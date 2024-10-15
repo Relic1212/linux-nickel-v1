@@ -2,7 +2,7 @@ let lib = import "lib.ncl"
 in
 
 let drvUtils = {
-  jsonToHash = (fun j => lib.computeSha256 j),
+  jsonToHash = (fun j => lib.functions.computeSha256 j),
   drvToJson = (fun drv => std.serialize 'Json drv),
   drvToHash = (fun drv => let j = drvToJson drv in jsonToHash j),
   pkgToHash = (fun p => let drv = pkgToDrv p in drvToHash drv),

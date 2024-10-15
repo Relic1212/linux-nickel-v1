@@ -1,30 +1,19 @@
 let constants = import "constants.ncl"
 in
 
-let isNullOrString = (fun s => std.is_string s || s == null)
-in
-
-let nullOrString = std.contract.from_predicate (isNullOrString)
-in
-let isNullArray = (fun a => std.is_array a || a == null)
-in
-let nullOrArray = std.contract.from_predicate (isNullArray)
-in
-
-let _Src = {
-  uri | nullOrString | default = null,
-  sha256sum | String | default = "",
-}
-in
-let 
- _SourceInput={
-    src|_Src|default={ uri=null,sha256sum=""},
-    dest|String|default="",
-  }
-in
-
 let lib = {
-  computeSha256 = (fun s => (std.hash 'Sha256) s),
+  functions = {
+    computeSha256 = (fun s => (std.hash 'Sha256) s),
+    recordToHash = fun r => computeSha256 (std.serialize 'Json r),
+    isNullOrString = (fun s => std.is_string s || s == null),
+    nullOrString = std.contract.from_predicate (isNullOrString),
+    isNullArray = (fun a => std.is_array a || a == null),
+    nullOrArray = std.contract.from_predicate (isNullArray),
+  },
+  nullOrString = std.contract.from_predicate (functions.isNullOrString),
+
+  nullOrArray = std.contract.from_predicate (functions.isNullArray),
+
   BuildEnv = {
     cc | nullOrString | optional,
     ccp | nullOrString | optional,
@@ -40,12 +29,6 @@ let lib = {
     cxxflags | nullOrArray | optional,
     ldflags | nullOrArray | optional,
   },
-  Src = _Src,
-  SourceInput= _SourceInput,
-  # {
-  #   src|Dyn|default={ uri=null,sha256sum=""},
-  #   dest|String|default="",
-  # },
 
   nullEnv | BuildEnv
     = {},
@@ -63,7 +46,7 @@ let lib = {
     buildEnv | BuildEnv | default = if isStatic then staticEnv else nullEnv,
     commands | Array String | default = [],
     sourceInputs | Array SourceInput | default = [],
-    isStatic|Bool|default=true,
+    isStatic | Bool | default = true,
   },
   MakePackage =
     Package
@@ -94,19 +77,15 @@ let lib = {
       name = null,
       buildInputs = []
     },
-  examplePackage =
-    basePackage
-    & {
-      name | priority 1 = "example",
-      buildInputs | force = [basePackage]
-    },
-  extendedExamplePackage =
-    examplePackage
-    & {
-      name | priority 2 = "extendedExample"
-    },
-  recordToHash = fun r => computeSha256 (std.serialize 'Json r),
-  packageToDrv = (fun p => p & { buildInputs | force = [] })
+
+  Src = {
+    uri | nullOrString | default = null,
+    sha256sum | String | default = "",
+  },
+  SourceInput = {
+    src | Src,
+    dest | String | default = "",
+  },
 }
 in
 lib
