@@ -14,27 +14,38 @@ in
 let _Src = {
   uri | nullOrString | default = null,
   sha256sum | String | default = "",
-  dest | String | default = "",
 }
 in
+let 
+ _SourceInput={
+    src|_Src|default={ uri=null,sha256sum=""},
+    dest|String|default="",
+  }
+in
+
 let lib = {
   computeSha256 = (fun s => (std.hash 'Sha256) s),
   BuildEnv = {
-    cc | nullOrString | default = null,
-    ccp | nullOrString | default = null,
-    cxx | nullOrString | default = null,
-    ar | nullOrString | default = null,
-    nm | nullOrString | default = null,
-    ranlib | nullOrString | default = null,
-    objdum | nullOrString | default = null,
-    objcopy | nullOrString | default = null,
-    ld | nullOrString | default = null,
-    cflags | nullOrArray | default = null,
-    cppflags | nullOrArray | default = null,
-    cxxflags | nullOrArray | default = null,
-    ldflags | nullOrArray | default = null,
+    cc | nullOrString | optional,
+    ccp | nullOrString | optional,
+    cxx | nullOrString | optional,
+    ar | nullOrString | optional,
+    nm | nullOrString | optional,
+    ranlib | nullOrString | optional,
+    objdum | nullOrString | optional,
+    objcopy | nullOrString | optional,
+    ld | nullOrString | optional,
+    cflags | nullOrArray | optional,
+    cppflags | nullOrArray | optional,
+    cxxflags | nullOrArray | optional,
+    ldflags | nullOrArray | optional,
   },
   Src = _Src,
+  SourceInput= _SourceInput,
+  # {
+  #   src|Dyn|default={ uri=null,sha256sum=""},
+  #   dest|String|default="",
+  # },
 
   nullEnv | BuildEnv
     = {},
@@ -49,9 +60,10 @@ let lib = {
   Package = {
     name | Dyn | default = null,
     buildInputs | Array Dyn | default = [],
-    buildEnv | BuildEnv | default = nullEnv,
+    buildEnv | BuildEnv | default = if isStatic then staticEnv else nullEnv,
     commands | Array String | default = [],
-    srcs | Array Dyn | default = [],
+    sourceInputs | Array SourceInput | default = [],
+    isStatic|Bool|default=true,
   },
   MakePackage =
     Package
