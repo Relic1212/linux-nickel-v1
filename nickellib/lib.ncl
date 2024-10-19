@@ -1,6 +1,6 @@
 let constants = import "./constants.ncl"
 in
-let shellFunctions= import "./shellFunctions.ncl"
+let shellFunctions = import "./shellFunctions.ncl"
 in
 let lib = {
   functions = {
@@ -10,10 +10,13 @@ let lib = {
     nullOrString = std.contract.from_predicate (isNullOrString),
     isNullArray = (fun a => std.is_array a || a == null),
     nullOrArray = std.contract.from_predicate (isNullArray),
-    varToExportvar=(fun var => if ((std.typeof var )== '"String") then var else 
-    "\"" + (std.string.join " " var) + "\"" 
+    varToExportvar = (fun var =>
+      if ((std.typeof var) == '"String") then
+        var
+      else
+        "\"" ++ (std.string.join " " var) ++ "\""
     ),
-    createExport=(fun key env => (if (std.record.has_field key env) then ["export %{key}=%{varToExportvar env."%{key}"}"] else []) )
+    createExport = (fun key env => (if (std.record.has_field key env) then ["export %{key}=%{varToExportvar env."%{key}"}"] else []))
   },
   nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
@@ -46,7 +49,7 @@ let lib = {
         LDFLAGS = common_flags,
       },
   Package = {
-    name | Dyn | default = null,
+    name | String,
     buildInputs | Array Dyn | default = [],
     buildEnv | BuildEnv | default = if isStatic then staticEnv else nullEnv,
     unpackPhase | Array String | default
@@ -62,36 +65,48 @@ let lib = {
       done
       "%
       ],
-    envSetupPhase=[
-      "export WORKDIR=/tmp/workdir",
-
-      "export SRC=/tmp/workdir/src",
-      "export DEST=/tmp/workdir/dest",
-      "export BUILDDIR=/tmp/workdir/build"
-
-    ]@
-    (functions.createExport "CC" buildEnv)
-    
-    ,
+    envSetupPhase =
+      [
+        "export WORKDIR=/tmp/workdir",
+        "export SRC=/tmp/workdir/src",
+        "export DEST=/tmp/workdir/dest",
+        "export BUILDDIR=/tmp/workdir/build"
+      ]
+      @ (functions.createExport "CC" buildEnv)
+      @ (functions.createExport "CXX" buildEnv)
+      @ (functions.createExport "CPP" buildEnv)
+      @ (functions.createExport "AR" buildEnv)
+      @ (functions.createExport "NM" buildEnv)
+      @ (functions.createExport "RANLIB" buildEnv)
+      @ (functions.createExport "OBJCOPY" buildEnv)
+      @ (functions.createExport "OBJDUMP" buildEnv)
+      @ (functions.createExport "CC" buildEnv)
+      @ (functions.createExport "LD" buildEnv)
+      @ (functions.createExport "CFLAGS" buildEnv)
+      @ (functions.createExport "CPPFLAGS" buildEnv)
+      @ (functions.createExport "CXXFLAGS" buildEnv)
+      @ (functions.createExport "LDFLAGS" buildEnv)
+      @ (if buildInChroot then [] else ["export LIBDIR=/tmp/workdir/sysroot/usr/lib", "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}"]),
     patchPhase | Array String | default
-      = 
+      =
         if (std.array.length patches) == 0 then
           []
-        else [
-          m%"      "export SRC=/tmp/workdir/src"
+        else
+          [
+            m%"      "export SRC=/tmp/workdir/src"
 
       for p in %{std.string.join " " patches} do
         (cd ${SRC}; patch -p1 < ${p})
       done
       "%
-      ],
+          ],
     configurePhase | Array String | default = [],
     buildPhase | Array String | default = [],
     installPhase | Array String | default = [],
-    phases | Array (Array String) | default = [unpackPhase, envSetupPhase ,patchPhase, configurePhase, buildPhase, installPhase],
+    phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, configurePhase, buildPhase, installPhase],
 
     commands | Array String | default = std.array.flatten phases,
-    scriptContent | String | default = "#!/bin/sh -e\n"++ std.string.join "\n" commands,
+    scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
     sourceInputs | Array SourceInput | default = [],
     patchDir | String | default = "patches",
@@ -99,16 +114,16 @@ let lib = {
     patches | Array String | default = [],
     extraFiles | Array String | default = [],
     isStatic | Bool | default = true,
-    isLlvm|Bool|default=true,
-    enableParallel|Bool|default=true,
-    enableCcache|Bool|default=true,
-    buildInChroot|Bool|default=true
+    isLlvm | Bool | default = true,
+    enableParallel | Bool | default = true,
+    enableCcache | Bool | default = true,
+    buildInChroot | Bool | default = true
   },
   MakePackage =
     Package
     & {
-      enableParallel|default=Package.enableParallel,
-      makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then  ["-j$(nproc)"] else []),
+      enableParallel | default = Package.enableParallel,
+      makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []),
       makeTargets | nullOrArray | default = null,
       makeInstallArgs | nullOrArray | default = ["DESTDIR=${out}"],
       makeInstallTargets | nullOrArray | default = ["install"],
@@ -124,27 +139,34 @@ let lib = {
   AutotoolsPackage =
     MakePackage
     & {
-      isStatic|default=MakePackage.isStatic,
-      configureFlags | nullOrArray | default = constants.configureFlags @ ( if isStatic then constants.configureFlagsStatic else [] ),
-      configureScript|String|default= "${SRC}/configure",
-      configurePhase|priority -1=[ 
-        configureScript ++ " " ++ (std.string.join " " configureFlags )
-      ]
+      isStatic | default = MakePackage.isStatic,
+      configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []),
+      configureScript | String | default = "${SRC}/configure",
+      configurePhase | priority -1
+        = [
+          configureScript ++ " " ++ (std.string.join " " configureFlags)
+        ]
     },
   MesonPackage =
     Package
     & {
-      mesonArgs | nullOrArray | default = constants.mesonArgs
+      isStatic|default=Package.isStatic,
+
+      mesonArgs | nullOrArray | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
     },
   CmakePackage =
     Package
     & {
-      cmakeArgs | nullOrArray | default = constants.cmakeArgs
+      isStatic|default=Package.isStatic,
+      cmakeArgs | Array String| default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
+      configurePhase|priority -10=["cmake -B . -S ${SRC} %{std.string.join " " cmakeArgs}"],
+      buildPhase|priority -10 = ["cmake --build ."],
+      installPhase|priority -10 =["DESTDIR=${DEST} cmake --install ."]
     },
 
   basePackage | Package
     = {
-      name = null,
+      name = "null",
       buildInputs = []
     },
 
