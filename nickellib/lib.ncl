@@ -59,10 +59,12 @@ let lib = {
         else
           m%"
       %{shellFunctions.unpackMaybe}
-      for dest in %{std.string.join " " ( std.array.map (fun x => if x.dest==null then "" else x.dest  ) sourceInputs )} do
-        mkdir -p /tmp/workdir/src/${dest}
-        cp -r /tmp/workdir/unpacked/${dest} /tmp/workdir/src/${dest}
-      done
+      %{std.string.join " " ( std.array.map (fun x => let dest =if x.dest==null then "" else x.dest in 
+      m%"
+      mkdir -p /tmp/workdir/src/%{dest}
+      unpack_maybe /tmp/workdir/packed/%{dest} /tmp/workdir/src/%{dest}
+      "%
+        ) sourceInputs )}
       "%
       ],
     envSetupPhase =
@@ -93,7 +95,7 @@ let lib = {
           []
         else
           [
-            m%"      "export SRC=/tmp/workdir/src"
+            m%"
 
       for p in %{std.string.join " " patches} do
         (cd ${SRC}; patch -p1 < ${p})
@@ -150,18 +152,18 @@ let lib = {
   MesonPackage =
     Package
     & {
-      isStatic|default=Package.isStatic,
+      isStatic | default = Package.isStatic,
 
       mesonArgs | nullOrArray | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
     },
   CmakePackage =
     Package
     & {
-      isStatic|default=Package.isStatic,
-      cmakeArgs | Array String| default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
-      configurePhase|priority -10=["cmake -B . -S ${SRC} %{std.string.join " " cmakeArgs}"],
-      buildPhase|priority -10 = ["cmake --build ."],
-      installPhase|priority -10 =["DESTDIR=${DEST} cmake --install ."]
+      isStatic | default = Package.isStatic,
+      cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
+      configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join " " cmakeArgs}"],
+      buildPhase | priority -10 = ["cmake --build ."],
+      installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."]
     },
 
   basePackage | Package

@@ -3,13 +3,17 @@ drvUtils=import "drv.ncl"
 in
 
 let 
-musl = import "../pkgs/musl/musl.ncl"
+pkgs={
+musl = import "../pkgs/musl/musl.ncl",
+libcxx = import "../pkgs/llvm/libcxx.ncl"
+}
 in 
-let 
-_musl=musl
-in
+
+
 let drvs =[
-    drvUtils.pkgToFullDrv _musl
+    drvUtils.pkgToFullDrv pkgs.musl ,
+    drvUtils.pkgToFullDrv pkgs.libcxx ,
+
 ]
 in 
 drvs
