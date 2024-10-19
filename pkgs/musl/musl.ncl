@@ -1,7 +1,7 @@
-let lib=import "../../lib.ncl"
+let lib=import "../../nickellib/lib.ncl"
 in 
 
-let musl|lib.MakePackage={
+let musl|lib.AutotoolsPackage={
     name="musl",
     isStatic=false,
     sourceInputs=[{

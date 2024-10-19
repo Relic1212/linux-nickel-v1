@@ -13,7 +13,9 @@
     "--includedir=/usr/include",
     "--oldincludedir=/usr/include",
     "--infodir=/usr/share/info",
-    "--mandir=/usr/share/man",
+    "--mandir=/usr/share/man"
+  ],
+  configureFlagsStatic = [
     "--enable-static",
     "--disable-shared"
   ],
@@ -32,6 +34,8 @@
     "--localstatedir=/var",
     "--sharedstatedir=/com",
     "--wrap-mode=nodownload",
+  ],
+  mesonArgsStatic = [
     "--prefer-static",
     "-Ddefault_library=static",
   ],
@@ -47,11 +51,13 @@
     "-DCMAKE_INSTALL_INCLUDEDIR:PATH=include",
     "-DCMAKE_INSTALL_DATAROOTDIR:PATH=share",
     "-DCMAKE_BUILD_TYPE=Release",
-    "-DCMAKE_INSTALL_PREFIX=/usr",
+    "-DCMAKE_INSTALL_PREFIX=/usr"
+  ],
+  cmakeArgsStatic = [
     "-DBUILD_SHARED_LIBS:BOOL=OFF",
     "-DBUILD_STATIC_LIBS:BOOL=ON",
     "-DCMAKE_LINK_SEARCH_START_STATIC:BOOL=ON",
     "-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON",
   ],
-  staticFlags=["-static","--static"],
+  staticFlags = ["-static", "--static"],
 }

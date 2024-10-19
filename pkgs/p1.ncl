@@ -1,6 +1,6 @@
 
 let
-lib=import "../lib.ncl"
+lib=import "../nickellib/lib.ncl"
 in
 let
 helloMeson|lib.MesonPackage={name="hello-meson"}

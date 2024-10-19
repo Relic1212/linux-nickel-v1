@@ -9,6 +9,8 @@ for r,_,fs in os.walk("pkgs"):
         #print(type(c))
         s=c.stdout.decode()
         #print((s))
+
+        # nix replace subdarivation with their hash, so we do that to
         d=json.loads(s)
         print('d',d)
         print("sha",hashlib.sha256(json.dumps(d).encode()).hexdigest())
