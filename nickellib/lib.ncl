@@ -59,7 +59,7 @@ let lib = {
         else
           m%"
       %{shellFunctions.unpackMaybe}
-      %{std.string.join " " ( std.array.map (fun x => let dest =if x.dest==null then "" else x.dest in 
+      %{std.string.join " " ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in 
       m%"
       mkdir -p /tmp/workdir/src/%{dest}
       unpack_maybe /tmp/workdir/packed/%{dest} /tmp/workdir/src/%{dest}
@@ -71,7 +71,7 @@ let lib = {
       [
         "export WORKDIR=/tmp/workdir",
         "export SRC=/tmp/workdir/src",
-        "export DEST=/tmp/workdir/dest",
+        "export DEST=/tmp/workdir/out/destdir",
         "export BUILDDIR=/tmp/workdir/build"
       ]
       @ (functions.createExport "CC" buildEnv)
@@ -127,7 +127,7 @@ let lib = {
       enableParallel | default = Package.enableParallel,
       makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []),
       makeTargets | nullOrArray | default = null,
-      makeInstallArgs | nullOrArray | default = ["DESTDIR=${out}"],
+      makeInstallArgs | nullOrArray | default = ["DESTDIR=${DEST}"],
       makeInstallTargets | nullOrArray | default = ["install"],
       buildPhase | priority -10
         = [
@@ -146,7 +146,7 @@ let lib = {
       configureScript | String | default = "${SRC}/configure",
       configurePhase | priority -1
         = [
-          configureScript ++ " " ++ (std.string.join " " configureFlags)
+          configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
         ]
     },
   MesonPackage =
@@ -161,7 +161,7 @@ let lib = {
     & {
       isStatic | default = Package.isStatic,
       cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
-      configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join " " cmakeArgs}"],
+      configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
       buildPhase | priority -10 = ["cmake --build ."],
       installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."]
     },
@@ -178,7 +178,7 @@ let lib = {
   },
   SourceInput = {
     src | Src,
-    dest | String | default = "",
+    dest | String | optional,
   },
 }
 in

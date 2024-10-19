@@ -13,15 +13,10 @@ except:
 
 
 try:
-    import  dirpaths
+    import dirpaths
 except:
-    pass 
-
-try:
     from builder import dirpaths
 
-except:
-    pass
 
 def fetch(uri:str,sha256sum):
     """_summary_
@@ -77,3 +72,4 @@ def fetch(uri:str,sha256sum):
         
     subprocess.run(["touch",cwd + "/0.txt"],check=True)
         
+

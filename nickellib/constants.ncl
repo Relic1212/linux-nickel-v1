@@ -60,4 +60,5 @@
     "-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON",
   ],
   staticFlags = ["-static", "--static"],
+  buildFlagSep=  " \\\n\t" ,
 }
