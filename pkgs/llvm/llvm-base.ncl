@@ -53,7 +53,11 @@ let llvmBase | lib.CmakePackage
           "-DCLANG_INCLUDE_TESTS=OFF",
           "-DCLANG_ENABLE_HLSL=OFF",
           "-DCLANG_TOOL_C_INDEX_TEST_BUILD=OFF",
-          "-Wno-dev"
+          "-Wno-dev",
+          "-DLLVM_ENABLE_UNWIND_TABLES=OFF",
+          "-DLLVM_USE_LINKER=lld",
+          "-DLLVM_ENABLE_LLD=ON",
+          "-LLVM_ENABLE_LIBCXX=ON"
         ]
         @ (
           if isStatic then

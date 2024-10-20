@@ -1,5 +1,18 @@
 let shellFuntions={
     unpackMaybe = m%"
+
+    tar_unpack(){
+        source=${1}
+        dest=${2}
+        tar xf ${source} -C ${dest} --no-same-owner
+    }
+
+    unzip_unpack(){
+        source=${1}
+        dest=${2}
+        unzip ${source} -d ${dest}
+    }
+
     unpack_maybe() {
         source=${1}
         dest=${2}
@@ -7,27 +20,23 @@ let shellFuntions={
             cmd="cp -r"
         fi 
         case ${source} in
-            *.tar) cmd="tar xf";;
-            *.tar.*) cmd="tar xf";;
-            *.tgz) cmd="tar xf";;
-            *.zip) cmd="unzip";;
+            *.tar) cmd="tar_unpack";;
+            *.tar.*) cmd="tar_unpack";;
+            *.tgz) cmd="tar_unpack";;
+            *.zip) cmd="unzip_unpack";;
 	    esac 
 
         stmp=$(realpath ${source})
         dtmp=$(mktemp)
-        _olddir=${pwd}
-        cd ${dtmp}
-        ${cmd} ${stmp}
-        if [ $(ls | wc -l) -eq 1 ];then
-            d=$(ls)
+        ${cmd} ${stmp} ${dtmp}
+        if [ $(ls ${dtmp} | wc -l) -eq 1 ];then
+            d=$(ls ${dtmp})
             if [ -d ${d} ];then
-                cp -a ${d}/. .
-                rm -r ${d} 
+                cp -a ${d}/. ${dest}/
             fi 
+        else
+            cp -a ${dtmp}/. ${dest}/
         fi
-        cd ${_olddir}
-        cp -a ${_dtmp}/. ${dest}/
-
 
     }
     

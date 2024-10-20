@@ -8,8 +8,8 @@ let DrvSchema = {
   sourceInputDrvs | Array Dyn,
   extraFileDrvs | Array String,
   patchDrvs | Array String,
-  buildInChroot|Bool,
-        enableCcache|Bool
+  buildInChroot | Bool,
+  enableCcache | Bool
 }
 in
 let drvUtils = {
@@ -41,8 +41,8 @@ let drvUtils = {
         patchDrvs = p.patches,
         extraFileDrvs = p.extraFiles,
         scriptContent = p.scriptContent,
-        buildInChroot=p.buildInChroot,
-        enableCcache=p.enableCcache
+        buildInChroot = p.buildInChroot,
+        enableCcache = p.enableCcache
       }
       in d
   ),
@@ -58,18 +58,18 @@ let drvUtils = {
       #      buildInputs= std.array.map pkgToFullDrv p.buildInputs
     }
   ),
-  sourceInputTohasBasedDrv = (fun s => { field = "%{s.sha256sum}", value = { drv = std.serialize 'Json s, name = null } }),
+  sourceInputTohasBasedDrv = (fun s => { "%{s.sha256sum}" = { drv = std.serialize 'Json s, name = null } }),
   toDrvsByhashArray = (fun p =>
     [
       {
-        field = "%{pkgToHash p}",
-        value = { drv = pkgToJson p, name = p.name },
+        "%{pkgToHash p}" = { drv = pkgToJson p, name = p.name },
       }
     ]
     @ (
       std.array.map
         (fun x =>
-          { field = x.field, value = { drv = x.value.drv, name = null } }
+          x
+        #{ field = x.field, value = { drv = x.value.drv, name = null } }
         )
         (
           []
@@ -79,7 +79,14 @@ let drvUtils = {
         )
     )
   ),
-  toDrvsByhash = (fun p => { drvByHash = std.record.from_array (std.array.map (fun d => { field = d.field, value = d.value.drv }) (toDrvsByhashArray p)), hashByName = std.record.from_array (std.array.map (fun d => { field = d.value.name, value = d.field }) (std.array.filter (fun x => x.value.name != null) (toDrvsByhashArray p))) }),
+  # toDrvsByhash = (fun p => { drvByHash = std.record.from_array (std.array.map (fun d => { field = d.field, value = d.value.drv }) (toDrvsByhashArray p)), hashByName = std.record.from_array (std.array.map (fun d => { field = d.value.name, value = d.field }) (std.array.filter (fun x => x.value.name != null) (toDrvsByhashArray p))) }),
+  toDrvsByhash = (fun p =>
+    let d = std.record.merge_all (toDrvsByhashArray p) in
+    {
+      drvByHash = std.record.map_values (fun x => x.drv) d,
+      hashByName = std.record.from_array ( std.array.filter (fun x=>x.field!=null) (std.array.map (fun x =>  { field=x.value.name,value=x.field }) (std.record.to_array d)))
+    }
+  )
 }
 in
 drvUtils

@@ -57,7 +57,7 @@ def _prepare_build(drv: dict, drvs_by_hash: dict):
         os.makedirs( f"{workdir}/{d}", exist_ok=True)
     
     for s in sourceInputDrvs:
-        sourceDir=f"{dirpaths.get_basedir()}/{s.hash}-src/unpacked"
+        sourceDir=f"{dirpaths.get_basedir()}/{s.hash}-src/packed"
         cont = os.listdir(sourceDir)
         if len(cont)!=0:
             raise Exception(f"ERROR: {sourceDir} does not contain exectly one source")

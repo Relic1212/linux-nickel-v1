@@ -11,7 +11,7 @@
 * Builds happen im /tmp/work, where the following directories are special:
 ** ./build
 ** ./src 
-** ./unpacked
+** ./packed
 ** ./patches
 ** ./files
 

@@ -88,7 +88,11 @@ let lib = {
       @ (functions.createExport "CPPFLAGS" buildEnv)
       @ (functions.createExport "CXXFLAGS" buildEnv)
       @ (functions.createExport "LDFLAGS" buildEnv)
-      @ (if buildInChroot then [] else ["export LIBDIR=/tmp/workdir/sysroot/usr/lib", "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}"]),
+      @ (if buildInChroot then [] else [
+        "export LIBDIR=/tmp/workdir/sysroot/usr/lib", 
+        "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}",
+        "export BUILD_SYROOT=/tmp/workdir/sysroot"
+        ]),
     patchPhase | Array String | default
       =
         if (std.array.length patches) == 0 then

@@ -1,23 +1,27 @@
 let 
-lib=import "../../nickellib/lib.ncl"
+#lib=import "../../nickellib/lib.ncl"
+ lib = import "../../nickellib/lib.ncl"
+in
+let llvmBase=import "./llvm-base.ncl"
 in 
 let 
-muslStageZero=import "../musl/musl-stage-0.ncl"
+pkgs={
+    muslStage0=import "../musl/musl-stage-0.ncl",
+}
 in
-let 
-libcxx|lib.CmakePackage={
-    name="libcxx",
-    sourceInputs=[
-        {
-            src={uri="https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.2/libcxx-19.1.2.src.tar.xz",
-            sha256sum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
-        }
-    ],
-
+let
+llvmStage0|lib.CmakePackage=llvmBase&{
+    name="libcxx-stage-0",
     buildInputs=[
-        muslStageZero
+        pkgs.muslStage0,
     ],
-    buildInChroot=false
+    cmakeArgs|priority -9 =(llvmBase.cmakeArgs) @[
+          "-DLLVM_TARGETS_TO_BUILD='X86'",
+          "-DLLVM_RUNTIMES=''",
+          "-DLLVM_ENABLE_PROJECTS='libunwind;libcxx;libcxxabi;compiler-rt'",
+
+    ]
+
 }
 in 
-libcxx
+llvmStage0
