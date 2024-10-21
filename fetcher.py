@@ -44,5 +44,5 @@ def fetch(uri:str,sha256sum):
     else:
         h=hashes.compute_file_or_dir_sha256sum(fetched)
         if h!=sha256sum:
-            raise Exception(f"sha256sum error for {uri}")
+            raise Exception(f"sha256sum error for {uri}\nExpected: {sha256sum}\nGot: {h}")
         

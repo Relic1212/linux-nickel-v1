@@ -2,7 +2,8 @@ import os
 import subprocess
 import json 
 import hashlib
-
+import sys 
+from builder import build_in_bubblewrap
 def nickel_to_json(fp):
     c=subprocess.run(["nickel", "export", fp , "--format", "json"],check=True,capture_output=True)
     return json.loads(c.stdout.decode())
@@ -22,24 +23,17 @@ def a():
             print('d',d)
             print("sha",hashlib.sha256(json.dumps(d).encode()).hexdigest())
 
-def test():
+def get_drvs():
     fp="nickellib/pkgs.ncl"
     c=nickel_to_json(fp)
-    # print(c)
-    print(type(c))
-    print(c.keys())
-    drvByHash=c["drvByHash"]
-    print(type(drvByHash))
-    d=drvByHash
-    hbn=c['hashByName']
-    print(hbn.keys())
-    for name in hbn:
-        h=hbn[name]
-        drv=drvByHash[h]
-        j=json.loads(drv)
-        print(j['scriptContent'])
+    return c
         
-
+def test():
+    pn=sys.argv[1]
+    drvs=get_drvs()
+    pn_hash = drvs['hashByName'][pn]
+    print(pn_hash)
+    build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
 
 if __name__=="__main__":
     test()

@@ -1,2 +1,5 @@
 sysroot
 testing
+build/**
+build 
+build/

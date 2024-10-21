@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 
 def get_files_from_dir(directory: str, extension=None) -> list[dict]:
     """
-    Get files and their hashes in directory dir. Returns a list of dicst 
+    Get files and their hashes in directory dir. Returns a list of dicst
     with 'file' and 'sha256sum' as keys,
     or None if dir does not exist.
     """
@@ -43,7 +43,6 @@ def get_files_from_dir(directory: str, extension=None) -> list[dict]:
                 exit(1)
             files.append({"file": filename, "sha256sum": sha256sum})
     return sorted(files, key=lambda x: x["file"])
-
 
 
 def get_default_rsync() -> list[str]:
@@ -80,7 +79,7 @@ def copy_root(src: str, dest: str, rsync=None):
         raise Exception
 
     cmd = rsync + [src, dest]
-    subprocess.run(cmd,check=True)
+    subprocess.run(cmd, check=True)
 
 
 def write_script(script_filepath: str, script_content: str) -> None:
@@ -90,15 +89,15 @@ def write_script(script_filepath: str, script_content: str) -> None:
         script_filepath (str): path to the file where the scipt should be written.
                                 Must be in an existing directory. If the file exists
                                 it will be overwritten.
-        script_content (str): Script to write, excluding shebang 
+        script_content (str): Script to write, excluding shebang
 
     Raises:
         Exception: _description_
     """
     with open(script_filepath, "w") as f:
         f.write(f"#!/bin/sh -e\n{script_content}")
-    subprocess.run(["chmod", "+x", script_filepath],check=True)
-    
+    subprocess.run(["chmod", "+x", script_filepath], check=True)
+
 
 def list_to_string(l: list[str]) -> str:
     return "".join([s + " " for s in l])
@@ -125,4 +124,3 @@ def classify_uri(uri: str):
             uri_type = "file"
 
     return uri_type
-

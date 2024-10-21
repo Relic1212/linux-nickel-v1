@@ -4,7 +4,9 @@ let shellFuntions={
     tar_unpack(){
         source=${1}
         dest=${2}
-        tar xf ${source} -C ${dest} --no-same-owner
+        unpack_cmd="tar xf ${source} -C ${dest} --no-same-owner"
+        printf "unpacking tar archive with command ${unpack_cmd}\n"
+        ${unpack_cmd}
     }
 
     unzip_unpack(){
@@ -14,8 +16,11 @@ let shellFuntions={
     }
 
     unpack_maybe() {
-        source=${1}
-        dest=${2}
+        source_dir=${1}
+        source_file=$(ls ${source_dir})
+        source="${source_dir}/${source_file}"
+
+        srcdest=${2}
         if [ -d ${source} ]; then 
             cmd="cp -r"
         fi 
@@ -27,17 +32,23 @@ let shellFuntions={
 	    esac 
 
         stmp=$(realpath ${source})
-        dtmp=$(mktemp)
+        dtmp=$(mktemp -d)
+        printf "running command ${cmd} ${stmp} ${dtmp}\n"
         ${cmd} ${stmp} ${dtmp}
         if [ $(ls ${dtmp} | wc -l) -eq 1 ];then
             d=$(ls ${dtmp})
-            if [ -d ${d} ];then
-                cp -a ${d}/. ${dest}/
+            dd="${dtmp}/${d}"
+            if [ -d ${dd} ];then
+                copy_cmd="cp -a ${dd}/. ${srcdest}/"
+            else
+                copy_cmd="cp -a ${dtmp}/. ${srcdest}/"
+
             fi 
         else
-            cp -a ${dtmp}/. ${dest}/
+            copy_cmd="cp -a ${dtmp}/. ${srcdest}/"
         fi
-
+        printf "copyying files to src dir: ${copy_cmd}\n"
+        ${copy_cmd}
     }
     
     "%

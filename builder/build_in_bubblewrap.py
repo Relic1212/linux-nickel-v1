@@ -1,9 +1,10 @@
 import json
+import subprocess
 
 try:
-    from builder import bubblewrap, hashes, util_functions, dirpaths,fetcher
+    from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
 except ModuleNotFoundError:
-    import bubblewrap, hashes, util_functions, dirpaths,fetcher
+    import bubblewrap, hashes, util_functions, dirpaths, fetcher
 
 import os
 
@@ -12,13 +13,13 @@ def get_src_dir(src_uri, src_uri_sha256sum) -> str:
     return dirpaths.get_basedir() + "/" + src_uri_sha256sum + "-src"
 
 
-def find_extrafile(name, sha256sum) -> str:
+def find_extrafile(name, sha256sum, files_dir="") -> str:
     for root, directory, file in os.walk("pkgs"):
         for f in directory + file:
             p = os.path.join(root, f)
             if not (os.path.exists(p)):
                 raise Exception()
-            if f == name:
+            if (f == name) and (p.endswith(files_dir)):
                 s = hashes.compute_file_or_dir_sha256sum(p)
                 if s == sha256sum:
                     return p
@@ -53,138 +54,95 @@ def drv_to_workdir(drv: dict) -> str:
         'hash':<hash>
     }
     """
-    workdir0 = "build/" + drv["hash"] + "-build"
-    workdir = "build/" + hashes.str_to_sha256sum(json.dumps(drv["manifest"])) + "-build"
+    workdir0 = "build/" + drv["hash"] + "-workdir"
+    workdir = (
+        "build/" + hashes.str_to_sha256sum(json.dumps(drv["manifest"])) + "-workdir"
+    )
 
     if workdir0 != workdir:
         print("workdir ", workdir)
         print("workdir0", workdir0)
-        raise Exception
+        raise Exception()
     return workdir
 
 
-def build(h,pkg_drvs: str) -> None:
+def copy_src(h, dest):
+    src_dir = dirpaths.get_basedir() + "/" + h + "-src/packed/"
+    cont = os.listdir(src_dir)
+    if len(cont) != 1:
+        raise Exception(f"{src_dir} does not contain exactly one item")
+    src_p = src_dir + "/" + cont[0]
+    subprocess.run(["cp", "-r", src_p, dest], check=True)
+
+
+def build(h, pkg_drvs: str) -> None:
 
     # h=hash
     # drv_s=pkgs[hash]
 
-    drv_s=pkg_drvs[h]
+    drv_s = pkg_drvs[h]
     drv = json.loads(drv_s)
 
-    base_build_dir = dirpaths.get_basedir() + h + "-build"
-    status_file = base_build_dir + "/0.txt"
+    workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
+    status_file = workdir + "/0.txt"
     if os.path.isfile(status_file):
         return
-    manifest = drv["manifest"]
-    src_uri = manifest["src_uri"]
-    src_uri_sha256sum = manifest["src_uri_sha256sum"]
-    fetcher.fetch(src_uri, src_uri_sha256sum)
+    subprocess.run(["rm", "-rf", workdir], check=True)
+    os.makedirs(workdir + "/build")
+    with open(workdir + "/drv.json", "w", encoding="utf-8") as f:
+        json.dump(drv, f)
+    os.makedirs(workdir + "/sysroot", exist_ok=True)
+    os.makedirs(workdir + "/out/destdir", exist_ok=True)
+    os.makedirs(workdir + "/src")
 
+    os.makedirs(f"{workdir}/packed")
 
-    os.makedirs(base_build_dir + "/build")
-    with open(base_build_dir + "/manifest.json", "w") as f:
-        json.dump(manifest, f)
-    os.makedirs(base_build_dir + "/sysroot", exist_ok=True)
-    os.makedirs(base_build_dir + "/destdir", exist_ok=True)
-    os.makedirs(base_build_dir + "/src")
-
-    os.makedirs(f"{base_build_dir}/unpacked")
-    os.makedirs(f"{base_build_dir}/unpacked_extra")
-
-    os.makedirs(f"{base_build_dir}/patches")
-    os.makedirs(f"{base_build_dir}/files")
-
-    extrafiles = manifest["extra_files"]
-    for ef_data in extrafiles:
-        hash = ef_data["sha256sum"]
-        file = ef_data["file"]
-        fp = find_extrafile(name=file, sha256sum=hash)
-        if os.path.isfile(fp):
-            cmd = f"cp {fp} {base_build_dir}/files/"
-        elif os.path.isdir(fp):
-            cmd = f"cp -r {fp} {base_build_dir}/files/"
-        else:
-            print(f"ERROR {fp} is neither a file nor a directory")
-            raise Exception
-
-        s = os.system(cmd)
-        if s != 0:
-            print(f"ERROR: cmd {cmd} failed with status {s}")
-
-    patches = manifest["patches"]
-
-    for p_data in patches:
-        hash = p_data["sha256sum"]
-        file = p_data["file"]
-        fp = find_extrafile(name=file, sha256sum=hash)
-        if os.path.isfile(fp):
-            cmd = f"cp {fp} {base_build_dir}/patches/"
-        elif os.path.isdir(fp):
-            cmd = f"cp -r {fp} {base_build_dir}/patches/"
-        else:
-            print(f"ERROR {fp} is neither a file nor a directory")
-            raise Exception
-
-        s = os.system(cmd)
-        if s != 0:
-            print(f"ERROR: cmd {cmd} failed with status {s}")
-
-    if src_uri != "":
-        u = (
-            get_src_dir(src_uri=src_uri, src_uri_sha256sum=src_uri_sha256sum)
-            + "/unpacked"
-        )
-
-        print(f"looking for unpacked sources in {u}")
-        for f in os.listdir(u):
-            print(f"copying {f} to  {base_build_dir}/unpacked ")
-            os.system(f"cp -r {u}/{f} {base_build_dir}/unpacked/ ")
-
-    for extra_src in manifest["extra_src"]:
-        src_uri = extra_src["src_uri"]
-        src_uri_sha256sum = extra_src["src_uri_sha256sum"]
-        dest = extra_src["dest"]
-        src_dir = get_src_dir(src_uri, src_uri_sha256sum)
-
-        filenames = os.listdir(src_dir + "/unpacked")
-        if len(filenames) != 1:
-            print(f"ERROR for dest={dest}, not precisely 1 path")
-            raise Exception
-        filename = filenames[0]
-        filepath = src_dir + "/unpacked/" + filename
-
-        full_dest = f"{base_build_dir}/unpacked_extra/" + dest
-
+    os.makedirs(f"{workdir}/patches")
+    os.makedirs(f"{workdir}/files")
+    for bi_drv in drv["buildInputDrvs"]:
+        build(h=bi_drv, pkg_drvs=pkg_drvs)
+        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+        util_functions.copy_root(src=bi_dest, dest=workdir + "/sysroot")
+    for si_drv in drv["sourceInputDrvs"]:
+        dest = si_drv["dest"]
+        si_h = si_drv["src"]
+        full_dest = workdir + f"/packed/{si_h}"
+        if dest != "":
+            full_dest += f"/{dest}"
+        # should not exist as workdir was deleted and si_h is unique
         os.makedirs(full_dest)
+        si = pkg_drvs[si_h]
+        fetcher.fetch_by_drv_string(si)
+        copy_src(h=si_h, dest=full_dest)
 
-        cmd = f"cp {filepath} { full_dest + "/" + filename}"
-        s = os.system(cmd)
-        if s != 0:
-            print(f"ERROR: {cmd} failed")
-            raise Exception
+    patch_drvs = drv["patchDrvs"]
 
-    build_command = manifest["command"]
-    util_functions.write_script(
-        script_content=build_command, script_filepath=base_build_dir + "/build.sh"
-    )
+    extra_file_drvs = drv["extraFileDrvs"]
 
-    ropaths = ["unpacked", "unpacked_extra", "files", "patches", "build.sh"]
-    args = util_functions.list_to_string(
-        [f" --ro-bind {base_build_dir}/{d} /tmp/workdir/{d} \\\n" for d in ropaths]
-    )
+    build_command = drv["scriptContent"]
+    build_script_path = workdir + "/build.sh"
+    with open(build_script_path, "w", encoding="utf-8") as f:
+        f.write(build_command)
+    subprocess.run(["chmod", "+x", build_script_path], check=True)
 
-    rwdirs = ["src", "build", "destdir"]
-    args += util_functions.list_to_string(
-        [f" --bind {base_build_dir}/{d} /tmp/workdir/{d} \\\n" for d in rwdirs]
-    )
+    ropaths = ["packed", "files", "patches", "build.sh"]
+    args = []
+    for ropath in ropaths:
+        args += ["--ro-bind", f"{workdir}/{ropath}", f"/tmp/workdir/{ropath}"]
 
-    sandboxed = manifest["sandboxed"]
-    uses_ccache = manifest["uses_ccache"]
+    rwpaths = ["src", "build", "out"]
+
+    for rwpath in rwpaths:
+        args += ["--bind", f"{workdir}/{rwpath}", f"/tmp/workdir/{rwpath}"]
+
+    sandboxed = drv["buildInChroot"]
+    uses_ccache = drv["enableCcache"]
     if sandboxed:
-        sysroot = base_build_dir + "/sysroot/"
-        for d in ropaths + rwdirs + ["/tmp", "/run", "/proc", "/sys", "/dev"]:
+        sysroot = workdir + "/sysroot/"
+        for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev"]:
             os.makedirs(sysroot + "/" + d, exist_ok=True)
-        os.environ.clear()
+        # os.environ.clear()
+
         path = "/usr/bin:/usr/sbin:/bin:/sbin"
         if uses_ccache:
             path = "/usr/lib/ccache:" + path
@@ -199,41 +157,42 @@ def build(h,pkg_drvs: str) -> None:
                 "x86_64-pc-linux-musl-gcc",
             ]:
                 if os.path.exists(sysroot + "/usr/bin/" + compiler):
-                    cmd = f"ln -s /usr/bin/ccache {compiler} "
-                    dir = sysroot + "/usr/lib/ccache"
-                    util_functions.run_in_directory(directory=dir, cmd=cmd)
+                    cmd = ["ln, -s, /usr/bin/ccache", compiler]
+                    directory = sysroot + "/usr/lib/ccache"
+                    senv = {"PATH": path}
+                    subprocess.run(cmd, cwd=directory, env=senv, check=True)
 
             os.environ["CCACHE_DIR"] = "/tmp/ccache"
-            args += " --bind build/ccache /tmp/ccache"
+            args += ["--bind", f"{dirpaths.get_basedir()}/ccache", "/tmp/ccache"]
 
-        os.environ["PATH"] = path
-        os.environ["HOME"] = "/"
+        senv = {}
+        senv["PATH"] = path
+        senv["HOME"] = "/"
 
     else:
+        senv = os.environ.copy()
         sysroot = "/"
-        args += f" --ro-bind {base_build_dir}/sysroot /tmp/workdir/sysroot \\\n"
+        args += ["--ro-bind", f"{workdir}/sysroot", "/tmp/workdir/sysroot"]
 
         try:
             ce = os.environ.get("CCACHE_DIR")
             if ce:
                 if ce != "/tmp/ccache":
-                    args += f" --bind {ce} {ce} "
+                    args += ["--bind", ce, ce]
         except:
             pass
 
-    args += " /tmp/workdir/build.sh"
+    args += ["--chdir", "/tmp/workdir/build"]
+    args += ["/tmp/workdir/build.sh"]
 
-    status = bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args)
-
-    if status != 0:
-        print(f"ERROR {status}")
-        raise Exception
+    bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv)
+    subprocess.run(["touch", status_file], check=True)
 
 
 def prepare_sysroot(workdir: str, buildinputs: dict):
     for bi in buildinputs:
-        hash = bi["name"]
-        other_root = f"build/{hash}-build/destdir"
+        h = bi["name"]
+        other_root = f"build/{h}-workdir/out/destdir"
         print(f"copying from destdir: {other_root} \nto ")
         util_functions.copy_root(src=other_root, dest=workdir + "/" + bi["dir"])
 

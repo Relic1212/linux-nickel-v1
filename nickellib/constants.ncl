@@ -60,5 +60,14 @@
     "-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON",
   ],
   staticFlags = ["-static", "--static"],
+  stage0Flags={
+    CPPFLAGS=[
+          "--sysroot=${SYSROOT}/",
+              "-L${SYSROOT}/usr/lib",
+              "-I${SYSROOT}/usr/include",
+              "-isystem${SYSROOT}/"
+    ],
+
+  },
   buildFlagSep=  " \\\n\t" ,
 }

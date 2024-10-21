@@ -17,6 +17,11 @@ try:
 except:
     from builder import dirpaths
 
+
+def fetch_by_hash(h:str,drv_dict):
+    drv_s=drv_dict[h]
+    fetch_by_drv_string(drv_s=drv_s)
+
 def fetch_by_drv_string(drv_s:str):
     drv=json.loads(drv_s)
     fetch_by_drv(drv=drv)
@@ -61,14 +66,13 @@ def fetch(uri: str, sha256sum):
     env = {"PATH": os.environ.get("PATH"), "HOME": "/"}
     carr = [cmd, uri]
     bwrap_args = ["--bind", packedwd, "/tmp/workdir/packed"]
-    bubblewrap.run_in_bwrap_chroot(
-        sysroot="/",
-        extra_bwrap_args=bwrap_args + carr,
-        network=True,
-        env=env,
-        cwd="/tmp/workdir/packed",
-    )
-    # subprocess.run(carr, cwd=packedwd, env=env, check=True)
+    # bubblewrap.run_in_bwrap_chroot(
+    #     sysroot="/",
+    #     extra_bwrap_args=bwrap_args + [ "--chdir", "/tmp/workdir/packed" ]  + carr,
+    #     network=True,
+    #     env=env,
+    # )
+    subprocess.run(carr, cwd=packedwd, env=env, check=True)
     dirs = os.listdir(packedwd)
     if len(dirs) != 1:
         raise Exception(f"{uri}")
@@ -78,10 +82,9 @@ def fetch(uri: str, sha256sum):
         cmd_arr = ["git", "reset" "--hard", sha256sum]
         bubblewrap.run_in_bwrap_chroot(
             sysroot="/",
-            extra_bwrap_args=bwrap_args + cmd_arr,
+            extra_bwrap_args=bwrap_args + [ "--chdir", "/tmp/workdir/packed" ] + cmd_arr,
             network=False,
-            env=env,
-            cwd="/tmp/workdir/packed",
+            env=env
         )
 
         # subprocess.run(cmd_arr,env=env,cwd=fetched,check=True)
@@ -89,7 +92,7 @@ def fetch(uri: str, sha256sum):
         h = hashes.compute_file_or_dir_sha256sum(fetched)
 
         if h != sha256sum:
-            raise Exception(f"sha256sum error for {uri}")
+            raise Exception(f"sha256sum error for {uri}\nExpected: {sha256sum}\nGot: {h}")
         else:
             print(f"verified that {h} == {sha256sum}")
 
