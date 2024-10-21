@@ -62,11 +62,13 @@
   staticFlags = ["-static", "--static"],
   stage0Flags={
     CPPFLAGS=[
-          "--sysroot=${SYSROOT}/",
-              "-L${SYSROOT}/usr/lib",
-              "-I${SYSROOT}/usr/include",
-              "-isystem${SYSROOT}/"
+          "--sysroot=/tmp/workdir/sysroot/",
+              "-L/tmp/workdir/sysroot/usr/lib",
+              "-I/tmp/workdir/sysroot/usr/include",
+              "-isystem/tmp/workdir/sysroot"
     ],
+              
+    LDFLAGS=["-L/tmp/workdir/sysroot/usr/lib",],
 
   },
   buildFlagSep=  " \\\n\t" ,

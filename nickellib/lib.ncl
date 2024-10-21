@@ -17,14 +17,14 @@ let lib = {
         "\"" ++ (std.string.join " " var) ++ "\""
     ),
     createExport = (fun key env => (if (std.record.has_field key env) then ["export %{key}=%{varToExportvar env."%{key}"}"] else [])),
-    joinArraysInSecondRecordWithArraysInFirstRecord=(fun a b => std.record.map (fun x y=> if ((std.is_array y)&&(std.record.has_field x b)) then y @ b."%{x}" else y) a),
-    replaceArraysWithEmptyArrays =(fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
-    joinMerge=(fun a b=> ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter ( fun f v=> ((std.is_array v)==false)  ) b )) ),
+    joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
+    replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
+    joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
   },
   nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
   nullOrArray = std.contract.from_predicate (functions.isNullArray),
-  StringOrArray=std.contract.from_predicate (functions.isStringOrArray),
+  StringOrArray = std.contract.from_predicate (functions.isStringOrArray),
 
   BuildEnv = {
     CC | nullOrString | optional,
@@ -41,7 +41,7 @@ let lib = {
     CPPFLAGS | nullOrArray | optional,
     CXXFLAGS | nullOrArray | optional,
     LDFLAGS | nullOrArray | optional,
-     SOURCE_DATE_EPOCH|String |default="\"1302044400\"",
+    SOURCE_DATE_EPOCH | String | default = "\"1302044400\"",
   },
 
   nullEnv | BuildEnv
@@ -66,12 +66,24 @@ let lib = {
     READELF="llvm-readelf",
     LDFLAGS=[ "-fuse-ld=lld", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
   },
-  staticLlvmEnv=functions.joinMerge staticEnv llvmEnv,
+  staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
     name | String,
     buildInputs | Array Dyn | default = [],
-    buildEnv | BuildEnv | default =if (isStatic && isLlvm) then staticLlvmEnv else (if isStatic then staticEnv else if isLlvm then llvmEnv else nullEnv),
-    extraEnv| {_: StringOrArray }|default={},
+    buiildDir|nullOrString|default=null,
+    buildEnv | BuildEnv | default = if (isStatic && isLlvm) then staticLlvmEnv else (if isStatic then staticEnv else if isLlvm then llvmEnv else nullEnv),
+    extraEnv | { _ : StringOrArray } | default
+      = (
+        if buildInChroot then
+          {}
+        else
+          {
+           # LIBDIR = "/tmp/workdir/sysroot/usr/lib",
+            PATH = "/tmp/workdir/sysroot/usr/bin:${PATH}",
+            SYSROOT = "/tmp/workdir/sysroot",
+          }
+      ),
+
     unpackPhase | Array String | default
       = [
         if (std.array.length sourceInputs) == 0 then
@@ -79,7 +91,7 @@ let lib = {
         else
           m%"
       %{shellFunctions.unpackMaybe}
-      %{std.string.join " " ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in 
+      %{std.string.join " " ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
       m%"
       mkdir -p /tmp/workdir/src/%{dest}
       unpack_maybe /tmp/workdir/packed/%{x.src.sha256sum}/%{dest} /tmp/workdir/src/%{dest}
@@ -94,32 +106,31 @@ let lib = {
         "export DEST=/tmp/workdir/out/destdir",
         "export BUILDDIR=/tmp/workdir/build"
       ]
-      @(std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") buildEnv))
+      @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") buildEnv))
+      @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
-      @(std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
+    # @ (functions.createExport "CC" buildEnv)
+    # @ (functions.createExport "CXX" buildEnv)
+    # @ (functions.createExport "CPP" buildEnv)
+    # @ (functions.createExport "AR" buildEnv)
+    # @ (functions.createExport "NM" buildEnv)
+    # @ (functions.createExport "RANLIB" buildEnv)
+    # @ (functions.createExport "OBJCOPY" buildEnv)
+    # @ (functions.createExport "OBJDUMP" buildEnv)
+    # @ (functions.createExport "CC" buildEnv)
+    # @ (functions.createExport "LD" buildEnv)
+    # @ (functions.createExport "CFLAGS" buildEnv)
+    # @ (functions.createExport "CPPFLAGS" buildEnv)
+    # @ (functions.createExport "CXXFLAGS" buildEnv)
+    # @ (functions.createExport "LDFLAGS" buildEnv)
+    # @
 
-      # @ (functions.createExport "CC" buildEnv)
-      # @ (functions.createExport "CXX" buildEnv)
-      # @ (functions.createExport "CPP" buildEnv)
-      # @ (functions.createExport "AR" buildEnv)
-      # @ (functions.createExport "NM" buildEnv)
-      # @ (functions.createExport "RANLIB" buildEnv)
-      # @ (functions.createExport "OBJCOPY" buildEnv)
-      # @ (functions.createExport "OBJDUMP" buildEnv)
-      # @ (functions.createExport "CC" buildEnv)
-      # @ (functions.createExport "LD" buildEnv)
-      # @ (functions.createExport "CFLAGS" buildEnv)
-      # @ (functions.createExport "CPPFLAGS" buildEnv)
-      # @ (functions.createExport "CXXFLAGS" buildEnv)
-      # @ (functions.createExport "LDFLAGS" buildEnv)
-      # @ 
-      
-      
-      @ (if buildInChroot then [] else [
-        "export LIBDIR=/tmp/workdir/sysroot/usr/lib", 
-        "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}",
-        "export BUILD_SYROOT=/tmp/workdir/sysroot"
-        ]),
+    # @ (if buildInChroot then [] else [
+    #   "export LIBDIR=/tmp/workdir/sysroot/usr/lib",
+    #   "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}",
+    #   "export SYSROOT=/tmp/workdir/sysroot"
+    #   ])
+    ,
     patchPhase | Array String | default
       =
         if (std.array.length patches) == 0 then
@@ -133,7 +144,7 @@ let lib = {
       done
       "%
           ],
-    configurePhase | Array String | default = [],
+    configurePhase | Array String | default = ( if (buiildDir==null) then [] else ["cd %{buiildDir}"]),
     buildPhase | Array String | default = [],
     installPhase | Array String | default = [],
     phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, configurePhase, buildPhase, installPhase],
@@ -191,15 +202,24 @@ let lib = {
     Package
     & {
       isStatic | default = Package.isStatic,
-      enableParallel|priority -10=Package.enableParallel,
+      buildInChroot | default = Package.buildInChroot,
+
+      enableParallel | priority -10 = Package.enableParallel,
       cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
       configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
       buildPhase | priority -10 = ["cmake --build ."],
       installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
-      extraEnv |priority -10=(Package.extraEnv & ( if enableParallel then  {CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"} 
-      
-      else {}))
-
+      extraEnv | priority -10
+        = (
+           
+           ( if buildInChroot then Package.extraEnv else (Package&{buildInChroot=false}).extraEnv)
+          & (
+            if enableParallel then
+              { CMAKE_BUILD_PARALLEL_LEVEL = "$(nproc)" }
+            else
+              {}
+          )
+        )
     },
 
   basePackage | Package
