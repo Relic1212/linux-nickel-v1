@@ -53,12 +53,36 @@
     "-DCMAKE_BUILD_TYPE=Release",
     "-DCMAKE_INSTALL_PREFIX=/usr"
   ],
+  cmakeArgsRecord = {
+    CMAKE_INSTALL_BINDIR="bin",
+    CMAKE_INSTALL_SBINDIR="bin",
+    CMAKE_INSTALL_LIBEXECDIR="libexec",
+    CMAKE_INSTALL_SYSCONFDIR="/etc",
+    CMAKE_INSTALL_SHAREDSTATEDIR="../com",
+    CMAKE_INSTALL_LOCALSTATEDIR="/var",
+    DCMAKE_INSTALL_LIBDIR="lib",
+    CMAKE_INSTALL_INCLUDEDIR="include",
+    CMAKE_INSTALL_DATAROOTDIR="share",
+    CMAKE_BUILD_TYPE="Release",
+    CMAKE_INSTALL_PREFIX="/usr"
+  },
+  
+  
   cmakeArgsStatic = [
     "-DBUILD_SHARED_LIBS:BOOL=OFF",
     "-DBUILD_STATIC_LIBS:BOOL=ON",
     "-DCMAKE_LINK_SEARCH_START_STATIC:BOOL=ON",
     "-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON",
   ],
+
+  cmakeArgsStaticRecord = {
+    BUILD_SHARED_LIBS="OFF",
+    BUILD_STATIC_LIBS="ON",
+    CMAKE_LINK_SEARCH_START_STATIC="ON",
+    CMAKE_SKIP_INSTALL_RPATH="ON",
+  },
+
+
   staticFlags = ["-static", "--static"],
   stage0Flags={
     CPPFLAGS=[

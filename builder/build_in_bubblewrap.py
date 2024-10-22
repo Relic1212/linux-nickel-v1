@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 
 try:
     from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
@@ -8,6 +9,13 @@ except ModuleNotFoundError:
 
 import os
 
+class LogFile:
+    def __init__(self,file_objects:str) -> None:
+        self.file_objects=file_objects
+    
+    def write(self,obj):
+        for f in self.file_objects:
+            f.write(obj)
 
 def get_src_dir(src_uri, src_uri_sha256sum) -> str:
     return dirpaths.get_basedir() + "/" + src_uri_sha256sum + "-src"
@@ -74,6 +82,20 @@ def copy_src(h, dest):
     src_p = src_dir + "/" + cont[0]
     subprocess.run(["cp", "-r", src_p, dest], check=True)
 
+def run_and_get_lines(**kwargs):
+    p=subprocess.Popen(**kwargs)
+    for l in p.stdout.readline():
+        yield l 
+        # yield {
+        #     "type":"stdout",
+        #   "line":l }
+    # for l in p.stderr.readline():
+    #     yield {
+    #         "type":"stderr",
+    #       "line":l }
+    status=p.wait()
+    if not status:
+        raise subprocess.CalledProcessError(status,cmd=p.args)
 
 def build(h, pkg_drvs: str) -> None:
 
@@ -94,6 +116,16 @@ def build(h, pkg_drvs: str) -> None:
     os.makedirs(workdir + "/sysroot", exist_ok=True)
     os.makedirs(workdir + "/out/destdir", exist_ok=True)
     os.makedirs(workdir + "/src")
+    subprocess.run(["rm", "-f", dirpaths.get_basedir() + "/latest"], check=True)
+    subprocess.run(
+        [
+            "ln",
+            "-s",
+            os.path.realpath(workdir),
+            os.path.realpath(dirpaths.get_basedir()) + "/latest",
+        ],
+        check=True,
+    )
 
     os.makedirs(f"{workdir}/packed")
 
@@ -102,7 +134,7 @@ def build(h, pkg_drvs: str) -> None:
     for bi_drv in drv["buildInputDrvs"]:
         build(h=bi_drv, pkg_drvs=pkg_drvs)
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-        util_functions.copy_root(src=bi_dest, dest=workdir + "/sysroot")
+        util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
     for si_drv in drv["sourceInputDrvs"]:
         dest = si_drv["dest"]
         si_h = si_drv["src"]
@@ -185,7 +217,19 @@ def build(h, pkg_drvs: str) -> None:
     args += ["--chdir", "/tmp/workdir/build"]
     args += ["/tmp/workdir/build.sh"]
 
-    bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv)
+    with open(f"{workdir}/b.log","a",encoding="utf-8") as f:
+        with open(f"{workdir}/error.log","a",encoding="utf-8") as f_error:
+            logfile=LogFile([f,sys.stderr])
+            errorfile=LogFile([f,f_error,sys.stderr])
+            # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
+            bwrap_wrap = bubblewrap.get_bwrap_wrap(sysroot=sysroot, extra_bwrap_args=args)
+            with subprocess.Popen(args=bwrap_wrap,env=senv,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,universal_newlines=True,text=True) as proc:
+                for line in proc.stdout:
+                    print(line,end="")
+                    f.write(line)
+        status=proc.returncode
+        if status!=0:
+            raise subprocess.CalledProcessError(status,cmd=bwrap_wrap)
     subprocess.run(["touch", status_file], check=True)
 
 

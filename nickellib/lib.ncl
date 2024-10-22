@@ -20,6 +20,9 @@ let lib = {
     joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
     replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
     joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
+    # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
+    cmakeRecordToArgs=(fun r =>(std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
+    replaceArrayElem=(fun old new arr=>(std.array.map (fun elem=> (if (elem==old) then new else elem) ) arr)),
   },
   nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
@@ -31,6 +34,8 @@ let lib = {
     CPP | nullOrString | optional,
     CXX | nullOrString | optional,
     AR | nullOrString | optional,
+    AS | nullOrString | optional,
+
     NM | nullOrString | optional,
     RANLIB | nullOrString | optional,
     READELF | nullOrString | optional,
@@ -58,19 +63,21 @@ let lib = {
     CC="clang",
     CPP="clang-cpp",
     CXX="clang++",
+    AS="llvm-as",
+
     AR="llvm-ar",
     NM="llvm-nm",
     OBJCOPY="llvm-objcopy",
     OBJDUMP="llvm-objdump",
     RANLIB="llvm-ranlib",
     READELF="llvm-readelf",
-    LDFLAGS=[ "-fuse-ld=lld", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+    LDFLAGS=[ "-fuse-ld=lld", "-stdlib=libc++","-rtlib=compiler-rt", "-unwindlib=libunwind"],
   },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
     name | String,
     buildInputs | Array Dyn | default = [],
-    buiildDir|nullOrString|default=null,
+    buildDir|nullOrString|default=null,
     buildEnv | BuildEnv | default = if (isStatic && isLlvm) then staticLlvmEnv else (if isStatic then staticEnv else if isLlvm then llvmEnv else nullEnv),
     extraEnv | { _ : StringOrArray } | default
       = (
@@ -78,7 +85,7 @@ let lib = {
           {}
         else
           {
-           # LIBDIR = "/tmp/workdir/sysroot/usr/lib",
+            LIBDIR = "/tmp/workdir/sysroot/usr/lib",
             PATH = "/tmp/workdir/sysroot/usr/bin:${PATH}",
             SYSROOT = "/tmp/workdir/sysroot",
           }
@@ -144,7 +151,7 @@ let lib = {
       done
       "%
           ],
-    configurePhase | Array String | default = ( if (buiildDir==null) then [] else ["cd %{buiildDir}"]),
+    configurePhase | Array String | default = ( if (buildDir==null) then [] else ["cd %{buildDir}"]),
     buildPhase | Array String | default = [],
     installPhase | Array String | default = [],
     phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, configurePhase, buildPhase, installPhase],
@@ -161,7 +168,8 @@ let lib = {
     isLlvm | Bool | default = true,
     enableParallel | Bool | default = true,
     enableCcache | Bool | default = true,
-    buildInChroot | Bool | default = true
+    buildInChroot | Bool | default = (stage!=0),
+    stage|default=-1,
   },
   MakePackage =
     Package

@@ -13,6 +13,8 @@ let llvmBase | lib.CmakePackage
       }
     ],
     isStatic | default = lib.CmakePackage.isStatic,
+    isLlvm | default = lib.CmakePackage.isLlvm,
+
     enableCcache | default = lib.CmakePackage.enableCcache,
 
     cmakeArgs | priority -10
@@ -64,37 +66,41 @@ let llvmBase | lib.CmakePackage
           "-DLLVM_ENABLE_LIBCXX=ON",
           "-DCOMPILER_RT_BUILD_GWP_ASAN=OFF",
           "-DCOMPILER_RT_BUILD_SANITIZERS=OFF",
+          "-DCOMPILER_RT_SCUDO_STANDALONE_BUILD_SHARED:BOOL=OFF",
+          "-DCOMPILER_RT_SANITIZERS_TO_BUILD:STRING=''",
+          "-DCOMPILER_RT_BUILD_CTX_PROFILE:BOOL=OFF",
           "-DCOMPILER_RT_BUILD_XRAY=OFF",
           "-DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
           "-DCOMPILER_RT_BUILD_PROFILE=OFF",
-          "-DDCOMPILER_RT_BUILD_MEMPROF=OFF",
+          "-DCOMPILER_RT_BUILD_MEMPROF=OFF",
+          "-DCLANG_BUILD_TOOLS:BOOL=ON",
           "-DCLANG_TOOL_APINOTES_TEST_BUILD=OFF",
-          "-DCLANG_TOOL_ARCMT_TEST_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_CHECK_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_DIFF_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_EXTDEF_MAPPING_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_FORMAT_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_FORMAT_VS_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_FUZZER_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_IMPORT_TEST_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_LINKER_WRAPPER_BUILD=OFF",
-          "-DCLANG_TOOL_CLANG_NVLINK_WRAPPER_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_OFFLOAD_BUNDLER_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_OFFLOAD_PACKAGER_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_REFACTOR_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_RENAME_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_REPL_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_SCAN_DEPS_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_CLANG_SHLIB_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_ARCMT_TEST_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_CHECK_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_DIFF_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_EXTDEF_MAPPING_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_FORMAT_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_FORMAT_VS_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_FUZZER_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_IMPORT_TEST_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_LINKER_WRAPPER_BUILD=OFF",
+          # "-DCLANG_TOOL_CLANG_NVLINK_WRAPPER_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_OFFLOAD_BUNDLER_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_OFFLOAD_PACKAGER_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_REFACTOR_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_RENAME_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_REPL_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_SCAN_DEPS_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_CLANG_SHLIB_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_C_ARCMT_TEST_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_C_INDEX_TEST_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_DIAGTOOL_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_DICTIONARY_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_DRIVER_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_HANDLE_CXX_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_HANDLE_LLVM_BUILD:BOOL=OFF",
-          "-DCLANG_TOOL_LIBCLANG_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_DIAGTOOL_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_DICTIONARY_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_DRIVER_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_HANDLE_CXX_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_HANDLE_LLVM_BUILD:BOOL=OFF",
+          # "-DCLANG_TOOL_LIBCLANG_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_NVPTX_ARCH_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_SCAN_BUILD_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_SCAN_BUILD_PY_BUILD:BOOL=OFF",
@@ -187,7 +193,27 @@ let llvmBase | lib.CmakePackage
           "-DLLVM_TOOL_VFABI_DEMANGLE_FUZZER_BUILD:BOOL=OFF",
           "-DLLVM_TOOL_XCODE_TOOLCHAIN_BUILD:BOOL=OFF",
           # "-DLLVM_TOOL_YAML2OBJ_BUILD:BOOL=OFF",
+                       "-DLIBCXX_HAS_MUSL_LIBC:BOOL=ON",
+
         ]
+        @ (
+          if isLlvm then
+            [
+              "-DLLVM_ENABLE_LLD=ON",
+              "-DLLVM_ENABLE_LIBCXX=ON",
+              "-DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON",
+              "-DCLANG_DEFAULT_UNWINDLIB=libunwind",
+              "-DCLANG_DEFAULT_CXX_STDLIB=libc++",
+              "-DCLANG_DEFAULT_RTLIB=compiler-rt",
+              "-DCLANG_DEFAULT_LINKER=lld",
+              "-DLIBCXXABI_USE_COMPILER_RT:BOOL=ON",
+              "-DLIBCXX_USE_COMPILER_RT:BOOL=ON",
+"-DLIBUNWIND_USE_COMPILER_RT:BOOL=ON",
+
+            ]
+          else
+            []
+        )
         @ (
           if isStatic then
             [
@@ -200,6 +226,14 @@ let llvmBase | lib.CmakePackage
               "-DLLVM_ENABLE_PIC=OFF",
               "-DLLVM_BUILD_LLVM_DYLIB=OFF",
               "-DLLVM_LINK_LLVM_DYLIB=OFF",
+              "-DLIBCXXABI_ENABLE_SHARED:BOOL=OFF",
+              "-DLIBCXX_ENABLE_SHARED:BOOL=OFF",
+              "-DLIBCXXABI_INSTALL_SHARED_LIBRARY:BOOL=OFF",
+              "-DLIBCXXABI_ENABLE_SHARED:BOOL=OFF",
+              "-DLIBCXXABI_ENABLE_STATIC_UNWINDER:BOOL=ON",
+              "-DLIBCXX_ENABLE_SHARED:BOOL=OFF",
+              "-DLIBCXX_INSTALL_SHARED_LIBRARY:BOOL=OFF",
+              "-DLIBUNWIND_ENABLE_SHARED:BOOL=OFF",
             ]
           else
             []
@@ -211,7 +245,9 @@ let llvmBase | lib.CmakePackage
     # unpackPhase=(lib.CmakePackage.unpackPhase ++ "export SRC=" )
     # configurePhase=(["export SRC=\"${SRC}/llvm\""]@lib.CmakePackage.configurePhase),
 
-    configurePhase | priority -9 = ["cmake ${SRC}/llvm %{std.string.join (constants.buildFlagSep) cmakeArgs}"],
+    configurePhase | priority -9 = [
+      "export DESTDIR=/tmp/workdir/out/destdir",
+      "cmake ${SRC}/llvm %{std.string.join (constants.buildFlagSep) cmakeArgs}"],
   }
   in
 llvmBase

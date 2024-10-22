@@ -21,6 +21,7 @@ let shellFuntions={
         source="${source_dir}/${source_file}"
 
         srcdest=${2}
+        cmd="cp"
         if [ -d ${source} ]; then 
             cmd="cp -r"
         fi 
