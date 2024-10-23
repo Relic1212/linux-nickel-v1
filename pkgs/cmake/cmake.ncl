@@ -18,7 +18,37 @@ let cmakeCmakeArgs = [
   "-DBUILD_CursesDialog=OFF",
   "-DBUILD_QtDialog=OFF",
   "-DBUILD_CURL_EXE=OFF",
-  "-DCMake_BUILD_DEVELOPER_REFERENCE_HTML=OFF"
+  "-DCMake_BUILD_DEVELOPER_REFERENCE_HTML=OFF",
+  "-DENABLE_ZSTD:BOOL=OFF",
+  "-DENABLE_OPENSSL:BOOL=OFF",
+  "-DENABLE_LIBB2:BOOL=OFF",
+  "-DENABLE_LZ4:BOOL=OFF",
+  "-DENABLE_LZMA:BOOL=OFF",
+  "-DENABLE_BZip2:BOOL=OFF",
+  "-DENABLE_LIBXML2:BOOL=OFF",
+  "-DENABLE_EXPAT:BOOL=OFF",
+  "-DENABLE_PCREPOSIX:BOOL=OFF",
+  "-DENABLE_LIBGCC:BOOL=OFF",
+  "-DENABLE_CNG:BOOL=OFF",
+  "-DENABLE_TAR:BOOL=OFF",
+  "-DENABLE_CPIO:BOOL=OFF",
+  "-DENABLE_CAT:BOOL=OFF",
+  "-DENABLE_UNZIP:BOOL=OFF",
+  "-DENABLE_XATTR:BOOL=OFF",
+  "-DENABLE_ACL:BOOL=OFF",
+  "-DENABLE_ICONV:BOOL=OFF",
+  "-DCMAKE_ASM_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+  "-DCMAKE_C_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+  "-DCMAKE_CXX_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+  "-DENABLE_IPV6:BOOL=OFF",
+  "-DBUILD_LIBCURL_DOCS:BOOL=OFF",
+  "-DBUILD_MISC_DOCS:BOOL=OFF",
+  "-DENABLE_CURL_MANUAL:BOOL=OFF",
+  "-DCURL_ENABLE_SSL:BOOL=OFF",
+  "-DUSE_LIBIDN2:BOOL=OFF",
+  "-DCURL_USE_LIBPSL:BOOL=OFF",
+  "-DCURL_USE_LIBSSH2:BOOL=OFF",
+  "-DCMake_BUILD_DEVELOPER_REFERENCE_HTML:BOOL=OFF",
 ]
 in
 {
@@ -28,7 +58,7 @@ in
       & {
         stage = 1,
         name = "cmake-stage-1",
-        extraEnv=std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" cmakeBase.extraEnv,
+        extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" cmakeBase.extraEnv,
         configureFlags =
           [
             "--prefix=/usr",
@@ -45,13 +75,12 @@ in
           ]
           @ cmakeCmakeArgs,
         buildInputs = [
-          (import "../busybox/busybox.ncl").busyboxStage0,
+          (import "../busybox/busybox-stage-0.ncl"),
           (import "../llvm/llvm-stage-0.ncl"),
-          (import "../musl/musl.ncl").muslStage1,
+          (import "../musl/musl-stage-0.ncl"),
           (import "../gnumake/gnumake.ncl").gnumakeStage1,
           (import "../ccache/ccache-bin.ncl"),
-          (import "../linux-headers/linux-headers.ncl").linuxHeadersStage1,
-
+          (import "../linux-headers/linux-headers-stage-1.ncl"),
         ]
       }
 }

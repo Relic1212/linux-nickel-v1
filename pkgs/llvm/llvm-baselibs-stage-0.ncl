@@ -43,7 +43,13 @@ let libs0 = (
 "-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
 
           ]
-        )
+        ),
+
+        buildInputs=[
+             (import "../musl/musl-stage-0.ncl"),
+      #   # pkgs.linuxHeadersStage0,
+       (import "../linux-headers/linux-headers-stage-0.ncl") #.linuxHeadersStage0,
+        ]
   }
 )
 in

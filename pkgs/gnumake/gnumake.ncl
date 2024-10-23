@@ -39,7 +39,7 @@ let gnumakePkgs = {
         "./make DESTDIR=${DEST} install"
       ],
       buildInputs = [
-        (import "../busybox/busybox.ncl").busyboxStage0,
+        (import "../busybox/busybox-stage-0.ncl"),
         (import "../llvm/llvm-stage-0.ncl"),
         (import "../musl/musl-stage-0.ncl"),
       ],

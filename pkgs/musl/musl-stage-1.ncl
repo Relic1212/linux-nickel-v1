@@ -1,6 +1,6 @@
 let muslBase = import "./musl-base.ncl"
 in
-let _muslStage1 =
+let muslStage1 =
   muslBase
   & {
     buildInputs = [
@@ -13,6 +13,5 @@ let _muslStage1 =
   }
 in
 
-{
-  # muslStage1=_muslStage1,
-}
+
+  muslStage1

@@ -5,8 +5,10 @@ in
 let llvmBase = import "./llvm-base.ncl"
 in
 let pkgs = {
-  muslStage0 = import "../musl/musl-stage-0.ncl",
-  linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
+  # muslStage0 = import "../musl/musl-stage-0.ncl",
+  # linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
+#  linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
+
 }
 in
 let libcxxStage0 | lib.CmakePackage
@@ -16,10 +18,12 @@ let libcxxStage0 | lib.CmakePackage
     & {
       buildInChroot = false,
       name = "llvm-stage-0",
-      buildInputs = [
-        pkgs.muslStage0,
-        pkgs.linuxHeadersStage0,
-      ],
+      # buildInputs = [
+      #   # pkgs.muslStage0,
+      #   (import "../musl/musl-stage-0.ncl"),
+      #   # pkgs.linuxHeadersStage0,
+      #   (import "../linux-headers/linux-headers.ncl").linuxHeadersStage0,
+      # ],
       buildEnv =
         let b = (
           (b2).buildEnv

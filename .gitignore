@@ -3,3 +3,4 @@ testing
 build/**
 build 
 build/
+test/

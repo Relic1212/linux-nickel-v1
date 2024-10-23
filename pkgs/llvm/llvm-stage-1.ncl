@@ -1,29 +1,49 @@
-let 
-#lib=import "../../nickellib/lib.ncl"
- lib = import "../../nickellib/lib.ncl"
-in
-let llvmBase=import "./llvm-base.ncl"
-in 
-let 
-pkgs={
-    muslStage0=import "../musl/musl-stage-0.ncl",
-    libcxx=import "libcxx.ncl"
-}
-in
 let
-llvmStage0|lib.CmakePackage=llvmBase&{
-    name="llvm-stage-0",
-    buildInputs=[
-        pkgs.muslStage0,
-        pkgs.libcxx
-    ],
-    cmakeArgs|priority -9 =(llvmBase.cmakeArgs) @[
-          "-DLLVM_TARGETS_TO_BUILD='X86'",
-          "-DLLVM_RUNTIMES='libunwind;libcxx;libcxxabi;compiler-rt'",
-          "-DLLVM_ENABLE_PROJECTS='clang;llvm;lld'",
+lib = import "../../nickellib/lib.ncl"
+in
+let llvmBase = import "./llvm-base.ncl"
 
-    ]
+in
+let llvmBaseTarget | lib.CmakePackage
+  =
+  let b2=(llvmBase &{isLlvm=true}) in
+    b2
+    & {
+     
+      cmakeArgs | priority -9
+        =
+          (llvmBase.cmakeArgs)
+          @ [
+            "-DLLVM_TARGETS_TO_BUILD='X86'",
+            # "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi'",
+            # "-DLLVM_ENABLE_PROJECTS='lld;clang;compiler-rt'",
+            # "-DLLVM_ENABLE_PROJECTS='lld;clang'",
+            "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
+            "-DCMAKE_ASM_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+            "-DCMAKE_C_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+            "-DCMAKE_CXX_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+             "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
+       "-DLLVM_ENABLE_PROJECTS='lld;clang'",
 
-}
+          ]
+    }
+  in
+let
+    llvmStage1|lib.CmakePackage=llvmBaseTarget&{
+        name="llvm-stage-1",
+        buildInputs=[
+                (import "../busybox/busybox-stage-0.ncl"),
+          (import "../llvm/llvm-stage-0.ncl"),
+          (import "../musl/musl-stage-1.ncl"),
+          (import "../gnumake/gnumake.ncl").gnumakeStage1,
+          (import "../ccache/ccache-bin.ncl"),
+          (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
+          (import "../cmake/cmake.ncl").cmakeStage1,
+          (import "../python/python.ncl").pythonStage1,
+
+        ],
+    }
+
 in 
-llvmStage0
+
+llvmStage1

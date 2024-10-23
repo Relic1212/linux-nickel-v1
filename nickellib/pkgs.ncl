@@ -14,7 +14,7 @@ compilerRtStage0=import "../pkgs/compiler-rt/compiler-rt-stage-0.ncl",
 binutilsStage0=(import "../pkgs/binutils/binutils.ncl").binutilsStage0,
 libsspNonsharedStage0=(import "../pkgs/libssp-nonshared/libssp-nonshared.ncl").libsspNonsharedStage0,
 
-busyboxStage0=(import "../pkgs/busybox/busybox.ncl").busyboxStage0,
+busyboxStage0=(import "../pkgs/busybox/busybox-stage-0.ncl"),
 gnumakeStage1=(import "../pkgs/gnumake/gnumake.ncl").gnumakeStage1,
 
 pythonStage1=(import "../pkgs/python/python.ncl").pythonStage1,
@@ -52,6 +52,11 @@ let pkgsArr=(std.record.values pkgs )@[
     (import "../pkgs/m4/m4.ncl").m4Stage1,
     (import "../pkgs/flex/flex.ncl").flexStage1,
     (import "../pkgs/bison/bison.ncl").bisonStage1,
+    #(import "../pkgs/llvm/llvm.ncl").llvmStage1,
+    (import "../pkgs/llvm/llvm-stage-1.ncl"),
+
+   # (import "../pkgs/ninja/ninja.ncl").ninjaStage1,
+
 
 
 ]

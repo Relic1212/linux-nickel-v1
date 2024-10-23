@@ -7,11 +7,14 @@ in
 b& {
     cmakeArgs|priority 1=b.cmakeArgs @[
            "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
-            "-DLLVM_ENABLE_PROJECTS='lld;clang;llvm'",
+            "-DLLVM_ENABLE_PROJECTS='lld;clang'",
             "-DCMAKE_SYSROOT=/tmp/workdir/sysroot"
 
     ],
     buildInputs|priority 1=b.buildInputs@[
+            (import "../musl/musl-stage-0.ncl"),
+      #   # pkgs.linuxHeadersStage0,
+        (import "../linux-headers/linux-headers-stage-0.ncl"), #.linuxHeadersStage0,
         import "./llvm-baselibs-stage-0.ncl",
         (import "../libssp-nonshared/libssp-nonshared.ncl").libsspNonsharedStage0
 

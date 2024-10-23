@@ -1,4 +1,11 @@
 
-let x= import "./linux-headers.ncl"
+let linuxHeadersBase = (import "./linux-headers-base.ncl")
 in 
-x.linuxHeadersStage0
+
+let 
+linuxHeadersStage0 = linuxHeadersBase & { buildInChroot = false, name = "linux-headers-stage-0", buildInputs = [
+    # pkgs.muslStage0
+     import "../musl/musl-stage-0.ncl"
+    ] }
+in
+linuxHeadersStage0

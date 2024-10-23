@@ -82,6 +82,7 @@ let lib = {
   Package = {
     name | String,
     buildInputs | Array Dyn | default = [],
+    buildInputNames|Array String|default=[],
     buildDir|nullOrString|default=null,
     buildEnv | BuildEnv | default = 
     

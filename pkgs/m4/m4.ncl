@@ -20,9 +20,9 @@ in
         stage=1,
         name="m4-stage-1",
         buildInputs=[
- (import "../busybox/busybox.ncl").busyboxStage0,
+ (import "../busybox/busybox-stage-0.ncl"),
       (import "../llvm/llvm-stage-0.ncl"),
-      (import "../musl/musl.ncl").muslStage1,
+      (import "../musl/musl-stage-1.ncl"),
       (import "../gnumake/gnumake.ncl").gnumakeStage1,
       (import "../ccache/ccache-bin.ncl"),
         ]
