@@ -29,20 +29,4 @@ libsspNonsharedBase|lib.Package={
 
     ]
 }in
-{
-libsspNonsharedStage0=libsspNonsharedBase&{
-    name="libssp-nonshared-stage-0",
-    buildEnv=libsspNonsharedBase.buildEnv&{
-        CFLAGS|priority 10 = libsspNonsharedBase.buildEnv.CFLAGS @[ "--sysroot=/tmp/workdir/sysroot"]
-        ,
-
-        LDFLAGS|priority 10=( lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" libsspNonsharedBase.buildEnv.LDFLAGS),
-    },
-    stage=0,
-    buildInputs=[
-        import "../musl/musl-stage-0.ncl",
-        import "../llvm/llvm-baselibs-stage-0.ncl",
-    ],
-}
-
-}
+libsspNonsharedBase

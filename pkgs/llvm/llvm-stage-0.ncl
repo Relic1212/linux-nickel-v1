@@ -16,7 +16,7 @@ b& {
       #   # pkgs.linuxHeadersStage0,
         (import "../linux-headers/linux-headers-stage-0.ncl"), #.linuxHeadersStage0,
         import "./llvm-baselibs-stage-0.ncl",
-        (import "../libssp-nonshared/libssp-nonshared.ncl").libsspNonsharedStage0
+        (import "../libssp-nonshared/libssp-nonshared-stage-0.ncl")
 
     ],
     buildEnv|priority 1=(b.buildEnv&{

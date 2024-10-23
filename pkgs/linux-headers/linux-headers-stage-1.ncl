@@ -37,11 +37,11 @@ let
         (import "../busybox/busybox-stage-0.ncl"),
         (import "../llvm/llvm-stage-0.ncl"),
         (import "../musl/musl-stage-1.ncl"),
-        (import "../gnumake/gnumake.ncl").gnumakeStage1,
+        (import "../gnumake/gnumake-stage-1.ncl"),
         (import "../ccache/ccache-bin.ncl"),
-        (import "../m4/m4.ncl").m4Stage1,
-        (import "../flex/flex.ncl").flexStage1,
-        (import "../bison/bison.ncl").bisonStage1,
+        (import "../m4/m4-stage-1.ncl"),
+        (import "../flex/flex-stage-1.ncl"),
+        (import "../bison/bison-stage-1.ncl"),
       ],
     }
 

@@ -7,7 +7,7 @@ let _muslStage1 =
       (import "../busybox/busybox-stage-0.ncl"),
       (import "../llvm/llvm-stage-0.ncl"),
       (import "../musl/musl-stage-0.ncl"),
-      (import "../gnumake/gnumake.ncl").gnumakeStage1,
+      (import "../gnumake/gnumake.ncl-stage-1"),
       (import "../ccache/ccache-bin.ncl"),
     ]
   }

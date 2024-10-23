@@ -80,6 +80,7 @@ let lib = {
   },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
+    pkgs|optional,
     name | String,
     buildInputs | Array Dyn | default = [],
     buildInputNames|Array String|default=[],

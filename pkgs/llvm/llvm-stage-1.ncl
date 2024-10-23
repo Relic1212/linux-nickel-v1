@@ -35,10 +35,10 @@ let
                 (import "../busybox/busybox-stage-0.ncl"),
           (import "../llvm/llvm-stage-0.ncl"),
           (import "../musl/musl-stage-1.ncl"),
-          (import "../gnumake/gnumake.ncl").gnumakeStage1,
+          (import "../gnumake/gnumake-stage-1.ncl"),
           (import "../ccache/ccache-bin.ncl"),
           (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
-          (import "../cmake/cmake.ncl").cmakeStage1,
+          (import "../cmake/cmake-stage-1.ncl"),
           (import "../python/python.ncl").pythonStage1,
 
         ],

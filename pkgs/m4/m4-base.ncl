@@ -15,17 +15,4 @@ let m4Base|lib.AutotoolsPackage={
 
 }
 in 
-{
-    m4Stage1|lib.AutotoolsPackage=m4Base&{
-        stage=1,
-        name="m4-stage-1",
-        buildInputs=[
- (import "../busybox/busybox-stage-0.ncl"),
-      (import "../llvm/llvm-stage-0.ncl"),
-      (import "../musl/musl-stage-1.ncl"),
-      (import "../gnumake/gnumake.ncl").gnumakeStage1,
-      (import "../ccache/ccache-bin.ncl"),
-        ]
-
-    }
-}
+m4Base
