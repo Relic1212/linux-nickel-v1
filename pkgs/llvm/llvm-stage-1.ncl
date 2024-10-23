@@ -39,7 +39,7 @@ let
           (import "../ccache/ccache-bin.ncl"),
           (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
           (import "../cmake/cmake-stage-1.ncl"),
-          (import "../python/python.ncl").pythonStage1,
+          (import "../python/python-stage-1.ncl"),
 
         ],
     }
