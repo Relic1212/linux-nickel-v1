@@ -1,27 +1,25 @@
-let 
-lib = import "../../nickellib/lib.ncl"
+let lib = import "../../nickellib/lib.ncl"
 in
 
 let pythonBase = import "python-base.ncl"
 in
-let 
-  pythonStage1 | lib.AutotoolsPackage
-    =
-      (pythonBase
-      & {
-        # enableCcache|force=false,
-        stage = 1,
-        buildInputs = [
-          (import "../busybox/busybox-stage-0.ncl"),
-          (import "../llvm/llvm-stage-0.ncl"),
-          (import "../musl/musl-stage-0.ncl"),
-          (import "../gnumake/gnumake-stage-1.ncl"),
-          (import "../ccache/ccache-bin.ncl"),
-        ],
-        configurePhase = (
-          (pythonBase.configurePhase)
-          @ [
-            m%"
+let pythonStage1 | lib.AutotoolsPackage
+  = (
+    pythonBase
+    & {
+      # enableCcache|force=false,
+      stage = 1,
+      buildInputs = [
+        (import "../busybox/busybox-stage-0.ncl"),
+        (import "../llvm/llvm-stage-0.ncl"),
+        (import "../musl/musl-stage-0.ncl"),
+        (import "../gnumake/gnumake-stage-1.ncl"),
+        (import "../ccache/ccache-bin.ncl"),
+      ],
+      configurePhase = (
+        (pythonBase.configurePhase)
+        @ [
+          m%"
         printf "
         *static*
         _random _randommodule.c
@@ -114,8 +112,9 @@ let
         _ctypes
         " > ./Modules/Setup.local
         "%
-          ]
-        ),
-      })
-in 
+        ]
+      ),
+    }
+  )
+  in
 pythonStage1

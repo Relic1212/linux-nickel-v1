@@ -60,8 +60,7 @@ let linuxHeadersBase | lib.MakePackage
   }
   in
 
-  linuxHeadersBase
-
+linuxHeadersBase
 
 # {
 #   linuxHeadersStage0 = linuxHeadersBase & { buildInChroot = false, name = "linux-headers-stage-0", buildInputs = [

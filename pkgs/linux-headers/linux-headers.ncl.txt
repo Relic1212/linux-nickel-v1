@@ -60,10 +60,16 @@ let linuxHeadersBase | lib.MakePackage
   }
   in
 {
-  linuxHeadersStage0 = linuxHeadersBase & { buildInChroot = false, name = "linux-headers-stage-0", buildInputs = [
-    # pkgs.muslStage0
-     import "../musl/musl-stage-0.ncl"
-    ] },
+  linuxHeadersStage0 =
+    linuxHeadersBase
+    & {
+      buildInChroot = false,
+      name = "linux-headers-stage-0",
+      buildInputs = [
+        # pkgs.muslStage0
+        import "../musl/musl-stage-0.ncl"
+      ]
+    },
 
   linuxHeadersStage1 =
     linuxHeadersBase

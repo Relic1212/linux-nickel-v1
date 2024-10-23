@@ -8,7 +8,7 @@ let libs0 = (
     name | priority 1 = "llvm-baselibs-stage-0",
     cmakeArgs | force
       =
-        let cma = b.cmakeArgs 
+        let cma = b.cmakeArgs
         #   lib.functions.replaceArrayElem
         #     "-DCLANG_BUILD_TOOLS:BOOL=ON"
         #     "-DCLANG_BUILD_TOOLS:BOOL=OFF"
@@ -38,19 +38,24 @@ let libs0 = (
             "-DLIBCXX_INSTALL_LIBRARY_DIR:STRING=lib",
             "-DLIBUNWIND_INSTALL_LIBRARY_DIR:STRING=lib",
             "-DCOMPILER_RT_INSTALL_BINARY_DIR:PATH=lib/bin",
-"-DCOMPILER_RT_INSTALL_DATA_DIR:PATH=share",
-"-DCOMPILER_RT_INSTALL_INCLUDE_DIR:PATH=include",
-"-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
-
+            "-DCOMPILER_RT_INSTALL_DATA_DIR:PATH=share",
+            "-DCOMPILER_RT_INSTALL_INCLUDE_DIR:PATH=include",
+            "-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
           ]
         ),
 
-        buildInputs=[
-             (import "../musl/musl-stage-0.ncl"),
-      #   # pkgs.linuxHeadersStage0,
-       (import "../linux-headers/linux-headers-stage-0.ncl") #.linuxHeadersStage0,
-        ]
+    #   buildInputs=[
+    #        (import "../musl/musl-stage-0.ncl"),
+    #  (import "../linux-headers/linux-headers-stage-0.ncl") #.linuxHeadersStage0,
+    #   ]
   }
 )
 in
-libs0
+{
+  muslStage0,
+  linuxHeadersStage0llvmBaselibsStage0 =
+    libs0
+    & {
+      buildInputs = [muslStage0, linuxHeadersStage0]
+    }
+}

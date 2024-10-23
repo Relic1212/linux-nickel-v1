@@ -87,7 +87,7 @@ let busyboxTarget | lib.MakePackage
           sha256sum = "b5b52c26069879e11a9ff1c182812774c2015a75a4fff1570b91ab71c1cbef52" #let s=import 'Raw "./files_minimal/busybox.config" in lib.functions.computeSha256 s
         }
       ],
-       buildDir = bbase.buildDir,
+      buildDir = bbase.buildDir,
 
       configurePhase = [
         "cd %{buildDir}",
@@ -101,7 +101,6 @@ let busyboxTarget | lib.MakePackage
     }
   in
 {
- busyboxBase=bbase ,
- busyboxBaseTarget=busyboxTarget,
-  
+  busyboxBase = bbase,
+  busyboxBaseTarget = busyboxTarget,
 }

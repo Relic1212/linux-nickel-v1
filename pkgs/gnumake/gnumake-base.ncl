@@ -8,9 +8,8 @@ let gnumakeSourceInput | lib.SourceInput
       sha256sum = "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
     }
   }
-in
-  let _g=gnumakeSourceInput
   in
-  
+let _g = gnumakeSourceInput
+in
 
-{gnumakeSourceInput=_g}
+{ gnumakeSourceInput = _g }

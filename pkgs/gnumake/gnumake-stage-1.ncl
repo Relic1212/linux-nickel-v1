@@ -1,55 +1,52 @@
-let 
-lib = import "../../nickellib/lib.ncl"
+let lib = import "../../nickellib/lib.ncl"
 in
 
-let {gnumakeSourceInput} = (import "gnumake-base.ncl")
-
+let { gnumakeSourceInput } = (import "gnumake-base.ncl")
 in
 
-let 
-gnumakeStage1 | lib.AutotoolsPackage
-    = {
-      name = "gnumake-stage-1",
+let gnumakeStage1 | lib.AutotoolsPackage
+  = {
+    name = "gnumake-stage-1",
 
-      sourceInputs = [
-        gnumakeSourceInput
-      ],
-      configureFlags |priority 10=[
+    sourceInputs = [
+      gnumakeSourceInput
+    ],
+    configureFlags | priority 10
+      =
+        [
           "ac_cv_path_GREP=/usr/bin/grep",
           "--disable-dependency-tracking"
-        ]@
-        (lib.AutotoolsPackage.configureFlags)
-        ,
-      enableCcache = false,
-      buildDir = "${SRC}",
-      configureScript="./configure",
+        ]
+        @ (lib.AutotoolsPackage.configureFlags),
+    enableCcache = false,
+    buildDir = "${SRC}",
+    configureScript = "./configure",
 
-      configurePhase = [
-        "cd %{buildDir}",
-      configureScript ++ " " ++ (std.string.join lib.constants.buildFlagSep configureFlags) 
-      ],
+    configurePhase = [
+      "cd %{buildDir}",
+      configureScript ++ " " ++ (std.string.join lib.constants.buildFlagSep configureFlags)
+    ],
 
-      buildPhase = [
-        "./build.sh",
-      ],
-      installPhase = [
-        "./make DESTDIR=${DEST} install"
-      ],
-      buildInputs = [
-        (import "../busybox/busybox-stage-0.ncl"),
-        (import "../llvm/llvm-stage-0.ncl"),
-        (import "../musl/musl-stage-0.ncl"),
-      ],
+    buildPhase = [
+      "./build.sh",
+    ],
+    installPhase = [
+      "./make DESTDIR=${DEST} install"
+    ],
+    buildInputs = [
+      (import "../busybox/busybox-stage-0.ncl"),
+      (import "../llvm/llvm-stage-0.ncl"),
+      (import "../musl/musl-stage-0.ncl"),
+    ],
 
-      buildEnv = (
-        lib.AutotoolsPackage.buildEnv
-        & {
+    buildEnv = (
+      lib.AutotoolsPackage.buildEnv
+      & {
 
-            LD="lld",
+        LD = "lld",
         #   LDFLAGS | priority 2
         #     = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/usr/bin/ld.lld" lib.AutotoolsPackage.buildEnv.LDFLAGS),
-        }
-      ),
-    }
-
-    in gnumakeStage1
+      }
+    ),
+  }
+  in gnumakeStage1

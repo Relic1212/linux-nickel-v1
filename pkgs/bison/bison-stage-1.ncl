@@ -13,4 +13,13 @@ let
         ],
     }
 in 
-bisonStage1
+{
+     muslStage1,gnumakeStage1,ccacheBin,m4Stage1,busyboxStage0,
+bisonStage1&{
+buildInputs=[
+          muslStage1,gnumakeStage1,ccacheBin,m4Stage1,busyboxStage0,
+
+]
+}
+
+}

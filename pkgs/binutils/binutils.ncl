@@ -9,8 +9,8 @@ in
 let binutilsBase | lib.AutotoolsPackage
   = {
     stage | default = lib.AutotoolsPackage.stage,
-    name |priority -1= "binutils",
-    isLlvm=false,
+    name | priority -1 = "binutils",
+    isLlvm = false,
     sourceInputs = [
       {
         src = {

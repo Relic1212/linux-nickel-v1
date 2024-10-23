@@ -1,6 +1,6 @@
 let lib = import "../../nickellib/lib.ncl"
 in
-let pythonBaseBase |lib.AutotoolsPackage
+let pythonBaseBase | lib.AutotoolsPackage
   = {
     stage | default = lib.AutotoolsPackage.stage,
     name = if stage == "final" then "python" else "python-stage-%{ std.to_string stage}",

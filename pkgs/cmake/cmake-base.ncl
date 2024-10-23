@@ -51,8 +51,9 @@ let cmakeCmakeArgs = [
   "-DCMake_BUILD_DEVELOPER_REFERENCE_HTML:BOOL=OFF",
 ]
 in
-let b=cmakeBase in let args=cmakeCmakeArgs in 
+let b = cmakeBase in
+let args = cmakeCmakeArgs in
 {
-  cmakeBase=b,
-  cmakeCmakeArgs=args
+  cmakeBase = b,
+  cmakeCmakeArgs = args
 }

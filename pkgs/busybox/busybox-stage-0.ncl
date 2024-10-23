@@ -1,14 +1,12 @@
-
 let lib = import "../../nickellib/lib.ncl"
 in
 
+let x = import "busybox-base.ncl" in
+let bbase = x.busyboxBase
+in
 
-let x=import "busybox-base.ncl" in 
-let bbase =x.busyboxBase
- in
-
-let 
-busyboxStage0 |lib.MakePackage=
+let busyboxStage0 | lib.MakePackage
+  =
     bbase
     & {
       name | priority 1 = "busybox-stage-0",
@@ -118,6 +116,5 @@ busyboxStage0 |lib.MakePackage=
             }
           )
     }
-
-    in 
-    busyboxStage0
+  in
+busyboxStage0

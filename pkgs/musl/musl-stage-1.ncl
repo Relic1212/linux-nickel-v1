@@ -13,5 +13,4 @@ let muslStage1 =
   }
 in
 
-
-  muslStage1
+muslStage1

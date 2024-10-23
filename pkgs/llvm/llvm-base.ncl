@@ -83,7 +83,7 @@ let llvmBase | lib.CmakePackage
           # "-DCLANG_TOOL_CLANG_FORMAT_VS_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_FUZZER_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_IMPORT_TEST_BUILD=OFF",
-           "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
+          "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
           # "-DCLANG_TOOL_CLANG_LINKER_WRAPPER_BUILD=OFF",
           # "-DCLANG_TOOL_CLANG_NVLINK_WRAPPER_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_OFFLOAD_BUNDLER_BUILD:BOOL=OFF",
@@ -255,9 +255,6 @@ let llvmBase | lib.CmakePackage
         (lib.CmakePackage).installPhase
         @ [
           "for f in $(find ${DEST}/usr/bin -type f);do\n\tstrip ${f} || echo \"not an elf\"\ndone",
-          
-
-
         ]
       ),
   }

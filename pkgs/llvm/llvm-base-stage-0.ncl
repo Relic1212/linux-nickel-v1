@@ -7,13 +7,12 @@ in
 let pkgs = {
   # muslStage0 = import "../musl/musl-stage-0.ncl",
   # linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
-#  linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
-
+  #  linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
 }
 in
 let libcxxStage0 | lib.CmakePackage
   =
-  let b2=(llvmBase &{isLlvm=true}) in
+    let b2 = (llvmBase & { isLlvm = true }) in
     b2
     & {
       buildInChroot = false,
@@ -29,13 +28,13 @@ let libcxxStage0 | lib.CmakePackage
           (b2).buildEnv
           & {
             CPPFLAGS = [
-             # "--sysroot=/tmp/workdir/sysroot/",
+              # "--sysroot=/tmp/workdir/sysroot/",
               # "-L/tmp/workdir/sysroot/usr/lib",
               "-I/tmp/workdir/sysroot/usr/include",
-               "-idirafter=/tmp/workdir/sysroot/"
+              "-idirafter=/tmp/workdir/sysroot/"
             ],
-            CFLAGS|priority 1 =(llvmBase.buildEnv.CFLAGS @ CPPFLAGS),
-            CXXFLAGS|priority 1 =(llvmBase.buildEnv.CXXFLAGS @ CPPFLAGS),
+            CFLAGS | priority 1 = (llvmBase.buildEnv.CFLAGS @ CPPFLAGS),
+            CXXFLAGS | priority 1 = (llvmBase.buildEnv.CXXFLAGS @ CPPFLAGS),
           }
         )
         in
