@@ -45,6 +45,12 @@ b& {
     LD|priority 1="/tmp/workdir/sysroot/usr/bin/ld.lld",
 
 
-    })
+    }),
+    installPhase|priority 1=b.installPhase @[
+        "cd ${DEST}/usr/bin",
+          "ln -s /usr/bin/clang cc",
+          "ln -s /usr/bin/clang++ c++",
+          "ln -s /usr/bin/clang-cpp cpp",
+    ]
     
 }

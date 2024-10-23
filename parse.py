@@ -43,7 +43,7 @@ def test():
     hbn= drvs["hashByName"]
     nbh =reverse_dict(hbn)
 
-    build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
+    build_in_bubblewrap.build(pn_hash,drvs['drvByHash'],nbh)
 
 if __name__=="__main__":
     test()

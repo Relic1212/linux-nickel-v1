@@ -1,5 +1,6 @@
 let lib = import "../../nickellib/lib.ncl"
 in
+
 let gnumakeSourceInput | lib.SourceInput
   = {
     src = {
@@ -8,35 +9,50 @@ let gnumakeSourceInput | lib.SourceInput
     }
   }
   in
-let
-gnumakePkgs={
- gnumakeStage1 | lib.AutotoolsPackage
-  = {
-    name = "gnumake-stage-1",
+let gnumakePkgs = {
+  gnumakeStage1 | lib.AutotoolsPackage
+    = {
+      name = "gnumake-stage-1",
 
-    sourceInputs = [
-      gnumakeSourceInput
-    ],
-    configureFlags =
-      (lib.AutotoolsPackage.configureFlags)
-      @ [
-        "ac_cv_path_GREP=/usr/bin/grep",
-        "--disable-dependency-tracking"
+      sourceInputs = [
+        gnumakeSourceInput
       ],
-    enableCcache = false,
-    buildDir = "${SRC}",
-    configurePhase = ["cd %{buildDir}"] @ lib.AutotoolsPackage.configurePhase,
-    buildPhase = [
-      "./build.sh",
-    ],
-    installPhase = [
-      "./make DESTDIR=${DEST} install"
-    ],
-    buildInputs = [
-      (import "../busybox/busybox.ncl").busyboxStage0,
-      (import "../llvm/llvm-stage-0.ncl"),
-      (import "../musl/musl-stage-0.ncl"),
-    ]
-  }
+      configureFlags |priority 10=[
+          "ac_cv_path_GREP=/usr/bin/grep",
+          "--disable-dependency-tracking"
+        ]@
+        (lib.AutotoolsPackage.configureFlags)
+        ,
+      enableCcache = false,
+      buildDir = "${SRC}",
+      configureScript="./configure",
+
+      configurePhase = [
+        "cd %{buildDir}",
+      configureScript ++ " " ++ (std.string.join lib.constants.buildFlagSep configureFlags) 
+      ],
+
+      buildPhase = [
+        "./build.sh",
+      ],
+      installPhase = [
+        "./make DESTDIR=${DEST} install"
+      ],
+      buildInputs = [
+        (import "../busybox/busybox.ncl").busyboxStage0,
+        (import "../llvm/llvm-stage-0.ncl"),
+        (import "../musl/musl-stage-0.ncl"),
+      ],
+
+      buildEnv = (
+        lib.AutotoolsPackage.buildEnv
+        & {
+
+            LD="lld",
+        #   LDFLAGS | priority 2
+        #     = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/usr/bin/ld.lld" lib.AutotoolsPackage.buildEnv.LDFLAGS),
+        }
+      ),
+    }
 }
-  in gnumakePkgs
+in gnumakePkgs

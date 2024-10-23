@@ -1,8 +1,11 @@
 let constants = import "./constants.ncl"
 in
+let _constants=constants
+in
 let shellFunctions = import "./shellFunctions.ncl"
 in
 let lib = {
+  constants=_constants,
   functions = {
     computeSha256 = (fun s => (std.hash 'Sha256) s),
     recordToHash = fun r => computeSha256 (std.serialize 'Json r),
@@ -72,13 +75,18 @@ let lib = {
     RANLIB="llvm-ranlib",
     READELF="llvm-readelf",
     LDFLAGS=[ "-fuse-ld=lld", "-stdlib=libc++","-rtlib=compiler-rt", "-unwindlib=libunwind"],
+    LD|default="lld",
+
   },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
     name | String,
     buildInputs | Array Dyn | default = [],
     buildDir|nullOrString|default=null,
-    buildEnv | BuildEnv | default = if (isStatic && isLlvm) then staticLlvmEnv else (if isStatic then staticEnv else if isLlvm then llvmEnv else nullEnv),
+    buildEnv | BuildEnv | default = 
+    
+    ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv))&( if ((isLlvm && buildInChroot) && (stage!=0) ) then {  } else {}  ))
+    ,
     extraEnv | { _ : StringOrArray } | default
       = (
         if buildInChroot then

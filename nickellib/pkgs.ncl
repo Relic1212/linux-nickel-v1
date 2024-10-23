@@ -6,7 +6,7 @@ let
 pkgs={
 musl-stage-0= import "../pkgs/musl/musl-stage-0.ncl",
 
-musl = import "../pkgs/musl/musl.ncl",
+# musl = import "../pkgs/musl/musl.ncl",
 llvmStage0 = import "../pkgs/llvm/llvm-stage-0.ncl",
 llvmBaselibsStage0 = import "../pkgs/llvm/llvm-baselibs-stage-0.ncl",
 linuxHeadersStage0=import "../pkgs/linux-headers/linux-headers-stage-0.ncl",
@@ -16,6 +16,10 @@ libsspNonsharedStage0=(import "../pkgs/libssp-nonshared/libssp-nonshared.ncl").l
 
 busyboxStage0=(import "../pkgs/busybox/busybox.ncl").busyboxStage0,
 gnumakeStage1=(import "../pkgs/gnumake/gnumake.ncl").gnumakeStage1,
+
+pythonStage1=(import "../pkgs/python/python.ncl").pythonStage1,
+
+
 }
 in 
 
@@ -24,7 +28,7 @@ let drvs =
     #drvUtils.pkgToFullDrv pkgs.musl ,
     #drvUtils.pkgToFullDrv pkgs.libcxx ,
     (drvUtils.toDrvsByhash pkgs.musl-stage-0)
-    &(drvUtils.toDrvsByhash pkgs.musl )
+    # &(drvUtils.toDrvsByhash pkgs.musl )
     &
     (drvUtils.toDrvsByhash pkgs.llvmStage0) 
     &(drvUtils.toDrvsByhash pkgs.linuxHeadersStage0) 
@@ -34,6 +38,7 @@ let drvs =
     &(drvUtils.toDrvsByhash pkgs.libsspNonsharedStage0)
     &(drvUtils.toDrvsByhash pkgs.busyboxStage0)
     &(drvUtils.toDrvsByhash pkgs.gnumakeStage1)
+    &(drvUtils.toDrvsByhash pkgs.pythonStage1)
 
 
 
@@ -42,4 +47,16 @@ let drvs =
 
 
 in 
-drvs
+let pkgsArr=(std.record.values pkgs )@[
+    (import "../pkgs/cmake/cmake.ncl").cmakeStage1,
+    (import "../pkgs/m4/m4.ncl").m4Stage1,
+    (import "../pkgs/flex/flex.ncl").flexStage1,
+    (import "../pkgs/bison/bison.ncl").bisonStage1,
+
+
+]
+in
+let 
+drvs2=std.record.merge_all (std.array.map (drvUtils.toDrvsByhash) pkgsArr)
+in
+drvs2

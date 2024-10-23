@@ -195,6 +195,7 @@ let llvmBase | lib.CmakePackage
           # "-DLLVM_TOOL_YAML2OBJ_BUILD:BOOL=OFF",
           "-DLIBCXX_HAS_MUSL_LIBC:BOOL=ON",
           "-DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF",
+          "-DLLVM_INSTALL_BINUTILS_SYMLINKS:BOOL=ON",
         ]
         @ (
           if isLlvm then
@@ -254,6 +255,9 @@ let llvmBase | lib.CmakePackage
         (lib.CmakePackage).installPhase
         @ [
           "for f in $(find ${DEST}/usr/bin -type f);do\n\tstrip ${f} || echo \"not an elf\"\ndone",
+          
+
+
         ]
       ),
   }

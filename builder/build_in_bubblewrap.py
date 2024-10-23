@@ -9,13 +9,15 @@ except ModuleNotFoundError:
 
 import os
 
+
 class LogFile:
-    def __init__(self,file_objects:str) -> None:
-        self.file_objects=file_objects
-    
-    def write(self,obj):
+    def __init__(self, file_objects: str) -> None:
+        self.file_objects = file_objects
+
+    def write(self, obj):
         for f in self.file_objects:
             f.write(obj)
+
 
 def get_src_dir(src_uri, src_uri_sha256sum) -> str:
     return dirpaths.get_basedir() + "/" + src_uri_sha256sum + "-src"
@@ -82,10 +84,11 @@ def copy_src(h, dest):
     src_p = src_dir + "/" + cont[0]
     subprocess.run(["cp", "-r", src_p, dest], check=True)
 
+
 def run_and_get_lines(**kwargs):
-    p=subprocess.Popen(**kwargs)
+    p = subprocess.Popen(**kwargs)
     for l in p.stdout.readline():
-        yield l 
+        yield l
         # yield {
         #     "type":"stdout",
         #   "line":l }
@@ -93,11 +96,34 @@ def run_and_get_lines(**kwargs):
     #     yield {
     #         "type":"stderr",
     #       "line":l }
-    status=p.wait()
+    status = p.wait()
     if not status:
-        raise subprocess.CalledProcessError(status,cmd=p.args)
+        raise subprocess.CalledProcessError(status, cmd=p.args)
 
-def build(h, pkg_drvs: str) -> None:
+
+def link_workdir(h, names_by_hashes):
+    workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
+
+    if names_by_hashes:
+        if h in names_by_hashes.keys():
+            name = names_by_hashes[h]
+
+            os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
+            subprocess.run(
+                ["rm", "-f", dirpaths.get_basedir() + "/tmp/" + name], check=True
+            )
+            subprocess.run(
+                [
+                    "ln",
+                    "-s",
+                    os.path.realpath(workdir),
+                    os.path.realpath(dirpaths.get_basedir()) + "/tmp/" + name,
+                ],
+                check=True,
+            )
+
+
+def build(h, pkg_drvs: str, names_by_hashes: dict[str, str] = None) -> None:
 
     # h=hash
     # drv_s=pkgs[hash]
@@ -108,8 +134,12 @@ def build(h, pkg_drvs: str) -> None:
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
     status_file = workdir + "/0.txt"
     if os.path.isfile(status_file):
+        link_workdir(h, names_by_hashes)
+
         return
     subprocess.run(["rm", "-rf", workdir], check=True)
+    for bi_drv in drv["buildInputDrvs"]:
+        build(h=bi_drv, pkg_drvs=pkg_drvs)
     os.makedirs(workdir + "/build")
     with open(workdir + "/drv.json", "w", encoding="utf-8") as f:
         json.dump(drv, f)
@@ -126,15 +156,19 @@ def build(h, pkg_drvs: str) -> None:
         ],
         check=True,
     )
+    link_workdir(h, names_by_hashes)
 
     os.makedirs(f"{workdir}/packed")
 
     os.makedirs(f"{workdir}/patches")
     os.makedirs(f"{workdir}/files")
+
     for bi_drv in drv["buildInputDrvs"]:
-        build(h=bi_drv, pkg_drvs=pkg_drvs)
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+        
+        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
         util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
+
     for si_drv in drv["sourceInputDrvs"]:
         dest = si_drv["dest"]
         si_h = si_drv["src"]
@@ -149,23 +183,23 @@ def build(h, pkg_drvs: str) -> None:
 
     patch_drvs = drv["patchDrvs"]
     for pd in patch_drvs:
-        patch_file=pd['file']
-        patch_sha256sum=pd['sha256sum']
-        pathc_uri=find_extrafile(patch_file,patch_sha256sum)
-        patch_dest=f"{workdir}/patches/{patch_file}"
+        patch_file = pd["file"]
+        patch_sha256sum = pd["sha256sum"]
+        pathc_uri = find_extrafile(patch_file, patch_sha256sum)
+        patch_dest = f"{workdir}/patches/{patch_file}"
         if os.path.exists(patch_dest):
             raise FileExistsError(patch_dest)
-        subprocess.run(["cp" ,pathc_uri, patch_dest],check=True)
+        subprocess.run(["cp", pathc_uri, patch_dest], check=True)
 
     extra_file_drvs = drv["extraFileDrvs"]
     for ef in extra_file_drvs:
-        ef_file=ef['file']
-        ef_sha256sum=ef['sha256sum']
-        ef_uri=find_extrafile(ef_file,ef_sha256sum)
-        ef_dest=f"{workdir}/files/{ef_file}"
+        ef_file = ef["file"]
+        ef_sha256sum = ef["sha256sum"]
+        ef_uri = find_extrafile(ef_file, ef_sha256sum)
+        ef_dest = f"{workdir}/files/{ef_file}"
         if os.path.exists(ef_dest):
             raise FileExistsError(ef_dest)
-        subprocess.run(["cp" ,ef_uri, ef_dest],check=True)
+        subprocess.run(["cp", ef_uri, ef_dest], check=True)
 
     build_command = drv["scriptContent"]
     build_script_path = workdir + "/build.sh"
@@ -205,9 +239,9 @@ def build(h, pkg_drvs: str) -> None:
                 "x86_64-pc-linux-musl-gcc",
             ]:
                 if os.path.exists(sysroot + "/usr/bin/" + compiler):
-                    cmd = ["ln, -s, /usr/bin/ccache", compiler]
+                    cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
                     directory = sysroot + "/usr/lib/ccache"
-                    senv = {"PATH": path}
+                    senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
                     subprocess.run(cmd, cwd=directory, env=senv, check=True)
 
             os.environ["CCACHE_DIR"] = "/tmp/ccache"
@@ -216,6 +250,8 @@ def build(h, pkg_drvs: str) -> None:
         senv = {}
         senv["PATH"] = path
         senv["HOME"] = "/"
+        if uses_ccache:
+            senv["CCACHE_DIR"] = "/tmp/ccache"
 
     else:
         senv = os.environ.copy()
@@ -233,18 +269,28 @@ def build(h, pkg_drvs: str) -> None:
     args += ["--chdir", "/tmp/workdir/build"]
     args += ["/tmp/workdir/build.sh"]
 
-    with open(f"{workdir}/b.log","a",encoding="utf-8") as f:
-        with open(f"{workdir}/error.log","a",encoding="utf-8") as f_error:
+    with open(f"{workdir}/b.log", "a", encoding="utf-8") as f:
+        with open(f"{workdir}/error.log", "a", encoding="utf-8") as f_error:
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
-            bwrap_wrap = bubblewrap.get_bwrap_wrap(sysroot=sysroot, extra_bwrap_args=args)
-            with subprocess.Popen(args=bwrap_wrap,env=senv,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,universal_newlines=True,text=True) as proc:
+            bwrap_wrap = bubblewrap.get_bwrap_wrap(
+                sysroot=sysroot, extra_bwrap_args=args
+            )
+            with subprocess.Popen(
+                args=bwrap_wrap,
+                env=senv,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                text=True,
+            ) as proc:
                 for line in proc.stdout:
-                    print(line,end="")
+                    print(line, end="")
                     f.write(line)
         f.close()
-        status=proc.returncode
-        if status!=0:
-            raise subprocess.CalledProcessError(status,cmd=bwrap_wrap)
+        status = proc.returncode
+        if status != 0:
+            print("env =", senv)
+            raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
     subprocess.run(["touch", status_file], check=True)
 
 
