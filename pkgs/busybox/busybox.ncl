@@ -23,14 +23,10 @@ let bbase | lib.MakePackage
     #   EXTRA_CXXFLAGS=buildEnv.CXXFLAGS,
 
     # },
-    enableParallel = false,
     makeArgs | priority 1
       =
-        ["-j1"]
-        @ (lib.MakePackage.makeArgs)
+        (lib.MakePackage.makeArgs)
         @ [
-          "V=1",
-          "-j1",
           "CC=%{buildEnv.CC} \\\n",
           "LD=%{buildEnv.CC} \\\n",
           "HOSTLD=%{buildEnv.CC} \\\n",
@@ -92,7 +88,7 @@ let bbase | lib.MakePackage
       extraFiles = [
         {
           file = "busybox-minimal.config",
-          sha256sum = "acac93411924c17a039f897f1ed7b17a19d97ed7ffee84200ae58ebd9c5be3ad" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
+          sha256sum = "cbb326d9da00d4d4b5584f7996bb3b291d11793d4d0d708b43d727f34d7ae427" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
         }
       ],
       buildInputs = [

@@ -33,7 +33,7 @@ let llvmBase | lib.CmakePackage
           "-DLLDB_EDITLINE_USE_WCHAR=1",
           "-DLLVM_ENABLE_LIBPFM=OFF",
           "-DLLVM_ENABLE_RTTI=OFF",
-          "-DLLVM_USE_SPLIT_DWARF=OFF",
+          "-DLLVM_USE_SPLIT_DWARF=ON",
           "-DLLVM_ENABLE_TERMINFO=OFF",
           "-DCOMPILER_RT_TERMINFO_LIB=OFF",
           "-DLLVM_LIBDIR_SUFFIX=",
@@ -83,15 +83,15 @@ let llvmBase | lib.CmakePackage
           # "-DCLANG_TOOL_CLANG_FORMAT_VS_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_FUZZER_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_IMPORT_TEST_BUILD=OFF",
-          # "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
+           "-DCLANG_TOOL_CLANG_INSTALLAPI_BUILD=OFF",
           # "-DCLANG_TOOL_CLANG_LINKER_WRAPPER_BUILD=OFF",
           # "-DCLANG_TOOL_CLANG_NVLINK_WRAPPER_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_OFFLOAD_BUNDLER_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_OFFLOAD_PACKAGER_BUILD:BOOL=OFF",
-          # "-DCLANG_TOOL_CLANG_REFACTOR_BUILD:BOOL=OFF",
+          "-DCLANG_TOOL_CLANG_REFACTOR_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_RENAME_BUILD:BOOL=OFF",
-          # "-DCLANG_TOOL_CLANG_REPL_BUILD:BOOL=OFF",
-          # "-DCLANG_TOOL_CLANG_SCAN_DEPS_BUILD:BOOL=OFF",
+          "-DCLANG_TOOL_CLANG_REPL_BUILD:BOOL=OFF",
+          "-DCLANG_TOOL_CLANG_SCAN_DEPS_BUILD:BOOL=OFF",
           # "-DCLANG_TOOL_CLANG_SHLIB_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_C_ARCMT_TEST_BUILD:BOOL=OFF",
           "-DCLANG_TOOL_C_INDEX_TEST_BUILD:BOOL=OFF",
@@ -193,8 +193,8 @@ let llvmBase | lib.CmakePackage
           "-DLLVM_TOOL_VFABI_DEMANGLE_FUZZER_BUILD:BOOL=OFF",
           "-DLLVM_TOOL_XCODE_TOOLCHAIN_BUILD:BOOL=OFF",
           # "-DLLVM_TOOL_YAML2OBJ_BUILD:BOOL=OFF",
-                       "-DLIBCXX_HAS_MUSL_LIBC:BOOL=ON",
-
+          "-DLIBCXX_HAS_MUSL_LIBC:BOOL=ON",
+          "-DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF",
         ]
         @ (
           if isLlvm then
@@ -208,8 +208,7 @@ let llvmBase | lib.CmakePackage
               "-DCLANG_DEFAULT_LINKER=lld",
               "-DLIBCXXABI_USE_COMPILER_RT:BOOL=ON",
               "-DLIBCXX_USE_COMPILER_RT:BOOL=ON",
-"-DLIBUNWIND_USE_COMPILER_RT:BOOL=ON",
-
+              "-DLIBUNWIND_USE_COMPILER_RT:BOOL=ON",
             ]
           else
             []
@@ -217,7 +216,7 @@ let llvmBase | lib.CmakePackage
         @ (
           if isStatic then
             [
-              "-DLLVM_BUILD_STATIC=ON",
+              "-DLLVM_BUILD_STATIC=OFF",
               "-DLLVM_ENABLE_SHARED_LIBS=OFF",
               "-DLLVM_USE_STATIC_ZSTD=ON",
               "-DCLANG_LINK_CLANG_DYLIB=OFF",
@@ -245,9 +244,18 @@ let llvmBase | lib.CmakePackage
     # unpackPhase=(lib.CmakePackage.unpackPhase ++ "export SRC=" )
     # configurePhase=(["export SRC=\"${SRC}/llvm\""]@lib.CmakePackage.configurePhase),
 
-    configurePhase | priority -9 = [
-      "export DESTDIR=/tmp/workdir/out/destdir",
-      "cmake ${SRC}/llvm %{std.string.join (constants.buildFlagSep) cmakeArgs}"],
+    configurePhase | priority -9
+      = [
+        "export DESTDIR=/tmp/workdir/out/destdir",
+        "cmake ${SRC}/llvm %{std.string.join (constants.buildFlagSep) cmakeArgs}"
+      ],
+    installPhase | priority -9
+      = (
+        (lib.CmakePackage).installPhase
+        @ [
+          "for f in $(find ${DEST}/usr/bin -type f);do\n\tstrip ${f} || echo \"not an elf\"\ndone",
+        ]
+      ),
   }
   in
 llvmBase
