@@ -1,23 +1,196 @@
-let 
-lib=import "../../nickellib/lib.ncl"
-in 
-let 
-bbase|lib.MakePackage={
-    name="busybox",
-    sourceInputs=[
-        {
-            src={
-                uri="https://busybox.net/downloads/busybox-1.37.0.tar.bz2",
-                sha256sum="1",
-            }
-        },
-        {
-            dest="patches",
-            src
+let lib = import "../../nickellib/lib.ncl"
+in
+let bbase | lib.MakePackage
+  = {
+    buildEnv =
+      (lib.MakePackage.buildEnv)
+      & {
+        CPPFLAGS | default = []
+      },
+    name = "busybox",
+    sourceInputs = [
+      {
+        src = {
+          uri = "https://busybox.net/downloads/busybox-1.37.0.tar.bz2",
+          sha256sum = "3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4",
         }
+      },
     ],
-    buildDir="/tmp/workdir/src",
-}
-in {
+    buildDir = "/tmp/workdir/src",
+    # extraEnv={
+    #   EXTRA_CFLAGS=buildEnv.CFLAGS,
+    #   EXTRA_LDFLAGS=buildEnv.LDFLAGS,
+    #   EXTRA_CXXFLAGS=buildEnv.CXXFLAGS,
 
+    # },
+    enableParallel = false,
+    makeArgs | priority 1
+      =
+        ["-j1"]
+        @ (lib.MakePackage.makeArgs)
+        @ [
+          "V=1",
+          "-j1",
+          "CC=%{buildEnv.CC} \\\n",
+          "LD=%{buildEnv.CC} \\\n",
+          "HOSTLD=%{buildEnv.CC} \\\n",
+          "CXX=%{buildEnv.CXX} \\\n",
+          "CPP=%{buildEnv.CXX} \\\n",
+          "HOSTCC=%{buildEnv.CC} \\\n",
+          "HOSTCXX=%{buildEnv.CXX} \\\n",
+          "LDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} \\\n",
+          "EXTRA_CPPFLAGS=%{ lib.functions.varToExportvar  buildEnv.CPPFLAGS} \\\n",
+          "CXXFLAGS=%{ lib.functions.varToExportvar  buildEnv.CXXFLAGS} \\\n",
+          "CFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
+          "HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} \\\n",
+          "HOSTCPPFLAGS=%{ lib.functions.varToExportvar  buildEnv.CPPFLAGS} \\\n",
+          "HOSTCXXFLAGS=%{ lib.functions.varToExportvar  buildEnv.CXXFLAGS} \\\n",
+          "HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
+          "EXTRA_LDFLAGS=%{ lib.functions.varToExportvar  buildEnv.LDFLAGS} \\\n",
+          "EXTRA_CXXFLAGS=%{ lib.functions.varToExportvar buildEnv.CXXFLAGS} \\\n",
+          "EXTRA_CFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
+          "SYSROOT=\"/tmp/workdir/sysroot\"",
+
+          # "CPPFLAGS=\"${CPPFLAGS}\"",
+          # "CFLAGS=\"${CFLAGS}\"",
+          # "CXXFLAGS=\"${CFLAGS}\"",
+          # "EXTRA_LDFLAGS=\"${LDFLAGS}\"",
+          # "EXTRA_CPPFLAGS=\"${CPPFLAGS}\"",
+          # "EXTRA_CFLAGS=\"${CFLAGS}\"",
+          # "EXTRA_CXXFLAGS=\"${CFLAGS}\"",
+        ]
+    # @(if std.record.has_field "LD" buildEnv then         ["LD=%{buildEnv.LD}"] else [])
+    ,
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/bin",
+      "install -m0755 ${SRC}/busybox ${DEST}/usr/bin",
+      "cd ${DEST}/usr/bin",
+      m%"for link in $(./busybox --list); do
+              ln -s /usr/bin/busybox ${link}
+           done"%,
+      "install -d -m0755 ${DEST}/bin",
+      "cd  ${DEST}/bin",
+      "ln -s /usr/bin/busybox sh",
+    ],
+
+    patches = [
+      {
+        file = "0001-mergedusr.patch",
+        sha256sum = "285e29f7248943689f4de3c092ef344d1ac8ace24f0cd0d3ab813a6959757a20" # let s=import 'Raw "./patches/0001-mergedusr.patch" in lib.functions.computeSha256 s
+      }
+    ],
+  }
+  in
+{
+  busybox = bbase,
+  busyboxStage0 =
+    bbase
+    & {
+      name | priority 1 = "busybox-stage-0",
+      stage = 0,
+      buildDir = bbase.buildDir,
+      extraFiles = [
+        {
+          file = "busybox-minimal.config",
+          sha256sum = "acac93411924c17a039f897f1ed7b17a19d97ed7ffee84200ae58ebd9c5be3ad" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
+        }
+      ],
+      buildInputs = [
+        import "../musl/musl-stage-0.ncl",
+        import "../llvm/llvm-stage-0.ncl",
+      ],
+      configurePhase = [
+        "cd %{buildDir}",
+        "unset CPPFLAGS",
+        "cp /tmp/workdir/files/busybox-minimal.config .config",
+        "sed -i 's@-falign-jumps=1@@g' Makefile.flags",
+        "sed -i 's@-falign-labels=1@@g' Makefile.flags",
+        "sed -i 's@-finline-limit=0@@g' Makefile.flags",
+
+        # "make " ++ (std.string.join " " bbase.makeArgs) ++ " defconfig"
+      ],
+
+      buildEnv | priority 1
+        =
+          let cf = [
+            "--sysroot=/tmp/workdir/sysroot/",
+            "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
+            # "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
+            # "-stdlib=libc++",
+            # "-rtlib=compiler-rt",
+            # "-unwindlib=libunwind",
+            "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
+            "-Qunused-arguments",
+            #"--no-default-config",
+            # "-nodefaultlibs",
+            # "-nostdlib",
+            # "--for-linker=-nostdlib",
+            "--for-linker=--sysroot=/tmp/workdir/sysroot/",
+            "--for-linker=-L/tmp/workdir/sysroot/usr/lib",
+          ]
+          in
+          let sr = " --sysroot=/tmp/workdir/sysroot"
+          in
+          (
+            bbase.buildEnv
+            & {
+
+              CPPFLAGS | priority 2
+                = [
+                  "--sysroot=/tmp/workdir/sysroot/",
+                  "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
+                  # "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
+                  # "-stdlib=libc++",
+                  # "-rtlib=compiler-rt",
+                  # "-unwindlib=libunwind",
+                  "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
+                  "-I/tmp/workdir/sysroot/usr/include",
+                  "-Qunused-arguments",
+                ],
+              CXXFLAGS | priority 2
+                =
+                  bbase.buildEnv.CXXFLAGS
+                  @ [
+                    "--sysroot=/tmp/workdir/sysroot/",
+                  ],
+
+              CFLAGS | priority 2
+                = (
+                  bbase.buildEnv.CFLAGS
+                  @ [
+                    "--sysroot=/tmp/workdir/sysroot/",
+                  ]
+                ),
+
+              LDFLAGS | priority 2
+                =
+                  #(lib.functions.replaceArrayElem "-rtlib=compiler-rt" "" (lib.functions.replaceArrayElem "-stdlib=libc++" "" (lib.functions.replaceArrayElem "-fuse-ld=lld" "" bbase.buildEnv.LDFLAGS)))
+                  # bbase.buildEnv.LDFLAGS
+                  (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" bbase.buildEnv.LDFLAGS)
+                  @ [
+                    "--sysroot=/tmp/workdir/sysroot/",
+                    "-L/tmp/workdir/sysroot/usr/lib/clang/19/lib/x86_64-unknown-linux-musl",
+                    "-L/tmp/workdir/sysroot/usr/lib",
+                    "-Qunused-arguments",
+                  ],
+
+              AR | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ar",
+              AS | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-as",
+
+              NM | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-nm",
+              OBJCOPY | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objcopy",
+              OBJDUMP | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objdump",
+              RANLIB | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ranlib",
+              READELF | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-readelf",
+              LD | priority 1 = "/tmp/workdir/sysroot/usr/bin/ld.lld",
+              # CC | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang%{sr}\"",
+              # CXX | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang++%{sr}\"",
+              # CPP | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang-cpp%{sr}\"",
+
+              CC | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang",
+              CXX | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang++",
+              CPP | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang-cpp",
+            }
+          )
+    }
 }

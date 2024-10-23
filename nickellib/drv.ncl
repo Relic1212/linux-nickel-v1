@@ -6,8 +6,8 @@ let DrvSchema = {
   buildInputDrvs | Array String,
   scriptContent | String,
   sourceInputDrvs | Array Dyn,
-  extraFileDrvs | Array String,
-  patchDrvs | Array String,
+  extraFileDrvs | Array Dyn,
+  patchDrvs | Array Dyn,
   buildInChroot | Bool,
   enableCcache | Bool
 }

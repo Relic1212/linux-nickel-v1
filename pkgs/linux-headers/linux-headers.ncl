@@ -20,9 +20,9 @@ let linuxHeadersBase | lib.MakePackage
         },
       },
     ],
-    buiildDir = "/tmp/workdir/src",
+    buildDir = "/tmp/workdir/src",
     configurePhase = [
-      "cd %{buiildDir}",
+      "cd %{buildDir}",
       "make defconfig"
     ],
     installPhase = [

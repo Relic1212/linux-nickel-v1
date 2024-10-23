@@ -14,6 +14,7 @@ compilerRtStage0=import "../pkgs/compiler-rt/compiler-rt-stage-0.ncl",
 binutilsStage0=(import "../pkgs/binutils/binutils.ncl").binutilsStage0,
 libsspNonsharedStage0=(import "../pkgs/libssp-nonshared/libssp-nonshared.ncl").libsspNonsharedStage0,
 
+busyboxStage0=(import "../pkgs/busybox/busybox.ncl").busyboxStage0,
 }
 in 
 
@@ -30,6 +31,8 @@ let drvs =
     &(drvUtils.toDrvsByhash pkgs.binutilsStage0)
     &(drvUtils.toDrvsByhash pkgs.llvmBaselibsStage0)
     &(drvUtils.toDrvsByhash pkgs.libsspNonsharedStage0)
+    &(drvUtils.toDrvsByhash pkgs.busyboxStage0)
+
 
 
    # ( std.record.map_values drvUtils.toDrvsByhash pkgs)

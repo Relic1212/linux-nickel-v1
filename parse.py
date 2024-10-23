@@ -27,12 +27,22 @@ def get_drvs():
     fp="nickellib/pkgs.ncl"
     c=nickel_to_json(fp)
     return c
-        
+def reverse_dict(d:dict[str,str])->dict[str,str]:
+    d2={}
+
+    for k in d:
+        v=d[k]
+        d2[v]=k 
+    return d2
+
 def test():
     pn=sys.argv[1]
     drvs=get_drvs()
     pn_hash = drvs['hashByName'][pn]
     print(pn_hash)
+    hbn= drvs["hashByName"]
+    nbh =reverse_dict(hbn)
+
     build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
 
 if __name__=="__main__":

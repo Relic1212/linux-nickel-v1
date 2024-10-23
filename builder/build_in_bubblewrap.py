@@ -148,8 +148,24 @@ def build(h, pkg_drvs: str) -> None:
         copy_src(h=si_h, dest=full_dest)
 
     patch_drvs = drv["patchDrvs"]
+    for pd in patch_drvs:
+        patch_file=pd['file']
+        patch_sha256sum=pd['sha256sum']
+        pathc_uri=find_extrafile(patch_file,patch_sha256sum)
+        patch_dest=f"{workdir}/patches/{patch_file}"
+        if os.path.exists(patch_dest):
+            raise FileExistsError(patch_dest)
+        subprocess.run(["cp" ,pathc_uri, patch_dest],check=True)
 
     extra_file_drvs = drv["extraFileDrvs"]
+    for ef in extra_file_drvs:
+        ef_file=ef['file']
+        ef_sha256sum=ef['sha256sum']
+        ef_uri=find_extrafile(ef_file,ef_sha256sum)
+        ef_dest=f"{workdir}/files/{ef_file}"
+        if os.path.exists(ef_dest):
+            raise FileExistsError(ef_dest)
+        subprocess.run(["cp" ,ef_uri, ef_dest],check=True)
 
     build_command = drv["scriptContent"]
     build_script_path = workdir + "/build.sh"
@@ -219,14 +235,13 @@ def build(h, pkg_drvs: str) -> None:
 
     with open(f"{workdir}/b.log","a",encoding="utf-8") as f:
         with open(f"{workdir}/error.log","a",encoding="utf-8") as f_error:
-            logfile=LogFile([f,sys.stderr])
-            errorfile=LogFile([f,f_error,sys.stderr])
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
             bwrap_wrap = bubblewrap.get_bwrap_wrap(sysroot=sysroot, extra_bwrap_args=args)
             with subprocess.Popen(args=bwrap_wrap,env=senv,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,universal_newlines=True,text=True) as proc:
                 for line in proc.stdout:
                     print(line,end="")
                     f.write(line)
+        f.close()
         status=proc.returncode
         if status!=0:
             raise subprocess.CalledProcessError(status,cmd=bwrap_wrap)

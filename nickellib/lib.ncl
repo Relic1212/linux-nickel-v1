@@ -16,7 +16,7 @@ let lib = {
       else
         "\"" ++ (std.string.join " " var) ++ "\""
     ),
-    createExport = (fun key env => (if (std.record.has_field key env) then ["export %{key}=%{varToExportvar env."%{key}"}"] else [])),
+    createExport = (fun key env => (if (std.record.has_field key env) then "export %{key}=%{varToExportvar env."%{key}"}" else "")),
     joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
     replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
     joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
@@ -143,14 +143,8 @@ let lib = {
         if (std.array.length patches) == 0 then
           []
         else
-          [
-            m%"
-
-      for p in %{std.string.join " " patches} do
-        (cd ${SRC}; patch -p1 < ${p})
-      done
-      "%
-          ],
+          (std.array.map (fun p=> "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches)
+      ,
     configurePhase | Array String | default = ( if (buildDir==null) then [] else ["cd %{buildDir}"]),
     buildPhase | Array String | default = [],
     installPhase | Array String | default = [],
@@ -162,8 +156,8 @@ let lib = {
     sourceInputs | Array SourceInput | default = [],
     patchDir | String | default = "%{name}/patches",
     filesDir | String | default = "%{name}/files",
-    patches | Array String | default = [],
-    extraFiles | Array String | default = [],
+    patches | Array {file|String,sha256sum|String,uri|String|optional} | default = [],
+    extraFiles | Array  {file|String,sha256sum|String,uri|String|optional}  | default = [],
     isStatic | Bool | default = true,
     isLlvm | Bool | default = true,
     enableParallel | Bool | default = true,
