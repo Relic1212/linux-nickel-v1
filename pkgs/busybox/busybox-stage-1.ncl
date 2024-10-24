@@ -21,11 +21,12 @@ let
 
    in 
    {
-    busyboxStage0,llvmStage1,muslStage1
-   busyboxStage1=_busyboxStage1&{[
+    busyboxStage0,llvmStage1,muslStage1,linuxHeadersStage1,ccacheBin,gnumakeStage1,
+   busyboxStage1=_busyboxStage1&{
     buildInputs=lib.biMap[
-    busyboxStage0,llvmStage1,muslStage1
+    busyboxStage0,llvmStage1,muslStage1,linuxHeadersStage1,ccacheBin,gnumakeStage1
 
-    ]
-   ]}
+    
+       ]
+   }
    }

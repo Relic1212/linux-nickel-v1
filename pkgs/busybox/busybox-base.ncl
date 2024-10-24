@@ -84,7 +84,7 @@ let busyboxTarget | lib.MakePackage
       extraFiles = [
         {
           file = "busybox.config",
-          sha256sum = "b5b52c26069879e11a9ff1c182812774c2015a75a4fff1570b91ab71c1cbef52" #let s=import 'Raw "./files_minimal/busybox.config" in lib.functions.computeSha256 s
+          sha256sum = "f457f5f43dabb9bbda657e542c76553ced78ecfbd739ca216ac594a622779e96" #let s=import 'Raw "./files_minimal/busybox.config" in lib.functions.computeSha256 s
         }
       ],
       buildDir = bbase.buildDir,

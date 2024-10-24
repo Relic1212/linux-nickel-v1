@@ -9,19 +9,21 @@ let _pkgsArray = [
   import "../pkgs/linux-headers/linux-headers-stage-0.ncl",
   import "../pkgs/linux-headers/linux-headers-stage-1.ncl",
 
-  (import "../pkgs/libssp-nonshared/libssp-nonshared-stage-0.ncl"),
-  (import "../pkgs/busybox/busybox-stage-0.ncl"),
-  (import "../pkgs/gnumake/gnumake-stage-1.ncl"),
-  (import "../pkgs/ccache/ccache-bin.ncl"),
+  import "../pkgs/libssp-nonshared/libssp-nonshared-stage-0.ncl",
+  import "../pkgs/busybox/busybox-stage-0.ncl",
+  import "../pkgs/busybox/busybox-stage-1.ncl",
 
-  (import "../pkgs/python/python-stage-1.ncl"),
-  (import "../pkgs/cmake/cmake-stage-1.ncl"),
-  (import "../pkgs/m4/m4-stage-1.ncl"),
-  (import "../pkgs/flex/flex-stage-1.ncl"),
-  (import "../pkgs/bison/bison-stage-1.ncl"),
-  (import "../pkgs/llvm/llvm-stage-1.ncl"),
-  (import "../pkgs/ninja/ninja-stage-1.ncl"),
-  (import "../pkgs/samurai/samurai.ncl"),
+  import "../pkgs/gnumake/gnumake-stage-1.ncl",
+  import "../pkgs/ccache/ccache-bin.ncl",
+
+  import "../pkgs/python/python-stage-1.ncl",
+  import "../pkgs/cmake/cmake-stage-1.ncl",
+  import "../pkgs/m4/m4-stage-1.ncl",
+  import "../pkgs/flex/flex-stage-1.ncl",
+  import "../pkgs/bison/bison-stage-1.ncl",
+  import "../pkgs/llvm/llvm-stage-1.ncl",
+  import "../pkgs/ninja/ninja-stage-1.ncl",
+import "../pkgs/samurai/samurai.ncl",
 
 
   # {
