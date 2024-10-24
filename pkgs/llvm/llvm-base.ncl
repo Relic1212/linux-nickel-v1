@@ -204,7 +204,7 @@ let llvmBase | lib.CmakePackage
               "-DLLVM_ENABLE_LLD=ON",
               "-DLLVM_ENABLE_LIBCXX=ON",
               "-DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON",
-              # undefined symbol: typeinfo 
+              # undefined symbol: typeinfo
               # "-DLIBCXX_ENABLE_EXCEPTIONS:BOOL=OFF",
               # "-DLIBCXX_ENABLE_RTTI:BOOL=OFF",
               "-DLIBCXX_INCLUDE_TESTS:BOOL=OFF",

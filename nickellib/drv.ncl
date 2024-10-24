@@ -18,7 +18,7 @@ let drvUtils = {
   drvToJson = (fun drv => std.serialize 'Json drv),
   drvToHash = (fun drv => let j = drvToJson drv in jsonToHash j),
   pkgToHash = (fun p => let drv = pkgToDrv p in drvToHash drv),
-  sortStringArray=(fun arr => (std.array.sort std.string.compare arr)),
+  sortStringArray = (fun arr => (std.array.sort std.string.compare arr)),
   pkgOrHashToHash = (fun ps =>
     (
       if (std.is_string ps) then

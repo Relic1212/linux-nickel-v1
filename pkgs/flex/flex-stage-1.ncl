@@ -1,4 +1,3 @@
-
 let lib = import "../../nickellib/lib.ncl"
 in
 let flexBase = import "flex-base.ncl" in
@@ -27,13 +26,14 @@ in
   flexStage1 =
     _flexStage1
     & {
-      buildInputs = lib.biMap [
-        llvmStage0,
-        muslStage1,
-        gnumakeStage1,
-        ccacheBin,
-        m4Stage1,
-        busyboxStage0,
-      ]
+      buildInputs =
+        lib.biMap [
+          llvmStage0,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+          m4Stage1,
+          busyboxStage0,
+        ]
     }
 }

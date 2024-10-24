@@ -44,40 +44,40 @@ let _samurai | lib.MakePackage
           gnumakeStage1
         ]
     },
-#   muslStage0,
-#   samuraiStage0 =
-#     _samurai
-#     & {
-#       stage = 0,
-#       buildEnv | priority 1
-#         =
-#           let flags = [
-#             "-nostdlib",
-#             "-nostdinc",
-#             "--sysroot=/tmp/workdir/sysroot",
-#             "-I/tmp/workdir/sysroot/usr/include"
-#           ]
-#           in
-#           _samurai.buildEnv
-#           & {
-#             CFLAGS | priority 1
-#               =
-#                 _samurai.buildEnv.CFLAGS @ flags,
-#             CPPFLAGS | priority 1
-#               =
-#                 (if (std.record.has_field "CPPFLAGS" _samurai.buildEnv) then _samurai.buildEnv.CPPFLAGS else [])
-#                 @ flags,
-#             LDFLAGS | priority 1 = _samurai.buildEnv.LDFLAGS @ [
-#      "-nostdlib",
-#             "-nostdinc",
-#             "--sysroot=/tmp/workdir/sysroot",
-#             "-L/tmp/workdir/sysroot/usr/lib",
-#             "-lc",
-#             ],
-#           },
-#       buildInputs =
-#         lib.biMap [
-#           muslStage0
-#         ]
-#     }
+  #   muslStage0,
+  #   samuraiStage0 =
+  #     _samurai
+  #     & {
+  #       stage = 0,
+  #       buildEnv | priority 1
+  #         =
+  #           let flags = [
+  #             "-nostdlib",
+  #             "-nostdinc",
+  #             "--sysroot=/tmp/workdir/sysroot",
+  #             "-I/tmp/workdir/sysroot/usr/include"
+  #           ]
+  #           in
+  #           _samurai.buildEnv
+  #           & {
+  #             CFLAGS | priority 1
+  #               =
+  #                 _samurai.buildEnv.CFLAGS @ flags,
+  #             CPPFLAGS | priority 1
+  #               =
+  #                 (if (std.record.has_field "CPPFLAGS" _samurai.buildEnv) then _samurai.buildEnv.CPPFLAGS else [])
+  #                 @ flags,
+  #             LDFLAGS | priority 1 = _samurai.buildEnv.LDFLAGS @ [
+  #      "-nostdlib",
+  #             "-nostdinc",
+  #             "--sysroot=/tmp/workdir/sysroot",
+  #             "-L/tmp/workdir/sysroot/usr/lib",
+  #             "-lc",
+  #             ],
+  #           },
+  #       buildInputs =
+  #         lib.biMap [
+  #           muslStage0
+  #         ]
+  #     }
 }

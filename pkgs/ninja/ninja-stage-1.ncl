@@ -22,37 +22,39 @@ let ninjaBase | lib.Package
       "sed -i 's@platform.supports_ninja_browse()@False@g' configure.py",
       "./configure.py --bootstrap"
     ],
-    installPhase=[
+    installPhase = [
       "echo 'installing directory'",
       "install -d -m0755 ${DEST}/usr/bin",
       "echo 'installing ninja'",
-
-      "install -m0755 ./ninja  ${DEST}/usr/bin", 
-
+      "install -m0755 ./ninja  ${DEST}/usr/bin",
     ]
   }
   in
-let 
-_ninjaStage1 =
-    ninjaBase
-    & {
-      stage = 1,
-      name | priority 1 = "ninja-stage-1",
-
-    
-    }
-  in 
+let _ninjaStage1 =
+  ninjaBase
+  & {
+    stage = 1,
+    name | priority 1 = "ninja-stage-1",
+  }
+in
 {
   muslStage0,
-  busyboxStage0,pythonStage1,llvmStage0,ccacheBin,
- ninjaStage1 =
+  busyboxStage0,
+  pythonStage1,
+  llvmStage0,
+  ccacheBin,
+  ninjaStage1 =
     _ninjaStage1
     & {
-     
 
-      buildInputs |priority 10= lib.biMap [muslStage0,
-        busyboxStage0,pythonStage1,llvmStage0,ccacheBin
-
-      ],
+      buildInputs | priority 10
+        =
+          lib.biMap [
+            muslStage0,
+            busyboxStage0,
+            pythonStage1,
+            llvmStage0,
+            ccacheBin
+          ],
     }
 }

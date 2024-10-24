@@ -8,7 +8,7 @@ let libs0 = (
     name | priority 1 = "llvm-baselibs-stage-0",
     cmakeArgs | force
       =
-        let cma =  (lib.functions.replaceArrayElem "-DLLVM_TARGETS_TO_BUILD='X86'" "-DLLVM_TARGETS_TO_BUILD=\"\""  b.cmakeArgs)
+        let cma = (lib.functions.replaceArrayElem "-DLLVM_TARGETS_TO_BUILD='X86'" "-DLLVM_TARGETS_TO_BUILD=\"\"" b.cmakeArgs)
         #   lib.functions.replaceArrayElem
         #     "-DCLANG_BUILD_TOOLS:BOOL=ON"
         #     "-DCLANG_BUILD_TOOLS:BOOL=OFF"
@@ -27,7 +27,7 @@ let libs0 = (
         (
           cma
           @ [
-             "-DCMAKE_ASM_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
+            "-DCMAKE_ASM_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
             "-DCMAKE_C_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
             "-DCMAKE_CXX_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
             "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;libunwind'",

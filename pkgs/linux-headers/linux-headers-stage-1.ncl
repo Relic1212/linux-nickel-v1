@@ -1,4 +1,3 @@
-
 let lib = import "../../nickellib/lib.ncl"
 in
 let linuxHeadersBase = (import "./linux-headers-base.ncl")
@@ -46,11 +45,27 @@ let _linuxHeadersStage1 =
 in
 {
 
-  busyboxStage0,llvmStage0,muslStage1,gnumakeStage1,ccacheBin,m4Stage1,flexStage1,bisonStage1,
-linuxHeadersStage1=_linuxHeadersStage1&{
-  buildInputs=lib.biMap[
-      busyboxStage0,llvmStage0,muslStage1,gnumakeStage1,ccacheBin,m4Stage1,flexStage1,bisonStage1,
-
-  ]
-}
+  busyboxStage0,
+  llvmStage0,
+  muslStage1,
+  gnumakeStage1,
+  ccacheBin,
+  m4Stage1,
+  flexStage1,
+  bisonStage1,
+  linuxHeadersStage1 =
+    _linuxHeadersStage1
+    & {
+      buildInputs =
+        lib.biMap [
+          busyboxStage0,
+          llvmStage0,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+          m4Stage1,
+          flexStage1,
+          bisonStage1,
+        ]
+    }
 }

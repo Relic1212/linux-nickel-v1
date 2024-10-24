@@ -18,9 +18,8 @@ let _cmakeStage1 | lib.AutotoolsPackage
           "--no-debugger",
           "--",
           "-G Ninja",
-           "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
-           "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
-
+          "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
+          "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
           "-DCMAKE_BUILD_TYPE=Release",
           "-DBUILD_SHARED_LIBS:BOOL=OFF",
           "-DBUILD_STATIC_LIBS:BOOL=ON",
@@ -30,13 +29,12 @@ let _cmakeStage1 | lib.AutotoolsPackage
         ]
         @ misc.cmakeCmakeArgs,
 
-        buildPhase=[
-          "ninja"
-        ],
-        installPhase=[
-          "DESTDIR=${DEST} ninja install"
-
-        ],
+      buildPhase = [
+        "ninja"
+      ],
+      installPhase = [
+        "DESTDIR=${DEST} ninja install"
+      ],
       # buildInputs = [
       #   (import "../busybox/busybox-stage-0.ncl"),
       #   (import "../llvm/llvm-stage-0.ncl"),
@@ -48,13 +46,27 @@ let _cmakeStage1 | lib.AutotoolsPackage
     }
   )
   in
-  {
-    busyboxStage0,llvmStage0,muslStage0,gnumakeStage1,ninjaStage1,samuraiStage1,ccacheBin , linuxHeadersStage1,
-cmakeStage1=_cmakeStage1&{
-  # extraEnv|priority 1=misc.cmakeBase.extraEnv&{MAKE="ninja"},
-  buildInputs=lib.biMap [
-    busyboxStage0,llvmStage0,muslStage0,samuraiStage1,ccacheBin ,linuxHeadersStage1,
-
-  ]
+{
+  busyboxStage0,
+  llvmStage0,
+  muslStage0,
+  gnumakeStage1,
+  ninjaStage1,
+  samuraiStage1,
+  ccacheBin,
+  linuxHeadersStage1,
+  cmakeStage1 =
+    _cmakeStage1
+    & {
+      # extraEnv|priority 1=misc.cmakeBase.extraEnv&{MAKE="ninja"},
+      buildInputs =
+        lib.biMap [
+          busyboxStage0,
+          llvmStage0,
+          muslStage0,
+          samuraiStage1,
+          ccacheBin,
+          linuxHeadersStage1,
+        ]
+    }
 }
-  }

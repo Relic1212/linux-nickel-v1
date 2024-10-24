@@ -11,8 +11,6 @@ let _gnumake | lib.AutotoolsPackage
     sourceInputs = [
       gnumakeSourceInput
     ],
-    
- 
   }
   in
 {
@@ -21,16 +19,17 @@ let _gnumake | lib.AutotoolsPackage
   muslStage1,
   gnumakeStage1,
   ccacheBin,
-  gnumakeStage2=
+  gnumakeStage2 =
     _gnumake
     & {
-      stage=2,
-      buildInputs =lib.biMap [
-        busyboxStage1,
-        llvmStage1,
-        muslStage1,
-        gnumakeStage1,
-        ccacheBin,
-      ]
+      stage = 2,
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+        ]
     }
 }

@@ -23,7 +23,7 @@ in
   muslStage1 =
     muslBase
     & {
-          stage = 1,
+      stage = 1,
 
       buildInputs =
         lib.biMap [

@@ -25,20 +25,19 @@ let llvmBaseTarget | lib.CmakePackage
             "-DLLVM_ENABLE_PROJECTS='lld;clang'",
             # "-DCMAKE_MAKE_PROGRAM=ninja",
             "-G Ninja",
-           "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
-           "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
-
+            "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
+            "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
           ],
 
-          # buildEnv|priority 1=b2.buildEnv&{
-          #   LDFLAGS|priority 1=
-          #   let flag=[
-          #     "-L/usr/lib/x86_64-unknown-linux-musl"
+      # buildEnv|priority 1=b2.buildEnv&{
+      #   LDFLAGS|priority 1=
+      #   let flag=[
+      #     "-L/usr/lib/x86_64-unknown-linux-musl"
 
-          #   ] in if (std.record.has_field "LDFLAGS" b2.buildEnv) then 
-            
-          #    (b2.buildEnv.LDFLAGS @ flag) else flag,
-          # },
+      #   ] in if (std.record.has_field "LDFLAGS" b2.buildEnv) then
+
+      #    (b2.buildEnv.LDFLAGS @ flag) else flag,
+      # },
     }
   in
 let _llvmStage1 | lib.CmakePackage
@@ -46,25 +45,41 @@ let _llvmStage1 | lib.CmakePackage
     llvmBaseTarget
     & {
       name = "llvm-stage-1",
-    #   buildInputs = [
-    #     (import "../busybox/busybox-stage-0.ncl"),
-    #     (import "../llvm/llvm-stage-0.ncl"),
-    #     (import "../musl/musl-stage-1.ncl"),
-    #     (import "../gnumake/gnumake-stage-1.ncl"),
-    #     (import "../ccache/ccache-bin.ncl"),
-    #     (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
-    #     (import "../cmake/cmake-stage-1.ncl"),
-    #     (import "../python/python-stage-1.ncl"),
-    #   ],
+      #   buildInputs = [
+      #     (import "../busybox/busybox-stage-0.ncl"),
+      #     (import "../llvm/llvm-stage-0.ncl"),
+      #     (import "../musl/musl-stage-1.ncl"),
+      #     (import "../gnumake/gnumake-stage-1.ncl"),
+      #     (import "../ccache/ccache-bin.ncl"),
+      #     (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
+      #     (import "../cmake/cmake-stage-1.ncl"),
+      #     (import "../python/python-stage-1.ncl"),
+      #   ],
     }
   in
 {
-  busyboxStage0,llvmStage0,muslStage1,gnumakeStage1,samuraiStage1,ccacheBin,linuxHeadersStage1,cmakeStage1,pythonStage1,
-llvmStage1=_llvmStage1&{
-  buildInputs=lib.biMap [
-  busyboxStage0,llvmStage0,muslStage1,samuraiStage1,ccacheBin,linuxHeadersStage1,cmakeStage1,pythonStage1,
-
-  ]
-
-}
+  busyboxStage0,
+  llvmStage0,
+  muslStage1,
+  gnumakeStage1,
+  samuraiStage1,
+  ccacheBin,
+  linuxHeadersStage1,
+  cmakeStage1,
+  pythonStage1,
+  llvmStage1 =
+    _llvmStage1
+    & {
+      buildInputs =
+        lib.biMap [
+          busyboxStage0,
+          llvmStage0,
+          muslStage1,
+          samuraiStage1,
+          ccacheBin,
+          linuxHeadersStage1,
+          cmakeStage1,
+          pythonStage1,
+        ]
+    }
 }

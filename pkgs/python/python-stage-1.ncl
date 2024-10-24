@@ -9,7 +9,7 @@ let _pythonStage1 | lib.AutotoolsPackage
     & {
       # enableCcache|force=false,
       stage = 1,
-      
+
       configurePhase = (
         (pythonBase.configurePhase)
         @ [
@@ -112,12 +112,22 @@ let _pythonStage1 | lib.AutotoolsPackage
   )
   in
 {
-  busyboxStage0,llvmStage0,gnumakeStage1,ccacheBin,muslStage0,
+  busyboxStage0,
+  llvmStage0,
+  gnumakeStage1,
+  ccacheBin,
+  muslStage0,
 
-pythonStage1=_pythonStage1&{
-  buildInputs = lib.biMap[
-busyboxStage0,llvmStage0,gnumakeStage1,ccacheBin,muslStage0
-        
-      ],
-}
+  pythonStage1 =
+    _pythonStage1
+    & {
+      buildInputs =
+        lib.biMap [
+          busyboxStage0,
+          llvmStage0,
+          gnumakeStage1,
+          ccacheBin,
+          muslStage0
+        ],
+    }
 }
