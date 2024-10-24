@@ -3,19 +3,13 @@ in
 
 let pythonBase = import "python-base.ncl"
 in
-let pythonStage1 | lib.AutotoolsPackage
+let _pythonStage1 | lib.AutotoolsPackage
   = (
     pythonBase
     & {
       # enableCcache|force=false,
       stage = 1,
-      buildInputs = [
-        (import "../busybox/busybox-stage-0.ncl"),
-        (import "../llvm/llvm-stage-0.ncl"),
-        (import "../musl/musl-stage-0.ncl"),
-        (import "../gnumake/gnumake-stage-1.ncl"),
-        (import "../ccache/ccache-bin.ncl"),
-      ],
+      
       configurePhase = (
         (pythonBase.configurePhase)
         @ [
@@ -30,6 +24,8 @@ let pythonStage1 | lib.AutotoolsPackage
         _socket socketmodule.c
         _pickle _pickle.c
         _elementtree _elementtree.c
+        _posixsubprocess _posixsubprocess.c
+        select selectmodule.c
         *disabled*
         _testinternalcapi
         nis
@@ -65,7 +61,6 @@ let pythonStage1 | lib.AutotoolsPackage
         binascii
         cmath
         mmap
-        select
         pyexpat
         _blake2
         _md5
@@ -80,7 +75,6 @@ let pythonStage1 | lib.AutotoolsPackage
         _codecs_tw
         _multibytecodec
         unicodedata
-        _posixsubprocess
         _posixshmem
         fcntl
         grp
@@ -117,4 +111,13 @@ let pythonStage1 | lib.AutotoolsPackage
     }
   )
   in
-pythonStage1
+{
+  busyboxStage0,llvmStage0,gnumakeStage1,ccacheBin,muslStage0,
+
+pythonStage1=_pythonStage1&{
+  buildInputs = lib.biMap[
+busyboxStage0,llvmStage0,gnumakeStage1,ccacheBin,muslStage0
+        
+      ],
+}
+}

@@ -123,7 +123,7 @@ let _busyboxStage0 | lib.MakePackage
   busyboxStage0 =
     _busyboxStage0
     & {
-      buildInputs = [
+      buildInputs = lib.biMap [
         llvmStage0,
         muslStage0,
       ]

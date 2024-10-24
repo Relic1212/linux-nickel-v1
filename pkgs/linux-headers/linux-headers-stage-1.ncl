@@ -1,7 +1,10 @@
+
+let lib = import "../../nickellib/lib.ncl"
+in
 let linuxHeadersBase = (import "./linux-headers-base.ncl")
 in
 
-let linuxHeadersStage1 =
+let _linuxHeadersStage1 =
   linuxHeadersBase
   & {
     name = "linux-headers-stage-1",
@@ -29,16 +32,25 @@ let linuxHeadersStage1 =
     #   #     "HOSTCXXFLAGS=%{ lib.functions.varToExportvar  buildEnv.CXXFLAGS} \\\n",
     #       "HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
     # ]@linuxHeadersBase.makeArgs,
-    buildInputs = [
-      (import "../busybox/busybox-stage-0.ncl"),
-      (import "../llvm/llvm-stage-0.ncl"),
-      (import "../musl/musl-stage-1.ncl"),
-      (import "../gnumake/gnumake-stage-1.ncl"),
-      (import "../ccache/ccache-bin.ncl"),
-      (import "../m4/m4-stage-1.ncl"),
-      (import "../flex/flex-stage-1.ncl"),
-      (import "../bison/bison-stage-1.ncl"),
-    ],
+    # buildInputs = [
+    #   (import "../busybox/busybox-stage-0.ncl"),
+    #   (import "../llvm/llvm-stage-0.ncl"),
+    #   (import "../musl/musl-stage-1.ncl"),
+    #   (import "../gnumake/gnumake-stage-1.ncl"),
+    #   (import "../ccache/ccache-bin.ncl"),
+    #   (import "../m4/m4-stage-1.ncl"),
+    #   (import "../flex/flex-stage-1.ncl"),
+    #   (import "../bison/bison-stage-1.ncl"),
+    # ],
   }
 in
-linuxHeadersStage1
+{
+
+  busyboxStage0,llvmStage0,muslStage1,gnumakeStage1,ccacheBin,m4Stage1,flexStage1,bisonStage1,
+linuxHeadersStage1=_linuxHeadersStage1&{
+  buildInputs=lib.biMap[
+      busyboxStage0,llvmStage0,muslStage1,gnumakeStage1,ccacheBin,m4Stage1,flexStage1,bisonStage1,
+
+  ]
+}
+}

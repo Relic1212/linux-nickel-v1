@@ -26,7 +26,7 @@ in
   libsspNonsharedStage0 =
     _libsspNonsharedStage0
     & {
-      buildInputs = [
+      buildInputs = lib.biMap [
         llvmBaselibsStage0,
         muslStage0
       ]

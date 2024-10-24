@@ -1,6 +1,8 @@
 import json
 import subprocess
 import sys
+import timeit 
+import datetime
 
 try:
     from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
@@ -101,51 +103,56 @@ def run_and_get_lines(**kwargs):
         raise subprocess.CalledProcessError(status, cmd=p.args)
 
 
-def link_workdir(h, names_by_hashes):
+def link_workdir(h, name):
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
 
-    if names_by_hashes:
-        if h in names_by_hashes.keys():
-            name = names_by_hashes[h]
-
-            os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
-            subprocess.run(
-                ["rm", "-f", dirpaths.get_basedir() + "/tmp/" + name], check=True
-            )
-            subprocess.run(
-                [
-                    "ln",
-                    "-s",
-                    os.path.realpath(workdir),
-                    os.path.realpath(dirpaths.get_basedir()) + "/tmp/" + name,
-                ],
-                check=True,
-            )
 
 
-def build(h, pkg_drvs: str, names_by_hashes: dict[str, str] = None) -> None:
+    os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
+    subprocess.run(
+        ["rm", "-f", dirpaths.get_basedir() + "/tmp/" + name], check=True
+    )
+    subprocess.run(
+        [
+            "ln",
+            "-s",
+            os.path.realpath(workdir),
+            os.path.realpath(dirpaths.get_basedir()) + "/tmp/" + name,
+        ],
+        check=True,
+    )
+
+
+def build(h, pkg_drvs: str) -> None:
 
     # h=hash
     # drv_s=pkgs[hash]
 
     drv_s = pkg_drvs[h]
     drv = json.loads(drv_s)
+    name=drv["name"]
 
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
     status_file = workdir + "/0.txt"
     if os.path.isfile(status_file):
-        link_workdir(h, names_by_hashes)
+        link_workdir(h, name)
 
         return
     subprocess.run(["rm", "-rf", workdir], check=True)
     for bi_drv in drv["buildInputDrvs"]:
         build(h=bi_drv, pkg_drvs=pkg_drvs)
+    
+    print(f"building {name}")
+
     os.makedirs(workdir + "/build")
     with open(workdir + "/drv.json", "w", encoding="utf-8") as f:
         json.dump(drv, f)
     os.makedirs(workdir + "/sysroot", exist_ok=True)
     os.makedirs(workdir + "/out/destdir", exist_ok=True)
     os.makedirs(workdir + "/src")
+    with open(workdir + f"/pn-{name}","w",encoding="utf-8") as f:
+        pass
+
     subprocess.run(["rm", "-f", dirpaths.get_basedir() + "/latest"], check=True)
     subprocess.run(
         [
@@ -156,7 +163,7 @@ def build(h, pkg_drvs: str, names_by_hashes: dict[str, str] = None) -> None:
         ],
         check=True,
     )
-    link_workdir(h, names_by_hashes)
+    link_workdir(h, name)
 
     os.makedirs(f"{workdir}/packed")
 
@@ -269,6 +276,7 @@ def build(h, pkg_drvs: str, names_by_hashes: dict[str, str] = None) -> None:
     args += ["--chdir", "/tmp/workdir/build"]
     args += ["/tmp/workdir/build.sh"]
 
+    t1=timeit.default_timer()
     with open(f"{workdir}/b.log", "a", encoding="utf-8") as f:
         with open(f"{workdir}/error.log", "a", encoding="utf-8") as f_error:
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
@@ -292,6 +300,12 @@ def build(h, pkg_drvs: str, names_by_hashes: dict[str, str] = None) -> None:
             print("env =", senv)
             raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
     subprocess.run(["touch", status_file], check=True)
+    t2=timeit.default_timer()
+    buildtime=datetime.timedelta(seconds=t2-t1)
+    print(f"building {name} took {buildtime}")
+    with open (dirpaths.get_basedir() + "/tmp/buildtimes.txt","a",encoding="utf-8") as f:
+        f.write(f"{name}\t-\t{buildtime}\n")
+    print(f"finished building {name}")
 
 
 def prepare_sysroot(workdir: str, buildinputs: dict):

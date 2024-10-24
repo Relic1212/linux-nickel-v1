@@ -57,7 +57,7 @@ let _gnumakeStage1 | lib.AutotoolsPackage
   gnumakeStage1 =
     _gnumakeStage1
     & {
-      buildInputs = [
+      buildInputs =lib.biMap [
         busyboxStage0,
         llvmStage0,
         muslStage0,

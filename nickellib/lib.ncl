@@ -79,13 +79,18 @@ let lib = {
       OBJDUMP = "llvm-objdump",
       RANLIB = "llvm-ranlib",
       READELF = "llvm-readelf",
+      CFLAGS= ["-O2", "-pipe" ],
+      CXXFLAGS= ["-O2", "-pipe" ],
+
       LDFLAGS = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
       LD | default = "lld",
     },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
-    pkgs | optional,
-    name | String,
+    baseName|String | optional,
+    name | String |default= if ((stage == "final") || (stage==-1)) then
+       baseName 
+       else "%{baseName}-stage-%{ std.to_string stage}", 
     buildInputs | Array Dyn | default = [],
     buildInputNames | Array String | default = [],
     buildDir | nullOrString | default = null,
@@ -219,6 +224,7 @@ let lib = {
 
       enableParallel | priority -10 = Package.enableParallel,
       cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
+      generator|nullOrString|default=null,
       configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
       buildPhase | priority -10 = ["cmake --build ."],
       installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
@@ -231,7 +237,7 @@ let lib = {
             else
               {}
           )
-        )
+        )&(if(generator==null) then { } else { CMAKE_GENERATOR=generator })
     },
 
   basePackage | Package

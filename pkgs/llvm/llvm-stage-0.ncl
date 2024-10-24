@@ -68,9 +68,9 @@ let _llvmStage0 =
         b.installPhase
         @ [
           "cd ${DEST}/usr/bin",
-          "ln -s /usr/bin/clang cc",
-          "ln -s /usr/bin/clang++ c++",
-          "ln -s /usr/bin/clang-cpp cpp",
+          "ln -s clang cc",
+          "ln -s clang++ c++",
+          "ln -s clang-cpp cpp",
         ]
   }
 in

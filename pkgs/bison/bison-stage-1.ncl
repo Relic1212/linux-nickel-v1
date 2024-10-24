@@ -23,6 +23,7 @@ in
   ccacheBin,
   m4Stage1,
   busyboxStage0,
+  llvmStage0,
   bisonStage1 =
     _bisonStage1
     & {
@@ -33,6 +34,7 @@ in
           ccacheBin,
           m4Stage1,
           busyboxStage0,
+          llvmStage0
         ]
     }
 }
