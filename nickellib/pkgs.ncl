@@ -3,7 +3,7 @@ in
 
 let _pkgsArray = [
   import "../pkgs/musl/musl-stage-0.ncl",
-  import "../pkgs/musl/musl-stage-1.ncl",
+  import "../pkgs/musl/musl.ncl",
   import "../pkgs/llvm/llvm-stage-0.ncl",
   import "../pkgs/llvm/llvm-baselibs-stage-0.ncl",
   import "../pkgs/linux-headers/linux-headers-stage-0.ncl",
@@ -14,6 +14,8 @@ let _pkgsArray = [
   import "../pkgs/busybox/busybox-stage-1.ncl",
 
   import "../pkgs/gnumake/gnumake-stage-1.ncl",
+  import "../pkgs/gnumake/gnumake.ncl",
+
   import "../pkgs/ccache/ccache-bin.ncl",
 
   import "../pkgs/python/python-stage-1.ncl",

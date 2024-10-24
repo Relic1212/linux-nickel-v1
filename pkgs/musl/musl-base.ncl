@@ -4,7 +4,7 @@ in
 let musl | lib.AutotoolsPackage
   = {
     isLlvm | default = lib.AutotoolsPackage.isLlvm,
-    name | priority -1 = "musl",
+    baseName = "musl",
     isStatic = false,
     sourceInputs = [
       {
