@@ -1,0 +1,38 @@
+let lib = import "../../nickellib/lib.ncl"
+in 
+{
+        llvm,musl,gnumake,busybox,ccacheBin,
+#
+perl|lib.AutotoolsPackage={
+    name="perl",
+    sourceInputs= [
+          {
+            src={
+                uri= "https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz",
+                sha256sum="c740348f357396327a9795d3e8323bafd0fe8a5c7835fc1cbaba0cc8dfe7161f",
+            }
+          }
+    ],
+    configurePhase=[
+
+"cd ${SRC}",
+m%"./Configure \
+    -Dprefix=/usr \
+    -Ddlext='none' \
+    -Dso='none' \
+    -Dcc='cc -static' -Ddynamic_ext='' \
+    -Dlddlflags='-static -O2 -L/usr/lib -I/usr/include -fstack-protector-strong' \
+    -Dnm_so_opt='' -Dvendorprefix=/usr  -Dusevendorprefix \
+    -Dstatic_ext='B Compress/Raw/Bzip2 Compress/Raw/Zlib Cwd Data/Dumper Devel/PPPort Devel/Peek Digest/MD5 Digest/SHA Encode Fcntl File/DosGlob File/Glob Filter/Util/Call Hash/Util Hash/Util/FieldHash I18N/Langinfo IO IPC/SysV List/Util MIME/Base64 Math/BigInt/FastCalc Opcode POSIX PerlIO/encoding PerlIO/mmap PerlIO/via SDBM_File Socket Storable Sys/Hostname Sys/Syslog Time/HiRes Time/Piece Unicode/Collate Unicode/Normalize XS/APItest XS/Typemap attributes mro re threads threads/shared' \
+    -Dman1dir=none -Dman3dir=none \
+    -Dd_access=true \
+    -Dd_eaccess='undef' \
+    -des"%,
+"make depend -j$(nproc)",
+
+    ],
+    buildInputs=lib.biMap[ llvm,musl,gnumake,busybox,ccacheBin, ],
+}
+
+
+}

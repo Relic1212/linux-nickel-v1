@@ -25,6 +25,15 @@ let _pkgsArray = [
   import "../pkgs/ninja/ninja-stage-1.ncl",
   import "../pkgs/samurai/samurai.ncl",
 
+  import "../pkgs/bash/bash.ncl",
+  import "../pkgs/perl/perl.ncl",
+  import "../pkgs/autoconf/autoconf.ncl",
+  import "../pkgs/automake/automake.ncl",
+
+
+
+
+
   # {
   #     name=pkgsRecord."flex-stage-1".name ++ "-other"
 

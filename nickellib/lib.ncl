@@ -172,7 +172,8 @@ let lib = {
     commands | Array String | default = std.array.flatten phases,
     scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
-    sourceInputs | Array SourceInput | default = [],
+    singleSource|Dyn|default=null,
+    sourceInputs | Array SourceInput | default = if (singleSource==null) then  [] else [{src=singleSource }] ,
     patchDir | String | default = "%{name}/patches",
     filesDir | String | default = "%{name}/files",
     patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
@@ -207,10 +208,15 @@ let lib = {
       isStatic | default = MakePackage.isStatic,
       configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []),
       configureScript | String | default = "${SRC}/configure",
-      configurePhase | priority -1
+      configurePhase | priority -11
         = [
           configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
         ]
+    },
+    AutomakePackage=AutotoolsPackage&{
+      configurePhase|priority -10=[
+          "(cd ${SRC}; autoreconf -fiv)",
+      ]@AutotoolsPackage.configurePhase,
     },
   MesonPackage =
     Package
