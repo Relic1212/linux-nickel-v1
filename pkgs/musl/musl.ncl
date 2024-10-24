@@ -1,19 +1,7 @@
 let lib = import "../../nickellib/lib.ncl" in
 let muslBase = import "./musl-base.ncl"
 in
-let _muslStage1 =
-  muslBase
-  & {
-    stage = 1
-    #   buildInputs = [
-    #     (import "../busybox/busybox-stage-0.ncl"),
-    #     (import "../llvm/llvm-stage-0.ncl"),
-    #     (import "../musl/musl-stage-0.ncl"),
-    #     (import "../gnumake/gnumake-stage-1.ncl"),
-    #     (import "../ccache/ccache-bin.ncl"),
-    #   ]
-  }
-in
+
 {
   busyboxStage0,
   llvmStage0,
@@ -33,5 +21,24 @@ in
           ccacheBin,
           muslStage0
         ]
-    }
+    },
+
+  busyboxStage1,
+  llvmStage1,
+  gnumakeStage2,
+  ccacheBin,
+  muslStage2=    muslBase
+    & {
+      stage = 2,
+
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          gnumakeStage2,
+          ccacheBin,
+          muslStage1
+        ]
+    },
+
 }

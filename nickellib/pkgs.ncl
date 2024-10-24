@@ -16,7 +16,7 @@ let _pkgsArray = [
   import "../pkgs/ccache/ccache-bin.ncl",
   import "../pkgs/python/python-stage-1.ncl",
   import "../pkgs/cmake/cmake-stage-1.ncl",
-  import "../pkgs/m4/m4-stage-1.ncl",
+  import "../pkgs/m4/m4.ncl",
   import "../pkgs/flex/flex-stage-1.ncl",
   import "../pkgs/bison/bison-stage-1.ncl",
   import "../pkgs/llvm/llvm-stage-1.ncl",
