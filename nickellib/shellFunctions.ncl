@@ -1,5 +1,5 @@
-let shellFuntions={
-    unpackMaybe = m%"
+let shellFuntions = {
+  unpackMaybe = m%"
 
     tar_unpack(){
         source=${1}
@@ -22,15 +22,15 @@ let shellFuntions={
 
         srcdest=${2}
         cmd="cp"
-        if [ -d ${source} ]; then 
+        if [ -d ${source} ]; then
             cmd="cp -r"
-        fi 
+        fi
         case ${source} in
             *.tar) cmd="tar_unpack";;
             *.tar.*) cmd="tar_unpack";;
             *.tgz) cmd="tar_unpack";;
             *.zip) cmd="unzip_unpack";;
-	    esac 
+	    esac
 
         stmp=$(realpath ${source})
         dtmp=$(mktemp -d)
@@ -44,15 +44,15 @@ let shellFuntions={
             else
                 copy_cmd="cp -a ${dtmp}/. ${srcdest}/"
 
-            fi 
+            fi
         else
             copy_cmd="cp -a ${dtmp}/. ${srcdest}/"
         fi
         printf "copyying files to src dir: ${copy_cmd}\n"
         ${copy_cmd}
     }
-    
-    "%
 
-}in
+    "%
+}
+in
 shellFuntions

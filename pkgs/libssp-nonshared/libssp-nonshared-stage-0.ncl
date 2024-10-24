@@ -2,7 +2,7 @@ let lib = import "../../nickellib/lib.ncl"
 in
 let libsspNonsharedBase = (import "libssp-nonshared-base.ncl")
 in
-let libsspNonsharedStage0 =
+let _libsspNonsharedStage0 =
   libsspNonsharedBase
   & {
     name = "libssp-nonshared-stage-0",
@@ -14,10 +14,21 @@ let libsspNonsharedStage0 =
         LDFLAGS | priority 10 = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" libsspNonsharedBase.buildEnv.LDFLAGS),
       },
     stage = 0,
-    buildInputs = [
-      import "../musl/musl-stage-0.ncl",
-      import "../llvm/llvm-baselibs-stage-0.ncl",
-    ],
+    # buildInputs = [
+    #   import "../musl/musl-stage-0.ncl",
+    #   import "../llvm/llvm-baselibs-stage-0.ncl",
+    # ],
   }
 in
-libsspNonsharedStage0
+{
+  llvmBaselibsStage0,
+  muslStage0,
+  libsspNonsharedStage0 =
+    _libsspNonsharedStage0
+    & {
+      buildInputs = [
+        llvmBaselibsStage0,
+        muslStage0
+      ]
+    }
+}

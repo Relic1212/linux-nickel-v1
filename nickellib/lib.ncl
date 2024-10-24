@@ -1,11 +1,15 @@
 let constants = import "./constants.ncl"
 in
-let _constants=constants
+let _constants = constants
 in
 let shellFunctions = import "./shellFunctions.ncl"
 in
+let drvUtils = import "drv.ncl"
+in
 let lib = {
-  constants=_constants,
+  biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
+
+  constants = _constants,
   functions = {
     computeSha256 = (fun s => (std.hash 'Sha256) s),
     recordToHash = fun r => computeSha256 (std.serialize 'Json r),
@@ -24,8 +28,8 @@ let lib = {
     replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
     joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
     # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
-    cmakeRecordToArgs=(fun r =>(std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
-    replaceArrayElem=(fun old new arr=>(std.array.map (fun elem=> (if (elem==old) then new else elem) ) arr)),
+    cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
+    replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
   },
   nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
@@ -62,33 +66,31 @@ let lib = {
         CXXFLAGS = common_flags,
         LDFLAGS = common_flags,
       },
-  llvmEnv|BuildEnv={
-    CC="clang",
-    CPP="clang-cpp",
-    CXX="clang++",
-    AS="llvm-as",
+  llvmEnv | BuildEnv
+    = {
+      CC = "clang",
+      CPP = "clang-cpp",
+      CXX = "clang++",
+      AS = "llvm-as",
 
-    AR="llvm-ar",
-    NM="llvm-nm",
-    OBJCOPY="llvm-objcopy",
-    OBJDUMP="llvm-objdump",
-    RANLIB="llvm-ranlib",
-    READELF="llvm-readelf",
-    LDFLAGS=[ "-fuse-ld=lld", "-stdlib=libc++","-rtlib=compiler-rt", "-unwindlib=libunwind"],
-    LD|default="lld",
-
-  },
+      AR = "llvm-ar",
+      NM = "llvm-nm",
+      OBJCOPY = "llvm-objcopy",
+      OBJDUMP = "llvm-objdump",
+      RANLIB = "llvm-ranlib",
+      READELF = "llvm-readelf",
+      LDFLAGS = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+      LD | default = "lld",
+    },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
   Package = {
-    pkgs|optional,
+    pkgs | optional,
     name | String,
     buildInputs | Array Dyn | default = [],
-    buildInputNames|Array String|default=[],
-    buildDir|nullOrString|default=null,
-    buildEnv | BuildEnv | default = 
-    
-    ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv))&( if ((isLlvm && buildInChroot) && (stage!=0) ) then {  } else {}  ))
-    ,
+    buildInputNames | Array String | default = [],
+    buildDir | nullOrString | default = null,
+    buildEnv | BuildEnv | default
+      = ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv)) & (if ((isLlvm && buildInChroot) && (stage != 0)) then {} else {})),
     extraEnv | { _ : StringOrArray } | default
       = (
         if buildInChroot then
@@ -153,9 +155,8 @@ let lib = {
         if (std.array.length patches) == 0 then
           []
         else
-          (std.array.map (fun p=> "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches)
-      ,
-    configurePhase | Array String | default = ( if (buildDir==null) then [] else ["cd %{buildDir}"]),
+          (std.array.map (fun p => "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches),
+    configurePhase | Array String | default = (if (buildDir == null) then [] else ["cd %{buildDir}"]),
     buildPhase | Array String | default = [],
     installPhase | Array String | default = [],
     phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, configurePhase, buildPhase, installPhase],
@@ -166,14 +167,14 @@ let lib = {
     sourceInputs | Array SourceInput | default = [],
     patchDir | String | default = "%{name}/patches",
     filesDir | String | default = "%{name}/files",
-    patches | Array {file|String,sha256sum|String,uri|String|optional} | default = [],
-    extraFiles | Array  {file|String,sha256sum|String,uri|String|optional}  | default = [],
+    patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
+    extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
     isStatic | Bool | default = true,
     isLlvm | Bool | default = true,
     enableParallel | Bool | default = true,
     enableCcache | Bool | default = true,
-    buildInChroot | Bool | default = (stage!=0),
-    stage|default=-1,
+    buildInChroot | Bool | default = (stage != 0),
+    stage | default = -1,
   },
   MakePackage =
     Package
@@ -223,8 +224,7 @@ let lib = {
       installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
       extraEnv | priority -10
         = (
-           
-           ( if buildInChroot then Package.extraEnv else (Package&{buildInChroot=false}).extraEnv)
+          (if buildInChroot then Package.extraEnv else (Package & { buildInChroot = false }).extraEnv)
           & (
             if enableParallel then
               { CMAKE_BUILD_PARALLEL_LEVEL = "$(nproc)" }

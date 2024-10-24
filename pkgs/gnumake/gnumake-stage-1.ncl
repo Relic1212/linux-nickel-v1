@@ -4,7 +4,7 @@ in
 let { gnumakeSourceInput } = (import "gnumake-base.ncl")
 in
 
-let gnumakeStage1 | lib.AutotoolsPackage
+let _gnumakeStage1 | lib.AutotoolsPackage
   = {
     name = "gnumake-stage-1",
 
@@ -33,11 +33,11 @@ let gnumakeStage1 | lib.AutotoolsPackage
     installPhase = [
       "./make DESTDIR=${DEST} install"
     ],
-    buildInputs = [
-      (import "../busybox/busybox-stage-0.ncl"),
-      (import "../llvm/llvm-stage-0.ncl"),
-      (import "../musl/musl-stage-0.ncl"),
-    ],
+    # buildInputs = [
+    #   (import "../busybox/busybox-stage-0.ncl"),
+    #   (import "../llvm/llvm-stage-0.ncl"),
+    #   (import "../musl/musl-stage-0.ncl"),
+    # ],
 
     buildEnv = (
       lib.AutotoolsPackage.buildEnv
@@ -49,4 +49,18 @@ let gnumakeStage1 | lib.AutotoolsPackage
       }
     ),
   }
-  in gnumakeStage1
+  in
+{
+  busyboxStage0,
+  llvmStage0,
+  muslStage0,
+  gnumakeStage1 =
+    _gnumakeStage1
+    & {
+      buildInputs = [
+        busyboxStage0,
+        llvmStage0,
+        muslStage0,
+      ]
+    }
+}

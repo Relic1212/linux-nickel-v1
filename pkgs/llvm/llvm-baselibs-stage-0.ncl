@@ -53,9 +53,10 @@ let libs0 = (
 in
 {
   muslStage0,
-  linuxHeadersStage0llvmBaselibsStage0 =
+  linuxHeadersStage0,
+  llvmBaselibsStage0 =
     libs0
     & {
-      buildInputs = [muslStage0, linuxHeadersStage0]
+      buildInputs = lib.biMap [muslStage0, linuxHeadersStage0]
     }
 }

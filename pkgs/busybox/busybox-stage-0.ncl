@@ -5,7 +5,7 @@ let x = import "busybox-base.ncl" in
 let bbase = x.busyboxBase
 in
 
-let busyboxStage0 | lib.MakePackage
+let _busyboxStage0 | lib.MakePackage
   =
     bbase
     & {
@@ -18,10 +18,10 @@ let busyboxStage0 | lib.MakePackage
           sha256sum = "cbb326d9da00d4d4b5584f7996bb3b291d11793d4d0d708b43d727f34d7ae427" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
         }
       ],
-      buildInputs = [
-        import "../musl/musl-stage-0.ncl",
-        import "../llvm/llvm-stage-0.ncl",
-      ],
+      # buildInputs = [
+      #   import "../musl/musl-stage-0.ncl",
+      #   import "../llvm/llvm-stage-0.ncl",
+      # ],
       configurePhase = [
         "cd %{buildDir}",
         "unset CPPFLAGS",
@@ -117,4 +117,15 @@ let busyboxStage0 | lib.MakePackage
           )
     }
   in
-busyboxStage0
+{
+  llvmStage0,
+  muslStage0,
+  busyboxStage0 =
+    _busyboxStage0
+    & {
+      buildInputs = [
+        llvmStage0,
+        muslStage0,
+      ]
+    }
+}

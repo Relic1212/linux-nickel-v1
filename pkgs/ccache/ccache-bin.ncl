@@ -1,6 +1,6 @@
 let lib = import "../../nickellib/lib.ncl"
 in
-let ccacheBin | lib.Package
+let _ccacheBin | lib.Package
   = {
     name = "ccache-bin",
     buildInChroot = false,
@@ -18,4 +18,6 @@ let ccacheBin | lib.Package
     ]
   }
   in
-ccacheBin
+{
+  ccacheBin = _ccacheBin
+}

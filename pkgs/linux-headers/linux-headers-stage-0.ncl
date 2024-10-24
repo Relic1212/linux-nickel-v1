@@ -1,3 +1,6 @@
+let lib = import "../../nickellib/lib.ncl"
+in
+
 let linuxHeadersBase = (import "./linux-headers-base.ncl")
 in
 
@@ -17,8 +20,9 @@ in
   linuxHeadersStage0 =
     _linuxHeadersStage0
     & {
-      buildInputs = [
-        muslStage0
-      ]
+      buildInputs =
+        lib.biMap [
+          muslStage0
+        ]
     }
 }
