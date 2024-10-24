@@ -31,5 +31,44 @@ let _gnumake | lib.AutotoolsPackage
           gnumakeStage1,
           ccacheBin,
         ]
-    }
+    },
+
+busyboxStage2,
+  llvmStage2,
+  muslStage2,
+  gnumakeStage2,
+  ccacheBin,
+  gnumakeStage3 =
+    _gnumake
+    & {
+      stage = 3,
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          muslStage2,
+          gnumakeStage2,
+          ccacheBin,
+        ]
+    },
+
+
+
+# final
+musl ,
+gnumake =
+    _gnumake
+    & {
+      stage = -1,
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          musl,
+          gnumakeStage3,
+          ccacheBin,
+        ]
+    },
+
+
 }

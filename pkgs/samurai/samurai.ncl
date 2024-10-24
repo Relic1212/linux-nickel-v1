@@ -44,6 +44,70 @@ let _samurai | lib.MakePackage
           gnumakeStage1
         ]
     },
+
+
+#2
+  muslStage2,
+  busyboxStage1,
+  llvmStage1,
+  gnumakeStage2,
+
+  samuraiStage2 =
+    _samurai
+    & {
+      stage = 2,
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          muslStage2,
+          llvmStage1,
+          ccacheBin,
+          gnumakeStage2
+        ]
+    },
+
+#final
+  musl,
+  busyboxStage2,
+  llvmStage2,
+  gnumake,
+
+  samurai =
+    _samurai
+    & {
+      stage = -1,
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          musl,
+          llvmStage2,
+          ccacheBin,
+          gnumake
+        ]
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   #   muslStage0,
   #   samuraiStage0 =
   #     _samurai

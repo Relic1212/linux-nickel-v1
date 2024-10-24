@@ -7,7 +7,7 @@ let bbase | lib.MakePackage
       & {
         CPPFLAGS | default = []
       },
-    name = "busybox",
+    baseName = "busybox",
     sourceInputs = [
       {
         src = {

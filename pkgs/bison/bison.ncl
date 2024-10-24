@@ -1,64 +1,75 @@
 let lib = import "../../nickellib/lib.ncl"
 in
 
-let m4Base = import "m4-base.ncl" in
+let bisonBase = import "bison-base.ncl" in
+
 {
-  busyboxStage0,
-  llvmStage0,
+  # 1
   muslStage1,
   gnumakeStage1,
   ccacheBin,
-  m4Stage1 =
-    m4Base 
+  m4Stage1,
+  busyboxStage0,
+  llvmStage0,
+  bisonStage1 =
+    bisonBase
     & {
       stage=1,
       buildInputs =
         lib.biMap [
-          busyboxStage0,
-          llvmStage0,
           muslStage1,
           gnumakeStage1,
           ccacheBin,
+          m4Stage1,
+          busyboxStage0,
+          llvmStage0
         ]
     },
 
-#2
- busyboxStage1,
-  llvmStage1,
-  muslStage2,
+# 2
+     muslStage2,
   gnumakeStage2,
-  m4Stage2 =
-    m4Base 
+  ccacheBin,
+  m4Stage2,
+  busyboxStage1,
+  llvmStage1,
+  bisonStage2 =
+    bisonBase
     & {
       stage=2,
       buildInputs =
         lib.biMap [
-          busyboxStage1,
-          llvmStage1,
           muslStage2,
           gnumakeStage2,
           ccacheBin,
+          m4Stage2,
+          busyboxStage1,
+          llvmStage1,
         ]
     },
 
-#final 
- busyboxStage2,
-  llvmStage2,
-  musl,
+# final
+
+     musl,
   gnumake,
-  m4 =
-    m4Base 
+  ccacheBin,
+  m4,
+  busyboxStage2,
+  llvmStage2,
+  bison =
+    bisonBase
     & {
       stage=-1,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
           musl,
           gnumake,
           ccacheBin,
+          m4,
+          busyboxStage2,
+          llvmStage2,
         ]
-    },
+    }
 
 
 

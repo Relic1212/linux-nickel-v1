@@ -3,12 +3,11 @@ in
 
 let pythonBase = import "python-base.ncl"
 in
-let _pythonStage1 | lib.AutotoolsPackage
+let _pythonBaseMinimal | lib.AutotoolsPackage
   = (
     pythonBase
     & {
       # enableCcache|force=false,
-      stage = 1,
 
       configurePhase = (
         (pythonBase.configurePhase)
@@ -119,8 +118,9 @@ let _pythonStage1 | lib.AutotoolsPackage
   muslStage0,
 
   pythonStage1 =
-    _pythonStage1
+    _pythonBaseMinimal
     & {
+      stage=1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -129,5 +129,58 @@ let _pythonStage1 | lib.AutotoolsPackage
           ccacheBin,
           muslStage0
         ],
-    }
+    },
+
+
+# 2
+
+busyboxStage1,
+  llvmStage1,
+  gnumakeStage2,
+  ccacheBin,
+  muslStage1,
+
+  pythonStage2 =
+    _pythonBaseMinimal
+    & {
+      stage=2,
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          gnumakeStage2,
+          ccacheBin,
+          muslStage1
+        ],
+    },
+
+
+
+# final
+
+
+busyboxStage2,
+  llvmStage2,
+  gnumake,
+  ccacheBin,
+  musl,
+
+  python =
+    _pythonBaseMinimal
+    & {
+      stage=-1,
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          gnumake,
+          ccacheBin,
+          musl
+        ],
+    },
+
+
+
+
+
 }

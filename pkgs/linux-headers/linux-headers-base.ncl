@@ -10,7 +10,7 @@ in
 # in
 let linuxHeadersBase | lib.MakePackage
   = {
-    name | default = "",
+    baseName = "linux-headers",
     makeTargets | priority -10 = ["headers"],
     sourceInputs = [
       {

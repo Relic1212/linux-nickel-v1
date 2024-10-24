@@ -4,7 +4,7 @@ let flexBase | lib.AutotoolsPackage
   = {
     buildEnv = (lib.AutotoolsPackage.buildEnv & { LD | default = "lld" }),
 
-    name | priority -10 = "flex",
+    baseName | priority -10 = "flex",
     sourceInputs = [
       {
         src = {

@@ -1,65 +1,67 @@
 let lib = import "../../nickellib/lib.ncl"
 in
+let flexBase = import "flex-base.ncl" in
 
-let m4Base = import "m4-base.ncl" in
 {
-  busyboxStage0,
   llvmStage0,
   muslStage1,
   gnumakeStage1,
   ccacheBin,
-  m4Stage1 =
-    m4Base 
+  m4Stage1,
+  busyboxStage0,
+  flexStage1 =
+    flexBase
     & {
       stage=1,
       buildInputs =
         lib.biMap [
-          busyboxStage0,
           llvmStage0,
           muslStage1,
           gnumakeStage1,
           ccacheBin,
+          m4Stage1,
+          busyboxStage0,
         ]
     },
 
 #2
- busyboxStage1,
   llvmStage1,
   muslStage2,
   gnumakeStage2,
-  m4Stage2 =
-    m4Base 
+  m4Stage2,
+  busyboxStage1,
+  flexStage2 =
+    flexBase
     & {
       stage=2,
       buildInputs =
         lib.biMap [
-          busyboxStage1,
           llvmStage1,
           muslStage2,
           gnumakeStage2,
           ccacheBin,
+          m4Stage2,
+          busyboxStage1,
         ]
     },
-
-#final 
- busyboxStage2,
-  llvmStage2,
+    #final 
+     llvmStage2,
   musl,
   gnumake,
-  m4 =
-    m4Base 
+  m4,
+  busyboxStage2,
+  flex =
+    flexBase
     & {
       stage=-1,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
           llvmStage2,
           musl,
           gnumake,
           ccacheBin,
+          m4,
+          busyboxStage2,
         ]
-    },
-
-
-
+    }
 }

@@ -41,4 +41,32 @@ in
         ]
     },
 
+
+
+
+
+  busyboxStage2,
+  llvmStage2,
+  gnumakeStage3,
+  ccacheBin,
+  musl=    muslBase
+    & {
+      stage = -1,
+
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          gnumakeStage3,
+          ccacheBin,
+          muslStage2
+        ]
+    },
+
+
+
+
+
+
+
 }

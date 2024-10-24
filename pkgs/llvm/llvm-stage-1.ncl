@@ -7,7 +7,7 @@ let llvmBaseTarget | lib.CmakePackage
     let b2 = (llvmBase & { isLlvm = true }) in
     b2
     & {
-
+      baseName="llvm",
       cmakeArgs | priority -9
         =
           (llvmBase.cmakeArgs)
@@ -28,35 +28,20 @@ let llvmBaseTarget | lib.CmakePackage
             "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
             "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
           ],
+           installPhase | priority 1
+      =
+        b2.installPhase
+        @ [
+          "cd ${DEST}/usr/bin",
+          "ln -s clang cc",
+          "ln -s clang++ c++",
+          "ln -s clang-cpp cpp",
+        ]
 
-      # buildEnv|priority 1=b2.buildEnv&{
-      #   LDFLAGS|priority 1=
-      #   let flag=[
-      #     "-L/usr/lib/x86_64-unknown-linux-musl"
 
-      #   ] in if (std.record.has_field "LDFLAGS" b2.buildEnv) then
-
-      #    (b2.buildEnv.LDFLAGS @ flag) else flag,
-      # },
     }
   in
-let _llvmStage1 | lib.CmakePackage
-  =
-    llvmBaseTarget
-    & {
-      name = "llvm-stage-1",
-      #   buildInputs = [
-      #     (import "../busybox/busybox-stage-0.ncl"),
-      #     (import "../llvm/llvm-stage-0.ncl"),
-      #     (import "../musl/musl-stage-1.ncl"),
-      #     (import "../gnumake/gnumake-stage-1.ncl"),
-      #     (import "../ccache/ccache-bin.ncl"),
-      #     (import "../linux-headers/linux-headers-stage-1.ncl"), # .linuxHeadersStage1,
-      #     (import "../cmake/cmake-stage-1.ncl"),
-      #     (import "../python/python-stage-1.ncl"),
-      #   ],
-    }
-  in
+
 {
   busyboxStage0,
   llvmStage0,
@@ -68,8 +53,9 @@ let _llvmStage1 | lib.CmakePackage
   cmakeStage1,
   pythonStage1,
   llvmStage1 =
-    _llvmStage1
+    llvmBaseTarget
     & {
+      stage=1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -81,5 +67,65 @@ let _llvmStage1 | lib.CmakePackage
           cmakeStage1,
           pythonStage1,
         ]
-    }
+    },
+
+
+
+
+
+
+
+# 2
+busyboxStage1,
+  llvmStage1,
+  muslStage2,
+  gnumakeStage2,
+  samuraiStage2,
+  linuxHeadersStage2,
+  cmakeStage2,
+  pythonStage2,
+  llvmStage2 =
+    llvmBaseTarget
+    & {
+      stage=2,
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage2,
+          samuraiStage2,
+          ccacheBin,
+          linuxHeadersStage2,
+          cmakeStage2,
+          pythonStage2,
+        ]
+    },
+
+
+# final 
+busyboxStage2,
+  llvmStage2,
+  musl,
+  gnumake,
+  samurai,
+  linuxHeaders,
+  cmake,
+  python,
+  llvm =
+    llvmBaseTarget
+    & {
+      stage=-1,
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          musl,
+          samurai,
+          ccacheBin,
+          linuxHeaders,
+          cmake,
+          python,
+        ]
+    },
+
 }
