@@ -1,4 +1,4 @@
-let lib = (import "lib2.ncl").lib
+let lib = (import "lib.ncl").lib
 in
 
 let DrvSchema = {
