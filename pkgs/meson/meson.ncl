@@ -1,6 +1,5 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
+  lib,
   busybox,
   pythonSetuptools,
   pythonFull,
