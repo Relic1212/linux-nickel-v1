@@ -307,8 +307,8 @@ in
         baseBuildinputPackages | priority -1000
           =
             Package.baseBuildinputPackages
-            @ ((
-              if (stage == -1) then
+            @ (
+              if (stage == -1) then (
                 [
                   pkgs.meson,
                   pkgs.samurai,
@@ -318,9 +318,9 @@ in
                 ]
                 @ (if isLlvm then [pkgs.llvm] else [])
                 @ (if enableCcache then [pkgs.ccacheBin] else [])
-              else
+            ) else 
                 []
-            )
+            
             ),
       },
     CmakePackage =
@@ -328,13 +328,37 @@ in
       & {
         # cmake,
         stage,
-        isStatic | default = Package.isStatic,
-        buildInChroot | default = Package.buildInChroot,
-        # biPkgs|priority -1000= if (stage==-1) then [] else [],
+        isStatic,
+        buildInChroot,
+        isLlvm,
+        enableCcache,
 
-        enableParallel | priority -10 = Package.enableParallel,
+        enableParallel,
         cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
         generator | nullOrString | default = null,
+
+        baseBuildinputPackages | priority -1000
+          =
+            Package.baseBuildinputPackages
+            @ (
+              if (stage == -1) then
+                ([
+                  pkgs.cmake,
+                  pkgs.pkgconf,
+                  pkgs.musl,
+                ]
+                @ (if isLlvm then [pkgs.llvm] else [])
+                @ (if enableCcache then [pkgs.ccacheBin] else [])
+                @ (if (generator=="Ninja") then [pkgs.samurai] else [])
+                )
+              else
+                []
+            
+            ),
+
+
+
+
         configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
         buildPhase | priority -10 = ["cmake --build ."],
         installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],

@@ -12,8 +12,6 @@
         # buildInputs=[],
         enableCcache=false,
         generator="Ninja",
-        biPkgs=[
-             pkgs.samurai,pkgs.llvm 
-        ]
+       
     }
 }
