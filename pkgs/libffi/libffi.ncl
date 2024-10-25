@@ -1,11 +1,6 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
-  llvm,
-  gnumake,
-  busybox,
-  musl,
-  ccacheBin,
+  lib,
+
   libffi | lib.AutotoolsPackage
     = {
       name = "libffi",
@@ -19,13 +14,5 @@ in
           "--enable-portable-binary",
           "--disable-exec-static-tramp",
         ],
-      buildInputs =
-        lib.biMap [
-          llvm,
-          gnumake,
-          busybox,
-          musl,
-          ccacheBin,
-        ]
     }
 }
