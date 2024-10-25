@@ -1,6 +1,5 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
+  lib,
   llvm,
   gnumake,
   busybox,
@@ -36,16 +35,10 @@ in
           "--with-staticdir=bin",
           "--with-usrsbindir=bin",
         ],
-      buildInputs =
-        lib.biMap [
-          llvm,
-          gnumake,
-          busybox,
-          musl,
-          ccacheBin,
-          pkgconf,
-          linuxHeaders,
-        ],
+      biPkgs = [
+        pkgconf,
+        linuxHeaders,
+      ],
       buildPhase = [
         "make DESTDIR=${DEST} install_device-mapper",
       ],
