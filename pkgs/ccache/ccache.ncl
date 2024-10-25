@@ -2,6 +2,7 @@
 {
     # busybox,
     lib,
+    pkgs,
     ccache|lib.CmakePackage={
         name="ccache",
         # utilsProvider=busybox,
@@ -13,7 +14,7 @@
         enableCcache=false,
         generator="Ninja",
         biPkgs=[
-            lib.pkgs.cmake, lib.pkgs.samurai,lib.pkgs.musl,lib.pkgs.llvm 
+            pkgs.cmake, pkgs.samurai,pkgs.musl,pkgs.llvm 
         ]
     }
 }

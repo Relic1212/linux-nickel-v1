@@ -1,6 +1,8 @@
 
 let _pkgsArray = [
-  { lib = import "lib.ncl" },
+  # {  import "lib.ncl" },
+  # {pkgs|default=null},
+   import "lib2.ncl"  ,
   import "../pkgs/musl/musl-stage-0.ncl",
   import "../pkgs/musl/musl.ncl",
   import "../pkgs/llvm/llvm-stage-0.ncl",
@@ -48,10 +50,15 @@ let _pkgsArray = [
   # }
 ]
 in
-
+let 
+  __pkgs =  (std.record.merge_all ( _pkgsArray))
+in
+let 
+_pkgs=__pkgs&{pkgs=__pkgs}
+in
 let
  
-  pkgs = std.record.remove "lib" (std.record.merge_all ( _pkgsArray))
+  pkgs = std.record.remove "pkgs"  (std.record.remove "lib" (_pkgs))
   
 in
 pkgs
