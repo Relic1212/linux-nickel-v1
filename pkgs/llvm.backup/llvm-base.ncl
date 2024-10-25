@@ -4,8 +4,6 @@ let constants = import "../../nickellib/constants.ncl"
 in
 let llvmBase | lib.CmakePackage
   = {
-    baseName = "llvm",
-    stage,
     sourceInputs = [
       {
         src = {
@@ -244,16 +242,12 @@ let llvmBase | lib.CmakePackage
           else
             []
         )
-        @ (if enableCcache then ["-DLLVM_CCACHE_BUILD:BOOL=ON"] else [])
-        @ (
-          if (stage == 0) then
-            [
-              "-DLLVM_TARGETS_TO_BUILD='X86'",
-              "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
-            ]
-          else
-            []
-        ),
+        @ (if enableCcache then ["-DLLVM_CCACHE_BUILD:BOOL=ON"] else []),
+    # envSetupPhase|priority 100=( std.array.map (fun s=> (if (s=="export SRC=/tmp/workdir/src")
+    # then "export SRC=/tmp/workdir/src/llvm" else s)
+    # ) lib.CmakePackage.envSetupPhase),
+    # unpackPhase=(lib.CmakePackage.unpackPhase ++ "export SRC=" )
+    # configurePhase=(["export SRC=\"${SRC}/llvm\""]@lib.CmakePackage.configurePhase),
 
     configurePhase | priority -9
       = [
@@ -267,27 +261,6 @@ let llvmBase | lib.CmakePackage
           "for f in $(find ${DEST}/usr/bin -type f);do\n\tstrip ${f} || echo \"not an elf\"\ndone",
         ]
       ),
-
-    buildEnv = (
-      if (stage != 0) then
-        lib.CmakePackage.buildEnv
-      else
-        (
-          let llvmBuildenv = (lib.CmakePackage & { isLlvm = true }).buildEnv in
-          (
-            llvmBuildenv
-            & {
-              CPPFLAGS = [
-                "-I/tmp/workdir/sysroot/usr/include",
-                "-idirafter=/tmp/workdir/sysroot/"
-              ],
-              CFLAGS | priority 1 = (llvmBuildenv.CFLAGS @ CPPFLAGS),
-              CXXFLAGS | priority 1 = (llvmBuildenv.CXXFLAGS @ CPPFLAGS),
-              LDFLAGS | priority 1 = (llvmBuildenv.LDFLAGS @ ["-L/tmp/workdir/sysroot/usr/lib"]),
-            }
-          )
-        )
-    ),
   }
   in
 llvmBase

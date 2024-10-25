@@ -1,11 +1,10 @@
-let b = ((import "llvm-base.ncl") & { stage = 0 })
+let b = import "llvm-base-stage-0.ncl"
 in
 let lib = import "../../nickellib/lib.ncl"
 in
 let libs0 = (
   b
   & {
-    stage = 0,
     name | priority 1 = "llvm-baselibs-stage-0",
     cmakeArgs | force
       =

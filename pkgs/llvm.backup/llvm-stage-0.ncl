@@ -1,4 +1,4 @@
-let b = ((import "llvm-base.ncl") & { stage = 0 })
+let b = (import "llvm-base-stage-0.ncl")
 in
 let lib = import "../../nickellib/lib.ncl"
 in
