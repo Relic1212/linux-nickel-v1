@@ -1,0 +1,8 @@
+# sys /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
+# proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0
+
+# devpts /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0
+# shm /dev/shm tmpfs rw,nosuid,nodev,relatime,inode64 0 0
+# tmpfs   /tmp    tmpfs   nosuid,nodev,mode=1777  0       0
+
+UUID=dd95fdd6-681c-4ebe-98eb-25822368a556       /home    ext4   defaults,noatime,nofail    0   0

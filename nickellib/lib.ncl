@@ -205,9 +205,11 @@ in
       Package
       & {
         enableParallel,
-        makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []),
+        makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []) @ extraMakeArgs,
+        extraMakeArgs | Array String | default = [],
         makeTargets | nullOrArray | default = null,
-        makeInstallArgs | nullOrArray | default = ["DESTDIR=${DEST}"],
+        makeInstallArgs | nullOrArray | default = ["DESTDIR=${DEST}"] @ extraMakeInstallArgs,
+        extraMakeInstallArgs | Array String | default = [],
         makeInstallTargets | nullOrArray | default = ["install"],
         utilsProviders,
         stage,
@@ -241,7 +243,8 @@ in
       MakePackage
       & {
         isStatic | default = MakePackage.isStatic,
-        configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []),
+        configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ extraConfigureFlags,
+        extraConfigureFlags | Array String | default = [],
         configureScript | String | default = "${SRC}/configure",
         configurePhase | priority -11
           = [
@@ -282,7 +285,9 @@ in
         isLlvm,
         stage,
 
-        mesonArgs | nullOrArray | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
+        mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
+        baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
+        extraMesonArgs | Array String | default = [],
 
         baseBuildinputPackages | priority -1000
           =
@@ -315,7 +320,8 @@ in
         enableCcache,
 
         enableParallel,
-        cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
+        cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ extraCmakeArgs,
+        extraCmakeArgs | Array String | default = [],
         generator | nullOrString | default = null,
 
         baseBuildinputPackages | priority -1000

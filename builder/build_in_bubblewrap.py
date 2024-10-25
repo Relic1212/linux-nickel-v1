@@ -210,7 +210,12 @@ def build(h, pkg_drvs: str) -> None:
         ef_dest = f"{workdir}/files/{ef_file}"
         if os.path.exists(ef_dest):
             raise FileExistsError(ef_dest)
-        subprocess.run(["cp", ef_uri, ef_dest], check=True)
+        if os.path.isdir(ef_uri):
+            ef_cp_cmd = ["cp","-r"]
+        else:
+            ef_cp_cmd = ["cp"]
+
+        subprocess.run(ef_cp_cmd + [ef_uri, ef_dest], check=True)
 
     build_command = drv["scriptContent"]
     build_script_path = workdir + "/build.sh"

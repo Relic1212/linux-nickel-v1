@@ -1,0 +1,6 @@
+NAME="Experimental Linux"
+ID=Linux
+VERSION_ID=Latest
+PRETTY_NAME="Experimental Linux Latest"
+HOME_URL="http://localhost"
+BUG_REPORT_URL="http://localhost"
