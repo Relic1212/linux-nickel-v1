@@ -86,7 +86,11 @@ let lib = {
       LD | default = "lld",
     },
   staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
+  pkgs=import "pkgsRecord.ncl",
   Package = {
+    # others 
+    # busybox,
+    #vars
     baseName | String | optional,
     name | String | default
       =
@@ -94,7 +98,10 @@ let lib = {
           baseName
         else
           "%{baseName}-stage-%{ std.to_string stage}",
-    buildInputs | Array String | default = [],
+    buildInputs | Array String | default = (biMap (biPkgs @ baseBuildinputPackages)),
+    utilsProvider|Dyn|default=if (stage==-1) then pkgs.busybox else null  ,
+    baseBuildinputPackages|Array Dyn |not_exported|Array Dyn|default = if (utilsProvider==null) then [] else [utilsProvider],
+    biPkgs |Array Dyn | not_exported|default=[],
     # buildInputNames | Array String | default = [],
     buildDir | nullOrString | default = null,
     buildEnv | BuildEnv | default
@@ -183,7 +190,7 @@ let lib = {
     enableParallel | Bool | default = true,
     enableCcache | Bool | default = true,
     buildInChroot | Bool | default = (stage != 0),
-    stage | default = -1,
+    stage | Number |default = -1,
   },
   MakePackage =
     Package
@@ -233,8 +240,11 @@ let lib = {
   CmakePackage =
     Package
     & {
+      cmake,
+      stage,
       isStatic | default = Package.isStatic,
       buildInChroot | default = Package.buildInChroot,
+      # biPkgs|priority -1000= if (stage==-1) then [] else [],
 
       enableParallel | priority -10 = Package.enableParallel,
       cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []),
