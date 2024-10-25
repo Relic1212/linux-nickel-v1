@@ -8,7 +8,6 @@ r={
   (import "../pkgs/musl/musl.ncl")&
   (import "../pkgs/llvm/llvm-stage-0.ncl")&
   (import "../pkgs/llvm/llvm-baselibs-stage-0.ncl")&
-  # (import "../pkgs/linux-headers/linux-headers-stage-0.ncl")&
   (import "../pkgs/linux-headers/linux-headers.ncl")&
   (import "../pkgs/libssp-nonshared/libssp-nonshared-stage-0.ncl")&
   (import "../pkgs/busybox/busybox-stage-0.ncl")&
@@ -22,7 +21,7 @@ r={
   (import "../pkgs/m4/m4.ncl")&
   (import "../pkgs/flex/flex.ncl")&
   (import "../pkgs/bison/bison.ncl")&
-  (import "../pkgs/llvm/llvm-stage-1.ncl")&
+  (import "../pkgs/llvm/llvm.ncl")&
   (import "../pkgs/ninja/ninja-stage-1.ncl")&
   (import "../pkgs/samurai/samurai.ncl")&
   (import "../pkgs/bash/bash.ncl")&
