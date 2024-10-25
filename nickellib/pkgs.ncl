@@ -36,6 +36,10 @@ let _pkgsArray = [
   import "../pkgs/python/python-full.ncl",
   import "../pkgs/libffi/libffi.ncl",
   import "../pkgs/meson/meson.ncl",
+  import "../pkgs/lvm2/lvm2.ncl",
+  import "../pkgs/json-c/json-c.ncl",
+
+
 
   # {
   #     name=pkgsRecord."flex-stage-1".name ++ "-other"
