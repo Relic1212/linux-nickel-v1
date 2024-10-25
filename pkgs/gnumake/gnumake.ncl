@@ -1,35 +1,32 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 
-let { gnumakeSourceInput } = (import "gnumake-base.ncl")
-in
-
-let _gnumake | lib.AutotoolsPackage
+let _gnumake 
   = {
     baseName = "gnumake",
 
-    sourceInputs = [
-      gnumakeSourceInput
-    ],
+  
+        singleSource=(import "gnumake-src.ncl"),
+
   }
   in
 {
+  lib,
+  pkgs,
   busyboxStage1,
   llvmStage1,
   muslStage1,
   gnumakeStage1,
   ccacheBin,
-  gnumakeStage2 =
+  gnumakeStage2 |lib.AutotoolsPackage=
     _gnumake
     & {
       stage = 2,
       buildInputs =
         lib.biMap [
-          busyboxStage1,
-          llvmStage1,
-          muslStage1,
-          gnumakeStage1,
-          ccacheBin,
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.muslStage1,
+          pkgs.gnumakeStage1,
+          pkgs.ccacheBin,
         ]
     },
 
@@ -38,33 +35,33 @@ let _gnumake | lib.AutotoolsPackage
   muslStage2,
   gnumakeStage2,
   ccacheBin,
-  gnumakeStage3 =
+  gnumakeStage3  |lib.AutotoolsPackage=
     _gnumake
     & {
       stage = 3,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
-          muslStage2,
-          gnumakeStage2,
-          ccacheBin,
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.muslStage2,
+          pkgs.gnumakeStage2,
+          pkgs.ccacheBin,
         ]
     },
 
   # final
   musl,
-  gnumake =
+  gnumake  |lib.AutotoolsPackage=
     _gnumake
     & {
       stage = -1,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
-          musl,
-          gnumakeStage3,
-          ccacheBin,
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.musl,
+          pkgs.gnumakeStage3,
+          pkgs.ccacheBin,
         ]
     },
 }

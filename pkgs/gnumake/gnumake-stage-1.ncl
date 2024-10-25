@@ -1,16 +1,11 @@
 let lib = import "../../nickellib/lib.ncl"
 in
 
-let { gnumakeSourceInput } = (import "gnumake-base.ncl")
-in
-
 let _gnumakeStage1 | lib.AutotoolsPackage
   = {
     name = "gnumake-stage-1",
 
-    sourceInputs = [
-      gnumakeSourceInput
-    ],
+    singleSource=(import "gnumake-src.ncl"),
     configureFlags | priority 10
       =
         [

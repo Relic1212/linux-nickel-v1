@@ -129,8 +129,8 @@ in
         = (biMap (biPkgs @ baseBuildinputPackages)),
       hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
       utilsProviders | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
-      baseBuildinputPackages | Array Dyn | default = utilsProviders,
-      biPkgs | Array Dyn | default = [],
+      baseBuildinputPackages| not_exported | Array Dyn | default = utilsProviders,
+      biPkgs | Array Dyn|not_exported | default = [],
       # buildInputNames | Array String | default = [],
       buildDir | nullOrString | default = null,
       buildEnv | BuildEnv | default
