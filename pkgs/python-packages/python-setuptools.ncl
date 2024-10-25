@@ -1,10 +1,7 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
-  busybox,
-  pythonFull,
-  musl,
-  llvm,
+  lib,
+  pkgs,
+
   pythonSetuptools | lib.SetuptoolPackage
     = {
       name = "python-setuptools",
@@ -13,6 +10,6 @@ in
         sha256sum = "514dc60688d3118c9883a3dd54a38b28128ea912c01ea325d6e204a93da3b524",
       },
       pythonExecutable = "python3",
-      buildInputs = lib.biMap [busybox, pythonFull]
+      buildInputs = lib.biMap [pkgs.busybox, pkgs.pythonFull]
     }
 }

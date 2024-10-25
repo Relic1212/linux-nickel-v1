@@ -1,73 +1,67 @@
-let lib = import "../../nickellib/lib.ncl"
-in
-
-let bisonBase = import "bison-base.ncl" in
-
 {
-  # 1
-  muslStage1,
-  gnumakeStage1,
-  ccacheBin,
-  m4Stage1,
-  busyboxStage0,
-  llvmStage0,
-  bisonStage1 =
-    bisonBase
-    & {
-      stage = 1,
-      buildInputs =
-        lib.biMap [
-          muslStage1,
-          gnumakeStage1,
-          ccacheBin,
-          m4Stage1,
-          busyboxStage0,
-          llvmStage0
-        ]
+  pkgs,
+  lib,
+  # base
+  _bisonBase | lib.AutotoolsPackage
+    = {
+      baseName | default = "bison",
+      sourceInputs = [
+        {
+          src = { uri = "https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz", sha256sum = "9bba0214ccf7f1079c5d59210045227bcf619519840ebfa80cd3849cff5a5bf2" }
+        }
+      ],
     },
+  # 1
+
+  bisonStage1 | lib.AutotoolsPackage
+    =
+      _bisonBase
+      & {
+        stage = 1,
+        buildInputs =
+          lib.biMap [
+            pkgs.muslStage1,
+            pkgs.gnumakeStage1,
+            pkgs.ccacheBin,
+            pkgs.m4Stage1,
+            pkgs.busyboxStage0,
+            pkgs.llvmStage0
+          ]
+      },
 
   # 2
-  muslStage2,
-  gnumakeStage2,
-  ccacheBin,
-  m4Stage2,
-  busyboxStage1,
-  llvmStage1,
-  bisonStage2 =
-    bisonBase
-    & {
-      stage = 2,
-      buildInputs =
-        lib.biMap [
-          muslStage2,
-          gnumakeStage2,
-          ccacheBin,
-          m4Stage2,
-          busyboxStage1,
-          llvmStage1,
-        ]
-    },
+
+  bisonStage2 | lib.AutotoolsPackage
+    =
+      _bisonBase
+      & {
+        stage = 2,
+        buildInputs =
+          lib.biMap [
+            pkgs.muslStage2,
+            pkgs.gnumakeStage2,
+            pkgs.ccacheBin,
+            pkgs.m4Stage2,
+            pkgs.busyboxStage1,
+            pkgs.llvmStage1,
+          ]
+      },
 
   # final
 
-  musl,
-  gnumake,
-  ccacheBin,
-  m4,
-  busyboxStage2,
-  llvmStage2,
-  bison =
-    bisonBase
-    & {
-      stage = -1,
-      buildInputs =
-        lib.biMap [
-          musl,
-          gnumake,
-          ccacheBin,
-          m4,
-          busyboxStage2,
-          llvmStage2,
-        ]
-    }
+  bison | lib.AutotoolsPackage
+    =
+      _bisonBase
+      & {
+        stage = -1,
+        buildInputs =
+          lib.biMap [
+            pkgs.musl,
+            pkgs.gnumake,
+            pkgs.ccacheBin,
+            pkgs.m4,
+            pkgs.busyboxStage2,
+            pkgs.llvmStage2,
+          ]
+      }
 }
