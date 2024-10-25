@@ -27,7 +27,8 @@ in
   llvmStage1,
   gnumakeStage2,
   ccacheBin,
-  muslStage2=    muslBase
+  muslStage2 =
+    muslBase
     & {
       stage = 2,
 
@@ -41,15 +42,12 @@ in
         ]
     },
 
-
-
-
-
   busyboxStage2,
   llvmStage2,
   gnumakeStage3,
   ccacheBin,
-  musl=    muslBase
+  musl =
+    muslBase
     & {
       stage = -1,
 
@@ -62,11 +60,4 @@ in
           muslStage2
         ]
     },
-
-
-
-
-
-
-
 }

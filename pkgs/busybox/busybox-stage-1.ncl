@@ -1,7 +1,7 @@
 
 let lib = import "../../nickellib/lib.ncl"
 in
-let x=import "busybox-base.ncl" in 
+let x=import "./busybox-base.ncl" in 
 let busyboxTarget =x.busyboxBaseTarget
 in
 let 
@@ -56,7 +56,7 @@ llvmStage2,muslStage2,linuxHeadersStage2,ccacheBin,gnumakeStage2,
    },
 
 #final 
-llvm,musl,linuxHeaders,ccacheBin,gnumake,
+   llvm,musl,linuxHeaders,ccacheBin,gnumake,
    busybox=busyboxTarget&{
     stage=-1,
     buildInputs=lib.biMap[
@@ -72,4 +72,4 @@ llvm,musl,linuxHeaders,ccacheBin,gnumake,
    }
 
 
-   }
+}

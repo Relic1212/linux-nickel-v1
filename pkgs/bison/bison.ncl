@@ -14,7 +14,7 @@ let bisonBase = import "bison-base.ncl" in
   bisonStage1 =
     bisonBase
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           muslStage1,
@@ -26,8 +26,8 @@ let bisonBase = import "bison-base.ncl" in
         ]
     },
 
-# 2
-     muslStage2,
+  # 2
+  muslStage2,
   gnumakeStage2,
   ccacheBin,
   m4Stage2,
@@ -36,7 +36,7 @@ let bisonBase = import "bison-base.ncl" in
   bisonStage2 =
     bisonBase
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           muslStage2,
@@ -48,9 +48,9 @@ let bisonBase = import "bison-base.ncl" in
         ]
     },
 
-# final
+  # final
 
-     musl,
+  musl,
   gnumake,
   ccacheBin,
   m4,
@@ -59,7 +59,7 @@ let bisonBase = import "bison-base.ncl" in
   bison =
     bisonBase
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           musl,
@@ -70,7 +70,4 @@ let bisonBase = import "bison-base.ncl" in
           llvmStage2,
         ]
     }
-
-
-
 }

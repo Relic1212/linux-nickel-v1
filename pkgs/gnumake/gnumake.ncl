@@ -33,7 +33,7 @@ let _gnumake | lib.AutotoolsPackage
         ]
     },
 
-busyboxStage2,
+  busyboxStage2,
   llvmStage2,
   muslStage2,
   gnumakeStage2,
@@ -52,11 +52,9 @@ busyboxStage2,
         ]
     },
 
-
-
-# final
-musl ,
-gnumake =
+  # final
+  musl,
+  gnumake =
     _gnumake
     & {
       stage = -1,
@@ -69,6 +67,4 @@ gnumake =
           ccacheBin,
         ]
     },
-
-
 }

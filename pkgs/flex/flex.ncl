@@ -12,7 +12,7 @@ let flexBase = import "flex-base.ncl" in
   flexStage1 =
     flexBase
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           llvmStage0,
@@ -24,7 +24,7 @@ let flexBase = import "flex-base.ncl" in
         ]
     },
 
-#2
+  #2
   llvmStage1,
   muslStage2,
   gnumakeStage2,
@@ -33,7 +33,7 @@ let flexBase = import "flex-base.ncl" in
   flexStage2 =
     flexBase
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           llvmStage1,
@@ -44,8 +44,8 @@ let flexBase = import "flex-base.ncl" in
           busyboxStage1,
         ]
     },
-    #final 
-     llvmStage2,
+  #final
+  llvmStage2,
   musl,
   gnumake,
   m4,
@@ -53,7 +53,7 @@ let flexBase = import "flex-base.ncl" in
   flex =
     flexBase
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           llvmStage2,

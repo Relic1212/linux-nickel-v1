@@ -3,8 +3,6 @@ in
 let linuxHeadersBase = (import "./linux-headers-base.ncl")
 in
 
-
-
 {
 
   busyboxStage0,
@@ -18,7 +16,7 @@ in
   linuxHeadersStage1 =
     linuxHeadersBase
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -32,8 +30,6 @@ in
         ]
     },
 
-
-
   busyboxStage1,
   llvmStage1,
   muslStage2,
@@ -44,7 +40,7 @@ in
   linuxHeadersStage2 =
     linuxHeadersBase
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           busyboxStage1,
@@ -58,7 +54,7 @@ in
         ]
     },
 
-#final 
+  #final
   busyboxStage2,
   llvmStage2,
   musl,
@@ -69,7 +65,7 @@ in
   linuxHeaders =
     linuxHeadersBase
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           busyboxStage2,
@@ -82,5 +78,4 @@ in
           bison,
         ]
     },
-
 }

@@ -45,8 +45,7 @@ let _samurai | lib.MakePackage
         ]
     },
 
-
-#2
+  #2
   muslStage2,
   busyboxStage1,
   llvmStage1,
@@ -66,7 +65,7 @@ let _samurai | lib.MakePackage
         ]
     },
 
-#final
+  #final
   musl,
   busyboxStage2,
   llvmStage2,
@@ -85,28 +84,6 @@ let _samurai | lib.MakePackage
           gnumake
         ]
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   #   muslStage0,
   #   samuraiStage0 =

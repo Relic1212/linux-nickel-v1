@@ -11,8 +11,8 @@ let _pythonBase | lib.AutotoolsPackage
       name | priority 1 = "python-full",
 
       configurePhase = (
-        ["cd ${SRC}"] @
-        (pythonBase.configurePhase)
+        ["cd ${SRC}"]
+        @ (pythonBase.configurePhase)
         @ [
           m%"
         printf "
@@ -112,11 +112,12 @@ let _pythonBase | lib.AutotoolsPackage
         " > ./Modules/Setup.local"%
         ]
       ),
-      installPhase=lib.AutotoolsPackage.installPhase@[
-        "cd $DEST/usr/bin",
-"ln -s python3 python",
-
-      ]
+      installPhase =
+        lib.AutotoolsPackage.installPhase
+        @ [
+          "cd $DEST/usr/bin",
+          "ln -s python3 python",
+        ]
     }
   )
   in

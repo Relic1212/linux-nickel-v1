@@ -2,7 +2,7 @@ let lib = import "../../nickellib/lib.ncl"
 in
 let m4Base | lib.AutotoolsPackage
   = {
-      baseName = "m4",
+    baseName = "m4",
     buildEnv = (lib.AutotoolsPackage.buildEnv & { LD = "lld" }),
     sourceInputs = [
       {

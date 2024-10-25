@@ -1,22 +1,26 @@
 let lib = import "../../nickellib/lib.ncl"
-in 
+in
 {
-        llvm,musl,gnumake,busybox,ccacheBin,
-#
-perl|lib.AutotoolsPackage={
-    name="perl",
-    sourceInputs= [
-          {
-            src={
-                uri= "https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz",
-                sha256sum="c740348f357396327a9795d3e8323bafd0fe8a5c7835fc1cbaba0cc8dfe7161f",
-            }
+  llvm,
+  musl,
+  gnumake,
+  busybox,
+  ccacheBin,
+  #
+  perl | lib.AutotoolsPackage
+    = {
+      name = "perl",
+      sourceInputs = [
+        {
+          src = {
+            uri = "https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz",
+            sha256sum = "c740348f357396327a9795d3e8323bafd0fe8a5c7835fc1cbaba0cc8dfe7161f",
           }
-    ],
-    configurePhase=[
-
-"cd ${SRC}",
-m%"./Configure \
+        }
+      ],
+      configurePhase = [
+        "cd ${SRC}",
+        m%"./Configure \
     -Dprefix=/usr \
     -Ddlext='none' \
     -Dso='none' \
@@ -28,11 +32,8 @@ m%"./Configure \
     -Dd_access=true \
     -Dd_eaccess='undef' \
     -des"%,
-"make depend -j$(nproc)",
-
-    ],
-    buildInputs=lib.biMap[ llvm,musl,gnumake,busybox,ccacheBin, ],
-}
-
-
+        "make depend -j$(nproc)",
+      ],
+      buildInputs = lib.biMap [llvm, musl, gnumake, busybox, ccacheBin, ],
+    }
 }

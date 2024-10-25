@@ -9,9 +9,9 @@ let m4Base = import "m4-base.ncl" in
   gnumakeStage1,
   ccacheBin,
   m4Stage1 =
-    m4Base 
+    m4Base
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -22,15 +22,15 @@ let m4Base = import "m4-base.ncl" in
         ]
     },
 
-#2
- busyboxStage1,
+  #2
+  busyboxStage1,
   llvmStage1,
   muslStage2,
   gnumakeStage2,
   m4Stage2 =
-    m4Base 
+    m4Base
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           busyboxStage1,
@@ -41,15 +41,15 @@ let m4Base = import "m4-base.ncl" in
         ]
     },
 
-#final 
- busyboxStage2,
+  #final
+  busyboxStage2,
   llvmStage2,
   musl,
   gnumake,
   m4 =
-    m4Base 
+    m4Base
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           busyboxStage2,
@@ -59,7 +59,4 @@ let m4Base = import "m4-base.ncl" in
           ccacheBin,
         ]
     },
-
-
-
 }

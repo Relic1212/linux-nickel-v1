@@ -120,7 +120,7 @@ let _pythonBaseMinimal | lib.AutotoolsPackage
   pythonStage1 =
     _pythonBaseMinimal
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -131,10 +131,9 @@ let _pythonBaseMinimal | lib.AutotoolsPackage
         ],
     },
 
+  # 2
 
-# 2
-
-busyboxStage1,
+  busyboxStage1,
   llvmStage1,
   gnumakeStage2,
   ccacheBin,
@@ -143,7 +142,7 @@ busyboxStage1,
   pythonStage2 =
     _pythonBaseMinimal
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           busyboxStage1,
@@ -154,12 +153,9 @@ busyboxStage1,
         ],
     },
 
+  # final
 
-
-# final
-
-
-busyboxStage2,
+  busyboxStage2,
   llvmStage2,
   gnumake,
   ccacheBin,
@@ -168,7 +164,7 @@ busyboxStage2,
   python =
     _pythonBaseMinimal
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           busyboxStage2,
@@ -178,9 +174,4 @@ busyboxStage2,
           musl
         ],
     },
-
-
-
-
-
 }

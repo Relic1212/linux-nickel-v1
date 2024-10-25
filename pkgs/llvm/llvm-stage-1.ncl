@@ -7,7 +7,7 @@ let llvmBaseTarget | lib.CmakePackage
     let b2 = (llvmBase & { isLlvm = true }) in
     b2
     & {
-      baseName="llvm",
+      baseName = "llvm",
       cmakeArgs | priority -9
         =
           (llvmBase.cmakeArgs)
@@ -28,17 +28,15 @@ let llvmBaseTarget | lib.CmakePackage
             "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
             "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
           ],
-           installPhase | priority 1
-      =
-        b2.installPhase
-        @ [
-          "cd ${DEST}/usr/bin",
-          "ln -s clang cc",
-          "ln -s clang++ c++",
-          "ln -s clang-cpp cpp",
-        ]
-
-
+      installPhase | priority 1
+        =
+          b2.installPhase
+          @ [
+            "cd ${DEST}/usr/bin",
+            "ln -s clang cc",
+            "ln -s clang++ c++",
+            "ln -s clang-cpp cpp",
+          ]
     }
   in
 
@@ -55,7 +53,7 @@ let llvmBaseTarget | lib.CmakePackage
   llvmStage1 =
     llvmBaseTarget
     & {
-      stage=1,
+      stage = 1,
       buildInputs =
         lib.biMap [
           busyboxStage0,
@@ -69,14 +67,8 @@ let llvmBaseTarget | lib.CmakePackage
         ]
     },
 
-
-
-
-
-
-
-# 2
-busyboxStage1,
+  # 2
+  busyboxStage1,
   llvmStage1,
   muslStage2,
   gnumakeStage2,
@@ -87,7 +79,7 @@ busyboxStage1,
   llvmStage2 =
     llvmBaseTarget
     & {
-      stage=2,
+      stage = 2,
       buildInputs =
         lib.biMap [
           busyboxStage1,
@@ -101,9 +93,8 @@ busyboxStage1,
         ]
     },
 
-
-# final 
-busyboxStage2,
+  # final
+  busyboxStage2,
   llvmStage2,
   musl,
   gnumake,
@@ -114,7 +105,7 @@ busyboxStage2,
   llvm =
     llvmBaseTarget
     & {
-      stage=-1,
+      stage = -1,
       buildInputs =
         lib.biMap [
           busyboxStage2,
@@ -127,5 +118,4 @@ busyboxStage2,
           python,
         ]
     },
-
 }
