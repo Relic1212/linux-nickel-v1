@@ -1,111 +1,91 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 let _llvmBase = import "./llvm-base.ncl"
 in
-let _llvmBaseTarget | lib.CmakePackage
-  =
-    let b2 = (_llvmBase & { isLlvm = true }) in
-    b2
-    & {
-      baseName = "llvm",
-      cmakeArgs | priority -9
-        =
-          (_llvmBase.cmakeArgs)
-          @ [
-            "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
-            "-DLLVM_ENABLE_PROJECTS='lld;clang'",
-            "-G Ninja",
-            "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
-            "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
-          ],
-      installPhase | priority 1
-        =
-          b2.installPhase
-          @ [
-            "cd ${DEST}/usr/bin",
-            "ln -s clang cc",
-            "ln -s clang++ c++",
-            "ln -s clang-cpp cpp",
-          ]
-    }
-  in
 
 {
-  busyboxStage0,
-  llvmStage0,
-  muslStage1,
-  gnumakeStage1,
-  samuraiStage1,
-  ccacheBin,
-  linuxHeadersStage1,
-  cmakeStage1,
-  pythonStage1,
+  pkgs,
+  lib,
+  # base if stage!=0
+  _llvmBaseTarget | lib.CmakePackage
+    =
+      let b2 = (_llvmBase & { isLlvm = true }) in
+      b2
+      & {
+        baseName = "llvm",
+        cmakeArgs | priority -9
+          =
+            (_llvmBase.cmakeArgs)
+            @ [
+              "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
+              "-DLLVM_ENABLE_PROJECTS='lld;clang'",
+              "-G Ninja",
+              "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
+              "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
+            ],
+        installPhase | priority 1
+          =
+            b2.installPhase
+            @ [
+              "cd ${DEST}/usr/bin",
+              "ln -s clang cc",
+              "ln -s clang++ c++",
+              "ln -s clang-cpp cpp",
+            ]
+      },
+
+  # 1
+
   llvmStage1 =
     _llvmBaseTarget
     & {
       stage = 1,
       buildInputs =
         lib.biMap [
-          busyboxStage0,
-          llvmStage0,
-          muslStage1,
-          samuraiStage1,
-          ccacheBin,
-          linuxHeadersStage1,
-          cmakeStage1,
-          pythonStage1,
+          pkgs.busyboxStage0,
+          pkgs.llvmStage0,
+          pkgs.muslStage1,
+          pkgs.samuraiStage1,
+          pkgs.ccacheBin,
+          pkgs.linuxHeadersStage1,
+          pkgs.cmakeStage1,
+          pkgs.pythonStage1,
         ]
     },
 
   # 2
-  busyboxStage1,
-  llvmStage1,
-  muslStage2,
-  gnumakeStage2,
-  samuraiStage2,
-  linuxHeadersStage2,
-  cmakeStage2,
-  pythonStage2,
+
   llvmStage2 =
     _llvmBaseTarget
     & {
       stage = 2,
       buildInputs =
         lib.biMap [
-          busyboxStage1,
-          llvmStage1,
-          muslStage2,
-          samuraiStage2,
-          ccacheBin,
-          linuxHeadersStage2,
-          cmakeStage2,
-          pythonStage2,
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.muslStage2,
+          pkgs.samuraiStage2,
+          pkgs.ccacheBin,
+          pkgs.linuxHeadersStage2,
+          pkgs.cmakeStage2,
+          pkgs.pythonStage2,
         ]
     },
 
   # final
-  busyboxStage2,
-  llvmStage2,
-  musl,
-  gnumake,
-  samurai,
-  linuxHeaders,
-  cmake,
-  python,
+
   llvm =
     _llvmBaseTarget
     & {
       stage = -1,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
-          musl,
-          samurai,
-          ccacheBin,
-          linuxHeaders,
-          cmake,
-          python,
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.musl,
+          pkgs.samurai,
+          pkgs.ccacheBin,
+          pkgs.linuxHeaders,
+          pkgs.cmake,
+          pkgs.python,
         ]
     },
 }
