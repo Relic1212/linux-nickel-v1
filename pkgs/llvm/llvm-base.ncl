@@ -12,7 +12,7 @@ let llvmBase | lib.CmakePackage
         },
       }
     ],
-    isStatic, 
+    isStatic,
     isLlvm,
     enableCcache,
 

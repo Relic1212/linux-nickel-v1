@@ -1,5 +1,4 @@
-let
-lib = import "../../nickellib/lib.ncl"
+let lib = import "../../nickellib/lib.ncl"
 in
 let llvmBase = import "./llvm-base.ncl"
 in

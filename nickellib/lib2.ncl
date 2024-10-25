@@ -359,6 +359,7 @@ in
     SetuptoolPackage =
       Package
       & {
+        stage,
         pythonExecutable | String | default = "python",
         buildPhase | priority -5
           = [
@@ -369,6 +370,24 @@ in
           = [
             "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
           ],
+            enableCcache|priority -1000=false,
+     baseBuildinputPackages | priority -1000
+          =
+            Package.baseBuildinputPackages
+            @ (
+              if (stage == -1) then (
+                [
+                  pkgs.pythonFull,
+                  # pkgs.pkgconf,
+                  # pkgs.musl,
+                  pkgs.pythonSetuptools,
+                ]
+                # @ (if isLlvm then [pkgs.llvm] else [])
+                @ (if enableCcache then [pkgs.ccacheBin] else [])
+            ) else 
+                []
+            
+            ),
       },
 
     Src = {

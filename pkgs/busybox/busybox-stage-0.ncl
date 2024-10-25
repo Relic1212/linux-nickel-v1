@@ -120,14 +120,15 @@ let _busyboxStage0 | lib.MakePackage
 {
   llvmStage0,
   muslStage0,
-  busyboxStage0 |lib.MakePackage=
-    _busyboxStage0
-    & {
-      stage=0,
-      buildInputs =
-        lib.biMap [
-          llvmStage0,
-          muslStage0,
-        ]
-    }
+  busyboxStage0 | lib.MakePackage
+    =
+      _busyboxStage0
+      & {
+        stage = 0,
+        buildInputs =
+          lib.biMap [
+            llvmStage0,
+            muslStage0,
+          ]
+      }
 }

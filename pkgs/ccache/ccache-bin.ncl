@@ -3,7 +3,7 @@ in
 let _ccacheBin | lib.Package
   = {
     name = "ccache-bin",
-    stage=0,
+    stage = 0,
     extraFiles = [
       {
         file = "ccache",
