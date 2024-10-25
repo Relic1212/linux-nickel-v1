@@ -29,6 +29,23 @@ let _pkgsArray = [
   import "../pkgs/perl/perl.ncl",
   import "../pkgs/autoconf/autoconf.ncl",
   import "../pkgs/automake/automake.ncl",
+  import "../pkgs/util-linux/util-linux.ncl",
+  import "../pkgs/libtool/libtool.ncl",
+  import "../pkgs/python-packages/python-setuptools.ncl",
+  import "../pkgs/openssl/openssl.ncl",
+  import "../pkgs/pkgconf/pkgconf.ncl",
+  import "../pkgs/zlib-ng/zlib-ng.ncl",
+  import "../pkgs/python/python-full.ncl",
+  import "../pkgs/libffi/libffi.ncl",
+  import "../pkgs/meson/meson.ncl",
+
+
+
+
+
+
+
+
 
 
 

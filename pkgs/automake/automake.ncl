@@ -1,5 +1,6 @@
-let lib = import "../../nickellib/lib.ncl"
-in 
+
+let lib = import "../../nickellib/lib.ncl" in
+
 {
     llvm,musl,busybox,gnumake,perl,autoconf,m4,ccacheBin,
 

@@ -94,8 +94,8 @@ let lib = {
           baseName
         else
           "%{baseName}-stage-%{ std.to_string stage}",
-    buildInputs | Array Dyn | default = [],
-    buildInputNames | Array String | default = [],
+    buildInputs | Array String | default = [],
+    # buildInputNames | Array String | default = [],
     buildDir | nullOrString | default = null,
     buildEnv | BuildEnv | default
       = ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv)) & (if ((isLlvm && buildInChroot) && (stage != 0)) then {} else {})),
@@ -250,7 +250,17 @@ let lib = {
           )
           & (if (generator == null) then {} else { CMAKE_GENERATOR = generator })
     },
+  SetuptoolPackage=Package&{
+    pythonExecutable|String|default="python",
+    buildPhase|priority -5=[
+      "cd ${SRC}",
+      "%{pythonExecutable} setup.py build",
+    ],
+    installPhase|priority -5=[
+       "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
+    ],
 
+  },
   basePackage | Package
     = {
       name = "null",

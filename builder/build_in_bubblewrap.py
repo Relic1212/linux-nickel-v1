@@ -141,6 +141,11 @@ def build(h, pkg_drvs: str) -> None:
     subprocess.run(["rm", "-rf", workdir], check=True)
     for bi_drv in drv["buildInputDrvs"]:
         build(h=bi_drv, pkg_drvs=pkg_drvs)
+    for si_drv in drv["sourceInputDrvs"]:
+        si_h = si_drv["src"]
+
+        si = pkg_drvs[si_h]
+        fetcher.fetch_by_drv_string(si)
     
     print(f"building {name}")
 
@@ -185,7 +190,6 @@ def build(h, pkg_drvs: str) -> None:
         # should not exist as workdir was deleted and si_h is unique
         os.makedirs(full_dest)
         si = pkg_drvs[si_h]
-        fetcher.fetch_by_drv_string(si)
         copy_src(h=si_h, dest=full_dest)
 
     patch_drvs = drv["patchDrvs"]

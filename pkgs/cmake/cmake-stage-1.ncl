@@ -49,7 +49,7 @@ let _cmakeStage1 | lib.AutotoolsPackage
 {
   busyboxStage0,
   llvmStage0,
-  muslStage0,
+  muslStage1,
   gnumakeStage1,
   ninjaStage1,
   samuraiStage1,
@@ -63,7 +63,7 @@ let _cmakeStage1 | lib.AutotoolsPackage
         lib.biMap [
           busyboxStage0,
           llvmStage0,
-          muslStage0, # TODO
+          muslStage1, # TODO -> DONE
           samuraiStage1,
           ccacheBin,
           linuxHeadersStage1,
