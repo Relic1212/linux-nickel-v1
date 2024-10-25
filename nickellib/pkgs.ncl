@@ -17,14 +17,12 @@ let _pkgsArray = [
   import "../pkgs/python/python.ncl",
   import "../pkgs/cmake/cmake-stage-1.ncl",
   import "../pkgs/cmake/cmake.ncl",
-
   import "../pkgs/m4/m4.ncl",
   import "../pkgs/flex/flex.ncl",
   import "../pkgs/bison/bison.ncl",
   import "../pkgs/llvm/llvm-stage-1.ncl",
   import "../pkgs/ninja/ninja-stage-1.ncl",
   import "../pkgs/samurai/samurai.ncl",
-
   import "../pkgs/bash/bash.ncl",
   import "../pkgs/perl/perl.ncl",
   import "../pkgs/autoconf/autoconf.ncl",
@@ -38,18 +36,6 @@ let _pkgsArray = [
   import "../pkgs/python/python-full.ncl",
   import "../pkgs/libffi/libffi.ncl",
   import "../pkgs/meson/meson.ncl",
-
-
-
-
-
-
-
-
-
-
-
-
 
   # {
   #     name=pkgsRecord."flex-stage-1".name ++ "-other"

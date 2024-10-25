@@ -172,8 +172,8 @@ let lib = {
     commands | Array String | default = std.array.flatten phases,
     scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
-    singleSource|Dyn|default=null,
-    sourceInputs | Array SourceInput | default = if (singleSource==null) then  [] else [{src=singleSource }] ,
+    singleSource | Dyn | default = null,
+    sourceInputs | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
     patchDir | String | default = "%{name}/patches",
     filesDir | String | default = "%{name}/files",
     patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
@@ -213,10 +213,15 @@ let lib = {
           configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
         ]
     },
-    AutomakePackage=AutotoolsPackage&{
-      configurePhase|priority -10=[
-          "(cd ${SRC}; autoreconf -fiv)",
-      ]@AutotoolsPackage.configurePhase,
+  AutomakePackage =
+    AutotoolsPackage
+    & {
+      configurePhase | priority -10
+        =
+          [
+            "(cd ${SRC}; autoreconf -fiv)",
+          ]
+          @ AutotoolsPackage.configurePhase,
     },
   MesonPackage =
     Package
@@ -250,17 +255,20 @@ let lib = {
           )
           & (if (generator == null) then {} else { CMAKE_GENERATOR = generator })
     },
-  SetuptoolPackage=Package&{
-    pythonExecutable|String|default="python",
-    buildPhase|priority -5=[
-      "cd ${SRC}",
-      "%{pythonExecutable} setup.py build",
-    ],
-    installPhase|priority -5=[
-       "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
-    ],
-
-  },
+  SetuptoolPackage =
+    Package
+    & {
+      pythonExecutable | String | default = "python",
+      buildPhase | priority -5
+        = [
+          "cd ${SRC}",
+          "%{pythonExecutable} setup.py build",
+        ],
+      installPhase | priority -5
+        = [
+          "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
+        ],
+    },
   basePackage | Package
     = {
       name = "null",
