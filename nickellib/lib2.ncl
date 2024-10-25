@@ -7,7 +7,7 @@ in
 let drvUtils = import "drv.ncl"
 in
 {
-  pkgs,
+  pkgs|default=import "pkgsRecord.ncl",
   
    lib = {
   biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
