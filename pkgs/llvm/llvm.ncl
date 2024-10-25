@@ -1,16 +1,16 @@
 let lib = import "../../nickellib/lib.ncl"
 in
-let llvmBase = import "./llvm-base.ncl"
+let _llvmBase = import "./llvm-base.ncl"
 in
-let llvmBaseTarget | lib.CmakePackage
+let _llvmBaseTarget | lib.CmakePackage
   =
-    let b2 = (llvmBase & { isLlvm = true }) in
+    let b2 = (_llvmBase & { isLlvm = true }) in
     b2
     & {
       baseName = "llvm",
       cmakeArgs | priority -9
         =
-          (llvmBase.cmakeArgs)
+          (_llvmBase.cmakeArgs)
           @ [
             "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
             "-DLLVM_ENABLE_PROJECTS='lld;clang'",
@@ -41,7 +41,7 @@ let llvmBaseTarget | lib.CmakePackage
   cmakeStage1,
   pythonStage1,
   llvmStage1 =
-    llvmBaseTarget
+    _llvmBaseTarget
     & {
       stage = 1,
       buildInputs =
@@ -67,7 +67,7 @@ let llvmBaseTarget | lib.CmakePackage
   cmakeStage2,
   pythonStage2,
   llvmStage2 =
-    llvmBaseTarget
+    _llvmBaseTarget
     & {
       stage = 2,
       buildInputs =
@@ -93,7 +93,7 @@ let llvmBaseTarget | lib.CmakePackage
   cmake,
   python,
   llvm =
-    llvmBaseTarget
+    _llvmBaseTarget
     & {
       stage = -1,
       buildInputs =

@@ -2,7 +2,7 @@ let b = ((import "llvm-base.ncl") & { stage = 0 })
 in
 let lib = import "../../nickellib/lib.ncl"
 in
-let libs0 = (
+let _llvmBaselibsStage0 = (
   b
   & {
     stage = 0,
@@ -59,7 +59,7 @@ in
   muslStage0,
   linuxHeadersStage0,
   llvmBaselibsStage0 =
-    libs0
+    _llvmBaselibsStage0
     & {
       buildInputs = lib.biMap [muslStage0, linuxHeadersStage0]
     }

@@ -2,7 +2,7 @@ let lib = import "../../nickellib/lib.ncl"
 in
 let constants = import "../../nickellib/constants.ncl"
 in
-let llvmBase | lib.CmakePackage
+let _llvmBase | lib.CmakePackage
   = {
     baseName = "llvm",
     stage,
@@ -285,4 +285,4 @@ let llvmBase | lib.CmakePackage
     ),
   }
   in
-llvmBase
+_llvmBase
