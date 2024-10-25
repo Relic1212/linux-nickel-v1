@@ -1,12 +1,6 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
-  musl,
-  llvm,
-  busybox,
-  samurai,
-  cmake,
-  ccacheBin,
+  lib,
+
   zlibNg | lib.CmakePackage
     = {
       name = "zlib-ng",
@@ -15,15 +9,7 @@ in
         uri = "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.2.2.tar.gz",
         sha256sum = "fcb41dd59a3f17002aeb1bb21f04696c9b721404890bb945c5ab39d2cb69654c",
       },
-      buildInputs =
-        lib.biMap [
-          musl,
-          llvm,
-          busybox,
-          samurai,
-          cmake,
-          ccacheBin,
-        ],
+
       cmakeArgs =
         lib.CmakePackage.cmakeArgs
         @ [

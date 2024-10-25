@@ -1,13 +1,6 @@
-let lib = import "../../nickellib/lib.ncl" in
-
 {
-  busybox,
-  llvm,
-  musl,
-  ccacheBin,
-  gnumake,
-  linuxHeaders,
-  bash,
+  lib,
+  pkgs,
   utilLinux | lib.AutotoolsPackage
     =
       let conf =
@@ -34,15 +27,9 @@ let lib = import "../../nickellib/lib.ncl" in
           ]
           @ (lib.AutotoolsPackage & { configureFlags = conf }).configurePhase,
 
-        buildInputs =
-          lib.biMap [
-            busybox,
-            llvm,
-            musl,
-            ccacheBin,
-            gnumake,
-            linuxHeaders,
-            bash,
-          ]
+        biPkgs = [
+          pkgs.linuxHeaders,
+          pkgs.bash,
+        ]
       }
 }
