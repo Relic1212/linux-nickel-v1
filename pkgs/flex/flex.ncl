@@ -1,67 +1,56 @@
-let lib = import "../../nickellib/lib.ncl"
-in
+# let lib = import "../../nickellib/lib.ncl"
+# in
 let flexBase = import "flex-base.ncl" in
 
 {
-  llvmStage0,
-  muslStage1,
-  gnumakeStage1,
-  ccacheBin,
-  m4Stage1,
-  busyboxStage0,
-  flexStage1 =
+  lib,
+  pkgs,
+
+  flexStage1 |lib.AutotoolsPackage =
     flexBase
     & {
       stage = 1,
       buildInputs =
         lib.biMap [
-          llvmStage0,
-          muslStage1,
-          gnumakeStage1,
-          ccacheBin,
-          m4Stage1,
-          busyboxStage0,
+          pkgs.llvmStage0,
+          pkgs.muslStage1,
+          pkgs.gnumakeStage1,
+          pkgs.ccacheBin,
+          pkgs.m4Stage1,
+          pkgs.busyboxStage0,
         ]
     },
 
   #2
-  llvmStage1,
-  muslStage2,
-  gnumakeStage2,
-  m4Stage2,
-  busyboxStage1,
-  flexStage2 =
+
+  flexStage2 |lib.AutotoolsPackage=
     flexBase
     & {
       stage = 2,
       buildInputs =
         lib.biMap [
-          llvmStage1,
-          muslStage2,
-          gnumakeStage2,
-          ccacheBin,
-          m4Stage2,
-          busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.muslStage2,
+          pkgs.gnumakeStage2,
+          pkgs.ccacheBin,
+          pkgs.m4Stage2,
+          pkgs.busyboxStage1,
         ]
     },
   #final
-  llvmStage2,
-  musl,
-  gnumake,
-  m4,
-  busyboxStage2,
-  flex =
+
+  flex|lib.AutotoolsPackage =
     flexBase
     & {
       stage = -1,
       buildInputs =
         lib.biMap [
-          llvmStage2,
-          musl,
-          gnumake,
-          ccacheBin,
-          m4,
-          busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.musl,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+          pkgs.m4,
+          pkgs.busyboxStage2,
         ]
     }
 }
