@@ -1,12 +1,13 @@
-let lib = import "../../nickellib/lib.ncl"
-in
-let llvmEtc | lib.Package
-  = {
-    name = "llvm-etc",
-    buildInChroot = false,
-    installPhase = [
-      "install -d -m0755 ${DEST}/etc/clang",
-      m%"
+{
+  lib,
+
+  llvmEtc | lib.Package
+    = {
+      name = "llvm-etc",
+      buildInChroot = false,
+      installPhase = [
+        "install -d -m0755 ${DEST}/etc/clang",
+        m%"
     echo "
     --rtlib=compiler-rt
     --unwindlib=libunwind
@@ -14,7 +15,6 @@ let llvmEtc | lib.Package
     -fuse-ld=lld
     " > ${DEST}/etc/clang/runtimes.cfg
     "%
-    ]
-  }
-  in
-llvmEtc
+      ]
+    }
+}
