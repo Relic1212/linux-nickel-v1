@@ -1,12 +1,6 @@
-let lib = import "../../nickellib/lib.ncl"
-in
 {
-  llvm,
-  musl,
-  gnumake,
-  busybox,
-  ccacheBin,
-  #
+  lib,
+
   perl | lib.AutotoolsPackage
     = {
       name = "perl",
@@ -34,6 +28,5 @@ in
     -des"%,
         "make depend -j$(nproc)",
       ],
-      buildInputs = lib.biMap [llvm, musl, gnumake, busybox, ccacheBin, ],
     }
 }

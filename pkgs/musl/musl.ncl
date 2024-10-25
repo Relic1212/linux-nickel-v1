@@ -1,63 +1,65 @@
-let lib = import "../../nickellib/lib.ncl" in
-let muslBase = import "./musl-base.ncl"
-in
-
 {
-  busyboxStage0,
-  llvmStage0,
-  gnumakeStage1,
-  ccacheBin,
-  muslStage0,
+  lib,
+  pkgs,
+
+  _muslBase | lib.AutotoolsPackage
+    = {
+      isLlvm | default = lib.AutotoolsPackage.isLlvm,
+      baseName = "musl",
+      isStatic = false,
+      sourceInputs = [
+        {
+          src = { uri = "https://musl.libc.org/releases/musl-1.2.5.tar.gz", sha256sum = "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4" }
+        }
+      ],
+      extraEnv | priority -10 = lib.AutotoolsPackage.extraEnv & (if isLlvm then { LIBCC_LDFLAGS = ["--rtlib=compiler-rt"] } else {}),
+      configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])
+    },
+
+  muslStage0 = _muslBase & { stage = 0 },
+
   muslStage1 =
-    muslBase
+    _muslBase
     & {
       stage = 1,
 
       buildInputs =
         lib.biMap [
-          busyboxStage0,
-          llvmStage0,
-          gnumakeStage1,
-          ccacheBin,
-          muslStage0
+          pkgs.busyboxStage0,
+          pkgs.llvmStage0,
+          pkgs.gnumakeStage1,
+          pkgs.ccacheBin,
+          pkgs.muslStage0
         ]
     },
 
-  busyboxStage1,
-  llvmStage1,
-  gnumakeStage2,
-  ccacheBin,
   muslStage2 =
-    muslBase
+    _muslBase
     & {
       stage = 2,
 
       buildInputs =
         lib.biMap [
-          busyboxStage1,
-          llvmStage1,
-          gnumakeStage2,
-          ccacheBin,
-          muslStage1
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.gnumakeStage2,
+          pkgs.ccacheBin,
+          pkgs.muslStage1
         ]
     },
 
-  busyboxStage2,
-  llvmStage2,
-  gnumakeStage3,
-  ccacheBin,
   musl =
-    muslBase
+    _muslBase
     & {
       stage = -1,
 
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
-          gnumakeStage3,
-          ccacheBin,
-          muslStage2
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.gnumakeStage3,
+          pkgs.ccacheBin,
+          pkgs.muslStage2
         ]
     },
 }

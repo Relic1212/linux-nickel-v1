@@ -4,7 +4,6 @@ let
 r={
  __pkgs=(
    (import "lib2.ncl"  )&
-  (import "../pkgs/musl/musl-stage-0.ncl")&
   (import "../pkgs/musl/musl.ncl")&
   (import "../pkgs/llvm/llvm-stage-0.ncl")&
   (import "../pkgs/llvm/llvm-baselibs-stage-0.ncl")&
