@@ -53,12 +53,16 @@ in
 let 
   __pkgs =  (std.record.merge_all ( _pkgsArray))
 in
+
 let 
 _pkgs=__pkgs&{pkgs=__pkgs}
+in
+let 
+Validator = (std.contract.from_validator (fun ps=>(if ((std.array.length  (std.array.filter (fun p=>p.value.hasValidBuildInputs==false) (std.record.to_array ps)))==0) then 'Error {message ="hello"}else 'Ok  )  ))
 in
 let
  
   pkgs = std.record.remove "pkgs"  (std.record.remove "lib" (_pkgs))
   
 in
-pkgs
+pkgs #|Validator

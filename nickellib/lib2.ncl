@@ -33,11 +33,23 @@ in
     # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
     cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
     replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
+
+    arrayContainsDups=(
+      fun arr =>(
+        (std.array.fold_left (fun arrp elem => ( {a= (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a)||arrp.b) }))  {a=[],b=false} arr).b
+      )
+    ),
+    hasNoDups=(fun arr=>((arrayContainsDups arr) == false )),
+    allHaveLen=(fun len arr =>(false==( std.array.elem false (std.array.map (fun s => ((std.string.length s)==len )) arr) ))),
+    isValidShasumArray=(fun arr=>( (hasNoDups arr)&&(allHaveLen 64 arr) )),
   },
   nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
   nullOrArray = std.contract.from_predicate (functions.isNullArray),
   StringOrArray = std.contract.from_predicate (functions.isStringOrArray),
+  ShasumArray1=std.contract.from_predicate (functions.isValidShasumArray),
+  ShasumArray=std.contract.from_validator (fun arr => (if (functions.isValidShasumArray arr) then 'Ok else 'Error {message="hello",notes="[notes here]"})),
+
 
   BuildEnv = {
     CC | nullOrString | optional,
@@ -101,10 +113,15 @@ in
           baseName
         else
           "%{baseName}-stage-%{ std.to_string stage}",
-    buildInputs | Array String | default = (biMap (biPkgs @ baseBuildinputPackages)),
-    utilsProvider|Dyn|default=if (stage==-1) then pkgs.busybox else null  ,
-    baseBuildinputPackages|Array Dyn |not_exported|Array Dyn|default = if (utilsProvider==null) then [] else [utilsProvider],
-    biPkgs |Array Dyn | not_exported|default=[],
+    buildInputs | std.contract.from_validator (fun arr => (if (functions.isValidShasumArray arr) then 'Ok else 'Error {
+      message="%{name} has invalid buildInputs\n"++
+      "        The buildInputs specified as packages are:\n        %{ std.string.join "\n        " (std.array.sort std.string.compare(std.array.map (fun x=> (x.name  )) (biPkgs @ baseBuildinputPackages ))) }"
+      }
+      )) | default = (biMap (biPkgs @ baseBuildinputPackages)),
+    hasValidBuildInputs=(functions.isValidShasumArray buildInputs),
+    utilsProviders|Array Dyn |default=if (stage==-1) then [pkgs.busybox] else []  ,
+    baseBuildinputPackages|Array Dyn |default =utilsProviders,
+    biPkgs |Array Dyn |default=[],
     # buildInputNames | Array String | default = [],
     buildDir | nullOrString | default = null,
     buildEnv | BuildEnv | default
@@ -198,11 +215,23 @@ in
   MakePackage =
     Package
     & {
-      enableParallel | default = Package.enableParallel,
+      enableParallel ,
       makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []),
       makeTargets | nullOrArray | default = null,
       makeInstallArgs | nullOrArray | default = ["DESTDIR=${DEST}"],
       makeInstallTargets | nullOrArray | default = ["install"],
+      utilsProviders,
+      stage,
+      isLlvm,
+      enableCcache,
+
+    baseBuildinputPackages |priority -1000 =utilsProviders @ (if (stage==-1) then (
+      [pkgs.gnumake,pkgs.musl]  
+      @(if isLlvm then [pkgs.llvm] else [])
+      @(if enableCcache then [pkgs.ccacheBin] else [])
+      ) else [])  ,
+
+
       buildPhase | priority -10
         = [
           "make " ++ (std.string.join " " makeArgs) ++ (if makeTargets == null then "" else " " ++ std.string.join " " makeTargets)
@@ -243,7 +272,7 @@ in
   CmakePackage =
     Package
     & {
-      cmake,
+      # cmake,
       stage,
       isStatic | default = Package.isStatic,
       buildInChroot | default = Package.buildInChroot,
