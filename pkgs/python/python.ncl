@@ -1,18 +1,19 @@
-let lib = import "../../nickellib/lib.ncl"
-in
+(import "python-base.ncl")
+& {
+  lib,
+  pkgs,
+  _pythonBase,
+  #base with minimal modules
+  _pythonBaseMinimal | lib.AutotoolsPackage
+    =
+      _pythonBase
+      & {
+        # enableCcache|force=false,
 
-let pythonBase = import "python-base.ncl"
-in
-let _pythonBaseMinimal | lib.AutotoolsPackage
-  = (
-    pythonBase
-    & {
-      # enableCcache|force=false,
-
-      configurePhase = (
-        (pythonBase.configurePhase)
-        @ [
-          m%"
+        configurePhase = (
+          (_pythonBase.configurePhase)
+          @ [
+            m%"
         printf "
         *static*
         _random _randommodule.c
@@ -105,39 +106,25 @@ let _pythonBaseMinimal | lib.AutotoolsPackage
         _ctypes
         " > ./Modules/Setup.local
         "%
-        ]
-      ),
-    }
-  )
-  in
-{
-  busyboxStage0,
-  llvmStage0,
-  gnumakeStage1,
-  ccacheBin,
-  muslStage0,
-
+          ]
+        ),
+      },
+  # stage 1
   pythonStage1 =
     _pythonBaseMinimal
     & {
       stage = 1,
       buildInputs =
         lib.biMap [
-          busyboxStage0,
-          llvmStage0,
-          gnumakeStage1,
-          ccacheBin,
-          muslStage0
+          pkgs.busyboxStage0,
+          pkgs.llvmStage0,
+          pkgs.gnumakeStage1,
+          pkgs.ccacheBin,
+          pkgs.muslStage0
         ],
     },
 
   # 2
-
-  busyboxStage1,
-  llvmStage1,
-  gnumakeStage2,
-  ccacheBin,
-  muslStage1,
 
   pythonStage2 =
     _pythonBaseMinimal
@@ -145,21 +132,15 @@ let _pythonBaseMinimal | lib.AutotoolsPackage
       stage = 2,
       buildInputs =
         lib.biMap [
-          busyboxStage1,
-          llvmStage1,
-          gnumakeStage2,
-          ccacheBin,
-          muslStage1
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.gnumakeStage2,
+          pkgs.ccacheBin,
+          pkgs.muslStage1
         ],
     },
 
   # final
-
-  busyboxStage2,
-  llvmStage2,
-  gnumake,
-  ccacheBin,
-  musl,
 
   python =
     _pythonBaseMinimal
@@ -167,11 +148,11 @@ let _pythonBaseMinimal | lib.AutotoolsPackage
       stage = -1,
       buildInputs =
         lib.biMap [
-          busyboxStage2,
-          llvmStage2,
-          gnumake,
-          ccacheBin,
-          musl
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+          pkgs.musl
         ],
     },
 }

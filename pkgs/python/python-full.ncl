@@ -1,20 +1,20 @@
-let lib = import "../../nickellib/lib.ncl"
-in
+(import "python-base.ncl")
+& {
+  pkgs,
+  lib,
+  _pythonBase,
+  pythonFull | lib.AutotoolsPackage
+    =
+      _pythonBase
+      & {
+        # enableCcache|force=false,
+        name | priority 1 = "python-full",
 
-let pythonBase = import "python-base.ncl"
-in
-let _pythonBase | lib.AutotoolsPackage
-  = (
-    pythonBase
-    & {
-      # enableCcache|force=false,
-      name | priority 1 = "python-full",
-
-      configurePhase = (
-        ["cd ${SRC}"]
-        @ (pythonBase.configurePhase)
-        @ [
-          m%"
+        configurePhase = (
+          ["cd ${SRC}"]
+          @ (_pythonBase.configurePhase)
+          @ [
+            m%"
         printf "
         *static*
         _asyncio _asynciomodule.c
@@ -110,44 +110,20 @@ let _pythonBase | lib.AutotoolsPackage
         _bz2 _bz2module.c
 
         " > ./Modules/Setup.local"%
+          ]
+        ),
+        installPhase =
+          lib.AutotoolsPackage.installPhase
+          @ [
+            "cd $DEST/usr/bin",
+            "ln -s python3 python",
+          ],
+        biPkgs = [
+          pkgs.linuxHeaders,
+          pkgs.zlibNg,
+          pkgs.pkgconf,
+          pkgs.libffi,
+          pkgs.openssl
         ]
-      ),
-      installPhase =
-        lib.AutotoolsPackage.installPhase
-        @ [
-          "cd $DEST/usr/bin",
-          "ln -s python3 python",
-        ]
-    }
-  )
-  in
-{
-
-  busybox,
-  llvm,
-  gnumake,
-  ccacheBin,
-  musl,
-  pkgconf,
-  openssl,
-  zlibNg,
-  libffi,
-  linuxHeaders,
-  pythonFull =
-    _pythonBase
-    & {
-      buildInputs =
-        lib.biMap [
-          busybox,
-          llvm,
-          gnumake,
-          ccacheBin,
-          musl,
-          pkgconf,
-          zlibNg,
-          openssl,
-          libffi,
-          linuxHeaders,
-        ],
-    },
+      }
 }
