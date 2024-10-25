@@ -1,9 +1,10 @@
-let _llvmBase = import "./llvm-base.ncl"
-in
-
-{
+(
+  import "./llvm-base.ncl"
+)
+& {
   pkgs,
   lib,
+  _llvmBase,
   # base if stage!=0
   _llvmBaseTarget | lib.CmakePackage
     =
