@@ -1,10 +1,7 @@
-let lib = import "../../nickellib/lib.ncl"
-in
-let x = import "./busybox-base.ncl" in
-let busyboxTarget = x.busyboxBaseTarget
-in
-
-{
+(import "busybox-base.ncl")
+& {
+  lib,
+  _busyboxBaseTarget,
   busyboxStage0,
   llvmStage1,
   muslStage1,
@@ -12,7 +9,7 @@ in
   ccacheBin,
   gnumakeStage1,
   busyboxStage1 =
-    busyboxTarget
+    _busyboxBaseTarget
     & {
       stage = 1,
       buildInputs =
@@ -32,7 +29,7 @@ in
   ccacheBin,
   gnumakeStage2,
   busyboxStage2 =
-    busyboxTarget
+    _busyboxBaseTarget
     & {
       stage = 2,
       buildInputs =
@@ -53,7 +50,7 @@ in
   ccacheBin,
   gnumake,
   busybox =
-    busyboxTarget
+    _busyboxBaseTarget
     & {
       stage = -1,
       buildInputs =
