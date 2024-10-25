@@ -245,15 +245,10 @@ let llvmBase | lib.CmakePackage
             []
         )
         @ (if enableCcache then ["-DLLVM_CCACHE_BUILD:BOOL=ON"] else [])
-        @ (
-          if (stage == 0) then
-            [
-              "-DLLVM_TARGETS_TO_BUILD='X86'",
-              "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
-            ]
-          else
-            []
-        ),
+        @ [
+          "-DLLVM_TARGETS_TO_BUILD='X86'",
+          "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
+        ],
 
     configurePhase | priority -9
       = [

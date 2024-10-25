@@ -12,18 +12,8 @@ let llvmBaseTarget | lib.CmakePackage
         =
           (llvmBase.cmakeArgs)
           @ [
-            "-DLLVM_TARGETS_TO_BUILD='X86'",
-
-            # "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi'",
-            # "-DLLVM_ENABLE_PROJECTS='lld;clang;compiler-rt'",
-            # "-DLLVM_ENABLE_PROJECTS='lld;clang'",
-            "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
-            # "-DCMAKE_ASM_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
-            # "-DCMAKE_C_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
-            # "-DCMAKE_CXX_FLAGS_RELEASE:STRING='-O0 -DNDEBUG'",
             "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
             "-DLLVM_ENABLE_PROJECTS='lld;clang'",
-            # "-DCMAKE_MAKE_PROGRAM=ninja",
             "-G Ninja",
             "-DLLVM_PARALLEL_LINK_JOBS=$(nproc)",
             "-DLLVM_PARALLEL_COMPILE_JOBS=$(nproc)",
