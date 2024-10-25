@@ -1,19 +1,4 @@
-let lib = import "../../nickellib/lib.ncl"
-in
-let cmakeBase | lib.Package
-  = {
-    name | priority -10 = "cmake",
-    sourceInputs = [
-      {
-        src = {
-          uri = "https://github.com/Kitware/CMake/releases/download/v3.30.3/cmake-3.30.3.tar.gz",
-          sha256sum = "6d5de15b6715091df7f5441007425264bdd477809f80333fdf95f846aaff88e4",
-        },
-      },
-    ],
-  }
-  in
-let cmakeCmakeArgs = [
+let _cmakeCmakeArgs = [
   "-DCMAKE_USE_OPENSSL=OFF",
   "-DBUILD_CursesDialog=OFF",
   "-DBUILD_QtDialog=OFF",
@@ -51,9 +36,12 @@ let cmakeCmakeArgs = [
   "-DCMake_BUILD_DEVELOPER_REFERENCE_HTML:BOOL=OFF",
 ]
 in
-let b = cmakeBase in
-let args = cmakeCmakeArgs in
 {
-  cmakeBase = b,
-  cmakeCmakeArgs = args
+
+  cmakeSingleSource = {
+    uri = "https://github.com/Kitware/CMake/releases/download/v3.30.3/cmake-3.30.3.tar.gz",
+    sha256sum = "6d5de15b6715091df7f5441007425264bdd477809f80333fdf95f846aaff88e4",
+  },
+
+  cmakeCmakeArgs = _cmakeCmakeArgs
 }

@@ -1,5 +1,5 @@
-let misc = import "cmake-base.ncl"
-in
+let misc = import "cmake-base.ncl" in
+
 {
 
   pkgs,
@@ -7,12 +7,13 @@ in
   cmakeStage1
     | lib.AutotoolsPackage
     =
-      misc.cmakeBase
-      & {
+      # misc.cmakeBase
+      # &
+      {
         stage = 1,
         name = "cmake-stage-1",
-        extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" misc.cmakeBase.extraEnv,
-        configureFlags =
+        extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" lib.AutotoolsPackage.extraEnv,
+        configureFlags = (
           [
             "--prefix=/usr",
             "--bindir=bin",
@@ -31,7 +32,8 @@ in
             "-DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON",
             "-DBUILD_TESTING:BOOL=OFF",
           ]
-          @ misc.cmakeCmakeArgs,
+          @ misc.cmakeCmakeArgs
+        ),
 
         buildPhase = [
           "ninja"
@@ -39,6 +41,7 @@ in
         installPhase = [
           "DESTDIR=${DEST} ninja install"
         ],
+        singleSource = misc.cmakeSingleSource,
 
         buildInputs =
           lib.biMap [
