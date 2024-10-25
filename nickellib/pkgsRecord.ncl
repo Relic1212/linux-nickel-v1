@@ -8,7 +8,7 @@ r={
   (import "../pkgs/musl/musl.ncl")&
   (import "../pkgs/llvm/llvm-stage-0.ncl")&
   (import "../pkgs/llvm/llvm-baselibs-stage-0.ncl")&
-  (import "../pkgs/linux-headers/linux-headers-stage-0.ncl")&
+  # (import "../pkgs/linux-headers/linux-headers-stage-0.ncl")&
   (import "../pkgs/linux-headers/linux-headers.ncl")&
   (import "../pkgs/libssp-nonshared/libssp-nonshared-stage-0.ncl")&
   (import "../pkgs/busybox/busybox-stage-0.ncl")&
