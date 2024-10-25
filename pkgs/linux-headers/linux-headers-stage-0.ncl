@@ -9,10 +9,6 @@ let _linuxHeadersStage0 =
   & {
     buildInChroot = false,
     name = "linux-headers-stage-0",
-
-    #buildInputs = [
-    #      import "../musl/musl-stage-0.ncl"
-    #     ]
   }
 in
 {
