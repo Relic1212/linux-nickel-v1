@@ -129,8 +129,8 @@ in
         = (biMap (biPkgs @ baseBuildinputPackages)),
       hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
       utilsProviders | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
-      baseBuildinputPackages| not_exported | Array Dyn | default = utilsProviders,
-      biPkgs | Array Dyn|not_exported | default = [],
+      baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
+      biPkgs | Array Dyn | not_exported | default = [],
       # buildInputNames | Array String | default = [],
       buildDir | nullOrString | default = null,
       buildEnv | BuildEnv | default
@@ -173,7 +173,6 @@ in
         @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
       # @ (functions.createExport "CC" buildEnv)
-     
       ,
       patchPhase | Array String | default
         =
@@ -289,19 +288,20 @@ in
           =
             Package.baseBuildinputPackages
             @ (
-              if (stage == -1) then (
-                [
-                  pkgs.meson,
-                  pkgs.samurai,
-                  pkgs.pythonFull,
-                  pkgs.pkgconf,
-                  pkgs.musl,
-                ]
-                @ (if isLlvm then [pkgs.llvm] else [])
-                @ (if enableCcache then [pkgs.ccacheBin] else [])
-            ) else 
+              if (stage == -1) then
+                (
+                  [
+                    pkgs.meson,
+                    pkgs.samurai,
+                    pkgs.pythonFull,
+                    pkgs.pkgconf,
+                    pkgs.musl,
+                  ]
+                  @ (if isLlvm then [pkgs.llvm] else [])
+                  @ (if enableCcache then [pkgs.ccacheBin] else [])
+                )
+              else
                 []
-            
             ),
       },
     CmakePackage =
@@ -323,22 +323,19 @@ in
             Package.baseBuildinputPackages
             @ (
               if (stage == -1) then
-                ([
-                  pkgs.cmake,
-                  pkgs.pkgconf,
-                  pkgs.musl,
-                ]
-                @ (if isLlvm then [pkgs.llvm] else [])
-                @ (if enableCcache then [pkgs.ccacheBin] else [])
-                @ (if (generator=="Ninja") then [pkgs.samurai] else [])
+                (
+                  [
+                    pkgs.cmake,
+                    pkgs.pkgconf,
+                    pkgs.musl,
+                  ]
+                  @ (if isLlvm then [pkgs.llvm] else [])
+                  @ (if enableCcache then [pkgs.ccacheBin] else [])
+                  @ (if (generator == "Ninja") then [pkgs.samurai] else [])
                 )
               else
                 []
-            
             ),
-
-
-
 
         configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
         buildPhase | priority -10 = ["cmake --build ."],
@@ -370,23 +367,24 @@ in
           = [
             "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
           ],
-            enableCcache|priority -1000=false,
-     baseBuildinputPackages | priority -1000
+        enableCcache | priority -1000 = false,
+        baseBuildinputPackages | priority -1000
           =
             Package.baseBuildinputPackages
             @ (
-              if (stage == -1) then (
-                [
-                  pkgs.pythonFull,
-                  # pkgs.pkgconf,
-                  # pkgs.musl,
-                  pkgs.pythonSetuptools,
-                ]
-                # @ (if isLlvm then [pkgs.llvm] else [])
-                @ (if enableCcache then [pkgs.ccacheBin] else [])
-            ) else 
+              if (stage == -1) then
+                (
+                  [
+                    pkgs.pythonFull,
+                    # pkgs.pkgconf,
+                    # pkgs.musl,
+                    pkgs.pythonSetuptools,
+                  ]
+                  # @ (if isLlvm then [pkgs.llvm] else [])
+                  @ (if enableCcache then [pkgs.ccacheBin] else [])
+                )
+              else
                 []
-            
             ),
       },
 

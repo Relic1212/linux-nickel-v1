@@ -1,4 +1,4 @@
-let constants = import "../../nickellib/constants.ncl"
+let constants = import "../../../nickellib/constants.ncl"
 in
 
 {
