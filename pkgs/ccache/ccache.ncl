@@ -1,7 +1,7 @@
-let lib = import "../../nickellib/lib.ncl"
-in 
+
 {
     # busybox,
+    lib,
     ccache|lib.CmakePackage={
         name="ccache",
         # utilsProvider=busybox,
