@@ -49,12 +49,6 @@ in
 
   # final
 
-  busyboxStage2,
-  llvmStage2,
-  musl,
-  samurai,
-  ccacheBin,
-  linuxHeaders,
   cmake | lib.CmakePackage
     =
       cmakeCmakeBase
@@ -62,13 +56,13 @@ in
         stage = -1,
         buildInputs =
           lib.biMap [
-            busyboxStage2,
-            llvmStage2,
-            musl,
-            samurai,
-            cmakeStage2,
-            ccacheBin,
-            linuxHeaders,
+            pkgs.busyboxStage2,
+            pkgs.llvmStage2,
+            pkgs.musl,
+            pkgs.samurai,
+            pkgs.cmakeStage2,
+            pkgs.ccacheBin,
+            pkgs.linuxHeaders,
           ]
       },
 }
