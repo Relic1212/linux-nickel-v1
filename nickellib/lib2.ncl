@@ -173,26 +173,7 @@ in
         @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
       # @ (functions.createExport "CC" buildEnv)
-      # @ (functions.createExport "CXX" buildEnv)
-      # @ (functions.createExport "CPP" buildEnv)
-      # @ (functions.createExport "AR" buildEnv)
-      # @ (functions.createExport "NM" buildEnv)
-      # @ (functions.createExport "RANLIB" buildEnv)
-      # @ (functions.createExport "OBJCOPY" buildEnv)
-      # @ (functions.createExport "OBJDUMP" buildEnv)
-      # @ (functions.createExport "CC" buildEnv)
-      # @ (functions.createExport "LD" buildEnv)
-      # @ (functions.createExport "CFLAGS" buildEnv)
-      # @ (functions.createExport "CPPFLAGS" buildEnv)
-      # @ (functions.createExport "CXXFLAGS" buildEnv)
-      # @ (functions.createExport "LDFLAGS" buildEnv)
-      # @
-
-      # @ (if buildInChroot then [] else [
-      #   "export LIBDIR=/tmp/workdir/sysroot/usr/lib",
-      #   "export PATH=/tmp/workdir/sysroot/usr/bin:${PATH}",
-      #   "export SYSROOT=/tmp/workdir/sysroot"
-      #   ])
+     
       ,
       patchPhase | Array String | default
         =
@@ -388,11 +369,6 @@ in
           = [
             "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
           ],
-      },
-    basePackage | Package
-      = {
-        name = "null",
-        buildInputs = []
       },
 
     Src = {
