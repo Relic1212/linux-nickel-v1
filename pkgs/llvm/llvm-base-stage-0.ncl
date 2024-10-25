@@ -1,16 +1,10 @@
 let
-#lib=import "../../nickellib/lib.ncl"
 lib = import "../../nickellib/lib.ncl"
 in
 let llvmBase = import "./llvm-base.ncl"
 in
-let pkgs = {
-  # muslStage0 = import "../musl/musl-stage-0.ncl",
-  # linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
-  #  linuxHeadersStage0=import "../linux-headers/linux-headers-stage-0.ncl",
-}
-in
-let libcxxStage0 | lib.CmakePackage
+
+let llvmBaseStage0 | lib.CmakePackage
   =
     let b2 = (llvmBase & { isLlvm = true }) in
     b2
@@ -56,4 +50,4 @@ let libcxxStage0 | lib.CmakePackage
           ]
     }
   in
-libcxxStage0
+llvmBaseStage0

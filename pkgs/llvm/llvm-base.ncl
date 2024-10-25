@@ -12,10 +12,9 @@ let llvmBase | lib.CmakePackage
         },
       }
     ],
-    isStatic | default = lib.CmakePackage.isStatic,
-    isLlvm | default = lib.CmakePackage.isLlvm,
-
-    enableCcache | default = lib.CmakePackage.enableCcache,
+    isStatic, 
+    isLlvm,
+    enableCcache,
 
     cmakeArgs | priority -10
       =

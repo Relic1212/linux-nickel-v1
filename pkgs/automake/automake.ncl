@@ -1,4 +1,3 @@
-let lib = import "../../nickellib/lib.ncl" in
 
 {
   llvm,
@@ -9,6 +8,8 @@ let lib = import "../../nickellib/lib.ncl" in
   autoconf,
   m4,
   ccacheBin,
+  lib,
+  pkgs,
 
   #
   automake | lib.AutotoolsPackage
