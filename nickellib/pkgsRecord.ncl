@@ -10,7 +10,7 @@ r={
   (import "../pkgs/linux-headers/linux-headers.ncl")&
   (import "../pkgs/libssp-nonshared/libssp-nonshared-stage-0.ncl")&
   (import "../pkgs/busybox/busybox-stage-0.ncl")&
-  (import "../pkgs/busybox/busybox-stage-1.ncl")&
+  (import "../pkgs/busybox/busybox.ncl")&
   (import "../pkgs/gnumake/gnumake-stage-1.ncl")&
   (import "../pkgs/gnumake/gnumake.ncl")&
   (import "../pkgs/ccache/ccache-bin.ncl")&
