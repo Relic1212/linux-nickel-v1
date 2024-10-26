@@ -1,6 +1,6 @@
 {
   lib,
-  hwData | lib.AutotoolsPackage
+  hwdata | lib.AutotoolsPackage
     = {
       name = "hwdata",
       singleSource = {

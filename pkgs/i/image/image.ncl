@@ -9,25 +9,38 @@
     & {
       name = "base-base-rootfs",
       biPkgs = [
+        # base
         pkgs.busybox,
         pkgs.basefiles,
         pkgs.dinit,
         pkgs.dinitServices,
         pkgs.dinitUtils,
         pkgs.shadow,
-        pkgs.fscrypt,
         pkgs.utilLinux,
-        pkgs.openssl,
-        pkgs.fscryptUnlockHome,
-        pkgs.dhcpcd,
-        pkgs.iwd,
-        pkgs.dropbear,
-        pkgs.seatd,
         pkgs.linux,
         pkgs.eudev,
         pkgs.dbus,
         pkgs.bkeymaps,
+
+        # net
+        pkgs.dhcpcd,
+        pkgs.iwd,
+        pkgs.dropbear,
         pkgs.openresolv,
+
+        # enc
+        pkgs.e2fsprogs,
+        pkgs.fscryptUnlockHome,
+        pkgs.openssl,
+        pkgs.fscrypt,
+
+        # gui
+        pkgs.seatd,
+        pkgs.sway,
+        pkgs.libinput,
+        pkgs.libxkbcommon,
+        pkgs.xkeyboardConfig,
+        pkgs.xdgRuntimeRun,
       ]
     }
   ),

@@ -13,6 +13,8 @@ let r = {
 
       & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
       & (import "../pkgs/b/busybox/busybox.ncl")
+      & (import "../pkgs/c/cairo/cairo.ncl")
+
       & (import "../pkgs/c/ccache/ccache-bin.ncl")
       & (import "../pkgs/c/ccache/ccache.ncl")
       & (import "../pkgs/c/cmake/cmake-stage-1.ncl")
@@ -32,6 +34,7 @@ let r = {
 
 
       & (import "../pkgs/d/dropbear/dropbear.ncl")
+      & (import "../pkgs/e/e2fsprogs/e2fsprogs.ncl")
 
       & (import "../pkgs/e/erofs-utils/erofs-utils.ncl")
       & (import "../pkgs/e/eudev/eudev.ncl")
@@ -43,6 +46,10 @@ let r = {
       & (import "../pkgs/f/file/file.ncl")
 
       & (import "../pkgs/f/findutils/findutils.ncl")
+      & (import "../pkgs/f/freetype/freetype.ncl")
+      & (import "../pkgs/f/fontconfig/fontconfig.ncl")
+
+
       & (import "../pkgs/f/fscrypt/fscrypt.ncl")
       & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
 
@@ -58,6 +65,10 @@ let r = {
 
 
       & (import "../pkgs/g/gperf/gperf.ncl")
+      & (import "../pkgs/g/glib/glib.ncl")
+
+
+      & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
 
       & (import "../pkgs/h/hwdata/hwdata.ncl")
 
@@ -71,6 +82,8 @@ let r = {
       & (import "../pkgs/l/libarchive/libarchive.ncl")
 
       & (import "../pkgs/l/libbsd/libbsd.ncl")
+      & (import "../pkgs/l/libdisplayinfo/libdisplayinfo.ncl")
+
 
       & (import "../pkgs/l/libmd/libmd.ncl")
 
@@ -79,6 +92,14 @@ let r = {
 
 
       & (import "../pkgs/l/libelf/libelf.ncl")
+
+      & (import "../pkgs/l/libevdev/libevdev.ncl")
+      & (import "../pkgs/l/libinput/libinput.ncl")
+      & (import "../pkgs/l/libpng/libpng.ncl")
+      & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
+
+
+
 
       & (import "../pkgs/l/libffi/libffi.ncl")
       & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
@@ -114,7 +135,14 @@ let r = {
       & (import "../pkgs/o/openresolv/openresolv.ncl")
 
       & (import "../pkgs/o/openssl/openssl.ncl")
+      & (import "../pkgs/p/pango/pango.ncl")
+
       & (import "../pkgs/p/perl/perl.ncl")
+      & (import "../pkgs/p/pixman/pixman.ncl")
+
+      & (import "../pkgs/p/pcre2/pcre2.ncl")
+
+
       & (import "../pkgs/p/popt/popt.ncl")
 
       & (import "../pkgs/p/pkgconf/pkgconf.ncl")
@@ -137,6 +165,8 @@ let r = {
       & (import "../pkgs/s/samurai/samurai.ncl")
       & (import "../pkgs/s/seatd/seatd.ncl")
       & (import "../pkgs/s/shadow/shadow.ncl")
+      & (import "../pkgs/s/sway/sway.ncl")
+
 
       & (import "../pkgs/u/util-linux/util-linux.ncl")
       & (import "../pkgs/u/unzip/unzip.ncl")
@@ -144,6 +174,9 @@ let r = {
       & (import "../pkgs/w/wayland/wayland.ncl")
       & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
 
+      & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")
+
+      & (import "../pkgs/x/xkeyboard-config/xkeyboard-config.ncl")
 
       & (import "../pkgs/x/xxhash/xxhash.ncl")
 
