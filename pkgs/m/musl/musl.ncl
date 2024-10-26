@@ -13,7 +13,8 @@
         }
       ],
       extraEnv | priority -10 = lib.AutotoolsPackage.extraEnv & (if isLlvm then { LIBCC_LDFLAGS = ["--rtlib=compiler-rt"] } else {}),
-      configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])
+      #configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])
+      extraConfigureFlags = ["--enable-static", "--disable-shared", "--disable-shared"],
     },
 
   muslStage0 = _muslBase & { stage = 0 },
@@ -62,4 +63,10 @@
           pkgs.muslStage2
         ]
     },
+  muslShared =
+    musl
+    & {
+      name = "musl-shared",
+      extraConfigureFlags | priority 1 = ["--disable-static", "--enable-shared"],
+    }
 }

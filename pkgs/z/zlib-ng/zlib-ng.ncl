@@ -19,5 +19,15 @@
           "-DZLIB_COMPAT:BOOL=ON",
           "-Wno-dev"
         ]
+    },
+  zlibNgPic =
+    zlibNg
+    & {
+      name | priority 1 = "zlib-ng-pic",
+      preConfigurePhase = [
+        "export CFLAGS=\"${CFLAGS} -fPIC\"",
+        "export CXXFLAGS=\"${CXXFLAGS} -fPIC\"",
+        "export LDFLAGS=\"${LDFLAGS} -fPIC\"",
+      ]
     }
 }

@@ -23,9 +23,8 @@
             }
           ],
 
-          extraMesonArgs=[
-                        "-Dwlroots:backends=drm,libinput"
-
+          extraMesonArgs = [
+            "-Dwlroots:backends=drm,libinput"
           ],
 
           preConfigurePhase = [

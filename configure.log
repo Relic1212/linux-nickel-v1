@@ -1,0 +1,25 @@
+--------------------
+./build/tmp/zlib-ng/src/configure --help
+Sat Oct 26 21:59:05 CEST 2024
+usage:
+  configure [--prefix=PREFIX]  [--eprefix=EXPREFIX]
+    [--static] [--32] [--64] [--libdir=LIBDIR] [--sharedlibdir=LIBDIR]
+    [--includedir=INCLUDEDIR] [--archs="-arch i386 -arch x86_64"]
+    [--sprefix=SYMBOL_PREFIX]   Adds a prefix to all exported symbols
+    [--warn]                    Enables extra compiler warnings
+    [--debug]                   Enables extra debug prints during operation
+    [--zlib-compat]             Compiles for zlib-compatible API instead of zlib-ng API
+    [--without-unaligned]       Compiles without fast unaligned access
+    [--without-gzfileops]       Compiles without the gzfile parts of the API enabled
+    [--without-optimizations]   Compiles without support for optional instruction sets
+    [--without-new-strategies]  Compiles without using new additional deflate strategies
+    [--without-acle]            Compiles without ARM C Language Extensions
+    [--without-neon]            Compiles without ARM Neon SIMD instruction set
+    [--without-armv6]           Compiles without ARMv6 SIMD instruction set
+    [--without-altivec]         Compiles without PPC AltiVec support
+    [--without-power8]          Compiles without Power8 instruction set
+    [--with-dfltcc-deflate]     Use DEFLATE CONVERSION CALL instruction for compression on IBM Z
+    [--with-dfltcc-inflate]     Use DEFLATE CONVERSION CALL instruction for decompression on IBM Z
+    [--without-crc32-vx]        Build without vectorized CRC32 on IBM Z
+    [--with-reduced-mem]        Reduced memory usage for special cases (reduces performance)
+    [--force-sse2]              Assume SSE2 instructions are always available (disabled by default on x86, enabled on x86_64)

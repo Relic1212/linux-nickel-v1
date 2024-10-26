@@ -82,12 +82,13 @@
     linux
     & {
       name | priority 1 = "linux-2",
-        extraMakeInstallArgs |priority 1= [
-        "INSTALL_MOD_STRIP=1",
-        "LLVM=1",
-        "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
-        # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
-        # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
-      ],
+      extraMakeInstallArgs | priority 1
+        = [
+          "INSTALL_MOD_STRIP=1",
+          "LLVM=1",
+          "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
+          # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
+          # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
+        ],
     }
 }

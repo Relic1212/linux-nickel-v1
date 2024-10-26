@@ -9,12 +9,15 @@
       & {
         # enableCcache|force=false,
         name | priority 1 = "python-full",
+        isStatic,
 
         configurePhase = (
           ["cd ${SRC}"]
           @ (_pythonBase.configurePhase)
-          @ [
-            m%"
+          @ (
+            if isStatic then
+              [
+                m%"
         printf "
         *static*
         _asyncio _asynciomodule.c
@@ -110,7 +113,10 @@
         _bz2 _bz2module.c
 
         " > ./Modules/Setup.local"%
-          ]
+              ]
+            else
+              []
+          )
         ),
         installPhase =
           lib.AutotoolsPackage.installPhase
@@ -125,5 +131,21 @@
           pkgs.libffi,
           pkgs.openssl
         ]
-      }
+      },
+
+  pythonDynamic =
+    pythonFull
+    & {
+      name | priority 20 = "python-dynamic",
+      isStatic | priority 2 = false,
+      biPkgs | priority 1
+        = [
+          pkgs.linuxHeaders,
+          pkgs.zlibNgPic,
+          pkgs.pkgconf,
+          pkgs.libffi,
+          pkgs.opensslPic,
+          pkgs.muslShared,
+        ]
+    }
 }

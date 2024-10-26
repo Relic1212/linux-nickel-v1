@@ -24,7 +24,7 @@
         pkgs.dbus,
         pkgs.bkeymaps,
         pkgs.kmod,
-        pkgs.checkFirmware,
+        # pkgs.checkFirmware,
 
         # net
         pkgs.dhcpcd,
@@ -45,7 +45,6 @@
         pkgs.libxkbcommon,
         pkgs.xkeyboardConfig,
         pkgs.xdgRuntimeRun,
-        
       ]
     }
   ),

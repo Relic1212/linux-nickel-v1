@@ -27,5 +27,16 @@
             @ _openssl.configurePhase,
           biPkgs = [pkgs.perl, pkgs.linuxHeaders]
         }
-      )
+      ),
+
+  opensslPic =
+    openssl
+    & {
+      name | priority 1 = "openssl-pic",
+      preConfigurePhase = [
+        "export CFLAGS=\"${CFLAGS} -fPIC\"",
+        "export CXXFLAGS=\"${CXXFLAGS} -fPIC\"",
+        "export LDFLAGS=\"${LDFLAGS} -fPIC\"",
+      ]
+    }
 }
