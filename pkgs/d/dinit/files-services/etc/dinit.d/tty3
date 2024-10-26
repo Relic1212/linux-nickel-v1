@@ -1,0 +1,8 @@
+type = process
+command = /usr/bin/agetty --login-program /usr/bin/login tty3 linux-c
+restart = true
+depends-on = loginready
+termsignal = HUP
+smooth-recovery = true
+inittab-id = 3
+inittab-line = tty3

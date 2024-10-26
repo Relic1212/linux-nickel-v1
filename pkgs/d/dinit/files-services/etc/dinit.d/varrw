@@ -1,0 +1,11 @@
+# Re-mount the root filesystem read/write.
+
+type = scripted
+command = /etc/dinit.d/scripts/varrw.sh
+restart = false
+options = starts-rwfs
+logfile = /run/rootrw.log
+
+depends-on = early-filesystems
+depends-on = udevd
+#waits-for = hwclock

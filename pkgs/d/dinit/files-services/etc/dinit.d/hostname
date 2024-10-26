@@ -1,0 +1,6 @@
+
+
+type = scripted
+command = hostname -F /etc/hostname
+restart = false
+depends-on=early-filesystems

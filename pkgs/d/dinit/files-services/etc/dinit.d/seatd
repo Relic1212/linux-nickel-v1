@@ -1,0 +1,7 @@
+
+type = process
+command = /usr/bin/seatd -g seat 
+logfile = /var/log/seatd-daemon.log
+smooth-recovery = true
+waits-for=udev-settle
+depends-on=varrw

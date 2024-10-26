@@ -1,0 +1,7 @@
+type = process
+command = /usr/bin/dropbear -E -F -P /run/dropbear.pid -R
+logfile = /var/log/dropbear.log
+
+depends-on = dhcpcd
+depends-on = netdev-eth0
+depends-on = dropbear-keys

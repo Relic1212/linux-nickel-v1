@@ -1,0 +1,13 @@
+# Virtual service run before login is enabled.
+
+type = internal
+restart = false
+options = runs-on-console
+
+# depends-on = rcboot
+depends-on = filesystems
+
+depends-on = loadkeys
+
+waits-for = udevd
+waits-for = syslogd

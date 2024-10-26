@@ -1,12 +1,13 @@
 {
   lib,
   pkgs,
-  libModulesDirectory|lib.Package={
-    name="lib-modules-directory",
-    installPhase=[
-      "install -d -m0755 ${DEST}/lib/modules/6.10.0-standard"
-    ],
-  },
+  libModulesDirectory | lib.Package
+    = {
+      name = "lib-modules-directory",
+      installPhase = [
+        "install -d -m0755 ${DEST}/lib/modules/6.10.0-standard"
+      ],
+    },
   linux | lib.MakePackage
     = {
       name = "linux",
@@ -23,9 +24,8 @@
 
       extraEnv = {
         KBUILD_BUILD_TIMESTAMP = "''",
-        HOSTLDFLAGS="%{ lib.functions.varToExportvar (buildEnv.LDFLAGS @ ["-lz"] )}",
-        HOSTCFLAGS="%{ lib.functions.varToExportvar  buildEnv.CFLAGS}",
-
+        HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.LDFLAGS @ ["-lz"] )}",
+        HOSTCFLAGS = "%{ lib.functions.varToExportvar  buildEnv.CFLAGS}",
       },
       extraMakeArgs = [
         "LLVM=1",
@@ -44,17 +44,15 @@
       makeInstallTargets = ["modules_install"],
       preBuildPhase = [
         "cp /tmp/workdir/files/base.config .config",
-                  "make " ++ (std.string.join " " makeArgs) ++ 
-                  " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} "
-                  ++
-                  " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS}"
-                  ++
-                  " olddefconfig",
+        "make "
+        ++ (std.string.join " " makeArgs)
+        ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} "
+        ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS}"
+        ++ " olddefconfig",
 
-                  # "mkdir /tmp/workdir/build/bin",
-                  # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
-                  # "export PATH=/tmp/workdir/build/bin:${PATH}"
-
+        # "mkdir /tmp/workdir/build/bin",
+        # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
+        # "export PATH=/tmp/workdir/build/bin:${PATH}"
       ],
       postInstallPhase = [
         # "KVER=\"$(ls /tmp/workdir/out/destdir/lib/modules/)\"",
@@ -62,11 +60,27 @@
         "install -d -m0755 ${DEST}/boot",
         "install -m0755 arch/x86/boot/bzImage  ${DEST}/boot",
       ],
-      biPkgs=[
-        pkgs.perl, pkgs.m4 , pkgs.libtool ,pkgs.openssl ,pkgs.zlibNg, pkgs.xz,
-        pkgs.flex,pkgs.bison , pkgs.linuxHeaders,pkgs.libelf,
-        pkgs.diffutils, pkgs.zstd, pkgs.lz4, pkgs.kmod, #, libModulesDirectory,
+      biPkgs = [
+        pkgs.perl,
+        pkgs.m4,
+        pkgs.libtool,
+        pkgs.openssl,
+        pkgs.zlibNg,
+        pkgs.xz,
+        pkgs.flex,
+        pkgs.bison,
+        pkgs.linuxHeaders,
+        pkgs.libelf,
+        pkgs.diffutils,
+        pkgs.zstd,
+        pkgs.lz4,
+        pkgs.kmod, #, libModulesDirectory,
         #, pkgs.libarchive,
       ],
+    },
+  linux2 =
+    linux
+    & {
+      name | priority 1 = "linux-2",
     }
 }

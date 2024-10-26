@@ -12,5 +12,14 @@
       # buildInputs=[],
       enableCcache = false,
       generator = "Ninja",
+      extraCmakeArgs = [
+        "-DENABLE_TESTING=OFF",
+        "-DREDIS_STORAGE_BACKEND=OFF",
+        "-DSTATIC_LINK=ON"
+      ],
+      biPkgs = [
+        pkgs.xxhash,
+        pkgs.zstd,
+      ]
     }
 }

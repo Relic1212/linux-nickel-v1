@@ -1,0 +1,14 @@
+# Auxillary (non-root) filesystems
+
+type = scripted
+command = /usr/bin/mount -a
+restart = false
+logfile = /var/log/dinit-filesystems.log
+options = start-interruptible
+start-timeout = 1200   # 20 minutes
+
+depends-on = udevd
+depends-on = varrw
+waits-for = udev-settle
+
+#depends-on=syslogd

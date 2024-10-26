@@ -1,0 +1,6 @@
+
+
+type = scripted
+command = modprobe cfg80211
+restart = false
+depends-on=early-filesystems

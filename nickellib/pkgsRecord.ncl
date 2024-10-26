@@ -9,6 +9,8 @@ let r = {
       & (import "../pkgs/b/basefiles/basefiles.ncl")
       & (import "../pkgs/b/bash/bash.ncl")
       & (import "../pkgs/b/bison/bison.ncl")
+      & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
+
       & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
       & (import "../pkgs/b/busybox/busybox.ncl")
       & (import "../pkgs/c/ccache/ccache-bin.ncl")
@@ -19,9 +21,16 @@ let r = {
 
       & (import "../pkgs/d/dbus/dbus.ncl")
 
+      & (import "../pkgs/d/dhcpcd/dhcpcd.ncl")
+
+
       & (import "../pkgs/d/diffutils/diffutils.ncl")
 
       & (import "../pkgs/d/dinit/dinit.ncl")
+      & (import "../pkgs/d/dinit/dinit-utils.ncl")
+      & (import "../pkgs/d/dinit/dinit-services.ncl")
+
+
       & (import "../pkgs/d/dropbear/dropbear.ncl")
 
       & (import "../pkgs/e/erofs-utils/erofs-utils.ncl")
@@ -34,13 +43,25 @@ let r = {
       & (import "../pkgs/f/file/file.ncl")
 
       & (import "../pkgs/f/findutils/findutils.ncl")
+      & (import "../pkgs/f/fscrypt/fscrypt.ncl")
+      & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
+
+
+      & (import "../pkgs/g/genimage/genimage.ncl")
+
       & (import "../pkgs/g/git/git.ncl")
 
       & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
       & (import "../pkgs/g/gnumake/gnumake.ncl")
+      & (import "../pkgs/g/go/go14.ncl")
+      & (import "../pkgs/g/go/go19.ncl")
+
+
       & (import "../pkgs/g/gperf/gperf.ncl")
 
       & (import "../pkgs/h/hwdata/hwdata.ncl")
+
+      & (import "../pkgs/i/image/image.ncl")
 
       & (import "../pkgs/i/iwd/iwd.ncl")
 
@@ -52,6 +73,9 @@ let r = {
       & (import "../pkgs/l/libbsd/libbsd.ncl")
 
       & (import "../pkgs/l/libmd/libmd.ncl")
+
+      & (import "../pkgs/l/libpam/libpam.ncl")
+
 
 
       & (import "../pkgs/l/libelf/libelf.ncl")
@@ -87,6 +111,8 @@ let r = {
       & (import "../pkgs/n/ncurses/ncurses.ncl")
 
       & (import "../pkgs/n/ninja/ninja-stage-1.ncl")
+      & (import "../pkgs/o/openresolv/openresolv.ncl")
+
       & (import "../pkgs/o/openssl/openssl.ncl")
       & (import "../pkgs/p/perl/perl.ncl")
       & (import "../pkgs/p/popt/popt.ncl")
@@ -119,6 +145,7 @@ let r = {
       & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
 
 
+      & (import "../pkgs/x/xxhash/xxhash.ncl")
 
       & (import "../pkgs/x/xz/xz.ncl")
 

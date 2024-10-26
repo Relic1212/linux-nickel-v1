@@ -1,0 +1,5 @@
+type = scripted
+command = /usr/bin/ip link set eth0 up
+restart = false
+
+depends-on = varrw

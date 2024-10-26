@@ -1,0 +1,7 @@
+type = process
+command = /usr/bin/dhcpcd -B -M --logfile /var/log/dhcpcd-service.log
+logfile = /var/log/dhcpcd.log
+restart = false
+
+depends-on = varrw
+depends-on = netdev-eth0

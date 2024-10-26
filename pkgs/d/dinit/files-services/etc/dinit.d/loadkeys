@@ -1,0 +1,8 @@
+
+type = scripted
+command = /etc/dinit.d/scripts/loadkeys.sh
+restart = false
+options = start-interruptible
+start-timeout = 1200   # 20 minutes
+
+depends-on = early-filesystems

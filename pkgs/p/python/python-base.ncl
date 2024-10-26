@@ -4,8 +4,8 @@
   _pythonBase | lib.AutotoolsPackage
     = {
       stage | default = lib.AutotoolsPackage.stage,
-      name = if stage == "final" then "python" else "python-stage-%{ std.to_string stage}",
-
+      # name = if stage == "final" then "python" else "python-stage-%{ std.to_string stage}",
+      baseName = "python",
       singleSource = {
         uri = "https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tar.xz",
         sha256sum = "f6d419a6d8743ab26700801b4908d26d97e8b986e14f95de31b32de2b0e79554",

@@ -1,0 +1,12 @@
+
+
+type = process
+command = /usr/libexec/iwd
+depends-on = dbusd
+depends-on = cfg80211
+depends-on = hostname
+
+
+logfile = /var/log/iwd-daemon.log
+smooth-recovery = yes
+#env-file=/etc/dinit.d/iwd.env
