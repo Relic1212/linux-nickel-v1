@@ -17,6 +17,8 @@ let r = {
 
       & (import "../pkgs/c/ccache/ccache-bin.ncl")
       & (import "../pkgs/c/ccache/ccache.ncl")
+      & (import "../pkgs/c/check-firmware/check-firmware.ncl")
+
       & (import "../pkgs/c/cmake/cmake-stage-1.ncl")
       & (import "../pkgs/c/cmake/cmake.ncl")
       & (import "../pkgs/c/cryptsetup/cryptsetup.ncl")
@@ -105,6 +107,8 @@ let r = {
       & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
       & (import "../pkgs/l/libtool/libtool.ncl")
       & (import "../pkgs/l/linux-headers/linux-headers.ncl")
+      & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
+
       & (import "../pkgs/l/linux/linux.ncl")
 
       & (import "../pkgs/l/libpciaccess/libpciaccess.ncl")
@@ -128,6 +132,8 @@ let r = {
       & (import "../pkgs/m/mtdev/mtdev.ncl")
 
       & (import "../pkgs/m/mtools/mtools.ncl")
+
+      & (import "../pkgs/n/nettle/nettle.ncl")
 
       & (import "../pkgs/n/ncurses/ncurses.ncl")
 
@@ -161,6 +167,7 @@ let r = {
       & (import "../pkgs/p/python-packages/python-setuptools.ncl")
       & (import "../pkgs/p/python/python-full.ncl")
       & (import "../pkgs/p/python/python.ncl")
+      & (import "../pkgs/r/rdfind/rdfind.ncl")
       & (import "../pkgs/r/readline/readline.ncl")
       & (import "../pkgs/s/samurai/samurai.ncl")
       & (import "../pkgs/s/seatd/seatd.ncl")

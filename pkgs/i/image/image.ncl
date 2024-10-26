@@ -18,9 +18,13 @@
         pkgs.shadow,
         pkgs.utilLinux,
         pkgs.linux,
+        # pkgs.linuxFirmware,
+        pkgs.linuxFirmwareSmaller,
         pkgs.eudev,
         pkgs.dbus,
         pkgs.bkeymaps,
+        pkgs.kmod,
+        pkgs.checkFirmware,
 
         # net
         pkgs.dhcpcd,
@@ -41,6 +45,7 @@
         pkgs.libxkbcommon,
         pkgs.xkeyboardConfig,
         pkgs.xdgRuntimeRun,
+        
       ]
     }
   ),

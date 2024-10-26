@@ -35,6 +35,21 @@
           # For testing only
           "echo p |passwd --stdin",
           "echo p |passwd user --stdin",
+
+          # m%"
+          # mv /lib/firmware /lib/firmware.unneeded
+          # mkdir /lib/firmware
+          # find /lib/modules/ -type f -print | xargs modinfo {}|grep "firmware:"| cut -d " " -f8 > /lib/firmware.needed
+
+          # cd /lib/firmware.unneeded
+          # for needed in $(cat  /lib/firmware.needed); do
+          #     if [ -f ${needed} ]; then
+          #       d=$(dirname ${needed})
+          #       mkdir -p /lib/firmware/${d}
+          #       mv ${needed} /lib/firmware/${needed}
+          #     fi
+          # done
+          # "%
         ]
         in
 
