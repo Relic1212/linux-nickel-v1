@@ -15,7 +15,7 @@
           }
         }
       ],
-      buildDir = "${SRC}"
+      # buildDir = "${SRC}"
     },
   ##
 

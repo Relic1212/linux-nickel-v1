@@ -11,7 +11,11 @@ class GraphNode:
         self.packages=packages
 
 def nickel_to_json(fp):
-    c=subprocess.run(["nickel", "export", fp , "--format", "json"],check=True,capture_output=True)
+    c=subprocess.run(["nickel", "export", fp , "--format", "json"],check=False,capture_output=True)
+
+    if c.returncode!=0:
+        print(c.stderr.decode())
+        raise subprocess.CalledProcessError(c.returncode,c.args)
     return json.loads(c.stdout.decode())
 
 
@@ -66,9 +70,32 @@ def reverse_dict(d:dict[str,str])->dict[str,str]:
         d2[v]=k 
     return d2
 
+
+def build_all(drvs):
+    failed=[]
+    s=[]
+    for k in drvs['hashByName'].keys():
+        pn_hash=drvs['hashByName'][k]
+        try:
+            build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
+            s.append(k)
+        except:
+            failed.append(k)
+    
+    print("The following packages succeded")
+    print(s)
+    if len(failed)>0:
+        print("The following packages failed to build:")
+        print(failed)
+    
+
+
 def test():
     pn=sys.argv[1]
     drvs=get_drvs()
+    if pn=="all":
+        build_all(drvs)
+        return
     pn_hash = drvs['hashByName'][pn]
     print(pn_hash)
     # hbn= drvs["hashByName"]

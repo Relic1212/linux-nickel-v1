@@ -307,6 +307,7 @@ def build(h, pkg_drvs: str) -> None:
         status = proc.returncode
         if status != 0:
             print("env =", senv)
+            print(f"Failed to build {name}")
             raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
     subprocess.run(["touch", status_file], check=True)
     t2=timeit.default_timer()

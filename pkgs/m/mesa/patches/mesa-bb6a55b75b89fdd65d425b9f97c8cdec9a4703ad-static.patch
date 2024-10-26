@@ -1,0 +1,654 @@
+diff --git a/meson.build b/meson.build
+index 5c91048a3f1..924ee4abf37 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2192,7 +2192,7 @@ endif
+ # FIXME: autotools lists this as incomplete
+ gbm_priv_libs = []
+ if dep_dl.found()
+-  gbm_priv_libs += '-ldl'
++  gbm_priv_libs += ''
+ endif
+ 
+ pkg = import('pkgconfig')
+diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
+index 988a655d82b..16d09af51aa 100644
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -654,14 +654,14 @@ dri2_add_pbuffer_configs_for_visuals(_EGLDisplay *disp)
+ }
+ 
+ GLboolean
+-dri2_validate_egl_image(void *image, void *data)
++dri2_validate_egl_image_driver(void *image, void *data)
+ {
+    _EGLDisplay *disp = _eglLockDisplay(data);
+    _EGLImage *img = _eglLookupImage(image, disp);
+    _eglUnlockDisplay(disp);
+ 
+    if (img == NULL) {
+-      _eglError(EGL_BAD_PARAMETER, "dri2_validate_egl_image");
++      _eglError(EGL_BAD_PARAMETER, "dri2_validate_egl_image_driver");
+       return false;
+    }
+ 
+@@ -669,7 +669,7 @@ dri2_validate_egl_image(void *image, void *data)
+ }
+ 
+ __DRIimage *
+-dri2_lookup_egl_image_validated(void *image, void *data)
++dri2_lookup_egl_image_driver_validated_driver(void *image, void *data)
+ {
+    struct dri2_egl_image *dri2_img;
+ 
+@@ -681,22 +681,22 @@ dri2_lookup_egl_image_validated(void *image, void *data)
+ }
+ 
+ __DRIimage *
+-dri2_lookup_egl_image(__DRIscreen *screen, void *image, void *data)
++dri2_lookup_egl_image_driver(__DRIscreen *screen, void *image, void *data)
+ {
+    (void)screen;
+ 
+-   if (!dri2_validate_egl_image(image, data))
++   if (!dri2_validate_egl_image_driver(image, data))
+       return NULL;
+ 
+-   return dri2_lookup_egl_image_validated(image, data);
++   return dri2_lookup_egl_image_driver_validated_driver(image, data);
+ }
+ 
+ const __DRIimageLookupExtension image_lookup_extension = {
+    .base = {__DRI_IMAGE_LOOKUP, 2},
+ 
+-   .lookupEGLImage = dri2_lookup_egl_image,
+-   .validateEGLImage = dri2_validate_egl_image,
+-   .lookupEGLImageValidated = dri2_lookup_egl_image_validated,
++   .lookupEGLImage = dri2_lookup_egl_image_driver,
++   .validateEGLImage = dri2_validate_egl_image_driver,
++   .lookupEGLImageValidated = dri2_lookup_egl_image_driver_validated_driver,
+ };
+ 
+ static const struct dri_extension_match dri3_driver_extensions[] = {
+diff --git a/src/egl/drivers/dri2/egl_dri2.h b/src/egl/drivers/dri2/egl_dri2.h
+index 57d8820c079..8334831fa5c 100644
+--- a/src/egl/drivers/dri2/egl_dri2.h
++++ b/src/egl/drivers/dri2/egl_dri2.h
+@@ -492,13 +492,13 @@ __DRIdrawable *
+ dri2_surface_get_dri_drawable(_EGLSurface *surf);
+ 
+ GLboolean
+-dri2_validate_egl_image(void *image, void *data);
++dri2_validate_egl_image_driver(void *image, void *data);
+ 
+ __DRIimage *
+-dri2_lookup_egl_image_validated(void *image, void *data);
++dri2_lookup_egl_image_driver_validated_driver(void *image, void *data);
+ 
+ __DRIimage *
+-dri2_lookup_egl_image(__DRIscreen *screen, void *image, void *data);
++dri2_lookup_egl_image_driver(__DRIscreen *screen, void *image, void *data);
+ 
+ void
+ dri2_get_shifts_and_sizes(const __DRIcoreExtension *core,
+diff --git a/src/egl/drivers/dri2/platform_drm.c b/src/egl/drivers/dri2/platform_drm.c
+index 1a35ae3b0fe..1467c8fbf49 100644
+--- a/src/egl/drivers/dri2/platform_drm.c
++++ b/src/egl/drivers/dri2/platform_drm.c
+@@ -657,9 +657,9 @@ dri2_initialize_drm(_EGLDisplay *disp)
+    dri2_dpy->kopper = dri2_dpy->gbm_dri->kopper;
+    dri2_dpy->driver_configs = dri2_dpy->gbm_dri->driver_configs;
+ 
+-   dri2_dpy->gbm_dri->lookup_image = dri2_lookup_egl_image;
+-   dri2_dpy->gbm_dri->validate_image = dri2_validate_egl_image;
+-   dri2_dpy->gbm_dri->lookup_image_validated = dri2_lookup_egl_image_validated;
++   dri2_dpy->gbm_dri->lookup_image = dri2_lookup_egl_image_driver;
++   dri2_dpy->gbm_dri->validate_image = dri2_validate_egl_image_driver;
++   dri2_dpy->gbm_dri->lookup_image_validated = dri2_lookup_egl_image_driver_validated_driver;
+    dri2_dpy->gbm_dri->lookup_user_data = disp;
+ 
+    dri2_dpy->gbm_dri->flush_front_buffer = dri2_drm_flush_front_buffer;
+diff --git a/src/gallium/auxiliary/pipe-loader/meson.build b/src/gallium/auxiliary/pipe-loader/meson.build
+index 7927515cf98..f0c39888aa4 100644
+--- a/src/gallium/auxiliary/pipe-loader/meson.build
++++ b/src/gallium/auxiliary/pipe-loader/meson.build
+@@ -31,7 +31,7 @@ libpipe_loader_links = []
+ 
+ if dep_libdrm.found()
+   files_pipe_loader += files('pipe_loader_drm.c')
+-  libpipe_loader_links += libloader
++  # libpipe_loader_links += libloader
+ endif
+ 
+ renderonly_drivers_c_args = []
+diff --git a/src/gallium/auxiliary/util/u_handle_table.c b/src/gallium/auxiliary/util/u_handle_table.c
+index 0436f46490b..e311893718d 100644
+--- a/src/gallium/auxiliary/util/u_handle_table.c
++++ b/src/gallium/auxiliary/util/u_handle_table.c
+@@ -234,7 +234,7 @@ handle_table_get(struct handle_table *ht,
+ 
+ 
+ void
+-handle_table_remove(struct handle_table *ht, 
++handle_table_remove_mesa(struct handle_table *ht, 
+                     unsigned handle)
+ {
+    void *object;
+diff --git a/src/gallium/auxiliary/util/u_handle_table.h b/src/gallium/auxiliary/util/u_handle_table.h
+index 2b1d7586a11..499e0ad2a55 100644
+--- a/src/gallium/auxiliary/util/u_handle_table.h
++++ b/src/gallium/auxiliary/util/u_handle_table.h
+@@ -56,7 +56,7 @@ handle_table_create(void);
+ /**
+  * Set an optional destructor callback.
+  * 
+- * If set, it will be called during handle_table_remove and 
++ * If set, it will be called during handle_table_remove_mesa and 
+  * handle_table_destroy calls.
+  */
+ void
+@@ -92,7 +92,7 @@ handle_table_get(struct handle_table *ht,
+ 
+ 
+ void
+-handle_table_remove(struct handle_table *ht, 
++handle_table_remove_mesa(struct handle_table *ht, 
+                     unsigned handle);
+ 
+ 
+diff --git a/src/gallium/drivers/virgl/virgl_screen.c b/src/gallium/drivers/virgl/virgl_screen.c
+index d86ca5d1e8c..1701976e33d 100644
+--- a/src/gallium/drivers/virgl/virgl_screen.c
++++ b/src/gallium/drivers/virgl/virgl_screen.c
+@@ -986,7 +986,7 @@ virgl_destroy_screen(struct pipe_screen *screen)
+    if (vws)
+       vws->destroy(vws);
+ 
+-   disk_cache_destroy(vscreen->disk_cache);
++   // disk_cache_destroy(vscreen->disk_cache);
+ 
+    FREE(vscreen);
+ }
+@@ -1045,40 +1045,40 @@ static void virgl_query_memory_info(struct pipe_screen *screen, struct pipe_memo
+    ctx->destroy(ctx);
+ }
+ 
+-static struct disk_cache *virgl_get_disk_shader_cache (struct pipe_screen *pscreen)
+-{
+-   struct virgl_screen *screen = virgl_screen(pscreen);
++// static struct disk_cache *virgl_get_disk_shader_cache (struct pipe_screen *pscreen)
++// {
++//    struct virgl_screen *screen = virgl_screen(pscreen);
+ 
+-   return screen->disk_cache;
+-}
++//    return screen->disk_cache;
++// }
+ 
+-static void virgl_disk_cache_create(struct virgl_screen *screen)
+-{
+-   const struct build_id_note *note =
+-      build_id_find_nhdr_for_addr(virgl_disk_cache_create);
+-   assert(note);
++// static void virgl_disk_cache_create(struct virgl_screen *screen)
++// {
++//    const struct build_id_note *note =
++//       build_id_find_nhdr_for_addr(virgl_disk_cache_create);
++//    assert(note);
+ 
+-   unsigned build_id_len = build_id_length(note);
+-   assert(build_id_len == 20); /* sha1 */
++//    unsigned build_id_len = build_id_length(note);
++//    assert(build_id_len == 20); /* sha1 */
+ 
+-   const uint8_t *id_sha1 = build_id_data(note);
+-   assert(id_sha1);
++//    const uint8_t *id_sha1 = build_id_data(note);
++//    assert(id_sha1);
+ 
+-   struct mesa_sha1 sha1_ctx;
+-   _mesa_sha1_init(&sha1_ctx);
+-   _mesa_sha1_update(&sha1_ctx, id_sha1, build_id_len);
++//    struct mesa_sha1 sha1_ctx;
++//    _mesa_sha1_init(&sha1_ctx);
++//    _mesa_sha1_update(&sha1_ctx, id_sha1, build_id_len);
+ 
+-   /* When we switch the host the caps might change and then we might have to
+-    * apply different lowering. */
+-   _mesa_sha1_update(&sha1_ctx, &screen->caps, sizeof(screen->caps));
++//    /* When we switch the host the caps might change and then we might have to
++//     * apply different lowering. */
++//    _mesa_sha1_update(&sha1_ctx, &screen->caps, sizeof(screen->caps));
+ 
+-   uint8_t sha1[20];
+-   _mesa_sha1_final(&sha1_ctx, sha1);
+-   char timestamp[41];
+-   _mesa_sha1_format(timestamp, sha1);
++//    uint8_t sha1[20];
++//    _mesa_sha1_final(&sha1_ctx, sha1);
++//    char timestamp[41];
++//    _mesa_sha1_format(timestamp, sha1);
+ 
+-   screen->disk_cache = disk_cache_create("virgl", timestamp, 0);
+-}
++//    screen->disk_cache = disk_cache_create("virgl", timestamp, 0);
++// }
+ 
+ static bool
+ virgl_is_dmabuf_modifier_supported(UNUSED struct pipe_screen *pscreen,
+@@ -1198,7 +1198,7 @@ virgl_create_screen(struct virgl_winsys *vws, const struct pipe_screen_config *c
+    screen->base.fence_finish = virgl_fence_finish;
+    screen->base.fence_get_fd = virgl_fence_get_fd;
+    screen->base.query_memory_info = virgl_query_memory_info;
+-   screen->base.get_disk_shader_cache = virgl_get_disk_shader_cache;
++   // screen->base.get_disk_shader_cache = virgl_get_disk_shader_cache;
+    screen->base.is_dmabuf_modifier_supported = virgl_is_dmabuf_modifier_supported;
+    screen->base.get_dmabuf_modifier_planes = virgl_get_dmabuf_modifier_planes;
+ 
+@@ -1232,6 +1232,6 @@ virgl_create_screen(struct virgl_winsys *vws, const struct pipe_screen_config *c
+ 
+    slab_create_parent(&screen->transfer_pool, sizeof(struct virgl_transfer), 16);
+ 
+-   virgl_disk_cache_create(screen);
++   // virgl_disk_cache_create(screen);
+    return &screen->base;
+ }
+diff --git a/src/gallium/drivers/virgl/virgl_screen.h b/src/gallium/drivers/virgl/virgl_screen.h
+index b84c690242d..7732f1b960f 100644
+--- a/src/gallium/drivers/virgl/virgl_screen.h
++++ b/src/gallium/drivers/virgl/virgl_screen.h
+@@ -25,7 +25,7 @@
+ 
+ #include "pipe/p_screen.h"
+ #include "util/slab.h"
+-#include "util/disk_cache.h"
++// #include "util/disk_cache.h"
+ #include "virgl_winsys.h"
+ #include "compiler/nir/nir.h"
+ #include "virtio-gpu/virgl_protocol.h"
+@@ -70,7 +70,7 @@ struct virgl_screen {
+ 
+    nir_shader_compiler_options compiler_options;
+ 
+-   struct disk_cache *disk_cache;
++   // struct disk_cache *disk_cache;
+ };
+ 
+ 
+diff --git a/src/gallium/frontends/va/buffer.c b/src/gallium/frontends/va/buffer.c
+index bbe0c75f23e..9c391c77003 100644
+--- a/src/gallium/frontends/va/buffer.c
++++ b/src/gallium/frontends/va/buffer.c
+@@ -326,7 +326,7 @@ vlVaDestroyBuffer(VADriverContextP ctx, VABufferID buf_id)
+    }
+ 
+    FREE(buf);
+-   handle_table_remove(VL_VA_DRIVER(ctx)->htab, buf_id);
++   handle_table_remove_mesa(VL_VA_DRIVER(ctx)->htab, buf_id);
+    mtx_unlock(&drv->mutex);
+ 
+    return VA_STATUS_SUCCESS;
+diff --git a/src/gallium/frontends/va/config.c b/src/gallium/frontends/va/config.c
+index 868e568a1a3..a770bb71e7c 100644
+--- a/src/gallium/frontends/va/config.c
++++ b/src/gallium/frontends/va/config.c
+@@ -764,7 +764,7 @@ vlVaDestroyConfig(VADriverContextP ctx, VAConfigID config_id)
+    }
+ 
+    FREE(config);
+-   handle_table_remove(drv->htab, config_id);
++   handle_table_remove_mesa(drv->htab, config_id);
+    mtx_unlock(&drv->mutex);
+ 
+    return VA_STATUS_SUCCESS;
+diff --git a/src/gallium/frontends/va/context.c b/src/gallium/frontends/va/context.c
+index 4f4f0ff5656..8b319440bf9 100644
+--- a/src/gallium/frontends/va/context.c
++++ b/src/gallium/frontends/va/context.c
+@@ -445,7 +445,7 @@ vlVaDestroyContext(VADriverContextP ctx, VAContextID context_id)
+    }
+    FREE(context->desc.base.decrypt_key);
+    FREE(context);
+-   handle_table_remove(drv->htab, context_id);
++   handle_table_remove_mesa(drv->htab, context_id);
+    mtx_unlock(&drv->mutex);
+ 
+    return VA_STATUS_SUCCESS;
+diff --git a/src/gallium/frontends/va/image.c b/src/gallium/frontends/va/image.c
+index 98d423f2a4d..7c9fa36966d 100644
+--- a/src/gallium/frontends/va/image.c
++++ b/src/gallium/frontends/va/image.c
+@@ -469,7 +469,7 @@ vlVaDestroyImage(VADriverContextP ctx, VAImageID image)
+       return VA_STATUS_ERROR_INVALID_IMAGE;
+    }
+ 
+-   handle_table_remove(VL_VA_DRIVER(ctx)->htab, image);
++   handle_table_remove_mesa(VL_VA_DRIVER(ctx)->htab, image);
+    mtx_unlock(&drv->mutex);
+    status = vlVaDestroyBuffer(ctx, vaimage->buf);
+    FREE(vaimage);
+diff --git a/src/gallium/frontends/va/subpicture.c b/src/gallium/frontends/va/subpicture.c
+index 75e7a7a2283..9e7c85cce7e 100644
+--- a/src/gallium/frontends/va/subpicture.c
++++ b/src/gallium/frontends/va/subpicture.c
+@@ -112,7 +112,7 @@ vlVaDestroySubpicture(VADriverContextP ctx, VASubpictureID subpicture)
+    }
+ 
+    FREE(sub);
+-   handle_table_remove(drv->htab, subpicture);
++   handle_table_remove_mesa(drv->htab, subpicture);
+    mtx_unlock(&drv->mutex);
+ 
+    return VA_STATUS_SUCCESS;
+diff --git a/src/gallium/frontends/va/surface.c b/src/gallium/frontends/va/surface.c
+index e79f4f78846..f8705525487 100644
+--- a/src/gallium/frontends/va/surface.c
++++ b/src/gallium/frontends/va/surface.c
+@@ -92,7 +92,7 @@ vlVaDestroySurfaces(VADriverContextP ctx, VASurfaceID *surface_list, int num_sur
+       }
+       util_dynarray_fini(&surf->subpics);
+       FREE(surf);
+-      handle_table_remove(drv->htab, surface_list[i]);
++      handle_table_remove_mesa(drv->htab, surface_list[i]);
+    }
+    mtx_unlock(&drv->mutex);
+ 
+diff --git a/src/gallium/frontends/vdpau/htab.c b/src/gallium/frontends/vdpau/htab.c
+index 9bd27912bfa..f1893aec76b 100644
+--- a/src/gallium/frontends/vdpau/htab.c
++++ b/src/gallium/frontends/vdpau/htab.c
+@@ -85,6 +85,6 @@ void vlRemoveDataHTAB(vlHandle handle)
+ {
+    simple_mtx_lock(&htab_lock);
+    if (htab)
+-      handle_table_remove(htab, handle);
++      handle_table_remove_mesa(htab, handle);
+    simple_mtx_unlock(&htab_lock);
+ }
+diff --git a/src/gallium/frontends/wgl/stw_context.c b/src/gallium/frontends/wgl/stw_context.c
+index 946dbc430c9..c917523f0ee 100644
+--- a/src/gallium/frontends/wgl/stw_context.c
++++ b/src/gallium/frontends/wgl/stw_context.c
+@@ -319,7 +319,7 @@ DrvDeleteContext(DHGLRC dhglrc)
+ 
+    stw_lock_contexts(stw_dev);
+    ctx = stw_lookup_context_locked(dhglrc);
+-   handle_table_remove(stw_dev->ctx_table, dhglrc);
++   handle_table_remove_mesa(stw_dev->ctx_table, dhglrc);
+    stw_unlock_contexts(stw_dev);
+ 
+    if (ctx) {
+diff --git a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson.build
+index 83925248b17..3c1315dde10 100644
+--- a/src/gallium/targets/dri/meson.build
++++ b/src/gallium/targets/dri/meson.build
+@@ -51,7 +51,7 @@ libgallium_dri = shared_library(
+   link_depends : gallium_dri_link_depends,
+   link_with : [
+     libdri, libmesa, libgalliumvl,
+-    libgallium, libglapi, libloader, libpipe_loader_static, libws_null, libwsw, libswdri,
++    libgallium, libglapi, libpipe_loader_static, libws_null, libwsw, libswdri,
+     libswkmsdri,
+   ],
+   dependencies : [
+diff --git a/src/gbm/backends/dri/gbm_dri.c b/src/gbm/backends/dri/gbm_dri.c
+index 91fcc1fd29f..d023b39552f 100644
+--- a/src/gbm/backends/dri/gbm_dri.c
++++ b/src/gbm/backends/dri/gbm_dri.c
+@@ -37,7 +37,7 @@
+ 
+ #include <sys/types.h>
+ #include <unistd.h>
+-#include <dlfcn.h>
++
+ #include <xf86drm.h>
+ #include "drm-uapi/drm_fourcc.h"
+ 
+@@ -270,7 +270,7 @@ dri_open_driver(struct gbm_dri_device *dri)
+    /* XXX: Library name differs on per platforms basis. Update this as
+     * osx/cygwin/windows/bsd gets support for GBM..
+     */
+-   dlopen("libglapi.so.0", RTLD_LAZY | RTLD_GLOBAL);
++   // dlopen("libglapi.so.0", RTLD_LAZY | RTLD_GLOBAL);
+ 
+    static const char *search_path_vars[] = {
+       /* Read GBM_DRIVERS_PATH first for compatibility, but LIBGL_DRIVERS_PATH
+@@ -340,7 +340,8 @@ free_screen:
+    dri->core->destroyScreen(dri->screen);
+ 
+ close_driver:
+-   dlclose(dri->driver);
++   goto fail;
++   // dlclose(dri->driver);
+ 
+ fail:
+    free(dri->driver_name);
+@@ -1234,7 +1235,7 @@ dri_destroy(struct gbm_device *gbm)
+    for (i = 0; dri->driver_configs[i]; i++)
+       free((__DRIconfig *) dri->driver_configs[i]);
+    free(dri->driver_configs);
+-   dlclose(dri->driver);
++   // dlclose(dri->driver);
+    free(dri->driver_name);
+ 
+    free(dri);
+diff --git a/src/gbm/meson.build b/src/gbm/meson.build
+index df65361aef7..88152144832 100644
+--- a/src/gbm/meson.build
++++ b/src/gbm/meson.build
+@@ -57,7 +57,7 @@ libgbm = shared_library(
+   include_directories : incs_gbm,
+   c_args : [args_gbm],
+   link_args : [ld_args_gc_sections],
+-  link_with : libloader,
++  # link_with : libloader,
+   dependencies : [deps_gbm, dep_dl, dep_thread, idep_mesautil, idep_xmlconfig],
+   gnu_symbol_visibility : 'hidden',
+   version : '1.0.0',
+diff --git a/src/loader/loader.c b/src/loader/loader.c
+index 19c456c7020..9b76b3e75f4 100644
+--- a/src/loader/loader.c
++++ b/src/loader/loader.c
+@@ -53,7 +53,7 @@
+ #include "util/os_misc.h"
+ #include "util/u_debug.h"
+ #include "git_sha1.h"
+-
++#include "../gallium/targets/dri/target.c"
+ #define MAX_DRM_DEVICES 64
+ 
+ #ifdef USE_DRICONF
+@@ -849,32 +849,102 @@ loader_open_driver(const char *driver_name,
+    char *get_extensions_name;
+    const struct __DRIextensionRec **extensions = NULL;
+    const struct __DRIextensionRec **(*get_extensions)(void);
+-   void *driver = loader_open_driver_lib(driver_name, "_dri", search_path_vars,
+-                                         DEFAULT_DRIVER_DIR, true);
++   // void *driver = loader_open_driver_lib(driver_name, "_dri", search_path_vars,
++                                       //   DEFAULT_DRIVER_DIR, true);
+ 
+-   if (!driver)
+-      goto failed;
++   // When using dlopen(), this always fails. We want to find a different solution and therefore go on here.
++   // if (!driver)
++      // goto failed;
+ 
+    get_extensions_name = loader_get_extensions_name(driver_name);
+-   if (get_extensions_name) {
+-      get_extensions = dlsym(driver, get_extensions_name);
+-      if (get_extensions) {
+-         extensions = get_extensions();
+-      } else {
+-         log_(_LOADER_DEBUG, "MESA-LOADER: driver does not expose %s(): %s\n",
+-              get_extensions_name, dlerror());
+-      }
+-      free(get_extensions_name);
++   // if (get_extensions_name) {
++   //    get_extensions = dlsym(driver, get_extensions_name);
++   //    if (get_extensions) {
++   //       extensions = get_extensions();
++   //    } else {
++   //       log_(_LOADER_DEBUG, "MESA-LOADER: driver does not expose %s(): %s\n",
++   //            get_extensions_name, dlerror());
++   //    }
++   //    free(get_extensions_name);
++   // }
++
++   // if (extensions == NULL) {
++   //    log_(_LOADER_WARNING,
++   //         "MESA-LOADER: driver exports no extensions (%s)\n", dlerror());
++   //    dlclose(driver);
++   //    driver = NULL;
++   // }
++   //  extensions= __driDriverGetExtensions_kms_swrast();
++   log_( _LOADER_WARNING,  "get_extensions_name=%s\n",get_extensions_name);
++
++   if (strcmp(get_extensions_name,"__driDriverGetExtensions_radeonsi")==0 ){
++      log_( _LOADER_WARNING,  "registered %s as radeonsi\n",get_extensions_name);
++      extensions= __driDriverGetExtensions_radeonsi();
++
++   }else
++#if defined(GALLIUM_IRIS)
++   
++    if (strcmp(get_extensions_name,"__driDriverGetExtensions_iris")==0 )
++   {
++      log_( _LOADER_WARNING,  "registered %s as iris\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_iris();
++   }
++#endif
++#if defined(GALLIUM_I915)
++    if (strcmp(get_extensions_name,"__driDriverGetExtensions_i915")==0 )
++   {
++      log_( _LOADER_WARNING,  "registered %s as i915\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_i915();
++   }
++#endif
++#if defined(GALLIUM_CROCUS)
++    if (strcmp(get_extensions_name,"__driDriverGetExtensions_crocus")==0 )
++   {
++      log_( _LOADER_WARNING,  "registered %s as crocus\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_crocus();
++   }
++#endif
++#if defined(GALLIUM_VIRGL)
++      else if (strcmp(get_extensions_name,"__driDriverGetExtensions_virtio_gpu")==0 )
++   {
++
++      log_( _LOADER_WARNING,  "registered %s as virtio_gpu\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_virtio_gpu();
++      log_(_LOADER_WARNING,
++            "MESA-LOADER: exstenions return by virtio_gpu are are (%p)\n", extensions);
+    }
++#endif
++#if defined(GALLIUM_SOFTPIPE)
++
++    else if (strcmp(get_extensions_name,"__driDriverGetExtensions_kms_swrast")==0 )
++   {
+ 
+-   if (extensions == NULL) {
++      log_( _LOADER_WARNING,  "registered %s as kms_swrast\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_kms_swrast();
+       log_(_LOADER_WARNING,
+-           "MESA-LOADER: driver exports no extensions (%s)\n", dlerror());
+-      dlclose(driver);
+-      driver = NULL;
++            "MESA-LOADER: exstenions return by kms_swrast are are (%p)\n", extensions);
+    }
++    else if (strcmp(get_extensions_name,"__driDriverGetExtensions_swrast")==0 )
++   {
+ 
+-failed:
+-   *out_driver_handle = driver;
++      log_( _LOADER_WARNING,  "registered %s as swrast\n",get_extensions_name);
++
++      extensions= __driDriverGetExtensions_swrast();
++      log_(_LOADER_WARNING,
++            "MESA-LOADER: exstenions return by swrast are are (%p)\n", extensions);
++   }
++#endif
++ if (extensions == NULL) {
++      log_(_LOADER_WARNING,
++            "MESA-LOADER: exstenions are null (%p)\n", extensions);
++      
++    }
++// failed:
++   // *out_driver_handle = driver;
+    return extensions;
+ }
+diff --git a/src/loader/meson.build b/src/loader/meson.build
+index 043cc852112..dedc675270f 100644
+--- a/src/loader/meson.build
++++ b/src/loader/meson.build
+@@ -43,10 +43,31 @@ loader_c_args = [
+ ]
+ libloader = static_library(
+   'loader',
+-  ['loader_dri_helper.c', 'loader.c', sha1_h],
++  ['loader_dri_helper.c', 'loader.c','../gallium/targets/dri/target.c', sha1_h],
++   include_directories : [
++    inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_gallium_aux, inc_util, inc_gallium_drivers,
++    inc_gallium_winsys, include_directories('../gallium/frontends/dri'),
++  ],
++  link_args : [ld_args_build_id, ld_args_gc_sections, gallium_dri_ld_args],
++  link_depends : gallium_dri_link_depends,
++  link_with : [
++    libdri, libmesa, libgalliumvl,
++    libgallium, libglapi, libpipe_loader_static, libws_null, libwsw, libswdri,
++    libswkmsdri,
++  ],
++  dependencies : [
++    dep_selinux, dep_libdrm, dep_llvm, dep_thread, idep_xmlconfig, idep_mesautil,
++    driver_swrast, driver_r300, driver_r600, driver_radeonsi, driver_nouveau,
++    driver_kmsro, driver_v3d, driver_vc4, driver_freedreno, driver_etnaviv,
++    driver_tegra, driver_i915, driver_svga, driver_virgl,
++    driver_panfrost, driver_iris, driver_lima, driver_zink, driver_d3d12,
++    driver_asahi, driver_crocus,
++    dep_xcb, dep_xcb_xrandr
++  ],
+   c_args : loader_c_args,
++#   link_with : libgallium_dri ,
+   gnu_symbol_visibility : 'hidden',
+-  include_directories : [inc_include, inc_src, inc_util],
+-  dependencies : [dep_libdrm, dep_thread, dep_xcb, dep_xcb_xrandr],
++  # include_directories : [inc_include, inc_src, inc_util],
++  # dependencies : [dep_libdrm, dep_thread, dep_xcb, dep_xcb_xrandr],
+   build_by_default : false,
+ )
+diff --git a/src/meson.build b/src/meson.build
+index 1293538b8f6..009a21cf254 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -116,7 +116,9 @@ if with_gallium_asahi or with_tools.contains('asahi')
+   subdir('asahi')
+ endif
+ if with_gallium or with_gbm
+-  subdir('loader')
++    inc_loader = include_directories('loader')
++
++#   subdir('loader')
+ endif
+ if with_gbm
+   subdir('gbm')
+@@ -126,6 +128,9 @@ endif
+ if with_gallium
+   subdir('mesa')
+   subdir('gallium')
++  if with_gallium or with_gbm
++    subdir('loader')
++  endif
+   if with_glx == 'dri'
+      subdir('glx')
+   endif
+@@ -138,6 +143,7 @@ if with_gallium
+     subdir('mesa/state_tracker/tests')
+   endif
+ endif
++
+ if with_egl
+   subdir('egl')
+ endif

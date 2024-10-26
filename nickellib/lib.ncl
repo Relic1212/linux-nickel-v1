@@ -7,7 +7,7 @@ in
 let drvUtils = import "drv.ncl"
 in
 {
-  pkgs | default = import "pkgsRecord.ncl",
+  pkgs , #| default = import "pkgsRecord.ncl",
 
   lib = {
     biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
@@ -180,10 +180,14 @@ in
             []
           else
             (std.array.map (fun p => "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches),
+      preConfigurePhase | Array String | default = [],
       configurePhase | Array String | default = (if (buildDir == null) then [] else ["cd %{buildDir}"]),
+      preBuildPhase | Array String | default = [],
       buildPhase | Array String | default = [],
+      preInstallPhase | Array String | default = [],
       installPhase | Array String | default = [],
-      phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, configurePhase, buildPhase, installPhase],
+      postInstallPhase | Array String | default = [],
+      phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
       commands | Array String | default = std.array.flatten phases,
       scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
@@ -242,12 +246,16 @@ in
     AutotoolsPackage =
       MakePackage
       & {
-        isStatic | default = MakePackage.isStatic,
+        isStatic ,
+        buildDir,
         configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ extraConfigureFlags,
         extraConfigureFlags | Array String | default = [],
         configureScript | String | default = "${SRC}/configure",
         configurePhase | priority -11
-          = [
+          =
+           (if (buildDir == null) then [] else ["cd %{buildDir}"]) @
+           [
+
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
           ]
       },
@@ -255,12 +263,16 @@ in
       AutotoolsPackage
       & {
         stage,
+        buildDir,
+        configureScript,
+        configureFlags,
         configurePhase | priority -10
-          =
+          = (if (buildDir == null) then [] else ["cd %{buildDir}"]) @
             [
               "(cd ${SRC}; autoreconf -fiv)",
-            ]
-            @ AutotoolsPackage.configurePhase,
+              configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
+
+            ],
         baseBuildinputPackages | priority -999
           =
             AutotoolsPackage.baseBuildinputPackages
@@ -269,6 +281,7 @@ in
                 [
                   pkgs.perl,
                   pkgs.automake,
+                  pkgs.autoconf,
                   pkgs.m4,
                   pkgs.libtool,
                   pkgs.pkgconf,
@@ -288,6 +301,15 @@ in
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
         baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
+        configurePhase|priority -1000=[
+          "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
+        ],
+        buildPhase|priority -1000=[
+          "meson compile"
+        ],
+        installPhase|priority -1000=[
+          "meson install --destdir ${DEST}"
+        ],
 
         baseBuildinputPackages | priority -1000
           =

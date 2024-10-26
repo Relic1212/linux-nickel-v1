@@ -1,0 +1,214 @@
+
+
+diff --git a/src/libudev/libudev-device-private.c b/src/libudev/libudev-device-private.c
+index e1ddac4..20be499 100644
+--- a/src/libudev/libudev-device-private.c
++++ b/src/libudev/libudev-device-private.c
+@@ -43,7 +43,7 @@ static void udev_device_tag(struct udev_device *dev, const char *tag, bool add)
+         if (add) {
+                 int fd;
+ 
+-                mkdir_parents(filename, 0755);
++                mkdir_parents_eudev(filename, 0755);
+                 fd = open(filename, O_WRONLY|O_CREAT|O_CLOEXEC|O_TRUNC|O_NOFOLLOW, 0444);
+                 if (fd >= 0)
+                         close(fd);
+@@ -127,7 +127,7 @@ int udev_device_update_db(struct udev_device *udev_device)
+ 
+         /* write a database file */
+         strscpyl(filename_tmp, sizeof(filename_tmp), filename, ".tmp", NULL);
+-        mkdir_parents(filename_tmp, 0755);
++        mkdir_parents_eudev(filename_tmp, 0755);
+         f = fopen(filename_tmp, "we");
+         if (f == NULL)
+                 return log_debug_errno(errno, "unable to create temporary db file '%s': %m", filename_tmp);
+diff --git a/src/shared/mkdir.c b/src/shared/mkdir.c
+index e852ff4..b7d22fb 100644
+--- a/src/shared/mkdir.c
++++ b/src/shared/mkdir.c
+@@ -104,7 +104,7 @@ int mkdir_parents_internal(const char *prefix, const char *path, mode_t mode, mk
+         }
+ }
+ 
+-int mkdir_parents(const char *path, mode_t mode) {
++int mkdir_parents_eudev(const char *path, mode_t mode) {
+         return mkdir_parents_internal(NULL, path, mode, mkdir);
+ }
+ 
+diff --git a/src/shared/mkdir.h b/src/shared/mkdir.h
+index bb1d01b..70df150 100644
+--- a/src/shared/mkdir.h
++++ b/src/shared/mkdir.h
+@@ -20,7 +20,7 @@
+ #pragma once
+ #include <sys/types.h>
+ 
+-int mkdir_parents(const char *path, mode_t mode);
++int mkdir_parents_eudev(const char *path, mode_t mode);
+ int udev_mkdir_p(const char *path, mode_t mode);
+ 
+ /* mandatory access control(MAC) versions */
+diff --git a/src/shared/path-util.c b/src/shared/path-util.c
+index 63e3423..b6970c4 100644
+--- a/src/shared/path-util.c
++++ b/src/shared/path-util.c
+@@ -37,7 +37,7 @@
+ #include "missing.h"
+ #include "fileio.h"
+ 
+-bool path_is_absolute(const char *p) {
++bool path_is_absolute_eudev(const char *p) {
+         return p[0] == '/';
+ }
+ 
+@@ -92,13 +92,13 @@ char *path_make_absolute(const char *p, const char *prefix) {
+         /* Makes every item in the list an absolute path by prepending
+          * the prefix, if specified and necessary */
+ 
+-        if (path_is_absolute(p) || !prefix)
++        if (path_is_absolute_eudev(p) || !prefix)
+                 return strdup(p);
+ 
+         return strjoin(prefix, "/", p, NULL);
+ }
+ 
+-char *path_make_absolute_cwd(const char *p) {
++char *path_make_absolute_cwd_eudev(const char *p) {
+         _cleanup_free_ char *cwd = NULL;
+ 
+         assert(p);
+@@ -106,7 +106,7 @@ char *path_make_absolute_cwd(const char *p) {
+         /* Similar to path_make_absolute(), but prefixes with the
+          * current working directory. */
+ 
+-        if (path_is_absolute(p))
++        if (path_is_absolute_eudev(p))
+                 return strdup(p);
+ 
+         cwd = get_current_dir_name();
+@@ -132,7 +132,7 @@ char **path_strv_resolve(char **l, const char *prefix) {
+                 char *t, *u;
+                 _cleanup_free_ char *orig = NULL;
+ 
+-                if (!path_is_absolute(*s)) {
++                if (!path_is_absolute_eudev(*s)) {
+                         free(*s);
+                         continue;
+                 }
+diff --git a/src/shared/path-util.h b/src/shared/path-util.h
+index 2dea53b..f47c396 100644
+--- a/src/shared/path-util.h
++++ b/src/shared/path-util.h
+@@ -25,9 +25,9 @@
+ #include "time-util.h"
+ 
+ int path_get_parent(const char *path, char **parent);
+-bool path_is_absolute(const char *p) _pure_;
++bool path_is_absolute_eudev(const char *p) _pure_;
+ char* path_make_absolute(const char *p, const char *prefix);
+-char* path_make_absolute_cwd(const char *p);
++char* path_make_absolute_cwd_eudev(const char *p);
+ char* path_kill_slashes(char *path);
+ char* path_startswith(const char *path, const char *prefix) _pure_;
+ int path_compare(const char *a, const char *b) _pure_;
+diff --git a/src/shared/selinux-util.c b/src/shared/selinux-util.c
+index 84e45e3..901931c 100644
+--- a/src/shared/selinux-util.c
++++ b/src/shared/selinux-util.c
+@@ -339,12 +339,12 @@ int mac_selinux_create_file_prepare(const char *path, mode_t mode) {
+         if (!label_hnd)
+                 return 0;
+ 
+-        if (path_is_absolute(path))
++        if (path_is_absolute_eudev(path))
+                 r = selabel_lookup_raw(label_hnd, &filecon, path, mode);
+         else {
+                 _cleanup_free_ char *newpath;
+ 
+-                newpath = path_make_absolute_cwd(path);
++                newpath = path_make_absolute_cwd_eudev(path);
+                 if (!newpath)
+                         return -ENOMEM;
+ 
+@@ -428,12 +428,12 @@ int mac_selinux_mkdir(const char *path, mode_t mode) {
+         if (!label_hnd)
+                 goto skipped;
+ 
+-        if (path_is_absolute(path))
++        if (path_is_absolute_eudev(path))
+                 r = selabel_lookup_raw(label_hnd, &fcon, path, S_IFDIR);
+         else {
+                 _cleanup_free_ char *newpath;
+ 
+-                newpath = path_make_absolute_cwd(path);
++                newpath = path_make_absolute_cwd_eudev(path);
+                 if (!newpath)
+                         return -ENOMEM;
+ 
+@@ -497,12 +497,12 @@ int mac_selinux_bind(int fd, const struct sockaddr *addr, socklen_t addrlen) {
+ 
+         path = strndupa(un->sun_path, addrlen - offsetof(struct sockaddr_un, sun_path));
+ 
+-        if (path_is_absolute(path))
++        if (path_is_absolute_eudev(path))
+                 r = selabel_lookup_raw(label_hnd, &fcon, path, S_IFSOCK);
+         else {
+                 _cleanup_free_ char *newpath;
+ 
+-                newpath = path_make_absolute_cwd(path);
++                newpath = path_make_absolute_cwd_eudev(path);
+                 if (!newpath)
+                         return -ENOMEM;
+ 
+diff --git a/src/shared/util.c b/src/shared/util.c
+index 64598c1..2db7ed1 100644
+--- a/src/shared/util.c
++++ b/src/shared/util.c
+@@ -992,7 +992,7 @@ int touch_file(const char *path, bool parents, usec_t stamp, uid_t uid, gid_t gi
+         assert(path);
+ 
+         if (parents)
+-                mkdir_parents(path, 0755);
++                mkdir_parents_eudev(path, 0755);
+ 
+         fd = open(path, O_WRONLY|O_CREAT|O_CLOEXEC|O_NOCTTY, mode > 0 ? mode : 0644);
+         if (fd < 0)
+diff --git a/src/udev/udev-node.c b/src/udev/udev-node.c
+index 021051e..928b644 100644
+--- a/src/udev/udev-node.c
++++ b/src/udev/udev-node.c
+@@ -209,7 +209,7 @@ static void link_update(struct udev_device *dev, const char *slink, bool add) {
+                 do {
+                         int fd;
+ 
+-                        err = mkdir_parents(filename, 0755);
++                        err = mkdir_parents_eudev(filename, 0755);
+                         if (err != 0 && err != -ENOENT)
+                                 break;
+                         fd = open(filename, O_WRONLY|O_CREAT|O_CLOEXEC|O_TRUNC|O_NOFOLLOW, 0444);
+diff --git a/src/udev/udev-watch.c b/src/udev/udev-watch.c
+index 59d5870..4afead3 100644
+--- a/src/udev/udev-watch.c
++++ b/src/udev/udev-watch.c
+@@ -109,7 +109,7 @@ void udev_watch_begin(struct udev *udev __attribute__((unused)), struct udev_dev
+         }
+ 
+         snprintf(filename, sizeof(filename), UDEV_ROOT_RUN "/udev/watch/%d", wd);
+-        mkdir_parents(filename, 0755);
++        mkdir_parents_eudev(filename, 0755);
+         unlink(filename);
+         r = symlink(udev_device_get_id_filename(dev), filename);
+         if (r < 0)
+diff --git a/src/udev/udevadm-hwdb.c b/src/udev/udevadm-hwdb.c
+index d14a343..11da060 100644
+--- a/src/udev/udevadm-hwdb.c
++++ b/src/udev/udevadm-hwdb.c
+@@ -677,7 +677,7 @@ static int adm_hwdb(struct udev *udev, int argc, char *argv[]) {
+                         rc = EXIT_FAILURE;
+                         goto out;
+                 }
+-                mkdir_parents(hwdb_bin, 0755);
++                mkdir_parents_eudev(hwdb_bin, 0755);
+                 err = trie_store(trie, hwdb_bin);
+                 if (err < 0) {
+                         log_error_errno(err, "Failure writing database %s: %m", hwdb_bin);

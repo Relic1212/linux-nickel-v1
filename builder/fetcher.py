@@ -92,7 +92,7 @@ def fetch(uri: str, sha256sum):
         h = hashes.compute_file_or_dir_sha256sum(fetched)
 
         if h != sha256sum:
-            raise Exception(f"sha256sum error for {uri}\nExpected: {sha256sum}\nGot: {h}")
+            raise Exception(f"sha256sum missmatch for {uri}\nExpected: {sha256sum}\nGot: {h}")
         else:
             print(f"verified that {h} == {sha256sum}")
 

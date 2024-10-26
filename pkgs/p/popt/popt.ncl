@@ -1,3 +1,11 @@
-let lib = import "../../nickellib/lib.ncl"
-in {
-  llvm,gnumake,busybox,musl,ccacheBin,
+{
+  lib,
+  popt | lib.AutotoolsPackage
+    = {
+      name = "popt",
+      singleSource = {
+        uri = "https://ftp.osuosl.org/pub/rpm/popt/releases/popt-1.x/popt-1.19.tar.gz",
+        sha256sum = "c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9",
+      }
+    }
+}
