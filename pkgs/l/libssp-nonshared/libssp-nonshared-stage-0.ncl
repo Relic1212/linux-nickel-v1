@@ -39,12 +39,17 @@
           llvmBaselibsStage0,
           muslStage0
         ],
-      buildEnv =
-        _libsspNonsharedBase.buildEnv
-        & {
-          CFLAGS | priority 10 = _libsspNonsharedBase.buildEnv.CFLAGS @ ["--sysroot=/tmp/workdir/sysroot"],
 
-          LDFLAGS | priority 10 = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" _libsspNonsharedBase.buildEnv.LDFLAGS),
-        },
+      buildEnv.LLVM_LDFLAGS = ["-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+
+      buildEnv.STAGE_CFLAGS = ["--sysroot=/tmp/workdir/sysroot"],
+
+      # buildEnv =
+      #   _libsspNonsharedBase.buildEnv
+      #   & {
+      #     CFLAGS | priority 10 = _libsspNonsharedBase.buildEnv.CFLAGS @ ["--sysroot=/tmp/workdir/sysroot"],
+
+      #     LDFLAGS | priority 10 = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" _libsspNonsharedBase.buildEnv.LDFLAGS),
+      #   },
     }
 }

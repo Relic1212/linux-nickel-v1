@@ -10,8 +10,8 @@
       },
 
       generator = "Ninja",
-      buildEnv.CFLAGS = lib.CmakePackage.buildEnv.CFLAGS @ ["-Wno-error=unused-command-line-argument"],
-      buildEnv.LDFLAGS = lib.CmakePackage.buildEnv.LDFLAGS @ ["-Wno-error=unused-command-line-argument"],
-      buildEnv.CXXFLAGS = lib.CmakePackage.buildEnv.CXXFLAGS @ ["-Wno-error=unused-command-line-argument"],
+      buildEnv.EXTRA_CFLAGS = ["-Wno-error=unused-command-line-argument"],
+      buildEnv.EXTRA_LDFLAGS = ["-Wno-error=unused-command-line-argument"],
+      buildEnv.EXTRA_CXXFLAGS = ["-Wno-error=unused-command-line-argument"],
     }
 }

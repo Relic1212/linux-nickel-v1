@@ -20,6 +20,6 @@
         pkgs.xxhash,
         pkgs.zstd,
       ],
-      buildEnv.CPP=null,
+      buildEnv.CPP = null,
     }
 }

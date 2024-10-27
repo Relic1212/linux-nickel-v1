@@ -10,14 +10,21 @@
       },
       isStatic,
       isLlvm,
-      buildEnv= let b=
-        (((lib.AutotoolsPackage & { isStatic, isLlvm }).buildEnv)  &{
-        _isStatic=isStatic,_isLlvm=true,})
-      
-
-        in (b& {
-            LDFLAGS|priority 10= b.LDFLAGS @ ["-lncursesw"]
-        }),
+      buildEnv =
+        let b = (
+          ((lib.AutotoolsPackage & { isStatic, isLlvm }).buildEnv)
+          & {
+            _isStatic = isStatic,
+            _isLlvm = true,
+          }
+        )
+        in
+        (
+          b
+          & {
+            LDFLAGS | priority 10 = b.LDFLAGS @ ["-lncursesw"]
+          }
+        ),
 
       extraConfigureFlags = [
         "--with-curses",
