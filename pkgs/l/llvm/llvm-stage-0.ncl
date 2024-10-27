@@ -36,9 +36,9 @@
                     "-stdlib=libc++"
                   ],
 
-              CXXFLAGS | priority 2
+             STAGE_CXXFLAGS | priority 2
                 =
-                  llvmStage0BuildEnv.CXXFLAGS
+                  llvmStage0BuildEnv.STAGE_CXXFLAGS
                   @ [
                     "-I/tmp/workdir/sysroot/include/c++/v1",
                     "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
@@ -47,9 +47,9 @@
                     "-unwindlib=libunwind"
                   ],
 
-              CFLAGS | priority 2
+              STAGE_CFLAGS | priority 2
                 = (
-                  llvmStage0BuildEnv.CFLAGS
+                  llvmStage0BuildEnv.STAGE_CFLAGS
                   @ [
                     "-I/tmp/workdir/sysroot/include/c++/v1",
                     "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
