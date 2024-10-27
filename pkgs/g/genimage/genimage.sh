@@ -126,13 +126,6 @@ create_boot_part() {
 	VMLINUZ_OFFSET=$( printf '%x\n' $((  $((16#$CMDLINE_OFFSET)) +33751040)) )
 
 
-	objcopy_command=" objcopy \
-		--add-section .osrel=$objcopy_efi_osrel  --change-section-vma .osrel=0x$OSREL_OFFSET \
-		--add-section .cmdline="$objcopy_efi_cmdline" --change-section-vma .cmdline=0x$CMDLINE_OFFSET  \
-		--add-section .linux=$vmlinuz --change-section-vma .linux=0x$VMLINUZ_OFFSET \
-		$efistub \
-		${outdir}/${rootname}-vmlinuz-${uki_part}.efi
-		"
 	objcopy_efi_manifest="
 	objcopy_efi_osrel=$objcopy_efi_osrel
 	\
@@ -144,18 +137,32 @@ create_boot_part() {
 	\
 	out=${outdir}/${rootname}-vmlinuz-${uki_part}.efi
 	\
-	$objcopy_command
 	"
 	
 	echo $objcopy_efi_manifest > "${outdir}/${rootname}-vmlinuz-${uki_part}.efi.manifest"
 	
-	objcopy \
-		--add-section .osrel="$objcopy_efi_osrel"  --change-section-vma .osrel="0x"$OSREL_OFFSET \
-		--add-section .cmdline="$objcopy_efi_cmdline" --change-section-vma .cmdline="0x"$CMDLINE_OFFSET  \
-		--add-section .linux="$vmlinuz" --change-section-vma .linux="0x"$VMLINUZ_OFFSET \
-		"$efistub" \
-		"${outdir}/${rootname}-vmlinuz-${uki_part}.efi"
 
+	llvm=0
+	command -v llvm-objcopy && llvm="1"
+
+	if [ "${llvm}" == "1" ]; then 
+		echo "using llvm"
+		llvm-objcopy \
+			--add-section .osrel="$objcopy_efi_osrel" --set-section-flags .osrel=readonly,data  \
+			--add-section .cmdline="$objcopy_efi_cmdline" --set-section-flags .cmdline=readonly,data \
+			--add-section .linux="$vmlinuz" --set-section-flags .linux=readonly,data \
+			"$efistub" \
+			"${outdir}/${rootname}-vmlinuz-${uki_part}.efi"
+
+	else
+		echo "using binutils"
+		objcopy \
+			--add-section .osrel="$objcopy_efi_osrel"  --change-section-vma .osrel="0x"$OSREL_OFFSET \
+			--add-section .cmdline="$objcopy_efi_cmdline" --change-section-vma .cmdline="0x"$CMDLINE_OFFSET  \
+			--add-section .linux="$vmlinuz" --change-section-vma .linux="0x"$VMLINUZ_OFFSET \
+			"$efistub" \
+			"${outdir}/${rootname}-vmlinuz-${uki_part}.efi"
+	fi
 	echo "uki ${outdir}/${rootname}-vmlinuz-${uki_part}.efi created"
 	
 	
@@ -273,7 +280,9 @@ CMDLINE_UKI_B="rootslot=b  debug raid=noautodetect dm-mod.waitfor=${dev_refind_b
 echo $CMDLINE_UKI_B > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 
-# create_boot_part a
+if [ -f ${stub} ]; then
+	create_boot_part a
+fi
 # create_boot_part b
 
 

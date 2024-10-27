@@ -17,6 +17,8 @@ let r = {
 
       & (import "../pkgs/c/ccache/ccache-bin.ncl")
       & (import "../pkgs/c/ccache/ccache.ncl")
+      & (import "../pkgs/c/coreutils/coreutils.ncl")
+
       & (import "../pkgs/c/check-firmware/check-firmware.ncl")
 
       & (import "../pkgs/c/cmake/cmake-stage-1.ncl")
@@ -44,10 +46,14 @@ let r = {
 
       & (import "../pkgs/e/expat/expat.ncl")
 
+      & (import "../pkgs/f/fcft/fcft.ncl")
+
       & (import "../pkgs/f/flex/flex.ncl")
       & (import "../pkgs/f/file/file.ncl")
 
       & (import "../pkgs/f/findutils/findutils.ncl")
+      & (import "../pkgs/f/foot/foot.ncl")
+
       & (import "../pkgs/f/freetype/freetype.ncl")
       & (import "../pkgs/f/fontconfig/fontconfig.ncl")
 
@@ -92,6 +98,7 @@ let r = {
       & (import "../pkgs/l/libpam/libpam.ncl")
 
 
+      & (import "../pkgs/l/libcap/libcap.ncl")
 
       & (import "../pkgs/l/libelf/libelf.ncl")
 
@@ -127,6 +134,7 @@ let r = {
       & (import "../pkgs/m/meson/meson.ncl")
       & (import "../pkgs/m/musl/musl.ncl")
       & (import "../pkgs/m/musl-fts/musl-fts.ncl")
+      & (import "../pkgs/m/musl-getent/musl-getent.ncl")
       & (import "../pkgs/m/musl-obstack/musl-obstack.ncl")
 
       & (import "../pkgs/m/mtdev/mtdev.ncl")
@@ -152,11 +160,15 @@ let r = {
       & (import "../pkgs/p/popt/popt.ncl")
 
       & (import "../pkgs/p/pkgconf/pkgconf.ncl")
+      & (import "../pkgs/p/python-packages/python-elftools.ncl")
+
       & (import "../pkgs/p/python-packages/python-flit-core.ncl")
       & (import "../pkgs/p/python-packages/python-gpep517.ncl")
 
 
       & (import "../pkgs/p/python-packages/python-installer.ncl")
+      & (import "../pkgs/p/python-packages/python-jinja2.ncl")
+
       & (import "../pkgs/p/python-packages/python-mako.ncl")
 
       & (import "../pkgs/p/python-packages/python-markupsafe.ncl")
@@ -172,7 +184,14 @@ let r = {
       & (import "../pkgs/s/samurai/samurai.ncl")
       & (import "../pkgs/s/seatd/seatd.ncl")
       & (import "../pkgs/s/shadow/shadow.ncl")
+      & (import "../pkgs/s/systemd/systemd.ncl")
+
       & (import "../pkgs/s/sway/sway.ncl")
+      
+      & (import "../pkgs/t/tllist/tllist.ncl")
+      & (import "../pkgs/t/ttf-croscore/ttf-croscore.ncl")
+
+
 
 
       & (import "../pkgs/u/util-linux/util-linux.ncl")

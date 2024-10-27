@@ -84,5 +84,5 @@ def get_bwrap_wrap(
         + extra_bwrap_args
     )
 
-    print( "\n" + ''.join ([s+" " for s in  bwrap_wrap])[: -1-len  ("/tmp/workdir/build.sh")] + "sh\n")
+    # print( "\n" + ''.join ([s+" " for s in  bwrap_wrap])[: -1-len  ("/tmp/workdir/build.sh")] + "sh\n")
     return bwrap_wrap

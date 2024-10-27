@@ -292,6 +292,13 @@ def build(h, pkg_drvs: str) -> None:
             bwrap_wrap = bubblewrap.get_bwrap_wrap(
                 sysroot=sysroot, extra_bwrap_args=args
             )
+            chroot_string =( "#!/bin/sh\n" + ''.join ([s+" " for s in  bwrap_wrap])[: -1-len  ("/tmp/workdir/build.sh")] + "sh\n")
+
+            with open(f"{workdir}/chroot.sh","w",encoding="utf-8") as f_chroot:
+                f_chroot.write(chroot_string)
+            subprocess.run(["chmod","+x",f"{workdir}/chroot.sh"],check=True)
+                
+
             with subprocess.Popen(
                 args=bwrap_wrap,
                 env=senv,

@@ -13,7 +13,7 @@ in
     biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
 
     constants = _constants,
-    functions = {
+    functions | not_exported = {
       computeSha256 = (fun s => (std.hash 'Sha256) s),
       recordToHash = fun r => computeSha256 (std.serialize 'Json r),
       isNullOrString = (fun s => std.is_string s || s == null),
@@ -113,6 +113,7 @@ in
           else
             "%{baseName}-stage-%{ std.to_string stage}",
       buildInputs
+       | not_exported
         | std.contract.from_validator (fun arr =>
           (
             if (functions.isValidShasumArray arr) then
@@ -128,7 +129,7 @@ in
         | default
         = (biMap (biPkgs @ baseBuildinputPackages)),
       hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
-      utilsProviders | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
+      utilsProviders|not_exported | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
       baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
       biPkgs | Array Dyn | not_exported | default = [],
       # buildInputNames | Array String | default = [],
@@ -193,7 +194,7 @@ in
       scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
       singleSource | Dyn | default = null,
-      sourceInputs | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
+      sourceInputs |not_exported| Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
       patchDir | String | default = "%{name}/patches",
       filesDir | String | default = "%{name}/files",
       patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
