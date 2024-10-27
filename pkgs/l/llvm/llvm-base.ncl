@@ -264,25 +264,18 @@ in
           ]
         ),
 
-      buildEnv = (
-        if (stage != 0) then
-          lib.CmakePackage.buildEnv
-        else
-          (
-            let llvmBuildenv = (lib.CmakePackage & { isLlvm = true }).buildEnv in
-            (
-              llvmBuildenv
-              & {
-                CPPFLAGS = [
-                  "-I/tmp/workdir/sysroot/usr/include",
-                  "-idirafter=/tmp/workdir/sysroot/"
-                ],
-                CFLAGS | priority 1 = (llvmBuildenv.CFLAGS @ CPPFLAGS),
-                CXXFLAGS | priority 1 = (llvmBuildenv.CXXFLAGS @ CPPFLAGS),
-                LDFLAGS | priority 1 = (llvmBuildenv.LDFLAGS @ ["-L/tmp/workdir/sysroot/usr/lib"]),
-              }
-            )
-          )
-      ),
+      buildEnv =
+        let common_stage_flags = [
+          "-I/tmp/workdir/sysroot/usr/include",
+          "-idirafter=/tmp/workdir/sysroot/"
+        ]
+        in
+        (lib.CmakePackage & { isLlvm = true }).buildEnv
+        & {
+          STAGE_LDFLAGS = if (stage == 0) then ["-L/tmp/workdir/sysroot/usr/lib"] else null,
+          STAGE_CPPFLAGS = if (stage == 0) then common_stage_flags else null,
+          STAGE_CFLAGS = if (stage == 0) then common_stage_flags else null,
+          STAGE_CXXFLAGS = if (stage == 0) then common_stage_flags else null,
+        },
     }
 }
