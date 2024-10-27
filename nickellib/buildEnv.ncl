@@ -1,26 +1,53 @@
 {
   constants,
-  functions,
+  functions={
+    getFinalBuildEnv = (fun benv=> std.record.filter (fun k v =>(
+        # only these values should be exported by the build
+        ((std.array.elem k [
+            "CC",
+            "CPP",
+            "CXX",
+            "AR",
+            "AS",
+            "NM",
+            "RANLIB",
+            "READELF",
+            "OBJDUMP",
+            "OBJCOPY",
+            "LD",
+            "CFLAGS",
+            "CPPFLAGS",
+            "CXXFLAGS",
+            "LDFLAGS",
+            "SOURCE_DATE_EPOCH",
+        ]) && (v!=null))
+    ))  benv),
+  },
   nullOrString,
   nullOrArray,
   BuildEnv = {
-    CC | nullOrString | optional,
-    CPP | nullOrString | optional,
-    CXX | nullOrString | optional,
-    AR | nullOrString | optional,
-    AS | nullOrString | optional,
+    _isStatic|Bool|optional,
+     _isLlvm|Bool|optional,
+     _stage|Number|optional,
+    CC | nullOrString | default = null,
+    CPP | nullOrString | default = null,
+    CXX | nullOrString | default = null,
+    AR | nullOrString | default = null,
+    AS | nullOrString | default = null,
 
-    NM | nullOrString | optional,
-    RANLIB | nullOrString | optional,
-    READELF | nullOrString | optional,
-    OBJDUMP | nullOrString | optional,
-    OBJCOPY | nullOrString | optional,
-    LD | nullOrString | optional,
-    CFLAGS | nullOrArray | optional,
-    CPPFLAGS | nullOrArray | optional,
-    CXXFLAGS | nullOrArray | optional,
-    LDFLAGS | nullOrArray | optional,
+    NM | nullOrString | default = null,
+    RANLIB | nullOrString | default = null,
+    READELF | nullOrString | default = null,
+    OBJDUMP | nullOrString | default = null,
+    OBJCOPY | nullOrString | default = null,
+    LD | nullOrString | default = null,
+    CFLAGS | nullOrArray | default = null,
+    CPPFLAGS | nullOrArray | default = null,
+    CXXFLAGS | nullOrArray | default = null,
+    LDFLAGS | nullOrArray | default = null,
     SOURCE_DATE_EPOCH | String | default = "\"1302044400\"",
+
+    
   },
 
   nullEnv | BuildEnv
@@ -46,11 +73,19 @@
       OBJDUMP = "llvm-objdump",
       RANLIB = "llvm-ranlib",
       READELF = "llvm-readelf",
-      CFLAGS = ["-O2", "-pipe"],
-      CXXFLAGS = ["-O2", "-pipe"],
+      CFLAGS|priority -1 = ["-O2", "-pipe"],
+      CXXFLAGS |priority -1= ["-O2", "-pipe"],
 
-      LDFLAGS = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
-      LD | default = "lld",
+      LDFLAGS|priority -1 = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+      LD | priority -1000 = "lld",
     },
-  staticLlvmEnv = functions.joinMerge staticEnv llvmEnv,
+  staticLlvmEnv =  llvmEnv&{
+
+    CFLAGS=constants.staticFlags @ llvmEnv.CFLAGS,
+    CXXFLAGS=constants.staticFlags @ llvmEnv.CXXFLAGS,
+    LDFLAGS=constants.staticFlags @ llvmEnv.LDFLAGS,
+
+  },
+
+
 }

@@ -96,7 +96,10 @@ in
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
         buildEnv | BuildEnv | default
-          = ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv)) & (if ((isLlvm && buildInChroot) && (stage != 0)) then {} else {})),
+          = ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv)) & (if ((isLlvm && buildInChroot) && (stage != 0)) then {} else {}))&{
+            _stage=stage, _isLlvm=isLlvm, _isStatic=isStatic,
+          },
+
         extraEnv | { _ : StringOrArray } | default
           = (
             if buildInChroot then
@@ -131,7 +134,7 @@ in
             "export DEST=/tmp/workdir/out/destdir",
             "export BUILDDIR=/tmp/workdir/build"
           ]
-          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") buildEnv))
+          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") ( functions.getFinalBuildEnv buildEnv)))
           @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
         # @ (functions.createExport "CC" buildEnv)

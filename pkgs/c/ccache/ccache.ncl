@@ -19,6 +19,7 @@
       biPkgs = [
         pkgs.xxhash,
         pkgs.zstd,
-      ]
+      ],
+      buildEnv.CPP=null,
     }
 }

@@ -5,7 +5,7 @@
       buildEnv =
         (lib.MakePackage.buildEnv)
         & {
-          CPPFLAGS | default = []
+          CPPFLAGS | priority -1000 = []
         },
       baseName = "busybox",
       sourceInputs = [
