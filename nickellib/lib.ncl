@@ -73,6 +73,8 @@ in
               baseName
             else
               "%{baseName}-stage-%{ std.to_string stage}",
+        isStatic | Bool | default = true,
+        isLlvm | Bool | default = true,
         buildInputs
           | not_exported
           | std.contract.from_validator (fun arr =>
@@ -96,9 +98,17 @@ in
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
         buildEnv | BuildEnv | default
-          = ((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then staticEnv else if isLlvm then (llvmEnv) else nullEnv)) & (if ((isLlvm && buildInChroot) && (stage != 0)) then {} else {}))&{
-            _stage=stage, _isLlvm=isLlvm, _isStatic=isStatic,
-          },
+          =
+            let b = (((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then (staticEnv & { _isLlvm = false }) else if isLlvm then (llvmEnv & { _isStatic = false }) else nullEnv & { _isLlvm = false, _isStatic = false }))))
+            in
+            (
+              b
+              & {
+                _stage = stage,
+                _isLlvm = isLlvm,
+                _isStatic = isStatic,
+              }
+            ),
 
         extraEnv | { _ : StringOrArray } | default
           = (
@@ -134,7 +144,7 @@ in
             "export DEST=/tmp/workdir/out/destdir",
             "export BUILDDIR=/tmp/workdir/build"
           ]
-          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") ( functions.getFinalBuildEnv buildEnv)))
+          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") (functions.getFinalBuildEnv buildEnv)))
           @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
         # @ (functions.createExport "CC" buildEnv)
@@ -163,8 +173,7 @@ in
         filesDir | String | default = "%{name}/files",
         patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
-        isStatic | Bool | default = true,
-        isLlvm | Bool | default = true,
+
         enableParallel | Bool | default = true,
         enableCcache | Bool | default = true,
         buildInChroot | Bool | default = (stage != 0),
