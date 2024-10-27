@@ -2,7 +2,6 @@
   lib,
   basefiles | lib.Package
     = {
-      name = "basefiles",
       extraFiles = [
         {
           file = "basefiles",

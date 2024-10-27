@@ -1,7 +1,7 @@
 let drvUtils = import "../nickellib/drv.ncl"
 in
-let 
-keyToName=(import "keyToName.ncl").keyToName in 
+let keyToName = (import "keyToName.ncl").keyToName
+in
 
 let pkgs =
   (import "pkgsRecord.ncl").pkgs
@@ -14,28 +14,27 @@ let si_all =
       (std.array.flatten (std.record.values (std.record.map_values (fun p => p.sourceInputs) pkgs)))
   )
 in
-let s=
-{
-bsdrv =(std.record.map_values (fun x => { field = "%{drvUtils.pkgToHash x}", value = drvUtils.pkgToJson x }) pkgs).baseRootfs
-
-
+let s = {
+  bsdrv = (std.record.map_values (fun x => { field = "%{drvUtils.pkgToHash x}", value = drvUtils.pkgToJson x }) pkgs).baseRootfs
 }
-in 
+in
 # std.record.values (std.record.map (fun k v=>(keyToName k)) pkgs)
 
 # std.array.map keyToName  (std.record.fields pkgs )
-std.record.map (fun k v=> if (keyToName k) == (v.name ) then "" else 
-
-m%"
+std.record.map
+  (fun k v =>
+    if (keyToName k) == (v.name) then
+      ""
+    else
+      m%"
 WARNING
 name=%{v.name}
 but according to the choesen key %{k}
-is should be 
+is should be
 %{keyToName k}
 "%
-
-  )  ( pkgs )
-
+  )
+  (pkgs)
 
 #pkgs.baseBaseRootfs
 

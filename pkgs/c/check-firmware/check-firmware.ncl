@@ -2,7 +2,6 @@
   lib,
   checkFirmware | lib.Package
     = {
-      name = "check-firmware",
       installPhase = [
         m%"
             install -d -m0755 ${DEST}/usr/bin

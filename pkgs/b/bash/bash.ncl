@@ -3,7 +3,6 @@
   bash | lib.AutotoolsPackage
     = {
       configureFlags = lib.AutotoolsPackage.configureFlags @ ["--without-bash-malloc", "--disable-nls", "--with-curses=no", "--enable-readline=no"],
-      name = "bash",
       sourceInputs = [
         {
           src = {

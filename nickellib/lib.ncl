@@ -14,7 +14,6 @@ in
     biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
     # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
 
-
     constants = _constants,
     functions | not_exported
       = {

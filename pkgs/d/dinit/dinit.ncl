@@ -3,7 +3,6 @@
   pkgs,
   dinit | lib.MesonPackage
     = {
-      name = "dinit",
       singleSource = {
 
         uri = "https://github.com/davmac314/dinit/archive/refs/tags/v0.19.1.tar.gz",

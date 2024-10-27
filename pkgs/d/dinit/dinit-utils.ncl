@@ -3,7 +3,6 @@
   pkgs,
   dinitUtils | lib.Package
     = {
-      name = "dinit-utils",
       extraFiles = [
         {
           file = "early-filesystems.c",

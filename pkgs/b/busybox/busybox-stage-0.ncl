@@ -8,7 +8,6 @@
     =
       _busyboxBase
       & {
-        name | priority 1 = "busybox-stage-0",
         stage = 0,
         buildDir = _busyboxBase.buildDir,
         extraFiles = [

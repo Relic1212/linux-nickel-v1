@@ -11,7 +11,6 @@ let misc = import "cmake-base.ncl" in
       # &
       {
         stage = 1,
-        name = "cmake-stage-1",
         extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" lib.AutotoolsPackage.extraEnv,
         configureFlags = (
           [
