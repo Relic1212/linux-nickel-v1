@@ -1,8 +1,13 @@
+let drvUtils = import "drv.ncl"
+in
+let keyToName=(import "keyToName.ncl").keyToName in 
+
 let r = {
-  __pkgs =
-    (
-      (import "lib.ncl")
-      & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
+  __pkgs = std.record.remove "hashByName" (std.record.remove "lib" (std.record.remove "pkgs"  
+    (( (
+      (import "lib.ncl")&
+      #&
+       (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
       & (import "../pkgs/a/autoconf/autoconf.ncl")
       & (import "../pkgs/a/automake/automake.ncl")
       & (import "../pkgs/b/basefiles/basefiles.ncl")
@@ -128,11 +133,13 @@ let r = {
       & (import "../pkgs/z/zlib-ng/zlib-ng.ncl")
       & (import "../pkgs/z/zstd/zstd.ncl")
       & {}
-    )
-    & { pkgs = __pkgs },
+    ))
+     &{ pkgs = __pkgs }& { pkgs,hashByName = std.record.map_values  (drvUtils.pkgToHash) pkgs  }))),
 
-  pkgs = (std.record.filter (fun f v => (std.string.substring 0 1 f != "_")) (std.record.remove "pkgs" (std.record.remove "lib" (__pkgs))))
+  _pkgs =  std.record.map (fun k v => v&{name = keyToName k }) __pkgs,
+
+  pkgs = (std.record.filter (fun f v => (std.string.substring 0 1 f != "_")) (_pkgs))
 }
 in
 
-r.pkgs
+r

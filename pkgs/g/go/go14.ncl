@@ -4,7 +4,7 @@
 
   lib,
   pkgs,
-  varTmp | lib.Package
+  varTmpDirectory | lib.Package
     = {
       name = "var-tmp-directory",
 
@@ -16,7 +16,7 @@
       ]
     },
 
-  go14 | lib.Package
+  "go-1.4" | lib.Package
     = {
 
       name = "go-1.4",
@@ -52,7 +52,7 @@
         pkgs.llvm,
         pkgs.gnumake,
         pkgs.ccacheBin,
-        pkgs.varTmp,
+        pkgs.varTmpDirectory,
         pkgs.bash,
       ],
     }

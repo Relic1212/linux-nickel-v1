@@ -78,7 +78,7 @@
         #, pkgs.libarchive,
       ],
     },
-  linux2 =
+  "linux-2" =
     linux
     & {
       name | priority 1 = "linux-2",

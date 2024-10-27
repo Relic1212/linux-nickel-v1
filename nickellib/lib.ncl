@@ -8,9 +8,12 @@ let drvUtils = import "drv.ncl"
 in
 {
   pkgs, #| default = import "pkgsRecord.ncl",
+  # hashByName,
 
   lib = {
     biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
+    # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
+
 
     constants = _constants,
     functions | not_exported

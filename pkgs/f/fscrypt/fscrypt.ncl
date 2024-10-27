@@ -36,7 +36,7 @@
         "install -m0755 bin/fscrypt ${DEST}/usr/bin"
       ],
       biPkgs = [
-        pkgs.go19,
+        pkgs."go-1.9",
         pkgs.findutils,
         pkgs.libpam,
       ]

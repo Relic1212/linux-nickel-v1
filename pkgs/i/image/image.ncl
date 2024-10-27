@@ -51,7 +51,7 @@
       ]
     }
   ),
-  baseRootfs =
+  baseImage =
     _rootfs2
     & {
       enableCcache = false,
@@ -71,7 +71,7 @@
 
   vmImage | lib.Package
     =
-      baseRootfs
+      baseImage
       & {
         name | priority 1 = "vm-image",
         installPhase = [

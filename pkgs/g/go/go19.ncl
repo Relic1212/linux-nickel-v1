@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  go19 | lib.Package
+  "go-1.9" | lib.Package
     = {
       name = "go-1.9",
       singleSource = {
@@ -27,7 +27,7 @@
         "cp -r ${SRC}/* ${DEST}/usr/lib/go",
       ],
       biPkgs = [
-        pkgs.go14,
+        pkgs."go-1.4",
         pkgs.bash,
       ]
     }
