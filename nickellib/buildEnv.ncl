@@ -90,14 +90,18 @@
           STAGE_CPPFLAGS,
           EXTRA_CPPFLAGS
         ],
-    CXXFLAGS | nullOrArray | default =  functions.flattenNullOrArray [
+    CXXFLAGS | nullOrArray | default
+      =
+        functions.flattenNullOrArray [
           BASE_CXXFLAGS,
           STATIC_CXXFLAGS,
           LLVM_CXXFLAGS,
           STAGE_CXXFLAGS,
           EXTRA_CXXFLAGS
         ],
-    LDFLAGS | nullOrArray | default =  functions.flattenNullOrArray [
+    LDFLAGS | nullOrArray | default
+      =
+        functions.flattenNullOrArray [
           BASE_LDFLAGS,
           STATIC_LDFLAGS,
           LLVM_LDFLAGS,
@@ -132,51 +136,4 @@
 
     SOURCE_DATE_EPOCH | String | default = "\"1302044400\"",
   },
-
-  nullEnv | BuildEnv
-    = {
-      _isLlvm | default = false,
-      _isStatic | default = false,
-    },
-  staticEnv | BuildEnv
-    =
-      let common_flags = constants.staticFlags in
-      {
-        _isStatic = true,
-        _isLlvm | default = false,
-        # CFLAGS = common_flags,
-        CXXFLAGS = common_flags,
-        LDFLAGS = common_flags,
-      },
-  llvmEnv | BuildEnv
-    = {
-      _isLlvm = true,
-      _isStatic | default = false,
-      # CC = "clang",
-      # CPP = "clang-cpp",
-      # CXX = "clang++",
-      # AS = "llvm-as",
-
-      # AR = "llvm-ar",
-      # NM = "llvm-nm",
-      # OBJCOPY = "llvm-objcopy",
-      # OBJDUMP = "llvm-objdump",
-      # RANLIB = "llvm-ranlib",
-      # READELF = "llvm-readelf",
-      # CFLAGS | priority -1 = ["-O2", "-pipe"],
-      # CXXFLAGS | priority -1 = ["-O2", "-pipe"],
-
-      # LDFLAGS | priority -1 = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
-      #LD | priority -1000 = "lld",
-    },
-  staticLlvmEnv =
-    llvmEnv
-    & {
-      _isStatic = true,
-      _isLlvm = true,
-
-      # CFLAGS = constants.staticFlags @ llvmEnv.CFLAGS,
-      # CXXFLAGS = constants.staticFlags @ llvmEnv.CXXFLAGS,
-      # LDFLAGS = constants.staticFlags @ llvmEnv.LDFLAGS,
-    },
 }
