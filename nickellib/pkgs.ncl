@@ -17,9 +17,3 @@ in
 
   hashByName = std.record.from_array (std.record.values (std.record.map_values (fun x => { field = x.name, value = drvUtils.pkgToHash x }) pkgs)),
 }
-# let m= std.array.flatten(std.record.values
-# (std.record.map_values (fun x=> x.buildInputs ) pkgs))
-
-# in
-# std.array.map (drvUtils.pkgOrHashToHash) m
-# (drvUtils.toDrvsByhashOnly) pkgs
