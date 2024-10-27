@@ -7,42 +7,43 @@ in
 let drvUtils = import "drv.ncl"
 in
 {
-  pkgs , #| default = import "pkgsRecord.ncl",
+  pkgs, #| default = import "pkgsRecord.ncl",
 
   lib = {
     biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
 
     constants = _constants,
-    functions | not_exported = {
-      computeSha256 = (fun s => (std.hash 'Sha256) s),
-      recordToHash = fun r => computeSha256 (std.serialize 'Json r),
-      isNullOrString = (fun s => std.is_string s || s == null),
-      isNullArray = (fun a => std.is_array a || a == null),
-      isStringOrArray = (fun a => std.is_array a || std.is_string a),
+    functions | not_exported
+      = {
+        computeSha256 = (fun s => (std.hash 'Sha256) s),
+        recordToHash = fun r => computeSha256 (std.serialize 'Json r),
+        isNullOrString = (fun s => std.is_string s || s == null),
+        isNullArray = (fun a => std.is_array a || a == null),
+        isStringOrArray = (fun a => std.is_array a || std.is_string a),
 
-      varToExportvar = (fun var =>
-        if ((std.typeof var) == '"String") then
-          var
-        else
-          "\"" ++ (std.string.join " " var) ++ "\""
-      ),
-      createExport = (fun key env => (if (std.record.has_field key env) then "export %{key}=%{varToExportvar env."%{key}"}" else "")),
-      joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
-      replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
-      joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
-      # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
-      cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
-      replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
+        varToExportvar = (fun var =>
+          if ((std.typeof var) == '"String") then
+            var
+          else
+            "\"" ++ (std.string.join " " var) ++ "\""
+        ),
+        createExport = (fun key env => (if (std.record.has_field key env) then "export %{key}=%{varToExportvar env."%{key}"}" else "")),
+        joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
+        replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
+        joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
+        # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
+        cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
+        replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
 
-      arrayContainsDups = (fun arr =>
-        (
-          (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a) || arrp.b) })) { a = [], b = false } arr).b
-        )
-      ),
-      hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
-      allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
-      isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
-    },
+        arrayContainsDups = (fun arr =>
+          (
+            (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a) || arrp.b) })) { a = [], b = false } arr).b
+          )
+        ),
+        hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
+        allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
+        isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
+      },
     nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
     nullOrArray = std.contract.from_predicate (functions.isNullArray),
@@ -113,7 +114,7 @@ in
           else
             "%{baseName}-stage-%{ std.to_string stage}",
       buildInputs
-       | not_exported
+        | not_exported
         | std.contract.from_validator (fun arr =>
           (
             if (functions.isValidShasumArray arr) then
@@ -129,7 +130,7 @@ in
         | default
         = (biMap (biPkgs @ baseBuildinputPackages)),
       hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
-      utilsProviders|not_exported | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
+      utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
       baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
       biPkgs | Array Dyn | not_exported | default = [],
       # buildInputNames | Array String | default = [],
@@ -194,7 +195,7 @@ in
       scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
       singleSource | Dyn | default = null,
-      sourceInputs |not_exported| Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
+      sourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
       patchDir | String | default = "%{name}/patches",
       filesDir | String | default = "%{name}/files",
       patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
@@ -247,18 +248,17 @@ in
     AutotoolsPackage =
       MakePackage
       & {
-        isStatic ,
+        isStatic,
         buildDir,
         configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ extraConfigureFlags,
         extraConfigureFlags | Array String | default = [],
         configureScript | String | default = "${SRC}/configure",
         configurePhase | priority -11
           =
-           (if (buildDir == null) then [] else ["cd %{buildDir}"]) @
-           [
-
-            configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
-          ]
+            (if (buildDir == null) then [] else ["cd %{buildDir}"])
+            @ [
+              configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
+            ]
       },
     AutomakePackage =
       AutotoolsPackage
@@ -268,11 +268,11 @@ in
         configureScript,
         configureFlags,
         configurePhase | priority -10
-          = (if (buildDir == null) then [] else ["cd %{buildDir}"]) @
-            [
+          =
+            (if (buildDir == null) then [] else ["cd %{buildDir}"])
+            @ [
               "(cd ${SRC}; autoreconf -fiv)",
               configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
-
             ],
         baseBuildinputPackages | priority -999
           =
@@ -302,15 +302,18 @@ in
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
         baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
-        configurePhase|priority -1000=[
-          "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
-        ],
-        buildPhase|priority -1000=[
-          "meson compile"
-        ],
-        installPhase|priority -1000=[
-          "meson install --destdir ${DEST}"
-        ],
+        configurePhase | priority -1000
+          = [
+            "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
+          ],
+        buildPhase | priority -1000
+          = [
+            "meson compile"
+          ],
+        installPhase | priority -1000
+          = [
+            "meson install --destdir ${DEST}"
+          ],
 
         baseBuildinputPackages | priority -1000
           =

@@ -38,7 +38,7 @@ let drvUtils = {
     let d | DrvSchema
       = {
         name = p.name,
-        buildInputDrvs = sortStringArray ( p.buildInputs),
+        buildInputDrvs = sortStringArray (p.buildInputs),
         sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
         patchDrvs = p.patches,
         extraFileDrvs = p.extraFiles,
