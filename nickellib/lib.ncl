@@ -98,17 +98,21 @@ in
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
         buildEnv | BuildEnv | default
-          =
-            let b = (((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then (staticEnv & { _isLlvm = false }) else if isLlvm then (llvmEnv & { _isStatic = false }) else nullEnv & { _isLlvm = false, _isStatic = false }))))
-            in
-            (
-              b
-              & {
+          ={
                 _stage = stage,
                 _isLlvm = isLlvm,
                 _isStatic = isStatic,
-              }
-            ),
+          },
+            # let b = (((if (isStatic && isLlvm) then (staticLlvmEnv) else (if isStatic then (staticEnv & { _isLlvm = false }) else if isLlvm then (llvmEnv & { _isStatic = false }) else nullEnv & { _isLlvm = false, _isStatic = false }))))
+            # in
+            # (
+            #   b
+            #   & {
+            #     _stage = stage,
+            #     _isLlvm = isLlvm,
+            #     _isStatic = isStatic,
+            #   }
+            # ),
 
         extraEnv | { _ : StringOrArray } | default
           = (

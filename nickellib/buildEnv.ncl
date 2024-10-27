@@ -72,10 +72,38 @@
     OBJCOPY | nullOrString | default = if _isLlvm then "llvm-objcopy" else null,
     LD | nullOrString | default = if _isLlvm then "lld" else null,
 
-    CFLAGS | nullOrArray | default = null,
-    CPPFLAGS | nullOrArray | default = functions.flattenNullOrArray [BASE_CPPFLAGS, STATIC_CPPFLAGS, LLVM_CPPFLAGS, EXTRA_CPPFLAGS],
-    CXXFLAGS | nullOrArray | default = null,
-    LDFLAGS | nullOrArray | default = null,
+    CFLAGS | nullOrArray | default
+      =
+        functions.flattenNullOrArray [
+          BASE_CFLAGS,
+          STATIC_CFLAGS,
+          LLVM_CFLAGS,
+          STAGE_CFLAGS,
+          EXTRA_CFLAGS
+        ],
+    CPPFLAGS | nullOrArray | default
+      =
+        functions.flattenNullOrArray [
+          BASE_CPPFLAGS,
+          STATIC_CPPFLAGS,
+          LLVM_CPPFLAGS,
+          STAGE_CPPFLAGS,
+          EXTRA_CPPFLAGS
+        ],
+    CXXFLAGS | nullOrArray | default =  functions.flattenNullOrArray [
+          BASE_CXXFLAGS,
+          STATIC_CXXFLAGS,
+          LLVM_CXXFLAGS,
+          STAGE_CXXFLAGS,
+          EXTRA_CXXFLAGS
+        ],
+    LDFLAGS | nullOrArray | default =  functions.flattenNullOrArray [
+          BASE_LDFLAGS,
+          STATIC_LDFLAGS,
+          LLVM_LDFLAGS,
+          STAGE_LDFLAGS,
+          EXTRA_LDFLAGS
+        ],
 
     STATIC_CFLAGS | nullOrArray | default = if _isStatic then ["-static", "--static"] else null,
     STATIC_CPPFLAGS | nullOrArray | default = null,
@@ -91,6 +119,11 @@
     LLVM_CPPFLAGS | nullOrArray | default = null,
     LLVM_CXXFLAGS | nullOrArray | default = if _isLlvm then ["-O2", "-pipe"] else null,
     LLVM_LDFLAGS | nullOrArray | default = if _isLlvm then ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"] else null,
+
+    STAGE_CFLAGS | nullOrArray | default = null,
+    STAGE_CPPFLAGS | nullOrArray | default = null,
+    STAGE_CXXFLAGS | nullOrArray | default = null,
+    STAGE_LDFLAGS | nullOrArray | default = null,
 
     EXTRA_CFLAGS | nullOrArray | default = null,
     EXTRA_CPPFLAGS | nullOrArray | default = null,
@@ -111,7 +144,7 @@
       {
         _isStatic = true,
         _isLlvm | default = false,
-        CFLAGS = common_flags,
+        # CFLAGS = common_flags,
         CXXFLAGS = common_flags,
         LDFLAGS = common_flags,
       },
@@ -119,22 +152,22 @@
     = {
       _isLlvm = true,
       _isStatic | default = false,
-      CC = "clang",
-      CPP = "clang-cpp",
-      CXX = "clang++",
-      AS = "llvm-as",
+      # CC = "clang",
+      # CPP = "clang-cpp",
+      # CXX = "clang++",
+      # AS = "llvm-as",
 
-      AR = "llvm-ar",
-      NM = "llvm-nm",
-      OBJCOPY = "llvm-objcopy",
-      OBJDUMP = "llvm-objdump",
-      RANLIB = "llvm-ranlib",
-      READELF = "llvm-readelf",
-      CFLAGS | priority -1 = ["-O2", "-pipe"],
-      CXXFLAGS | priority -1 = ["-O2", "-pipe"],
+      # AR = "llvm-ar",
+      # NM = "llvm-nm",
+      # OBJCOPY = "llvm-objcopy",
+      # OBJDUMP = "llvm-objdump",
+      # RANLIB = "llvm-ranlib",
+      # READELF = "llvm-readelf",
+      # CFLAGS | priority -1 = ["-O2", "-pipe"],
+      # CXXFLAGS | priority -1 = ["-O2", "-pipe"],
 
-      LDFLAGS | priority -1 = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
-      LD | priority -1000 = "lld",
+      # LDFLAGS | priority -1 = ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+      #LD | priority -1000 = "lld",
     },
   staticLlvmEnv =
     llvmEnv
@@ -142,8 +175,8 @@
       _isStatic = true,
       _isLlvm = true,
 
-      CFLAGS = constants.staticFlags @ llvmEnv.CFLAGS,
-      CXXFLAGS = constants.staticFlags @ llvmEnv.CXXFLAGS,
-      LDFLAGS = constants.staticFlags @ llvmEnv.LDFLAGS,
+      # CFLAGS = constants.staticFlags @ llvmEnv.CFLAGS,
+      # CXXFLAGS = constants.staticFlags @ llvmEnv.CXXFLAGS,
+      # LDFLAGS = constants.staticFlags @ llvmEnv.LDFLAGS,
     },
 }

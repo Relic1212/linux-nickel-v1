@@ -89,12 +89,29 @@ def build_all(drvs):
         print(failed)
     
 
+def what_is_not_built(drvs):
+    non_built=[]
+    for k in drvs['hashByName'].keys():
+        
+        pn_hash=drvs['hashByName'][k]
+        d=f"build/{pn_hash}-workdir"
+        f=d +"/0.txt"
+        if not os.path.isfile(f):
+            non_built.append(k)
+
+    for n in non_built:
+        print(n) 
+    
+
 
 def test():
     pn=sys.argv[1]
     drvs=get_drvs()
     if pn=="all":
         build_all(drvs)
+        return
+    if pn=="diff":
+        what_is_not_built(drvs)
         return
     pn_hash = drvs['hashByName'][pn]
     print(pn_hash)
