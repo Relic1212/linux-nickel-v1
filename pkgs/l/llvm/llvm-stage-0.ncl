@@ -73,15 +73,12 @@
               LD | priority 1 = "/tmp/workdir/sysroot/usr/bin/ld.lld",
             }
           ),
-      installPhase | priority 1
-        =
-          _llvmBase.installPhase
-          @ [
-            "cd ${DEST}/usr/bin",
-            "ln -s clang cc",
-            "ln -s clang++ c++",
-            "ln -s clang-cpp cpp",
-          ],
+      postInstallPhase = [
+        "cd ${DEST}/usr/bin",
+        "ln -s clang cc",
+        "ln -s clang++ c++",
+        "ln -s clang-cpp cpp",
+      ],
       buildInputs =
         lib.biMap [
           muslStage0,
