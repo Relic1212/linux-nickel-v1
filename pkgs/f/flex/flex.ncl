@@ -4,7 +4,6 @@
   ## base
   _flexBase | lib.AutotoolsPackage
     = {
-      buildEnv = (lib.AutotoolsPackage.buildEnv & { LD | default = "lld" }),
 
       baseName | priority -10 = "flex",
       sourceInputs = [

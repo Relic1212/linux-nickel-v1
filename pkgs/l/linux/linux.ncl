@@ -78,17 +78,79 @@
         #, pkgs.libarchive,
       ],
     },
-  "linux-2" =
+  linuxAarch64 =
     linux
     & {
-      name | priority 1 = "linux-2",
+      makeArgs,
+        extraFiles|priority 1 = [
+        {
+          file = "kernel-aarch64-fedora.config",
+          sha256sum = "99cc448445ba26180a412cfdd36348200b2f4635ce4631070a98505045c46aaf"
+        }
+      ],
+      extraMakeArgs|priority 1=[
+                  "ARCH=arm64",
+                  "LLVM=1",
+      ],
+      buildEnv.TARGET="aarch64-unknown-linux-musl",
+      buildEnv.EXTRA_LDFLAGS=["--verbose", " -nostdlib"],
       extraMakeInstallArgs | priority 1
         = [
           "INSTALL_MOD_STRIP=1",
           "LLVM=1",
           "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
+          "ARCH=arm64"
           # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
           # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
         ],
+         preBuildPhase|priority 1 = [
+        "cp /tmp/workdir/files/kernel-aarch64-fedora.config .config",
+
+# https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
+        m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+        "make "
+        ++ (std.string.join " " makeArgs)
+        ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.STATIC_LDFLAGS} "
+        ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.STATIC_CFLAGS}"
+        ++ " olddefconfig",
+
+        # "mkdir /tmp/workdir/build/bin",
+        # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
+        # "export PATH=/tmp/workdir/build/bin:${PATH}"
+      ],
+          extraEnv |force= {
+        KBUILD_BUILD_TIMESTAMP = "''",
+        HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.STATIC_LDFLAGS @ ["-lz"] )}",
+        HOSTCFLAGS = "%{ lib.functions.varToExportvar  buildEnv.STATIC_CFLAGS}",
+      },
+        buildInputs|force =lib.biMap [
+          pkgs.busybox,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+           pkgs.clangCross,
+          pkgs.muslAarch64,
+          pkgs.musl,
+          pkgs.libcxxAarch64,
+          pkgs.compilerRtAarch64,
+          pkgs.linuxHeadersAarch64,
+          pkgs.linuxHeaders,
+
+        pkgs.perl,
+        pkgs.m4,
+        pkgs.libtool,
+        pkgs.openssl, # tgt?
+        pkgs.zlibNg, # tgt?
+        pkgs.xz,
+        pkgs.flex,
+        pkgs.bison,
+        pkgs.libelf,
+        pkgs.diffutils,
+        pkgs.zstd,
+        pkgs.lz4,
+        pkgs.kmod, #, libModulesDirectory,
+        #, pkgs.libarchive,
+        pkgs.pythonFull,
+
+      ],
     }
 }

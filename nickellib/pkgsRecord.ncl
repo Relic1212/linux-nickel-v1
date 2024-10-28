@@ -69,6 +69,8 @@ let r = {
     & (import "../pkgs/l/libffi/libffi.ncl")
     & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
     & (import "../pkgs/l/libtool/libtool.ncl")
+    & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
+
     & (import "../pkgs/l/linux-headers/linux-headers.ncl")
     & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
     & (import "../pkgs/l/linux/linux.ncl")
@@ -80,6 +82,8 @@ let r = {
     & (import "../pkgs/l/lvm2/lvm2.ncl")
     & (import "../pkgs/l/lz4/lz4.ncl")
     & (import "../pkgs/m/m4/m4.ncl")
+    & (import "../pkgs/m/mdevd/mdevd.ncl")
+
     & (import "../pkgs/m/mesa/mesa.ncl")
     & (import "../pkgs/m/meson/meson.ncl")
     & (import "../pkgs/m/musl/musl.ncl")
@@ -115,6 +119,8 @@ let r = {
     & (import "../pkgs/s/samurai/samurai.ncl")
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
+    & (import "../pkgs/s/skalibs/skalibs.ncl")
+
     & (import "../pkgs/s/systemd/systemd.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")

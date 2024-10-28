@@ -238,12 +238,11 @@
         "-DCOMPILER_RT_INCLUDE_TESTS=OFF",
         "-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY",
         "-DCMAKE_SYSROOT=/${TARGET}",
-        "-DLLVM_CMAKE_DIR=/tmp/workdir/src/llvm",
         #  "-DLLVM_RUNTIME_TARGETS='AArch64'",
         # https://github.com/llvm/llvm-project/issues/57104
-        #  "-DLLVM_RUNTIME_TARGETS=aarch64-unknown-linux-musl",
-        "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-        #  "-DLLVM_ENABLE_RUNTIMES=''",
+         "-DLLVM_RUNTIME_TARGETS=aarch64-unknown-linux-musl",
+        # "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
+         "-DLLVM_ENABLE_RUNTIMES='compiler-rt'",
         "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=OFF",
         "-DCOMPILER_RT_BUILD_XRAY=OFF",
         "-DCOMPILER_RT_BUILD_SANITIZERS=OFF",
@@ -251,10 +250,12 @@
         "-DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
         "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON",
         "-DCOMPILER_RT_HAS_AARCH64_SME:BOOL=OFF",
+                     "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING=aarch64-unknown-linux-musl",
+
       ],
       configurePhase | priority 100
         = [
-          "cmake ${SRC}/llvm %{std.string.join " \\\n\t" cmakeArgs}"
+          "cmake -S ${SRC}/runtimes %{std.string.join " \\\n\t" cmakeArgs}"
         ],
 
       buildEnv = {
@@ -270,7 +271,7 @@
       installPhase | priority 2
         = [
           "DESTDIR=${DEST} ninja install-compiler-rt install-compiler-rt-headers",
-          "DESTDIR=/tmp/workdir/out/dest ninja install-compiler-rt install-compiler-rt-headers",
+          "DESTDIR=/tmp/workdir/out/destdir ninja install-compiler-rt install-compiler-rt-headers",
         ],
 
       buildInputs | priority 1

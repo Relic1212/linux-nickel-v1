@@ -13,7 +13,8 @@
       ],
       extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
       biPkgs = [
-        pkgs.eudev,
+        # pkgs.eudev,
+        pkgs.libudevZero,
         pkgs.mtdev,
         pkgs.libevdev,
         pkgs.linuxHeaders,
