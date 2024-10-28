@@ -68,5 +68,34 @@
     & {
       name = "musl-shared",
       extraConfigureFlags | priority 1 = ["--disable-static", "--enable-shared"],
+    },
+  muslAarch64 =
+    musl
+    & {
+      extraConfigureFlags | priority 1
+        =
+          musl.extraConfigureFlags
+          @ [
+
+            # "--target=aarch64-unknown-linux-musl",
+            "--build=x86_64-unknown-linux-gnu",
+            "--host=aarch64-unknown-linux-musl"
+          ],
+
+      extraMakeArgs = [
+        "TARGET=aarch64-linux-musl"
+      ],
+      # buildEnv.EXTRA_CFLAGS=["-target aarch64-unknown-linux-musl"],
+
+      buildEnv.TARGET = "aarch64-unknown-linux-musl",
+      buildInputs | priority 1
+        =
+          lib.biMap [
+            pkgs.busybox,
+            pkgs.clangCross,
+            pkgs.gnumake,
+            pkgs.ccacheBin,
+            # pkgs.muslStage2
+          ],
     }
 }

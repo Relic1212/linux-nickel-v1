@@ -1,124 +1,194 @@
 import os
 import subprocess
-import json 
+import json
 import hashlib
-import sys 
+import sys
 from builder import build_in_bubblewrap
 
+
 class GraphNode:
-    def __init__(self,name,packages):
-        self.name=name
-        self.packages=packages
+    def __init__(self, name, packages):
+        self.name = name
+        self.packages = packages
+
 
 def nickel_to_json(fp):
-    c=subprocess.run(["nickel", "export", fp , "--format", "json"],check=False,capture_output=True)
+    c = subprocess.run(
+        ["nickel", "export", fp, "--format", "json"], check=False, capture_output=True
+    )
 
-    if c.returncode!=0:
+    if c.returncode != 0:
         print(c.stderr.decode())
-        raise subprocess.CalledProcessError(c.returncode,c.args)
+        raise subprocess.CalledProcessError(c.returncode, c.args)
     return json.loads(c.stdout.decode())
 
 
 def a():
-    for r,_,fs in os.walk("pkgs"):
+    for r, _, fs in os.walk("pkgs"):
         for f in fs:
-            fp = f'{r}/{f}'
-            c=subprocess.run(["nickel", "export", fp , "--format", "json"],check=True,capture_output=True)
-            #print(type(c))
-            s=c.stdout.decode()
-            #print((s))
+            fp = f"{r}/{f}"
+            c = subprocess.run(
+                ["nickel", "export", fp, "--format", "json"],
+                check=True,
+                capture_output=True,
+            )
+            # print(type(c))
+            s = c.stdout.decode()
+            # print((s))
 
             # nix replace subdarivation with their hash, so we do that to
-            d=json.loads(s)
-            print('d',d)
-            print("sha",hashlib.sha256(json.dumps(d).encode()).hexdigest())
+            d = json.loads(s)
+            print("d", d)
+            print("sha", hashlib.sha256(json.dumps(d).encode()).hexdigest())
+
 
 def get_drvs():
-    fp="nickellib/pkgs.ncl"
-    c=nickel_to_json(fp)
+    fp = "nickellib/pkgs.ncl"
+    c = nickel_to_json(fp)
     return c
+
 
 def get_graph(drvs=None):
     import graphviz
+
     if drvs is None:
-        drvs=get_drvs()
-    hbn = drvs['hashByName']
-    dbh=drvs['drvByHash']
-    g=graphviz.Digraph()
+        drvs = get_drvs()
+    hbn = drvs["hashByName"]
+    dbh = drvs["drvByHash"]
+    g = graphviz.Digraph()
 
     for name in hbn:
-        g.node(name,name)
+        g.node(name, name)
         # g[name]={"name":name,"deps":[]}
 
     for name in hbn:
-        hk=hbn[name]
-        drv=json.loads(dbh[hk])
-        name2=drv["name"]
-        buildinput_hashes=drv['buildInputDrvs']
-        buildinput_names=[ json.loads(dbh[h])["name"] for h in buildinput_hashes]
+        hk = hbn[name]
+        drv = json.loads(dbh[hk])
+        name2 = drv["name"]
+        buildinput_hashes = drv["buildInputDrvs"]
+        buildinput_names = [json.loads(dbh[h])["name"] for h in buildinput_hashes]
 
-        for  bname in buildinput_names:
-            g.edge(name,bname)
+        for bname in buildinput_names:
+            g.edge(name, bname)
 
-    return(g)
+    return g
 
-def reverse_dict(d:dict[str,str])->dict[str,str]:
-    d2={}
+
+def reverse_dict(d: dict[str, str]) -> dict[str, str]:
+    d2 = {}
 
     for k in d:
-        v=d[k]
-        d2[v]=k 
+        v = d[k]
+        d2[v] = k
     return d2
 
 
 def build_all(drvs):
-    failed=[]
-    s=[]
-    for k in drvs['hashByName'].keys():
-        pn_hash=drvs['hashByName'][k]
+    failed = []
+    s = []
+    for k in drvs["hashByName"].keys():
+        pn_hash = drvs["hashByName"][k]
         try:
-            build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
+            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"])
             s.append(k)
         except:
             failed.append(k)
-    
+
     print("The following packages succeded")
     print(s)
-    if len(failed)>0:
+    if len(failed) > 0:
         print("The following packages failed to build:")
         print(failed)
-    
+
 
 def what_is_not_built(drvs):
-    non_built=[]
-    for k in drvs['hashByName'].keys():
-        
-        pn_hash=drvs['hashByName'][k]
-        d=f"build/{pn_hash}-workdir"
-        f=d +"/0.txt"
+    non_built = []
+    for k in drvs["hashByName"].keys():
+
+        pn_hash = drvs["hashByName"][k]
+        d = f"build/{pn_hash}-workdir"
+        f = d + "/0.txt"
         if not os.path.isfile(f):
             non_built.append(k)
 
     for n in non_built:
-        print(n) 
-    
+        print(n)
+
+def diff2(drvs):
+    non_built = []
+    subprocess.run(["unlink","build/hypothetical"], check=False)
+    tmp = subprocess.run(["mktemp","-d"], check=True,capture_output=True).stdout.decode().strip()
+    subprocess.run(["ln","-s",tmp, "build/hypothetical" ],check=True)
+
+    diffs=0
+    same=0
+    notbuilt=0
+    for k in drvs["hashByName"].keys():
+        old_path = f"build/tmp/{k}"
+        old = old_path + "/drv.json"
+        old_status=old + "/0.txt"
+        # print(old)
+
+        if os.path.exists(old)  :
+            with open(old,encoding="utf-8") as f:
+                old_drv=json.load(f)
+
+         
+            old_script=old_drv["scriptContent"]
+
+            new_h = drvs["hashByName"][k]
+
+            new_drv = json.loads(drvs["drvByHash"][new_h])
+
+            # print(new_drv)
+            # print(type(new_drv))
+            new_script=new_drv["scriptContent"]
+            if not old_script==new_script:
+                print(f"{k} differs")
+                diffs+=1
+                kd = (tmp + "/" + k  )
+                os.makedirs(kd)
+                with open (kd + "/drv.json" , "w") as f:
+                    json.dump(new_drv,f)
+                
+                with open (kd + "/build.sh" , "w") as f:
+                    f.write(new_script)
+                bdiff=subprocess.run(["diff", old_path + "/build.sh",  kd + "/build.sh" ],capture_output=True,check=False).stdout.decode()
+                print(bdiff)
+                with open(kd + "build.diff","w") as f:
+                    f.write(bdiff)
+            else:
+                same+=1
+        else:
+            notbuilt+=1
+    print(notbuilt,same,diffs)
+
+    for n in non_built:
+        print(n)
+
 
 
 def test():
-    pn=sys.argv[1]
-    drvs=get_drvs()
-    if pn=="all":
+    pn = sys.argv[1]
+    drvs = get_drvs()
+    if pn == "all":
         build_all(drvs)
         return
-    if pn=="diff":
+    if pn == "diff":
         what_is_not_built(drvs)
         return
-    pn_hash = drvs['hashByName'][pn]
+    if pn == "diff2":
+        diff2(drvs)
+        return
+  
+  
+    pn_hash = drvs["hashByName"][pn]
     print(pn_hash)
     # hbn= drvs["hashByName"]
     # nbh =reverse_dict(hbn)
 
-    build_in_bubblewrap.build(pn_hash,drvs['drvByHash'])
+    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"])
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     test()

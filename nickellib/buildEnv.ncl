@@ -27,6 +27,8 @@
                   "CXXFLAGS",
                   "LDFLAGS",
                   "SOURCE_DATE_EPOCH",
+                  "TARGET",
+                  "HOST",
                 ]
             )
             && (v != null)
@@ -55,13 +57,17 @@
   },
   nullOrString,
   nullOrArray,
+  NullOrStringOrArray,
   BuildEnv = {
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
-    _stage | Number,
-    CC | nullOrString | default = if _isLlvm then "clang" else null,
-    CPP | nullOrString | default = if _isLlvm then "clang-cpp" else null,
-    CXX | nullOrString | default = if _isLlvm then "clang++" else null,
+    _stage | Number | optional,
+    TARGET | nullOrString | default = null,
+    HOST | nullOrString | default = null,
+
+    CC | NullOrStringOrArray | default = if _isLlvm then "clang" else null,
+    CPP | NullOrStringOrArray | default = if _isLlvm then "clang-cpp" else null,
+    CXX | NullOrStringOrArray | default = if _isLlvm then "clang++" else null,
     AR | nullOrString | default = if _isLlvm then "llvm-ar" else null,
     AS | nullOrString | default = if _isLlvm then "llvm-as" else null,
 
@@ -76,6 +82,7 @@
       =
         functions.flattenNullOrArray [
           BASE_CFLAGS,
+          CROSS_CFLAGS,
           STATIC_CFLAGS,
           LLVM_CFLAGS,
           STAGE_CFLAGS,
@@ -85,6 +92,7 @@
       =
         functions.flattenNullOrArray [
           BASE_CPPFLAGS,
+          CROSS_CPPFLAGS,
           STATIC_CPPFLAGS,
           LLVM_CPPFLAGS,
           STAGE_CPPFLAGS,
@@ -94,6 +102,7 @@
       =
         functions.flattenNullOrArray [
           BASE_CXXFLAGS,
+          CROSS_CXXFLAGS,
           STATIC_CXXFLAGS,
           LLVM_CXXFLAGS,
           STAGE_CXXFLAGS,
@@ -103,11 +112,50 @@
       =
         functions.flattenNullOrArray [
           BASE_LDFLAGS,
+          CROSS_LDFLAGS,
           STATIC_LDFLAGS,
           LLVM_LDFLAGS,
           STAGE_LDFLAGS,
           EXTRA_LDFLAGS
         ],
+
+    # Stage 0 is never cross-compiled, so we can always but stuff in /${TARGET}
+    CROSS_CFLAGS | nullOrArray | default
+      =
+        if (HOST == TARGET) then
+          null
+        else
+          [
+            "-target %{TARGET}",
+            "--sysroot=/%{TARGET}"
+          ],
+    CROSS_CPPFLAGS | nullOrArray | default
+      =
+        if (HOST == TARGET) then
+          null
+        else
+          [
+            "-target %{TARGET}",
+            "--sysroot=/%{TARGET}",
+          ],
+    CROSS_CXXFLAGS | nullOrArray | default
+      =
+        if (HOST == TARGET) then
+          null
+        else
+          [
+            "-target %{TARGET}",
+            "--sysroot=/%{TARGET}"
+          ],
+    CROSS_LDFLAGS | nullOrArray | default
+      =
+        if (HOST == TARGET) then
+          null
+        else
+          [
+            "-target %{TARGET}",
+            "--sysroot=/%{TARGET}"
+          ],
 
     STATIC_CFLAGS | nullOrArray | default = if _isStatic then ["-static", "--static"] else null,
     STATIC_CPPFLAGS | nullOrArray | default = null,

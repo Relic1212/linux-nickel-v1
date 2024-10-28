@@ -30,6 +30,8 @@ in
           isNullOrString = (fun s => std.is_string s || s == null),
           isNullArray = (fun a => std.is_array a || a == null),
           isStringOrArray = (fun a => std.is_array a || std.is_string a),
+          isNullOrStringOrArray = (fun a => std.is_array a || std.is_string a||a==null ),
+
 
           varToExportvar = (fun var =>
             if ((std.typeof var) == '"String") then
@@ -58,6 +60,8 @@ in
 
       nullOrArray = std.contract.from_predicate (functions.isNullArray),
       StringOrArray = std.contract.from_predicate (functions.isStringOrArray),
+      NullOrStringOrArray = std.contract.from_predicate (functions.isNullOrStringOrArray),
+
       ShasumArray1 = std.contract.from_predicate (functions.isValidShasumArray),
       ShasumArray = std.contract.from_validator (fun arr => (if (functions.isValidShasumArray arr) then 'Ok else 'Error { message = "hello", notes = "[notes here]" })),
 
@@ -135,7 +139,19 @@ in
           [
             "export WORKDIR=/tmp/workdir",
             "export SRC=/tmp/workdir/src",
-            "export DEST=/tmp/workdir/out/destdir",
+          ]
+          @ (
+            if (buildEnv.TARGET == buildEnv.HOST) then
+              [
+                "export DEST=/tmp/workdir/out/destdir",
+              ]
+            else
+              [
+                "mkdir /tmp/workdir/out/destdir/%{buildEnv.TARGET}",
+                "export DEST=/tmp/workdir/out/destdir/%{buildEnv.TARGET}",
+              ]
+          )
+          @ [
             "export BUILDDIR=/tmp/workdir/build"
           ]
           @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") (functions.getFinalBuildEnv buildEnv)))

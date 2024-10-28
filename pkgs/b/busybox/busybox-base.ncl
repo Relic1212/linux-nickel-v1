@@ -1,12 +1,17 @@
+let cmpFun = (fun x => (if x == null then [] else x))
+in
+
 {
   lib,
   _busyboxBase | lib.MakePackage
     = {
-      buildEnv =
-        (lib.MakePackage.buildEnv)
-        & {
-          CPPFLAGS | priority -1000 = []
-        },
+      # buildEnv =
+      #   (lib.MakePackage.buildEnv)
+      #   & {
+      #     CPPFLAGS | priority -1000 = []
+      #   },
+      buildEnv.CPPFLAGS | priority -1000 = [],
+      buildEnv,
       baseName = "busybox",
       sourceInputs = [
         {
@@ -27,19 +32,19 @@
         =
           (lib.MakePackage.makeArgs)
           @ [
-            "CC=%{buildEnv.CC} \\\n",
-            "LD=%{buildEnv.CC} \\\n",
-            "HOSTLD=%{buildEnv.CC} \\\n",
-            "CXX=%{buildEnv.CXX} \\\n",
-            "CPP=%{buildEnv.CXX} \\\n",
-            "HOSTCC=%{buildEnv.CC} \\\n",
-            "HOSTCXX=%{buildEnv.CXX} \\\n",
+            "CC=%{lib.functions.varToExportvar buildEnv.CC} \\\n",
+            "LD=%{lib.functions.varToExportvar buildEnv.CC} \\\n",
+            "HOSTLD=%{lib.functions.varToExportvar buildEnv.CC} \\\n",
+            "CXX=%{lib.functions.varToExportvar buildEnv.CXX} \\\n",
+            "CPP=%{lib.functions.varToExportvar buildEnv.CXX} \\\n",
+            "HOSTCC=%{lib.functions.varToExportvar buildEnv.CC} \\\n",
+            "HOSTCXX=%{lib.functions.varToExportvar buildEnv.CXX} \\\n",
             "LDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} \\\n",
-            "EXTRA_CPPFLAGS=%{ lib.functions.varToExportvar  buildEnv.CPPFLAGS} \\\n",
+            "EXTRA_CPPFLAGS=%{ lib.functions.varToExportvar (cmpFun buildEnv.CPPFLAGS)} \\\n",
             "CXXFLAGS=%{ lib.functions.varToExportvar  buildEnv.CXXFLAGS} \\\n",
             "CFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
             "HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} \\\n",
-            "HOSTCPPFLAGS=%{ lib.functions.varToExportvar  buildEnv.CPPFLAGS} \\\n",
+            "HOSTCPPFLAGS=%{ lib.functions.varToExportvar (cmpFun buildEnv.CPPFLAGS)} \\\n",
             "HOSTCXXFLAGS=%{ lib.functions.varToExportvar  buildEnv.CXXFLAGS} \\\n",
             "HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
             "EXTRA_LDFLAGS=%{ lib.functions.varToExportvar  buildEnv.LDFLAGS} \\\n",
@@ -81,6 +86,8 @@
     =
       _busyboxBase
       & {
+
+        makeArgs,
         extraFiles = [
           {
             file = "busybox.config",
@@ -96,7 +103,7 @@
           "sed -i 's@-falign-jumps=1@@g' Makefile.flags",
           "sed -i 's@-falign-labels=1@@g' Makefile.flags",
           "sed -i 's@-finline-limit=0@@g' Makefile.flags",
-          "make " ++ (std.string.join " " _busyboxBase.makeArgs) ++ " oldconfig"
+          "make " ++ (std.string.join " " makeArgs) ++ " oldconfig"
         ],
       }
 }

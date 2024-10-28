@@ -36,7 +36,7 @@
                     "-stdlib=libc++"
                   ],
 
-             STAGE_CXXFLAGS | priority 2
+              STAGE_CXXFLAGS | priority 2
                 =
                   llvmStage0BuildEnv.STAGE_CXXFLAGS
                   @ [

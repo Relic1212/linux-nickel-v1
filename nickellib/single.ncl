@@ -18,10 +18,11 @@ let s = {
   bsdrv = (std.record.map_values (fun x => { field = "%{drvUtils.pkgToHash x}", value = drvUtils.pkgToJson x }) pkgs).baseRootfs
 }
 in
+let 
 # std.record.values (std.record.map (fun k v=>(keyToName k)) pkgs)
 
 # std.array.map keyToName  (std.record.fields pkgs )
-std.record.map
+x=std.record.map
   (fun k v =>
     if (keyToName k) == (v.name) then
       ""
@@ -36,6 +37,8 @@ is should be
   )
   (pkgs)
 
-#pkgs.baseBaseRootfs
 
 # drvUtils.pkgToJson pkgs.baseRootfs
+
+in 
+pkgs.baseImage
