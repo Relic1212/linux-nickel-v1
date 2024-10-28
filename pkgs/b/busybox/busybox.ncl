@@ -83,7 +83,7 @@
           "sed -i 's@-falign-jumps=1@@g' Makefile.flags",
           "sed -i 's@-falign-labels=1@@g' Makefile.flags",
           "sed -i 's@-finline-limit=0@@g' Makefile.flags",
-          "make " ++ (std.string.join " " (makeArgs )) ++ " oldconfig"
+          "make " ++ (std.string.join " " (makeArgs)) ++ " oldconfig"
         ],
       extraFiles | priority 1
         = [
@@ -93,45 +93,42 @@
           }
         ],
 
-        makeArgs|force=[
-
-           "PREFIX=/usr",
-            "-j$(nproc)",
-            "CC=%{lib.functions.varToExportvar buildEnv.CC}" ,
-          "LD=\"clang --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl\"" ,
+      makeArgs | force
+        = [
+          "PREFIX=/usr",
+          "-j$(nproc)",
+          "CC=%{lib.functions.varToExportvar buildEnv.CC}",
+          "LD=\"clang --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl\"",
           "HOSTLD=clang",
           "CXX=clang++",
           "CPP=\"clang++ --sysroot=/%{buildEnv.TARGET}\"",
           "HOSTCC=clang",
           "HOSTCXX=clang++",
           "LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib -static --static -fuse-ld=lld --rtlib=compiler-rt -nostdlib\"",
-          "EXTRA_CPPFLAGS=\"\"" ,
+          "EXTRA_CPPFLAGS=\"\"",
           "CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
-          "CFLAGS=\" --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"" ,
-          "HOSTLDFLAGS=\"-static --static -fuse-ld=lld \"" ,
+          "CFLAGS=\" --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
+          "HOSTLDFLAGS=\"-static --static -fuse-ld=lld \"",
           "HOSTCPPFLAGS=\"\"",
           "HOSTCXXFLAGS=\" -static --static -O2 -pipe\"",
           "HOSTCFLAGS=\" --verbose -static --static -O2 -pipe\" ",
-          "EXTRA_LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib-static --static -fuse-ld=lld \"" ,
-          "EXTRA_CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"", 
+          "EXTRA_LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib-static --static -fuse-ld=lld \"",
+          "EXTRA_CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
           "EXTRA_CFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
           "SYSROOT=\"/aarch64-unknown-linux-musl\" ",
           "LIBDIR=\"/aarch64-unknown-linux-musl/usr/lib\"",
-           "ARCH=arm64",
-
+          "ARCH=arm64",
         ],
 
       buildPhase | priority 1000
         = [
-          "make " ++ (std.string.join " " (makeArgs )) ,
-
-
+          "make " ++ (std.string.join " " (makeArgs)),
         ],
       installPhase | priority 1000
         = [
-                    "make DESTDIR=${DEST}" ++ (std.string.join " " (makeArgs )) ++ " install",
+          "make DESTDIR=${DEST}" ++ (std.string.join " " (makeArgs)) ++ " install",
           m%"
-       
+
                   install -d -m0755 ${DEST}/usr/bin
                   install -m0755 ${SRC}/busybox ${DEST}/usr/bin
                   cd ${DEST}/usr/bin

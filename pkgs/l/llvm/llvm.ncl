@@ -240,9 +240,9 @@
         "-DCMAKE_SYSROOT=/${TARGET}",
         #  "-DLLVM_RUNTIME_TARGETS='AArch64'",
         # https://github.com/llvm/llvm-project/issues/57104
-         "-DLLVM_RUNTIME_TARGETS=aarch64-unknown-linux-musl",
+        "-DLLVM_RUNTIME_TARGETS=aarch64-unknown-linux-musl",
         # "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-         "-DLLVM_ENABLE_RUNTIMES='compiler-rt'",
+        "-DLLVM_ENABLE_RUNTIMES='compiler-rt'",
         "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=OFF",
         "-DCOMPILER_RT_BUILD_XRAY=OFF",
         "-DCOMPILER_RT_BUILD_SANITIZERS=OFF",
@@ -250,8 +250,7 @@
         "-DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
         "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON",
         "-DCOMPILER_RT_HAS_AARCH64_SME:BOOL=OFF",
-                     "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING=aarch64-unknown-linux-musl",
-
+        "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING=aarch64-unknown-linux-musl",
       ],
       configurePhase | priority 100
         = [
@@ -260,9 +259,9 @@
 
       buildEnv = {
         TARGET = "aarch64-unknown-linux-musl",
-        CROSS_CFLAGS=[ "--sysroot=/${TARGET}"],
-        CROSS_LDFLAGS=[ "--sysroot=/${TARGET}"],
-        CROSS_CXXFLAGS=[ "--sysroot=/${TARGET}"],
+        CROSS_CFLAGS = ["--sysroot=/${TARGET}"],
+        CROSS_LDFLAGS = ["--sysroot=/${TARGET}"],
+        CROSS_CXXFLAGS = ["--sysroot=/${TARGET}"],
       },
 
       buildPhase = [
