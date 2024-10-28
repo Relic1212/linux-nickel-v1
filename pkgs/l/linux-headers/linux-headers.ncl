@@ -16,7 +16,7 @@
       ],
       buildDir = "/tmp/workdir/src",
 
-      buildEnv | default = lib.MakePackage.buildEnv,
+      buildEnv ,
       configurePhase | priority 1
         = [
           "cd %{buildDir}",
@@ -70,7 +70,7 @@
   linuxHeadersStage2 =
     _linuxHeadersBase
     & {
-      stage = 2,
+      stage|force = 2,
       buildInputs =
         lib.biMap [
           pkgs.busyboxStage1,

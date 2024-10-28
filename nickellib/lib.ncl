@@ -177,7 +177,7 @@ in
         cdBuildPhase|Array String= if separateBuildDir then [] else [ "cd ${SRC}" ] ,
         separateBuildDir|Bool|default=true,
         commands | Array String | default = std.array.flatten phases,
-        scriptContent | String | default = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
+        scriptContent | String | force = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
         singleSource | Dyn | default = null,
         sourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
