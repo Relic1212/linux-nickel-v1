@@ -78,9 +78,10 @@
           @ [
 
             # "--target=aarch64-unknown-linux-musl",
-            "--build=x86_64-unknown-linux-gnu",
+            # "--build=x86_64-unknown-linux-gnu",
             "--host=aarch64-unknown-linux-musl"
           ],
+      # buildEnv.CPP=["clang","--target=aarch64-unknown-linux-musl", "--sysroot=/aarch64-unknown-linux-musl","-E"],
 
       extraMakeArgs = [
         "TARGET=aarch64-linux-musl"

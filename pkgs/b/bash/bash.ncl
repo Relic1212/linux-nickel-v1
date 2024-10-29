@@ -11,5 +11,25 @@
           }
         }
       ]
+    },
+  pkgs,
+  bashAarch64 =
+    bash
+    & {
+      buildEnv,
+      configureFlags | priority 1
+        =
+          bash.configureFlags
+          @ [
+            "--host=aarch64-unknown-linux-musl"
+          ],
+      buildInputs = pkgs.busyboxAarch64.buildInputs,
+      buildEnv.TARGET = "aarch64-unknown-linux-musl",
+      buildEnv.CROSS_LDFLAGS = ["-nostdlib", "-lc"],
+      buildEnv.CPP = ["clang-cpp", "-target aarch64-unknown-linux-musl"],
+
+      extraEnv.CC_FOR_BUILD = ["clang"],
+      extraEnv.LD_FOR_BUILD = ["ls.llld"],
+      extraEnv.CPP_FOR_BUILD = ["clang-cpp"],
     }
 }

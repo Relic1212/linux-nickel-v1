@@ -91,5 +91,25 @@
             sha256sum = "a82241e070c53f517c964b301969b28993bcb748cbb8a2f9a48b392a0e841770"
           }
         ]
-      }
+      },
+
+  aarch64Image | lib.Package
+    = {
+      biPkgs = [
+        pkgs.busyboxAarch64,
+        pkgs.linuxAarch64,
+        pkgs.basefiles,
+        pkgs.erofsUtils,
+        pkgs.basefilesAarch64,
+      ],
+      buildPhase = [
+        m%"
+          mkfs.erofs \
+              -d 1 \
+              -L aarch6-root \
+                  \
+              ${DEST}/aarch64-root.img /aarch64-unknown-linux-musl/
+            "%
+      ],
+    }
 }

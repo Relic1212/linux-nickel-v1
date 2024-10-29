@@ -30,8 +30,7 @@ in
           isNullOrString = (fun s => std.is_string s || s == null),
           isNullArray = (fun a => std.is_array a || a == null),
           isStringOrArray = (fun a => std.is_array a || std.is_string a),
-          isNullOrStringOrArray = (fun a => std.is_array a || std.is_string a||a==null ),
-
+          isNullOrStringOrArray = (fun a => std.is_array a || std.is_string a || a == null),
 
           varToExportvar = (fun var =>
             if ((std.typeof var) == '"String") then
@@ -172,10 +171,10 @@ in
         preInstallPhase | Array String | default = [],
         installPhase | Array String | default = [],
         postInstallPhase | Array String | default = [],
-        phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase,cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
-        cdBuildPhase|Array String= if separateBuildDir then [] else [ "cd ${SRC}" ] ,
-        separateBuildDir|Bool|default=true,
+        cdBuildPhase | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
+        separateBuildDir | Bool | default = true,
         commands | Array String | default = std.array.flatten phases,
         scriptContent | String | force = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 

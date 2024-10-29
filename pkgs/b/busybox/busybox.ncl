@@ -63,7 +63,6 @@
           pkgs.muslAarch64,
           pkgs.musl,
           pkgs.libcxxAarch64,
-          pkgs.compilerRtAarch64,
           pkgs.linuxHeadersAarch64,
           pkgs.linuxHeaders,
           pkgs.ccacheBin,
@@ -98,24 +97,24 @@
           "PREFIX=/usr",
           "-j$(nproc)",
           "CC=%{lib.functions.varToExportvar buildEnv.CC}",
-          "LD=\"clang --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl\"",
+          "LD=\"clang --verbose --target=aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl\"",
           "HOSTLD=clang",
           "CXX=clang++",
-          "CPP=\"clang++ --sysroot=/%{buildEnv.TARGET}\"",
+          "CPP=\"clang --target=aarch64-unknown-linux-musl --sysroot=/%{buildEnv.TARGET} -E\"",
           "HOSTCC=clang",
           "HOSTCXX=clang++",
-          "LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib -static --static -fuse-ld=lld --rtlib=compiler-rt -nostdlib\"",
+          "LDFLAGS=\"-L/aarch64-unknown-linux-musl/usr/lib -L/aarch64-unknown-linux-musl/usr/lib/aarch64-unknown-linux-musl -static --static -fuse-ld=lld  --rtlib=compiler-rt \"",
           "EXTRA_CPPFLAGS=\"\"",
-          "CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
-          "CFLAGS=\" --verbose -target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
+          "CXXFLAGS=\"-static --static -O2 -pipe\"",
+          "CFLAGS=\" --verbose  -static --static -O2 -pipe\"",
           "HOSTLDFLAGS=\"-static --static -fuse-ld=lld \"",
           "HOSTCPPFLAGS=\"\"",
           "HOSTCXXFLAGS=\" -static --static -O2 -pipe\"",
           "HOSTCFLAGS=\" --verbose -static --static -O2 -pipe\" ",
-          "EXTRA_LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib-static --static -fuse-ld=lld \"",
-          "EXTRA_CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
-          "EXTRA_CFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
-          "SYSROOT=\"/aarch64-unknown-linux-musl\" ",
+          "EXTRA_LDFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -L/aarch64-unknown-linux-musl/usr/lib -static --static -fuse-ld=lld --rtlib=compiler-rt\"",
+          # "EXTRA_CXXFLAGS=\"-target aarch64-unknown-linux-musl --sysroot=/aarch64-unknown-linux-musl -static --static -O2 -pipe\"",
+          "EXTRA_CFLAGS=\"-DBB_GLOBAL_CONST=''\"",
+          # "SYSROOT=\"/aarch64-unknown-linux-musl\" ",
           "LIBDIR=\"/aarch64-unknown-linux-musl/usr/lib\"",
           "ARCH=arm64",
         ],
@@ -137,8 +136,8 @@
                                 ln -s /usr/bin/busybox ${link}
                             done
                   install -d -m0755 ${DEST}/bin
-                  cd  ${DEST}/bin
-                  ln -s /usr/bin/busybox sh
+                  cd  ${DEST}/
+                  cp usr/bin/busybox bin/sh
 
 
           "%

@@ -62,13 +62,13 @@
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
     _stage | Number | optional,
-    _isCross = TARGET!=HOST,
+    _isCross = TARGET != HOST,
     TARGET | nullOrString | default = null,
     HOST | nullOrString | default = null,
 
-    CC | NullOrStringOrArray | default = if _isCross then [ "clang","-target %{TARGET}", "--sysroot=/%{TARGET}"] else  if _isLlvm then "clang" else null,
-    CPP | NullOrStringOrArray | default = if _isCross then [ "clang-cpp","-target %{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang-cpp" else null,
-    CXX | NullOrStringOrArray | default = if _isCross then [ "clang++","-target %{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang++" else null,
+    CC | NullOrStringOrArray | default = if _isCross then ["clang", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang" else null,
+    CPP | NullOrStringOrArray | default = if _isCross then ["clang", "--target %{TARGET}", "--sysroot=/%{TARGET}", "-E"] else if _isLlvm then "clang-cpp" else null,
+    CXX | NullOrStringOrArray | default = if _isCross then ["clang++", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang++" else null,
     AR | nullOrString | default = if _isLlvm then "llvm-ar" else null,
     AS | nullOrString | default = if _isLlvm then "llvm-as" else null,
 
@@ -77,7 +77,7 @@
     READELF | nullOrString | default = if _isLlvm then "llvm-readelf" else null,
     OBJDUMP | nullOrString | default = if _isLlvm then "llvm-objdump" else null,
     OBJCOPY | nullOrString | default = if _isLlvm then "llvm-objcopy" else null,
-    LD | NullOrStringOrArray | default = if _isCross then [ "lld","-target %{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "lld" else null,
+    LD | NullOrStringOrArray | default = if _isCross then ["lld", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "lld" else null,
 
     CFLAGS | nullOrArray | default
       =
@@ -127,8 +127,8 @@
           null
         else
           [
-            "-target %{TARGET}",
-            "--sysroot=/%{TARGET}"
+            # "-target %{TARGET}",
+            # "--sysroot=/%{TARGET}"
           ],
     CROSS_CPPFLAGS | nullOrArray | default
       =
@@ -136,8 +136,8 @@
           null
         else
           [
-            "-target %{TARGET}",
-            "--sysroot=/%{TARGET}",
+            # "-target %{TARGET}",
+            # "--sysroot=/%{TARGET}",
           ],
     CROSS_CXXFLAGS | nullOrArray | default
       =
@@ -145,8 +145,8 @@
           null
         else
           [
-            "-target %{TARGET}",
-            "--sysroot=/%{TARGET}"
+            # "-target %{TARGET}",
+            # "--sysroot=/%{TARGET}"
           ],
     CROSS_LDFLAGS | nullOrArray | default
       =
@@ -154,8 +154,8 @@
           null
         else
           [
-            "-target %{TARGET}",
-            "--sysroot=/%{TARGET}"
+            # "-target %{TARGET}",
+            # "--sysroot=/%{TARGET}"
           ],
 
     STATIC_CFLAGS | nullOrArray | default = if _isStatic then ["-static", "--static"] else null,

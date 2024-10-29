@@ -86,7 +86,7 @@
         = [
           {
             file = "kernel-aarch64-fedora.config",
-            sha256sum = "99cc448445ba26180a412cfdd36348200b2f4635ce4631070a98505045c46aaf"
+            sha256sum = "4900e8c622364d7a4d5277114b96c3109328e2d4fd445b7202d291d291caa7da"
           }
         ],
       extraMakeArgs | priority 1
@@ -100,7 +100,7 @@
         = [
           "INSTALL_MOD_STRIP=1",
           "LLVM=1",
-          "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
+          "INSTALL_MOD_PATH=${DEST}",
           "ARCH=arm64"
           # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
           # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
@@ -121,6 +121,13 @@
           # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
           # "export PATH=/tmp/workdir/build/bin:${PATH}"
         ],
+      postInstallPhase | priority 1
+        = [
+          # "KVER=\"$(ls /tmp/workdir/out/destdir/lib/modules/)\"",
+          # "depmod -b /tmp/workdir/out/destdir  ${KVER}",
+          # "install -d -m0755 ${DEST}/",
+          "cp -r arch/arm64/boot/ ${DEST}/boot",
+        ],
       extraEnv | force
         = {
           KBUILD_BUILD_TIMESTAMP = "''",
@@ -137,7 +144,6 @@
             pkgs.muslAarch64,
             pkgs.musl,
             pkgs.libcxxAarch64,
-            pkgs.compilerRtAarch64,
             pkgs.linuxHeadersAarch64,
             pkgs.linuxHeaders,
             pkgs.perl,
@@ -156,5 +162,34 @@
             #, pkgs.libarchive,
             pkgs.pythonFull,
           ],
+    },
+  linuxAarch64Virt =
+    linuxAarch64
+    & {
+      makeArgs,
+      buildEnv,
+      extraFiles | priority 2
+        = [
+          {
+            file = "virt.aarch64.config",
+            sha256sum = "0ab7f1c60987bac0a7f957d10f34f2d58f26ce5f3de1e8c4baf1fc4ccb920305"
+          }
+        ],
+      preBuildPhase | priority 2
+        = [
+          # "cp /tmp/workdir/files/virt.aarch64.config .config",
+
+          # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
+          m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+          "make "
+          ++ (std.string.join " " makeArgs)
+          ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.STATIC_LDFLAGS} "
+          ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.STATIC_CFLAGS}"
+          ++ " defconfig",
+
+          # "mkdir /tmp/workdir/build/bin",
+          # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
+          # "export PATH=/tmp/workdir/build/bin:${PATH}"
+        ],
     }
 }
