@@ -19,7 +19,9 @@ in
       staticEnv,
       llvmEnv,
       staticLlvmEnv,
-      biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
+      # biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
+      biMap = (fun arr => std.array.map (fun x => x.drvHash) arr),
+
       # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
 
       constants = _constants,
@@ -76,6 +78,28 @@ in
               baseName
             else
               "%{baseName}-stage-%{ std.to_string stage}",
+        drvHash =
+          let _name = name
+          in
+          let _bs = buildInputs
+          in
+          let _sis = sourceInputs in
+          let _pds = patches in
+          let _efs = extraFiles in
+          let _sc = scriptContent in
+          let _bic = buildInChroot in
+          let _ec = enableCcache in
+          drvUtils.pkgToHash {
+            name = _name,
+            buildInputs = _bs,
+            sourceInputs = _sis,
+            patches = _pds,
+            extraFiles = _efs,
+            scriptContent = _sc,
+            buildInChroot = _bic,
+            enableCcache = _ec,
+          },
+
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
         buildInputs
@@ -93,7 +117,7 @@ in
             )
           )
           | default
-          = (biMap (biPkgs )) @ baseBuildinputPackages @ biDrvs,
+          = (biMap (biPkgs)) @ baseBuildinputPackages @ biDrvs,
         hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then (biMap [pkgs.busybox]) else [],
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
