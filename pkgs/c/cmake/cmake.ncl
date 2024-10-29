@@ -53,6 +53,9 @@ in
       _cmakeCmakeBase
       & {
         stage = -1,
+
+        utilsProviders = [],
+        baseBuildinputPackages = [],
         buildInputs =
           lib.biMap [
             pkgs.busyboxStage2,

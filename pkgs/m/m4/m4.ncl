@@ -54,6 +54,9 @@
     _m4Base
     & {
       stage = -1,
+
+      utilsProviders = [],
+      baseBuildinputPackages = [],
       buildInputs =
         lib.biMap [
           pkgs.busyboxStage2,

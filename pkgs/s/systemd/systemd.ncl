@@ -2,20 +2,23 @@
   lib,
   pkgs,
   busybox,
-  busyboxMiscUtils|lib.MakePackage=(busybox&{
-    name="busybox-misc-utils",
-    installPhase|priority 100=[
-        "install -d -m0755 ${DEST}/usr/bin",
-        "install -m0755 ${SRC}/busybox ${DEST}/usr/bin",
-        "cd ${DEST}/usr/bin",
-       "ln -s busybox sed",
-       "ln -s busybox awk",
-       "ln -s busybox diff",
-       "ln -s busybox find",
-
-
-    ],
-  }),
+  busyboxMiscUtils | lib.MakePackage
+    = (
+      busybox
+      & {
+        name = "busybox-misc-utils",
+        installPhase | priority 100
+          = [
+            "install -d -m0755 ${DEST}/usr/bin",
+            "install -m0755 ${SRC}/busybox ${DEST}/usr/bin",
+            "cd ${DEST}/usr/bin",
+            "ln -s busybox sed",
+            "ln -s busybox awk",
+            "ln -s busybox diff",
+            "ln -s busybox find",
+          ],
+      }
+    ),
   systemdBoot | lib.MesonPackage
     = {
       name = "systemd-boot",
@@ -50,13 +53,12 @@
         pkgs.bash,
         pkgs.coreutils,
         pkgs.bashSh,
-         pkgs.meson,
-                      pkgs.samurai,
-                      pkgs.pkgconf,
-                      pkgs.musl,
-                      pkgs.llvm,
-                      pkgs.ccacheBin,
-
+        pkgs.meson,
+        pkgs.samurai,
+        pkgs.pkgconf,
+        pkgs.musl,
+        pkgs.llvm,
+        pkgs.ccacheBin,
       ],
 
       preConfigurePhase = [

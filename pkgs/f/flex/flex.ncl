@@ -58,6 +58,9 @@
       _flexBase
       & {
         stage = -1,
+
+        utilsProviders = [],
+        baseBuildinputPackages = [],
         buildInputs =
           lib.biMap [
             pkgs.llvmStage2,

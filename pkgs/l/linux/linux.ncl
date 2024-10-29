@@ -151,34 +151,36 @@
           HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.STATIC_LDFLAGS @ ["-lz"] )}",
           HOSTCFLAGS = "%{ lib.functions.varToExportvar  buildEnv.STATIC_CFLAGS}",
         },
-      buildInputs | force
-        =
-          lib.biMap [
-            pkgs.busybox,
-            pkgs.gnumake,
-            pkgs.ccacheBin,
-            pkgs.clangCross,
-            pkgs.muslAarch64,
-            pkgs.musl,
-            pkgs.libcxxAarch64,
-            pkgs.linuxHeadersAarch64,
-            pkgs.linuxHeaders,
-            pkgs.perl,
-            pkgs.m4,
-            pkgs.libtool,
-            pkgs.openssl, # tgt?
-            pkgs.zlibNg, # tgt?
-            pkgs.xz,
-            pkgs.flex,
-            pkgs.bison,
-            pkgs.libelf,
-            pkgs.diffutils,
-            pkgs.zstd,
-            pkgs.lz4,
-            pkgs.kmod, #, libModulesDirectory,
-            #, pkgs.libarchive,
-            pkgs.pythonFull,
-          ],
+
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+      biPkgs | force
+        = [
+          pkgs.busybox,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+          pkgs.clangCross,
+          pkgs.muslAarch64,
+          pkgs.musl,
+          pkgs.libcxxAarch64,
+          pkgs.linuxHeadersAarch64,
+          pkgs.linuxHeaders,
+          pkgs.perl,
+          pkgs.m4,
+          pkgs.libtool,
+          pkgs.openssl, # tgt?
+          pkgs.zlibNg, # tgt?
+          pkgs.xz,
+          pkgs.flex,
+          pkgs.bison,
+          pkgs.libelf,
+          pkgs.diffutils,
+          pkgs.zstd,
+          pkgs.lz4,
+          pkgs.kmod, #, libModulesDirectory,
+          #, pkgs.libarchive,
+          pkgs.pythonFull,
+        ],
     },
   linuxAarch64Virt =
     linuxAarch64

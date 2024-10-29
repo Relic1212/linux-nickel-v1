@@ -10,6 +10,9 @@
         sha256sum = "514dc60688d3118c9883a3dd54a38b28128ea912c01ea325d6e204a93da3b524",
       },
       pythonExecutable = "python3",
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+
       buildInputs = lib.biMap [pkgs.busybox, pkgs.pythonFull]
     }
 }

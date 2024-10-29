@@ -106,10 +106,9 @@
               }
             ),
         stage = 0,
-        buildInputs =
-          lib.biMap [
-            pkgs.llvmStage0,
-            pkgs.muslStage0,
-          ]
+        biPkgs = [
+          pkgs.llvmStage0,
+          pkgs.muslStage0,
+        ]
       }
 }

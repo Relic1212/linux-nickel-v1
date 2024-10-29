@@ -18,15 +18,14 @@
       _bisonBase
       & {
         stage = 1,
-        buildInputs =
-          lib.biMap [
-            pkgs.muslStage1,
-            pkgs.gnumakeStage1,
-            pkgs.ccacheBin,
-            pkgs.m4Stage1,
-            pkgs.busyboxStage0,
-            pkgs.llvmStage0
-          ]
+        biPkgs = [
+          pkgs.muslStage1,
+          pkgs.gnumakeStage1,
+          pkgs.ccacheBin,
+          pkgs.m4Stage1,
+          pkgs.busyboxStage0,
+          pkgs.llvmStage0
+        ]
       },
 
   # 2
@@ -36,15 +35,14 @@
       _bisonBase
       & {
         stage = 2,
-        buildInputs =
-          lib.biMap [
-            pkgs.muslStage2,
-            pkgs.gnumakeStage2,
-            pkgs.ccacheBin,
-            pkgs.m4Stage2,
-            pkgs.busyboxStage1,
-            pkgs.llvmStage1,
-          ]
+        biPkgs = [
+          pkgs.muslStage2,
+          pkgs.gnumakeStage2,
+          pkgs.ccacheBin,
+          pkgs.m4Stage2,
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+        ]
       },
 
   # final
@@ -54,14 +52,15 @@
       _bisonBase
       & {
         stage = -1,
-        buildInputs =
-          lib.biMap [
-            pkgs.musl,
-            pkgs.gnumake,
-            pkgs.ccacheBin,
-            pkgs.m4,
-            pkgs.busyboxStage2,
-            pkgs.llvmStage2,
-          ]
+        utilsProviders = [],
+        baseBuildinputPackages = [],
+        biPkgs = [
+          pkgs.musl,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+          pkgs.m4,
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+        ]
       }
 }
