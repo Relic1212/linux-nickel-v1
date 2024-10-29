@@ -34,10 +34,11 @@
           "--with-module-directory=/usr/lib/modules"
         ],
 
-      biPkgs = [
-        pkgs.xz,
-        pkgs.zlibNg,
-        pkgs.openssl,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.xz,
+          pkgs.zlibNg,
+          pkgs.openssl,
+        ],
     }
 }

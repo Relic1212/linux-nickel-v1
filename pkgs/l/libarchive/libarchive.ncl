@@ -15,11 +15,12 @@
         "ln -s bsdtar tar",
         "ln -s bsdunzip unzip",
       ],
-      biPkgs = [
-        pkgs.zlibNg,
-        pkgs.zstd,
-        pkgs.lz4,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.zlibNg,
+          pkgs.zstd,
+          pkgs.lz4,
+        ],
       extraCmakeArgs = [
         "-DENABLE_ZLIB:BOOL=ON",
         "-DENABLE_ZSTD:BOOL=ON",

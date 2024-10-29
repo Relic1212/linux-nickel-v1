@@ -14,8 +14,9 @@
         "--disable-wtmp",
         "--disable-wtmpx",
       ],
-      biPkgs = [
-        pkgs.zlibNg,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.zlibNg,
+        ]
     }
 }

@@ -14,10 +14,11 @@
         m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/src/Makefile.am"%,
         m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/src/Makefile.in"%,
       ],
-      biPkgs = [
-        pkgs.pkgconf,
-        pkgs.libmd,
-        pkgs.libbsd,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.pkgconf,
+          pkgs.libmd,
+          pkgs.libbsd,
+        ]
     }
 }

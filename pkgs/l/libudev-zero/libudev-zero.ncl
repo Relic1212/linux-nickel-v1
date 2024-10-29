@@ -15,8 +15,9 @@
         "install-static"
       ],
 
-      biPkgs = [
-        pkgs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.linuxHeaders,
+        ]
     },
 }

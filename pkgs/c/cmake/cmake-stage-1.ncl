@@ -42,7 +42,7 @@ let misc = import "cmake-base.ncl" in
         ],
         singleSource = misc.cmakeSingleSource,
 
-        buildInputs =
+        biDrvs =
           lib.biMap [
             pkgs.busyboxStage0,
             pkgs.llvmStage0,

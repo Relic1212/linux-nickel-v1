@@ -11,10 +11,11 @@
       extraMesonArgs = [
         "-Druntime_dir=/run"
       ],
-      biPkgs = [
-        pkgs.expat,
-        pkgs.linuxHeaders,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.expat,
+          pkgs.linuxHeaders,
+        ],
       preConfigurePhase = [
         "sed -i 's@    post_install_exe()@    # post_install_exe()@g' ${SRC}/meson_post_install.py"
       ]

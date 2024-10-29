@@ -10,12 +10,13 @@
         sha256sum = "65782f0a10a4b455af9c6baab7040e2f537520caa2ec2092805cdfd36863b247"
       },
       extraMesonArgs = ["-Denable-x11=false", "-Denable-xkbregistry=false"],
-      biPkgs = [
-        pkgs.wayland,
-        pkgs.waylandProtocols,
-        pkgs.libffi,
-        pkgs.bison,
-        pkgs.m4
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.wayland,
+          pkgs.waylandProtocols,
+          pkgs.libffi,
+          pkgs.bison,
+          pkgs.m4
+        ]
     }
 }

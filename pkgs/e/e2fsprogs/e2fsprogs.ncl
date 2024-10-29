@@ -10,8 +10,9 @@
       extraConfigureFlags = [
         "ac_cv_func_llseek='yes'"
       ],
-      biPkgs = [
-        pkgs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.linuxHeaders,
+        ]
     }
 }

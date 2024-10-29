@@ -93,11 +93,13 @@ in
             )
           )
           | default
-          = (biMap (biPkgs @ baseBuildinputPackages)),
+          = (biMap (biPkgs )) @ baseBuildinputPackages @ biDrvs,
         hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
-        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then [pkgs.busybox] else [],
+        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then (biMap [pkgs.busybox]) else [],
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         biPkgs | Array Dyn | not_exported | default = [],
+        biDrvs | Array String | not_exported | default = [],
+
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
         buildEnv | BuildEnv | default
@@ -208,7 +210,7 @@ in
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
-              @ (
+              @ lib.biMap (
                 if (stage == -1) then
                   (
                     [pkgs.gnumake, pkgs.musl]
@@ -260,7 +262,7 @@ in
           baseBuildinputPackages | priority -999
             =
               AutotoolsPackage.baseBuildinputPackages
-              @ (
+              @ lib.biMap (
                 if (stage == -1) then
                   [
                     pkgs.perl,
@@ -302,7 +304,7 @@ in
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
-              @ (
+              @ lib.biMap (
                 if (stage == -1) then
                   (
                     [
@@ -328,6 +330,7 @@ in
           buildInChroot,
           isLlvm,
           enableCcache,
+          utilsProviders,
 
           enableParallel,
           cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ extraCmakeArgs,
@@ -336,8 +339,8 @@ in
 
           baseBuildinputPackages | priority -1000
             =
-              Package.baseBuildinputPackages
-              @ (
+              utilsProviders
+              @ lib.biMap (
                 if (stage == -1) then
                   (
                     [
@@ -387,7 +390,7 @@ in
           baseBuildinputPackages | priority -1000
             =
               Package.baseBuildinputPackages
-              @ (
+              @ lib.biMap (
                 if (stage == -1) then
                   (
                     [

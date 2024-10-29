@@ -124,13 +124,14 @@
             "cd $DEST/usr/bin",
             "ln -s python3 python",
           ],
-        biPkgs = [
-          pkgs.linuxHeaders,
-          pkgs.zlibNg,
-          pkgs.pkgconf,
-          pkgs.libffi,
-          pkgs.openssl
-        ]
+        biDrvs =
+          lib.biMap [
+            pkgs.linuxHeaders,
+            pkgs.zlibNg,
+            pkgs.pkgconf,
+            pkgs.libffi,
+            pkgs.openssl
+          ]
       },
 
   pythonDynamic =
@@ -138,14 +139,15 @@
     & {
       name | priority 20 = "python-dynamic",
       isStatic | priority 2 = false,
-      biPkgs | priority 1
-        = [
-          pkgs.linuxHeaders,
-          pkgs.zlibNgPic,
-          pkgs.pkgconf,
-          pkgs.libffi,
-          pkgs.opensslPic,
-          pkgs.muslShared,
-        ]
+      biDrvs | priority 1
+        =
+          lib.biMap [
+            pkgs.linuxHeaders,
+            pkgs.zlibNgPic,
+            pkgs.pkgconf,
+            pkgs.libffi,
+            pkgs.opensslPic,
+            pkgs.muslShared,
+          ]
     }
 }

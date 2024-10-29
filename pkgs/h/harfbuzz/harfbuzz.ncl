@@ -12,14 +12,15 @@
         "-Dfreetype=enabled",
         "-Dcairo=enabled"
       ],
-      biPkgs = [
-        pkgs.freetype,
-        pkgs.cairo,
-        pkgs.zlibNg,
-        pkgs.pixman,
-        pkgs.fontconfig,
-        pkgs.libpng,
-        pkgs.expat
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.freetype,
+          pkgs.cairo,
+          pkgs.zlibNg,
+          pkgs.pixman,
+          pkgs.fontconfig,
+          pkgs.libpng,
+          pkgs.expat
+        ]
     }
 }

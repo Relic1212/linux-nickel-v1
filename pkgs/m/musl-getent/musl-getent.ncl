@@ -16,10 +16,11 @@
             install -m0755 getent ${DEST}/usr/bin
             "%
       ],
-      biPkgs = [
-        pkgs.musl,
-        pkgs.llvm,
-        pkgs.ccacheBin,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.musl,
+          pkgs.llvm,
+          pkgs.ccacheBin,
+        ]
     }
 }

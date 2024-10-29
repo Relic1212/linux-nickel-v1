@@ -106,9 +106,10 @@
               }
             ),
         stage = 0,
-        biPkgs = [
-          pkgs.llvmStage0,
-          pkgs.muslStage0,
-        ]
+        biDrvs =
+          lib.biMap [
+            pkgs.llvmStage0,
+            pkgs.muslStage0,
+          ]
       }
 }

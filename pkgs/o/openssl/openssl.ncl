@@ -25,7 +25,7 @@
               "sed -i \"s@disable('static', 'pic', 'threads');@disable('static', 'pic');@g\" ${SRC}/Configure",
             ]
             @ _openssl.configurePhase,
-          biPkgs = [pkgs.perl, pkgs.linuxHeaders]
+          biDrvs = lib.biMap [pkgs.perl, pkgs.linuxHeaders]
         }
       ),
 

@@ -47,13 +47,14 @@
         "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
         "cp -r ${SRC}/* ${DEST}/usr/lib/go",
       ],
-      biPkgs = [
-        pkgs.musl,
-        pkgs.llvm,
-        pkgs.gnumake,
-        pkgs.ccacheBin,
-        pkgs.varTmpDirectory,
-        pkgs.bash,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.musl,
+          pkgs.llvm,
+          pkgs.gnumake,
+          pkgs.ccacheBin,
+          pkgs.varTmpDirectory,
+          pkgs.bash,
+        ],
     }
 }

@@ -40,8 +40,9 @@
         "ln -s ncursesw.pc ncurses.pc",
         "ln -s panelw.pc panel.pc",
       ],
-      biPkgs = [
-        pkgs.pkgconf,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.pkgconf,
+        ]
     }
 }

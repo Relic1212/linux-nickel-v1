@@ -20,8 +20,9 @@
         # touch /run/resolv.conf
         "ln -s /run/resolv.conf etc/resolv.conf",
       ],
-      biPkgs = [
-        pkgs.pkgconf,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.pkgconf,
+        ]
     }
 }

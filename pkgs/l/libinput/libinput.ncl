@@ -12,12 +12,13 @@
         m%"sed -i "s/shared_library/library/" ${SRC}/meson.build"%
       ],
       extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
-      biPkgs = [
-        # pkgs.eudev,
-        pkgs.libudevZero,
-        pkgs.mtdev,
-        pkgs.libevdev,
-        pkgs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          # pkgs.eudev,
+          pkgs.libudevZero,
+          pkgs.mtdev,
+          pkgs.libevdev,
+          pkgs.linuxHeaders,
+        ]
     }
 }

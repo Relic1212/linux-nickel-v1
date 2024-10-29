@@ -27,9 +27,10 @@
           ]
           @ (lib.AutotoolsPackage & { configureFlags = conf }).configurePhase,
 
-        biPkgs = [
-          pkgs.linuxHeaders,
-          pkgs.bash,
-        ]
+        biDrvs =
+          lib.biMap [
+            pkgs.linuxHeaders,
+            pkgs.bash,
+          ]
       }
 }

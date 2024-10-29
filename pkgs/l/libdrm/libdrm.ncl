@@ -15,9 +15,10 @@
         "-Dvmwgfx=disabled",
         "-Dnouveau=disabled",
       ],
-      biPkgs = [
-        pkgs.libpciaccess,
-        pkgs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.libpciaccess,
+          pkgs.linuxHeaders,
+        ]
     }
 }

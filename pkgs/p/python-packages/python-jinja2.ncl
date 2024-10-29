@@ -13,12 +13,13 @@
         "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
         "python -m installer -d ${DEST} .dist/*.whl",
       ],
-      biPkgs = [
-        pkgs.pythonFull,
-        pkgs.pythonSetuptools,
-        pkgs.pythonInstaller,
-        pkgs.pythonGpep517,
-        pkgs.pythonFlitCore,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.pythonFull,
+          pkgs.pythonSetuptools,
+          pkgs.pythonInstaller,
+          pkgs.pythonGpep517,
+          pkgs.pythonFlitCore,
+        ]
     }
 }

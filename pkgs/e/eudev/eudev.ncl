@@ -8,16 +8,17 @@
         uri = "https://github.com/eudev-project/eudev/releases/download/v3.2.14/eudev-3.2.14.tar.gz",
         sha256sum = "8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f"
       },
-      biPkgs = [
-        pkgs.gperf,
-        pkgs.kmod,
-        pkgs.zlibNg,
-        pkgs.xz,
-        pkgs.utilLinux,
-        pkgs.linuxHeaders,
-        pkgs.file,
-        pkgs.pkgconf
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.gperf,
+          pkgs.kmod,
+          pkgs.zlibNg,
+          pkgs.xz,
+          pkgs.utilLinux,
+          pkgs.linuxHeaders,
+          pkgs.file,
+          pkgs.pkgconf
+        ],
       patches = [
         {
           file = "0001-fix-static-kmod-in-eudev.patch",

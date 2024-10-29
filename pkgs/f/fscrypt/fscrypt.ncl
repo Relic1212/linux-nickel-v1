@@ -35,10 +35,11 @@
         "install -d -m0755 ${DEST}/usr/bin",
         "install -m0755 bin/fscrypt ${DEST}/usr/bin"
       ],
-      biPkgs = [
-        pkgs."go-1.9",
-        pkgs.findutils,
-        pkgs.libpam,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs."go-1.9",
+          pkgs.findutils,
+          pkgs.libpam,
+        ]
     }
 }

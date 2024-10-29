@@ -34,7 +34,7 @@ in
       & {
         stage = 2,
 
-        buildInputs =
+        biDrvs =
           lib.biMap [
             pkgs.busyboxStage1,
             pkgs.llvmStage1,
@@ -56,7 +56,7 @@ in
 
         utilsProviders = [],
         baseBuildinputPackages = [],
-        buildInputs =
+        biDrvs =
           lib.biMap [
             pkgs.busyboxStage2,
             pkgs.llvmStage2,

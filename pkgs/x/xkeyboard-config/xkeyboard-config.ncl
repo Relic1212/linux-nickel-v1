@@ -9,8 +9,9 @@
         sha256sum = "932ff62af3245ad248a3b659a4b1435354acdae7273bbbc61fd183fddb2e4748",
       },
       extraMesonArgs = ["-Dnls=false"],
-      biPkgs = [
-        pkgs.perl,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.perl,
+        ]
     }
 }

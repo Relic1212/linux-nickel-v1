@@ -35,10 +35,11 @@
           "--with-staticdir=bin",
           "--with-usrsbindir=bin",
         ],
-      biPkgs = [
-        pkgconf,
-        linuxHeaders,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgconf,
+          linuxHeaders,
+        ],
       buildPhase = [
         "make DESTDIR=${DEST} install_device-mapper",
       ],

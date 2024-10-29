@@ -8,9 +8,10 @@
         uri = "https://github.com/pypa/installer/archive/refs/tags/0.7.0.tar.gz",
         sha256sum = "e1589201863a6b6f570ce2f9994febe54a8d9196e0cc54fd331cd7ffd728fb86",
       },
-      biPkgs = [
-        pkgs.pythonFull
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.pythonFull
+        ],
       # buildDir = "${SRC}",
       # unpackPhase = [
       #   "tar xf /tmp/workdir/packed/*/* -C /tmp/workdir/src --no-same-owner"

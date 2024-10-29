@@ -14,22 +14,23 @@
           sha256sum = "9ae89539149379f36b0126a66b649e0e95e9a602dea416d73f447af53625d3ce"
         }
       ],
-      biPkgs = [
-        pkgs.libelf,
-        pkgs.libdrm,
-        pkgs.zlibNg,
-        pkgs.pythonMako,
-        pkgs.pythonPackaging,
-        pkgs.pythonMarkupsafe,
-        pkgs.libpciaccess,
-        pkgs.libffi,
-        pkgs.bison,
-        pkgs.flex,
-        pkgs.wayland,
-        pkgs.waylandProtocols,
-        pkgs.linuxHeaders,
-        pkgs.m4
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.libelf,
+          pkgs.libdrm,
+          pkgs.zlibNg,
+          pkgs.pythonMako,
+          pkgs.pythonPackaging,
+          pkgs.pythonMarkupsafe,
+          pkgs.libpciaccess,
+          pkgs.libffi,
+          pkgs.bison,
+          pkgs.flex,
+          pkgs.wayland,
+          pkgs.waylandProtocols,
+          pkgs.linuxHeaders,
+          pkgs.m4
+        ],
       extraMesonArgs = [
         "-Dgles1=disabled",
         "-Dxmlconfig=disabled",

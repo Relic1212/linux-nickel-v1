@@ -13,8 +13,9 @@
         "--rundir=/run/dhcpcd",
         "--runstatedir=/run/dhcpcd"
       ],
-      biPkgs = [
-        pkgs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.linuxHeaders,
+        ]
     }
 }

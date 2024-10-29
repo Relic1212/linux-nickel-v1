@@ -9,16 +9,17 @@
         sha256sum = "93e9b6ae2240661639c874f5fc38f677d18afe365b17a13fee6b4fc4fba42c10",
       },
       buildDir = "${SRC}",
-      biPkgs = [
-        pkgs.rdfind,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.rdfind,
+        ]
     },
   linuxFirmwareSmaller | lib.MakePackage
     =
       linuxFirmware
       & {
         name | priority 1 = "linux-firmware-smaller",
-        biPkgs | priority 1 = linuxFirmware.biPkgs @ [pkgs.pythonFull],
+        biDrvs | priority 1 = linuxFirmware.biDrvs @ (lib.biMap [pkgs.pythonFull]),
         extraFiles = [
           {
             file = "split.py",

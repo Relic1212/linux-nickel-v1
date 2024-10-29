@@ -26,9 +26,10 @@
         "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
         "cp -r ${SRC}/* ${DEST}/usr/lib/go",
       ],
-      biPkgs = [
-        pkgs."go-1.4",
-        pkgs.bash,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs."go-1.4",
+          pkgs.bash,
+        ]
     }
 }

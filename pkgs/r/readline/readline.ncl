@@ -41,8 +41,9 @@
         "--with-ticlib",
         "--with-terminfo=ticlib",
       ],
-      biPkgs = [
-        pkgs.ncurses,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.ncurses,
+        ]
     }
 }

@@ -18,9 +18,10 @@
         "install -m0755 /tmp/workdir/build/mount-early ${DEST}/usr/libexec",
       ],
       enableCcache = false,
-      biPkgs = [
-        pkgs.llvm,
-        pkgs.musl,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.llvm,
+          pkgs.musl,
+        ]
     }
 }

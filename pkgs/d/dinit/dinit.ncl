@@ -16,8 +16,9 @@
       extraMesonArgs = [
         "-Ddinit-sbindir=/usr/bin"
       ],
-      biPkgs = [
-        pkgs.m4
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.m4
+        ]
     }
 }

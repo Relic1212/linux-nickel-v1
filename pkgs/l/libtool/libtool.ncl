@@ -10,6 +10,6 @@
         uri = "https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.gz",
         sha256sum = "04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8",
       },
-      biPkgs = [pkgs.m4]
+      biDrvs = lib.biMap [pkgs.m4]
     }
 }

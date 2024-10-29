@@ -8,47 +8,48 @@
     _rootfs
     & {
       name = "base-base-rootfs",
-      biPkgs = [
-        # base
-        pkgs.busybox,
-        pkgs.basefiles,
-        pkgs.dinit,
-        pkgs.dinitServices,
-        pkgs.dinitUtils,
-        pkgs.shadow,
-        pkgs.utilLinux,
-        pkgs.linux,
-        # pkgs.linuxFirmware,
-        pkgs.linuxFirmwareSmaller,
-        pkgs.eudev,
-        pkgs.dbus,
-        pkgs.bkeymaps,
-        pkgs.kmod,
-        # pkgs.checkFirmware,
+      biDrvs =
+        lib.biMap [
+          # base
+          pkgs.busybox,
+          pkgs.basefiles,
+          pkgs.dinit,
+          pkgs.dinitServices,
+          pkgs.dinitUtils,
+          pkgs.shadow,
+          pkgs.utilLinux,
+          pkgs.linux,
+          # pkgs.linuxFirmware,
+          pkgs.linuxFirmwareSmaller,
+          pkgs.eudev,
+          pkgs.dbus,
+          pkgs.bkeymaps,
+          pkgs.kmod,
+          # pkgs.checkFirmware,
 
-        # net
-        pkgs.dhcpcd,
-        pkgs.iwd,
-        pkgs.dropbear,
-        pkgs.openresolv,
+          # net
+          pkgs.dhcpcd,
+          pkgs.iwd,
+          pkgs.dropbear,
+          pkgs.openresolv,
 
-        # enc
-        pkgs.e2fsprogs,
-        pkgs.fscryptUnlockHome,
-        pkgs.openssl,
-        pkgs.fscrypt,
+          # enc
+          pkgs.e2fsprogs,
+          pkgs.fscryptUnlockHome,
+          pkgs.openssl,
+          pkgs.fscrypt,
 
-        # gui
-        pkgs.seatd,
-        pkgs.sway,
-        pkgs.libinput,
-        pkgs.libxkbcommon,
-        pkgs.xkeyboardConfig,
-        pkgs.xdgRuntimeRun,
-        pkgs.foot,
-        pkgs.fontconfig,
-        pkgs.ttfCroscore,
-      ]
+          # gui
+          pkgs.seatd,
+          pkgs.sway,
+          pkgs.libinput,
+          pkgs.libxkbcommon,
+          pkgs.xkeyboardConfig,
+          pkgs.xdgRuntimeRun,
+          pkgs.foot,
+          pkgs.fontconfig,
+          pkgs.ttfCroscore,
+        ]
     }
   ),
   baseImage =
@@ -56,17 +57,18 @@
     & {
       enableCcache = false,
       name = "base-image",
-      biPkgs = [
-        baseBaseRootfs,
-        pkgs.erofsUtils,
-        pkgs.mtools,
-        pkgs.genimage,
-        pkgs.cryptsetup,
-        pkgs.systemdBoot,
-        pkgs.llvm, # objdump
-        pkgs.pythonFull,
-        pkgs.utilLinux,
-      ]
+      biDrvs =
+        lib.biMap [
+          baseBaseRootfs,
+          pkgs.erofsUtils,
+          pkgs.mtools,
+          pkgs.genimage,
+          pkgs.cryptsetup,
+          pkgs.systemdBoot,
+          pkgs.llvm, # objdump
+          pkgs.pythonFull,
+          pkgs.utilLinux,
+        ]
     },
 
   vmImage | lib.Package
@@ -95,13 +97,14 @@
 
   aarch64Image | lib.Package
     = {
-      biPkgs = [
-        pkgs.busyboxAarch64,
-        pkgs.linuxAarch64,
-        pkgs.basefiles,
-        pkgs.erofsUtils,
-        pkgs.basefilesAarch64,
-      ],
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxAarch64,
+          pkgs.linuxAarch64,
+          pkgs.basefiles,
+          pkgs.erofsUtils,
+          pkgs.basefilesAarch64,
+        ],
       buildPhase = [
         m%"
           mkfs.erofs \

@@ -21,18 +21,19 @@
       ],
       patches = [{ file = "kisslinux-no-fribidi.patch", sha256sum = "fb69568c89cc1c00a3d5f5aaffa048ffe2d1d846a6153f7c7c2665717e10191f" }],
 
-      biPkgs = [
-        pkgs.glib,
-        pkgs.pcre2,
-        pkgs.libffi,
-        pkgs.freetype,
-        pkgs.fontconfig,
-        pkgs.zlibNg,
-        pkgs.harfbuzz,
-        pkgs.cairo,
-        pkgs.pixman,
-        pkgs.libpng,
-        pkgs.expat,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.glib,
+          pkgs.pcre2,
+          pkgs.libffi,
+          pkgs.freetype,
+          pkgs.fontconfig,
+          pkgs.zlibNg,
+          pkgs.harfbuzz,
+          pkgs.cairo,
+          pkgs.pixman,
+          pkgs.libpng,
+          pkgs.expat,
+        ]
     }
 }

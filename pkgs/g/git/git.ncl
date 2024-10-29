@@ -21,8 +21,9 @@
         "NO_GETTEXT=YesPlease" #, "MSGFMT=/usr/bin/true",
       ],
       extraMakeInstallArgs = extraMakeArgs,
-      biPkgs = [
-        pkgs.zlibNg,
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.zlibNg,
+        ]
     }
 }

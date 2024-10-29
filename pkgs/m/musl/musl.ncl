@@ -56,13 +56,14 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biPkgs = [
-        pkgs.busyboxStage2,
-        pkgs.llvmStage2,
-        pkgs.gnumakeStage3,
-        pkgs.ccacheBin,
-        pkgs.muslStage2
-      ]
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.gnumakeStage3,
+          pkgs.ccacheBin,
+          pkgs.muslStage2
+        ]
     },
   muslShared =
     musl
@@ -91,13 +92,14 @@
 
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
 
-      biPkgs | priority 1
-        = [
-          pkgs.busybox,
-          pkgs.clangCross,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          # pkgs.muslStage2
-        ],
+      biDrvs | priority 1
+        =
+          lib.biMap [
+            pkgs.busybox,
+            pkgs.clangCross,
+            pkgs.gnumake,
+            pkgs.ccacheBin,
+            # pkgs.muslStage2
+          ],
     }
 }

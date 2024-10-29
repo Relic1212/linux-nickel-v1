@@ -23,7 +23,7 @@
       _flexBase
       & {
         stage = 1,
-        buildInputs =
+        biDrvs =
           lib.biMap [
             pkgs.llvmStage0,
             pkgs.muslStage1,
@@ -41,7 +41,7 @@
       _flexBase
       & {
         stage = 2,
-        buildInputs =
+        biDrvs =
           lib.biMap [
             pkgs.llvmStage1,
             pkgs.muslStage2,
