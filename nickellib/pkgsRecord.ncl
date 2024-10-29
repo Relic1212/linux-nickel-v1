@@ -136,8 +136,7 @@ let r = {
     & {},
 
   __pkgs =
-    std.record.remove
-      "hashByName"
+ 
       (
         std.record.remove
           "lib"
@@ -155,7 +154,7 @@ let r = {
                     )
                     & { pkgs = __pkgs }
                   )
-                & { pkgs, hashByName = std.record.map_values (drvUtils.pkgToHash) pkgs }
+                # & { pkgs}
               )
           )
       ),
