@@ -7,7 +7,6 @@
   baseBaseRootfs = (
     _rootfs
     & {
-      name = "base-base-rootfs",
       biPkgs = [
         # base
         pkgs.busybox,
@@ -55,7 +54,6 @@
     _rootfs2
     & {
       enableCcache = false,
-      name = "base-image",
       biPkgs = [
         baseBaseRootfs,
         pkgs.erofsUtils,
@@ -73,7 +71,6 @@
     =
       baseImage
       & {
-        name | priority 1 = "vm-image",
         installPhase = [
           "mkdir -p /tmp/workdir/out/efipart/EFI/BOOT",
           "mkdir -p /tmp/workdir/out/efipart/EFI/loader",
