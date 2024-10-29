@@ -49,6 +49,7 @@
           pkgs.foot,
           pkgs.fontconfig,
           pkgs.ttfCroscore,
+          pkgs.sndiod,
         ]
     }
   ),

@@ -17,7 +17,5 @@ in
 
   # hashByName = std.record.from_array (std.record.values (std.record.map_values (fun x => { field = x.name, value = drvUtils.pkgToHash x }) pkgs)),
 
-  hashByName = std.record.map_values (fun v=>v.drvHash) pkgs,
-
-
+  hashByName = std.record.merge_all (std.record.values (std.record.map_values (fun v => { "%{v.name}" = v.drvHash }) pkgs)),
 }

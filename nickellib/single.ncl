@@ -1,6 +1,5 @@
 let drvUtils = import "../nickellib/drv.ncl"
-in
-let keyToName = (import "keyToName.ncl").keyToName
+in let keyToName = (import "keyToName.ncl").keyToName
 in
 
 let functions = {
@@ -92,7 +91,7 @@ let functions = {
     )
   ),
 
-  getBiClosure = (fun p hbn => [p] @ (std.array.flatten  ( std.array.map  p.buildInputs)) ),
+  getBiClosure = (fun p hbn => [p] @ (std.array.flatten (std.array.map p.buildInputs))),
 }
 in
 
@@ -100,58 +99,50 @@ let pkgs =
   std.record.filter (fun k v => v.buildEnv.TARGET == null) (import "pkgsRecord.ncl").pkgs
 in
 
-let imported =(import "pkgsRecord.ncl").pkgs 
-
+let imported = (import "pkgsRecord.ncl").pkgs
 in
 
 let r = {
   pkgsNative = pkgs,
   pkgsTarget = std.record.map_values (fun v => v & { buildEnv.TARGET | force = "aarch64-unknown-linux-musl" }) pkgs
 }
-in
-let x = {
+in let x = {
   pkgsNative = std.record.map_values functions.showPkg2 pkgs,
   pkgsTarget = std.record.map_values functions.showPkg2 r.pkgsTarget,
 }
 in
 # x
 # std.record.map (fun k v => functions. showPkg2 v ) pkgs
-
 let _p =
-std.record.map (fun k v => (v &{drvSha256sum = drvUtils.pkgToHash v})) pkgs
-
-in 
-let y=
-std.record.map_values (fun v=>v.drvSha256sum ) _p
-
-in 
-let 
-f={
+  std.record.map (fun k v => (v & { drvSha256sum = drvUtils.pkgToHash v })) pkgs
+in let y =
+  std.record.map_values (fun v => v.drvSha256sum) _p
+in let f = {
   __pkgs =
     # std.record.remove
     #   "hashByName"
-      (
-        std.record.remove
-          "lib"
-          (
-            std.record.remove
-              "pkgs"
-              (
-                std.record.map
-                  (fun k v => v & { name | priority 100 = keyToName k,drvSha256sum =drvUtils.pkgToHash v  })
+    (
+      std.record.remove
+        "lib"
+        (
+          std.record.remove
+            "pkgs"
+            (
+              std.record.map
+                (fun k v => v & { name | priority 100 = keyToName k, drvSha256sum = drvUtils.pkgToHash v })
+                (
                   (
-                    (
-                      (import "lib.ncl") &
-                      #&
-                      imported
-                    )
-                    & { pkgs = __pkgs}
+                    (import "lib.ncl") &
+                    #&
+                    imported
                   )
-                & { pkgs  ,  hashByName = std.record.map_values ( fun p=> std.record.get_or  "drvSha256sum" null p) __pkgs}
-              )
-          )
-      ),
+                  & { pkgs = __pkgs }
+                )
+              & { pkgs, hashByName = std.record.map_values (fun p => std.record.get_or "drvSha256sum" null p) __pkgs }
+            )
+        )
+    ),
 }
-in 
+in
 
-std.record.from_array( f.__pkgs.hashByName
+std.record.from_array (f.__pkgs.hashByName

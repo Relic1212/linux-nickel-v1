@@ -6,7 +6,12 @@
       buildInChroot = false,
       utilsProviders = [],
       installPhase = [
-        "cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"
+        "cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+        "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
       ],
     },
 

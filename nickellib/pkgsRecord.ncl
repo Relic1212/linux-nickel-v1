@@ -4,7 +4,9 @@ let keyToName = (import "keyToName.ncl").keyToName in
 
 let r = {
   imported =
-    (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
+    {}
+    & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
+    & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
     & (import "../pkgs/a/autoconf/autoconf.ncl")
     & (import "../pkgs/a/automake/automake.ncl")
     & (import "../pkgs/b/basefiles/basefiles.ncl")
@@ -119,6 +121,7 @@ let r = {
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
     & (import "../pkgs/s/skalibs/skalibs.ncl")
+    & (import "../pkgs/s/sndiod/sndiod.ncl")
     & (import "../pkgs/s/systemd/systemd.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
@@ -136,7 +139,8 @@ let r = {
     & {},
 
   __pkgs =
- 
+    std.record.remove
+      "drvs"
       (
         std.record.remove
           "lib"
@@ -152,7 +156,7 @@ let r = {
                       #&
                       imported
                     )
-                    & { pkgs = __pkgs }
+                    & { pkgs = __pkgs, drvs = std.record.map (fun k v => v.drvHash) __pkgs }
                   )
                 # & { pkgs}
               )

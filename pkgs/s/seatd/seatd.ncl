@@ -32,5 +32,11 @@
 
       buildEnv.CFLAGS = (lib.MesonPackage.buildEnv.CFLAGS) @ ["-Wno-sign-compare"],
       buildEnv.LDFLAGS = (lib.MesonPackage.buildEnv.LDFLAGS) @ ["-Wno-error=unused-command-line-argument"],
+
+      extraMesonArgs = [
+        "-Dlibseat-builtin=enabled",
+        "-Dserver=enabled",
+        "-Dlibseat-seatd=enabled"
+      ]
     }
 }
