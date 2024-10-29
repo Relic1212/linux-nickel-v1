@@ -10,7 +10,7 @@
       name | priority 1 = "llvm-baselibs-stage-0",
       cmakeArgs | force
         =
-          let llvmStage0Cmakeargs = (lib.functions.replaceArrayElem "-DLLVM_TARGETS_TO_BUILD='X86'" "-DLLVM_TARGETS_TO_BUILD=\"\"" (_llvmBase & { stage = 0 }).cmakeArgs)
+          let llvmStage0Cmakeargs = (lib.functions.replaceArrayElem "-DLLVM_TARGETS_TO_BUILD='AArch64;X86'" "-DLLVM_TARGETS_TO_BUILD=\"\"" (lib.functions.replaceArrayElem "-DLLVM_TARGETS_TO_BUILD='X86'" "-DLLVM_TARGETS_TO_BUILD=\"\"" (_llvmBase & { stage = 0 }).cmakeArgs))
           in
           (
             llvmStage0Cmakeargs

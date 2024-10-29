@@ -281,6 +281,7 @@ in
           enableCcache,
           isLlvm,
           stage,
+          utilsProviders,
 
           mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
           baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
@@ -300,7 +301,7 @@ in
 
           baseBuildinputPackages | priority -1000
             =
-              Package.baseBuildinputPackages
+              utilsProviders
               @ (
                 if (stage == -1) then
                   (

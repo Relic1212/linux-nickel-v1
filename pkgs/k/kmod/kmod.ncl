@@ -31,6 +31,7 @@
           "--infodir=/usr/share/info",
           "--mandir=/usr/share/man",
           "--disable-manpages",
+          "--with-module-directory=/usr/lib/modules"
         ],
 
       biPkgs = [

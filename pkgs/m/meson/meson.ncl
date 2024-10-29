@@ -1,8 +1,6 @@
 {
   lib,
-  busybox,
-  pythonSetuptools,
-  pythonFull,
+  pkgs,
   meson | lib.SetuptoolPackage
     = {
       name = "meson",
@@ -12,9 +10,9 @@
       },
       buildInputs =
         lib.biMap [
-          busybox,
-          pythonSetuptools,
-          pythonFull,
+          pkgs.busybox,
+          pkgs.pythonSetuptools,
+          pkgs.pythonFull,
         ]
     }
 }

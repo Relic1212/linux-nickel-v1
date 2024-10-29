@@ -37,14 +37,13 @@
       ]
     },
   ############
-  muslStage0,
   linuxHeadersStage0 =
     _linuxHeadersBase
     & {
       stage = 0,
       buildInputs =
         lib.biMap [
-          muslStage0
+          pkgs.muslStage0
         ]
     },
 

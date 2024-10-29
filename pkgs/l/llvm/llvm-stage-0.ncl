@@ -3,22 +3,24 @@
   lib,
   _llvmBase,
 
-  muslStage0,
-  linuxHeadersStage0,
-  llvmBaselibsStage0,
-  libsspNonsharedStage0,
+  pkgs,
   llvmStage0 =
     _llvmBase
     & {
       stage = 0,
       cmakeArgs | priority 1
         =
-          _llvmBase.cmakeArgs
-          @ [
-            "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
-            "-DLLVM_ENABLE_PROJECTS='lld;clang'",
-            "-DCMAKE_SYSROOT=/tmp/workdir/sysroot"
-          ],
+          lib.functions.replaceArrayElem
+            "-DLLVM_TARGETS_TO_BUILD='AArch64;X86'"
+            "-DLLVM_TARGETS_TO_BUILD='X86'"
+            (
+              _llvmBase.cmakeArgs
+              @ [
+                "-DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;compiler-rt;libunwind'",
+                "-DLLVM_ENABLE_PROJECTS='lld;clang'",
+                "-DCMAKE_SYSROOT=/tmp/workdir/sysroot"
+              ]
+            ),
 
       buildEnv | priority 1
         =
@@ -73,6 +75,7 @@
               LD | priority 1 = "/tmp/workdir/sysroot/usr/bin/ld.lld",
             }
           ),
+
       postInstallPhase = [
         "cd ${DEST}/usr/bin",
         "ln -s clang cc",
@@ -81,10 +84,10 @@
       ],
       buildInputs =
         lib.biMap [
-          muslStage0,
-          linuxHeadersStage0,
-          llvmBaselibsStage0,
-          libsspNonsharedStage0
+          pkgs.muslStage0,
+          pkgs.linuxHeadersStage0,
+          pkgs.llvmBaselibsStage0,
+          pkgs.libsspNonsharedStage0
         ],
     },
 }

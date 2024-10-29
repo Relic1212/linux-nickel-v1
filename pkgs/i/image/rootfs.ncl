@@ -33,9 +33,13 @@
           # useradd -u 461 -g 11 -d /var/run/sndiod sndiod
           # "ln -s /usr/lib /lib",
           # For testing only
-          "echo p |passwd --stdin",
-          "echo p |passwd user --stdin",
 
+          # For shadow:
+          # "echo p |passwd --stdin",
+          # "echo p |passwd user --stdin",
+          # For bb:
+          "chpasswd root:p",
+          "chpasswd user:user",
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded
           # mkdir /lib/firmware

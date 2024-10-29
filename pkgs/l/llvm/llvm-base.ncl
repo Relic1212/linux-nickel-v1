@@ -246,8 +246,16 @@ in
               []
           )
           @ (if enableCcache then ["-DLLVM_CCACHE_BUILD:BOOL=ON"] else [])
+          @ (
+            if ((stage == 0)) then
+              [
+                "-DLLVM_TARGETS_TO_BUILD='X86'",
+              ]
+            else
+              ["-DLLVM_TARGETS_TO_BUILD='AArch64;X86'", ]
+          )
           @ [
-            "-DLLVM_TARGETS_TO_BUILD='X86'",
+            # "-DLLVM_TARGETS_TO_BUILD='X86'",
             "-DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF",
           ],
 

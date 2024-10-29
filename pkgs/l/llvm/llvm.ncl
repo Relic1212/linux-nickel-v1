@@ -30,6 +30,7 @@
               "ln -s clang cc",
               "ln -s clang++ c++",
               "ln -s clang-cpp cpp",
+              "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin",
             ]
       },
 

@@ -19,7 +19,7 @@
         {
           file = "base.config",
           sha256sum = "fcd595d91c7a85c15530661e0b5d8a0dad1418fdc20a3f7de1044980b708d8aa"
-        }
+        },
       ],
 
       extraEnv = {
@@ -37,9 +37,9 @@
         "INSTALL_MOD_STRIP=1",
         "LLVM=1",
         "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
-        "DEPMOD=true",
+        # "DEPMOD=true",
         # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
-        # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
+        "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
       ],
       makeInstallTargets = ["modules_install"],
       preBuildPhase = [
@@ -87,6 +87,10 @@
           {
             file = "kernel-aarch64-fedora.config",
             sha256sum = "4900e8c622364d7a4d5277114b96c3109328e2d4fd445b7202d291d291caa7da"
+          },
+          {
+            file = "aarch64.diffconfig",
+            sha256sum = "37aa93710a130d538512088a4a0336b57409590db8b28d05bdc11555b7b0cc09"
           }
         ],
       extraMakeArgs | priority 1
@@ -95,22 +99,35 @@
           "LLVM=1",
         ],
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
+      buildEnv.READELF = "readelf",
+
       buildEnv.EXTRA_LDFLAGS = ["--verbose", " -nostdlib"],
       extraMakeInstallArgs | priority 1
         = [
           "INSTALL_MOD_STRIP=1",
           "LLVM=1",
           "INSTALL_MOD_PATH=${DEST}",
-          "ARCH=arm64"
+          "ARCH=arm64",
           # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
-          # "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
+          "MODLIB=${DEST}/usr/lib/modules/6.10.0",
         ],
       preBuildPhase | priority 1
         = [
-          "cp /tmp/workdir/files/kernel-aarch64-fedora.config .config",
 
           # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
           m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+          m%"sed -i 's@llvm-readelf@readelf@g' Makefile"%,
+
+          # "cp /tmp/workdir/files/kernel-aarch64-fedora.config .config",
+          "make "
+          ++ (std.string.join " " makeArgs)
+          ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.STATIC_LDFLAGS} "
+          ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.STATIC_CFLAGS}"
+          ++ " defconfig",
+          "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/files/aarch64.diffconfig ",
+
+          # https://wiki.gentoo.org/wiki/Hardkernel_ODROID-N2
+          # "perl -pi -e 's/CONFIG_ARCH_[^_]*=y|.*(DEBUG|NOUVEAU).*//g' .config",
           "make "
           ++ (std.string.join " " makeArgs)
           ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.STATIC_LDFLAGS} "
