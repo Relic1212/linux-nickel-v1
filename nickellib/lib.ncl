@@ -345,6 +345,27 @@ in
                   []
               ),
         },
+      cmakeRecordFieldToCmakeArg=(fun k v=>
+        let var="-D%{k}" in 
+        if std.is_string v then 
+        "%{var}=%{v}" else if std.is_bool v then (
+          if v then "%{var}:BOOL=ON" 
+          else "%{var}:BOOL=OFF")
+          else if std.is_record v then (
+            let 
+              cmakeVarType = std.record.get_or "type"  (std.FailWith "type") v
+            in 
+            let 
+              cmakeVarValue = std.record.get_or "value"  (std.FailWith "value") v
+            in 
+            "%{var}:%{cmakeVarType}=%{cmakeVarValue}"
+            )
+            else std.FailWith "cmake %{k} (%{std.typeof v}) has invalid value"
+          
+        
+    
+      ),
+      cmakeArgsTransform=(fun r => std.record.values ( std.record.map cmakeRecordFieldToCmakeArg r )),
       CmakePackage =
         Package
         & {
@@ -357,8 +378,11 @@ in
           utilsProviders,
 
           enableParallel,
-          cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ extraCmakeArgs,
+          cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ (cmakeArgsTransform (cmakeArgsRecord &  cmakeExtraArgsRecord)) @ extraCmakeArgs,
           extraCmakeArgs | Array String | default = [],
+          cmakeArgsRecord | default={},
+          cmakeExtraArgsRecord | default={},
+
           generator | nullOrString | default = null,
 
           baseBuildinputPackages | priority -1000
@@ -380,7 +404,9 @@ in
                   []
               ),
 
-          configurePhase | priority -10 = ["cmake -B . -S ${SRC} %{std.string.join constants.buildFlagSep cmakeArgs}"],
+          cmakeDir|String|default="${SRC}",
+
+          configurePhase | priority -10 = ["cmake -B . -S %{cmakeDir} %{std.string.join constants.buildFlagSep cmakeArgs}"],
           buildPhase | priority -10 = ["cmake --build ."],
           installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
           extraEnv | priority -10
