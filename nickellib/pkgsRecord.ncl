@@ -78,6 +78,8 @@ let r = {
     & (import "../pkgs/l/linux/linux.ncl")
     & (import "../pkgs/l/libpciaccess/libpciaccess.ncl")
     & (import "../pkgs/l/libdrm/libdrm.ncl")
+    & (import "../pkgs/l/llvm/clang-stage-0.ncl")
+
     & (import "../pkgs/l/llvm/llvm-baselibs-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm.ncl")

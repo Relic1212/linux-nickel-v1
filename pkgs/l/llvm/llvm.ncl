@@ -30,6 +30,7 @@
               "ln -s clang cc",
               "ln -s clang++ c++",
               "ln -s clang-cpp cpp",
+              "ln -s llvm-readobj llvm-readelf",
               "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin",
             ]
       },

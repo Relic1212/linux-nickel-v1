@@ -3,6 +3,7 @@
   _libsspNonsharedBase | lib.Package
     = {
       stage,
+      isLlvm=(stage!=0),
       baseName = "libssp-nonshared",
       singleSource = {
         uri = "https://raw.githubusercontent.com/alpinelinux/aports/1177d1af7808fcec67822aa569e0ee1eb427cd32/main/musl/__stack_chk_fail_local.c",
@@ -16,12 +17,12 @@
         # "export LIBDIR=${LIBDIR}:/usr/lib:/lib",
         (
           let f = if (stage == 0) then " -L/tmp/workdir/sysroot/usr/lib -L/usr/lib/ -L/tmp/workdir/sysroot/usr/lib" else "" in
-          "CMD=\"${CC} -c %{f}${CFLAGS} ${LDFLAGS} /tmp/workdir/src/__stack_chk_fail_local.c -o a.out\""
+          "CMD=\"${CC} -c --verbose /tmp/workdir/src/__stack_chk_fail_local.c -o a.out\""
         ),
         "echo \"running ${CMD}\"",
         "${CMD}",
         "echo \"running ar\"",
-        "${AR} r libssp_nonshared.a a.out"
+        "ar r libssp_nonshared.a a.out"
       ],
       installPhase = [
         "install -d -m0755 ${DEST}/usr/lib",
@@ -35,11 +36,12 @@
       stage = 0,
       buildInputs =
         lib.biMap [
-          pkgs.llvmBaselibsStage0,
+          # pkgs.llvmBaselibsStage0,
+          
           pkgs.muslStage0
         ],
 
-      buildEnv.LLVM_LDFLAGS = ["-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+      #buildEnv.LLVM_LDFLAGS = ["-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
 
       buildEnv.STAGE_CFLAGS = ["--sysroot=/tmp/workdir/sysroot"],
 

@@ -15,14 +15,14 @@
         },
       ],
       buildDir = "/tmp/workdir/src",
-
+      separateBuildDir=false,
       buildEnv,
-      configurePhase | priority 1
-        = [
-          "cd %{buildDir}",
-          "make " ++ (std.string.join " " makeArgs) ++ " defconfig",
-          "echo 'defconfig done'",
-        ],
+      # configurePhase | priority 1
+      #   = [
+      #     "cd %{buildDir}",
+      #     "make " ++ (std.string.join " " makeArgs) ++ " defconfig",
+      #     "echo 'defconfig done'",
+      #   ],
       makeArgs =
         [
           "LLVM=1",
@@ -40,6 +40,9 @@
   linuxHeadersStage0 =
     _linuxHeadersBase
     & {
+      isLlvm=false,
+      buildEnv|force={},
+      makeArgs|force=[ "PREFIX=/usr" ],
       stage = 0,
       buildInputs =
         lib.biMap [
@@ -60,9 +63,9 @@
           pkgs.muslStage1,
           pkgs.gnumakeStage1,
           pkgs.ccacheBin,
-          pkgs.m4Stage1,
-          pkgs.flexStage1,
-          pkgs.bisonStage1,
+          # pkgs.m4Stage1,
+          # pkgs.flexStage1,
+          # pkgs.bisonStage1,
         ]
     },
 
@@ -77,9 +80,9 @@
           pkgs.muslStage2,
           pkgs.gnumakeStage2,
           pkgs.ccacheBin,
-          pkgs.m4Stage2,
-          pkgs.flexStage2,
-          pkgs.bisonStage2,
+          # pkgs.m4Stage2,
+          # pkgs.flexStage2,
+          # pkgs.bisonStage2,
         ]
     },
 
@@ -96,11 +99,12 @@
           pkgs.musl,
           pkgs.gnumake,
           pkgs.ccacheBin,
-          pkgs.m4,
-          pkgs.flex,
-          pkgs.bison,
+          # pkgs.m4,
+          # pkgs.flex,
+          # pkgs.bison,
         ]
     },
+
   linuxHeadersAarch64 =
     linuxHeaders
     & {

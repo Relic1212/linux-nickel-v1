@@ -4,9 +4,11 @@ FROM docker.io/library/alpine:edge
 RUN apk upgrade
 
 # RUN apk add gcc make linux-headers alpine-sdk ncurses-dev flex bison ccache python3
-RUN apk add clang llvm-dev lld  clang19-ccache python3 cmake ccache
+RUN apk add clang lld  clang19-ccache python3 cmake ccache
 RUN apk add shadow py3-pip nickel bubblewrap make rsync flex bison
-RUN apk add llvm-libunwind-dev  libc++ libc++-dev  compiler-rt llvm-libunwind-static patch
+RUN apk add llvm-libunwind-dev  libc++ libc++-dev  compiler-rt llvm-libunwind-static patch  llvm-dev
+
+
 # RUN apk add libelf
 # RUN apk add elfutils-dev
 # RUN apk add openssl
