@@ -21,10 +21,20 @@
           pkgs.zstd,
           pkgs.lz4,
         ],
-      extraCmakeArgs = [
-        "-DENABLE_ZLIB:BOOL=ON",
-        "-DENABLE_ZSTD:BOOL=ON",
-        "-DENABLE_LZ4:BOOL=ON",
-      ]
+      # extraCmakeArgs = [
+      #   "-DENABLE_ZLIB:BOOL=ON",
+      #   "-DENABLE_ZSTD:BOOL=ON",
+      #   "-DENABLE_LZ4:BOOL=ON",
+      # ],
+      cmakeExtraArgsRecord={
+        ENABLE_ZLIB=true,
+        ENABLE_ZSTD=true,
+#        ENABLE_LZ4=true,
+
+        "ENABLE_LZ4:BOOL"="ON",
+
+        SOMETHING=null,
+
+      }
     }
 }
