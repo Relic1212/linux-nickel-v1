@@ -79,7 +79,6 @@ let r = {
     & (import "../pkgs/l/libpciaccess/libpciaccess.ncl")
     & (import "../pkgs/l/libdrm/libdrm.ncl")
     & (import "../pkgs/l/llvm/clang-stage-0.ncl")
-
     & (import "../pkgs/l/llvm/llvm-baselibs-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm.ncl")
@@ -158,7 +157,7 @@ let r = {
                       #&
                       imported
                     )
-                    & { pkgs = __pkgs, drvs = std.record.map (fun k v => v.drvHash) __pkgs }
+                    & { lib, pkgs = __pkgs, drvs = std.record.map (fun k v => { name = v.name, drvHash = v.drvHash }) __pkgs }
                   )
                 # & { pkgs}
               )

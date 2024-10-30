@@ -20,7 +20,7 @@ in
       llvmEnv,
       staticLlvmEnv,
       # biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
-      biMap = (fun arr => std.array.map (fun x => x.drvHash) arr),
+      biMap = (fun arr => std.array.map (fun x => { name = x.name, drvHash = x.drvHash }) arr),
 
       # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
 
@@ -78,28 +78,29 @@ in
               baseName
             else
               "%{baseName}-stage-%{ std.to_string stage}",
-        drvHash|force =
-          let _name = name
-          in
-          let _bs = buildInputs
-          in
-          let _sis = sourceInputs in
-          let _pds = patches in
-          let _efs = extraFiles in
-          let _sc = scriptContent in
-          let _bic = buildInChroot in
-          let _ec = enableCcache in
-          drvUtils.pkgToHash {
-            name = _name,
-            buildInputs = _bs,
-            sourceInputs = _sis,
-            patches = _pds,
-            extraFiles = _efs,
-            scriptContent = _sc,
-            buildInChroot = _bic,
-            enableCcache = _ec,
-          },
-          options|default={},
+        drvHash | force
+          =
+            let _name = name
+            in
+            let _bs = buildInputs
+            in
+            let _sis = sourceInputs in
+            let _pds = patches in
+            let _efs = extraFiles in
+            let _sc = scriptContent in
+            let _bic = buildInChroot in
+            let _ec = enableCcache in
+            drvUtils.pkgToHash {
+              name = _name,
+              buildInputs = _bs,
+              sourceInputs = _sis,
+              patches = _pds,
+              extraFiles = _efs,
+              scriptContent = _sc,
+              buildInChroot = _bic,
+              enableCcache = _ec,
+            },
+        options | default = {},
 
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
@@ -107,7 +108,7 @@ in
           | not_exported
           | std.contract.from_validator (fun arr =>
             (
-              if (functions.isValidShasumArray arr) then
+              if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
                 'Ok
               else
                 'Error {
@@ -119,11 +120,17 @@ in
           )
           | default
           = (biMap (biPkgs)) @ baseBuildinputPackages @ biDrvs,
-        hasValidBuildInputs = (functions.isValidShasumArray buildInputs),
+        hasValidBuildInputs = (
+          functions.isValidShasumArray (
+            std.array.map
+              (fun x => x.drvHash)
+              buildInputs
+          )
+        ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then (biMap [pkgs.busybox]) else [],
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         biPkgs | Array Dyn | not_exported | default = [],
-        biDrvs | Array String | not_exported | default = [],
+        biDrvs | Array { name | String, drvHash | String } | not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
@@ -346,29 +353,39 @@ in
                   []
               ),
         },
-      cmakeRecordFieldToCmakeArg=(fun k v=>
-        let var="-D%{k}" in 
-        if std.is_string v then 
-        "%{var}=%{v}" else if std.is_bool v then (
-          if v then "%{var}:BOOL=ON" 
-          else "%{var}:BOOL=OFF")
-          else if std.is_record v then (
-            let 
-              cmakeVarType = std.record.get_or "type"  (std.FailWith "type") v
-            in 
-            let 
-              cmakeVarValue = std.record.get_or "value"  (std.FailWith "value") v
-            in 
+      cmakeRecordFieldToCmakeArg = (fun k v =>
+        let var = "-D%{k}" in
+        if std.is_string v then
+          "%{var}=%{v}"
+        else if std.is_bool v then
+          (
+            if v then
+              "%{var}:BOOL=ON"
+            else
+              "%{var}:BOOL=OFF"
+          )
+        else if std.is_record v then
+          (
+            let cmakeVarType = std.record.get_or "type" (std.FailWith "type") v
+            in
+            let cmakeVarValue = std.record.get_or "value" (std.FailWith "value") v
+            in
             "%{var}:%{cmakeVarType}=%{cmakeVarValue}"
-            )
-            else std.FailWith "cmake %{k} (%{std.typeof v}) has invalid value"
-          
-        
-    
+          )
+        else
+          std.FailWith "cmake %{k} (%{std.typeof v}) has invalid value"
       ),
-      cmakeArgsTransform=(fun r => std.record.values ( std.record.map cmakeRecordFieldToCmakeArg (
-        std.record.filter (fun k v=> v!=null)
-        r) )),
+      cmakeArgsTransform = (fun r =>
+        std.record.values (
+          std.record.map
+            cmakeRecordFieldToCmakeArg
+            (
+              std.record.filter
+                (fun k v => v != null)
+                r
+            )
+        )
+      ),
       CmakePackage =
         Package
         & {
@@ -381,10 +398,10 @@ in
           utilsProviders,
 
           enableParallel,
-          cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ (cmakeArgsTransform (cmakeArgsRecord &  cmakeExtraArgsRecord)) @ extraCmakeArgs,
+          cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ (cmakeArgsTransform (cmakeArgsRecord & cmakeExtraArgsRecord)) @ extraCmakeArgs,
           extraCmakeArgs | Array String | default = [],
-          cmakeArgsRecord | default={},
-          cmakeExtraArgsRecord | default={},
+          cmakeArgsRecord | default = {},
+          cmakeExtraArgsRecord | default = {},
 
           generator | nullOrString | default = null,
 
@@ -407,7 +424,7 @@ in
                   []
               ),
 
-          cmakeDir|String|default="${SRC}",
+          cmakeDir | String | default = "${SRC}",
 
           configurePhase | priority -10 = ["cmake -B . -S %{cmakeDir} %{std.string.join constants.buildFlagSep cmakeArgs}"],
           buildPhase | priority -10 = ["cmake --build ."],
