@@ -78,7 +78,7 @@ in
               baseName
             else
               "%{baseName}-stage-%{ std.to_string stage}",
-        drvHash =
+        drvHash|force =
           let _name = name
           in
           let _bs = buildInputs
@@ -99,6 +99,7 @@ in
             buildInChroot = _bic,
             enableCcache = _ec,
           },
+          options|default={},
 
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
@@ -365,7 +366,9 @@ in
         
     
       ),
-      cmakeArgsTransform=(fun r => std.record.values ( std.record.map cmakeRecordFieldToCmakeArg r )),
+      cmakeArgsTransform=(fun r => std.record.values ( std.record.map cmakeRecordFieldToCmakeArg (
+        std.record.filter (fun k v=> v!=null)
+        r) )),
       CmakePackage =
         Package
         & {
