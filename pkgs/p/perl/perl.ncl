@@ -28,5 +28,15 @@
     -des"%,
         "make depend -j$(nproc)",
       ],
+      postInstallPhase=[
+        "cd ${DEST}",
+        m%"
+        for f in $(ls); do 
+          if [ -f "${f}" ]; then 
+            rm -f "${f}"
+          fi
+        done
+        "%
+      ]
     }
 }
