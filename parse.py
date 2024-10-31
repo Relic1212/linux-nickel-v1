@@ -91,7 +91,7 @@ def build_all(drvs):
         try:
             build_in_bubblewrap.build(pn_hash, drvs["drvByHash"])
             s.append(k)
-        except:
+        finally:
             failed.append(k)
 
     print("The following packages succeded")
@@ -101,7 +101,12 @@ def build_all(drvs):
         print(failed)
 
 
-def what_is_not_built(drvs):
+def what_is_not_built(drvs:dict):
+    """Print all derivations in the tree that do not have a successful buils
+
+    Args:
+        drvs (_type_): _description_
+    """
     non_built = []
     for k in drvs["hashByName"].keys():
 
@@ -165,6 +170,8 @@ def diff2(drvs):
 
     for n in non_built:
         print(n)
+    if (diffs)==0:
+        print("zero packages which have a successfull build in build/tmp would be built")
 
 
 
