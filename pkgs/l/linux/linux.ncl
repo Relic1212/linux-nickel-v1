@@ -13,6 +13,7 @@
       name = "linux",
       sourceInputs = pkgs.linuxHeaders.sourceInputs,
       buildDir = "/tmp/workdir/src",
+      separateBuildDir=true,
       buildEnv,
       makeArgs,
       extraFiles = [
@@ -161,7 +162,7 @@
             pkgs.busybox,
             pkgs.gnumake,
             pkgs.ccacheBin,
-            pkgs.clangCross,
+            pkgs.llvm,
             pkgs.muslAarch64,
             pkgs.musl,
             pkgs.libcxxAarch64,

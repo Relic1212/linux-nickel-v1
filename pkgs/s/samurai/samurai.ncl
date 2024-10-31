@@ -11,7 +11,8 @@
           uri = "https://github.com/michaelforney/samurai/archive/189023533035ecc30848ba8dffc25c9139928f89.zip",
           sha256sum = "acb644c29b78a3c50aba8cc636b7ccde0e9c7a40c89d70d59a3604fed2187c62",
         },
-        buildDir = "${SRC}",
+        # buildDir = "${SRC}",
+        separateBuildDir=false,
         makeInstallArgs = _makeInstallArgs,
         installPhase =
           (lib.MakePackage & { makeInstallArgs = _makeInstallArgs }).installPhase

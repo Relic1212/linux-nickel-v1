@@ -21,6 +21,8 @@ in
           }
         },
       ],
+      # TODO
+      separateBuildDir=true,
       buildDir = "/tmp/workdir/src",
       # extraEnv={
       #   EXTRA_CFLAGS=buildEnv.CFLAGS,

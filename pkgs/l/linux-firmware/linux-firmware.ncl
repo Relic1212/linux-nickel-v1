@@ -8,7 +8,8 @@
         uri = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-20240909.tar.gz",
         sha256sum = "93e9b6ae2240661639c874f5fc38f677d18afe365b17a13fee6b4fc4fba42c10",
       },
-      buildDir = "${SRC}",
+      # buildDir = "${SRC}",
+      separateBuildDir=false,
       biDrvs =
         lib.biMap [
           pkgs.rdfind,

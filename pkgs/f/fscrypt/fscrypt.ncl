@@ -19,9 +19,9 @@
           dest = "go-mod",
         }
       ],
-
+      separateBuildDir=false,
       configurePhase = [
-        "cd ${SRC}",
+        # "cd ${SRC}",
         "export GOROOT=/usr/lib/go",
         "export GOMODCACHE=${SRC}/go-mod",
         "export CGO_ENABLED=1",

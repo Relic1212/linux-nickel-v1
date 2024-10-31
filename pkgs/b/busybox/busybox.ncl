@@ -65,7 +65,7 @@
       buildInputs =
         lib.biMap [
           pkgs.busybox,
-          pkgs.clangCross,
+          pkgs.llvm,
           pkgs.muslAarch64,
           pkgs.musl,
           pkgs.libcxxAarch64,

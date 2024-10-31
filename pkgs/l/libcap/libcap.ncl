@@ -8,8 +8,9 @@
         uri = "https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-2.70.tar.gz",
         sha256sum = "18f00ea97c7541af86379dec9d4d8ea838aac4a1f70177d81d91657e4e43b808",
       },
+      separateBuildDir=false,
       preConfigurePhase = [
-        "cd ${SRC}",
+        # "cd ${SRC}",
         "sed -i 's@/bin/bash@/bin/sh@g' progs/mkcapshdoc.sh",
         "echo \"all: \n\techo 1\n\" > doc/Makefile",
         "echo \"\ninstall: \n\techo 1\n\" >> doc/Makefile",
