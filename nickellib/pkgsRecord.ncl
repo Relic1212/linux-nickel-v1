@@ -13,6 +13,8 @@ let r = {
     & (import "../pkgs/b/bash/bash.ncl")
     & (import "../pkgs/b/bison/bison.ncl")
     & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
+    & (import "../pkgs/b/bootstrap/bootstrap-toolchain.ncl")
+
     & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
     & (import "../pkgs/b/busybox/busybox.ncl")
     & (import "../pkgs/c/cairo/cairo.ncl")
@@ -126,6 +128,8 @@ let r = {
     & (import "../pkgs/s/systemd/systemd.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
+    & (import "../pkgs/t/toybox/toybox.ncl")
+
     & (import "../pkgs/t/ttf-croscore/ttf-croscore.ncl")
     & (import "../pkgs/u/util-linux/util-linux.ncl")
     & (import "../pkgs/u/unzip/unzip.ncl")

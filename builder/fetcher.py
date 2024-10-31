@@ -47,7 +47,7 @@ def fetch(uri: str, sha256sum):
     elif os.path.exists(uri):
         t = "local"
     else:
-        raise Exception(f"bad uri: {uri}")
+        raise Exception(f"bad uri: \"{uri}\"")
 
     if t == "local":
         cmd = "cp"

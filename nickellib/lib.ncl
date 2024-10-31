@@ -1,8 +1,8 @@
 let constants = import "./constants.ncl"
 in
 let _constants = constants
-in
-let shellFunctions = import "./shellFunctions.ncl"
+# in
+# let shellFunctions = import "./shellFunctions.ncl"
 in
 let drvUtils = import "drv.ncl"
 in
@@ -19,6 +19,7 @@ in
       staticEnv,
       llvmEnv,
       staticLlvmEnv,
+      shellFunctions = import "./shellFunctions.ncl",
       # biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
       biMap = (fun arr => std.array.map (fun x => { name = x.name, drvHash = x.drvHash }) arr),
 
@@ -158,6 +159,7 @@ in
             if (std.array.length sourceInputs) == 0 then
               ""
             else
+            # TODO: these should be joined by newlines
               m%"
       %{shellFunctions.unpackMaybe}
       %{std.string.join " " ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
