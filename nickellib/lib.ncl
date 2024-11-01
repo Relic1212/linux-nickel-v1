@@ -160,9 +160,10 @@ in
               ""
             else
             # TODO: these should be joined by newlines
+            # Fixed
               m%"
       %{shellFunctions.unpackMaybe}
-      %{std.string.join " " ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
+      %{std.string.join "\n" ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
       m%"
       mkdir -p /tmp/workdir/src/%{dest}
       unpack_maybe /tmp/workdir/packed/%{x.src.sha256sum}/%{dest} /tmp/workdir/src/%{dest}
