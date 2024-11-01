@@ -123,14 +123,14 @@ def link_workdir(h, name):
     )
 
 
-def build(h, pkg_drvs: str) -> None:
+def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
 
     # h=hash
     # drv_s=pkgs[hash]
 
     drv_s = pkg_drvs[h]
     drv = json.loads(drv_s)
-    name=drv["name"]
+    name=pkg_names[h]
 
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
     status_file = workdir + "/0.txt"
@@ -140,7 +140,7 @@ def build(h, pkg_drvs: str) -> None:
         return
     subprocess.run(["rm", "-rf", workdir], check=True)
     for bi_drv in drv["buildInputDrvs"]:
-        build(h=bi_drv, pkg_drvs=pkg_drvs)
+        build(h=bi_drv, pkg_drvs=pkg_drvs,pkg_names=pkg_names)
     for si_drv in drv["sourceInputDrvs"]:
         si_h = si_drv["src"]
 
@@ -253,6 +253,9 @@ def build(h, pkg_drvs: str) -> None:
                 "x86_64-pc-linux-musl-c++",
                 "x86_64-pc-linux-musl-g++",
                 "x86_64-pc-linux-musl-gcc",
+                  "x86_64-linux-musl-c++",
+                "x86_64-linux-musl-g++",
+                "x86_64-linux-musl-gcc",
             ]:
                 if os.path.exists(sysroot + "/usr/bin/" + compiler):
                     cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
@@ -325,87 +328,4 @@ def build(h, pkg_drvs: str) -> None:
     print(f"finished building {name}")
 
 
-def prepare_sysroot(workdir: str, buildinputs: dict):
-    for bi in buildinputs:
-        h = bi["name"]
-        other_root = f"build/{h}-workdir/out/destdir"
-        print(f"copying from destdir: {other_root} \nto ")
-        util_functions.copy_root(src=other_root, dest=workdir + "/" + bi["dir"])
 
-
-def pkgs_to_stringdrvs(pkgs: dict) -> dict[str, dict[str, str]]:
-    strings = {"pkgs": {}, "hashes": {}}
-    for k in pkgs.keys():
-        manifest = pkgs[k].get_manifest()
-        hash = manifest["hash"]
-        strings["pkgs"][k] = json.dumps(manifest)
-        strings["hashes"][
-            hash
-        ] = k  # to build dependencies we need to be able to go hash -> name
-
-    return strings
-
-
-def build_package_from_drv(package_name, drvs):
-    drv = json.loads(drvs["pkgs"][package_name])
-
-    manifest = drv["manifest"]
-    workdir = drv_to_workdir(drv)
-    status_file = workdir + "/0.txt"
-    link_cmd = f"ln -s $(realpath {workdir})   $(realpath ./build/tmp/{package_name})"
-
-    if os.path.exists(f"build/tmp/{package_name}"):
-        os.system(f"rm build/tmp/{package_name}")
-
-    if os.path.isfile(status_file):
-        print(f"{package_name} is already build in \n{workdir}")
-
-        print(f"linking {link_cmd}")
-        os.system(link_cmd)
-        return
-    # build deps
-    print(f"manifest for {package_name} is")
-    print(manifest)
-
-    print("building", package_name)
-
-    try:
-        buildinputs = manifest["build_inputs"]
-    except:
-        print(manifest)
-        print(manifest.keys())
-        raise Exception
-
-    for b in buildinputs:
-        h = b["name"]
-        name = drvs["hashes"][h]
-        build_package_from_drv(package_name=name, drvs=drvs)
-
-    os.system(f"rm -rf {workdir}")
-    os.mkdir(workdir)
-    os.system(link_cmd)
-
-    madedirs = []
-    for d in [dtmp["dir"] for dtmp in manifest["build_inputs"]]:
-        if not d in madedirs:
-            # print("d =",d,"madedirs =",madedirs)
-            # print (f"making {workdir}/{d}")
-            os.makedirs(f"{workdir}/{d}")
-            madedirs.append(d)
-    # copy deps
-    prepare_sysroot(workdir=drv_to_workdir(drv), buildinputs=manifest["build_inputs"])
-
-    # final build
-    print("executing final build of", package_name)
-    build(drv_s=drvs["pkgs"][package_name])
-    os.system(f"touch {status_file}")
-    print(f"build {package_name} in {workdir}")
-
-
-def bf():
-    import sys
-
-    fp = sys.argv[1]
-    with open(fp) as f:
-        drv_s = f.read()
-    build(drv_s)

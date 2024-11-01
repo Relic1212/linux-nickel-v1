@@ -2,7 +2,6 @@ let lib = (import "lib.ncl").lib
 in
 
 let DrvSchema = {
-  name | String,
   buildInputDrvs | Array String,
   scriptContent | String,
   sourceInputDrvs | Array Dyn,
@@ -37,7 +36,6 @@ let drvUtils = {
   pkgToDrv = (fun p =>
     let d | DrvSchema
       = {
-        name = p.name,
         buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
         sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
         patchDrvs = p.patches,
