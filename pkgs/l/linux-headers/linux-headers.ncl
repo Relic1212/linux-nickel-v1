@@ -15,7 +15,7 @@
         },
       ],
       buildDir = "/tmp/workdir/src",
-      separateBuildDir=false,
+      separateBuildDir = false,
       buildEnv,
       # configurePhase | priority 1
       #   = [
@@ -40,9 +40,9 @@
   linuxHeadersStage0 =
     _linuxHeadersBase
     & {
-      isLlvm=false,
-      buildEnv|force={},
-      makeArgs|force=[ "PREFIX=/usr" ],
+      isLlvm = false,
+      buildEnv | force = {},
+      makeArgs | force = ["PREFIX=/usr"],
       stage = 0,
       buildInputs =
         lib.biMap [
@@ -56,11 +56,29 @@
     _linuxHeadersBase
     & {
       stage = 1,
+
+      buildEnv = {
+        _isLlvm = false,
+        STAGE_CFLAGS = [
+          "-I/include"
+        ],
+        STAGE_CPPFLAGS = [
+          "-I/include"
+        ],
+      },
+      makeArgs | force
+        =
+          [
+            "HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} \\\n",
+            "HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
+          ]
+          @ lib.MakePackage.makeArgs,
+
       buildInputs =
         lib.biMap [
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0,
-          pkgs.muslStage1,
+          pkgs.busyboxBootstrapStage0,
+          pkgs.bootstrapStage0,
+          pkgs.bootstrapSymlinks,
           pkgs.gnumakeStage1,
           pkgs.ccacheBin,
           # pkgs.m4Stage1,
@@ -86,6 +104,23 @@
         ]
     },
 
+  linuxHeadersStage3 =
+    _linuxHeadersBase
+    & {
+      stage = -1,
+      buildInputs =
+        lib.biMap [
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.muslStage3,
+          pkgs.gnumakeStage4,
+          pkgs.ccacheBin,
+          # pkgs.m4,
+          # pkgs.flex,
+          # pkgs.bison,
+        ]
+    },
+
   #final
 
   linuxHeaders =
@@ -94,8 +129,8 @@
       stage = -1,
       buildInputs =
         lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
+          pkgs.busyboxStage3,
+          pkgs.llvmStage3,
           pkgs.musl,
           pkgs.gnumake,
           pkgs.ccacheBin,

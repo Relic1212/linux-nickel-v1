@@ -138,7 +138,7 @@ in
         buildEnv | BuildEnv | default
           = {
             _stage = stage,
-            _isLlvm = isLlvm,
+            _isLlvm | force = isLlvm,
             _isStatic = isStatic,
           },
 
@@ -159,8 +159,8 @@ in
             if (std.array.length sourceInputs) == 0 then
               ""
             else
-            # TODO: these should be joined by newlines
-            # Fixed
+              # TODO: these should be joined by newlines
+              # Fixed
               m%"
       %{shellFunctions.unpackMaybe}
       %{std.string.join "\n" ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
@@ -241,7 +241,7 @@ in
           stage,
           isLlvm,
           enableCcache,
-          separateBuildDir|priority -1000=false,
+          separateBuildDir | priority -1000 = false,
 
           baseBuildinputPackages | priority -1000
             =
@@ -267,23 +267,23 @@ in
             ]
         },
 
-#  configureFieldToFlag = (fun k v =>
-#         let var = "--%{k}" in
-#         if std.is_string v then
-#           "%{var}=%{v}"
-#         else if v==null then
-#         var 
-#         else
-#           std.FailWith " %{k} (%{std.typeof v}) has invalid type, must be string or null"
-#       ),
+      #  configureFieldToFlag = (fun k v =>
+      #         let var = "--%{k}" in
+      #         if std.is_string v then
+      #           "%{var}=%{v}"
+      #         else if v==null then
+      #         var
+      #         else
+      #           std.FailWith " %{k} (%{std.typeof v}) has invalid type, must be string or null"
+      #       ),
       configureFlagsFromRecord = (fun r =>
-       let flagOpts = std.record.fields r in 
-       # make a flag empty by leaving it unspecified of setting it to false
-       # {"--disable-shared",} same as {"--disable-shared"=false,}
-       let mapped = std.array.map (fun f => {flag  = f, value=std.record.get_or "%{f}" false r}) flagOpts in 
-       # remove a flag by setting "--disable-shared"=null
-       let filtered = std.array.filter (fun x=>x.value!=null) mapped in 
-        let finalFlags = std.array.map (fun x =>  ( if x.value==false then x.flag else  "%{x.flag}=%{x.value}" )  ) filtered in 
+        let flagOpts = std.record.fields r in
+        # make a flag empty by leaving it unspecified of setting it to false
+        # {"--disable-shared",} same as {"--disable-shared"=false,}
+        let mapped = std.array.map (fun f => { flag = f, value = std.record.get_or "%{f}" false r }) flagOpts in
+        # remove a flag by setting "--disable-shared"=null
+        let filtered = std.array.filter (fun x => x.value != null) mapped in
+        let finalFlags = std.array.map (fun x => (if x.value == false then x.flag else "%{x.flag}=%{x.value}")) filtered in
         finalFlags
       ),
 
@@ -292,12 +292,12 @@ in
         & {
           isStatic,
           buildDir,
-          configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @(configureFlagsFromRecord ( extraFlagsByField & extraConfigureFlagsByField  ) )  @ extraConfigureFlags,
+          configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ (configureFlagsFromRecord (extraFlagsByField & extraConfigureFlagsByField)) @ extraConfigureFlags,
           extraConfigureFlags | Array String | default = [],
-          extraFlagsByField|default={},
-          extraConfigureFlagsByField|default={},
+          extraFlagsByField | default = {},
+          extraConfigureFlagsByField | default = {},
           configureScript | String | default = "${SRC}/configure",
-          separateBuildDir|priority -999=true,
+          separateBuildDir | priority -999 = true,
 
           configurePhase | priority -11
             =
@@ -383,7 +383,12 @@ in
               ),
         },
       cmakeRecordFieldToCmakeArg = (fun k v =>
-        let var = "-D%{k}" in
+        let var =
+          #  ( if (
+          #   std.string.substring 0 1 k != "-") then  "-D%{k}" else
+          #  k )
+          k
+        in
         if std.is_string v then
           "%{var}=%{v}"
         else if std.is_bool v then
@@ -427,7 +432,23 @@ in
           utilsProviders,
 
           enableParallel,
-          cmakeArgs | Array String | default = constants.cmakeArgs @ (if isStatic then constants.cmakeArgsStatic else []) @ (cmakeArgsTransform (cmakeArgsRecord & cmakeExtraArgsRecord)) @ extraCmakeArgs,
+          cmakeArgs | Array String | default
+            =
+              cmakeArgsPrepend
+              @ (
+              # std.array.sort (std.string.compare)
+              (
+                cmakeArgsTransform (
+                  constants.cmakeArgsByField
+                  & (if isStatic then constants.cmakeArgsStaticByField else {})
+                  & cmakeArgsRecord
+                  & cmakeExtraArgsRecord
+                )
+              )
+              )
+              @ extraCmakeArgs,
+          cmakeArgsPrepend | Array String | default = [],
+
           extraCmakeArgs | Array String | default = [],
           cmakeArgsRecord | default = {},
           cmakeExtraArgsRecord | default = {},

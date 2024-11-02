@@ -24,14 +24,12 @@
       #   "--target=aarch64-unknown-linux-musl",
 
       # ],
-      extraConfigureFlagsByField ={
-        ac_cv_func_strsignal="'yes'",
-        ac_cv_func_killpg="'yes'",
-        ac_cv_func_strtod="'yes'",
-        "--host"="aarch64-unknown-linux-musl",
-        "--target"="aarch64-unknown-linux-musl",
-
-
+      extraConfigureFlagsByField = {
+        ac_cv_func_strsignal = "'yes'",
+        ac_cv_func_killpg = "'yes'",
+        ac_cv_func_strtod = "'yes'",
+        "--host" = "aarch64-unknown-linux-musl",
+        "--target" = "aarch64-unknown-linux-musl",
       },
       buildInputs = pkgs.busyboxAarch64.buildInputs,
       buildEnv.TARGET = pkgs.busyboxAarch64.buildEnv.TARGET,

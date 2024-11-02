@@ -9,3 +9,6 @@ tmp/
 oom
 **/__pycache__/**
 __pycache__/**
+a.out
+.ipynb_checkpoints/Untitled-checkpoint.ipynb
+.ipynb_checkpoints/Untitled-checkpoint.ipynb

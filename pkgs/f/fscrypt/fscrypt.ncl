@@ -19,7 +19,7 @@
           dest = "go-mod",
         }
       ],
-      separateBuildDir=false,
+      separateBuildDir = false,
       configurePhase = [
         # "cd ${SRC}",
         "export GOROOT=/usr/lib/go",

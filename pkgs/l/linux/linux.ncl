@@ -13,7 +13,7 @@
       name = "linux",
       sourceInputs = pkgs.linuxHeaders.sourceInputs,
       buildDir = "/tmp/workdir/src",
-      separateBuildDir=true,
+      separateBuildDir = true,
       buildEnv,
       makeArgs,
       extraFiles = [
@@ -35,10 +35,13 @@
         #  "HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS} \\\n",
       ],
       extraMakeInstallArgs = [
+        "-j$(nproc)",
         "INSTALL_MOD_STRIP=1",
         "LLVM=1",
         "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
-        # "DEPMOD=true",
+        "DEPMOD=true",
+        # "\"DEPMOD=kmod depmod\"",
+
         # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
         "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
       ],
@@ -110,6 +113,7 @@
           "LLVM=1",
           "INSTALL_MOD_PATH=${DEST}",
           "ARCH=arm64",
+          "DEPMOD=\"kmod depmod\"",
           # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
           "MODLIB=${DEST}/usr/lib/modules/6.10.0",
         ],

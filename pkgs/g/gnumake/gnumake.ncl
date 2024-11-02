@@ -37,6 +37,23 @@ in
             pkgs.ccacheBin,
           ]
       },
+  gnumakeStage4 | lib.AutotoolsPackage
+    =
+      _gnumake
+      & {
+        stage = -1,
+
+        utilsProviders = [],
+        baseBuildinputPackages = [],
+        biDrvs =
+          lib.biMap [
+            pkgs.busyboxStage2,
+            pkgs.llvmStage2,
+            pkgs.muslStage3,
+            pkgs.gnumakeStage3,
+            pkgs.ccacheBin,
+          ]
+      },
 
   # final
   gnumake | lib.AutotoolsPackage
@@ -49,10 +66,10 @@ in
         baseBuildinputPackages = [],
         biDrvs =
           lib.biMap [
-            pkgs.busyboxStage2,
-            pkgs.llvmStage2,
+            pkgs.busyboxStage3,
+            pkgs.llvmStage3,
             pkgs.musl,
-            pkgs.gnumakeStage3,
+            pkgs.gnumakeStage4,
             pkgs.ccacheBin,
           ]
       },

@@ -8,6 +8,21 @@
     =
       _pythonBase
       & {
+        buildEnv = {
+          _isLlvm = false,
+          STAGE_CFLAGS = [
+            "-I/include"
+          ],
+          STAGE_CPPFLAGS = [
+            "-I/include",
+          ],
+          CXX = ["x86_64-linux-musl-g++", "--verbose", "--sysroot=/"],
+          CXXFLAGS = [
+            "-I/include/c++/9.4.0",
+            # "-I/include",
+            #"-idirafter/include"
+          ],
+        },
         # enableCcache|force=false,
 
         configurePhase = (
@@ -116,11 +131,11 @@
       stage = 1,
       buildInputs =
         lib.biMap [
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0,
-          pkgs.gnumakeStage1,
+          pkgs.busyboxBootstrapStage0,
+          pkgs.bootstrapStage0,
+          pkgs.bootstrapSymlinks,
           pkgs.ccacheBin,
-          pkgs.muslStage0
+          pkgs.gnumakeStage1,
         ],
     },
 
@@ -140,6 +155,23 @@
         ],
     },
 
+  pythonStage3 =
+    _pythonBaseMinimal
+    & {
+      stage = 3,
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+
+      buildInputs =
+        lib.biMap [
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.gnumakeStage4,
+          pkgs.ccacheBin,
+          pkgs.muslStage3
+        ],
+    },
+
   # final
 
   python =
@@ -151,8 +183,8 @@
 
       buildInputs =
         lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
+          pkgs.busyboxStage3,
+          pkgs.llvmStage3,
           pkgs.gnumake,
           pkgs.ccacheBin,
           pkgs.musl

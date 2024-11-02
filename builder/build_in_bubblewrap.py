@@ -274,6 +274,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
 
     else:
         senv = os.environ.copy()
+        senv["TMPDIR"]="/tmp"
         sysroot = "/"
         args += ["--ro-bind", f"{workdir}/sysroot", "/tmp/workdir/sysroot"]
 

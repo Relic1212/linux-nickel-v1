@@ -18,7 +18,7 @@
     -Dprefix=/usr \
     -Ddlext='none' \
     -Dso='none' \
-    -Dcc='cc -static' -Ddynamic_ext='' \
+    -Dcc='clang -static' -Ddynamic_ext='' \
     -Dlddlflags='-static -O2 -L/usr/lib -I/usr/include -fstack-protector-strong' \
     -Dnm_so_opt='' -Dvendorprefix=/usr  -Dusevendorprefix \
     -Dstatic_ext='B Compress/Raw/Bzip2 Compress/Raw/Zlib Cwd Data/Dumper Devel/PPPort Devel/Peek Digest/MD5 Digest/SHA Encode Fcntl File/DosGlob File/Glob Filter/Util/Call Hash/Util Hash/Util/FieldHash I18N/Langinfo IO IPC/SysV List/Util MIME/Base64 Math/BigInt/FastCalc Opcode POSIX PerlIO/encoding PerlIO/mmap PerlIO/via SDBM_File Socket Storable Sys/Hostname Sys/Syslog Time/HiRes Time/Piece Unicode/Collate Unicode/Normalize XS/APItest XS/Typemap attributes mro re threads threads/shared' \
@@ -28,11 +28,11 @@
     -des"%,
         "make depend -j$(nproc)",
       ],
-      postInstallPhase=[
+      postInstallPhase = [
         "cd ${DEST}",
         m%"
-        for f in $(ls); do 
-          if [ -f "${f}" ]; then 
+        for f in $(ls); do
+          if [ -f "${f}" ]; then
             rm -f "${f}"
           fi
         done

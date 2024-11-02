@@ -14,6 +14,10 @@
           }
         }
       ],
+      extraConfigureFlags = [
+        "--without-libintl-prefix",
+        "--disable-nls",
+      ],
       # buildDir = "${SRC}"
     },
   ##
@@ -53,22 +57,23 @@
       },
   #final
 
-  flex | lib.AutotoolsPackage
+  flex | lib.AutomakePackage
     =
       _flexBase
       & {
         stage = -1,
 
-        utilsProviders = [],
-        baseBuildinputPackages = [],
-        buildInputs =
+        # utilsProviders = [],
+        # baseBuildinputPackages = [],
+        biPkgs =
           lib.biMap [
-            pkgs.llvmStage2,
-            pkgs.musl,
-            pkgs.gnumake,
-            pkgs.ccacheBin,
-            pkgs.m4,
-            pkgs.busyboxStage2,
+            pkgs.gettext,
+            # pkgs.llvm,
+            # pkgs.musl,
+            # pkgs.gnumake,
+            # pkgs.ccacheBin,
+            # pkgs.m4,
+            # pkgs.busybox,
           ]
       }
 }

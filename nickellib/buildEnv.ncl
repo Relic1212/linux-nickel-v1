@@ -66,9 +66,9 @@
     TARGET | nullOrString | default = null,
     HOST | nullOrString | default = null,
 
-    CC | NullOrStringOrArray | default = if _isCross then ["clang", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang" else null,
-    CPP | NullOrStringOrArray | default = if _isCross then ["clang", "--target %{TARGET}", "--sysroot=/%{TARGET}", "-E"] else if _isLlvm then "clang-cpp" else null,
-    CXX | NullOrStringOrArray | default = if _isCross then ["clang++", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "clang++" else null,
+    CC | NullOrStringOrArray | default = if _isCross then ["clang", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then ["clang"] else null,
+    CPP | NullOrStringOrArray | default = if _isCross then ["clang", "--target %{TARGET}", "--sysroot=/%{TARGET}", "-E"] else if _isLlvm then ["clang-cpp"] else null,
+    CXX | NullOrStringOrArray | default = if _isCross then ["clang++", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then ["clang++"] else null,
     AR | nullOrString | default = if _isLlvm then "llvm-ar" else null,
     AS | nullOrString | default = if _isLlvm then "llvm-as" else null,
 

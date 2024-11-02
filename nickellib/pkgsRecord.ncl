@@ -14,7 +14,6 @@ let r = {
     & (import "../pkgs/b/bison/bison.ncl")
     & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
     & (import "../pkgs/b/bootstrap/bootstrap-toolchain.ncl")
-
     & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
     & (import "../pkgs/b/busybox/busybox.ncl")
     & (import "../pkgs/c/cairo/cairo.ncl")
@@ -47,6 +46,7 @@ let r = {
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
+    & (import "../pkgs/g/gettext/gettext.ncl")
     & (import "../pkgs/g/git/git.ncl")
     & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
     & (import "../pkgs/g/gnumake/gnumake.ncl")
@@ -129,7 +129,6 @@ let r = {
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
     & (import "../pkgs/t/toybox/toybox.ncl")
-
     & (import "../pkgs/t/ttf-croscore/ttf-croscore.ncl")
     & (import "../pkgs/u/util-linux/util-linux.ncl")
     & (import "../pkgs/u/unzip/unzip.ncl")

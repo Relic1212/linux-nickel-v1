@@ -11,7 +11,7 @@
       buildPhase = [
         m%"
             cd ${SRC}
-            cc -static getent.c -o getent
+            ${CC} -static getent.c -o getent
             install -d -m0755 ${DEST}/usr/bin
             install -m0755 getent ${DEST}/usr/bin
             "%

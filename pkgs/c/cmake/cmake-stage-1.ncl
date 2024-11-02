@@ -12,13 +12,38 @@ let misc = import "cmake-base.ncl" in
       {
         stage = 1,
         extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" lib.AutotoolsPackage.extraEnv,
+
+        buildEnv = {
+          _isLlvm = false,
+          # STAGE_CFLAGS= [
+          #   "-I/include"
+          # ],
+          # STAGE_CPPFLAGS=[
+          #   "-I/include",
+          # ],
+          CXX = [
+            "x86_64-linux-musl-g++",
+            "--verbose",
+            #  "--sysroot=/"
+          ],
+
+          #  this would not be needed if we installed the kernel headers in bootstrap-stage-0
+          STAGE_CXXFLAGS = [
+            "-I/usr/include",
+            #"-idirafter/include"
+          ],
+        },
+        #  extraEnv={
+        #     "CPLUS_INCLUDE_PATH"="/include/c++/9.4.0:/include",
+
+        #  },
+
         configureFlags = (
           [
             "--prefix=/usr",
             "--bindir=bin",
             "--parallel=$(nproc)",
             " --generator=Ninja",
-            "--enable-ccache",
             "--no-debugger",
             "--",
             "-G Ninja",
@@ -44,8 +69,9 @@ let misc = import "cmake-base.ncl" in
 
         biDrvs =
           lib.biMap [
-            pkgs.busyboxStage0,
-            pkgs.llvmStage0,
+            pkgs.busyboxBootstrapStage0,
+            pkgs.bootstrapStage0,
+            pkgs.bootstrapSymlinks,
             pkgs.muslStage1,
             pkgs.samuraiStage1,
             pkgs.ccacheBin,

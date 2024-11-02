@@ -128,6 +128,7 @@ def diff2(drvs):
     diffs=0
     same=0
     notbuilt=0
+    diffing =[]
     for k in drvs["hashByName"].keys():
         old_path = f"build/tmp/{k}"
         old = old_path + "/drv.json"
@@ -151,6 +152,7 @@ def diff2(drvs):
             if not old_script==new_script:
                 print(f"{k} differs")
                 diffs+=1
+                diffing.append(k)
                 kd = (tmp + "/" + k  )
                 os.makedirs(kd)
                 with open (kd + "/drv.json" , "w") as f:
@@ -168,8 +170,8 @@ def diff2(drvs):
             notbuilt+=1
     print(notbuilt,same,diffs)
 
-    for n in non_built:
-        print(n)
+    for k in diffing:
+        print("diffs:",k)
     if (diffs)==0:
         print("zero packages which have a successfull build in build/tmp would be built")
 
@@ -194,7 +196,7 @@ def test():
     hbn= drvs["hashByName"]
     nbh =reverse_dict(hbn)
 
-    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],nbh)
+    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],pkg_names=nbh)
 
 
 if __name__ == "__main__":

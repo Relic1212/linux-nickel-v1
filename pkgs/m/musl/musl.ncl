@@ -5,10 +5,10 @@
   _muslBase | lib.AutotoolsPackage
     = {
       stage,
-      isLlvm =(stage!=0),
+      isLlvm = (stage != 0),
       baseName = "musl",
       isStatic = false,
-    
+
       sourceInputs = [
         {
           src = { uri = "https://musl.libc.org/releases/musl-1.2.5.tar.gz", sha256sum = "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4" }
@@ -21,20 +21,25 @@
 
   muslStage0 = _muslBase & { stage = 0 },
 
-  muslStage1 =
-    _muslBase
-    & {
-      stage = 1,
+  muslStage1 | lib.AutotoolsPackage
+    =
+      _muslBase
+      & {
+        stage = 1,
+        isLlvm | force = false,
+        buildEnv = {
+          _isLlvm | force = false,
+        },
 
-      buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
-          pkgs.muslStage0
-        ]
-    },
+        buildInputs =
+          lib.biMap [
+            pkgs.busyboxBootstrapStage0,
+            pkgs.bootstrapSymlinks,
+            pkgs.bootstrapStage0,
+            pkgs.gnumakeStage1,
+            pkgs.ccacheBin,
+          ]
+      },
 
   muslStage2 =
     _muslBase
@@ -51,22 +56,40 @@
         ]
     },
 
-  musl =
-    _muslBase
-    & {
-      stage = -1,
+  muslStage3 | lib.AutotoolsPackage
+    =
+      _muslBase
+      & {
+        stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.gnumakeStage3,
-          pkgs.ccacheBin,
-          pkgs.muslStage2
-        ]
-    },
+        utilsProviders = [],
+        baseBuildinputPackages = [],
+        biDrvs =
+          lib.biMap [
+            pkgs.busyboxStage2,
+            pkgs.llvmStage2,
+            pkgs.gnumakeStage3,
+            pkgs.ccacheBin,
+            pkgs.muslStage2
+          ]
+      },
+  musl | lib.AutotoolsPackage
+    =
+      _muslBase
+      & {
+        stage = -1,
+
+        utilsProviders = [],
+        baseBuildinputPackages = [],
+        biDrvs =
+          lib.biMap [
+            pkgs.busyboxStage3,
+            pkgs.llvmStage3,
+            pkgs.gnumakeStage4,
+            pkgs.ccacheBin,
+            pkgs.muslStage3,
+          ]
+      },
   muslShared =
     musl
     & {

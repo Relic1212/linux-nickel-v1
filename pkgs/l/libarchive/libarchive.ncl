@@ -26,15 +26,14 @@
       #   "-DENABLE_ZSTD:BOOL=ON",
       #   "-DENABLE_LZ4:BOOL=ON",
       # ],
-      cmakeExtraArgsRecord={
-        ENABLE_ZLIB=true,
-        ENABLE_ZSTD=true,
-#        ENABLE_LZ4=true,
+      cmakeExtraArgsRecord = {
+        ENABLE_ZLIB = true,
+        ENABLE_ZSTD = true,
+        #        ENABLE_LZ4=true,
 
-        "ENABLE_LZ4:BOOL"="ON",
+        "ENABLE_LZ4:BOOL" = "ON",
 
-        SOMETHING=null,
-
+        SOMETHING = null,
       }
     }
 }

@@ -2,7 +2,7 @@
   lib,
   dinitServices | lib.Package
     = {
-      extraFiles = [{ file = "files-services", sha256sum = "dad4e0dfcdd967847aa871254435793fa10d61de6d9416603f3b1e852d0a71c2" }],
+      extraFiles = [{ file = "files-services", sha256sum = "13533a1365b747ac95e6acfbf34cc42ce68a5b273aaf041a96f41cb87b2dc5ee" }],
 
       installPhase = [
         m%"

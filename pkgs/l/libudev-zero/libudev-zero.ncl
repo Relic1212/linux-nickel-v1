@@ -8,7 +8,7 @@
         sha256sum = "0bd89b657d62d019598e6c7ed726ff8fed80e8ba092a83b484d66afb80b77da5",
       },
       # buildDir = "${SRC}",
-      separateBuildDir=false,
+      separateBuildDir = false,
       extraMakeInstallArgs = [
         "PREFIX=/usr"
       ],

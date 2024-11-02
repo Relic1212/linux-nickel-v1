@@ -10,7 +10,7 @@
       stage = 1,
       biDrvs =
         lib.biMap [
-          pkgs.busyboxStage0,
+          pkgs.busyboxBootstrapStage0,
           pkgs.llvmStage1,
           pkgs.muslStage1,
           pkgs.linuxHeadersStage1,
@@ -34,9 +34,9 @@
         ]
     },
 
-  #final
+  #3
 
-  busybox =
+  busyboxStage3 =
     _busyboxBaseTarget
     & {
       stage = -1,
@@ -46,6 +46,23 @@
       biDrvs =
         lib.biMap [
           pkgs.busyboxStage2,
+          pkgs.llvmStage3,
+          pkgs.muslStage3,
+          pkgs.linuxHeadersStage3,
+          pkgs.ccacheBin,
+          pkgs.gnumakeStage4
+        ]
+    },
+  busybox =
+    _busyboxBaseTarget
+    & {
+      stage = -1,
+
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxStage3,
           pkgs.llvm,
           pkgs.musl,
           pkgs.linuxHeaders,

@@ -29,26 +29,29 @@
       installPhase = [
         "./make DESTDIR=${DEST} install"
       ],
-      # buildInputs = [
-      #   (import "../busybox/busybox-stage-0.ncl"),
-      #   (import "../llvm/llvm-stage-0.ncl"),
-      #   (import "../musl/musl-stage-0.ncl"),
-      # ],
 
-      buildEnv = (
-        lib.AutotoolsPackage.buildEnv
-        & {
+      isLlvm = false,
 
-          LD = "lld",
-          #   LDFLAGS | priority 2
-          #     = (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/usr/bin/ld.lld" lib.AutotoolsPackage.buildEnv.LDFLAGS),
-        }
-      ),
+      buildEnv =
+        let common = [
+          "--sysroot=/"
+        ]
+        in
+        {
+          _isLlvm = false,
+          # STAGE_CFLAGS=common @ [
+          #   "-I/include"
+          # ],
+          # STAGE_CPPFLAGS=STAGE_CFLAGS @ [
+          #   "-I/include"
+          # ],
+          # STAGE_LDFLAGS=common,
+        },
       buildInputs =
         lib.biMap [
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0,
-          pkgs.muslStage0,
+          pkgs.busyboxBootstrapStage0,
+          pkgs.bootstrapStage0,
+          pkgs.bootstrapSymlinks,
         ]
     },
 }

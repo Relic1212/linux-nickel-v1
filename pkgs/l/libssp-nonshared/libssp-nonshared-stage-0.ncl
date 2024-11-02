@@ -3,7 +3,7 @@
   _libsspNonsharedBase | lib.Package
     = {
       stage,
-      isLlvm=(stage!=0),
+      isLlvm = (stage != 0),
       baseName = "libssp-nonshared",
       singleSource = {
         uri = "https://raw.githubusercontent.com/alpinelinux/aports/1177d1af7808fcec67822aa569e0ee1eb427cd32/main/musl/__stack_chk_fail_local.c",
@@ -37,7 +37,6 @@
       buildInputs =
         lib.biMap [
           # pkgs.llvmBaselibsStage0,
-          
           pkgs.muslStage0
         ],
 
