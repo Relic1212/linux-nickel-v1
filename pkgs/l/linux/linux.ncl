@@ -113,7 +113,9 @@
           "LLVM=1",
           "INSTALL_MOD_PATH=${DEST}",
           "ARCH=arm64",
-          "DEPMOD=\"kmod depmod\"",
+          # "DEPMOD=\"/usr/bin/kmod depmod\"",
+          "DEPMOD=true",
+
           # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
           "MODLIB=${DEST}/usr/lib/modules/6.10.0",
         ],
