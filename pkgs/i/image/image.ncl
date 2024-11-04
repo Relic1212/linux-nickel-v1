@@ -4,6 +4,16 @@
   pkgs,
   _rootfs,
   _rootfs2,
+  busybox,
+  busyboxFinal = busybox & { postInstallPhase = ["rm ${DEST}/usr/bin/modprobe"] },
+  dashSh | lib.Package
+    = {
+      installPhase = [
+        "install -d -m0755 ${DEST}/bin",
+        "cd ${DEST}/bin",
+        "ln -s /usr/bin/dash sh",
+      ]
+    },
   baseBaseRootfs = (
     _rootfs
     & {
@@ -11,10 +21,20 @@
       biDrvs =
         lib.biMap [
           # base
-          pkgs.busybox,
+          # pkgs.busyboxFinal,
+          pkgs.bsdutils,
+          pkgs.dash,
+          pkgs.dashSh,
+          pkgs.iproute2,
+          pkgs.kbd,
+          pkgs.pigz,
+          pkgs.curl,
+          pkgs.metalog,
+          pkgs.zsh,
+          pkgs.ncurses,
           pkgs.basefiles,
           pkgs.dinit,
-          pkgs.dinitServices,
+          pkgs.dinitServicesV3,
           pkgs.dinitUtils,
           pkgs.shadow,
           pkgs.utilLinux,
@@ -22,9 +42,13 @@
           # pkgs.linuxFirmware,
           pkgs.linuxFirmwareSmaller,
           pkgs.eudev,
+          # pkgs.mdevd,
+          # pkgs.mdevdConf,
           pkgs.dbus,
           pkgs.bkeymaps,
           pkgs.kmod,
+          pkgs.mandoc,
+          pkgs.less,
           # pkgs.checkFirmware,
 
           # net
@@ -32,6 +56,7 @@
           pkgs.iwd,
           pkgs.dropbear,
           pkgs.openresolv,
+          pkgs.caCertificates,
 
           # enc
           pkgs.e2fsprogs,

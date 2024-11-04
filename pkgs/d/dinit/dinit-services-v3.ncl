@@ -42,218 +42,279 @@ let serviceToString = (fun service =>
   std.string.join "\n" _arr
 )
 in
-let _services = {
-  boot | Service
-    = {
-      type = "internal",
-      "depends-ms" = ["tty1", "tty2", "seatd"],
+let _services =
+  let useUdev = true in
 
-      "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
-    },
+  (
+    {
+      boot | Service
+        = {
+          type = "internal",
+          "depends-ms" = ["tty1", "tty2", "seatd"],
 
-  cfg80211 = {
-    type = "scripted",
-    command = "modprobe cfg80211",
-    restart = false,
-    "depends-on" = ["early-filesystems"],
-  },
-  dbusd = {
-    type = "process",
-    command = "/usr/bin/dbus-daemon --system --nofork --nopidfile --print-address=4",
-    "depends-on" = ["rcboot"],
-    logfile = "/var/log/dbus-daemon.log",
-    ready-notification = "pipefd:4",
-    smooth-recovery = "yes",
-  },
+          "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
+        },
 
-  dhcpcd = {
-    type = "process",
-    command = "/usr/bin/dhcpcd -B -M --logfile /var/log/dhcpcd-service.log",
-    logfile = "/var/log/dhcpcd.log",
-    restart = false,
-    "depends-on" = [
-      "varrw",
-      "netdev-eth0"
-    ],
-  },
+      cfg80211 = {
+        type = "scripted",
+        command = "modprobe cfg80211",
+        restart = false,
+        "depends-on" = ["early-filesystems"],
+      },
+      dbusd = {
+        type = "process",
+        command = "/usr/bin/dbus-daemon --system --nofork --nopidfile --print-address=4",
+        "depends-on" = ["rcboot"],
+        logfile = "/var/log/dbus-daemon.log",
+        ready-notification = "pipefd:4",
+        smooth-recovery = "yes",
+      },
 
-  dropbear = {
-    type = "process",
-    command = "/usr/bin/dropbear -E -F -P /run/dropbear.pid -R",
-    logfile = "/var/log/dropbear.log",
-    "depends-on" = [
-      "dhcpcd",
-      "netdev-eth0",
-      "dropbear-keys"
-    ],
-  },
+      dhcpcd = {
+        type = "process",
+        command = "/usr/bin/dhcpcd -B -M", #" --logfile /var/log/dhcpcd-service.log",
+        logfile = "/var/log/dhcpcd.log",
+        restart = false,
+        "depends-on" = [
+          "varrw",
+          "hostname",
+          "udevd",
+          
+        ],
+        "waits-for"=[
+          "netdev",
+          "udev-settle",
 
-  "dropbear-keys" = {
-    type = "scripted",
-    command = "/etc/dinit.d/scripts/dropbear-keys.sh",
-    restart = false,
-    options = "starts-rwfs",
-    "depends-on" = ["early-filesystems"],
-  },
+        ]
+      },
 
-  "early-filesystems" = {
-    type = "scripted",
-    command = "/usr/libexec/mount-early",
-    restart = false,
-    options = "starts-rwfs",
-  },
+      dropbear = {
+        type = "process",
+        command = "/usr/bin/dropbear -E -F -P /run/dropbear.pid -R",
+        logfile = "/var/log/dropbear.log",
+        "waits-for" = [
+          "dhcpcd",
+          "dropbear-keys"
+        ],
+      },
 
-  filesystems = {
-    type = "scripted",
-    command = "/usr/bin/mount -a",
-    restart = false,
-    logfile = "/var/log/dinit-filesystems.log",
-    "options" = "start-interruptible",
-    "start-timeout" = "1200", # 20 minutes
-    "depends-on" = ["udevd", "varrw"],
-    "waits-for" = ["udev-settle"],
-  },
+      "dropbear-keys" = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/dropbear-keys.sh",
+        restart = false,
+        options = "starts-rwfs",
+        "depends-on" = ["early-filesystems"],
+      },
 
-  hostname = {
-    type = "scripted",
-    command = "hostname -F /etc/hostname",
-    restart = false,
-    depends-on = ["early-filesystems"],
-  },
+      "early-filesystems" = {
+        type = "scripted",
+        command = "/usr/libexec/mount-early",
+        restart = false,
+        options = "starts-rwfs",
+      },
 
-  iwd = {
-    type = "process",
-    command = "/usr/libexec/iwd",
-    "depends-on" = [
-      "dbusd",
-      "cfg80211",
-      " hostname"
-    ],
-    logfile = "/var/log/iwd-daemon.log",
-    "smooth-recovery" = "yes",
-  },
+      filesystems = {
+        type = "scripted",
+        command = "/usr/bin/mount -a",
+        restart = false,
+        logfile = "/var/log/dinit-filesystems.log",
+        "options" = "start-interruptible",
+        "start-timeout" = "1200", # 20 minutes
+        "depends-on" = [
+          # "udevd",
+          "varrw"
+        ],
+        #"waits-for" = ["udev-settle"],
+      },
 
-  loadkeys = {
-    type = "scripted",
-    command = "/etc/dinit.d/scripts/loadkeys.sh",
-    restart = false,
-    options = "start-interruptible",
-    "start-timeout" = "1200", # 20 minutes
-    "depends-on" = ["early-filesystems"],
-  },
+      hostname = {
+        type = "scripted",
+        command = "hostname $(cat /etc/hostname)",
+        restart = false,
+        depends-on = ["early-filesystems"],
+      },
 
-  loginready = {
-    type = "internal",
-    restart = false,
-    options = "runs-on-console",
-    "depends-on" = ["filesystems", "loadkeys"],
-    "waits-for" = [
-      "udevd",
-      "syslogd"
-    ],
-  },
-  "netdev-eth0" = {
-    type = "scripted",
-    command = "/usr/bin/ip link set eth0 up",
-    restart = false,
-    depends-on = ["varrw"],
-  },
-  rcboot = {
-    type = "scripted",
-    command = "/etc/dinit.d/scripts/rcboot.sh",
-    logfile = "/var/log/rcboot.log",
-    restart = false,
-    "depends-on" = ["varrw"],
-  },
+      iwd = {
+        type = "process",
+        command = "/usr/libexec/iwd",
+        "depends-on" = [
+          "dbusd",
+          "cfg80211",
+          " hostname"
+        ],
+        logfile = "/var/log/iwd-daemon.log",
+        "smooth-recovery" = "yes",
+      },
 
-  loginready = {
-    type = "internal",
-    restart = false,
-    options = "runs-on-console",
-    "depends-on" = [
-      "filesystems",
-      "loadkeys",
-    ],
-    "waits-for" = [
-      "udevd",
-      "syslogd"
-    ],
-  },
+      loadkeys = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/loadkeys.sh",
+        restart = false,
+        options = "start-interruptible",
+        "start-timeout" = "1200", # 20 minutes
+        "depends-on" = ["early-filesystems"],
+      },
 
-  "netdev-eth0" = {
-    type = "scripted",
-    command = "/usr/bin/ip link set eth0 up",
-    restart = false,
-    "depends-on" = ["varrw"],
-  },
+      loginready = {
+        type = "internal",
+        restart = false,
+        options = "runs-on-console",
+        "depends-on" = ["filesystems"],
+        "waits-for" = [
+          # "udevd",
+          "syslogd",
+          "loadkeys",
+        ],
 
-  rcboot = {
-    type = "scripted",
-    command = "/etc/dinit.d/scripts/rcboot.sh",
-    logfile = "/var/log/rcboot.log",
-    restart = false,
-    "depends-on" = ["varrw"],
-  },
+      },
 
-  recovery = {
-    type = "process",
-    command = "/usr/bin/sulogin",
-    options = "runs-on-console"
-  },
+   "netdev" = {
+        type = "scripted",
+        command = "/usr/bin/ip link set group 0 up",
+        restart = false,
+        "depends-on" = ["varrw"],
+      },
+ 
+      # "netdev-eth0" = {
+      #   type = "scripted",
+      #   command = "/usr/bin/ip link set eth0 up",
+      #   restart = false,
+      #   "depends-on" = ["varrw"],
+      # },
+      #    "netdev-ens2" = {
+      #   type = "scripted",
+      #   command = "/usr/bin/ip link set ens2 up",
+      #   restart = false,
+      #   "depends-on" = ["varrw"],
+      # },
 
-  seatd = {
-    type = "process",
-    command = "/usr/bin/seatd -g seat",
-    logfile = "/var/log/seatd-daemon.log",
-    smooth-recovery = true,
-    "waits-for" = ["udev-settle"],
-    "depends-on" = ["varrw"],
-  },
+      rcboot = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/rcboot.sh",
+        logfile = "/var/log/rcboot.log",
+        restart = false,
+        "depends-on" = ["varrw"],
+      },
 
-  syslogd = {
-    type = "process",
-    "smooth-recovery" = true,
-    command = "/usr/bin/syslogd -n",
-    "pid-file" = "/run/syslogd.pid",
-    options = "starts-log",
-  },
+      recovery = {
+        type = "process",
+        command = "/usr/bin/sulogin",
+        options = "runs-on-console"
+      },
 
-  "udev-settle" = {
-    type = "scripted",
-    command = "/usr/bin/udevadm settle",
-    restart = false,
-    "waits-for" = ["udevd", "udev-trigger"],
-  },
+      seatd = {
+        type = "process",
+        command = "/usr/bin/seatd -g seat",
+        logfile = "/var/log/seatd-daemon.log",
+        smooth-recovery = true,
+        "waits-for" =
+          if useUdev then
+            [
+              "udev-settle",
+              # "mdevd-coldplug",
+            ]
+          else
+            [
+              "mdevd-coldplug",
+            ],
+        "depends-on" =
+          [
+            "varrw",
+            # "udevd"
+            # "mdevd",
+          ]
+          @ (
+            if useUdev then
+              [
+                "udevd"
+              ]
+            else
+              [
+                "mdevd"
+              ]
+          ),
+      },
 
-  "udev-trigger" = {
-    type = "scripted",
-    command = "/usr/bin/udevadm trigger --action=add",
-    logfile = "/run/udev-trigger.log",
-    restart = false,
-    "depends-on" = ["udevd"],
-  },
+      # syslogd = {
+      #   type = "process",
+      #   "smooth-recovery" = true,
+      #   command = "/usr/bin/syslogd -n",
+      #   "pid-file" = "/run/syslogd.pid",
+      #   options = "starts-log",
+      # },
 
-  udevd = {
-    type = "scripted",
-    command = "/usr/bin/udevd --daemon",
-    "stop-command" = "/usr/bin/udevadm control -e",
-    logfile = "/run/udevd.log",
-    restart = false,
-    depends-on = "early-filesystems",
-  },
+      syslogd = {
+        type = "process",
+        "smooth-recovery" = true,
+        command = "/usr/bin/metalog",
+        "depends-on" = [
+          "varrw",
+        ],
+        "pid-file" = "/var/run/syslogd.pid",
+        "log-type" = "buffer",
+        options = "starts-log",
+      },
 
-  varrw = {
-    type = "scripted",
-    command = "/etc/dinit.d/scripts/varrw.sh",
-    restart = false,
-    options = "starts-rwfs",
-    logfile = "/run/rootrw.log",
-    "depends-on" = [
-      "early-filesystems",
-      "udevd",
-    ],
-  },
-}
+      varrw = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/varrw.sh",
+        restart = false,
+        options = "starts-rwfs",
+        logfile = "/run/rootrw.log",
+        "depends-on" = [
+          "early-filesystems",
+          # "udevd",
+        ],
+      },
+    }
+    & (
+      if useUdev then
+        {
+
+          "udev-settle" = {
+            type = "scripted",
+            command = "/usr/bin/udevadm settle",
+            restart = false,
+            "waits-for" = ["udevd", "udev-trigger"],
+          },
+
+          # Trigger udev events for already-present devices.
+          "udev-trigger" = {
+            type = "scripted",
+            command = "/usr/bin/udevadm trigger --action=add",
+            logfile = "/run/udev-trigger.log",
+            restart = false,
+            "depends-on" = ["udevd"],
+          },
+
+          udevd = {
+            type = "scripted",
+            command = "/usr/bin/udevd --daemon",
+            "stop-command" = "/usr/bin/udevadm control -e",
+            logfile = "/run/udevd.log",
+            restart = false,
+            depends-on = "early-filesystems",
+          },
+        }
+      else
+        {
+          mdevd = {
+            type = "process",
+            command = "/usr/bin/mdevd -v3",
+            "depends-on" = [
+              "early-filesystems"
+            ],
+            logfile = "/run/mdevd.log",
+          },
+          "mdevd-coldplug" = {
+            type = "scripted",
+
+            command = "/usr/bin/mdevd-coldplug",
+            "depends-on" = ["mdevd"],
+          },
+        }
+    )
+  )
 in
 
 let services = (std.record.map (fun k v => serviceToString v) _services)
@@ -269,10 +330,15 @@ let scripts = {
             dropbearkey -t ecdsa -f /etc/dropbear/dropbear_ecdsa_host_key
             dropbearkey -t ed25519 -f /etc/dropbear/dropbear_ed25519_host_key
             "%,
+  # "loadkeys.sh" = m%"
+  #           #!/bin/sh -e
+  #           loadkmap < /usr/share/bkeymaps/sv/sv-latin1.bmap
+  #           "%,
   "loadkeys.sh" = m%"
             #!/bin/sh -e
-            loadkmap < /usr/share/bkeymaps/sv/sv-latin1.bmap
+            loadkeys sv-latin1
             "%,
+
   "rcboot.sh" = m%"
             #!/bin/sh -e
             /usr/bin/install -m755 -g messagebus -o messagebus -d /run/dbus

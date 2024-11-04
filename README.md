@@ -1,13 +1,4 @@
 
-* Generate json package info with nickel (python executes nickel-2-json)
-* Parse the json with python
-* Execute parsed python code in a sandbox
-* Sandbox alternatives:
-    ** Call the bwrap binary
-    ** Call the unshare binary
-    ** Call os.unshare in the beginning and execute everything in a sandbox (how about networking?)
-    ** Use multiprocessing module and a different process, in which os.unshare is called, once for every package
-
 * Builds happen im /tmp/work, where the following directories are special:
 ** ./build
 ** ./src 
@@ -16,22 +7,37 @@
 ** ./files
 ** ./out
 
-* Structure of the file:
-** env (environment variables)
-** build inputs
-** sources (passed to the fetch function implemented in python)
-** optionally, any of the phases unpackPhase, patchPhase, configurePhase, buildPhase and installPhase
-** a phase is  a list of commands (strings) that are written to a build script by python and then executed with a bubblewrap wrapper   
-** TODO: host builddeps (tools needed to build package)
-** TODO: deps (libs etc needed to build package)
-** TODO: runtime deps (needed on target to run package)
-** Currently there is only buildInputs, reprecenting host builddeps and deps
-** extraFiles (files to add to /tmp/files)
-** patches (files to add to /tmp/patches)
-
 * Stage 0 packages needed in chroot:
 ** Busybox
-** Musl
-** Llvm
+** Musl, gcc,linux-headers and binutils all combined
 
-In chroot, build make,bison,flex, cmake, linux-headers, musl, llvm, busybox
+In chroot, build make, cmake, linux-headers, musl, llvm, busybox
+
+TODO:
+
+Cross:
+* separate buildInputs into nativeBuildinputs and targetBuildinput
+* install targetBuildinputs to /sysroot-target
+* in buildEnv, also set BUILD_*, HOST_* and *_FOR_BUILD
+* set PKGCONFIG* in buildEnv 
+* always pass --target to clang (at least to CC, CPP, CXX and LD) and figure out when to pass --sysroot. Maybe do this with a cc-wrapper.
+* Always pass --host (and maybe --target?) to autotools
+* Always use a cmake toolchain file
+* Always use a meson cross file
+
+Misc:
+* Bind rather than copy source tarballs
+* Unpack sources once per source and bind-mount the unpacked tree read-only in workdir (so it does not have to be unpacked every timr)
+* create a separate derivation for each sysroot (so only one is needed for every package with the same inputs)
+* Figure out how to handle file conflicts
+* set KCONFIG_NOTIMESTAMP for busybox
+* add ssl-certificates
+
+Long run:
+* Investigate use of clang in stage 0
+
+
+Links:
+
+* Clang cross: https://mcilloni.ovh/2021/02/09/cxx-cross-clang/
+* https://maskray.me/blog/2021-03-28-compiler-driver-and-cross-compilation

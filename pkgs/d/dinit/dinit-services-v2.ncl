@@ -1,4 +1,60 @@
+let Service = {
+  type | String,
+
+  command | String | optional,
+
+  "inittab-id" | optional,
+  "inittab-ine" | optional,
+  logfile | String | optional,
+  options | optional,
+  "pid-file" | String | optional,
+  "ready-notification" | optional,
+  restart | Bool | optional,
+  "smooth-recovery" | Bool | optional,
+  "start-timeout" | String | optional,
+  "stop-command" | String | optional,
+  termsignal | optional,
+  "waits-for" | Array String | default = [],
+  "depends-ms" | Array String | default = [],
+  "depends-on" | Array String | default = [],
+}
+in
+let serviceToString = (fun service =>
+  let _arr_arr = (
+    std.record.map
+      (fun k v =>
+        (
+          if (std.is_string v) then
+            ["%{k} = %{v}"]
+          else if (std.is_array v) then
+            (std.array.map (fun vi => "%{k} = %{vi}") v)
+          else if (std.is_bool v) then
+            ["%{k} = %{std.to_string v}"]
+          else
+            []
+        )
+      )
+      service
+  )
+  in
+  let _arr = std.array.flatten (std.record.values _arr_arr)
+  in
+  std.string.join "\n" _arr
+)
+in
+let _services = {
+  boot | Service
+    = {
+      type = "internal",
+      "depends-ms" = ["tty1", "tty2", "seatd"],
+
+      "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
+    }
+}
+in
+
 let services = {
+  boot2 = serviceToString _services.boot,
   boot = m%"
             type = internal
             depends-ms = tty1

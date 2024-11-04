@@ -15,3 +15,6 @@
       ]
     }
 }
+& (
+  import "dinit-services-v3.ncl"
+)

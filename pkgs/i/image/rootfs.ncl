@@ -6,11 +6,22 @@
       buildInChroot = false,
       utilsProviders = [],
       installPhase = [
-        "cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
+        "echo 'copyinf the rootfs'",
+
+        #"cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
+        "mkdir /tmp/workdir/out/destdir/rootfs",
+        m%"
+        for d in $(ls /tmp/workdir/sysroot);do
+          echo "copying ${d}"
+          cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
+        done
+        "%,
+        "echo 'removing useless stuff'",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+        "echo 'stripping binaries'",
         "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
       ],
     },
@@ -43,8 +54,22 @@
           # "echo p |passwd --stdin",
           # "echo p |passwd user --stdin",
           # For bb:
-          "chpasswd root:p",
-          "chpasswd user:user",
+          m%"
+          chpasswd <<EOF
+          root:p
+          EOF
+          "%,
+          m%"
+          chpasswd <<EOF
+          user:p
+          EOF
+          "%,
+          m%"
+          kver=$(ls /usr/lib/modules)
+          depmod $kver
+          "%,
+
+          "makewhatis /usr/share/man",
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded
           # mkdir /lib/firmware
@@ -63,6 +88,7 @@
         in
 
         [
+          "echo 'copying rootfs to chroot dir'",
           "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
           m%"
   chroot /tmp/workdir/out/destdir/rootfs <<"EOT"

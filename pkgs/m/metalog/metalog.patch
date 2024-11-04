@@ -1,0 +1,23 @@
+diff --git a/configure.ac b/configure.ac
+index 07ba1c3..c4e5a2a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -81,17 +81,7 @@ dnl Options
+ AM_WITH_DMALLOC
+ 
+ WFLAGS=""
+-AC_DEFUN([W_CHECK_CFLAG],[AX_CHECK_COMPILE_FLAG([$1],[WFLAGS="$WFLAGS $1"])])
+-W_CHECK_CFLAG([-Wall])
+-W_CHECK_CFLAG([-W])
+-W_CHECK_CFLAG([-Wcast-qual])
+-W_CHECK_CFLAG([-Wcast-align])
+-W_CHECK_CFLAG([-Wmissing-noreturn])
+-W_CHECK_CFLAG([-Wbad-function-cast])
+-W_CHECK_CFLAG([-Wstrict-prototypes])
+-W_CHECK_CFLAG([-Wwrite-strings])
+-W_CHECK_CFLAG([-Wreturn-type])
+-AC_SUBST(WFLAGS, $WFLAGS)
++
+ 
+ AC_ARG_WITH(unicode,
+ 	[AS_HELP_STRING([--with-unicode],[Enable unicode support (default no)])])
