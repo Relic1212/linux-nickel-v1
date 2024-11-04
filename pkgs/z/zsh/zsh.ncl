@@ -16,12 +16,11 @@
       ],
 
       # copied from OE
-      extraConfigureFlags=[
-          "--with-term-lib='ncursesw ncurses'",
-    "--with-tcsetpgrp",
-    # "--enable-cap",
-    "--enable-multibyte",
+      extraConfigureFlags = [
+        "--with-term-lib='ncursesw ncurses'",
+        "--with-tcsetpgrp",
+        # "--enable-cap",
+        "--enable-multibyte",
       ],
-     
     },
 }

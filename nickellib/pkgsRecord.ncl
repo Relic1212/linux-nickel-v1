@@ -12,21 +12,15 @@ let r = {
     & (import "../pkgs/b/basefiles/basefiles.ncl")
     & (import "../pkgs/b/bash/bash.ncl")
     & (import "../pkgs/b/basu/basu.ncl")
-
     & (import "../pkgs/b/bison/bison.ncl")
     & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
     & (import "../pkgs/b/bmaptool/bmaptool.ncl")
-
     & (import "../pkgs/b/bootstrap/bootstrap-toolchain.ncl")
     & (import "../pkgs/b/bsdutils/bsdutils.ncl")
     & (import "../pkgs/b/bubblewrap/bubblewrap.ncl")
-
-
     & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
-    
     & (import "../pkgs/b/busybox/busybox.ncl")
     & (import "../pkgs/c/ca-certificates/ca-certificates.ncl")
-    
     & (import "../pkgs/c/cairo/cairo.ncl")
     & (import "../pkgs/c/ccache/ccache-bin.ncl")
     & (import "../pkgs/c/ccache/ccache.ncl")
@@ -36,7 +30,6 @@ let r = {
     & (import "../pkgs/c/cmake/cmake.ncl")
     & (import "../pkgs/c/cryptsetup/cryptsetup.ncl")
     & (import "../pkgs/c/curl/curl.ncl")
-
     & (import "../pkgs/d/dash/dash.ncl")
     & (import "../pkgs/d/dbus/dbus.ncl")
     & (import "../pkgs/d/dhcpcd/dhcpcd.ncl")
@@ -45,7 +38,6 @@ let r = {
     & (import "../pkgs/d/dinit/dinit-utils.ncl")
     & (import "../pkgs/d/dinit/dinit-services.ncl")
     & (import "../pkgs/d/dinit/dinit-services-v2.ncl")
-
     & (import "../pkgs/d/dropbear/dropbear.ncl")
     & (import "../pkgs/e/e2fsprogs/e2fsprogs.ncl")
     & (import "../pkgs/e/erofs-utils/erofs-utils.ncl")
@@ -61,7 +53,6 @@ let r = {
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
-
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
     & (import "../pkgs/g/git/git.ncl")
@@ -76,24 +67,17 @@ let r = {
     & (import "../pkgs/i/image/image.ncl")
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/i/iproute2/iproute2.ncl")
-
     & (import "../pkgs/i/iputils/iputils.ncl")
     & (import "../pkgs/i/ivykis/ivykis.ncl")
-
-
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/k/kbd/kbd.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")
     & (import "../pkgs/l/less/less.ncl")
-
     & (import "../pkgs/l/libarchive/libarchive.ncl")
     & (import "../pkgs/l/libbsd/libbsd.ncl")
     & (import "../pkgs/l/libdisplayinfo/libdisplayinfo.ncl")
     & (import "../pkgs/l/libedit/libedit.ncl")
-
     & (import "../pkgs/l/libnet/libnet.ncl")
-
-
     & (import "../pkgs/l/libmd/libmd.ncl")
     & (import "../pkgs/l/libpam/libpam.ncl")
     & (import "../pkgs/l/libcap/libcap.ncl")
@@ -101,21 +85,16 @@ let r = {
     & (import "../pkgs/l/libevdev/libevdev.ncl")
     & (import "../pkgs/l/libinput/libinput.ncl")
     & (import "../pkgs/l/libnotify/libnotify.ncl")
-
     & (import "../pkgs/l/libpng/libpng.ncl")
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
     & (import "../pkgs/l/libffi/libffi.ncl")
     & (import "../pkgs/l/libpsl/libpsl.ncl")
     & (import "../pkgs/l/libestr/libestr.ncl")
     & (import "../pkgs/l/libfastjson/libfastjson.ncl")
-
-
-
     & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
     & (import "../pkgs/l/libtool/libtool.ncl")
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
     & (import "../pkgs/l/libxo/libxo.ncl")
-
     & (import "../pkgs/l/linux-headers/linux-headers.ncl")
     & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
     & (import "../pkgs/l/linux/linux.ncl")
@@ -131,22 +110,16 @@ let r = {
     & (import "../pkgs/m/mako/mako.ncl")
     & (import "../pkgs/m/mandoc/mandoc.ncl")
     & (import "../pkgs/m/mawk/mawk.ncl")
-
-
-
     & (import "../pkgs/m/mdevd/mdevd.ncl")
     & (import "../pkgs/m/mdevd/mdevd-conf.ncl")
-
     & (import "../pkgs/m/mesa/mesa.ncl")
     & (import "../pkgs/m/meson/meson.ncl")
     & (import "../pkgs/m/metalog/metalog.ncl")
-
     & (import "../pkgs/m/musl/musl.ncl")
     & (import "../pkgs/m/musl-fts/musl-fts.ncl")
     & (import "../pkgs/m/musl-getent/musl-getent.ncl")
     & (import "../pkgs/m/musl-obstack/musl-obstack.ncl")
     & (import "../pkgs/m/musl-rpmatch/musl-rpmatch.ncl")
-
     & (import "../pkgs/m/mtdev/mtdev.ncl")
     & (import "../pkgs/m/mtools/mtools.ncl")
     & (import "../pkgs/n/nettle/nettle.ncl")
@@ -157,7 +130,6 @@ let r = {
     & (import "../pkgs/p/pango/pango.ncl")
     & (import "../pkgs/p/perl/perl.ncl")
     & (import "../pkgs/p/pigz/pigz.ncl")
-
     & (import "../pkgs/p/pixman/pixman.ncl")
     & (import "../pkgs/p/pcre2/pcre2.ncl")
     & (import "../pkgs/p/popt/popt.ncl")
@@ -176,11 +148,8 @@ let r = {
     & (import "../pkgs/r/rdfind/rdfind.ncl")
     & (import "../pkgs/r/readline/readline.ncl")
     & (import "../pkgs/r/rsyslog/rsyslog.ncl")
-
     & (import "../pkgs/r/rust/rust.ncl")
     & (import "../pkgs/r/rsync/rsync.ncl")
-
-
     & (import "../pkgs/s/samurai/samurai.ncl")
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
@@ -188,8 +157,6 @@ let r = {
     & (import "../pkgs/s/sndiod/sndiod.ncl")
     & (import "../pkgs/s/syslog-ng/syslog-ng.ncl")
     & (import "../pkgs/s/sysklogd/sysklogd.ncl")
-
-
     & (import "../pkgs/s/systemd/systemd.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
@@ -205,7 +172,6 @@ let r = {
     & (import "../pkgs/x/xz/xz.ncl")
     & (import "../pkgs/z/zlib-ng/zlib-ng.ncl")
     & (import "../pkgs/z/zsh/zsh.ncl")
-   
     & (import "../pkgs/z/zstd/zstd.ncl")
     & {},
 

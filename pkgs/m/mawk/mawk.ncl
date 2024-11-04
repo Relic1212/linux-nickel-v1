@@ -1,11 +1,11 @@
 {
-    lib,
-    mawk|lib.AutotoolsPackage={
-        singleSource={
-            uri="https://invisible-island.net/archives/mawk/mawk-1.3.4-20240905.tgz",
-            sha256sum="a39967927dfa1b0116efc45b944a0f5b5b4c34f8e842a4b223dcdd7b367399e0",
-        },
-                separateBuildDir=false,
-
+  lib,
+  mawk | lib.AutotoolsPackage
+    = {
+      singleSource = {
+        uri = "https://invisible-island.net/archives/mawk/mawk-1.3.4-20240905.tgz",
+        sha256sum = "a39967927dfa1b0116efc45b944a0f5b5b4c34f8e842a4b223dcdd7b367399e0",
+      },
+      separateBuildDir = false,
     }
 }

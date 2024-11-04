@@ -68,7 +68,6 @@
           kver=$(ls /usr/lib/modules)
           depmod $kver
           "%,
-
           "makewhatis /usr/share/man",
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded

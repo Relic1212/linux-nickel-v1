@@ -79,12 +79,10 @@ let _services =
           "varrw",
           "hostname",
           "udevd",
-          
         ],
-        "waits-for"=[
+        "waits-for" = [
           "netdev",
           "udev-settle",
-
         ]
       },
 
@@ -165,16 +163,15 @@ let _services =
           "syslogd",
           "loadkeys",
         ],
-
       },
 
-   "netdev" = {
+      "netdev" = {
         type = "scripted",
         command = "/usr/bin/ip link set group 0 up",
         restart = false,
         "depends-on" = ["varrw"],
       },
- 
+
       # "netdev-eth0" = {
       #   type = "scripted",
       #   command = "/usr/bin/ip link set eth0 up",
