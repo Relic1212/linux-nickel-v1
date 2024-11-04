@@ -32,7 +32,7 @@ echo $CMDLINE
 echo "--------------------------------"
 
 $qemu_run $USB_ARGS $AUDIO_ARGS  \
-	-m 4G -cpu host --enable-kvm \
+	-m 4G -cpu host -smp 4  --enable-kvm \
 	 $DISPLAY_ARGS \
 	--kernel $VMLINUZ \
 	--append  "${CMDLINE}" \
