@@ -168,8 +168,7 @@ in
       mkdir -p /tmp/workdir/src/%{dest}
       unpack_maybe /tmp/workdir/packed/%{x.src.sha256sum}/%{dest} /tmp/workdir/src/%{dest}
       "%
-        ) 
-        # allows setting { src={..}, unpack=false }
+        )
         ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) sourceInputs ) )}
       "%
           ],
@@ -536,7 +535,7 @@ in
       SourceInput = {
         src | Src,
         dest | String | optional,
-        unpack|Bool|optional,
+        unpack | Bool | optional,
       },
     }
 }
