@@ -68,8 +68,7 @@
             "-DCOMPILER_RT_INSTALL_DATA_DIR:PATH=share",
             "-DCOMPILER_RT_INSTALL_INCLUDE_DIR:PATH=include",
             "-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
-                    # "-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
-
+            # "-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
           ],
 
         preConfigurePhase = [
@@ -122,7 +121,7 @@
         ],
       },
 
-################################################################################################
+  ################################################################################################
   clangBaseStage0 | lib.CmakePackage
     =
       let srFlag = "--sysroot=/tmp/workdir/sysroot" in
@@ -220,13 +219,11 @@
             "-DCLANG_DEFAULT_CXX_STDLIB=libc++",
             "-DLIBCXXABI_USE_COMPILER_RT=ON",
             "-DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON",
-                    "-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
-
+            "-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
             "-DLIBCXX_CXX_ABI=libcxxabi",
             "-DLIBCXX_USE_COMPILER_RT=ON",
             "-DLIBCXXABI_USE_LLVM_UNWINDER=ON",
             "-DLLVM_HOST_TRIPLE:STRING=x86_64-unknown-linux-musl",
-
           ],
 
         preConfigurePhase = [
