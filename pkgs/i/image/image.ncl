@@ -31,6 +31,8 @@
           pkgs.curl,
           pkgs.metalog,
           pkgs.zsh,
+          pkgs.fish,
+          pkgs.mawk,
           pkgs.ncurses,
           pkgs.basefiles,
           pkgs.dinit,
@@ -116,7 +118,7 @@
         extraFiles = [
           {
             file = "write_partitions.py",
-            sha256sum = "a25763f62698564d41053bf160d6a12bfc26683de7788e30186d0fbe788709e0"
+            sha256sum = "56ef6bd18eb90551f901243780c235a19aef0500205b691258f67f2f966f98c8"
           }
         ]
       },

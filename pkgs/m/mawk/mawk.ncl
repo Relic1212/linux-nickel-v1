@@ -7,5 +7,9 @@
         sha256sum = "a39967927dfa1b0116efc45b944a0f5b5b4c34f8e842a4b223dcdd7b367399e0",
       },
       separateBuildDir = false,
+      postInstallPhase=[
+        "cd ${DEST}/usr/bin",
+        "ln -s mawk awk",
+      ]
     }
 }

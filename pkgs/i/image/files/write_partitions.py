@@ -44,8 +44,6 @@ if not os.path.isfile(gpt_image):
     label-id: F128C731-03B8-43EA-88F1-4DC7CE8CA229
     device: gpt2.img
     unit: sectors
-    first-lba: 2048
-    last-lba: 12582878
     sector-size: 512
 
     gpt2.img1 : start=        {efi_start}, size=      {efi_size}, type=21686148-6449-6E6F-744E-656564454649, uuid=10D20191-1A5A-4B43-A6E8-0EA129B9B4AA, name="ESP"

@@ -6,6 +6,8 @@ let r = {
   imported =
     {}
     & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
+    & (import "../pkgs/a/appstream/appstream.ncl")
+
     & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
     & (import "../pkgs/a/autoconf/autoconf.ncl")
     & (import "../pkgs/a/automake/automake.ncl")
@@ -45,13 +47,18 @@ let r = {
     & (import "../pkgs/e/expat/expat.ncl")
     & (import "../pkgs/f/fcft/fcft.ncl")
     & (import "../pkgs/f/file/file.ncl")
+    & (import "../pkgs/f/fish/fish.ncl")
+
     & (import "../pkgs/f/findutils/findutils.ncl")
+    & (import "../pkgs/f/flatpak/flatpak.ncl")
     & (import "../pkgs/f/flex/flex.ncl")
     & (import "../pkgs/f/fontconfig/fontconfig.ncl")
     & (import "../pkgs/f/foot/foot.ncl")
     & (import "../pkgs/f/freetype/freetype.ncl")
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
+    & (import "../pkgs/f/fuse/fuse.ncl")
+
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
@@ -64,12 +71,16 @@ let r = {
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
     & (import "../pkgs/h/hwdata/hwdata.ncl")
+    & (import "../pkgs/i/itstool/itstool.ncl")
+
     & (import "../pkgs/i/image/image.ncl")
     & (import "../pkgs/i/iproute2/iproute2.ncl")
     & (import "../pkgs/i/iputils/iputils.ncl")
     & (import "../pkgs/i/ivykis/ivykis.ncl")
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/j/json-c/json-c.ncl")
+    & (import "../pkgs/j/json-glib/json-glib.ncl")
+
     & (import "../pkgs/k/kbd/kbd.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")
     & (import "../pkgs/l/less/less.ncl")
@@ -96,7 +107,14 @@ let r = {
     & (import "../pkgs/l/libtool/libtool.ncl")
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
+    & (import "../pkgs/l/libxml2/libxml2.ncl")
+    & (import "../pkgs/l/libxmlb/libxmlb.ncl")
+
+
     & (import "../pkgs/l/libxo/libxo.ncl")
+
+    & (import "../pkgs/l/libyaml/libyaml.ncl")
+
     & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
     & (import "../pkgs/l/linux-headers/linux-headers.ncl")
     & (import "../pkgs/l/linux/linux.ncl")
@@ -127,6 +145,8 @@ let r = {
     & (import "../pkgs/n/ninja/ninja-stage-1.ncl")
     & (import "../pkgs/o/openresolv/openresolv.ncl")
     & (import "../pkgs/o/openssl/openssl.ncl")
+    & (import "../pkgs/o/ostree/ostree.ncl")
+
     & (import "../pkgs/p/pango/pango.ncl")
     & (import "../pkgs/p/pcre2/pcre2.ncl")
     & (import "../pkgs/p/perl/perl.ncl")

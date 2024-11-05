@@ -86,6 +86,13 @@
         ]
         in
 
+        let 
+        rootauuid="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
+        # rootauuid="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+
+
+        in
+
         [
           "echo 'copying rootfs to chroot dir'",
           "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
@@ -94,7 +101,12 @@
   %{std.string.join "\n" chrootPhase}
   EOT
   "%,
-          "genimage -r image -p a -d /tmp/workdir/out/destdir/rootfs -s /usr/lib/systemd/boot/efi/linuxx64.efi.stub -o /tmp/workdir/out/image"
+          m%"genimage \
+          -r image \
+          -p "%{rootauuid}" \
+          -d /tmp/workdir/out/destdir/rootfs \
+          -s /usr/lib/systemd/boot/efi/linuxx64.efi.stub \
+          -o /tmp/workdir/out/image"%
         ],
     },
 }

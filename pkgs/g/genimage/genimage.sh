@@ -6,7 +6,8 @@ while getopts "d:r:s:k:p:o:" opt; do
 		r) rootname="$OPTARG";;
 		s) efistub="$OPTARG";;
 		k) kerndir="$OPTARG";;
-		p) part="$OPTARG";;
+		p) partauuid="$OPTARG";;
+		q) partbuuid="$OPTARG";;
 		o) outdir="$OPTARG";;
 	esac
 done
@@ -49,11 +50,15 @@ ROOTB_PARTUUID="59364898-e253-49e8-bce4-ddc225293b33"
 
 echo "part= ${part}"
 if  [ "$part" = "a" ] ; then
-	rootpartuuid="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
+	# rootpartuuid="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
+	rootpartuuid="$partauuid"
+
 fi
 
 if [ "$part" = "b" ] ; then
-    rootpartuuid="59364898-e253-49e8-bce4-ddc225293b33"
+    # rootpartuuid="59364898-e253-49e8-bce4-ddc225293b33"
+    rootpartuuid="$partbuuid"
+
 fi
 # echo rootdev=$rootdev
 # echo hashdev=$hashdev
