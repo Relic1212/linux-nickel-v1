@@ -40,13 +40,13 @@ header="${hashimg}.header_info.txt"
 # DDI amd64 root partition. Root A in my system
 # ROOTA_UUID="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
 # HASHA_UUID="2c7357ed-ebd2-46d9-aec1-23d437ec2bf5"
-ROOTA_PARTUUID="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
+# ROOTA_PARTUUID="d17c04a8-398e-4809-92ee-c7f17f4d6fdb"
 
 # DDI amd64 /usr partition. Using this for now as
 # root B
 # ROOTB_UUID="59364898-e253-49e8-bce4-ddc225293b33"
 # HASHB_UUID="77ff5f63-e7b6-4633-acf4-1565b864c0e6"
-ROOTB_PARTUUID="59364898-e253-49e8-bce4-ddc225293b33"
+# ROOTB_PARTUUID="59364898-e253-49e8-bce4-ddc225293b33"
 
 echo "part= ${part}"
 if  [ "$part" = "a" ] ; then
@@ -244,8 +244,8 @@ CMDLINE="dm-mod.create=\"${TABLE}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bi
 echo $CMDLINE >  "$outdir/${rootname}.img.cmdline.txt"
 
 dev_refind="PARTUUID=${rootpartuuid}"
-dev_refind_a="PARTUUID=${ROOTA_PARTUUID}"
-dev_refind_b="PARTUUID=${ROOTB_PARTUUID}"
+dev_refind_a="PARTUUID=${partauuid}"
+dev_refind_b="PARTUUID=${partbuuid}"
 
 
 TABLE_METAL="verity,,,ro,0 \

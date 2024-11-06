@@ -112,7 +112,7 @@
           "dd if=/dev/zero of=/tmp/workdir/out/image/efipart.vfat bs=224M count=1",
           "mkfs.vfat /tmp/workdir/out/image/efipart.vfat",
           "mcopy -s -i  /tmp/workdir/out/image/efipart.vfat  /tmp/workdir/out/efipart/EFI ::/",
-          "python /tmp/workdir/files/write_partitions.py"
+          "python /tmp/workdir/files/write_partitions.py --partauuid aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
         ],
 
         extraFiles = [
