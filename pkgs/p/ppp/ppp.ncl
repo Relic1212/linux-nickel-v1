@@ -1,0 +1,14 @@
+{
+    lib,
+    drvs,
+    ppp|lib.AutotoolsPackage={
+        singleSource={
+            uri="https://download.samba.org/pub/ppp/ppp-2.5.1.tar.gz",
+            sha256sum="733b7f5840b613da4eab0429a5081293275f06ba8b528e1b8eea6964faf0243a",
+        },
+        biDrvs=[
+            drvs.linuxHeaders,
+            drvs.openssl,
+        ]
+    }
+}
