@@ -118,7 +118,7 @@
         extraFiles = [
           {
             file = "write_partitions.py",
-            sha256sum = "56ef6bd18eb90551f901243780c235a19aef0500205b691258f67f2f966f98c8"
+            sha256sum = "b55fd7c30c96b851b2354c6b163a881261fe603dd855cf1db4f0eef353fea087"
           }
         ]
       },
