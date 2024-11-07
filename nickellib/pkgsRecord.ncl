@@ -7,7 +7,6 @@ let r = {
     {}
     & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
     & (import "../pkgs/a/appstream/appstream.ncl")
-
     & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
     & (import "../pkgs/a/autoconf/autoconf.ncl")
     & (import "../pkgs/a/automake/automake.ncl")
@@ -48,7 +47,6 @@ let r = {
     & (import "../pkgs/f/fcft/fcft.ncl")
     & (import "../pkgs/f/file/file.ncl")
     & (import "../pkgs/f/fish/fish.ncl")
-
     & (import "../pkgs/f/findutils/findutils.ncl")
     & (import "../pkgs/f/flatpak/flatpak.ncl")
     & (import "../pkgs/f/flex/flex.ncl")
@@ -58,7 +56,6 @@ let r = {
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
     & (import "../pkgs/f/fuse/fuse.ncl")
-
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
@@ -71,8 +68,8 @@ let r = {
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
     & (import "../pkgs/h/hwdata/hwdata.ncl")
+    & (import "../pkgs/h/hyprland/hyprland.ncl")
     & (import "../pkgs/i/itstool/itstool.ncl")
-
     & (import "../pkgs/i/image/image.ncl")
     & (import "../pkgs/i/iproute2/iproute2.ncl")
     & (import "../pkgs/i/iputils/iputils.ncl")
@@ -80,7 +77,6 @@ let r = {
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
-
     & (import "../pkgs/k/kbd/kbd.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")
     & (import "../pkgs/l/less/less.ncl")
@@ -97,6 +93,7 @@ let r = {
     & (import "../pkgs/l/libffi/libffi.ncl")
     & (import "../pkgs/l/libinput/libinput.ncl")
     & (import "../pkgs/l/libmd/libmd.ncl")
+    & (import "../pkgs/l/libndp/libndp.ncl")
     & (import "../pkgs/l/libnet/libnet.ncl")
     & (import "../pkgs/l/libnotify/libnotify.ncl")
     & (import "../pkgs/l/libpam/libpam.ncl")
@@ -109,12 +106,9 @@ let r = {
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
     & (import "../pkgs/l/libxml2/libxml2.ncl")
     & (import "../pkgs/l/libxmlb/libxmlb.ncl")
-
-
     & (import "../pkgs/l/libxo/libxo.ncl")
-
+    & (import "../pkgs/l/libxslt/libxslt.ncl")
     & (import "../pkgs/l/libyaml/libyaml.ncl")
-
     & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
     & (import "../pkgs/l/linux-headers/linux-headers.ncl")
     & (import "../pkgs/l/linux/linux.ncl")
@@ -131,6 +125,7 @@ let r = {
     & (import "../pkgs/m/mdevd/mdevd-conf.ncl")
     & (import "../pkgs/m/mdevd/mdevd.ncl")
     & (import "../pkgs/m/mesa/mesa.ncl")
+    & (import "../pkgs/m/mesa/mesa2.ncl")
     & (import "../pkgs/m/meson/meson.ncl")
     & (import "../pkgs/m/metalog/metalog.ncl")
     & (import "../pkgs/m/mtdev/mtdev.ncl")
@@ -142,11 +137,12 @@ let r = {
     & (import "../pkgs/m/musl/musl.ncl")
     & (import "../pkgs/n/ncurses/ncurses.ncl")
     & (import "../pkgs/n/nettle/nettle.ncl")
+    & (import "../pkgs/n/networkmanager/networkmanager.ncl")
+    & (import "../pkgs/n/newt/newt.ncl")
     & (import "../pkgs/n/ninja/ninja-stage-1.ncl")
     & (import "../pkgs/o/openresolv/openresolv.ncl")
     & (import "../pkgs/o/openssl/openssl.ncl")
     & (import "../pkgs/o/ostree/ostree.ncl")
-
     & (import "../pkgs/p/pango/pango.ncl")
     & (import "../pkgs/p/pcre2/pcre2.ncl")
     & (import "../pkgs/p/perl/perl.ncl")
@@ -154,6 +150,7 @@ let r = {
     & (import "../pkgs/p/pixman/pixman.ncl")
     & (import "../pkgs/p/pkgconf/pkgconf.ncl")
     & (import "../pkgs/p/popt/popt.ncl")
+    & (import "../pkgs/p/ppp/ppp.ncl")
     & (import "../pkgs/p/python-packages/python-elftools.ncl")
     & (import "../pkgs/p/python-packages/python-flit-core.ncl")
     & (import "../pkgs/p/python-packages/python-gpep517.ncl")
@@ -174,7 +171,11 @@ let r = {
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
     & (import "../pkgs/s/skalibs/skalibs.ncl")
+    & (import "../pkgs/s/slang/slang.ncl")
     & (import "../pkgs/s/sndiod/sndiod.ncl")
+    & (import "../pkgs/s/spirv-headers/spirv-headers.ncl")
+    & (import "../pkgs/s/spirv-llvm-translator/spirv-llvm-translator.ncl")
+    & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/s/sysklogd/sysklogd.ncl")
     & (import "../pkgs/s/syslog-ng/syslog-ng.ncl")

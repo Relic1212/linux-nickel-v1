@@ -11,8 +11,8 @@
       },
       biDrvs = [
         drvs.git,
-       ],
-      extraMesonArgs=[
+      ],
+      extraMesonArgs = [
         "-Dpython=true",
       ]
     }

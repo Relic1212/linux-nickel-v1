@@ -23,10 +23,9 @@
         drvs.fuse,
         drvs.ostree,
         drvs.jsonGlib,
-                drvs.libyaml,
-drvs.appstream,
+        drvs.libyaml,
+        drvs.appstream,
         drvs.libxmlb,
-
       ],
       extraMesonArgs = [
         "-Dseccomp=disabled",

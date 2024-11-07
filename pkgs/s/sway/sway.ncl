@@ -42,13 +42,13 @@
             "mkdir -p ${SRC}/subprojects",
             "mv ${SRC}/wlroots ${SRC}/subprojects",
           ],
-
+          llvmProvider = pkgs.llvmFull,
           biDrvs =
             lib.biMap [
               pkgs.expat,
               pkgs.jsonC,
               pkgs.pcre2,
-              pkgs.mesa,
+              pkgs.mesa2,
               pkgs.wayland,
               pkgs.waylandProtocols,
               pkgs.libelf,
