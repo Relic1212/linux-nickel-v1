@@ -129,6 +129,7 @@ in
           )
         ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then (biMap [pkgs.busybox]) else [],
+        llvmProvider | default = pkgs.llvm,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         biPkgs | Array Dyn | not_exported | default = [],
         biDrvs | Array { name | String, drvHash | String } | not_exported | default = [],
@@ -243,7 +244,7 @@ in
           isLlvm,
           enableCcache,
           separateBuildDir | priority -1000 = false,
-
+          llvmProvider,
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
@@ -251,7 +252,7 @@ in
                 if (stage == -1) then
                   (
                     [pkgs.gnumake, pkgs.musl]
-                    @ (if isLlvm then [pkgs.llvm] else [])
+                    @ (if isLlvm then [llvmProvider] else [])
                     @ (if enableCcache then [pkgs.ccacheBin] else [])
                   )
                 else
@@ -346,6 +347,7 @@ in
           isLlvm,
           stage,
           utilsProviders,
+          llvmProvider,
 
           mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
           baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
@@ -376,7 +378,7 @@ in
                       pkgs.pkgconf,
                       pkgs.musl,
                     ]
-                    @ (if isLlvm then [pkgs.llvm] else [])
+                    @ (if isLlvm then [llvmProvider] else [])
                     @ (if enableCcache then [pkgs.ccacheBin] else [])
                   )
                 else
@@ -431,6 +433,7 @@ in
           isLlvm,
           enableCcache,
           utilsProviders,
+          llvmProvider,
 
           enableParallel,
           cmakeArgs | Array String | default
@@ -467,7 +470,7 @@ in
                       pkgs.pkgconf,
                       pkgs.musl,
                     ]
-                    @ (if isLlvm then [pkgs.llvm] else [])
+                    @ (if isLlvm then [llvmProvider] else [])
                     @ (if enableCcache then [pkgs.ccacheBin] else [])
                     @ (if (generator == "Ninja") then [pkgs.samurai] else [])
                   )

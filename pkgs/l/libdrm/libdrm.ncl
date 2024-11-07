@@ -19,6 +19,24 @@
         lib.biMap [
           pkgs.libpciaccess,
           pkgs.linuxHeaders,
-        ]
+        ],
+
+      preConfigurePhase = [
+        m%"
+          sed -i \
+            's@handle_table_remove@handle_table_remove_libdrm@g' \
+            ${SRC}/amdgpu/handle_table.c
+          "%,
+        m%"
+          sed -i \
+            's@handle_table_remove@handle_table_remove_libdrm@g' \
+            ${SRC}/amdgpu/handle_table.h
+          "%,
+        m%"
+          sed -i \
+            's@handle_table_remove@handle_table_remove_libdrm@g' \
+            ${SRC}/amdgpu/amdgpu_bo.c
+          "%,
+      ]
     }
 }
