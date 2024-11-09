@@ -5,7 +5,7 @@
       extraFiles = [
         {
           file = "basefiles",
-          sha256sum = "68941254efbb18b3662fdd3278f830ed4dfe0ac164473ffe2b5a13c2be789669"
+          sha256sum = "d90eff754c8e52c0ebb9c4b99c7e04e9d542e0c592ec49ad0d5d60427495679b"
         }
       ],
 

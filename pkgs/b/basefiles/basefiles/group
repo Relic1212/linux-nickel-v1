@@ -25,3 +25,4 @@ users:x:999:
 nogroup:x:65534:
 seat:x:202:
 dhcpcd:x:303:dhcpcd
+utmp:x:406:
