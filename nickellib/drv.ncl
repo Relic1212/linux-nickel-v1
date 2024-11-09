@@ -33,10 +33,23 @@ let drvUtils = {
   # ),
   srcInputToHash = fun s => { src = s.src.sha256sum, dest = if (std.record.has_field "dest" s) then s.dest else "" },
 
+  buildInputCmp = (fun bi1 bi2 =>
+    let bi1_prio = std.record.get_or "priority" 0 bi1 in
+    let bi2_prio = std.record.get_or "priority" 0 bi2 in
+    if (bi1_prio == bi2_prio) then
+      std.string.compare bi1.drvHash bi2.drvHash
+    else
+      std.number.compare bi1_prio bi2_prio
+  ),
+
   pkgToDrv = (fun p =>
     let d | DrvSchema
       = {
-        buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
+        # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
+
+        buildInputDrvs =  (std.array.map (fun x => x.drvHash)  (std.array.sort (buildInputCmp) p.buildInputs)),
+
+
         sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
         patchDrvs = p.patches,
         extraFileDrvs = p.extraFiles,
