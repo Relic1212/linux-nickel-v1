@@ -42,7 +42,7 @@ def fetch(uri: str, sha256sum):
         Exception: _description_
         Exception: _description_
     """
-    if uri.startswith("http"):
+    if uri.startswith("http") or uri.startswith("git://"):
         t = "online"
     elif os.path.exists(uri):
         t = "local"
@@ -52,7 +52,7 @@ def fetch(uri: str, sha256sum):
     if t == "local":
         cmd = "cp"
     else:
-        if uri.endswith(".git"):
+        if uri.endswith(".git") or uri.startswith("git://"):
             cmd = "git"
         else:
             cmd = "wget"
@@ -72,17 +72,25 @@ def fetch(uri: str, sha256sum):
     #     network=True,
     #     env=env,
     # )
-    subprocess.run(carr, cwd=packedwd, env=env, check=True)
+    if cmd !="git":
+        subprocess.run(carr, cwd=packedwd, env=env, check=True)
+    else:
+        subprocess.run(["git","clone",uri], cwd=packedwd, env=env, check=True)
+
     dirs = os.listdir(packedwd)
     if len(dirs) != 1:
         raise Exception(f"{uri}")
     fetched = packedwd + "/" + dirs[0]
 
     if cmd == "git":
-        cmd_arr = ["git", "reset" "--hard", sha256sum]
+        ds = os.listdir(packedwd)
+        if len(ds)!=1:
+            raise Exception(f"{packedwd} (fetched with git) does not contain exactly one directory")
+        gitwd= ds[0]
+        cmd_arr = ["git", "reset" ,"--hard", sha256sum]
         bubblewrap.run_in_bwrap_chroot(
             sysroot="/",
-            extra_bwrap_args=bwrap_args + [ "--chdir", "/tmp/workdir/packed" ] + cmd_arr,
+            extra_bwrap_args=bwrap_args + [ "--chdir", f"/tmp/workdir/packed/{gitwd}" ] + cmd_arr,
             network=False,
             env=env
         )
