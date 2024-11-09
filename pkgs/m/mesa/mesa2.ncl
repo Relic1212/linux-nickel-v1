@@ -97,9 +97,8 @@
         "-Dgles2=enabled",
         "-Dgallium-nine=false",
         "-Ddri3=disabled",
-        "-Dopengl=false",
+        "-Dopengl=true",
         "-Dgallium-drivers=radeonsi,virgl,iris,i915,crocus",
-        "-Dllvm=disabled",
         "-Dplatforms='wayland'",
         "-Dcpp_rtti=false",
         "-Dshared-glapi=enabled",
@@ -127,16 +126,6 @@
          "-Dintel-clc=enabled",
               "-Dllvm=enabled",
       ],
-
-
-
-
-
-
-
-
-
-
 
 
         # name|force="mesa2",

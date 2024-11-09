@@ -18,9 +18,9 @@
         drvs.libpsl,
         drvs.libxml2,
         drvs.libyaml,
-                drvs.libxmlb,
-drvs.gperf,
-drvs.gettext,
+        drvs.libxmlb,
+        drvs.gperf,
+        drvs.gettext,
       ],
 
       extraMesonArgs = [

@@ -1,0 +1,34 @@
+{
+    lib,
+    drvs,
+    sbase|lib.MakePackage={
+        singleSource={
+            uri="git://git.suckless.org/sbase",
+            sha256sum="cf1e0643396391213056ebae2f5c25611fc20ea4"
+        },
+        extraMakeInstallArgs=[
+            "PREFIX=/usr"
+        ]
+    }
+}
+&
+{
+    lib,
+    drvs,
+    ubase|lib.MakePackage={
+        singleSource={
+            uri="git://git.suckless.org/ubase",
+            sha256sum="a570a80ed1606bed43118cb148fc83c3ac22b5c1"
+        },
+        extraMakeArgs=[
+            "CC=\"${CC}\"",
+            "CFLAGS=\"${CFLAGS}\"",
+            "LDFLAGS=\"${LDFLAGS}\"",
+
+
+        ],
+        extraMakeInstallArgs=[
+            "PREFIX=/usr"
+        ]
+    }
+}

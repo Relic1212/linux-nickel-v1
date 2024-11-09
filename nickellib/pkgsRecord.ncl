@@ -21,6 +21,8 @@ let r = {
     & (import "../pkgs/b/bubblewrap/bubblewrap.ncl")
     & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
     & (import "../pkgs/b/busybox/busybox.ncl")
+    & (import "../pkgs/b/bzip2/bzip2.ncl")
+
     & (import "../pkgs/c/ca-certificates/ca-certificates.ncl")
     & (import "../pkgs/c/cairo/cairo.ncl")
     & (import "../pkgs/c/ccache/ccache-bin.ncl")
@@ -63,10 +65,14 @@ let r = {
     & (import "../pkgs/g/glib/glib.ncl")
     & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
     & (import "../pkgs/g/gnumake/gnumake.ncl")
+    & (import "../pkgs/g/go/go123.ncl")
+
     & (import "../pkgs/g/go/go14.ncl")
     & (import "../pkgs/g/go/go19.ncl")
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
+    & (import "../pkgs/h/heirloom-ng/heirloom-ng.ncl")
+
     & (import "../pkgs/h/hwdata/hwdata.ncl")
     & (import "../pkgs/h/hyprland/hyprland.ncl")
     & (import "../pkgs/i/itstool/itstool.ncl")
@@ -103,6 +109,8 @@ let r = {
     & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
     & (import "../pkgs/l/libtool/libtool.ncl")
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
+    & (import "../pkgs/l/libxcursor/libxcursor.ncl")
+
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
     & (import "../pkgs/l/libxml2/libxml2.ncl")
     & (import "../pkgs/l/libxmlb/libxmlb.ncl")
@@ -168,6 +176,10 @@ let r = {
     & (import "../pkgs/r/rsyslog/rsyslog.ncl")
     & (import "../pkgs/r/rust/rust.ncl")
     & (import "../pkgs/s/samurai/samurai.ncl")
+    & (import "../pkgs/s/sbase/sbase.ncl")
+
+    & (import "../pkgs/s/sbctl/sbctl.ncl")
+
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
     & (import "../pkgs/s/skalibs/skalibs.ncl")
