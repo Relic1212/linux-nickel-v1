@@ -35,14 +35,28 @@
           },
         ],
         separateBuildDir = false,
-        #isStatic=false,
-        buildEnv = {
-          # _isStatic=false,
-          EXTRA_CFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
-          EXTRA_CXXFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
-          EXTRA_LDFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
-        },
+        isStatic=false,
+        isLlvm=false,
 
+        # buildEnv = {
+        #   # _isStatic=false,
+        #   EXTRA_CFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
+        #   EXTRA_CXXFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
+        #   EXTRA_LDFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
+        # },
+
+        buildEnv|force =
+        # (std.record.map (fun k v => let v2 =(
+        #   if std.is_string v then null 
+        #   else if std.is_array v then null 
+        #   else v) in v2 ) (lib.AutotoolsPackage.buildEnv)) &
+           {
+            _isLlvm|force=false, 
+            _isStatic|force=false,
+          } ,
+
+
+        
         unpackPhase = [
           m%"
         rust_src=$(find  /tmp/workdir/packed -name rustc-1.82.0-src.tar.xz)
@@ -67,53 +81,64 @@
           "export LD_LIBRARY_PATH=\"/tmp/workdir/build/root/lib:/usr/lib:/lib\"",
 
           # "mount -t proc proc /proc",
-          m%"
-        sed -i \
-          's@\[lib\]@#\[lib\]@g'\
-          ${SRC}/compiler/rustc_driver/Cargo.toml
-        "%,
-          m%"
-        sed -i \
-          's@crate-type@#crate-type@g'\
-          ${SRC}/compiler/rustc_driver/Cargo.toml
-        "%,
-          m%"
-        sed -i \
-          's@"-static-pie"@"-static"@g'\
-          ${SRC}/compiler/rustc_codegen_ssa/src/back/linker.rs
-        "%,
+        #   m%"
+        # sed -i \
+        #   's@\[lib\]@#\[lib\]@g'\
+        #   ${SRC}/compiler/rustc_driver/Cargo.toml
+        # "%,
+        #   m%"
+        # sed -i \
+        #   's@crate-type@#crate-type@g'\
+        #   ${SRC}/compiler/rustc_driver/Cargo.toml
+        # "%,
+        #   m%"
+        # sed -i \
+        #   's@"-static-pie"@"-static"@g'\
+        #   ${SRC}/compiler/rustc_codegen_ssa/src/back/linker.rs
+        # "%,
+          "export OPENSSL_NO_VENDOR=1",
           "export RUST_BACKTRACE=1",
         ],
 
         buildPhase = [
-          "echo 'running b 0'",
-          "./x.py build --stage 0 --jobs $(nproc)",
-          "echo 'running b 1'",
-          m%"
-          RUSTC_SYSROOT=/tmp/workdir/src/build/tmp/rust/src/build/x86_64-unknown-linux-musl/stage0-sysroot/ \
-          ./x.py build --keep-stage 0 --stage 1 --jobs $(nproc)
-          "%,
-          "echo 'running b 2'",
-          m%"
-          RUSTC_SYSROOT=/tmp/workdir/src/build/tmp/rust/src/build/x86_64-unknown-linux-musl/stage1-sysroot/ \
-          ./x.py build --keep-stage 1 --stage 2 --jobs $(nproc)
-          "%,
+          "echo 'running b'",
+          "./x.py build  --jobs $(nproc)",
+          # "echo 'running b 1'",
+          # m%"
+          # RUSTC_SYSROOT=/tmp/workdir/src/build/tmp/rust/src/build/x86_64-unknown-linux-musl/stage0-sysroot/ \
+          # ./x.py build --keep-stage 0 --stage 1 --jobs $(nproc)
+          # "%,
+          # "echo 'running b 2'",
+          # m%"
+          # RUSTC_SYSROOT=/tmp/workdir/src/build/tmp/rust/src/build/x86_64-unknown-linux-musl/stage1-sysroot/ \
+          # ./x.py build --keep-stage 1 --stage 2 --jobs $(nproc)
+          # "%,
           "echo 'b done'",
-          "./x.py install",
         ],
-        # llvmProvider=drvs.llvmPic,
+        
+        installPhase = [
+          "DESTDIR=${DEST} ./x.py install",
+        ],
+        llvmProvider=drvs.llvmPic,
         llvmProvider = drvs.llvmFull,
 
         biDrvs = [
           drvs.pythonFull,
           drvs.rsync,
+          drvs.pkgconf,
           drvs.muslShared,
-          drvs.gcc,
           drvs.clangCc,
+          drvs.llvmFullPic,
           drvs.libgccSymlinks,
+          drvs.zlibNgPic,
+          drvs.opensslPic,
+                    drvs.gcc,
+
+          # drvs.gccSymlink,
+          #(drvs.binutils & { priority = 1 }),
           # drvs.libemptyGcc,
           # drvs.libempty,
-          (drvs.llvmConfigStatic & { priority = 1 }),
+         (drvs.llvmConfigStatic & { priority = 1 }),
           (drvs.gnutar & { priority = 1 }),
         ],
         configureFlags = [
@@ -138,7 +163,7 @@
           "--build=%{tgt}",
           "--set=\"target.%{tgt}.llvm-config=/usr/bin/llvm-config\"",
           "--set=\"target.%{tgt}.musl-root=/usr\"",
-          # "--set=\"target.%{tgt}.crt-static=true\"",
+          "--set=\"target.%{tgt}.crt-static=false\"",
         ],
       },
 }
@@ -164,4 +189,17 @@
         drvs.zstd,
       ]
     }
+}
+& 
+
+{
+  lib,
+  gccSymlink | lib.Package={
+  installPhase = [
+        "install -d -m0755 ${DEST}/usr/bin",
+        "cd ${DEST}/usr/bin",
+        "ln -s gcc cc",
+        "ln -s g++ c++",
+      ]
+  }
 }
