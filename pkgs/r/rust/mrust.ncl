@@ -187,7 +187,7 @@
         "cd ${DEST}/usr/lib",
         "ln -s /usr/lib/gcc/x86_64-pc-linux-musl/14.2.0/libgcc.a libgcc_s.a",
         "ln -s /usr/lib/gcc/x86_64-pc-linux-musl/14.2.0/libgcc_eh.a libgcc_eh.a",
-        "ln -s /usr/lib/gcc/x86_64-pc-linux-musl/14.2.0/libgcc_eh.a libgcc.a",
+        "ln -s /usr/lib/gcc/x86_64-pc-linux-musl/14.2.0/libgcc.a libgcc.a",
       ]
     },
 }

@@ -35,8 +35,8 @@
           },
         ],
         separateBuildDir = false,
-        isStatic=false,
-        isLlvm=false,
+        isStatic = false,
+        isLlvm = false,
 
         # buildEnv = {
         #   # _isStatic=false,
@@ -45,18 +45,23 @@
         #   EXTRA_LDFLAGS = ["-no-pie", "-fno-pie", "-fPIC"],
         # },
 
-        buildEnv|force =
-        # (std.record.map (fun k v => let v2 =(
-        #   if std.is_string v then null 
-        #   else if std.is_array v then null 
-        #   else v) in v2 ) (lib.AutotoolsPackage.buildEnv)) &
-           {
-            _isLlvm|force=false, 
-            _isStatic|force=false,
-          } ,
+        buildEnv | force
+          =
+            # (std.record.map (fun k v => let v2 =(
+            #   if std.is_string v then null
+            #   else if std.is_array v then null
+            #   else v) in v2 ) (lib.AutotoolsPackage.buildEnv)) &
+            {
+              _isLlvm | force = false,
+              _isStatic | force = false,
+              #LDFLAGS = ["-static", "--static"],
+              #CFLAGS = ["-static", "--static"],
+              #CXXFLAGS = ["-static", "--static"],
+              # LDFLAGS = ["-static-libgcc"],
+              # CFLAGS = ["-static-libgcc"],
+              # CXXFLAGS = ["-static-libgcc"],
+            },
 
-
-        
         unpackPhase = [
           m%"
         rust_src=$(find  /tmp/workdir/packed -name rustc-1.82.0-src.tar.xz)
@@ -80,22 +85,21 @@
           #   "rsync -avz ${SRC}/local2/cargo/ /tmp/workdir/build/root/",
           "export LD_LIBRARY_PATH=\"/tmp/workdir/build/root/lib:/usr/lib:/lib\"",
 
-          # "mount -t proc proc /proc",
-        #   m%"
-        # sed -i \
-        #   's@\[lib\]@#\[lib\]@g'\
-        #   ${SRC}/compiler/rustc_driver/Cargo.toml
-        # "%,
-        #   m%"
-        # sed -i \
-        #   's@crate-type@#crate-type@g'\
-        #   ${SRC}/compiler/rustc_driver/Cargo.toml
-        # "%,
-        #   m%"
-        # sed -i \
-        #   's@"-static-pie"@"-static"@g'\
-        #   ${SRC}/compiler/rustc_codegen_ssa/src/back/linker.rs
-        # "%,
+          #   m%"
+          # sed -i \
+          #   's@\[lib\]@#\[lib\]@g'\
+          #   ${SRC}/compiler/rustc_driver/Cargo.toml
+          # "%,
+          #   m%"
+          # sed -i \
+          #   's@crate-type@#crate-type@g'\
+          #   ${SRC}/compiler/rustc_driver/Cargo.toml
+          # "%,
+          #   m%"
+          # sed -i \
+          #   's@"-static-pie"@"-static"@g'\
+          #   ${SRC}/compiler/rustc_codegen_ssa/src/back/linker.rs
+          # "%,
           "export OPENSSL_NO_VENDOR=1",
           "export RUST_BACKTRACE=1",
         ],
@@ -115,12 +119,10 @@
           # "%,
           "echo 'b done'",
         ],
-        
+
         installPhase = [
           "DESTDIR=${DEST} ./x.py install",
         ],
-        llvmProvider=drvs.llvmPic,
-        llvmProvider = drvs.llvmFull,
 
         biDrvs = [
           drvs.pythonFull,
@@ -132,16 +134,17 @@
           drvs.libgccSymlinks,
           drvs.zlibNgPic,
           drvs.opensslPic,
-                    drvs.gcc,
+          drvs.gcc,
 
           # drvs.gccSymlink,
           #(drvs.binutils & { priority = 1 }),
           # drvs.libemptyGcc,
           # drvs.libempty,
-         (drvs.llvmConfigStatic & { priority = 1 }),
+          (drvs.llvmConfigStatic & { priority = 1 }),
           (drvs.gnutar & { priority = 1 }),
         ],
         configureFlags = [
+          "--enable-verbose-configure",
           "--prefix=/usr",
           "--disable-docs",
           "--enable-extended",
@@ -162,6 +165,7 @@
           "--host=%{tgt}",
           "--build=%{tgt}",
           "--set=\"target.%{tgt}.llvm-config=/usr/bin/llvm-config\"",
+          "--set=\"target.%{tgt}.llvm-libunwind=system\"",
           "--set=\"target.%{tgt}.musl-root=/usr\"",
           "--set=\"target.%{tgt}.crt-static=false\"",
         ],
@@ -190,16 +194,15 @@
       ]
     }
 }
-& 
-
-{
+& {
   lib,
-  gccSymlink | lib.Package={
-  installPhase = [
+  gccSymlink | lib.Package
+    = {
+      installPhase = [
         "install -d -m0755 ${DEST}/usr/bin",
         "cd ${DEST}/usr/bin",
         "ln -s gcc cc",
         "ln -s g++ c++",
       ]
-  }
+    }
 }

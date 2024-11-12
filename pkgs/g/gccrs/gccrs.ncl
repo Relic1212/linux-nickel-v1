@@ -468,7 +468,7 @@
         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" | force = false,
         "-DLLVM_TARGETS_TO_BUILD" | force = "'X86'"
       },
-      llvmProvider=drvs.llvmPic,
+      llvmProvider = drvs.llvmPic,
       buildEnv = {
         EXTRA_CFLAGS = ["-fPIC"],
         EXTRA_CXXFLAGS = ["-fPIC"],
