@@ -9,7 +9,6 @@
       },
       configurePhase = [
         "export HOME=/tmp",
-
         "export CC=\"${CC} -static --static \"",
         "export DESTDIR=${DEST}",
         "cd ${SRC}",
@@ -34,8 +33,7 @@
         ]
     }
 }
-&
-{
+& {
   lib,
   pkgs,
   "go-1.22" | lib.Package
@@ -46,7 +44,6 @@
       },
       configurePhase = [
         "export HOME=/tmp",
-
         "export CC=\"${CC} -static --static \"",
         "export DESTDIR=${DEST}",
         "cd ${SRC}",
@@ -71,8 +68,7 @@
         ]
     }
 }
-&
-{
+& {
   lib,
   pkgs,
   "go-1.21" | lib.Package

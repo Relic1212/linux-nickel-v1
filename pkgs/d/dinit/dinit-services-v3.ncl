@@ -127,7 +127,9 @@ let _services =
 
       hostname = {
         type = "scripted",
-        command = "hostname $(cat /etc/hostname)",
+        # command = m%"/usr/bin/hostname \$(cat /etc/hostname)"%,
+        command = m%"/usr/bin/hostname linux"%,
+
         restart = false,
         depends-on = ["early-filesystems"],
       },

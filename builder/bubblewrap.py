@@ -37,6 +37,8 @@ def run_in_bwrap_chroot(
             "/dev",
             "--tmpfs",
             "/tmp",
+            "--proc",
+            "/proc"
         ]
         + net_args
         + extra_bwrap_args
@@ -79,6 +81,8 @@ def get_bwrap_wrap(
             "/dev",
             "--tmpfs",
             "/tmp",
+             "--proc",
+            "/proc"
         ]
         + net_args
         + extra_bwrap_args

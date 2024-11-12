@@ -63,33 +63,30 @@
   mesa,
   lib,
   mesa2 | lib.MesonPackage
-    =
-      {
+    = {
 
-         biDrvs =
-        [
-          drvs.libelf,
-          drvs.libdrm,
-          drvs.zlibNg,
-          drvs.pythonMako,
-          drvs.pythonPackaging,
-          drvs.pythonMarkupsafe,
-          drvs.libpciaccess,
-          drvs.libffi,
-          drvs.bison,
-          drvs.flex,
-          drvs.wayland,
-          drvs.waylandProtocols,
-          drvs.linuxHeaders,
-          drvs.m4,
-
-            drvs.git,
-              drvs.pyyaml,
-              drvs.llvmFull,
-              drvs.llvmConfigStatic,
-              drvs.spirvTools,
-              drvs.spirvLlvmTranslator,
-        ],
+      biDrvs = [
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.zlibNg,
+        drvs.pythonMako,
+        drvs.pythonPackaging,
+        drvs.pythonMarkupsafe,
+        drvs.libpciaccess,
+        drvs.libffi,
+        drvs.bison,
+        drvs.flex,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.linuxHeaders,
+        drvs.m4,
+        drvs.git,
+        drvs.pyyaml,
+        drvs.llvmFull,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+      ],
       extraMesonArgs = [
         "-Dgles1=disabled",
         "-Dxmlconfig=disabled",
@@ -123,31 +120,30 @@
         "-Dosmesa=false",
         "-Dvulkan-beta=false",
         "-Degl-native-platform=drm",
-         "-Dintel-clc=enabled",
-              "-Dllvm=enabled",
+        "-Dintel-clc=enabled",
+        "-Dllvm=enabled",
       ],
 
-
-        # name|force="mesa2",
-        singleSource | priority 1
-          = {
-            uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-24.2.6/mesa-mesa-24.2.6.tar.gz",
-            sha256sum = "5456ca326e84b5dda0dd93e91337ee337ac79cba15ee9d98bfae1002c24cfce1",
-          },
-         
-        extraEnv = {
-          PATH = "/usr/libexec:${PATH}"
+      # name|force="mesa2",
+      singleSource | priority 1
+        = {
+          uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-24.2.6/mesa-mesa-24.2.6.tar.gz",
+          sha256sum = "5456ca326e84b5dda0dd93e91337ee337ac79cba15ee9d98bfae1002c24cfce1",
         },
-        patches | priority 1
-          = [
-            {
-              file = "0.patch",
-              sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
-            },
-          ],
-        preConfigurePhase | priority 1
-          = [
-            m%"
+
+      extraEnv = {
+        PATH = "/usr/libexec:${PATH}"
+      },
+      patches | priority 1
+        = [
+          {
+            file = "0.patch",
+            sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
+          },
+        ],
+      preConfigurePhase | priority 1
+        = [
+          m%"
           sed -i 's@main()@print()@g' ${SRC}/bin/install_megadrivers.py
           sed -i 's@def print()@def main()@g' ${SRC}/bin/install_megadrivers.py
 
@@ -156,16 +152,14 @@
           done
 
           "%,
-            m%"
+          m%"
           sed -i \
             "s@name_suffix : 'so',@name_suffix : 'a',@g" \
             ${SRC}/src/gallium/targets/dri/meson.build
           "%
-          ],
-        baseBuildinputPackages = std.array.filter (fun v => v.drvHash != drvs.llvm.drvHash) lib.MesonPackage.baseBuildinputPackages,
-
-        
-      },
+        ],
+      baseBuildinputPackages = std.array.filter (fun v => v.drvHash != drvs.llvm.drvHash) lib.MesonPackage.baseBuildinputPackages,
+    },
 
   llvmConfigStatic | lib.Package
     = {

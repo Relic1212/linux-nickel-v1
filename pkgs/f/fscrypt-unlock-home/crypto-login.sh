@@ -102,12 +102,13 @@ do_bind(){
     done
 
     # Delete previous password hash if it exists
+    ( findmnt /etc/shadow > /dev/null && umount /etc/shadow ) || true
     rm -rf /run/shadow
 
     # Store the session password hash
-    cp -p /etc/shadow /run/shadow
-    sed -i -e  "s/^\($USER_NAME:\)[^:]*\(:.*\)$/\1$PASS\2/" /run/shadow
-    findmnt /etc/shadow > /dev/null ||    mount --bind /run/shadow /etc/shadow
+    sed -e  "s/^\($USER_NAME:\)[^:]*\(:.*\)$/\1$PASS\2/" /etc/shadow > /run/shadow
+    
+    mount --bind /run/shadow /etc/shadow
     
     if [ ! -d  "/home/.shadow/$USER_NAME/nix" ]; then 
         mkdir  "/home/.shadow/$USER_NAME/nix" 

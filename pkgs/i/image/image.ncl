@@ -1,7 +1,8 @@
 (import "rootfs.ncl")
 & {
   lib,
-  pkgs,
+  drvs,
+  drvs,
   _rootfs,
   _rootfs2,
   busybox,
@@ -14,70 +15,82 @@
         "ln -s /usr/bin/dash sh",
       ]
     },
+  emptyStty | lib.Package
+    = {
+      installPhase = [
+        "install -d -m0755 ${DEST}/bin",
+        "cd ${DEST}/bin",
+        "ln -s /usr/bin/true stty",
+      ]
+    },
   baseBaseRootfs = (
     _rootfs
     & {
       name = "base-base-rootfs",
-      biDrvs =
-        lib.biMap [
-          # base
-          # pkgs.busyboxFinal,
-          pkgs.bsdutils,
-          pkgs.dash,
-          pkgs.dashSh,
-          pkgs.iproute2,
-          pkgs.kbd,
-          pkgs.pigz,
-          pkgs.curl,
-          pkgs.metalog,
-          pkgs.zsh,
-          pkgs.fish,
-          pkgs.mawk,
-          pkgs.ncurses,
-          pkgs.basefiles,
-          pkgs.dinit,
-          pkgs.dinitServicesV3,
-          pkgs.dinitUtils,
-          pkgs.shadow,
-          pkgs.utilLinux,
-          pkgs.linux,
-          # pkgs.linuxFirmware,
-          pkgs.linuxFirmwareSmaller,
-          pkgs.eudev,
-          # pkgs.mdevd,
-          # pkgs.mdevdConf,
-          pkgs.dbus,
-          pkgs.bkeymaps,
-          pkgs.kmod,
-          pkgs.mandoc,
-          pkgs.less,
-          # pkgs.checkFirmware,
+      biDrvs = [
+        # base
+        # drvs.busyboxFinal,
+        # drvs.bsdutils,
+        drvs.sbase,
+        (drvs.emptyStty & { priority = -1 }),
+        (drvs.ubase & { priority = -1 }),
+        drvs.vis,
+        drvs.bc,
+        drvs.dash,
+        drvs.dashSh,
+        drvs.iproute2,
+        drvs.kbd,
+        drvs.pigz,
+        drvs.curl,
+        drvs.metalog,
+        drvs.zsh,
+        drvs.fish,
+        drvs.mawk,
+        drvs.ncurses,
+        drvs.basefiles,
+        drvs.dinit,
+        drvs.dinitServicesV3,
+        drvs.dinitUtils,
+        drvs.shadow,
+        drvs.utilLinux,
+        drvs.linux,
+        # drvs.linuxFirmware,
+        drvs.linuxFirmwareSmaller,
+        drvs.eudev,
+        # drvs.mdevd,
+        # drvs.mdevdConf,
+        drvs.dbus,
+        drvs.bkeymaps,
+        drvs.kmod,
+        drvs.mandoc,
+        drvs.less,
+        # drvs.checkFirmware,
 
-          # net
-          pkgs.dhcpcd,
-          pkgs.iwd,
-          pkgs.dropbear,
-          pkgs.openresolv,
-          pkgs.caCertificates,
+        # net
+        drvs.dhcpcd,
+        drvs.iwd,
+        drvs.dropbear,
+        drvs.openresolv,
+        drvs.caCertificates,
 
-          # enc
-          pkgs.e2fsprogs,
-          pkgs.fscryptUnlockHome,
-          pkgs.openssl,
-          pkgs.fscrypt,
+        # enc
+        drvs.e2fsprogs,
+        drvs.fscryptUnlockHome,
+        drvs.openssl,
+        drvs.fscrypt,
 
-          # gui
-          pkgs.seatd,
-          pkgs.sway,
-          pkgs.libinput,
-          pkgs.libxkbcommon,
-          pkgs.xkeyboardConfig,
-          pkgs.xdgRuntimeRun,
-          pkgs.foot,
-          pkgs.fontconfig,
-          pkgs.ttfCroscore,
-          pkgs.sndiod,
-        ]
+        # gui
+        drvs.seatd,
+        drvs.sway,
+        drvs.libinput,
+        drvs.libxkbcommon,
+        drvs.xkeyboardConfig,
+        drvs.xdgRuntimeRun,
+        drvs.foot,
+        drvs.fontconfig,
+        drvs.ttfCroscore,
+        drvs.sndiod,
+      ]
     }
   ),
   baseImage =
@@ -88,14 +101,14 @@
       biDrvs =
         lib.biMap [
           baseBaseRootfs,
-          pkgs.erofsUtils,
-          pkgs.mtools,
-          pkgs.genimage,
-          pkgs.cryptsetup,
-          pkgs.systemdBoot,
-          pkgs.llvm, # objdump
-          pkgs.pythonFull,
-          pkgs.utilLinux,
+          drvs.erofsUtils,
+          drvs.mtools,
+          drvs.genimage,
+          drvs.cryptsetup,
+          drvs.systemdBoot,
+          drvs.llvm, # objdump
+          drvs.pythonFull,
+          drvs.utilLinux,
         ]
     },
 
@@ -125,14 +138,13 @@
 
   aarch64Image | lib.Package
     = {
-      biDrvs =
-        lib.biMap [
-          pkgs.busyboxAarch64,
-          pkgs.linuxAarch64,
-          pkgs.basefiles,
-          pkgs.erofsUtils,
-          pkgs.basefilesAarch64,
-        ],
+      biDrvs = [
+        drvs.busyboxAarch64,
+        drvs.linuxAarch64,
+        drvs.basefiles,
+        drvs.erofsUtils,
+        drvs.basefilesAarch64,
+      ],
       buildPhase = [
         m%"
           mkfs.erofs \

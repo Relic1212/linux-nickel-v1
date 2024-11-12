@@ -32,15 +32,15 @@
       makeTargets = [
         "sbctl"
       ],
-       buildPhase = [
+      buildPhase = [
         m%"
         go build  -ldflags="-extldflags -static -X github.com/foxboron/sbctl.Version=0.15.4" -o sbctl ./cmd/sbctl
 
-        
+
         "%
       ],
 
-      installPhase=[
+      installPhase = [
         m%"
         export DESTDIR=$DEST
         export BINDIR=/usr/bin
@@ -49,11 +49,11 @@
         export PROGNM=sbctl
 
         install -Dm755 sbctl -t ${DESTDIR}${BINDIR}
-       
+
         install -Dm755 contrib/kernel-install/91-sbctl.install ${DESTDIR}${LIBDIR}/kernel/install.d/91-sbctl.install
         install -Dm644 LICENSE -t ${DESTDIR}${SHRDIR}/licenses/${PROGNM}
-        
-        
+
+
         "%
       ]
     }

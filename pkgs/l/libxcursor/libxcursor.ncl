@@ -10,7 +10,7 @@
       biDrvs = [
         drvs.xorgMacros,
         drvs.xorgproto,
-         drvs.xtrans,
+        drvs.xtrans,
         drvs.libxcb,
         drvs.xcbProto,
         drvs.libxau,
@@ -20,7 +20,7 @@
       ]
     }
 }
-&{
+& {
   lib,
   drvs,
   libxfixes | lib.AutomakePackage
@@ -32,7 +32,7 @@
       biDrvs = [
         drvs.xorgMacros,
         drvs.xorgproto,
-         drvs.xtrans,
+        drvs.xtrans,
         drvs.libxcb,
         drvs.xcbProto,
         drvs.libxau,
@@ -41,8 +41,7 @@
       ]
     }
 }
-& 
-{
+& {
   lib,
   drvs,
   xorgproto | lib.AutomakePackage

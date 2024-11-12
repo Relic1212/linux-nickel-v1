@@ -1,6 +1,7 @@
 # FROM 
 FROM docker.io/library/alpine:edge
 
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk upgrade
 
 # RUN apk add gcc make linux-headers alpine-sdk ncurses-dev flex bison ccache python3

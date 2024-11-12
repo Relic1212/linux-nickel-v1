@@ -118,14 +118,13 @@
         "-DNO_SYSTEMD" = true,
         "-DNO_XWAYLAND" = true,
       },
-       preConfigurePhase = [
+      preConfigurePhase = [
         m%"
           sed -i \
             's@OpenGL::GL@OpenGL::GLES2@g' \
             ${SRC}/CMakeLists.txt
 
           "%,
-      
       ]
     },
 
@@ -394,7 +393,7 @@
         }
       ],
 
-      biDrvs=[
+      biDrvs = [
         drvs.pythonFull,
       ]
     }
@@ -414,42 +413,38 @@
       ]
     }
 }
-&
-(
-  let symbols=[
-#      "zwp_linux_buffer_params_v1_interface",
-#  "zwp_linux_dmabuf_feedback_v1_interface",
-#  "wl_callback_interface",
-#  "wl_registry_interface",
-#  "zwp_linux_dmabuf_v1_interface",
-#  "wl_surface_interface",
-#  "wl_region_interface",
-#  "wl_buffer_interface",
-#  "wl_shm_pool_interface",
-#  "wl_data_source_interface",
-#  "wl_data_device_interface",
-#  "wl_shell_surface_interface",
-#  "wl_pointer_interface",
-#  "wl_keyboard_interface",
-#  "wl_touch_interface",
-#  "wl_subsurface_interface",
-#  "wl_display_interface",
-#  "wl_compositor_interface",
-#  "wl_shm_interface",
-#  "wl_data_offer_interface",
-"wl",
-"zwp",
-"WL",
+& (
+  let symbols = [
+    #      "zwp_linux_buffer_params_v1_interface",
+    #  "zwp_linux_dmabuf_feedback_v1_interface",
+    #  "wl_callback_interface",
+    #  "wl_registry_interface",
+    #  "zwp_linux_dmabuf_v1_interface",
+    #  "wl_surface_interface",
+    #  "wl_region_interface",
+    #  "wl_buffer_interface",
+    #  "wl_shm_pool_interface",
+    #  "wl_data_source_interface",
+    #  "wl_data_device_interface",
+    #  "wl_shell_surface_interface",
+    #  "wl_pointer_interface",
+    #  "wl_keyboard_interface",
+    #  "wl_touch_interface",
+    #  "wl_subsurface_interface",
+    #  "wl_display_interface",
+    #  "wl_compositor_interface",
+    #  "wl_shm_interface",
+    #  "wl_data_offer_interface",
+    "wl",
+    "zwp",
+    "WL",
   ]
-  in 
-  let 
-  rr=(std.array.map (fun v => "sed -i 's@%{v}@%{v}_wayland_private@g' \"${f}\"") symbols)
   in
-  let 
-  r="\t" ++ (std.string.join "\n\t" rr )
+  let rr = (std.array.map (fun v => "sed -i 's@%{v}@%{v}_wayland_private@g' \"${f}\"") symbols)
   in
-  let 
-  c=  m%"
+  let r = "\t" ++ (std.string.join "\n\t" rr)
+  in
+  let c = m%"
         rm -rf ${SRC}/.gitlab
         for f in $(find ${SRC} -type f);do
           sed -i 's@wl@wl_wayland_private@g' "${f}"
@@ -464,24 +459,26 @@
 
         done
         "%
-        in
+  in
   {
     drvs,
     wayland,
     waylandProtocols,
 
-    wayland2=wayland & {
-      preConfigurePhase=[
-      c
-      ]
-    },
+    wayland2 =
+      wayland
+      & {
+        preConfigurePhase = [
+          c
+        ]
+      },
 
-    waylandProtocols2=waylandProtocols & {
-      preConfigurePhase=[
-      c
-      ]
-    }
-
+    waylandProtocols2 =
+      waylandProtocols
+      & {
+        preConfigurePhase = [
+          c
+        ]
+      }
   }
-
 )

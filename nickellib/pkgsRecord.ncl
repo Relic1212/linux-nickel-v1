@@ -13,6 +13,7 @@ let r = {
     & (import "../pkgs/b/basefiles/basefiles.ncl")
     & (import "../pkgs/b/bash/bash.ncl")
     & (import "../pkgs/b/basu/basu.ncl")
+    & (import "../pkgs/b/bc/bc.ncl")
     & (import "../pkgs/b/bison/bison.ncl")
     & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
     & (import "../pkgs/b/bmaptool/bmaptool.ncl")
@@ -22,7 +23,6 @@ let r = {
     & (import "../pkgs/b/busybox/busybox-stage-0.ncl")
     & (import "../pkgs/b/busybox/busybox.ncl")
     & (import "../pkgs/b/bzip2/bzip2.ncl")
-
     & (import "../pkgs/c/ca-certificates/ca-certificates.ncl")
     & (import "../pkgs/c/cairo/cairo.ncl")
     & (import "../pkgs/c/ccache/ccache-bin.ncl")
@@ -58,6 +58,7 @@ let r = {
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
     & (import "../pkgs/f/fuse/fuse.ncl")
+    & (import "../pkgs/g/gccrs/gccrs.ncl")
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
@@ -66,13 +67,12 @@ let r = {
     & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
     & (import "../pkgs/g/gnumake/gnumake.ncl")
     & (import "../pkgs/g/go/go123.ncl")
-
     & (import "../pkgs/g/go/go14.ncl")
     & (import "../pkgs/g/go/go19.ncl")
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
+    & (import "../pkgs/h/heirloom/heirloom.ncl")
     & (import "../pkgs/h/heirloom-ng/heirloom-ng.ncl")
-
     & (import "../pkgs/h/hwdata/hwdata.ncl")
     & (import "../pkgs/h/hyprland/hyprland.ncl")
     & (import "../pkgs/i/itstool/itstool.ncl")
@@ -110,7 +110,6 @@ let r = {
     & (import "../pkgs/l/libtool/libtool.ncl")
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
     & (import "../pkgs/l/libxcursor/libxcursor.ncl")
-
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
     & (import "../pkgs/l/libxml2/libxml2.ncl")
     & (import "../pkgs/l/libxmlb/libxmlb.ncl")
@@ -170,6 +169,7 @@ let r = {
     & (import "../pkgs/p/python-packages/python-setuptools.ncl")
     & (import "../pkgs/p/python/python-full.ncl")
     & (import "../pkgs/p/python/python.ncl")
+    & (import "../pkgs/q/qt/qtbase.ncl")
     & (import "../pkgs/r/rdfind/rdfind.ncl")
     & (import "../pkgs/r/readline/readline.ncl")
     & (import "../pkgs/r/rsync/rsync.ncl")
@@ -177,9 +177,7 @@ let r = {
     & (import "../pkgs/r/rust/rust.ncl")
     & (import "../pkgs/s/samurai/samurai.ncl")
     & (import "../pkgs/s/sbase/sbase.ncl")
-
     & (import "../pkgs/s/sbctl/sbctl.ncl")
-
     & (import "../pkgs/s/seatd/seatd.ncl")
     & (import "../pkgs/s/shadow/shadow.ncl")
     & (import "../pkgs/s/skalibs/skalibs.ncl")
@@ -197,6 +195,7 @@ let r = {
     & (import "../pkgs/t/ttf-croscore/ttf-croscore.ncl")
     & (import "../pkgs/u/unzip/unzip.ncl")
     & (import "../pkgs/u/util-linux/util-linux.ncl")
+    & (import "../pkgs/v/vis/vis.ncl")
     & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
     & (import "../pkgs/w/wayland/wayland.ncl")
     & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")

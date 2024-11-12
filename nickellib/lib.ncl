@@ -132,7 +132,7 @@ in
         llvmProvider | default = pkgs.llvm,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         biPkgs | Array Dyn | not_exported | default = [],
-        biDrvs | Array { name | String, drvHash | String } | not_exported | default = [],
+        biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
