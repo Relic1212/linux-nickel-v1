@@ -21,11 +21,11 @@
         uri = "git://git.suckless.org/ubase",
         sha256sum = "a570a80ed1606bed43118cb148fc83c3ac22b5c1"
       },
-        extraMakeArgs = [
-          "CC=\"${CC}\"",
-          "CFLAGS=\"${CFLAGS}\"",
-          "LDFLAGS=\"${LDFLAGS}\"",
-        ],
+      extraMakeArgs = [
+        "CC=\"${CC}\"",
+        "CFLAGS=\"${CFLAGS}\"",
+        "LDFLAGS=\"${LDFLAGS}\"",
+      ],
       extraMakeInstallArgs = [
         "PREFIX=/usr"
       ]

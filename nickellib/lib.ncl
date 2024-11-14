@@ -364,7 +364,7 @@ in
             = [
               "meson install --destdir ${DEST}"
             ],
-
+          pythonProvider | default = pkgs.pythonFull,
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
@@ -374,7 +374,7 @@ in
                     [
                       pkgs.meson,
                       pkgs.samurai,
-                      pkgs.pythonFull,
+                      pythonProvider,
                       pkgs.pkgconf,
                       pkgs.musl,
                     ]

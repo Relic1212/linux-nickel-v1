@@ -1,0 +1,133 @@
+
+
+diff --git a/examples/library/meson.build b/examples/library/meson.build
+index 2313ffd..c5f3c9b 100644
+--- a/examples/library/meson.build
++++ b/examples/library/meson.build
+@@ -5,7 +5,7 @@ libsources = ['gi-sample.c', 'gi-sample.h']
+ gnome = import('gnome')
+ gobj_dep = dependency('gobject-2.0')
+ 
+-girlib = shared_library(
++girlib = library(
+   'gi-sample',
+   sources : libsources,
+   dependencies : [gobj_dep],
+diff --git a/girepository/meson.build b/girepository/meson.build
+index 786749a..d746725 100644
+--- a/girepository/meson.build
++++ b/girepository/meson.build
+@@ -173,7 +173,7 @@ lib_version_micro = lib_version_arr[2].to_int()
+ osx_current = lib_version_major + 1
+ lib_osx_version = [osx_current, '@0@.@1@'.format(osx_current, lib_version_minor)]
+ 
+-girepo_lib = shared_library('girepository-1.0',
++girepo_lib = library('girepository-1.0',
+   sources: girepo_sources,
+   include_directories : configinc,
+   c_args: gi_hidden_visibility_cflags + ['-DG_IREPOSITORY_COMPILATION'] +
+diff --git a/tests/meson.build b/tests/meson.build
+index 22b402b..4652c13 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -79,7 +79,7 @@ if cc.get_id() != 'msvc'
+   ])
+ endif
+ 
+-everything_lib = shared_library('everything-1.0',
++everything_lib = library('everything-1.0',
+   sources: test_everything_sources,
+   include_directories : configinc,
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+@@ -93,7 +93,7 @@ if cc.get_id() != 'msvc'
+   ])
+ endif
+ 
+-gimarshallingtests_lib = shared_library('gimarshallingtests-1.0',
++gimarshallingtests_lib = library('gimarshallingtests-1.0',
+   sources: test_marshalling_sources,
+   include_directories : configinc,
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+diff --git a/tests/offsets/meson.build b/tests/offsets/meson.build
+index 970e54c..922dad5 100644
+--- a/tests/offsets/meson.build
++++ b/tests/offsets/meson.build
+@@ -3,7 +3,7 @@ test_offsets_headers = files('offsets.h')
+ 
+ test_offsets_inc = include_directories('.', '..')
+ 
+-test_offsets_lib = shared_library('offsets-1.0',
++test_offsets_lib = library('offsets-1.0',
+   sources: test_offsets_sources,
+   include_directories : [configinc, test_offsets_inc],
+   c_args: gi_hidden_visibility_cflags,
+diff --git a/tests/scanner/meson.build b/tests/scanner/meson.build
+index e77c2de..f5ca77e 100644
+--- a/tests/scanner/meson.build
++++ b/tests/scanner/meson.build
+@@ -30,49 +30,49 @@ if cc.get_id() != 'msvc'
+   ])
+ endif
+ 
+-typedef_lib = shared_library('typedef-1.0',
++typedef_lib = library('typedef-1.0',
+   sources: ['typedefs.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gobject_dep],
+ )
+ 
+-sletter_lib = shared_library('sletter-1.0',
++sletter_lib = library('sletter-1.0',
+   sources: ['sletter.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gio_dep],
+ )
+ 
+-warnlib_lib = shared_library('warnlib-1.0',
++warnlib_lib = library('warnlib-1.0',
+   sources: ['warnlib.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gio_dep],
+ )
+ 
+-utility_lib = shared_library('utility-1.0',
++utility_lib = library('utility-1.0',
+   sources: ['utility.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gobject_dep],
+ )
+ 
+-gtkfrob_lib = shared_library('gtkfrob-1.0',
++gtkfrob_lib = library('gtkfrob-1.0',
+   sources: ['gtkfrob.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gobject_dep],
+ )
+ 
+-gettype_lib = shared_library('gettype-1.0',
++gettype_lib = library('gettype-1.0',
+   sources: ['gettype.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+   dependencies: [gobject_dep],
+ )
+ 
+-barapp_lib = shared_library('barapp-1.0',
++barapp_lib = library('barapp-1.0',
+   sources: ['barapp.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + custom_c_args,
+@@ -95,7 +95,7 @@ else
+   regress_c_args = ['-D_GI_DISABLE_CAIRO']
+ endif
+ 
+-regress_lib = shared_library('regress-1.0',
++regress_lib = library('regress-1.0',
+   sources: ['regress.c', 'annotation.c', 'foo.c', 'drawable.c'],
+   include_directories : [configinc, include_directories('..')],
+   c_args: gi_hidden_visibility_cflags + regress_c_args + custom_c_args,
