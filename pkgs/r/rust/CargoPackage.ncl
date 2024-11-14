@@ -9,9 +9,13 @@
       importCrates = (fun j =>
         let crate | Crate
           = {
-            name = j.name,
-            version = j.version,
-            meta = {}
+            name = std.record.get_or "name" "NULL" j,
+            version = std.record.get_or "version" "NULL" j,
+            sha256sum = std.record.get_or "checksum" "NULL" j, 
+            meta = {
+              source = std.record.get_or "source" "NULL" j , 
+
+            }
           }
           in
         crate

@@ -2,7 +2,13 @@
   lib,
   drvs,
   uutils | lib.CargoPackage
-    = {
+    = 
+    let j = import "./uutils/uutils-packages.json" 
+    in 
+    let _crates = std.array.map (lib.functions.importCrates) j 
+    in 
+    
+    {
       sourceInputs = [
         {
           src = {
@@ -13,6 +19,7 @@
       ],
 
       separateBuildDir = false,
+      crates = _crates,
 
       buildPhase = [
         "cargo build --offline"
