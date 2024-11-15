@@ -6,20 +6,28 @@
     SourceInput,
 
     functions = {
-      importCrates = (fun j =>
+      importCrate = (fun j =>
         let crate | Crate
           = {
-            name = std.record.get_or "name" "NULL" j,
-            version = std.record.get_or "version" "NULL" j,
-            sha256sum = std.record.get_or "checksum" "NULL" j, 
+            name  |default = std.record.get_or "name" "NULL" j,
+            version |default = std.record.get_or "version" "NULL" j,
+            sha256sum|default  = std.record.get_or "checksum" "NULL" j, 
             meta = {
-              source = std.record.get_or "source" "NULL" j , 
+              source |default  = std.record.get_or "source" "NULL" j , 
 
             }
           }
           in
         crate
-      )
+      ),
+      importCrates = (fun js => 
+        std.array.map (fun j => let _crate = importCrate j in {
+          # "%{j.name}-%{j.version}" 
+          "%{_crate.name}" 
+          = 
+          { "%{_crate.version}" =_crate}, 
+        } ) js |> std.record.merge_all 
+      ),
     },
 
     CargoPackage =
@@ -28,6 +36,17 @@
         utilsProviders,
         llvmProvider,
         singleSource,
+        buildEnv,
+        target= (if buildEnv.TARGET==null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
+        extraEnv = {
+        STATIC_RUSTFLAGS |default = ["-C target-feature=+crt-static", 
+        "-C link-self-contained=yes" ,
+         "-C link-arg=-static",
+          "-C link-arg=--static"],
+        EXTRA_RUSTFLAGS|default = [],
+        RUSTFLAGS | default = STATIC_RUSTFLAGS @ EXTRA_RUSTFLAGS,
+        },
+        
         baseBuildinputPackages | priority -1000
           =
             [
@@ -35,22 +54,55 @@
               drvs.muslShared,
               drvs.pkgconf,
               llvmProvider,
+              drvs.clangCc,
+
             ]
             @ utilsProviders,
 
         enableCcache | priority -1000 = false,
         separateBuildDir | priority -1000 = false,
+        extraCargoFlags |Array String |default = [ ],
+         preConfigurePhase|priority -1000 = [ 
+        m%"
+        for d in $(ls  ${SRC}/vendor); do
+          if [ -e ${SRC}/vendor/${d}/download ]; then
+            mv  ${SRC}/vendor/${d}/download  ${SRC}/vendor/${d}/download.tar.gz 
+            tar -xf ${SRC}/vendor/${d}/download.tar.gz --strip-components=1 -C ${SRC}/vendor/${d}/
+            echo '{"package":"'"$(sha256sum ${SRC}/vendor/${d}/download.tar.gz|cut -d ' ' -f1)"'","files":{}}' >  ${SRC}/vendor/${d}/.cargo-checksum.json
+          fi
+        done
+        "%,
+        "mkdir -p ${SRC}/.cargo",
+        m%"
+        echo "
+        
+        [source.crates-io]
+        replace-with = \"vendored-sources\"
+
+        [source.vendored-sources]
+        directory = \"vendor\"
+
+
+        " >> ${SRC}/.cargo/config.toml
+        "%,
+        "export CARGO_HOME=${SRC}/.cargo",
+
+
+      ],
 
         buildPhase | priority -1000
           = [
-            "cargo build --offline"
+            "cargo build --offline --release --target %{target} %{std.string.join "\t\\\n" extraCargoFlags}"
           ],
 
         nonCrateSourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
 
-        crates | not_exported | Array Crate | default = [],
 
-        crateSourceInputs | not_exported | Array SourceInput | default = (std.array.map (fun c => c.sourceInput) crates),
+        crates|default = {},
+
+        cratesArray | not_exported  | default =  std.array.flatten (std.array.map (std.record.values) (std.record.values crates)),
+
+        crateSourceInputs | not_exported | Array SourceInput | default = (std.array.map (fun c => c.sourceInput) cratesArray),
 
         sourceInputs | priority -1000 = nonCrateSourceInputs @ crateSourceInputs,
       },
@@ -72,13 +124,13 @@
 
       sourceInput | default
         = {
-          dest = "vendor/%{name}",
+          dest = "vendor/%{name}-%{version}",
           src =
             let _uri = uri in
             let _sha = sha256sum in
             {
-              uri = _uri,
-              sha256sum = _sha,
+              uri |priority -1 = _uri,
+              sha256sum|priority -1  = _sha,
             }
         }
     }

@@ -55,7 +55,6 @@
         drvs.glib,
         drvs.hwdata,
         drvs.linuxHeaders,
-        drvs.clangCc,
         drvs.cairoGobjectEmpty,
       ],
 
