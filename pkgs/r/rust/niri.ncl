@@ -1,4 +1,4 @@
- {
+{
   lib,
   drvs,
   niri | lib.CargoPackage

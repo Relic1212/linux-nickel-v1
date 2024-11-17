@@ -26,71 +26,102 @@
   baseBaseRootfs = (
     _rootfs
     & {
+
+      options = {
+        full = true,
+      },
       name = "base-base-rootfs",
-      biDrvs = [
-        # base
-        # drvs.busyboxFinal,
-        # drvs.bsdutils,
-        drvs.sbase,
-        (drvs.emptyStty & { priority = -1 }),
-        (drvs.ubase & { priority = -1 }),
-        drvs.vis,
-        drvs.bc,
-        drvs.dash,
-        drvs.dashSh,
-        drvs.iproute2,
-        drvs.kbd,
-        drvs.pigz,
-        drvs.curl,
-        drvs.metalog,
-        drvs.zsh,
-        drvs.fish,
-        drvs.mawk,
-        drvs.ncurses,
-        drvs.basefiles,
-        drvs.dinit,
-        drvs.dinitServicesV3,
-        drvs.dinitUtils,
-        drvs.shadow,
-        drvs.utilLinux,
-        drvs.linux,
-        # drvs.linuxFirmware,
-        drvs.linuxFirmwareSmaller,
-        drvs.eudev,
-        # drvs.mdevd,
-        # drvs.mdevdConf,
-        drvs.dbus,
-        drvs.bkeymaps,
-        drvs.kmod,
-        drvs.mandoc,
-        drvs.less,
-        # drvs.checkFirmware,
+      biDrvs =
+        [
+          # base
+          # drvs.busyboxFinal,
 
-        # net
-        drvs.dhcpcd,
-        drvs.iwd,
-        drvs.dropbear,
-        drvs.openresolv,
-        drvs.caCertificates,
+          ## begin bsdutils
+          # drvs.bsdutils,
+          ## end bsdutils
 
-        # enc
-        drvs.e2fsprogs,
-        drvs.fscryptUnlockHome,
-        drvs.openssl,
-        drvs.fscrypt,
+          ## begin uutils
+          drvs.uutils,
+          drvs.uutilsSymlinks,
+          drvs.gnused,
+          ## end uutils
 
-        # gui
-        drvs.seatd,
-        drvs.sway,
-        drvs.libinput,
-        drvs.libxkbcommon,
-        drvs.xkeyboardConfig,
-        drvs.xdgRuntimeRun,
-        drvs.foot,
-        drvs.fontconfig,
-        drvs.ttfCroscore,
-        drvs.sndiod,
-      ]
+          ## begin sbase
+          #drvs.sbase,
+          (drvs.emptyStty & { priority = 10 }),
+          #(drvs.ubase & { priority = -1 }),
+          ## end sbase
+          drvs.vis,
+          drvs.bc,
+          drvs.dash,
+          drvs.dashSh,
+          drvs.iproute2,
+          drvs.kbd,
+          drvs.pigz,
+          drvs.curl,
+          drvs.metalog,
+          drvs.zsh,
+          drvs.fish,
+          drvs.mawk,
+          drvs.ncurses,
+          drvs.basefiles,
+          drvs.dinit,
+          drvs.dinitServicesV3,
+          drvs.dinitUtils,
+          drvs.shadow,
+          drvs.utilLinux,
+          drvs.linux,
+          # drvs.linuxFirmware,
+          drvs.linuxFirmwareSmaller,
+          drvs.eudev,
+          # drvs.mdevd,
+          # drvs.mdevdConf,
+          drvs.dbus,
+          drvs.bkeymaps,
+          drvs.kmod,
+          drvs.mandoc,
+          drvs.less,
+          # drvs.checkFirmware,
+
+          # net
+          drvs.dhcpcd,
+          drvs.iwd,
+          drvs.dropbear,
+          drvs.openresolv,
+          drvs.caCertificates,
+
+          # enc
+          drvs.e2fsprogs,
+          drvs.fscryptUnlockHome,
+          drvs.openssl,
+          drvs.fscrypt,
+
+          # gui
+          drvs.seatd,
+          drvs.sway,
+          drvs.libinput,
+          drvs.libxkbcommon,
+          drvs.xkeyboardConfig,
+          drvs.xdgRuntimeRun,
+          drvs.foot,
+          drvs.fontconfig,
+          drvs.ttfCroscore,
+          drvs.sndiod,
+        ]
+        @ (
+          if options.full then
+            [
+              drvs.cagebreak,
+              drvs.rwaybar,
+              drvs.brightnessctl,
+              drvs.mako,
+              drvs.basu,
+              drvs.libnotify,
+              drvs.strace,
+            ]
+          else
+            []
+        )
     }
   ),
   baseImage =

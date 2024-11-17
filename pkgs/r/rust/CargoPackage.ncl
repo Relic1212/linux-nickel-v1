@@ -31,6 +31,11 @@
           js
         |> std.record.merge_all
       ),
+
+      filterCrates = (fun j =>
+        let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
+        in _crates
+      ),
     },
 
     CargoPackage =
@@ -110,6 +115,26 @@
         buildPhase | priority -1000
           = [
             "cargo build %{std.string.join "\t\\\n" cargoFlags}"
+          ],
+        artefactDir | default = if release then "${SRC}/target/%{target}/release" else "${SRC}/target/%{target}/debug",
+
+        installPhase | priority -1000
+          = [
+            "install -d -m0755 ${DEST}/usr/bin",
+            m%"
+          for f in $(ls %{artefactDir}); do
+            file_end=$(echo $f| rev | cut -d '.' -f1|rev)
+
+            if [ -f "%{artefactDir}/${f}" ] \
+              && [ ! "$file_end" = "d" ] \
+              && [ ! "$file_end" = "rlib" ]; then
+
+              install -m0755 "%{artefactDir}/${f}" \
+                ${DEST}/usr/bin
+
+            fi
+          done
+          "%
           ],
 
         nonCrateSourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],

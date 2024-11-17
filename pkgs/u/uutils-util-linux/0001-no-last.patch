@@ -1,0 +1,14 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 602e3c7..678d8bb 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -31,8 +31,7 @@ feat_common_core = [
+   "lsmem",
+   "ctrlaltdel",
+   "rev",
+-  "setsid",
+-  "last"
++  "setsid"
+ ]
+ 
+ [workspace.dependencies]
