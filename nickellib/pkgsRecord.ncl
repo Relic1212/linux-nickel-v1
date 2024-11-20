@@ -67,6 +67,8 @@ let r = {
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
     & (import "../pkgs/g/git/git.ncl")
+    & (import "../pkgs/g/gtk-layer-shell/gtk-layer-shell.ncl")
+
     & (import "../pkgs/g/glib/glib.ncl")
     & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
     & (import "../pkgs/g/gnumake/gnumake.ncl")
@@ -85,6 +87,8 @@ let r = {
     & (import "../pkgs/h/hyprland/hyprland.ncl")
     & (import "../pkgs/i/itstool/itstool.ncl")
     & (import "../pkgs/i/image/image.ncl")
+    & (import "../pkgs/i/inih/inih.ncl")
+
     & (import "../pkgs/i/iproute2/iproute2.ncl")
     & (import "../pkgs/i/iputils/iputils.ncl")
     & (import "../pkgs/i/ivykis/ivykis.ncl")
@@ -92,7 +96,12 @@ let r = {
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
     & (import "../pkgs/k/kbd/kbd.ncl")
+    & (import "../pkgs/k/kickoff/kickoff.ncl")
+
     & (import "../pkgs/k/kmod/kmod.ncl")
+    & (import "../pkgs/l/lavalauncher/lavalauncher.ncl")
+    & (import "../pkgs/l/lcms/lcms.ncl")
+
     & (import "../pkgs/l/less/less.ncl")
     & (import "../pkgs/l/libarchive/libarchive.ncl")
     & (import "../pkgs/l/libbsd/libbsd.ncl")
@@ -199,6 +208,8 @@ let r = {
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
+    & (import "../pkgs/s/swayfx/swayfx.ncl")
+
     & (import "../pkgs/s/sysklogd/sysklogd.ncl")
     & (import "../pkgs/s/syslog-ng/syslog-ng.ncl")
     & (import "../pkgs/s/systemd/systemd.ncl")
@@ -213,6 +224,9 @@ let r = {
     & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
     & (import "../pkgs/w/wayland/wayland.ncl")
     & (import "../pkgs/w/weston/weston.ncl")
+    & (import "../pkgs/w/wldash/wldash.ncl")
+    & (import "../pkgs/w/wob/wob.ncl")
+
     & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")
     & (import "../pkgs/x/xkeyboard-config/xkeyboard-config.ncl")
     & (import "../pkgs/x/xxhash/xxhash.ncl")

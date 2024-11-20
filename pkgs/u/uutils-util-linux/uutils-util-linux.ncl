@@ -18,7 +18,7 @@
           #   "--no-default-features",
           #   "--features mountpoint,lscpu,lsmem,ctrlaltdel,rev,setsid",
           # ],
-          
+
           patches = [
             {
               sha256sum = "3d23e5dd54b08d7cee6a84d5c2d88eb2fc46796dac184e5bdc9c6dce4dcf988b",

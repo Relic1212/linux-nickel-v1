@@ -15,12 +15,17 @@
       separateBuildDir = false,
 
       preConfigurePhase = [
-        m%"
-            echo "
-            all:
-                echo \"po\"
-            " > ${SRC}/po/Makefile
-            "%
-      ]
+        "./autogen.sh",
+        # m%"
+        # echo "
+        # all:
+        #   true
+        # " > ${SRC}/po/Makefile
+        # "%
+      ],
+
+      extraConfigureFlags = [
+        "--disable-nls"
+      ],
     }
 }

@@ -55,9 +55,9 @@ fi
 printf "\------------------------------\n"
 printf "Please type your password:"
 
-stty -echo
+stty -- -echo
 read -r PASSWORD
-stty -echo
+stty echo
 
 printf "%s" "${PASSWORD}"|fscrypt unlock "/home/.shadow/${USER_NAME}" --quiet
 unlock_status=$?
@@ -126,7 +126,7 @@ if [  -d "/home/.shadow/$USER/" ]; then
 else
     printf "User not in database, please enter your password again to create a new user:\n"
     printf "Password:"
-    stty -echo
+    stty -- -echo
     read -r PASSWORD_CHECK
     stty echo
     if [ ! "${PASSWORD}" = "${PASSWORD_CHECK}" ]; then 

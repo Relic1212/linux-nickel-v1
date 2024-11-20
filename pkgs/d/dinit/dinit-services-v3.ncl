@@ -52,7 +52,12 @@ let _services =
           type = "internal",
           "depends-ms" = ["tty1", "tty2", "seatd"],
 
-          "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
+          "waits-for" = ["dbusd", 
+          # "dhcpcd", 
+          "iwd", 
+
+          
+          "dropbear"],
         },
 
       cfg80211 = {

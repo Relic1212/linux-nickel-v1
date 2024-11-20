@@ -24,7 +24,11 @@
           ],
 
           extraMesonArgs = [
-            "-Dwlroots:backends=drm,libinput"
+            "-Dwlroots:backends=drm,libinput",
+            "-Dwlroots:color-management=enabled",
+            "-Dgdk-pixbuf=enabled",
+            "-Dtray=enabled",
+            "-Dman-pages=enabled",
           ],
 
           preConfigurePhase = [
@@ -73,6 +77,13 @@
             drvs.glib,
             drvs.hwdata,
             drvs.linuxHeaders,
+
+            # For optional features
+            drvs.gdkPixbufFull,
+            drvs.libjpegTurbo,
+            drvs.basu,
+            drvs.lcms,
+            drvs.scdoc,
           ]
         }
         in (_sway & { buildEnv.LDFLAGS = _sway.buildEnv.LDFLAGS @ ["-lc++"] }),

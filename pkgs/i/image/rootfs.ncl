@@ -21,8 +21,8 @@
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
-        "echo 'stripping binaries'",
-        "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
+        # "echo 'stripping binaries'",
+        # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
       ],
     },
 

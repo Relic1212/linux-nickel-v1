@@ -22,3 +22,19 @@
       ],
     }
 }
+& {
+  lib,
+  drvs,
+  cairo,
+  cairo3 | lib.MesonPackage
+    =
+      cairo
+      & {
+        extraMesonArgs | priority 1
+          =
+            cairo.extraMesonArgs
+            @ [
+              "-DCAIRO_HAS_GOBJECT_FUNCTIONS=1"
+            ]
+      }
+}

@@ -6,7 +6,7 @@
       extraFiles = [
         {
           file = "crypto-login.sh",
-          sha256sum = "642dd4e9a0594a3ffe3d01b5fd9bc4e44c03dc257442a558b19ddad99ca58d9e",
+          sha256sum = "db9ec92aa753de9ff2692e7658ddd90aecb7db970ab7121775a039dd05731428",
         }
       ],
       installPhase = [
