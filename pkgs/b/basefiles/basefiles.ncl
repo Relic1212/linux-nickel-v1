@@ -11,7 +11,13 @@
 
       installPhase = [
         "install -d -m0755 ${DEST}/etc",
-        "install -m0755 /tmp/workdir/files/basefiles/shells ${DEST}/etc",
+        # "install -m0755 /tmp/workdir/files/basefiles/shells ${DEST}/etc",
+        m%"echo \"/bin/sh\n/usr/bin/zsh\n/usr/bin/fish\n\" > ${DEST}/etc/shells"%,
+
+        m%"echo "root:1000000:65536\nuser:100000:165536" > ${DEST}/etc/subgid"%,
+        m%"echo "root:1000000:65536\nuser:100000:165536" > ${DEST}/etc/subuid"%,
+
+
         "install -m0755 /tmp/workdir/files/basefiles/passwd ${DEST}/etc",
         "install -m0755 /tmp/workdir/files/basefiles/group ${DEST}/etc",
         "install -m0600 /tmp/workdir/files/basefiles/shadow ${DEST}/etc",

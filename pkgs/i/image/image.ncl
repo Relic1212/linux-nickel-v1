@@ -118,6 +118,24 @@
               drvs.basu,
               drvs.libnotify,
               drvs.strace,
+              drvs.dwl,
+              drvs.psmisc,
+              drvs.uutilsProcps,
+              drvs.uutilsProcpsSymlinks,
+
+              drvs.wob,
+              drvs.opendoas,
+              drvs.rsync,
+              drvs.ripgrep,
+              # alsa
+              (drvs.alsaFirmware & { priority = -1 }),
+              drvs.alsaLibs,
+              drvs.alsaUtils,
+
+              # really?
+              drvs.bubblewrap,
+              drvs.podman,
+              drvs.conmon,
             ]
           else
             []

@@ -6,7 +6,7 @@
       buildInChroot = false,
       utilsProviders = [],
       installPhase = [
-        "echo 'copyinf the rootfs'",
+        "echo 'copying the rootfs'",
 
         #"cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
         "mkdir /tmp/workdir/out/destdir/rootfs",
@@ -21,6 +21,7 @@
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+
         # "echo 'stripping binaries'",
         # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
       ],
@@ -29,6 +30,7 @@
   _rootfs2 | lib.Package
     = {
       buildPhase =
+      let shell="/usr/bin/fish" in 
         let chrootPhase = [
           # "install -d -m0755 /proc",
           # "install -d -m0755 /sys",
@@ -45,7 +47,9 @@
           "ln -s /run/dropbear /etc/dropbear",
           # FIXME
           # "install -d -m0755 /root",
-          "useradd -M -s /bin/sh -G wheel,seat,video,audio  user",
+          "useradd -M -s %{shell} -G wheel,seat,video,audio  user",
+          "useradd -M -s %{shell} -G wheel,seat,video,audio  user1",
+
           # useradd -u 461 -g 11 -d /var/run/sndiod sndiod
           # "ln -s /usr/lib /lib",
           # For testing only
@@ -59,16 +63,18 @@
           root:p
           EOF
           "%,
-          m%"
-          chpasswd <<EOF
-          user:p
-          EOF
-          "%,
+          # m%"
+          # chpasswd <<EOF
+          # user:p
+          # EOF
+          # "%,
           m%"
           kver=$(ls /usr/lib/modules)
           depmod $kver
           "%,
           "makewhatis /usr/share/man",
+          "command -v dbus-uuidgen && dbus-uuidgen > /etc/machine-id",
+
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded
           # mkdir /lib/firmware
@@ -95,16 +101,23 @@
           "echo 'copying rootfs to chroot dir'",
           "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
           m%"
-  chroot /tmp/workdir/out/destdir/rootfs <<"EOT"
-  %{std.string.join "\n" chrootPhase}
-  EOT
-  "%,
-          m%"genimage \
+          chroot /tmp/workdir/out/destdir/rootfs <<"EOT"
+          %{std.string.join "\n" chrootPhase}
+          EOT
+          "%,
+          m%"
+          if [ -e /tmp/workdir/out/destdir/rootfs/usr/bin/doas ]; then
+            chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/doas
+          fi
+          "%,
+          m%"
+          genimage \
           -r image \
           -p "%{rootauuid}" \
           -d /tmp/workdir/out/destdir/rootfs \
           -s /usr/lib/systemd/boot/efi/linuxx64.efi.stub \
-          -o /tmp/workdir/out/image"%
+          -o /tmp/workdir/out/image
+          "%
         ],
     },
 }

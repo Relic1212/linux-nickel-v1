@@ -62,7 +62,7 @@ let _services =
 
       cfg80211 = {
         type = "scripted",
-        command = "modprobe cfg80211",
+        command = "/usr/bin/modprobe cfg80211",
         restart = false,
         "depends-on" = ["early-filesystems"],
       },
