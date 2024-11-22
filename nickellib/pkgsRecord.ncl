@@ -159,6 +159,8 @@ let r = {
     & (import "../pkgs/m/musl-obstack/musl-obstack.ncl")
     & (import "../pkgs/m/musl-rpmatch/musl-rpmatch.ncl")
     & (import "../pkgs/m/musl/musl.ncl")
+    & (import "../pkgs/n/netavark/netavark.ncl")
+
     & (import "../pkgs/n/ncurses/ncurses.ncl")
     & (import "../pkgs/n/nettle/nettle.ncl")
     & (import "../pkgs/n/networkmanager/networkmanager.ncl")
@@ -178,6 +180,8 @@ let r = {
     & (import "../pkgs/p/podman/podman.ncl")
     & (import "../pkgs/p/popt/popt.ncl")
     & (import "../pkgs/p/ppp/ppp.ncl")
+    & (import "../pkgs/p/protobuf/protobuf.ncl")
+
     & (import "../pkgs/p/psmisc/psmisc.ncl")
     & (import "../pkgs/p/python-packages/python-elftools.ncl")
     & (import "../pkgs/p/python-packages/python-flit-core.ncl")

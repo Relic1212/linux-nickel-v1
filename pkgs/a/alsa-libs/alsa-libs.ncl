@@ -56,6 +56,7 @@
         drvs.ncurses,
         drvs.readline,
         drvs.eudev,
+        drvs.pkgconf,
       ],
       buildEnv = {
         EXTRA_CFLAGS = ["-fPIC"],

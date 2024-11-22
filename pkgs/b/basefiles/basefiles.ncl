@@ -14,8 +14,8 @@
         # "install -m0755 /tmp/workdir/files/basefiles/shells ${DEST}/etc",
         m%"echo \"/bin/sh\n/usr/bin/zsh\n/usr/bin/fish\n\" > ${DEST}/etc/shells"%,
 
-        m%"echo "root:1000000:65536\nuser:100000:165536" > ${DEST}/etc/subgid"%,
-        m%"echo "root:1000000:65536\nuser:100000:165536" > ${DEST}/etc/subuid"%,
+        m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subgid"%,
+        m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subuid"%,
 
 
         "install -m0755 /tmp/workdir/files/basefiles/passwd ${DEST}/etc",

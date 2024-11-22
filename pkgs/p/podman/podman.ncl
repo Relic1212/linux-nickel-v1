@@ -86,8 +86,8 @@
         "install -d -m 755 ${DESTDIR}/usr/bin",
         "install -m 755 bin/podman ${DESTDIR}/usr/bin/podman",
         "ln -sf podman ${DESTDIR}/usr/bin/podmansh",
-        "install -d -m 755 ${DESTDIR}/usr/libexec",
-        "install -m 755 bin/rootlessport ${DESTDIR}/usr/libexec/rootlessport",
+        "install -d -m 755 ${DESTDIR}/usr/libexec/podman",
+        "install -m 755 bin/rootlessport ${DESTDIR}/usr/libexec/podman/rootlessport",
         "make DESTDIR=${DEST} PREFIX=/usr install.man"
       ]
     }

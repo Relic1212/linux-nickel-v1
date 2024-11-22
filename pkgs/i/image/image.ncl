@@ -136,6 +136,8 @@
               drvs.bubblewrap,
               drvs.podman,
               drvs.conmon,
+              drvs.crun,
+              drvs.netavark,
             ]
           else
             []

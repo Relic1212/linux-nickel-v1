@@ -47,8 +47,8 @@
           "ln -s /run/dropbear /etc/dropbear",
           # FIXME
           # "install -d -m0755 /root",
-          "useradd -M -s %{shell} -G wheel,seat,video,audio  user",
-          "useradd -M -s %{shell} -G wheel,seat,video,audio  user1",
+          "useradd -M -s %{shell} -G wheel,seat,video,audio,input user",
+          "useradd -M -s %{shell} -G wheel,seat,video,audio,input user1",
 
           # useradd -u 461 -g 11 -d /var/run/sndiod sndiod
           # "ln -s /usr/lib /lib",

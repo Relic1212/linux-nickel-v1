@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-while getopts "d:r:s:k:p:o:" opt; do
+while getopts "d:r:s:k:p:q:o:" opt; do
 	case "$opt" in 
 		d) rootdir="$OPTARG";;
 		r) rootname="$OPTARG";;
@@ -9,6 +9,7 @@ while getopts "d:r:s:k:p:o:" opt; do
 		p) partauuid="$OPTARG";;
 		q) partbuuid="$OPTARG";;
 		o) outdir="$OPTARG";;
+		*) echo "error";exit 1;;
 	esac
 done
 echo "
@@ -16,7 +17,7 @@ options:
 	rootdir=${rootdir}
 	rootname=${rootname}
 	kerndir=${kerndir}
-	part=${part}
+	partauuid=${partauuid}
 	outdir=${outdir}
 "
 
@@ -69,7 +70,7 @@ create_part() {
 	#	--all-root \
 	UUID_ARGS="" #"U $rootu "
 	mkfs.erofs \
-		-d 1 \
+		-d 0 \
 		-L roota \
 		$UUID_ARGS		\
 		$outdir/$rootimg $rootdir
@@ -114,9 +115,9 @@ create_boot_part() {
 		exit 1
 	fi
 
-	reloc=$(objdump -h -f  $efistub | grep ".reloc" )
+	reloc=$(objdump -h -f  "${efistub}" | grep ".reloc" )
 	i=0
-	for f in $(echo $reloc) ; do 
+	for f in $(echo "${reloc}") ; do 
 		if [ $i -eq 2 ]; then 
 			reloc_size=$f
 		elif [ $i -eq 3 ]; then 
@@ -144,7 +145,7 @@ create_boot_part() {
 	\
 	"
 	
-	echo $objcopy_efi_manifest > "${outdir}/${rootname}-vmlinuz-${uki_part}.efi.manifest"
+	echo "${objcopy_efi_manifest}" > "${outdir}/${rootname}-vmlinuz-${uki_part}.efi.manifest"
 	
 
 	llvm=0
@@ -186,8 +187,8 @@ create_boot_part() {
 	efi_dir="${outdir}/${rootname}-EFI-${uki_part}/Linux"
 
 
-	rm -rf $efi_dir
-	mkdir -p $efi_dir
+	rm -rf "${efi_dir}"
+	mkdir -p "${efi_dir}"
 	the_date="$(date +%Y-%m-%d_%I-%M)"
 	# cp "${outdir}/${rootname}-vmlinuz-${uki_part}.efi" "${efi_dir}/${rootname}-vmlinuz-${uki_part}-${the_date}.efi" 
 	cp "${outdir}/${rootname}-vmlinuz-${uki_part}.efi" "${efi_dir}/linux.efi" 
@@ -196,7 +197,7 @@ create_boot_part() {
 
 	ADD_VMLINUZ_FALLBACK=0
 	if [ $ADD_VMLINUZ_FALLBACK -eq 1 ]; then
-		cp $vmlinuz  "${efi_dir}/bzImage-${uki_part}-${the_date}"
+		cp "${efi_dir}"  "${efi_dir}/bzImage-${uki_part}-${the_date}"
 	fi 
 	
 	dd if=/dev/zero of="${outdir}/${rootname}-boot-${uki_part}.img" bs=224M count=1 
@@ -209,7 +210,7 @@ create_boot_part() {
 
 
 }
-mkdir -p  $outdir
+mkdir -p  "${outdir}"
 
 
 
@@ -217,15 +218,15 @@ create_part
  
 
 # Parse verity header information for necec
-DATA_BLOCKS=$(cat $outdir/$header  | grep "Data blocks:" | cut -f2 ) 
+DATA_BLOCKS=$(cat "${outdir}/${header}" | grep "Data blocks:" | cut -f2 ) 
 # DATA_BLOCK_SIZE=4096
-HASH_BLOCKS=$(cat $outdir/$header  | grep "Hash blocks:" | cut -f2 )
+HASH_BLOCKS=$(cat "${outdir}/${header}" | grep "Hash blocks:" | cut -f2 )
 # HASH_BLOCK_SIZE=4096
-HASH_ALGORITHM="sha256"
-SALT=$(cat $outdir/$header | grep "Salt:" | cut -f2 )
-ROOT_HASH=$(cat $outdir/$header | grep "Root hash:" | cut -f2)
+# HASH_ALGORITHM="sha256"
+SALT=$(cat "${outdir}/${header}" | grep "Salt:" | cut -f2 )
+ROOT_HASH=$(cat "${outdir}/${header}" | grep "Root hash:" | cut -f2)
 
-#FEC_BLOCKS=$(cat $outdir/$header | grep "FEC blocks:" | cut -f2)
+#FEC_BLOCKS=$(cat "${outdir}/${header}" | grep "FEC blocks:" | cut -f2)
 
 # ROOT_HASH_DEVICE_SIZE
 BLOCKS=$((DATA_BLOCKS*8))
@@ -241,7 +242,7 @@ TABLE="verity,,,ro,0 \
 
 CMDLINE="dm-mod.create=\"${TABLE}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
 
-echo $CMDLINE >  "$outdir/${rootname}.img.cmdline.txt"
+echo "${CMDLINE}" >  "$outdir/${rootname}.img.cmdline.txt"
 
 dev_refind="PARTUUID=${rootpartuuid}"
 dev_refind_a="PARTUUID=${partauuid}"
@@ -267,25 +268,25 @@ TABLE_METAL_B="verity,,,ro,0 \
 
 
 OPTIONS_REFIND="\"boot ${part}\"  \"rootslot=${part}  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
-echo $OPTIONS_REFIND  >  "$outdir/${rootname}.img.options_refind.txt"
+echo "${OPTIONS_REFIND}"  >  "$outdir/${rootname}.img.options_refind.txt"
 
 
 OPTIONS_REFIND_A="\"boot a\"  \"rootslot=a  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"\"${TABLE_METAL_A}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
-echo $OPTIONS_REFIND_A  >  "$outdir/${rootname}.a.img.options_refind.txt"
+echo "${OPTIONS_REFIND_A}"  >  "$outdir/${rootname}.a.img.options_refind.txt"
 
 
 OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"\"${TABLE_METAL_B}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
-echo $OPTIONS_REFIND_B  >  "$outdir/${rootname}.b.img.options_refind.txt"
+echo "${OPTIONS_REFIND_B}"  >  "$outdir/${rootname}.b.img.options_refind.txt"
 
 
 CMDLINE_UKI_A="rootslot=a debug  dm-mod.waitfor=${dev_refind_a}  dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
-echo $CMDLINE_UKI_A > "$outdir/${rootname}.img.cmdline_uki_a.txt"
+echo "${CMDLINE_UKI_A}" > "$outdir/${rootname}.img.cmdline_uki_a.txt"
 
 CMDLINE_UKI_B="rootslot=b  debug raid=noautodetect dm-mod.waitfor=${dev_refind_b}  dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
-echo $CMDLINE_UKI_B > "$outdir/${rootname}.img.cmdline_uki_b.txt"
+echo "${CMDLINE_UKI_B}" > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 
-if [ -f ${stub} ]; then
+if [ -f "${efistub}" ]; then
 	create_boot_part a
 fi
 # create_boot_part b
