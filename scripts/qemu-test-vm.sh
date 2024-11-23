@@ -22,7 +22,8 @@ CMDLINE="${CMDLINE} console=ttyS0"
 
 
 export ALSA_PLUGIN_DIR="${ALSA_PLUGIN_DIR_NIX}"
-AUDIO_ARGS=" -audio driver=pa,model=virtio,server=${XDG_RUNTIME_DIR}/pulse/native "
+AUDIO_ARGS=""
+# AUDIO_ARGS=" -audio driver=pa,model=virtio,server=${XDG_RUNTIME_DIR}/pulse/native "
 
 
 

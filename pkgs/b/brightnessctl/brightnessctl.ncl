@@ -15,5 +15,8 @@
         drvs.basu,
       ],
       separateBuildDir = false,
+      preConfigurePhase = [
+        m%"sed -i 's@\"\/bin\/@\"\/usr\/bin\/@g' ${SRC}/90-brightnessctl.rules"%
+      ]
     }
 }

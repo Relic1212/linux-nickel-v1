@@ -43,15 +43,21 @@
           ## begin uutils
           drvs.uutils,
           drvs.uutilsSymlinks,
-          drvs.gnused,
+          #drvs.gnused,
+          #drvs.gnugrep,
+          (drvs.sbase & {priority = -1}),
+          drvs.libarchive,
+          drvs.wget,
           ## end uutils
 
           ## begin sbase
           #drvs.sbase,
-          (drvs.emptyStty & { priority = 10 }),
+          #(drvs.emptyStty & { priority = 10 }),
           #(drvs.ubase & { priority = -1 }),
           ## end sbase
           drvs.vis,
+          drvs.vim,
+
           drvs.bc,
           drvs.dash,
           drvs.dashSh,
@@ -70,6 +76,7 @@
           drvs.dinitUtils,
           drvs.shadow,
           drvs.utilLinux,
+          drvs.xz,
           drvs.linux,
           # drvs.linuxFirmware,
           drvs.linuxFirmwareSmaller,
@@ -120,12 +127,20 @@
               drvs.strace,
               drvs.dwl,
               drvs.psmisc,
-              drvs.uutilsProcps,
-              drvs.uutilsProcpsSymlinks,
+              #drvs.uutilsProcps,
+              #drvs.uutilsProcpsSymlinks,
+              drvs.procps,
 
               drvs.wob,
+              drvs.wmenu,
+              drvs.dmenuWayland,
+              drvs.sov,
+              drvs.swayidle,
+              drvs.swaylock,
               drvs.opendoas,
               drvs.rsync,
+              drvs.file,
+              
               drvs.ripgrep,
               # alsa
               (drvs.alsaFirmware & { priority = -1 }),
@@ -138,6 +153,8 @@
               drvs.conmon,
               drvs.crun,
               drvs.netavark,
+              drvs.mountOthers,
+              drvs.sbctl,
             ]
           else
             []

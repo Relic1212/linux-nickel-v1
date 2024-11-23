@@ -23,6 +23,10 @@
       biDrvs =
         lib.biMap [
           pkgs.pkgconf,
-        ]
+        ],
+      extraConfigureFlags = [
+        "--rundir=/run",
+        "--libexecdir=/usr/libexec/openresolv",
+      ]
     }
 }

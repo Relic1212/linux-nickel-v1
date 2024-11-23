@@ -47,9 +47,13 @@ let r = {
     & (import "../pkgs/d/dinit/dinit-services.ncl")
     & (import "../pkgs/d/dinit/dinit-utils.ncl")
     & (import "../pkgs/d/dinit/dinit.ncl")
+    & (import "../pkgs/d/dmenu-wayland/dmenu-wayland.ncl")
+
     & (import "../pkgs/d/dropbear/dropbear.ncl")
     & (import "../pkgs/d/dwl/dwl.ncl")
     & (import "../pkgs/e/e2fsprogs/e2fsprogs.ncl")
+    & (import "../pkgs/e/earlyoom/earlyoom.ncl")
+
     & (import "../pkgs/e/erofs-utils/erofs-utils.ncl")
     & (import "../pkgs/e/eudev/eudev.ncl")
     & (import "../pkgs/e/expat/expat.ncl")
@@ -65,6 +69,8 @@ let r = {
     & (import "../pkgs/f/fscrypt-unlock-home/fscrypt-unlock-home.ncl")
     & (import "../pkgs/f/fscrypt/fscrypt.ncl")
     & (import "../pkgs/f/fuse/fuse.ncl")
+    & (import "../pkgs/g/gammastep/gammastep.ncl")
+
     & (import "../pkgs/g/gccrs/gccrs.ncl")
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
@@ -98,6 +104,8 @@ let r = {
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
     & (import "../pkgs/k/kbd/kbd.ncl")
+    & (import "../pkgs/k/kde/kwallet.ncl")
+
     & (import "../pkgs/k/kickoff/kickoff.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")
     & (import "../pkgs/l/lavalauncher/lavalauncher.ncl")
@@ -180,6 +188,8 @@ let r = {
     & (import "../pkgs/p/podman/podman.ncl")
     & (import "../pkgs/p/popt/popt.ncl")
     & (import "../pkgs/p/ppp/ppp.ncl")
+    & (import "../pkgs/p/procps/procps.ncl")
+
     & (import "../pkgs/p/protobuf/protobuf.ncl")
 
     & (import "../pkgs/p/psmisc/psmisc.ncl")
@@ -210,11 +220,15 @@ let r = {
     & (import "../pkgs/s/skalibs/skalibs.ncl")
     & (import "../pkgs/s/slang/slang.ncl")
     & (import "../pkgs/s/sndiod/sndiod.ncl")
+    & (import "../pkgs/s/sov/sov.ncl")
+
     & (import "../pkgs/s/spirv-headers/spirv-headers.ncl")
     & (import "../pkgs/s/spirv-llvm-translator/spirv-llvm-translator.ncl")
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
+    & (import "../pkgs/s/swayidle/swayidle.ncl")
+
     & (import "../pkgs/s/swayfx/swayfx.ncl")
     & (import "../pkgs/s/sysklogd/sysklogd.ncl")
     & (import "../pkgs/s/syslog-ng/syslog-ng.ncl")
@@ -225,12 +239,18 @@ let r = {
     & (import "../pkgs/u/unzip/unzip.ncl")
     & (import "../pkgs/u/util-linux/util-linux.ncl")
     & (import "../pkgs/u/uutils-util-linux/uutils-util-linux.ncl")
+    & (import "../pkgs/v/vim/vim.ncl")
     & (import "../pkgs/v/vis/vis.ncl")
+
     & (import "../pkgs/w/wayfire/wayfire.ncl")
     & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
     & (import "../pkgs/w/wayland/wayland.ncl")
     & (import "../pkgs/w/weston/weston.ncl")
+    & (import "../pkgs/w/wget/wget.ncl")
+
     & (import "../pkgs/w/wldash/wldash.ncl")
+    & (import "../pkgs/w/wmenu/wmenu.ncl")
+
     & (import "../pkgs/w/wob/wob.ncl")
     & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")
     & (import "../pkgs/x/xkeyboard-config/xkeyboard-config.ncl")

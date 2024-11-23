@@ -11,8 +11,12 @@
     bubblewrap
     util-linux.bin
         stdenv.cc.cc.lib
-
-    
+    wget
+	curl
+	cacert
+	cacert.unbundled
+	openssl
+	openssl.bin    
   ]) ;
 profile = ''
     export LIBRARY_PATH=/usr/lib

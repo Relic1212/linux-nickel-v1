@@ -52,12 +52,14 @@ let _services =
           type = "internal",
           "depends-ms" = ["tty1", "tty2", "seatd"],
 
-          "waits-for" = ["dbusd", 
-          # "dhcpcd", 
+          "waits-for" = [
+            "dbusd", 
+          #"dhcpcd", 
           "iwd", 
-
-          
-          "dropbear"],
+"make-shared-root",
+          "mount-others",
+          #"dropbear"
+          ],
         },
 
       cfg80211 = {
@@ -96,7 +98,7 @@ let _services =
         command = "/usr/bin/dropbear -E -F -P /run/dropbear.pid -R",
         logfile = "/var/log/dropbear.log",
         "waits-for" = [
-          "dhcpcd",
+          #"dhcpcd",
           "dropbear-keys"
         ],
       },
@@ -171,7 +173,27 @@ let _services =
           "loadkeys",
         ],
       },
+      "make-shared-root" = {
+        type = "scripted",
+        command = "/usr/bin/mount --make-shared /",
+        restart = false,
+        "depends-on" = ["varrw"],
+      },
+       "mount-others" = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/mount-other.sh",
+        restart = false,
 
+
+         "depends-on" = [
+          "udevd",
+        ],
+        "waits-for" = [
+          "udev-settle",
+        ]
+        
+        
+        },
       "netdev" = {
         type = "scripted",
         command = "/usr/bin/ip link set group 0 up",

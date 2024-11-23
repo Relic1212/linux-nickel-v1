@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SIZE=1
+SIZE=6
 
 rm -f home.img
 dd if=/dev/zero of=home.img bs=1024M count=${SIZE}

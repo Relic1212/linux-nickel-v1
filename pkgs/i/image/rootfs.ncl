@@ -19,6 +19,10 @@
         "echo 'removing useless stuff'",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/pkgconfig",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
+
+
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
 
