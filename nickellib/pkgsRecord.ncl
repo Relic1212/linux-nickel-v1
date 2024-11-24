@@ -5,9 +5,12 @@ let keyToName = (import "keyToName.ncl").keyToName in
 let r = {
   imported =
     {}
+    & (import "../pkgs/a/acl/acl.ncl")
+
     & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
     & (import "../pkgs/a/appstream/appstream.ncl")
     & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
+    & (import "../pkgs/a/attr/attr.ncl")
     & (import "../pkgs/a/autoconf/autoconf.ncl")
     & (import "../pkgs/a/automake/automake.ncl")
     & (import "../pkgs/b/basefiles/basefiles.ncl")
@@ -227,6 +230,7 @@ let r = {
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
+    & (import "../pkgs/s/swaybg/swaybg.ncl")
     & (import "../pkgs/s/swayidle/swayidle.ncl")
 
     & (import "../pkgs/s/swayfx/swayfx.ncl")

@@ -11,6 +11,5 @@
         drvs.pkgconf,
         drvs.ncurses,
       ],
-      
     }
 }

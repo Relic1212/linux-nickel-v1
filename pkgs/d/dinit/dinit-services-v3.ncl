@@ -53,12 +53,12 @@ let _services =
           "depends-ms" = ["tty1", "tty2", "seatd"],
 
           "waits-for" = [
-            "dbusd", 
-          #"dhcpcd", 
-          "iwd", 
-"make-shared-root",
-          "mount-others",
-          #"dropbear"
+            "dbusd",
+            "dhcpcd",
+            "iwd",
+            "make-shared-root",
+            "mount-others",
+            #"dropbear"
           ],
         },
 
@@ -179,21 +179,18 @@ let _services =
         restart = false,
         "depends-on" = ["varrw"],
       },
-       "mount-others" = {
+      "mount-others" = {
         type = "scripted",
         command = "/etc/dinit.d/scripts/mount-other.sh",
         restart = false,
 
-
-         "depends-on" = [
+        "depends-on" = [
           "udevd",
         ],
         "waits-for" = [
           "udev-settle",
         ]
-        
-        
-        },
+      },
       "netdev" = {
         type = "scripted",
         command = "/usr/bin/ip link set group 0 up",

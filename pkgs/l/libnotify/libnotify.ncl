@@ -14,11 +14,13 @@
         "-Dgtk_doc=false",
       ],
       biDrvs = [
-        drvs.gdkPixbuf,
+        drvs.gdkPixbufFull,
+        drvs.libpng,
+        drvs.libjpegTurbo,
         drvs.glib,
         drvs.pcre2,
         drvs.libffi,
-        drvs.zlibNg
+        drvs.zlibNg,
       ],
       preConfigurePhase = [
         m%"find "${SRC}" -name "meson.build"|xargs sed -i 's/shared_library/library/g'"%

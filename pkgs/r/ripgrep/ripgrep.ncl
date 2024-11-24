@@ -11,7 +11,7 @@
       extraEnv = {
         JEMALLOC_SYS_WITH_LG_PAGE = "16",
         PCRE2_SYS_STATIC = "0",
-        RUST_BACKTRACE="full",
+        RUST_BACKTRACE = "full",
       },
       buildEnv = {
         EXTRA_CFLAGS = ["-L/usr/lib", "--verbose"],

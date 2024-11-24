@@ -26,6 +26,10 @@
         drvs.zlibNg,
         drvs.xz,
         drvs.mawk,
+
+        # optional
+        drvs.attr,
+        drvs.acl,
       ],
       extraConfigureFlags = [
         "--disable-md2man",

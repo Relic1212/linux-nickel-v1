@@ -27,7 +27,6 @@
         drvs.cairo,
         drvs.libpng,
         drvs.harfbuzz,
-
         drvs.scdoc,
         # drvs.glib,
         # drvs.hwdata,
@@ -46,15 +45,16 @@
         drvs.libxfixes,
         ###################################################
       ],
-      makeTargets =[
-        "bemenu", "bemenu-run"
+      makeTargets = [
+        "bemenu",
+        "bemenu-run"
       ],
-      makeInstallTargets = [ 
+      makeInstallTargets = [
         "install-bins"
       ],
       preConfigurePhase = [
-     #   m%"sed -i 's@\.so@\.a@g' ${SRC}/GNUmakefile"%,
-      #  m%"sed -i 's@-shared@@g' ${SRC}/GNUmakefile"%,
+        #   m%"sed -i 's@\.so@\.a@g' ${SRC}/GNUmakefile"%,
+        #  m%"sed -i 's@-shared@@g' ${SRC}/GNUmakefile"%,
       ]
     }
 }

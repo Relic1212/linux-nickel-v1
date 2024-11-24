@@ -21,8 +21,6 @@
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/pkgconfig",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
-
-
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
 
@@ -34,7 +32,7 @@
   _rootfs2 | lib.Package
     = {
       buildPhase =
-      let shell="/usr/bin/fish" in 
+        let shell = "/usr/bin/fish" in
         let chrootPhase = [
           # "install -d -m0755 /proc",
           # "install -d -m0755 /sys",
@@ -78,6 +76,11 @@
           "%,
           "makewhatis /usr/share/man",
           "command -v dbus-uuidgen && dbus-uuidgen > /etc/machine-id",
+          m%"
+          for d in $(find / -type d); do
+            chmod 0755 "${d}"
+          done
+          "%,
 
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded

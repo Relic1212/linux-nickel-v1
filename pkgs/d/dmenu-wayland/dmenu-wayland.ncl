@@ -35,7 +35,6 @@
         "ln -s dmenu-wl dmenu",
         "ln -s dmenu-wl_path dmenu_path",
         "ln -s dmenu-wl_run dmenu_run",
-
       ]
     }
 }

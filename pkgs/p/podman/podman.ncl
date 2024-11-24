@@ -25,21 +25,18 @@
         drvs.pythonFull,
         (drvs.gnugrep & { priority = 1 }),
         (drvs.mandoc & { priority = 1 }),
-
         drvs.gpgme,
         drvs.libgpgError,
         drvs.libassuan,
         drvs.libseccomp,
       ],
-      buildEnv ={
-        EXTRA_LDFLAGS=["-lassuan","-lgpg-error","-lgpgme","-Wl,--no-gc-sections","--verbose"],
-        EXTRA_CFLAGS=["--verbose"],
-
+      buildEnv = {
+        EXTRA_LDFLAGS = ["-lassuan", "-lgpg-error", "-lgpgme", "-Wl,--no-gc-sections", "--verbose"],
+        EXTRA_CFLAGS = ["--verbose"],
       },
       extraEnv = {
-        CGO_LDFLAGS = buildEnv.EXTRA_LDFLAGS @ [ "-static","--static" ],
-        GOGCCFLAGS =   ["-static","--static","-Wl,--no-gc-sections","--verbose"],
-
+        CGO_LDFLAGS = buildEnv.EXTRA_LDFLAGS @ ["-static", "--static"],
+        GOGCCFLAGS = ["-static", "--static", "-Wl,--no-gc-sections", "--verbose"],
       },
       configurePhase = [
         "export GOROOT=/usr/lib/go",
@@ -48,7 +45,7 @@
         "mkdir /tmp/home",
         "export HOME=/tmp/home",
       ],
-      buildPhase =[
+      buildPhase = [
         m%"make \
             -j$(nproc) \
             PREFIX=/usr \
@@ -63,13 +60,12 @@
             EXTRA_BUILDTAGS="osusergo netgo" \
             rootlessport
         "%,
-         
-         m%"CGO_ENABLED=1 make \
+        m%"CGO_ENABLED=1 make \
             -j$(nproc) \
             PREFIX=/usr \
             EXTRA_LDFLAGS="-linkmode external -extldflags=-static " \
             EXTRA_BUILDTAGS="osusergo netgo" \
-            podman-remote podmansh podman-testing 
+            podman-remote podmansh podman-testing
         "%,
         m%"CGO_ENABLED=1 make \
             -j$(nproc) \
@@ -78,7 +74,6 @@
             EXTRA_BUILDTAGS="osusergo netgo" \
             docs
         "%
-
       ],
 
       installPhase = [
@@ -256,7 +251,7 @@
         # LDFLAGS_FOR_BUILD = ["-static","--static"],
         CC_FOR_BUILD = ["clang", "-static", "--static"]
       },
-      preConfigurePhase =[
+      preConfigurePhase = [
         m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/src/arch-gperf-generate"%
       ]
     }

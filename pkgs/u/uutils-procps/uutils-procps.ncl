@@ -42,21 +42,33 @@
           @ lib.CargoPackage.buildPhase,
       },
 
-      uutilsProcpsSymlinks | lib.Package =
+  uutilsProcpsSymlinks | lib.Package
+    =
       let bins = [
-            "free", "pgrep",
-             "pidof", "pidwait", 
-             "pmap", "ps", "pwdx", "slabtop",
-              "snice", "top", "w", "watch"
-
-      ] in 
-       {
-        installPhase = [
-          "install -d -m0755 ${DEST}/usr/bin",
-          "cd ${DEST}/usr/bin",
-        ] @ ( 
-          std.array.map (fun bin => "ln -s /usr/bin/procps ${DEST}/usr/bin/%{bin}")
-            bins
-        ),
+        "free",
+        "pgrep",
+        "pidof",
+        "pidwait",
+        "pmap",
+        "ps",
+        "pwdx",
+        "slabtop",
+        "snice",
+        "top",
+        "w",
+        "watch"
+      ]
+      in
+      {
+        installPhase =
+          [
+            "install -d -m0755 ${DEST}/usr/bin",
+            "cd ${DEST}/usr/bin",
+          ]
+          @ (
+            std.array.map
+              (fun bin => "ln -s /usr/bin/procps ${DEST}/usr/bin/%{bin}")
+              bins
+          ),
       }
 }

@@ -9,8 +9,8 @@
         sha256sum = "478634440bf52ee4ec4428d558787398c0be6b043c521beb308334b3db4489a6",
       },
       biDrvs = [
-        drvs.pcre2, 
-        drvs.libffi, 
+        drvs.pcre2,
+        drvs.libffi,
         drvs.zlibNg,
       ],
 

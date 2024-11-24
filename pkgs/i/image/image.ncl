@@ -45,7 +45,7 @@
           drvs.uutilsSymlinks,
           #drvs.gnused,
           #drvs.gnugrep,
-          (drvs.sbase & {priority = -1}),
+          (drvs.sbase & { priority = -1 }),
           drvs.libarchive,
           drvs.wget,
           ## end uutils
@@ -57,7 +57,6 @@
           ## end sbase
           drvs.vis,
           drvs.vim,
-
           drvs.bc,
           drvs.dash,
           drvs.dashSh,
@@ -108,6 +107,7 @@
           drvs.sway,
           drvs.libinput,
           drvs.libxkbcommon,
+          drvs.libdrm,
           drvs.xkeyboardConfig,
           drvs.xdgRuntimeRun,
           drvs.foot,
@@ -130,17 +130,16 @@
               #drvs.uutilsProcps,
               #drvs.uutilsProcpsSymlinks,
               drvs.procps,
-
               drvs.wob,
               drvs.wmenu,
               drvs.dmenuWayland,
               drvs.sov,
               drvs.swayidle,
               drvs.swaylock,
+              drvs.swaybg,
               drvs.opendoas,
               drvs.rsync,
               drvs.file,
-              
               drvs.ripgrep,
               # alsa
               (drvs.alsaFirmware & { priority = -1 }),
