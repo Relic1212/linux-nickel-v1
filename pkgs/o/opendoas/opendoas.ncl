@@ -13,11 +13,15 @@
         drvs.bison,
         drvs.m4,
         drvs.basefiles,
+        drvs.libbsd,
+        drvs.libmd,
+        drvs.shadow,
       ],
       configureFlags = [
         "--prefix=/usr",
         "--enable-static",
         "--without-pam",
+        "--with-timestamp",
       ],
       installPhase =
         (lib.AutotoolsPackage.installPhase)
@@ -26,7 +30,8 @@
           m%"
             echo "permit persist :wheel" >> ${DEST}/etc/doas.conf
             "%,
-          "chmod u+s ${DEST}/usr/bin/doas"
+          "chmod 0400 ${DEST}/etc/doas.conf",
+          "chmod u+s ${DEST}/usr/bin/doas",
         ]
     }
 }

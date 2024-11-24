@@ -15,6 +15,7 @@
             CFLAGS=\"${CFLAGS}\"
             LDFLAGS=\"${LDFLAGS}\"
             PREFIX="/usr"
+            SBINDIR="/usr/bin"
             " >> configure.local "%
       ],
 

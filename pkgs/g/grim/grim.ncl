@@ -21,6 +21,7 @@
         drvs.libxkbcommon,
         drvs.expat,
         drvs.linuxHeaders,
+        drvs.scdoc,
       ]
     }
 }

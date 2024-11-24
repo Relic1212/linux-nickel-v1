@@ -106,6 +106,8 @@ let r = {
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
+    & (import "../pkgs/j/jq/jq.ncl")
+
     & (import "../pkgs/k/kbd/kbd.ncl")
     & (import "../pkgs/k/kde/kwallet.ncl")
 
@@ -222,6 +224,8 @@ let r = {
     & (import "../pkgs/s/shadow/shadow.ncl")
     & (import "../pkgs/s/skalibs/skalibs.ncl")
     & (import "../pkgs/s/slang/slang.ncl")
+    & (import "../pkgs/s/slurp/slurp.ncl")
+
     & (import "../pkgs/s/sndiod/sndiod.ncl")
     & (import "../pkgs/s/sov/sov.ncl")
 
@@ -243,6 +247,7 @@ let r = {
     & (import "../pkgs/u/unzip/unzip.ncl")
     & (import "../pkgs/u/util-linux/util-linux.ncl")
     & (import "../pkgs/u/uutils-util-linux/uutils-util-linux.ncl")
+    & (import "../pkgs/v/v4l2loopback/v4l2loopback.ncl")
     & (import "../pkgs/v/vim/vim.ncl")
     & (import "../pkgs/v/vis/vis.ncl")
 
@@ -251,6 +256,7 @@ let r = {
     & (import "../pkgs/w/wayland/wayland.ncl")
     & (import "../pkgs/w/weston/weston.ncl")
     & (import "../pkgs/w/wget/wget.ncl")
+    & (import "../pkgs/w/wl-clipboard/wl-clipboard.ncl")
 
     & (import "../pkgs/w/wldash/wldash.ncl")
     & (import "../pkgs/w/wmenu/wmenu.ncl")

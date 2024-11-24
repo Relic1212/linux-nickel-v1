@@ -14,6 +14,7 @@
         drvs.libffi,
         drvs.libxkbcommon,
         drvs.expat,
+        drvs.scdoc
       ],
     }
 }
@@ -38,6 +39,7 @@
         drvs.fontconfig,
         drvs.libpng,
         drvs.cairo,
+        drvs.scdoc
       ],
     }
 }

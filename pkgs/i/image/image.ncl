@@ -88,6 +88,7 @@
           drvs.mandoc,
           drvs.less,
           # drvs.checkFirmware,
+          drvs.jq,
 
           # net
           drvs.dhcpcd,
@@ -137,6 +138,10 @@
               drvs.swayidle,
               drvs.swaylock,
               drvs.swaybg,
+              drvs.wlClipboard,
+              drvs.slurp,
+              drvs.grim,
+              drvs.v4l2loopback,
               drvs.opendoas,
               drvs.rsync,
               drvs.file,

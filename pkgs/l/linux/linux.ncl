@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  drvs,
   libModulesDirectory | lib.Package
     = {
       name = "lib-modules-directory",
@@ -19,7 +20,7 @@
       extraFiles = [
         {
           file = "base.config",
-          sha256sum = "fcd595d91c7a85c15530661e0b5d8a0dad1418fdc20a3f7de1044980b708d8aa"
+          sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
         },
       ],
 
@@ -39,15 +40,28 @@
         "INSTALL_MOD_STRIP=1",
         "LLVM=1",
         "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
-        "DEPMOD=true",
-        # "\"DEPMOD=kmod depmod\"",
-
-        # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
+        #"DEPMOD=true",
         "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
       ],
       makeInstallTargets = ["modules_install"],
       preBuildPhase = [
         "cp /tmp/workdir/files/base.config .config",
+        # https://github.com/umlaeute/v4l2loopback/discussions/604
+        m%"
+        echo "
+        CONFIG_V4L2_FWNODE=m
+        CONFIG_V4L_MEM2MEM_DRIVERS=y
+        CONFIG_V4L_PLATFORM_DRIVERS=y
+        CONFIG_V4L_TEST_DRIVERS=y
+        CONFIG_VIDEO=y
+        CONFIG_VIDEOBUF2_CORE=m
+        CONFIG_VIDEOBUF2_MEMOPS=m
+        CONFIG_VIDEOBUF2_V4L2=m
+        CONFIG_VIDEOBUF2_VMALLOC=m
+        CONFIG_VIDEO_DEV=m
+        " > /tmp/workdir/build/v4l2loopback.diffconfig
+        "%,
+        "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/build/v4l2loopback.diffconfig",
         "make "
         ++ (std.string.join " " makeArgs)
         ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} "
@@ -64,24 +78,24 @@
         "install -d -m0755 ${DEST}/boot",
         "install -m0755 arch/x86/boot/bzImage  ${DEST}/boot",
       ],
-      biDrvs =
-        lib.biMap [
-          pkgs.perl,
-          pkgs.m4,
-          pkgs.libtool,
-          pkgs.openssl,
-          pkgs.zlibNg,
-          pkgs.xz,
-          pkgs.flex,
-          pkgs.bison,
-          pkgs.linuxHeaders,
-          pkgs.libelf,
-          pkgs.diffutils,
-          pkgs.zstd,
-          pkgs.lz4,
-          pkgs.kmod, #, libModulesDirectory,
-          #, pkgs.libarchive,
-        ],
+      biDrvs = [
+        drvs.perl,
+        drvs.m4,
+        drvs.libtool,
+        drvs.openssl,
+        drvs.zlibNg,
+        drvs.xz,
+        drvs.flex,
+        drvs.bison,
+        drvs.linuxHeaders,
+        drvs.libelf,
+        (drvs.diffutils & { priority = 1 }),
+        drvs.zstd,
+        drvs.lz4,
+        (drvs.kmod & { priority = 1 }),
+        #, libModulesDirectory,
+        #, drvs.libarchive,
+      ],
     },
   linuxAarch64 =
     linux

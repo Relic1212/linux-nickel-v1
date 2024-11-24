@@ -1,0 +1,47 @@
+{
+  lib,
+  drvs,
+  v4l2loopback | lib.MakePackage
+    = {
+      singleSource = {
+        uri = "https://github.com/umlaeute/v4l2loopback/archive/refs/tags/v0.13.2.tar.gz",
+        sha256sum = "1e57e1e382d7451aa2a88d63cc9f146eab1f425b90e76104d4c3d73127e34771"
+      },
+      biDrvs = [
+        drvs.linuxHeaders,
+        drvs.linuxWithBuild,
+        (drvs.kmod & { priority = 1 }),
+      ],
+      extraMakeArgs = [
+        "KERNELRELEASE=6.10.0-standard",
+        "KERNEL_DIR=/usr/lib/modules/6.10.0-standard/build",
+        "INSTALL_MOD_STRIP=1",
+        "LLVM=1",
+        "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
+        #        "DEPMOD=true",
+        "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
+      ],
+      extraMakeInstallArgs =
+        extraMakeArgs
+        @ [
+          "PREFIX=/usr"
+        ]
+    }
+}
+& {
+  lib,
+  drvs,
+  linux,
+  linuxWithBuild | lib.MakePackage
+    =
+      linux
+      & {
+        postInstallPhase | priority 1
+          =
+            linux.postInstallPhase
+            @ [
+              "rm ${DEST}/usr/lib/modules/6.10.0-standard/build",
+              "cp -r ${SRC} ${DEST}/usr/lib/modules/6.10.0-standard/build",
+            ]
+      }
+}
