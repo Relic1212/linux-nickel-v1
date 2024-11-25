@@ -8,8 +8,8 @@ P="./build/tmp/base-image/out"
 VMLINUZ="${P}/destdir/rootfs/boot/bzImage"
 
 
-DISPLAY_ARGS="-display gtk,gl=on,show-cursor=on,grab-on-hover=on 	-device virtio-vga-gl"
-# DISPAY_ARGS=" -vga qxl  -display gtk,gl=on,show-cursor=on,grab-on-hover=on "
+#:DISPLAY_ARGS="-display gtk,gl=on,show-cursor=on,grab-on-hover=on 	-device virtio-vga-gl"
+DISPAY_ARGS=" -vga qxl  -display gtk,gl=on"
 
 
 USB_ARGS=" -usb -device nec-usb-xhci,id=xhci -global nec-usb-xhci.msi=off 	-device usb-ehci,id=ehci -device usb-tablet"

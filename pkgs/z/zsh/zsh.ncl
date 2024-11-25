@@ -11,8 +11,10 @@
         drvs.ncurses,
         drvs.readline,
         drvs.pcre2,
-        # drvs.libcap,
+        drvs.libcap,
         drvs.bison,
+        drvs.pkgconf,
+        (drvs.diffutils & { priority = 1 }),
       ],
 
       # copied from OE
@@ -20,6 +22,10 @@
         "--with-term-lib='ncursesw ncurses'",
         "--with-tcsetpgrp",
         # "--enable-cap",
+        "--enable-multibyte",
+        "--enable-libc-musl",
+        "--disable-dynamic-nss",
+        "--disable-dynamic",
         "--enable-multibyte",
       ],
     },

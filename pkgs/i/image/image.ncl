@@ -29,6 +29,7 @@
 
       options = {
         full = true,
+        hasX11 = true,
       },
       name = "base-base-rootfs",
       biDrvs =
@@ -105,9 +106,10 @@
 
           # gui
           drvs.seatd,
-          drvs.sway,
+          #drvs.sway,
           drvs.libinput,
           drvs.libxkbcommon,
+          drvs.libx11,
           drvs.libdrm,
           drvs.xkeyboardConfig,
           drvs.xdgRuntimeRun,
@@ -116,6 +118,18 @@
           drvs.ttfCroscore,
           drvs.sndiod,
         ]
+        @ (
+          if options.hasX11 then
+            [
+              drvs.swayX11,
+              drvs.xwayland,
+              drvs.xkbcomp,
+            ]
+          else
+            [
+              drvs.sway,
+            ]
+        )
         @ (
           if options.full then
             [
@@ -141,6 +155,7 @@
               drvs.wlClipboard,
               drvs.slurp,
               drvs.grim,
+              drvs.grimshot,
               drvs.v4l2loopback,
               drvs.opendoas,
               drvs.rsync,

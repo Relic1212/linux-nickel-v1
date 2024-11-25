@@ -234,6 +234,7 @@ let r = {
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
+    & (import "../pkgs/s/sway-contrib/sway-contrib.ncl")
     & (import "../pkgs/s/swaybg/swaybg.ncl")
     & (import "../pkgs/s/swayidle/swayidle.ncl")
 
