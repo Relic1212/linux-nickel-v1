@@ -269,24 +269,3 @@
       ]
     }
 }
-& {
-  drvs,
-  lib,
-  cairo,
-  cairo2 =
-    cairo
-    & {
-      extraMesonArgs | priority 1
-        =
-          cairo.extraMesonArgs
-          @ [
-            "-Dglib=enabled",
-          ],
-      biDrvs | priority 1
-        =
-          cairo.biDrvs
-          @ [
-            drvs.glib,
-          ]
-    }
-}

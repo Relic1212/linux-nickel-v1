@@ -193,6 +193,11 @@
         # name|force="mesa2",
 
         extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" mesa.extraMesonArgs,
+
+        postInstallPhase = [
+          "cd ${DEST}/usr/lib/pkgconfig",
+          "ln -s egl.pc opengl.pc",
+        ]
       },
 }
 & {

@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  drvs,
   linuxFirmware | lib.MakePackage
     = {
       name = "linux-firmware",
@@ -11,8 +12,9 @@
       # buildDir = "${SRC}",
       separateBuildDir = false,
       biDrvs =
-        lib.biMap [
-          pkgs.rdfind,
+         [
+          drvs.rdfind,
+          (drvs.coreutils & { priority = 1 })
         ]
     },
   linuxFirmwareSmaller | lib.MakePackage

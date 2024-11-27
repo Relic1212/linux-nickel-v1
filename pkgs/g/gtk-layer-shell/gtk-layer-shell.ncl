@@ -67,7 +67,7 @@
         drvs.glibDynamic,
         drvs.muslShared,
         drvs.hwdata,
-        drvs.cairoGobjectEmpty,
+       # drvs.cairoGobjectEmpty,
         drvs.fribidi,
         drvs.gdkPixbufFull,
         drvs.libjpegTurbo,
@@ -76,7 +76,6 @@
       ],
 
       extraMesonArgs = [
-        "-Dintrospection=false",
         "-Dgtk_doc=false",
         "-Dxinerama=no",
         "-Dtests=false",

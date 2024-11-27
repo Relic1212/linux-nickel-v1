@@ -15,12 +15,12 @@
         "--disable-tests",
         "--disable-nls",
       ],
-      installPhase = [
-        "mkdir destdir",
-        "make DESTDIR=$(realpath ./destdir) install",
-        "install -d -m 0755 ${DEST}/usr/bin",
-        "install -m 0755 ./destdir/usr/bin/loadkeys ${DEST}/usr/bin",
-        "cp -r ./destdir/usr/share ${DEST}/usr/",
-      ],
+      #installPhase = [
+      #  "mkdir destdir",
+      #  "make DESTDIR=$(realpath ./destdir) install",
+      #  "install -d -m 0755 ${DEST}/usr/bin",
+      #  "install -m 0755 ./destdir/usr/bin/loadkeys ${DEST}/usr/bin",
+      #  "cp -r ./destdir/usr/share ${DEST}/usr/",
+      #],
     }
 }

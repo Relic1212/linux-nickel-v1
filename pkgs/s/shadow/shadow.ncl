@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   shadow | lib.AutotoolsPackage
     = {
       name = "shadow",
@@ -15,10 +15,15 @@
         m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/src/Makefile.in"%,
       ],
       biDrvs =
-        lib.biMap [
-          pkgs.pkgconf,
-          pkgs.libmd,
-          pkgs.libbsd,
+         [
+          drvs.pkgconf,
+          drvs.libmd,
+          drvs.libbsd,
+          drvs.libcap,
+          drvs.linuxHeaders,
+        ],
+        extraConfigureFlags  = [
+          "--with-fcaps"
         ]
     }
 }

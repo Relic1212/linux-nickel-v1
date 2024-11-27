@@ -5,7 +5,7 @@
       extraFiles = [
         {
           file = "basefiles",
-          sha256sum = "d90eff754c8e52c0ebb9c4b99c7e04e9d542e0c592ec49ad0d5d60427495679b"
+          sha256sum = "cda0cb973164e39ec4b82ee716cd7ab1f003a78c67535f5e847dbd6c4c4595dc"
         }
       ],
 
@@ -16,8 +16,8 @@
         echo "/bin/sh
         /usr/bin/zsh
         /usr/bin/fish" > ${DEST}/etc/shells"%,
-        m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subgid"%,
-        m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subuid"%,
+        # m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subgid"%,
+        # m%"echo "root:1000000:65536\nuser:100000:165536\n" > ${DEST}/etc/subuid"%,
         "install -m0755 /tmp/workdir/files/basefiles/passwd ${DEST}/etc",
         "install -m0755 /tmp/workdir/files/basefiles/group ${DEST}/etc",
         "install -m0600 /tmp/workdir/files/basefiles/shadow ${DEST}/etc",

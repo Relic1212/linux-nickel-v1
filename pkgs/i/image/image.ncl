@@ -62,7 +62,7 @@
           drvs.dash,
           drvs.dashSh,
           drvs.iproute2,
-          drvs.kbd,
+          (drvs.kbd & { priority = -1 }),
           drvs.pigz,
           drvs.curl,
           drvs.metalog,
@@ -75,11 +75,12 @@
           drvs.dinitServicesV3,
           drvs.dinitUtils,
           drvs.shadow,
+          drvs.libcap,
           drvs.utilLinux,
           drvs.xz,
           drvs.linux,
-          # drvs.linuxFirmware,
-          drvs.linuxFirmwareSmaller,
+          drvs.linuxFirmware,
+          # drvs.linuxFirmwareSmaller,
           drvs.eudev,
           # drvs.mdevd,
           # drvs.mdevdConf,
@@ -156,6 +157,7 @@
               drvs.slurp,
               drvs.grim,
               drvs.grimshot,
+              drvs.j4MenuDesktop,
               drvs.v4l2loopback,
               drvs.opendoas,
               drvs.rsync,
@@ -165,7 +167,9 @@
               (drvs.alsaFirmware & { priority = -1 }),
               drvs.alsaLibs,
               drvs.alsaUtils,
-
+              # bt
+              drvs.bluez,
+              drvs.blueAlsa,
               # really?
               drvs.bubblewrap,
               drvs.podman,
@@ -174,6 +178,8 @@
               drvs.netavark,
               drvs.mountOthers,
               drvs.sbctl,
+              drvs.pythonFull,
+              drvs.autotiling,
             ]
           else
             []

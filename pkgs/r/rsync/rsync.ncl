@@ -30,6 +30,7 @@
         # optional
         drvs.attr,
         drvs.acl,
+        drvs.libcap,
       ],
       extraConfigureFlags = [
         "--disable-md2man",
@@ -38,6 +39,8 @@
         # "--with-included-zlib=no",
         #  "--disable-zstd" ,"--disable-lz4",
         "--enable-roll-simd",
+        "--enable-acl-support",
+        "--enable-xattr-support",
       ],
       buildEnv = {
         EXTRA_CFLAGS = [

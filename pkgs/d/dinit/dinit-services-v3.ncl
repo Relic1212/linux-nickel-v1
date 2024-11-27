@@ -44,6 +44,7 @@ let serviceToString = (fun service =>
 in
 let _services =
   let useUdev = true in
+  let enableBluetooth = true in 
 
   (
     {
@@ -54,12 +55,14 @@ let _services =
 
           "waits-for" = [
             "dbusd",
-            "dhcpcd",
+            # "dhcpcd",
             "iwd",
             "make-shared-root",
             "mount-others",
             #"dropbear"
-          ],
+          ] @ (if enableBluetooth then [ 
+           # "bluetooth"
+             ] else []),
         },
 
       cfg80211 = {
@@ -336,6 +339,20 @@ let _services =
             "depends-on" = ["mdevd"],
           },
         }
+    ) & (
+      if enableBluetooth then {
+        bluetooth = {
+          type = "process",
+          command = "/usr/libexec/bluetooth/bluetoothd -n",
+          logfile = "/var/log/bluetooth.log",
+          "smooth-recovery" = "true",
+          "depends-on" = [
+            "udevd",
+            "varrw",
+            "dbusd",
+          ]
+        }
+      } else {}
     )
   )
 in

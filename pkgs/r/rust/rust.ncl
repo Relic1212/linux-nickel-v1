@@ -126,7 +126,7 @@
 
         biDrvs = [
           drvs.pythonFull,
-          drvs.rsync,
+          # drvs.rsync,
           drvs.pkgconf,
           drvs.muslShared,
           drvs.clangCc,

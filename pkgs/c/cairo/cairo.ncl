@@ -37,3 +37,26 @@
             ]
       }
 }
+
+
+& {
+  drvs,
+  lib,
+  cairo,
+  cairoGobject =
+    cairo
+    & {
+      extraMesonArgs | priority 1
+        =
+          cairo.extraMesonArgs
+          @ [
+            "-Dglib=enabled",
+          ],
+      biDrvs | priority 1
+        =
+          cairo.biDrvs
+          @ [
+            drvs.glib,
+          ]
+    }
+}

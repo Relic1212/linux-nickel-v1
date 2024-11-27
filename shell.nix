@@ -17,6 +17,7 @@
 	cacert.unbundled
 	openssl
 	openssl.bin    
+	gnutar
   ]) ;
 profile = ''
     export LIBRARY_PATH=/usr/lib

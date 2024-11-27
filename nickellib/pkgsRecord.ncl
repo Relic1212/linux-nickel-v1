@@ -13,6 +13,9 @@ let r = {
     & (import "../pkgs/a/attr/attr.ncl")
     & (import "../pkgs/a/autoconf/autoconf.ncl")
     & (import "../pkgs/a/automake/automake.ncl")
+    & (import "../pkgs/a/autotiling/autotiling.ncl")
+    & (import "../pkgs/a/avizo/avizo.ncl")
+
     & (import "../pkgs/b/basefiles/basefiles.ncl")
     & (import "../pkgs/b/bash/bash.ncl")
     & (import "../pkgs/b/basu/basu.ncl")
@@ -20,6 +23,7 @@ let r = {
     & (import "../pkgs/b/bemenu/bemenu.ncl")
     & (import "../pkgs/b/bison/bison.ncl")
     & (import "../pkgs/b/bkeymaps/bkeymaps.ncl")
+    & (import "../pkgs/b/bluez/bluez.ncl")
     & (import "../pkgs/b/bmaptool/bmaptool.ncl")
     & (import "../pkgs/b/bootstrap/bootstrap-toolchain.ncl")
     & (import "../pkgs/b/brightnessctl/brightnessctl.ncl")
@@ -61,6 +65,7 @@ let r = {
     & (import "../pkgs/e/eudev/eudev.ncl")
     & (import "../pkgs/e/expat/expat.ncl")
     & (import "../pkgs/f/fcft/fcft.ncl")
+    & (import "../pkgs/f/ffmpeg/ffmpeg.ncl")
     & (import "../pkgs/f/file/file.ncl")
     & (import "../pkgs/f/fish/fish.ncl")
     & (import "../pkgs/f/findutils/findutils.ncl")
@@ -105,6 +110,7 @@ let r = {
     & (import "../pkgs/i/ivykis/ivykis.ncl")
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/j/json-c/json-c.ncl")
+    & (import "../pkgs/j/j4-menu-desktop/j4-menu-desktop.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
     & (import "../pkgs/j/jq/jq.ncl")
 
@@ -233,6 +239,7 @@ let r = {
     & (import "../pkgs/s/spirv-llvm-translator/spirv-llvm-translator.ncl")
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
+    & (import "../pkgs/s/swappy/swappy.ncl")
     & (import "../pkgs/s/sway/sway.ncl")
     & (import "../pkgs/s/sway-contrib/sway-contrib.ncl")
     & (import "../pkgs/s/swaybg/swaybg.ncl")
@@ -256,6 +263,8 @@ let r = {
     & (import "../pkgs/w/wayland-protocols/wayland-protocols.ncl")
     & (import "../pkgs/w/wayland/wayland.ncl")
     & (import "../pkgs/w/weston/weston.ncl")
+    & (import "../pkgs/w/wf-recorder/wf-recorder.ncl")
+
     & (import "../pkgs/w/wget/wget.ncl")
     & (import "../pkgs/w/wl-clipboard/wl-clipboard.ncl")
 
@@ -264,7 +273,10 @@ let r = {
 
     & (import "../pkgs/w/wob/wob.ncl")
     & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")
+    & (import "../pkgs/x/xdg-utils/xdg-utils.ncl")
     & (import "../pkgs/x/xkeyboard-config/xkeyboard-config.ncl")
+    & (import "../pkgs/x/xmlto/xmlto.ncl")
+    
     & (import "../pkgs/x/xxhash/xxhash.ncl")
     & (import "../pkgs/x/xz/xz.ncl")
     & (import "../pkgs/y/yajl/yajl.ncl")

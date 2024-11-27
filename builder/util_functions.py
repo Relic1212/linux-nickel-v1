@@ -51,7 +51,7 @@ def get_default_rsync() -> list[str]:
     Returns:
         list[str]: beginning of rsync command
     """
-    rsync = ["rsync", "-a","--no-compress", "--no-o", "--no-g", "--no-perms"]
+    rsync = ["rsync", "-a","--no-compress", "--no-o", "--no-g", "--perms","--acls","--xattrs"]
     return rsync
 
 
