@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libxkbcommon | lib.MesonPackage
     = {
       name = "libxkbcommon",
@@ -10,13 +10,37 @@
         sha256sum = "65782f0a10a4b455af9c6baab7040e2f537520caa2ec2092805cdfd36863b247"
       },
       extraMesonArgs = ["-Denable-x11=false", "-Denable-xkbregistry=false"],
-      biDrvs =
-        lib.biMap [
-          pkgs.wayland,
-          pkgs.waylandProtocols,
-          pkgs.libffi,
-          pkgs.bison,
-          pkgs.m4
-        ]
+      biDrvs = [
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.bison,
+        drvs.m4
+      ]
+    }
+}
+& {
+  lib,
+  drvs,
+  libxkbcommon,
+  libxkbcommonWithRegistry | lib.MesonPackage
+    = {
+
+      singleSource = libxkbcommon.singleSource,
+      extraMesonArgs = ["-Denable-x11=false", "-Denable-xkbregistry=true"],
+
+      buildEnv = {
+        EXTRA_CPPFLAGS = ["-I/usr/include/libxml2"],
+        EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
+      },
+
+      biDrvs = [
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.bison,
+        drvs.m4,
+        drvs.libxml2,
+      ]
     }
 }

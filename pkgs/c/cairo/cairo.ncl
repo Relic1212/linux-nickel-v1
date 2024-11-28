@@ -37,8 +37,6 @@
             ]
       }
 }
-
-
 & {
   drvs,
   lib,
@@ -57,6 +55,9 @@
           cairo.biDrvs
           @ [
             drvs.glib,
+            drvs.gobjectDynamic,
+            drvs.libffi,
+            drvs.pcre2,
           ]
     }
 }

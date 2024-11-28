@@ -468,9 +468,10 @@
     wayland2 =
       wayland
       & {
-        preConfigurePhase = [
-          c
-        ]
+        preConfigurePhase | priority 1
+          = [
+            c
+          ]
       },
 
     waylandProtocols2 =

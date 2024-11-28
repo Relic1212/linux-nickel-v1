@@ -8,8 +8,9 @@
         sha256sum = "fba78a37dc3535e4686c7f57407b97d03c676e3a57beac5fb2315162b0cc3176",
       },
       biDrvs = [
-        drvs.pythonFull,
-        drvs.libxml2,
+        drvs.pythonDynamic,
+        drvs.muslShared,
+        drvs.libxml2Dynamic,
       ]
     }
 }

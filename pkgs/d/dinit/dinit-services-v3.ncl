@@ -44,7 +44,7 @@ let serviceToString = (fun service =>
 in
 let _services =
   let useUdev = true in
-  let enableBluetooth = true in 
+  let enableBluetooth = true in
 
   (
     {
@@ -53,16 +53,24 @@ let _services =
           type = "internal",
           "depends-ms" = ["tty1", "tty2", "seatd"],
 
-          "waits-for" = [
-            "dbusd",
-            # "dhcpcd",
-            "iwd",
-            "make-shared-root",
-            "mount-others",
-            #"dropbear"
-          ] @ (if enableBluetooth then [ 
-           # "bluetooth"
-             ] else []),
+          "waits-for" =
+            [
+              "dbusd",
+              # "dhcpcd",
+              "iwd",
+              "make-shared-root",
+              "mount-others",
+              "earlyoom",
+              #"dropbear"
+            ]
+            @ (
+              if enableBluetooth then
+                [
+                  # "bluetooth"
+                ]
+              else
+                []
+            ),
         },
 
       cfg80211 = {
@@ -120,7 +128,15 @@ let _services =
         restart = false,
         options = "starts-rwfs",
       },
-
+      earlyoom = {
+        type = "process",
+        command = "/usr/bin/earlyoom",
+        logfile = "/var/log/earlyoom.log",
+        "waits-for" = [
+          "zram-init",
+          "varrw"
+        ],
+      },
       filesystems = {
         type = "scripted",
         command = "/usr/bin/mount -a",
@@ -292,6 +308,15 @@ let _services =
           # "udevd",
         ],
       },
+      "zram-init" = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/zram-init.sh",
+
+        restart = false,
+        "depends-on" = [
+          "early-filesystems",
+        ],
+      }
     }
     & (
       if useUdev then
@@ -339,20 +364,24 @@ let _services =
             "depends-on" = ["mdevd"],
           },
         }
-    ) & (
-      if enableBluetooth then {
-        bluetooth = {
-          type = "process",
-          command = "/usr/libexec/bluetooth/bluetoothd -n",
-          logfile = "/var/log/bluetooth.log",
-          "smooth-recovery" = "true",
-          "depends-on" = [
-            "udevd",
-            "varrw",
-            "dbusd",
-          ]
+    )
+    & (
+      if enableBluetooth then
+        {
+          bluetooth = {
+            type = "process",
+            command = "/usr/libexec/bluetooth/bluetoothd -n",
+            logfile = "/var/log/bluetooth.log",
+            "smooth-recovery" = "true",
+            "depends-on" = [
+              "udevd",
+              "varrw",
+              "dbusd",
+            ]
+          }
         }
-      } else {}
+      else
+        {}
     )
   )
 in
@@ -389,7 +418,15 @@ let scripts = {
             mkdir -p /run/var_overlay/work
             modprobe overlay || /usr/bin/true
             mount -t overlay overlay -o lowerdir=/var,upperdir=/run/var_overlay/upper,workdir=/run/var_overlay/work /var
-            "%
+            "%,
+  # echo "$(head -n1 /proc/meminfo | rev |cut -d ' ' -f2 | rev)KiB"
+  "zram-init.sh" = m%"
+#!/bin/sh -e
+/usr/bin/modprobe zram || true
+/usr/bin/zramctl /dev/zram0 --algorithm zstd --size "32GiB"
+/usr/bin/mkswap -U clear /dev/zram0
+/usr/bin/swapon --discard --priority 100 /dev/zram0
+  "%
 }
 in
 

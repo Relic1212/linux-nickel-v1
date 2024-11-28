@@ -91,7 +91,13 @@ let functions = {
     )
   ),
 
-  getBiClosure = (fun p hbn => [p] @ (std.array.flatten (std.array.map p.buildInputs))),
+  getBiClosure = (fun p1 kbn pkgs => 
+  
+  let subf = (fun p ssf =>
+  ([p] @ (std.array.flatten (std.array.map ( fun bi => ssf  pkgs."%{ kbn."%{bi.name}" }" ) p.buildInputs)))) 
+  in 
+  subf p1 subf
+   ),
 }
 in
 
@@ -129,7 +135,7 @@ in let f = {
             "pkgs"
             (
               std.record.map
-                (fun k v => v & { name | priority 100 = keyToName k, drvSha256sum = drvUtils.pkgToHash v })
+                (fun k v => v & { key = k, name | priority 100 = keyToName k, drvSha256sum = drvUtils.pkgToHash v })
                 (
                   (
                     (import "lib.ncl") &
@@ -145,4 +151,13 @@ in let f = {
 }
 in
 
-std.record.from_array (f.__pkgs.hashByName
+# std.record.from_array (f.__pkgs.hashByName
+
+# f.__pkgs.mesa2.drvHash
+
+let 
+keyByName =  std.record.from_array (std.record.values (std.record.map (fun f v => { field = v.name, value = v.key })    ( std.record.filter (fun k v => std.record.has_field "buildInputs" v) f.__pkgs)))
+
+in
+# keyByName
+functions.getBiClosure f.__pkgs.musl keyByName f.__pkgs

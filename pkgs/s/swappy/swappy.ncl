@@ -1,15 +1,18 @@
 {
-    lib,
-    drvs,
+  lib,
+  drvs,
 
-    swappy | lib.MesonPackage = {
-        singleSource = {
-            uri = "https://github.com/jtheoof/swappy/archive/2aa3ae2433ee671ddc73e36ece8598e68f7f3632.zip",
-            sha256sum = "718e41fa65ac2e20291f009dd1edfc44414683489b93ee9a7a3fd3a7714fedd7"
-        },
-        biDrvs = [
-           # drvs."gtk+3" ,
-            drvs.fontconfig,
+  swappy | lib.MesonPackage
+    = {
+      singleSource = {
+        uri = "https://github.com/jtheoof/swappy/archive/2aa3ae2433ee671ddc73e36ece8598e68f7f3632.zip",
+        sha256sum = "718e41fa65ac2e20291f009dd1edfc44414683489b93ee9a7a3fd3a7714fedd7"
+      },
+
+      llvmProvider = drvs.llvmFull,
+
+      biDrvs = [
+        drvs.fontconfig,
         drvs.freetype,
         drvs.zlibNg,
         drvs.gperf,
@@ -27,15 +30,25 @@
         drvs.cairo,
         drvs.libpng,
         drvs.harfbuzz,
-        drvs.glib,
+        drvs.glibDynamic,
+        drvs.muslShared,
         drvs.hwdata,
-        drvs.cairoGobjectEmpty,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
         drvs.fribidi,
         drvs.gdkPixbufFull,
         drvs.libjpegTurbo,
         drvs.libepoxy,
         drvs.atSpi2Core,
-        ]
-
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs."gtk+3",
+        drvs.gettext,
+      ],
     }
 }

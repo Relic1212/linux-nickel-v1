@@ -14,16 +14,15 @@
         m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/src/Makefile.am"%,
         m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/src/Makefile.in"%,
       ],
-      biDrvs =
-         [
-          drvs.pkgconf,
-          drvs.libmd,
-          drvs.libbsd,
-          drvs.libcap,
-          drvs.linuxHeaders,
-        ],
-        extraConfigureFlags  = [
-          "--with-fcaps"
-        ]
+      biDrvs = [
+        drvs.pkgconf,
+        drvs.libmd,
+        drvs.libbsd,
+        drvs.libcap,
+        drvs.linuxHeaders,
+      ],
+      extraConfigureFlags = [
+        "--with-fcaps"
+      ]
     }
 }

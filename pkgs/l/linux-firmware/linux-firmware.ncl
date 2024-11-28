@@ -11,11 +11,10 @@
       },
       # buildDir = "${SRC}",
       separateBuildDir = false,
-      biDrvs =
-         [
-          drvs.rdfind,
-          (drvs.coreutils & { priority = 1 })
-        ]
+      biDrvs = [
+        drvs.rdfind,
+        (drvs.coreutils & { priority = 1 })
+      ]
     },
   linuxFirmwareSmaller | lib.MakePackage
     =

@@ -83,10 +83,8 @@
           "%,
           m%"echo "root:1000000:65536\nuser:100000:165536\n" > /etc/subgid"%,
           m%"echo "root:1000000:65536\nuser:100000:165536\n" > /etc/subuid"%,
-
           "setcap cap_setgid=ep /usr/bin/newgidmap",
           "setcap cap_setuid=ep /usr/bin/newuidmap",
-
 
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded

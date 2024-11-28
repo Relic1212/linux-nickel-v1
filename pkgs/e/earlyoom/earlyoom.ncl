@@ -9,6 +9,9 @@
       },
       extraMakeInstallArgs = [
         "PREFIX=/usr"
+      ],
+      makeInstallTargets = [
+        "install-initscript"
       ]
     }
 }

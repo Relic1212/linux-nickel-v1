@@ -91,7 +91,7 @@
           drvs.less,
           # drvs.checkFirmware,
           drvs.jq,
-
+          drvs.earlyoom,
           # net
           drvs.dhcpcd,
           drvs.iwd,
@@ -134,14 +134,14 @@
         @ (
           if options.full then
             [
-              drvs.cagebreak,
+              #drvs.cagebreak,
               drvs.rwaybar,
               drvs.brightnessctl,
               drvs.mako,
               drvs.basu,
               drvs.libnotify,
               drvs.strace,
-              drvs.dwl,
+              #drvs.dwl,
               drvs.psmisc,
               #drvs.uutilsProcps,
               #drvs.uutilsProcpsSymlinks,
@@ -158,6 +158,9 @@
               drvs.grim,
               drvs.grimshot,
               drvs.j4MenuDesktop,
+              drvs.waybar,
+              drvs.upower,
+              drvs.tuned,
               drvs.v4l2loopback,
               drvs.opendoas,
               drvs.rsync,

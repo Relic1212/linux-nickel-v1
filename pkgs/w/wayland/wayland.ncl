@@ -14,6 +14,15 @@
           pkgs.expat,
           pkgs.libffi,
         ],
-      extraMesonArgs = ["-Dtests=false", "-Ddocumentation=false", "-Ddtd_validation=false"],
+      preConfigurePhase = [
+        m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/os-compatibility.c"%,
+        m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/os-compatibility.h"%,
+        m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/wayland-cursor.c"%,
+      ],
+      extraMesonArgs = [
+        #"-Dtests=false",
+        "-Ddocumentation=false",
+        "-Ddtd_validation=false"
+      ],
     }
 }

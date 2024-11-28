@@ -23,16 +23,13 @@
         "--enable-ffplay",
 
         # from Alpine
-
         "--enable-gpl",
         "--enable-libdrm",
-
         "--enable-libfontconfig",
-		"--enable-libfreetype",
-		"--enable-libfribidi",
-    #"--enable-openssl",
-    # "--enable-opengl",
-
+        "--enable-libfreetype",
+        "--enable-libfribidi",
+        #"--enable-openssl",
+        # "--enable-opengl",
       ],
 
       llvmProvider = drvs.llvmFull,
@@ -53,10 +50,8 @@
         drvs.libelf,
         drvs.mesaOpengl,
         drvs.nasm,
-
         drvs.fribidi,
         drvs.openssl,
-
         drvs.pkgconf,
         drvs.bison,
         drvs.m4,

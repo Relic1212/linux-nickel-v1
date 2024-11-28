@@ -17,3 +17,32 @@
       ]
     }
 }
+& {
+  lib,
+  drvs,
+  libxml2,
+  libxml2Dynamic | lib.AutomakePackage
+    = {
+      singleSource = libxml2.singleSource,
+      isStatic = false,
+      buildEnv = {
+        _isStatic = false
+      },
+      # pythonProvider = drvs.pythonDynamic,
+      separateBuildDir = false,
+      biDrvs = [
+        drvs.muslShared,
+        drvs.git,
+        drvs.zstd,
+        drvs.zlibNgPic,
+        drvs.pythonDynamic,
+      ],
+
+      extraConfigureFlags = [
+        "--with-python=/usr/bin/python",
+
+        #"--prefer-static",
+        #"-Ddefault_library=static",
+      ]
+    }
+}
