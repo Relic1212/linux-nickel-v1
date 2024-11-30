@@ -22,13 +22,15 @@
         drvs.libxkbcommon,
         drvs.expat,
         drvs.linuxHeaders,
+        drvs.scdoc,
       ],
       extraMesonArgs = [
-        "-Ddocs=disabled",
+        "-Ddocs=enabled",
         "-Dthemes=false",
         "-Dime=true",
         "-Dgrapheme-clustering=disabled",
-        "-Dtests=false -Dutmp-backend=none",
+        "-Dtests=false",
+        "-Dutmp-backend=none",
         "-Dterminfo=disabled",
       ]
     }
