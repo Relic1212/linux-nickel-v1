@@ -1,3 +1,18 @@
+let 
+kconfigFiles = {
+  fedora = {
+    file ="kernel-x86_64-fedora.config",
+
+    sha256sum = "c6c4db5b937a8f37538d82c05c55502d0c7f2ac0189647603e65cbbd1d82c310"  
+  },
+  base = {
+          file = "base.config",
+          sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
+        },
+
+}
+in
+
 {
   lib,
   pkgs,
@@ -10,7 +25,10 @@
       ],
     },
   linux | lib.MakePackage
-    = {
+    = 
+    let baseConfig = kconfigFiles.base
+    in
+    {
       name = "linux",
       sourceInputs = pkgs.linuxHeaders.sourceInputs,
       buildDir = "/tmp/workdir/src",
@@ -18,10 +36,7 @@
       buildEnv,
       makeArgs,
       extraFiles = [
-        {
-          file = "base.config",
-          sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
-        },
+        baseConfig
       ],
 
       extraEnv = {
@@ -45,7 +60,7 @@
       ],
       makeInstallTargets = ["modules_install"],
       preBuildPhase = [
-        "cp /tmp/workdir/files/base.config .config",
+        "cp /tmp/workdir/files/%{baseConfig.file} .config",
         # https://github.com/umlaeute/v4l2loopback/discussions/604
         m%"
         echo "
