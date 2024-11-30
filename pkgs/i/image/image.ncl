@@ -56,7 +56,7 @@
           #(drvs.emptyStty & { priority = 10 }),
           #(drvs.ubase & { priority = -1 }),
           ## end sbase
-          drvs.vis,
+          # drvs.vis,
           drvs.vim,
           drvs.bc,
           drvs.dash,
@@ -77,6 +77,7 @@
           drvs.shadow,
           drvs.libcap,
           drvs.utilLinux,
+          drvs.pciutils,
           drvs.xz,
           drvs.linux,
           drvs.linuxFirmware,
@@ -117,6 +118,8 @@
           drvs.foot,
           drvs.fontconfig,
           drvs.ttfCroscore,
+          drvs.fontAwesome,
+          drvs.terminusFont,
           drvs.sndiod,
         ]
         @ (
@@ -158,9 +161,10 @@
               drvs.grim,
               drvs.grimshot,
               drvs.j4MenuDesktop,
+              drvs.lavalauncher,
               drvs.waybar,
               drvs.upower,
-              drvs.tuned,
+              #drvs.tuned,
               drvs.v4l2loopback,
               drvs.opendoas,
               drvs.rsync,

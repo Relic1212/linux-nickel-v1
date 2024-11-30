@@ -14,8 +14,8 @@
       extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
       biDrvs =
         lib.biMap [
-          # pkgs.eudev,
-          pkgs.libudevZero,
+          pkgs.eudev,
+          # pkgs.libudevZero,
           pkgs.mtdev,
           pkgs.libevdev,
           pkgs.linuxHeaders,

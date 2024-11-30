@@ -55,3 +55,61 @@
       ]
     }
 }
+&
+{
+  lib,
+  drvs,
+  gtkLayerShell,
+  gtkLayerShellFull | lib.MesonPackage
+    = {
+      singleSource = gtkLayerShell.singleSource,
+
+      llvmProvider = drvs.llvmFull,
+      pythonProvider = drvs.pythonDynamic,
+
+      biDrvs = [
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.zlibNg,
+        drvs.gperf,
+        drvs.pixman,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.libxkbcommon,
+        drvs.expat,
+        drvs.linuxHeaders,
+        drvs.ncurses,
+        drvs.readline,
+        drvs.pcre2,
+        drvs.pango,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.harfbuzz,
+        drvs.glibDynamic,
+        drvs.muslShared,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs."gtk+3",
+        drvs.vala,
+        drvs.pythonSetuptools,
+      ],
+      extraMesonArgs = [
+        "-Dvapi=true",
+        "-Dintrospection=false",
+      ]
+    }
+}

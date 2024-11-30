@@ -48,7 +48,9 @@
         drvs.spirvTools,
         drvs.spirvLlvmTranslator,
         drvs."gtk+3",
-        drvs.gtkLayerShell,
+        drvs.gtkLayerShellFull,
+
+        drvs.vala,
       ],
     }
 }
