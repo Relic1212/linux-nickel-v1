@@ -6,6 +6,7 @@ let r = {
   imported =
     {}
     & (import "../pkgs/a/acl/acl.ncl")
+    & (import "../pkgs/a/acpid/acpid.ncl")
 
     & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
     & (import "../pkgs/a/appstream/appstream.ncl")
@@ -49,6 +50,8 @@ let r = {
     & (import "../pkgs/c/curl/curl.ncl")
     & (import "../pkgs/d/dash/dash.ncl")
     & (import "../pkgs/d/dbus/dbus.ncl")
+    & (import "../pkgs/d/dbus-python/dbus-python.ncl")
+
     & (import "../pkgs/d/dejavu-fonts/dejavu-fonts.ncl")
     & (import "../pkgs/d/desktop-file-utils/desktop-file-utils.ncl")
     & (import "../pkgs/d/dhcpcd/dhcpcd.ncl")
@@ -131,6 +134,7 @@ let r = {
 
     & (import "../pkgs/k/kickoff/kickoff.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")
+    & (import "../pkgs/l/laptop-mode-tools/laptop-mode-tools.ncl")
     & (import "../pkgs/l/lavalauncher/lavalauncher.ncl")
     & (import "../pkgs/l/lcms/lcms.ncl")
     & (import "../pkgs/l/less/less.ncl")
