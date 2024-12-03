@@ -36,12 +36,19 @@
     =
       linux
       & {
+        biDrvs | priority 1 = linux.biDrvs @ [drvs.rsync],
         postInstallPhase | priority 1
           =
             linux.postInstallPhase
             @ [
               "rm ${DEST}/usr/lib/modules/6.10.0-standard/build",
-              "cp -r ${SRC} ${DEST}/usr/lib/modules/6.10.0-standard/build",
+              "mkdir ${DEST}/usr/lib/modules/6.10.0-standard/build",
+              
+              # "rsync -a --no-compress --no-o --no-g --perms --acls --xattrs --exclude=drivers ${SRC}/ ${DEST}/usr/lib/modules/6.10.0-standard/build/",
+
+              m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs --exclude="*.o" --exclude="*.ko" --exclude="*.a" ${SRC}/ ${DEST}/usr/lib/modules/6.10.0-standard/build/"%,
+
+              #"cp -r ${SRC} ${DEST}/usr/lib/modules/6.10.0-standard/build",
             ]
       }
 }

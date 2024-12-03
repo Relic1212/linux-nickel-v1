@@ -23,15 +23,17 @@
         drvs.expat,
         drvs.linuxHeaders,
         drvs.scdoc,
+        drvs.ncurses,
+        drvs.utf8proc,
       ],
       extraMesonArgs = [
         "-Ddocs=enabled",
         "-Dthemes=false",
         "-Dime=true",
-        "-Dgrapheme-clustering=disabled",
+        "-Dgrapheme-clustering=enabled",
         "-Dtests=false",
         "-Dutmp-backend=none",
-        "-Dterminfo=disabled",
+        "-Dterminfo=enabled",
       ]
     }
 }

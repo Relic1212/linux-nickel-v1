@@ -1,0 +1,3 @@
+
+CONFIG_SCSI_VIRTIO=y
+

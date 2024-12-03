@@ -9,6 +9,10 @@ kconfigFiles = {
           file = "base.config",
           sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
         },
+  voidlinux = {
+    file  = "void-linux-x86_64-dotconfig",
+    sha256sum = "df510058c1cafcb7c5adc118bf6087806fc018a0e0f227b12a7ba50ff8b4816c",
+  }
 
 }
 in
@@ -26,7 +30,11 @@ in
     },
   linux | lib.MakePackage
     = 
+    # let baseConfig = kconfigFiles.fedora
     let baseConfig = kconfigFiles.base
+    # let baseConfig = kconfigFiles.voidlinux
+
+
     in
     {
       name = "linux",
@@ -61,6 +69,10 @@ in
       makeInstallTargets = ["modules_install"],
       preBuildPhase = [
         "cp /tmp/workdir/files/%{baseConfig.file} .config",
+
+        # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
+        m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+
         # https://github.com/umlaeute/v4l2loopback/discussions/604
         m%"
         echo "
@@ -74,6 +86,66 @@ in
         CONFIG_VIDEOBUF2_V4L2=m
         CONFIG_VIDEOBUF2_VMALLOC=m
         CONFIG_VIDEO_DEV=m
+
+        CONFIG_BLK_DEV=y
+        CONFIG_BLK_DEV_DM=y
+        CONFIG_BLK_DEV_LOOP=y
+        CONFIG_BLK_DEV_MD=y
+        CONFIG_BLK_DEV_NVME=y
+        CONFIG_DM_INIT=y
+        CONFIG_DM_VERITY=y
+        CONFIG_DM_VERITY_FEC=y
+        CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG=y
+        CONFIG_EFIVAR_FS=y
+        CONFIG_EFI_STUB=y
+        CONFIG_EROFS_FS=y
+        CONFIG_EROFS_FS_POSIX_ACL=y
+        CONFIG_EROFS_FS_SECURITY=y
+        CONFIG_EROFS_FS_XATTR=y
+        CONFIG_EROFS_FS_ZIP=y
+        CONFIG_EROFS_FS_ZIP_DEFLATE=y
+        CONFIG_EROFS_FS_ZIP_LZMA=y
+        CONFIG_FAT_DEFAULT_UTF8=y
+        CONFIG_FAT_FS=y
+        CONFIG_FS_VERITY=y
+        CONFIG_FS_VERITY_BUILTIN_SIGNATURES=y
+        CONFIG_FUSE_FS=y
+        CONFIG_MD=y
+        CONFIG_MMC=y
+        CONFIG_NLS=y
+        CONFIG_NLS_CODEPAGE_437=y
+        CONFIG_NVME_CORE=y
+        CONFIG_OVERLAY_FS=y
+        CONFIG_USB_STORAGE=y
+        CONFIG_VFAT_FS=y
+        CONFIG_LOCALVERSION=\"-standard\"
+
+        CONFIG_IKHEADERS=n
+        CONFIG_DEBUG_INFO_BTF=n
+
+        CONFIG_KEY_DH_OPERATIONS=y
+        CONFIG_CRYPTO_USER_API_SKCIPHER=y
+        CONFIG_CRYPTO_USER_API_HASH=y
+        CONFIG_CRYPTO_HMAC=y
+        CONFIG_CRYPTO_CMAC=y
+        CONFIG_CRYPTO_MD4=y
+        CONFIG_CRYPTO_MD5=y
+        CONFIG_CRYPTO_SHA256=y
+        CONFIG_CRYPTO_SHA512=y
+        CONFIG_CRYPTO_AES=y
+        CONFIG_CRYPTO_ECB=y
+        CONFIG_CRYPTO_DES=y
+        CONFIG_CRYPTO_CBC=y
+
+        CONFIG_EXT4_FS=y
+
+        CONFIG_SCSI_COMMON=y
+        CONFIG_SCSI_DMA=y
+        CONFIG_SCSI_MOD=y
+        CONFIG_SCSI_PROC_FS=y
+        CONFIG_VIRTIO_BLK=y
+        CONFIG_VIRTIO_PCI=y
+
         " > /tmp/workdir/build/v4l2loopback.diffconfig
         "%,
         "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/build/v4l2loopback.diffconfig",
@@ -108,6 +180,13 @@ in
         drvs.zstd,
         drvs.lz4,
         (drvs.kmod & { priority = 1 }),
+
+        drvs.pythonFull,
+        (drvs.findutils & {priority = 1}),
+        (drvs.mawk & {priority = 1}),
+        drvs.basefiles,
+
+
         #, libModulesDirectory,
         #, drvs.libarchive,
       ],

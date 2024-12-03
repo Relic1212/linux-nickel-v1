@@ -279,10 +279,10 @@ OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro dm-mod
 echo "${OPTIONS_REFIND_B}"  >  "$outdir/${rootname}.b.img.options_refind.txt"
 
 
-CMDLINE_UKI_A="rootslot=a debug  dm-mod.waitfor=${dev_refind_a}  dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_A="rootslot=a debug sysctl.kernel.sysrq=1 raid=noautodetect dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
 echo "${CMDLINE_UKI_A}" > "$outdir/${rootname}.img.cmdline_uki_a.txt"
 
-CMDLINE_UKI_B="rootslot=b  debug raid=noautodetect dm-mod.waitfor=${dev_refind_b}  dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_B="rootslot=b debug sysctl.kernel.sysrq=1 raid=noautodetect dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
 echo "${CMDLINE_UKI_B}" > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 

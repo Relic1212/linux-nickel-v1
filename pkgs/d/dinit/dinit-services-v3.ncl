@@ -423,7 +423,7 @@ let scripts = {
   "zram-init.sh" = m%"
 #!/bin/sh -e
 /usr/bin/modprobe zram || true
-/usr/bin/zramctl /dev/zram0 --algorithm zstd --size "32GiB"
+/usr/bin/zramctl /dev/zram0 --size "32GiB"
 /usr/bin/mkswap -U clear /dev/zram0
 /usr/bin/swapon --discard --priority 100 /dev/zram0
   "%

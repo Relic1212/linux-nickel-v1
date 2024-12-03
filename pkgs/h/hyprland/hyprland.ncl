@@ -8,8 +8,8 @@
       sourceInputs = [
         {
           src = {
-            uri = "https://github.com/hyprwm/Hyprland/archive/e58e97b0a38b8ccc87a4304c9e4e2b37c9966875.zip",
-            sha256sum = "1f67dfed21af0dae1199f7affb23c230e82bbb65edefe935fbd29596ab8f0f22",
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.45.2.tar.gz",
+            sha256sum = "ad54556ed694e00dc7b433a3cc916c8f5b9633f0b290d2d6f48f2bcdf2886d28",
           },
         },
         # {
@@ -132,8 +132,8 @@
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/hyprwm/aquamarine/archive/a49bc3583ff223f426cb3526fdaa4bcaa247ec14.zip",
-        sha256sum = "5eb940774429f6d26245ad93f051f89d20d9e68badfaefeabf5e00a1884b3704",
+        uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.5.0.tar.gz",
+        sha256sum = "30ced616ce5c2f1b83a0c4807637589157af5ba98e7956f0e6168d5724f5b62c",
       },
       llvmProvider = pkgs.llvmFull,
 
@@ -142,8 +142,8 @@
         drvs.jsonC,
         drvs.pcre2,
         drvs.mesa2,
-        drvs.wayland2,
-        drvs.waylandProtocols2,
+        drvs.wayland,
+        drvs.waylandProtocols,
         drvs.libelf,
         drvs.libpciaccess,
         drvs.libdrm,
