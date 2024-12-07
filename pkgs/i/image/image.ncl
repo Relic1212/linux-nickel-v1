@@ -180,6 +180,9 @@
               # bt
               drvs.bluez,
               drvs.blueAlsa,
+              # flatpak 
+              drvs.xdgDbusProxy,
+              drvs.flatpak,
               # really?
               drvs.bubblewrap,
               drvs.podman,

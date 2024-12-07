@@ -23,6 +23,23 @@
         drvs.gettext,
       ],
 
+      # https://github.com/kiss-community/community/blob/153bd6c63fb8291b385e95d30da1dc6b9de87244/community/appstream/build
+
+      preConfigurePhase = [
+        ":>${SRC}/po/meson.build",
+        ":>${SRC}/docs/meson.build",
+        m%"sed -i 's@mo_targets\:\ i18n_result\[0\]\,@@g' ${SRC}/data/meson.build"%,
+        m%"head -n26 ${SRC}/data/meson.build >> /tmp/meson.build"%,
+        m%"tail -n16 ${SRC}/data/meson.build >> /tmp/meson.build"%,
+        m%"mv ${SRC}/data/meson.build ${SRC}/data/meson.build.old"%,
+
+        m%"mv /tmp/meson.build ${SRC}/data/meson.build"%,
+
+        m%"sed -i "s@subdir('tests\/')@@g" ${SRC}/meson.build"%,
+
+
+      ],
+
       extraMesonArgs = [
         "-Dstemming=false",
         "-Dsystemd=false",
@@ -31,6 +48,13 @@
         "-Dzstd-support=false",
         "-Dapidocs=false",
         "-Dinstall-docs=false",
-      ]
+
+      ],
+
+      buildEnv = {
+        EXTRA_CPPFLAGS = ["-I/usr/include/libxml2"],
+        EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
+      },
+
     }
 }

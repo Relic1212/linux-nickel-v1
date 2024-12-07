@@ -21,28 +21,36 @@
   lib,
   drvs,
   libxml2,
-  libxml2Dynamic | lib.AutomakePackage
+  libxml2Dynamic | lib.MesonPackage
     = {
       singleSource = libxml2.singleSource,
       isStatic = false,
       buildEnv = {
         _isStatic = false
       },
-      # pythonProvider = drvs.pythonDynamic,
-      separateBuildDir = false,
+      pythonProvider = drvs.pythonDynamic,
+      # separateBuildDir = false,
       biDrvs = [
         drvs.muslShared,
         drvs.git,
         drvs.zstd,
         drvs.zlibNgPic,
-        drvs.pythonDynamic,
+        drvs.xz,
+        # drvs.pythonDynamic,
       ],
 
-      extraConfigureFlags = [
-        "--with-python=/usr/bin/python",
+      extraMesonArgs = [
+        # "--with-python=/usr/bin/python",
 
         #"--prefer-static",
         #"-Ddefault_library=static",
+        "-Dlegacy=true",
+        "-Dzlib=enabled",
+        "-Dlzma=enabled",
+        "-Dtls=true",
+        "-Dthreads=enabled",
+        "-Dpython=true",
+        "-Dmodules=enabled",
       ]
     }
 }

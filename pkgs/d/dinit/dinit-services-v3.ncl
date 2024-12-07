@@ -61,7 +61,8 @@ let _services =
               "make-shared-root",
               "mount-others",
               "earlyoom",
-              #"dropbear"
+              #"dropbear",
+              "upowerd",
             ]
             @ (
               if enableBluetooth then
@@ -293,8 +294,19 @@ let _services =
           "varrw",
         ],
         "pid-file" = "/var/run/syslogd.pid",
-        "log-type" = "buffer",
+        # "log-type" = "buffer",
         options = "starts-log",
+      },
+      upowerd = {
+        type = "process",
+        command = "/usr/libexec/upowerd",
+        "depends-on" = [
+          "varrw",
+        ],
+        logfile = [
+          "/var/log/upowerd.log"
+        ]
+        
       },
 
       varrw = {
