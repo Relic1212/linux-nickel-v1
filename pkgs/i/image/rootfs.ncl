@@ -87,14 +87,17 @@
           "setcap cap_setuid=ep /usr/bin/newuidmap",
 
           # https://github.com/flatpak/flatpak/issues/5488
+          "mkdir -p /var/lib/flatpak",
           "cd /var/lib/flatpak",
           "mkdir -p repo/objects repo/tmp",
-          m%"tee repo/config <<EOF
+          m%"
+          echo "
           [core]
           repo_version=1
           mode=bare-user-only
           min-free-space-size=500MB
-          EOF"%,
+          " > repo/config
+          "%,
 
           # m%"
           # mv /lib/firmware /lib/firmware.unneeded

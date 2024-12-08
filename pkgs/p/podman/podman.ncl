@@ -123,7 +123,7 @@
 & {
   lib,
   drvs,
-  gnupg | lib.AutotoolsPackage
+  gnupg2 | lib.AutotoolsPackage
     = {
       singleSource = {
         uri = "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.4.6.tar.bz2",
@@ -135,7 +135,30 @@
         drvs.libgcrypt,
         drvs.npth,
         drvs.libksba,
-      ]
+
+        drvs.gettext,
+      ],
+      preConfigurePhase = [
+        m%"
+        sed -i 's@#include <npth.h>@#include <npth.h>\n#include <unistd.h>@g' ${SRC}/scd/app.c
+        "%
+      ],
+      extraConfigureFlags = [
+        "--disable-gnutls",
+            "--enable-symcryptrun",
+            "--enable-gpg-is-gpg2",
+            "--disable-ldap",
+            "--disable-nls",
+            "--disable-doc",
+      ],
+      extraMakeArgs = [
+        "PREFIX=/usr",
+      ],
+      extraMakeInstallArgs = extraMakeArgs ,
+      extraEnv = {
+        CC_FOR_BUILD = [ "clang", "-static"]
+      },
+      separateBuildDir = false,
     }
 }
 & {

@@ -183,6 +183,8 @@
               # flatpak 
               drvs.xdgDbusProxy,
               drvs.flatpak,
+              drvs.gnupg2,
+              drvs.gpgme,
               # really?
               drvs.bubblewrap,
               drvs.podman,
@@ -193,6 +195,8 @@
               drvs.sbctl,
               drvs.pythonFull,
               drvs.autotiling,
+              drvs.i3ipcPython,
+              drvs.tzdata,
             ]
           else
             []

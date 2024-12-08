@@ -9,3 +9,14 @@
       }
     }
 }
+&
+{
+  lib,
+  drvs,
+  i3ipcPython | lib.SetuptoolPackage = {
+    singleSource = {
+      uri = "https://github.com/altdesktop/i3ipc-python/archive/9de8e885536bf611c96cc7c8ea0b2f19dd40f4f2.zip",
+      sha256sum = "55f48ad642c4838cb8ae4b599e4048090c7d0f53d1668340dd2ff4330ea1b363"
+    }
+  }
+}
