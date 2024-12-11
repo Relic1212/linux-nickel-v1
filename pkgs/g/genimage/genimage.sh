@@ -267,22 +267,25 @@ TABLE_METAL_B="verity,,,ro,0 \
 	9 ignore_zero_blocks use_fec_from_device ${dev_refind_b} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
 
 
-OPTIONS_REFIND="\"boot ${part}\"  \"rootslot=${part}  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+# EXTRA_CMDLINE="lsm=lockdown,capability,yama,selinux,bpf,landlock,ima,evm"
+EXTRA_CMDLINE="debug sysctl.kernel.sysrq=1 raid=noautodetect ro rootwait lsm=lockdown,capability"
+
+OPTIONS_REFIND="\"boot ${part}\"  \"rootslot=${part}  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
 echo "${OPTIONS_REFIND}"  >  "$outdir/${rootname}.img.options_refind.txt"
 
 
-OPTIONS_REFIND_A="\"boot a\"  \"rootslot=a  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"\"${TABLE_METAL_A}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+OPTIONS_REFIND_A="\"boot a\"  \"rootslot=a  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"\"${TABLE_METAL_A}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
 echo "${OPTIONS_REFIND_A}"  >  "$outdir/${rootname}.a.img.options_refind.txt"
 
 
-OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"\"${TABLE_METAL_B}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"\"${TABLE_METAL_B}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
 echo "${OPTIONS_REFIND_B}"  >  "$outdir/${rootname}.b.img.options_refind.txt"
 
 
-CMDLINE_UKI_A="rootslot=a debug sysctl.kernel.sysrq=1 raid=noautodetect dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_A="rootslot=a ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
 echo "${CMDLINE_UKI_A}" > "$outdir/${rootname}.img.cmdline_uki_a.txt"
 
-CMDLINE_UKI_B="rootslot=b debug sysctl.kernel.sysrq=1 raid=noautodetect dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs ro rootwait root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_B="rootslot=b ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
 echo "${CMDLINE_UKI_B}" > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 

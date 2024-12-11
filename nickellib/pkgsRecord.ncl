@@ -133,6 +133,7 @@ let r = {
 
     & (import "../pkgs/k/kbd/kbd.ncl")
     & (import "../pkgs/k/kde/kwallet.ncl")
+    & (import "../pkgs/k/keyutils/keyutils.ncl")
 
     & (import "../pkgs/k/kickoff/kickoff.ncl")
     & (import "../pkgs/k/kmod/kmod.ncl")

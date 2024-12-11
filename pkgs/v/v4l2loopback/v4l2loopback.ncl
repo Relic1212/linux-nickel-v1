@@ -11,6 +11,7 @@
         drvs.linuxHeaders,
         drvs.linuxWithBuild,
         (drvs.kmod & { priority = 1 }),
+        drvs.rsync,
       ],
       extraMakeArgs = [
         "KERNELRELEASE=6.10.0-standard",
@@ -25,7 +26,11 @@
         extraMakeArgs
         @ [
           "PREFIX=/usr"
-        ]
+        ],
+      postInstallPhase = [
+              m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs --exclude="build/" /usr/lib/modules/6.10.0-standard/ ${DEST}/usr/lib/modules/6.10.0-standard/"%,
+			  "cp -r /boot ${DEST}",
+      ]
     }
 }
 & {

@@ -77,6 +77,8 @@ let _services =
       cfg80211 = {
         type = "scripted",
         command = "/usr/bin/modprobe cfg80211",
+        # command = "/usr/bin/modprobe -a cfg80211 iwlmvm",
+        # 
         restart = false,
         "depends-on" = ["early-filesystems"],
       },

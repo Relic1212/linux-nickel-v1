@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   kmod | lib.AutomakePackage
     = {
       name = "kmod",
@@ -31,14 +31,19 @@
           "--infodir=/usr/share/info",
           "--mandir=/usr/share/man",
           "--disable-manpages",
-          "--with-module-directory=/usr/lib/modules"
+          "--with-module-directory=/usr/lib/modules",
+          "--with-openssl",
+          "--with-zlib",
+          "--with-xz",
+          "--with-zstd",
         ],
 
       biDrvs =
-        lib.biMap [
-          pkgs.xz,
-          pkgs.zlibNg,
-          pkgs.openssl,
+         [
+          drvs.xz,
+          drvs.zlibNg,
+          drvs.zstd,
+          drvs.openssl,
         ],
     }
 }

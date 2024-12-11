@@ -5,6 +5,10 @@ kconfigFiles = {
 
     sha256sum = "c6c4db5b937a8f37538d82c05c55502d0c7f2ac0189647603e65cbbd1d82c310"  
   },
+  fedora610 = {
+    file = "kernel-6.10-x86_64-fedora.config",
+    sha256sum = "9483b9ef26420d6cc045dcf403d55285a7960660d1498815ed3eb2f296e73f80",
+  },
   base = {
           file = "base.config",
           sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
@@ -31,7 +35,9 @@ in
   linux | lib.MakePackage
     = 
     # let baseConfig = kconfigFiles.fedora
-    let baseConfig = kconfigFiles.base
+    let baseConfig = kconfigFiles.fedora610
+
+    # let baseConfig = kconfigFiles.base
     # let baseConfig = kconfigFiles.voidlinux
 
 
@@ -145,6 +151,8 @@ in
         CONFIG_SCSI_PROC_FS=y
         CONFIG_VIRTIO_BLK=y
         CONFIG_VIRTIO_PCI=y
+
+        CONFIG_MODPROBE_PATH=\"/usr/bin/modprobe\"
 
         " > /tmp/workdir/build/v4l2loopback.diffconfig
         "%,

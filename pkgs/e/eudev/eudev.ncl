@@ -14,6 +14,8 @@
           pkgs.kmod,
           pkgs.zlibNg,
           pkgs.xz,
+          pkgs.openssl,
+          pkgs.zstd,
           pkgs.utilLinux,
           pkgs.linuxHeaders,
           pkgs.file,

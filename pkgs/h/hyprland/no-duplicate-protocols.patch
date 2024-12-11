@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b7966d0..0035de0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -337,18 +337,18 @@ protocolnew("staging/ext-idle-notify" "ext-idle-notify-v1" false)
+ protocolnew("staging/ext-session-lock" "ext-session-lock-v1" false)
+ protocolnew("stable/tablet" "tablet-v2" false)
+ protocolnew("stable/presentation-time" "presentation-time" false)
+-protocolnew("stable/xdg-shell" "xdg-shell" false)
++# protocolnew("stable/xdg-shell" "xdg-shell" false)
+ protocolnew("unstable/primary-selection" "primary-selection-unstable-v1" false)
+ protocolnew("staging/xwayland-shell" "xwayland-shell-v1" false)
+ protocolnew("stable/viewporter" "viewporter" false)
+-protocolnew("stable/linux-dmabuf" "linux-dmabuf-v1" false)
++# protocolnew("stable/linux-dmabuf" "linux-dmabuf-v1" false)
+ protocolnew("staging/drm-lease" "drm-lease-v1" false)
+ protocolnew("staging/linux-drm-syncobj" "linux-drm-syncobj-v1" false)
+ protocolnew("staging/xdg-dialog" "xdg-dialog-v1" false)
+ protocolnew("staging/single-pixel-buffer" "single-pixel-buffer-v1" false)
+ protocolnew("staging/security-context" "security-context-v1" false)
+ 
+-protocolwayland()
++# protocolwayland()
+ 
+ # tools
+ add_subdirectory(hyprctl)

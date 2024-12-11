@@ -34,6 +34,12 @@
         #   }
         # }
       ],
+      patches = [
+        {
+          file = "no-duplicate-protocols.patch",
+          sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
+        }
+      ],
       llvmProvider = pkgs.llvmFull,
 
       biDrvs = [
@@ -125,7 +131,13 @@
             ${SRC}/CMakeLists.txt
 
           "%,
-      ]
+      ],
+      buildEnv = {
+        # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
+       EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+
+      }
     },
 
   aquamarine | lib.CmakePackage
@@ -181,6 +193,15 @@
           's@aquamarine SHARED@aquamarine STATIC@g' \
           ${SRC}/CMakeLists.txt
         "%,
+      ],
+      postInstallPhase = [
+        # fix duplicate symbols wit hyprland
+        # https://unix.stackexchange.com/questions/181363/deleting-a-file-object-from-a-library
+        # "ar dv ${DEST}/usr/lib/libaquamarine.a wayland.cpp.o",
+        #"ar dv ${DEST}/usr/lib/libaquamarine.a linux-dmabuf-v1.cpp.o",
+        #"ar dv ${DEST}/usr/lib/libaquamarine.a xdg-shell.cpp.o",
+
+        "cp -r ${SRC}/protocols ${DEST}/usr/include/aquamarine/protocols"
       ]
     },
   hyprwaylandScanner | lib.CmakePackage

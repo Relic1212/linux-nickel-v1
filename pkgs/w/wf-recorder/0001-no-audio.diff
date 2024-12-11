@@ -1,0 +1,39 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index 092a9c1..1e98ea3 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -611,14 +611,19 @@ static void write_loop(FrameWriterParams params)
+         uint64_t sync_timestamp = 0;
+         if (first_frame_ts.has_value()) {
+             sync_timestamp = buffer.base_usec - first_frame_ts.value();
+-        } else if (pr) {
++        }
++#ifdef HAVE_AUDIO
++         else if (pr) {
+             if (!pr->get_time_base() || pr->get_time_base() > buffer.base_usec) {
+                 drop = true;
+             } else {
+                 first_frame_ts = pr->get_time_base();
+                 sync_timestamp = buffer.base_usec - first_frame_ts.value();
+             }
+-        } else {
++        }
++#endif
++        
++        else {
+             sync_timestamp = 0;
+             first_frame_ts = buffer.base_usec;
+         }
+@@ -1135,10 +1140,11 @@ int main(int argc, char *argv[])
+                 force_overwrite = true;
+                 break;
+ 
++#ifdef HAVE_AUDIO
+             case '*':
+                 audioParams.audio_backend = optarg;
+                 break;
+-
++#endif
+             default:
+                 printf("Unsupported command line argument %s\n", optarg);
+         }
