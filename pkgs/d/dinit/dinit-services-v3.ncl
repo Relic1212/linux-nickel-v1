@@ -63,6 +63,8 @@ let _services =
               "earlyoom",
               #"dropbear",
               "upowerd",
+
+              "v4l2loopback",
             ]
             @ (
               if enableBluetooth then
@@ -309,6 +311,12 @@ let _services =
           "/var/log/upowerd.log"
         ]
         
+      },
+      v4l2loopback = {
+        type = "scripted",
+        command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
+         restart = false,
+        "depends-on" = ["early-filesystems"],
       },
 
       varrw = {

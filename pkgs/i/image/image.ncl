@@ -163,6 +163,7 @@
               drvs.slurp,
               drvs.grim,
               drvs.grimshot,
+              drvs.wfRecorder,
               drvs.j4MenuDesktop,
               drvs.lavalauncher,
               drvs.waybar,
