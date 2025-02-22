@@ -64,7 +64,10 @@
         drvs.perl,
       ],
       cmakeArgsRecord = {
-        "-DICAL_GLIB" = "False"
+        "-DICAL_GLIB" = "false",
+        "-DSTATIC_ONLY" = "true",
+        "-DGOBJECT_INTROSPECTION" = "false",
+        "-DICAL_GLIB_VAPI"="false",
       }
     }
 }
