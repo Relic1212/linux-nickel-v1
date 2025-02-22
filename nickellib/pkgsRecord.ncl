@@ -221,6 +221,7 @@ let r = {
     & (import "../pkgs/p/pciutils/pciutils.ncl")
     & (import "../pkgs/p/pcre2/pcre2.ncl")
     & (import "../pkgs/p/perl/perl.ncl")
+    & (import "../pkgs/p/pipewire/pipewire.ncl")
     & (import "../pkgs/p/pigz/pigz.ncl")
     & (import "../pkgs/p/pixman/pixman.ncl")
     & (import "../pkgs/p/pkgconf/pkgconf.ncl")
