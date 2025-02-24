@@ -95,3 +95,18 @@
       ]
     }
 }
+& {
+  lib,
+  drvs,
+  libjpegTurbo,
+  libjpegTurboStatic | lib.CmakePackage
+    = {
+      generator = "Ninja",
+      singleSource = libjpegTurbo.singleSource,
+      biDrvs = [
+      ],
+      cmakeExtraArgsRecord={
+        "-DENABLE_SHARED" = false,
+      }
+    }
+}

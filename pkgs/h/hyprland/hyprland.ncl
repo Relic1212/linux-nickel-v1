@@ -3,14 +3,18 @@
   drvs,
   pkgs,
   hyprland
-    | lib.CmakePackage
+    | lib.MesonPackage
     = {
       sourceInputs = [
         {
-          src = {
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.45.2.tar.gz",
-            sha256sum = "ad54556ed694e00dc7b433a3cc916c8f5b9633f0b290d2d6f48f2bcdf2886d28",
+          src ={
+            uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.47.2/source-v0.47.2.tar.gz",
+            sha256sum = "e7f4447c9e24149cf2fd57057410bc90cb3c4ecaa35b6ec2a60a9d44d2fb2feb"
           },
+          # src = {
+          #   uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.45.2.tar.gz",
+          #   sha256sum = "ad54556ed694e00dc7b433a3cc916c8f5b9633f0b290d2d6f48f2bcdf2886d28",
+          # },
         },
         # {
         #   dest = "subprojects/hyprland-protocols",
@@ -35,10 +39,10 @@
         # }
       ],
       patches = [
-        {
-          file = "no-duplicate-protocols.patch",
-          sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
-        }
+        #{
+        #  file = "no-duplicate-protocols.patch",
+        #  sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
+        #}
       ],
       llvmProvider = pkgs.llvmFull,
 
@@ -82,6 +86,9 @@
         ###############################################################
         drvs.hyprlandProtocols,
         drvs.udis86,
+        drvs.hyprgraphics,
+        drvs.re2,
+        drvs.abseilCpp,
         ###############################################################
         drvs.libxcursor,
         drvs.xorgMacros,
@@ -94,17 +101,20 @@
         drvs.libxrender,
         drvs.libxfixes,
         ###################################################
+        drvs.git,
+        drvs.libzip,
       ],
 
-      # extraMesonArgs = [
-      #   "-Dxwayland=disabled",
-      #   "-Dtracy_enable=false",
-      # ],
+      extraMesonArgs = [
+        "-Dxwayland=disabled",
+        "-Dtracy_enable=false",
+        "-Dhyprpm=disabled",
+      ],
 
-      # preConfigurePhase=[
-      #   m%"
-      #   sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build
-      #   "%,
+      preConfigurePhase=[
+        m%"
+        sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build
+        "%,
       #   # m%"
       #   # sed -i "s@server_protos,@@g" ${SRC}/src/meson.build
       #   # "%,
@@ -118,24 +128,29 @@
       #     's@sources: wl_protocols + wayland_protocol,@sources: wayland_protocol,@g' \
       #     ${SRC}/protocols/meson.build
       #   "%,
-      # ],
-      generator = "Ninja",
-      cmakeExtraArgsRecord = {
-        "-DNO_SYSTEMD" = true,
-        "-DNO_XWAYLAND" = true,
-      },
-      preConfigurePhase = [
-        m%"
-          sed -i \
-            's@OpenGL::GL@OpenGL::GLES2@g' \
-            ${SRC}/CMakeLists.txt
-
-          "%,
       ],
+      #generator = "Ninja",
+      #cmakeExtraArgsRecord = {
+      #  "-DNO_SYSTEMD" = true,
+      #  "-DNO_XWAYLAND" = true,
+      #  "-DLEGACY_RENDERER" = true,
+      #  "-DUSE_TRACY" = false,
+      #  "-DNO_HYPRPM" = true,
+      #},
+      #preConfigurePhase = [
+      #  m%"
+      #    sed -i \
+      #      's@OpenGL::GL@OpenGL::GLES2@g' \
+      #      ${SRC}/CMakeLists.txt
+      #    "%,
+      #],
       buildEnv = {
+        EXTRA_LDFLAGS = [ "-lseat", "-ltomlplusplus", "-lzip", "-ldisplay-info" ],
         # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
-       EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
-       EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       #EXTRA_CPPFLAGS=["-DXDG_POSITIONER_INTERFACE","-DXDG_SURFACE_INTERFACE","-DHYPRWAYLAND_SCANNER_NO_INTERFACES"],
+       #EXTRA_CXXFLAGS=EXTRA_CPPFLAGS,
 
       }
     },
@@ -144,8 +159,11 @@
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.5.0.tar.gz",
-        sha256sum = "30ced616ce5c2f1b83a0c4807637589157af5ba98e7956f0e6168d5724f5b62c",
+        #uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.5.0.tar.gz",
+        #sha256sum = "30ced616ce5c2f1b83a0c4807637589157af5ba98e7956f0e6168d5724f5b62c",
+
+        uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.7.2.tar.gz",
+        sha256sum = "822ce38345bc4c1b95966c79ee72ff18d753aa923c83e9aa64e9d82eebf55a38"
       },
       llvmProvider = pkgs.llvmFull,
 
@@ -180,6 +198,7 @@
         drvs.linuxHeaders,
         drvs.hyprwaylandScanner,
         drvs.hyprUtils,
+        drvs.libzip,
       ],
       preConfigurePhase = [
         m%"
@@ -197,20 +216,71 @@
       postInstallPhase = [
         # fix duplicate symbols wit hyprland
         # https://unix.stackexchange.com/questions/181363/deleting-a-file-object-from-a-library
-        # "ar dv ${DEST}/usr/lib/libaquamarine.a wayland.cpp.o",
+        #"ar dv ${DEST}/usr/lib/libaquamarine.a wayland.cpp.o",
+        #"ar dv ${DEST}/usr/lib/libaquamarine.a Wayland.cpp.o",
+
         #"ar dv ${DEST}/usr/lib/libaquamarine.a linux-dmabuf-v1.cpp.o",
         #"ar dv ${DEST}/usr/lib/libaquamarine.a xdg-shell.cpp.o",
 
-        "cp -r ${SRC}/protocols ${DEST}/usr/include/aquamarine/protocols"
-      ]
+      #  "cp -r ${SRC}/protocols ${DEST}/usr/include/aquamarine/protocols"
+
+      "objcopy -W wl_callback_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_registry_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_buffer_interface ${DEST}/usr/lib/libaquamarine.a",
+
+      "objcopy -W wl_compositor_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_data_device_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_data_device_manager_interface ${DEST}/usr/lib/libaquamarine.a",
+
+      "objcopy -W wl_data_offer_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_data_source_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_display_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_keyboard_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_pointer_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_region_interface ${DEST}/usr/lib/libaquamarine.a",
+
+      "objcopy -W wl_seat_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_shell_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_shell_surface_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_shm_pool_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_subsurface_interface ${DEST}/usr/lib/libaquamarine.a",
+
+      "objcopy -W wl_surface_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_touch_interface ${DEST}/usr/lib/libaquamarine.a",
+
+      "objcopy -W wl_output_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_shm_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W wl_subcompositor_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W xdg_popup_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W xdg_positioner_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W xdg_surface_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W xdg_toplevel_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W xdg_wm_base_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W zwp_linux_buffer_params_v1_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W zwp_linux_dmabuf_feedback_v1_interface ${DEST}/usr/lib/libaquamarine.a",
+      "objcopy -W zwp_linux_dmabuf_v1_interface ${DEST}/usr/lib/libaquamarine.a",
+
+
+
+      ],
+      buildEnv = {
+       #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
+       #EXTRA_CPPFLAGS=["-DXDG_POSITIONER_INTERFACE","-DXDG_SURFACE_INTERFACE","-DHYPRWAYLAND_SCANNER_NO_INTERFACES"],
+       #EXTRA_CXXFLAGS=EXTRA_CPPFLAGS,
+
+      }
     },
   hyprwaylandScanner | lib.CmakePackage
     = {
       generator = "Ninja",
 
       singleSource = {
-        uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/500c81a9e1a76760371049a8d99e008ea77aa59e.zip",
-        sha256sum = "8408af601bfc784500ba033b77a27e3d863a54d5e911ec39f3d84f1e67565937"
+        # uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/500c81a9e1a76760371049a8d99e008ea77aa59e.zip",
+        # sha256sum = "8408af601bfc784500ba033b77a27e3d863a54d5e911ec39f3d84f1e67565937"
+
+        uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/refs/tags/v0.4.4.tar.gz",
+        sha256sum = "ac73f626019f8d819ff79a5fca06ce4768ce8a3bded6f48c404445f3afaa25ac"
       },
       biDrvs = [
         drvs.pugixml,
@@ -230,8 +300,10 @@
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/hyprwm/hyprutils/archive/3ce0cde8709cdacbfba471f8e828433b58a561e9.zip",
-        sha256sum = "8278af70177985de8a07fa08387b4bafc969cec90a43c565cc542d98252f6d8d"
+        # uri = "https://github.com/hyprwm/hyprutils/archive/3ce0cde8709cdacbfba471f8e828433b58a561e9.zip",
+        # sha256sum = "8278af70177985de8a07fa08387b4bafc969cec90a43c565cc542d98252f6d8d",
+        uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.5.1.tar.gz",
+        sha256sum = "0ad1d873012568661667cb5b599ddd59b3bea945a0d03c0f2ca3c7f4dff55798"
       },
       biDrvs = [
         drvs.pixman,
@@ -300,14 +372,22 @@
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/hyprwm/hyprcursor/archive/0264e698149fcb857a66a53018157b41f8d97bb0.zip",
-        sha256sum = "d533d479f339d559a285dfd8a5d47a5d4491dc834ef6aceaad315f2949748404"
+        #uri = "https://github.com/hyprwm/hyprcursor/archive/0264e698149fcb857a66a53018157b41f8d97bb0.zip",
+        #sha256sum = "d533d479f339d559a285dfd8a5d47a5d4491dc834ef6aceaad315f2949748404",
+
+        uri = "https://github.com/hyprwm/hyprcursor/archive/refs/tags/v0.1.11.tar.gz",
+        sha256sum = "17e4576b884e6bdb463b445cffff099ad16647b826a87a67b78d38b8cad4c39e"
       },
       patches = [
-        {
-          file = "hyprcyrsor-no-svg.patch",
-          sha256sum = "78890380a3531a76b629e2742fcb100ebc74da5299f68f5bfb48d88d6cd2b42b",
-        }
+       # {
+       #   file = "hyprcyrsor-no-svg.patch",
+       #   sha256sum = "78890380a3531a76b629e2742fcb100ebc74da5299f68f5bfb48d88d6cd2b42b",
+       # }
+       {
+        file = "hyprcyrsor-no-svg-v2.patch",
+
+        sha256sum = "f4621359f73f2193a0e8162d40c5676608d77406139ca8cedd9f0b7e843fa669"
+       }
       ],
       biDrvs = [
         drvs.cairo,
@@ -321,6 +401,8 @@
         drvs.hyprlang,
         drvs.hyprUtils,
         drvs.tomlplusplus,
+
+        # drvs.librsvg,
       ],
       buildEnv = {
         EXTRA_CXXFLAGS = [
@@ -369,8 +451,11 @@
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/hyprwm/hyprlang/archive/f054f2e44d6a0b74607a6bc0f52dba337a3db38e.zip",
-        sha256sum = "70e22059dfffabd19568027a56799ebd0e284699ec5801b26cf89165a5cebc52",
+        #uri = "https://github.com/hyprwm/hyprlang/archive/f054f2e44d6a0b74607a6bc0f52dba337a3db38e.zip",
+        #sha256sum = "70e22059dfffabd19568027a56799ebd0e284699ec5801b26cf89165a5cebc52",
+
+        uri = "https://github.com/hyprwm/hyprlang/archive/refs/tags/v0.6.0.tar.gz",
+        sha256sum = "b1a163606402041d92507936fb6dcbc40dd0035b8e8abbf44b0ab59be627b52c"
       },
       biDrvs = [
         drvs.hyprUtils,
@@ -427,8 +512,11 @@
       sourceInputs = [
         {
           src = {
-            uri = "https://github.com/hyprwm/hyprland-protocols/archive/c7c3f4cd0faed21fc90ba6bd06fe4f3e0e057ea8.zip",
-            sha256sum = "4d38ee1b5a64c9e3ac4eb8820b3a2283a1f29e50c1b5b15cf28142ce980f10b0"
+            # uri = "https://github.com/hyprwm/hyprland-protocols/archive/c7c3f4cd0faed21fc90ba6bd06fe4f3e0e057ea8.zip",
+            # sha256sum = "4d38ee1b5a64c9e3ac4eb8820b3a2283a1f29e50c1b5b15cf28142ce980f10b0",
+
+            uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.6.2.tar.gz",
+            sha256sum ="bba082af141599d4342e7b8505401a6e3a32be819d9eb23ce6c90f7407e62c1f"
           }
         },
       ]
@@ -504,3 +592,50 @@
       }
   }
 )
+
+&
+
+{
+  lib,
+  drvs,
+  hyprgraphics | lib.CmakePackage = {
+      generator = "Ninja",
+
+    singleSource = {
+      uri = "https://github.com/hyprwm/hyprgraphics/archive/refs/tags/v0.1.2.tar.gz",
+      sha256sum = "9409b29e80200e06237c124a9eaf5a367ab407e56f43a575bdc84ed2d551a154"
+    },
+    biDrvs = [
+        drvs.pixman,
+        drvs.expat,
+    drvs.libffi,
+        drvs.libevdev,
+        drvs.mtdev,
+        drvs.pango,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.freetype,
+        drvs.fontconfig,
+        drvs.zlibNg,
+        drvs.harfbuzz,
+        drvs.glib,
+        drvs.hwdata,
+        drvs.linuxHeaders,
+        drvs.hyprwaylandScanner,
+        drvs.aquamarine,
+        drvs.hyprUtils,
+        drvs.hyprlang,
+        drvs.hyprcursor,
+
+        drvs.libjpegTurboStatic,
+
+        drvs.libspng,
+
+        drvs.file,
+        drvs.libwebp,
+    ],
+    preConfigurePhase = [
+      "sed -i 's@hyprgraphics SHARED@hyprgraphics STATIC@g' ${SRC}/CMakeLists.txt"
+    ]
+  }
+}

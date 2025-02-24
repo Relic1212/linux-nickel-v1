@@ -180,8 +180,10 @@
               drvs.alsaLibs,
               drvs.alsaUtils,
               # bt
-              drvs.bluez,
-              drvs.blueAlsa,
+              #drvs.bluez,
+              #drvs.blueAlsa,
+              drvs.bluez4,
+              # drvs.pulseaudio14,
               # flatpak 
               drvs.xdgDbusProxy,
               drvs.flatpak,

@@ -33,6 +33,16 @@
           sed -i 's@ifndef PIC@if 1@g' "${file}"
       done
       "%,
+
+      m%"
+      fix_page_size() {
+        sed -i 's@page_size@page_size_alsalibs_private@g' "${1}"
+      }
+      fix_page_size "${SRC}/src/rawmidi/rawmidi.c"
+      fix_page_size "${SRC}/src/rawmidi/rawmidi_hw.c"
+      fix_page_size "${SRC}/src/conf.c"
+      fix_page_size "${SRC}/include/local.h"
+      "%
       ]
     }
 }

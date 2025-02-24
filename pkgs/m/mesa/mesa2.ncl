@@ -188,11 +188,11 @@
 
   mesaOpengl | lib.MesonPackage
     =
-      mesa
+      mesa2
       & {
         # name|force="mesa2",
 
-        extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" mesa.extraMesonArgs,
+        extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" mesa2.extraMesonArgs,
 
         postInstallPhase = [
           "cd ${DEST}/usr/lib/pkgconfig",
