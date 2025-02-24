@@ -131,6 +131,9 @@
               drvs.swayX11,
               drvs.xwayland,
               drvs.xkbcomp,
+              drvs.hyprland,
+              drvs.hyprpaper,
+              
             ]
           else
             [
@@ -180,9 +183,9 @@
               drvs.alsaLibs,
               drvs.alsaUtils,
               # bt
-              #drvs.bluez,
+              drvs.bluez,
               #drvs.blueAlsa,
-              drvs.bluez4,
+              #drvs.bluez4,
               # drvs.pulseaudio14,
               # flatpak 
               drvs.xdgDbusProxy,

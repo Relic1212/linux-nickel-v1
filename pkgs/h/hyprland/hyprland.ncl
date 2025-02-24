@@ -639,3 +639,69 @@
     ]
   }
 }
+
+
+&
+
+{
+  lib,
+  drvs,
+  hyprpaper|lib.CmakePackage = {
+    generator= "Ninja",
+    singleSource = {
+      uri = "https://github.com/hyprwm/hyprpaper/archive/refs/tags/v0.7.4.tar.gz",
+      sha256sum = "a2375dae58d29293b942a60cd465771b2c3c85cfcac628ec4897f11e7008666f",
+    },
+     biDrvs = [
+        drvs.pixman,
+        drvs.expat,
+    drvs.libffi,
+        drvs.libevdev,
+        drvs.mtdev,
+        drvs.pango,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.freetype,
+        drvs.fontconfig,
+        drvs.zlibNg,
+        drvs.harfbuzz,
+        drvs.glib,
+        drvs.hwdata,
+        drvs.linuxHeaders,
+        drvs.hyprwaylandScanner,
+        drvs.aquamarine,
+        drvs.hyprUtils,
+        drvs.hyprlang,
+        drvs.hyprcursor,
+
+        drvs.libjpegTurboStatic,
+
+        drvs.libspng,
+
+        drvs.file,
+        drvs.libwebp,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.hyprgraphics,
+
+
+          drvs.pcre2,
+    ],
+    preConfigurePhase = [
+      "sed -i 's@#include <GLES3/gl32.h>@@g' ${SRC}/src/includes.hpp",
+      "sed -i 's@#include <GLES3/gl3ext.h>@@g' ${SRC}/src/includes.hpp",
+
+      "sed -i 's@OpenGL@@g' ${SRC}/CMakeLists.txt",
+      "sed -i 's@GLESv2@@g' ${SRC}/CMakeLists.txt",
+
+    ],
+    buildEnv={
+      EXTRA_LDFLAGS=[
+        "-ljpeg",
+        "-lspng",
+        "-lwebp",
+      ]
+    }
+  }
+}
+
