@@ -705,3 +705,32 @@
   }
 }
 
+&
+
+{
+  lib,
+  drvs,
+  hyprland,
+  hyprlandX11 | lib.MesonPackage = (hyprland &{
+    biDrvs | priority 1 = hyprland.biDrvs @ [
+             
+              drvs.xcbRenderutil,
+              drvs.libxfont2,
+              drvs.libfontenc,
+              drvs.libxcvt,
+              drvs.libxshmfence,
+              drvs.xwayland,
+              drvs.libxkbfile,
+              drvs.openssl,
+              drvs.xcbUtilWm,
+              drvs.xcbUtilErrors,
+      
+    ],
+
+      extraMesonArgs | priority 1 = [
+        "-Dxwayland=enabled",
+        "-Dtracy_enable=false",
+        "-Dhyprpm=disabled",
+      ],
+  })
+}

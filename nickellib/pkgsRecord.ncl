@@ -321,6 +321,7 @@ let r = {
     & (import "../pkgs/w/wmenu/wmenu.ncl")
 
     & (import "../pkgs/w/wob/wob.ncl")
+    & (import "../pkgs/x/xcb-util-errors/xcb-util-errors.ncl")
     & (import "../pkgs/x/xdg-dbus-proxy/xdg-dbus-proxy.ncl")
     & (import "../pkgs/x/xdg-runtime-run/xdg-runtime-run.ncl")
     & (import "../pkgs/x/xdg-utils/xdg-utils.ncl")
