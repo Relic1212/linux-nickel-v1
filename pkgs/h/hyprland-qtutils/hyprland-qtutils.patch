@@ -1,0 +1,44 @@
+diff --git a/utils/dialog/CMakeLists.txt b/utils/dialog/CMakeLists.txt
+index ad7ae44..57affed 100644
+--- a/utils/dialog/CMakeLists.txt
++++ b/utils/dialog/CMakeLists.txt
+@@ -25,8 +25,21 @@ qt_add_qml_module(hyprland-dialog
+ 
+ target_link_libraries(hyprland-dialog PRIVATE
+     Qt6::Widgets Qt6::QuickControls2 Qt6::WaylandClientPrivate PkgConfig::hyprutils
++    Qt6::WaylandClient 
++    Qt6::WlShellIntegrationPrivate
++    Qt6::Gui
++    
++    Qt6::WaylandCompositor
++    Qt6::WaylandCompositorPrivate
++
++
+ )
+ 
++qt_import_plugins(hyprland-dialog INCLUDE 
++    Qt6::QWaylandIntegrationPlugin
++    Qt6::QWaylandXdgShellIntegrationPlugin
++    Qt6::QWaylandBradientDecorationPlugin
++)
+ 
+ include(GNUInstallDirs)
+ install(TARGETS hyprland-dialog
+diff --git a/utils/dialog/main.cpp b/utils/dialog/main.cpp
+index 7fd3c75..84f7b86 100644
+--- a/utils/dialog/main.cpp
++++ b/utils/dialog/main.cpp
+@@ -7,6 +7,13 @@
+ #include <qtenvironmentvariables.h>
+ #include <QQmlContext>
+ 
++#include <QtPlugin>
++
++
++Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
++Q_IMPORT_PLUGIN(QWaylandXdgShellIntegrationPlugin)
++Q_IMPORT_PLUGIN(QWaylandBradientDecorationPlugin)
++
+ using namespace Hyprutils::String;
+ 
+ int main(int argc, char* argv[]) {

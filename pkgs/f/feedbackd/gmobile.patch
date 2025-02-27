@@ -1,0 +1,28 @@
+diff --git a/src/meson.build b/src/meson.build
+index 502e8ab..ad98a97 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -45,7 +45,7 @@ gm_c_args = [
+   '-DG_LOG_DOMAIN="gmobile"',
+ ]
+ 
+-gm_lib = both_libraries(
++gm_lib = library(
+   'gmobile',
+   gm_sources,
+   include_directories: root_inc,
+@@ -57,12 +57,9 @@ gm_lib = both_libraries(
+ gmobile_dep = declare_dependency(
+   include_directories: [root_inc, include_directories('.')],
+   dependencies: gm_deps,
+-  link_with: gm_lib.get_static_lib())
++  link_with: gm_lib)
++
+ 
+-gmobile_shared_dep = declare_dependency(
+-  include_directories: [root_inc, include_directories('.')],
+-  dependencies: gm_deps,
+-  link_with: gm_lib.get_shared_lib())
+ 
+ pkgconfig = import('pkgconfig')
+ pkgconfig.generate(

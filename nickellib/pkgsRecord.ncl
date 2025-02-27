@@ -73,6 +73,8 @@ let r = {
     & (import "../pkgs/e/eudev/eudev.ncl")
     & (import "../pkgs/e/expat/expat.ncl")
     & (import "../pkgs/f/fcft/fcft.ncl")
+    & (import "../pkgs/f/feedbackd/feedbackd.ncl")
+
     & (import "../pkgs/f/ffmpeg/ffmpeg.ncl")
     & (import "../pkgs/f/file/file.ncl")
     & (import "../pkgs/f/fish/fish.ncl")
@@ -96,13 +98,20 @@ let r = {
     & (import "../pkgs/g/git/git.ncl")
     & (import "../pkgs/g/gnupg/gnupg.ncl")
     & (import "../pkgs/g/googlefonts/googlefonts.ncl")
+    & (import "../pkgs/g/graphene/graphene.ncl")
+
     & (import "../pkgs/g/gtk-layer-shell/gtk-layer-shell.ncl")
     & (import "../pkgs/g/gtk3/gtk3.ncl")
+    & (import "../pkgs/g/gtk4/gtk4.ncl")
+    & (import "../pkgs/g/gtk4-layer-shell/gtk4-layer-shell.ncl")
+
     & (import "../pkgs/g/gtkmm/gtkmm3.ncl")
+    & (import "../pkgs/g/gtkmm/gtkmm4.ncl")
 
 
     & (import "../pkgs/g/glib/glib.ncl")
     & (import "../pkgs/g/glibmm/glibmm.ncl")
+    & (import "../pkgs/g/gnome-desktop/gnome-desktop.ncl")
     & (import "../pkgs/g/gnumake/gnumake-stage-1.ncl")
     & (import "../pkgs/g/gnumake/gnumake.ncl")
     & (import "../pkgs/g/gnused/gnused.ncl")
@@ -169,6 +178,7 @@ let r = {
     & (import "../pkgs/l/libspng/libspng.ncl")
 
     & (import "../pkgs/l/libssp-nonshared/libssp-nonshared-stage-0.ncl")
+    & (import "../pkgs/l/libtiff/libtiff.ncl")
     & (import "../pkgs/l/libtool/libtool.ncl")
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
     & (import "../pkgs/l/libwebp/libwebp.ncl")
@@ -278,6 +288,7 @@ let r = {
     & (import "../pkgs/s/spirv-headers/spirv-headers.ncl")
     & (import "../pkgs/s/spirv-llvm-translator/spirv-llvm-translator.ncl")
     & (import "../pkgs/s/spirv-tools/spirv-tools.ncl")
+    & (import "../pkgs/s/squeekboard/squeekboard.ncl")
     & (import "../pkgs/s/strace/strace.ncl")
     & (import "../pkgs/s/swappy/swappy.ncl")
     & (import "../pkgs/s/sway/sway.ncl")

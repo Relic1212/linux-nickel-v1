@@ -112,3 +112,63 @@
       ]
     }
 }
+&
+{
+  lib,
+  drvs,
+  "pangomm-2.48" | lib.MesonPackage
+    = {
+      singleSource = {
+        #uri = "https://download.gnome.org/sources/pangomm/2.48/pangomm-2.48.2.tar.xz",
+        #sha256sum = "e1d75522c53f462799875cd247f9b49c91ced4b1abe68387ac35b271392d4ea5",
+        uri = "https://download.gnome.org/sources/pangomm/2.56/pangomm-2.56.1.tar.xz",
+        sha256sum = "539f5aa60e9bdc6b955bb448e2a62cc14562744df690258040fbb74bf885755d",
+      },
+
+      llvmProvider = drvs.llvmFull,
+      biDrvs = [
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.zlibNg,
+        drvs.gperf,
+        drvs.pixman,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.libxkbcommon,
+        drvs.expat,
+        drvs.linuxHeaders,
+        drvs.ncurses,
+        drvs.readline,
+        drvs.pcre2,
+        drvs."pango-1.56",
+        drvs.cairo,
+        drvs.libpng,
+        drvs.harfbuzzFull,
+        drvs.glibDynamic,
+        drvs.muslShared,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs.gtk4,
+        drvs.libtiff,
+        drvs.graphene,
+        drvs."libsigc++",
+        drvs."cairomm-1.16",
+        drvs."glibmm-2.82" ,
+
+      ],
+    }
+}

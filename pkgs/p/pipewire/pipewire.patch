@@ -1,0 +1,119 @@
+diff --git a/src/pipewire/conf.c b/src/pipewire/conf.c
+index 387a3ab..f2c00a8 100644
+--- a/src/pipewire/conf.c
++++ b/src/pipewire/conf.c
+@@ -601,7 +601,7 @@ static int load_module(struct pw_context *context, const char *key, const char *
+ 		} else if (flags == NULL || strstr(flags, "nofail") == NULL) {
+ 			pw_log_error("%p: could not load mandatory module \"%s\": %m",
+ 					context, key);
+-			return -errno;
++			// return -errno;
+ 		} else {
+ 			pw_log_info("%p: could not load optional module \"%s\": %m",
+ 					context, key);
+@@ -729,7 +729,7 @@ bool pw_conf_find_match(struct spa_json *arr, const struct spa_dict *props, bool
+ 		/* empty match for condition means success */
+ 		return true;
+ 
+-	return false;
++	return true;
+ }
+ 
+ /*
+diff --git a/src/pipewire/loop.c b/src/pipewire/loop.c
+index 2e7fb47..650cebd 100644
+--- a/src/pipewire/loop.c
++++ b/src/pipewire/loop.c
+@@ -57,18 +57,18 @@ struct pw_loop *pw_loop_new(const struct spa_dict *props)
+ 
+ 	this = &impl->this;
+ 
+-	if (props)
+-		lib = spa_dict_lookup(props, PW_KEY_LIBRARY_NAME_SYSTEM);
+-	else
++	//if (props)
++	//	lib = spa_dict_lookup(props, PW_KEY_LIBRARY_NAME_SYSTEM);
++	//else
+ 		lib = NULL;
+ 
+ 	impl->system_handle = pw_load_spa_handle(lib,
+ 			SPA_NAME_SUPPORT_SYSTEM,
+ 			props, n_support, support);
+ 	if (impl->system_handle == NULL) {
+-		res = -errno;
++		// res = -errno;
+ 		pw_log_error("%p: can't make "SPA_NAME_SUPPORT_SYSTEM" handle: %m", this);
+-		goto error_free;
++		// goto error_free;
+ 	}
+ 
+         if ((res = spa_handle_get_interface(impl->system_handle,
+diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
+index 900f13e..5ad96fe 100644
+--- a/src/pipewire/meson.build
++++ b/src/pipewire/meson.build
+@@ -106,7 +106,7 @@ libpipewire = library(pipewire_name, pipewire_sources,
+   c_args : libpipewire_c_args,
+   include_directories : [pipewire_inc, configinc, includes_inc],
+   install : true,
+-  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep],
+ )
+ 
+ pipewire_dep = declare_dependency(link_with : libpipewire,
+diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
+index 4451fa5..deec3af 100644
+--- a/src/pipewire/pipewire.c
++++ b/src/pipewire/pipewire.c
+@@ -28,6 +28,7 @@
+ #include "pipewire.h"
+ #include "private.h"
+ #include "i18n.h"
++#include "../include/spa/support/plugin.h"
+ 
+ #define MAX_SUPPORT	32
+ 
+@@ -111,26 +112,27 @@ open_plugin(struct registry *registry,
+ 	}
+ 
+         if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
+-		res = -ENOENT;
++		// res = -ENOENT;
+ 		pw_log_debug("can't load %s: %s", filename, dlerror());
+-		goto error_out;
++		// goto error_out;
+         }
+         if ((enum_func = dlsym(hnd, SPA_HANDLE_FACTORY_ENUM_FUNC_NAME)) == NULL) {
+-		res = -ENOSYS;
++		//res = -ENOSYS;
+ 		pw_log_debug("can't find enum function: %s", dlerror());
+-		goto error_dlclose;
++		// goto error_dlclose;
+         }
+ 
+ 	if ((plugin = calloc(1, sizeof(struct plugin))) == NULL) {
+ 		res = -errno;
+-		goto error_dlclose;
++	//	goto error_dlclose;
+ 	}
+-
++	
++	
+ 	pw_log_debug("loaded plugin:'%s'", filename);
+ 	plugin->ref = 1;
+ 	plugin->filename = strdup(filename);
+ 	plugin->hnd = hnd;
+-	plugin->enum_func = enum_func;
++	plugin->enum_func = spa_handle_factory_enum;
+ 	plugin->log_topic_enum = dlsym(hnd, SPA_LOG_TOPIC_ENUM_NAME);
+ 
+ 	spa_list_append(&registry->plugins, &plugin->link);
+@@ -574,7 +576,7 @@ void pw_init(int *argc, char **argv[])
+ 		items[n_items++] = SPA_DICT_ITEM_INIT(SPA_KEY_CPU_VM_TYPE, str);
+ 	info = SPA_DICT_INIT(items, n_items);
+ 
+-	add_interface(support, SPA_NAME_SUPPORT_CPU, SPA_TYPE_INTERFACE_CPU, &info);
++	// add_interface(support, SPA_NAME_SUPPORT_CPU, SPA_TYPE_INTERFACE_CPU, &info);
+ 
+ 	add_i18n(support);
+ 

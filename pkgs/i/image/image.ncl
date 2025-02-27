@@ -49,6 +49,7 @@
           (drvs.sbase & { priority = -1 }),
           drvs.libarchive,
           drvs.wget,
+          drvs.bzip2,
           ## end uutils
 
           ## begin sbase

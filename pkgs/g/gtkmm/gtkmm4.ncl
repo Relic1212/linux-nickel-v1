@@ -1,0 +1,84 @@
+{
+  lib,
+  drvs,
+  gtkmm4 | lib.MesonPackage
+    = {
+      singleSource = {
+        #uri = "https://gitlab.gnome.org/GNOME/gtkmm/-/archive/4.16.0/gtkmm-4.16.0.tar.gz",
+        #sha256sum = "a5e5fa6abab2b57a5c9e2b48741b117b54c3a87e60597aef57a075ae649e3704",
+        uri = "https://download.gnome.org/sources/gtkmm/4.16/gtkmm-4.16.0.tar.xz",
+        sha256sum = "3b23fd3abf8fb223b00e9983b6010af2db80e38c89ab6994b8b6230aa85d60f9",
+      },
+
+      llvmProvider = drvs.llvmFull,
+      pythonProvider = drvs.pythonDynamic,
+
+      biDrvs = [
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.zlibNg,
+        drvs.gperf,
+        drvs.pixman,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.libxkbcommon,
+        drvs.expat,
+        drvs.linuxHeaders,
+        drvs.ncurses,
+        drvs.readline,
+        drvs.pcre2,
+        drvs."pango-1.56",
+        drvs.cairo,
+        drvs.libpng,
+        drvs.harfbuzzFull,
+        drvs.glibDynamic,
+        drvs.muslShared,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs.gtk4,
+        #drvs."libsigc++2",
+        drvs."libsigc++",
+
+        drvs."cairomm-1.16",
+        drvs."pangomm-2.48",
+        drvs."glibmm-2.82" ,
+        (drvs.pythonSetuptools & { priority = 1 }),
+
+        drvs.libtiff,
+
+
+        drvs.graphene,
+
+        drvs.libxslt,
+        drvs.m4,
+        drvs.gettext,
+        drvs.graphviz,
+
+      ],
+      extraMesonArgs = [
+        "-Dbuild-demos=false",
+        "-Dbuild-tests=false",
+        "-Dmsvc14x-parallel-installable=false",
+      ],
+      preConfigurePhase = [
+        #"mkdir ${SRC}/untracked/build_scripts",
+        #"touch ${SRC}/untracked/generate-binding.py"
+
+        #"sed -i 's@not import@import@g' ${SRC}/meson.build"
+      ]
+    }
+}

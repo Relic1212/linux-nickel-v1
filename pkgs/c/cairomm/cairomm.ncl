@@ -42,3 +42,28 @@
       ]
     }
 }
+
+
+&
+{
+  lib,
+  drvs,
+  "cairomm-1.16" | lib.MesonPackage
+    = {
+      singleSource = {
+        uri = "https://gitlab.freedesktop.org/cairo/cairomm/-/archive/1.16.0/cairomm-1.16.0.tar.gz",
+        sha256sum = "96b281441b6836bf579139c3beeac527d1ae8cc6040344f52b20e6842a1bd937"
+      },
+      biDrvs = [
+        drvs.perl,
+        drvs.pixman,
+        drvs.zlibNg,
+        drvs.freetype,
+        drvs.fontconfig,
+        drvs.libpng,
+        drvs.expat,
+        drvs.cairo,
+        drvs."libsigc++"
+      ]
+    }
+}

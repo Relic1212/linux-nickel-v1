@@ -1,0 +1,101 @@
+
+
+{
+    lib,
+    drvs,
+    hyprlandQtSupport | lib.CmakePackage = {
+        generator = "Ninja",
+
+        singleSource = {
+            uri = "https://github.com/hyprwm/hyprland-qt-support/archive/refs/tags/v0.1.0.tar.gz",
+            sha256sum = "cac1f980bd088b890097f3f999cfdf03e73ee94c53f3c92d0b3bc23baa9e7b2c"
+        },
+      llvmProvider = drvs.llvmFull,
+
+
+    biDrvs = [
+        drvs.pixman,
+        drvs.expat,
+    drvs.libffi,
+        drvs.libevdev,
+        drvs.mtdev,
+        drvs.pango,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.freetype,
+        drvs.fontconfig,
+        drvs.zlibNg,
+        drvs.harfbuzz,
+        drvs.glib,
+        drvs.hwdata,
+        drvs.linuxHeaders,
+        drvs.hyprwaylandScanner,
+        drvs.aquamarine,
+        drvs.hyprUtils,
+        drvs.hyprlang,
+        drvs.hyprcursor,
+
+        drvs.libjpegTurboStatic,
+
+        drvs.libspng,
+
+        drvs.file,
+        drvs.libwebp,
+
+        drvs.qtdeclarative,
+        drvs.qtbase,
+        drvs.qtshadertools,
+        drvs.qtwayland,
+
+
+
+
+        drvs.mesa2,
+        # drvs.pkgconf,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.pythonMako,
+        drvs.pythonPackaging,
+        drvs.pythonMarkupsafe,
+        drvs.libpciaccess,
+        drvs.bison,
+        drvs.flex,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.m4,
+        drvs.pyyaml,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        ###
+        drvs.jsonC,
+        drvs.pcre2,
+        drvs.libxkbcommon,
+        drvs.openssl,
+
+        drvs.kmod,
+        drvs.zstd,
+        drvs.xz,
+        drvs.eudev,
+        drvs.libinput,
+    ],
+   preConfigurePhase = [
+        "sed -i 's@SHARED@STATIC@g' ${SRC}/src/style/CMakeLists.txt",
+        "sed -i 's@SHARED@STATIC@g' ${SRC}/src/style/impl/CMakeLists.txt",
+
+    ],
+       buildEnv = {
+        EXTRA_LDFLAGS= [
+          
+            "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
+
+
+
+        ]
+    },
+    cmakeExtraArgsRecord = {
+"-DINSTALL_QML_PREFIX"="/lib/qt6/qml",
+        "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+    },
+    }
+}

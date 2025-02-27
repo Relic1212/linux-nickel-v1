@@ -24,3 +24,35 @@
         ]
     }
 }
+
+
+&
+{
+  lib,
+  drvs,
+  harfbuzz,
+  harfbuzzFull | lib.MesonPackage = {
+    singleSource = harfbuzz.singleSource,
+     extraMesonArgs = [
+        "-Dfreetype=enabled",
+        "-Dcairo=enabled",
+        "-Dglib=enabled",
+
+      ],
+      biDrvs =
+         [
+          drvs.freetype,
+          drvs.cairo,
+          drvs.zlibNg,
+          drvs.pixman,
+          drvs.fontconfig,
+          drvs.libpng,
+          drvs.expat,
+
+        drvs.pcre2,
+        drvs.libffi,
+          drvs.glib,
+        ]
+
+  }
+}

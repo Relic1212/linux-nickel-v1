@@ -734,3 +734,5 @@
       ],
   })
 }
+
+& (import "../hyprland-qtutils/hyprland-qtutils.ncl")

@@ -1,11 +1,16 @@
 {
     lib,
     drvs,
-    pipewire|lib.MesonPackage={
+    _pipewire|lib.MesonPackage={
         singleSource={
-            uri = "https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/1.2.7/pipewire-1.2.7.tar.gz",
-            sha256sum = "e75568ed18bcbe75e9779af57cb9cc256fd7ebfaadc12bb347a0717055d1d3a9"
+            uri = "https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/1.3.83/pipewire-1.3.83.tar.gz",
+            sha256sum = "fb9ffee4c8cece297dd44cb83bc070d9fdf0d264a08858b21b401e17683ca790"
         },
+        patches = [{
+           sha256sum = "86cb1b6ff59ed947f8c2ad01b9c473e0a97946d6dde20b62dedf4f79385ff654",
+          file=  "pipewire.patch"
+
+        }],
         biDrvs = [
             drvs.dbus,
             drvs.alsaLibs,
@@ -63,6 +68,8 @@
 
         (drvs.findutils & {priority = 1}),
 
+        drvs.libsndfile,
+
       
         ],
         extraMesonArgs = [
@@ -71,17 +78,24 @@
             "-Dvideoconvert=disabled",
             "-Dv4l2=disabled",
             "-Dsupport=enabled",
-            "-Dspa-plugins=disabled",
+            "-Dspa-plugins=enabled",
             "-Dtests=disabled",
             "-Davb=disabled",
             "-Draop=disabled",
+            "-Dsndfile=enabled",
+            
         ],
         preConfigurePhase = [
             m%"
             for f in $(find "${SRC}" -name meson.build); do
                 sed -i 's@shared_library@library@g' "${f}"
             done
-            "%
+            "%,
+
+            # "sed -i 's@, plugin_dependencies@@g' ${SRC}/src/modules/meson.build",
         ]
+    },
+    pipewire | lib.MesonPackage = _pipewire &{
+        mesonArgs | force = lib.functions.replaceArrayElem "--buildtype=release" "--buildtype=debug" _pipewire.mesonArgs
     }
 }

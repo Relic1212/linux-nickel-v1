@@ -20,6 +20,8 @@
             # "LDFLAGS=\"${LDFLAGS}\"",
             "BINDIR=/usr/bin",
             "SBINDIR=/usr/bin",
+            "LIBDIR=/usr/lib",
+            "USRLIBDIR=/usr/lib",
             "NO_SOLIB=1",
             "DEVELLIB=libkeyutils.a",
         ],
