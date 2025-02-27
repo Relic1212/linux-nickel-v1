@@ -65,6 +65,8 @@ let _services =
               "upowerd",
 
               "v4l2loopback",
+              "netdev",
+              "netdev-lo",
             ]
             @ (
               if enableBluetooth then
@@ -105,6 +107,7 @@ let _services =
         ],
         "waits-for" = [
           "netdev",
+
           "udev-settle",
         ]
       },
@@ -221,7 +224,12 @@ let _services =
         restart = false,
         "depends-on" = ["varrw"],
       },
-
+      "netdev-lo" = {
+        type = "scripted",
+        command = "/usr/bin/ip link set lo up",
+        restart = false,
+        "depends-on" = ["varrw"],
+      },
       # "netdev-eth0" = {
       #   type = "scripted",
       #   command = "/usr/bin/ip link set eth0 up",

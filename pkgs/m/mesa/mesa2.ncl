@@ -199,6 +199,83 @@
           "ln -s egl.pc opengl.pc",
         ]
       },
+
+  mesaGlx | lib.MesonPackage
+    =
+      mesa2
+      & {
+        # name|force="mesa2",
+
+        extraMesonArgs | priority 1 = 
+        [
+        "-Dgles1=disabled",
+        "-Dxmlconfig=disabled",
+        "-Dshared-llvm=disabled",
+        "-Dgles2=enabled",
+        "-Dgallium-nine=false",
+        "-Ddri3=disabled",
+        "-Dopengl=true",
+        "-Dgallium-drivers=radeonsi,virgl,iris,i915,crocus",
+        "-Dplatforms='x11,wayland'",
+        "-Dcpp_rtti=false",
+        "-Dshared-glapi=enabled",
+        "-Dgbm=enabled",
+        "-Dzstd=disabled",
+        "-Dzlib=enabled",
+        "-Dglvnd=false",
+        "-Dvulkan-drivers=",
+        "-Dshader-cache=disabled",
+        "-Dexpat=disabled",
+        "-Dvideo-codecs='all'",
+        "-Dtools=''",
+        "-Degl=enabled",
+        "-Dglx-read-only-text=true",
+        "-Dgallium-xa=disabled",
+        "-Dgallium-vdpau=disabled",
+        "-Dgallium-va=disabled",
+        "-Dgallium-opencl=disabled",
+        "-Dimagination-srv=false",
+        "-Dglx=dri",
+        "-Dopencl-spirv=false",
+        "-Dosmesa=false",
+        "-Dvulkan-beta=false",
+        "-Degl-native-platform=drm",
+        "-Dintel-clc=enabled",
+        "-Dllvm=enabled",
+      ],
+      biDrvs|priority 1 = mesa2.biDrvs @ [
+        drvs.wayland,
+        drvs.waylandProtocols,
+        
+drvs.libxcursor,
+        drvs.xorgMacros,
+        drvs.xorgproto,
+        drvs.xtrans,
+        drvs.libxcb,
+        drvs.xcbProto,
+        drvs.libxau,
+        drvs.libx11,
+        drvs.libxrender,
+        drvs.libxfixes,
+
+             drvs.xcbRenderutil,
+              drvs.libxfont2,
+              drvs.libfontenc,
+              drvs.libxcvt,
+              drvs.libxshmfence,
+              drvs.xwayland,
+              drvs.libxkbfile,
+              drvs.openssl,
+              drvs.xcbUtilWm,
+              drvs.xcbUtilErrors,
+
+              drvs.libxext,
+              drvs.libxf86vm,
+              drvs.libxrandr,
+      ]
+
+       
+      },
 }
 & {
   lib,

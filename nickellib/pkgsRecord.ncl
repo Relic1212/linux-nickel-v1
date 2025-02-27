@@ -183,6 +183,7 @@ let r = {
     & (import "../pkgs/l/libudev-zero/libudev-zero.ncl")
     & (import "../pkgs/l/libwebp/libwebp.ncl")
     & (import "../pkgs/l/libxcursor/libxcursor.ncl")
+    & (import "../pkgs/l/libxext/libxext.ncl")
     & (import "../pkgs/l/libxkbcommon/libxkbcommon.ncl")
     & (import "../pkgs/l/libxml2/libxml2.ncl")
     & (import "../pkgs/l/libxmlb/libxmlb.ncl")
