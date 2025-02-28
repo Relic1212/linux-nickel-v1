@@ -33,6 +33,9 @@ qtbaseCmakeExtraArgsRecorf = {
    "-DFEATURE_openssl_linked"="ON",
    "-DFEATURE_dbus"="OFF",
 
+   "-DFEATURE_egl"="ON",
+        "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
+
 }
 in
 {
@@ -110,6 +113,8 @@ in
           "-lc++",
           "-lglapi",
           "-ldrm",
+           "$(pkg-config --libs --static gbm glesv2 dri egl)",
+
         ],
       },
     }

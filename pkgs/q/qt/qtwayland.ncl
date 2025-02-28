@@ -78,6 +78,8 @@
 
     cmakeExtraArgsRecord = {
       "-DFEATURE_wayland_compositor_quick" = "ON",
+      "-DFEATURE_wayland_egl" = "ON",
+      "-DQT_FEATURE_egl"="ON",
         "-DQT_DEBUG_FIND_PACKAGE"="ON",
         "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
     },

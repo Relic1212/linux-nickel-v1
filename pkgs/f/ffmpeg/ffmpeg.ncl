@@ -48,7 +48,7 @@
         drvs.libdrm,
         drvs.libpciaccess,
         drvs.libelf,
-        drvs.mesaOpengl,
+        drvs.mesa2,
         drvs.nasm,
         drvs.fribidi,
         drvs.openssl,

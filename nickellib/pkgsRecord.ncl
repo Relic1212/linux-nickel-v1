@@ -93,6 +93,7 @@ let r = {
 
     & (import "../pkgs/g/gccrs/gccrs.ncl")
     & (import "../pkgs/g/gdk-pixbuf/gdk-pixbuf.ncl")
+    & (import "../pkgs/g/gebaar-libinput/gebaar-libinput.ncl")
     & (import "../pkgs/g/genimage/genimage.ncl")
     & (import "../pkgs/g/gettext/gettext.ncl")
     & (import "../pkgs/g/git/git.ncl")
@@ -104,6 +105,7 @@ let r = {
     & (import "../pkgs/g/gtk3/gtk3.ncl")
     & (import "../pkgs/g/gtk4/gtk4.ncl")
     & (import "../pkgs/g/gtk4-layer-shell/gtk4-layer-shell.ncl")
+    & (import "../pkgs/g/gtkgreet/gtkgreet.ncl")
 
     & (import "../pkgs/g/gtkmm/gtkmm3.ncl")
     & (import "../pkgs/g/gtkmm/gtkmm4.ncl")
@@ -301,6 +303,8 @@ let r = {
     & (import "../pkgs/s/sysklogd/sysklogd.ncl")
     & (import "../pkgs/s/syslog-ng/syslog-ng.ncl")
     & (import "../pkgs/s/systemd/systemd.ncl")
+    & (import "../pkgs/s/sysshell/sysshell.ncl")
+
     & (import "../pkgs/t/terminus-font/terminus-font.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
     & (import "../pkgs/t/tlp/tlp.ncl")

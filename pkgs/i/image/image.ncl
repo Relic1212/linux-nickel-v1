@@ -30,9 +30,15 @@
       options = {
         full = true,
         hasX11 = true,
+        haveContainers = true,
+        isVm = false,
       },
       name = "base-base-rootfs",
       biDrvs =
+        (if options.isVm then [] else [
+                    drvs.linuxFirmware,
+
+        ] ) @
         [
           # base
           # drvs.busyboxFinal,
@@ -83,7 +89,6 @@
           # drvs.linux,
           drvs.v4l2loopback,
 
-          drvs.linuxFirmware,
           # drvs.linuxFirmwareSmaller,
           drvs.eudev,
           # drvs.mdevd,
@@ -125,6 +130,15 @@
           drvs.fontAwesome,
           drvs.terminusFont,
           drvs.sndiod,
+
+          drvs.squeekboard,
+          drvs.glib,
+          drvs.gsettingsDesktopSchemas,
+          drvs.gnomeDesktop,
+
+          #drvs.hyprlandQtSupport,
+          #drvs.hyprlandQtutils,
+
         ]
         @ (
           if options.hasX11 then
@@ -142,7 +156,7 @@
             ]
         )
         @ (
-          if options.full then
+          (if options.full then
             [
               #drvs.cagebreak,
               drvs.rwaybar,
@@ -190,15 +204,7 @@
               # drvs.pulseaudio14,
               # flatpak 
               drvs.xdgDbusProxy,
-              drvs.flatpak,
-              drvs.gnupg2,
-              drvs.gpgme,
-              # really?
-              drvs.bubblewrap,
-              drvs.podman,
-              drvs.conmon,
-              drvs.crun,
-              drvs.netavark,
+            
               drvs.mountOthers,
               drvs.sbctl,
               drvs.pythonFull,
@@ -207,7 +213,18 @@
               drvs.tzdata,
             ]
           else
-            []
+            [])
+            @ (if options.haveContainers then [
+                drvs.flatpak,
+              drvs.gnupg2,
+              drvs.gpgme,
+              
+              drvs.bubblewrap,
+              drvs.podman,
+              drvs.conmon,
+              drvs.crun,
+              drvs.netavark,
+            ] else [])
         )
     }
   ),
