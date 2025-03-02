@@ -10,7 +10,7 @@
         installPhase = [
             "install -d -m0755 ${DEST}/usr/share/fonts/TTF",
             "install -d -m0755 ${DEST}/usr/share/fonts/OTF",
-            "install -m0644 webfonts/*.ttf ${DEST}/usr/share/fonts/TTF",
+           # "install -m0644 webfonts/*.ttf ${DEST}/usr/share/fonts/TTF",
             "install -m0644 otfs/*.otf ${DEST}/usr/share/fonts/OTF",
         ]
     }

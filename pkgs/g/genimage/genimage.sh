@@ -70,6 +70,7 @@ create_part() {
 	#	--all-root \
 	UUID_ARGS="" #"U $rootu "
 	mkfs.erofs \
+		-zlz4hc \
 		-d 0 \
 		-L roota \
 		$UUID_ARGS		\

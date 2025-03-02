@@ -322,13 +322,14 @@ in
                 "(cd ${SRC}; autoreconf -fiv)",
                 configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
               ],
+              perlProvider | default =  pkgs.perl,
           baseBuildinputPackages | priority -999
             =
               AutotoolsPackage.baseBuildinputPackages
               @ lib.biMap (
                 if (stage == -1) then
                   [
-                    pkgs.perl,
+                   perlProvider,
                     pkgs.automake,
                     pkgs.autoconf,
                     pkgs.m4,

@@ -73,6 +73,10 @@ in
         "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
       ],
       makeInstallTargets = ["modules_install"],
+
+#       CONFIG_LZ4_COMPRESS=y
+# CONFIG_LZ4HC_COMPRESS=y
+# CONFIG_MODULE_COMPRESS_ZSTD=y
       preBuildPhase = [
         "cp /tmp/workdir/files/%{baseConfig.file} .config",
 
@@ -153,6 +157,9 @@ in
         CONFIG_VIRTIO_PCI=y
 
         CONFIG_MODPROBE_PATH=\"/usr/bin/modprobe\"
+
+        CONFIG_FB_DEVICE=y
+        CONFIG_INPUT_UINPUT=y
 
         " > /tmp/workdir/build/v4l2loopback.diffconfig
         "%,

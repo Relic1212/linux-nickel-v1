@@ -13,6 +13,11 @@ gebaarLibinput | lib.CmakePackage = {
         drvs.eudev,
         drvs.linuxHeaders,
         drvs.cxxopts,
+        drvs.zlibNg,
+        drvs.cpptoml,
+    ],
+    preConfigurePhase = [
+        "sed -i 's@stdc++fs@@g' ${SRC}/CMakeLists.txt"
     ]
 }
 }
@@ -48,6 +53,8 @@ gebaarLibinput | lib.CmakePackage = {
         llvmProvider = drvs.llvmFull,
         cmakeExtraArgsRecord = {
             "-DLIBCXX_DIR"="/usr/lib/cmake/llvm",
+            "-DENABLE_LIBCXX" = false,
+            "-DCPPTOML_BUILD_EXAMPLES" = false,
         }
     }
 }

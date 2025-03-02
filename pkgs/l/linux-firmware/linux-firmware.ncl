@@ -13,8 +13,12 @@
       separateBuildDir = false,
       biDrvs = [
         drvs.rdfind,
-        (drvs.coreutils & { priority = 1 })
-      ]
+        (drvs.coreutils & { priority = 1 }),
+        drvs.zstd,
+      ],
+      makeInstallTargets = [
+        "install-zst"
+      ],
     },
   linuxFirmwareSmaller | lib.MakePackage
     =

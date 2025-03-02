@@ -86,7 +86,7 @@
           drvs.utilLinux,
           drvs.pciutils,
           drvs.xz,
-          # drvs.linux,
+          #drvs.linux,
           drvs.v4l2loopback,
 
           # drvs.linuxFirmwareSmaller,
@@ -127,17 +127,28 @@
           drvs.foot,
           drvs.fontconfig,
           drvs.ttfCroscore,
-          drvs.fontAwesome,
+          # drvs.fontAwesome,
+          drvs.dejavuFonts,
+          drvs.hicolorIconTheme,
+
           drvs.terminusFont,
           drvs.sndiod,
 
           drvs.squeekboard,
+          drvs.lisgd,
           drvs.glib,
           drvs.gsettingsDesktopSchemas,
           drvs.gnomeDesktop,
+          drvs.atSpi2Core,
 
-          #drvs.hyprlandQtSupport,
-          #drvs.hyprlandQtutils,
+
+          drvs.hyprlandQtSupport,
+          drvs.hyprlandQtutils,
+
+          # ttyescape
+          drvs.buffybox,
+          drvs.hkdm,
+          drvs.ttyescape,
 
         ]
         @ (
@@ -185,6 +196,8 @@
               drvs.j4MenuDesktop,
               drvs.lavalauncher,
               drvs.waybar,
+              drvs.gammastep,
+              drvs.gebaarLibinput,
               drvs.upower,
               drvs.acpid,
               drvs.laptopModeTools,

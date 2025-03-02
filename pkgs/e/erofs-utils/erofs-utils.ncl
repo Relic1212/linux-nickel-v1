@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   erofsUtils | lib.AutomakePackage
     = {
       singleSource = {
@@ -8,8 +8,13 @@
         sha256sum = "5dbf7b492f7682462b97a77121d43ca7609cd90e65f8c96931aefc820a6f0da3",
       },
       biDrvs =
-        lib.biMap [
-          pkgs.utilLinux,
+         [
+          drvs.utilLinux,
+          drvs.lz4,
+          drvs.xz,
+          drvs.zlibNg,
+          drvs.zstd,
+
         ]
     }
 }

@@ -11,6 +11,11 @@
       configureScript,
       configureFlags,
 
+      extraConfigureFlags = [
+        "--enable-wayland",
+
+      ],
+
       configurePhase = [
         #"(cd ${SRC}; autoreconf -fiv)",
         "cd ${SRC}",
@@ -20,9 +25,20 @@
       ],
       biDrvs = [
         drvs.gettext,
-        drvs.perlXmlParser,
         drvs.intltool,
-      ]
+        #drvs.perl,
+        drvs.perlXmlParserDynamic,
+        drvs.muslShared,
+
+        drvs.wayland,
+        drvs.waylandProtocols,
+          drvs.linuxHeaders,
+          drvs.expat,
+          drvs.libffi,
+        
+      ],
+      perlProvider =         drvs.perlDynamic,
+
     }
 }
 
@@ -36,7 +52,9 @@
       sha256sum = "67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd"
     },
     biDrvs = [
-      drvs.perlWithXmlParser,
+      drvs.perlDynamic,
+      drvs.perlXmlParserDynamic,
+      drvs.muslShared,
 
     ]
   }
@@ -62,6 +80,26 @@
     preConfigurePhase = [
       "perl Makefile.PL LINKTYPE=static"
     ]
+  }
+}
+&
+{
+  lib,
+  drvs,
+  perlXmlParser,
+  perlXmlParserDynamic | lib.MakePackage = {
+    singleSource = perlXmlParser.singleSource,
+    biDrvs=[
+      drvs.perlDynamic,
+              drvs.muslShared,
+
+      drvs.expat,
+    ],
+    preConfigurePhase = [
+      "perl Makefile.PL"
+
+    ],
+    isStatic = false,
   }
 }
 
@@ -97,6 +135,7 @@
     -Uusedl \
     -Dd_access=true \
     -Dd_eaccess='undef' \
+    -Dlocincpth=' ' \
     -des
     }
     "%,

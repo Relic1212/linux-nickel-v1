@@ -6,7 +6,7 @@
       extraFiles = [
         {
           file = "genimage.sh",
-          sha256sum = "460f656ffc6091fb962ec8187dc3419b22cb57c2209f7cee36a8e5048e180670",
+          sha256sum = "d9aa130ec29df62335fbb440237f1d5aea929b8b3e3a78de8b6b885968f58857",
         }
       ],
       installPhase = [

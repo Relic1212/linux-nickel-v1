@@ -40,3 +40,31 @@
       ]
     }
 }
+
+&
+
+{
+  lib,
+  drvs,
+  perl,
+  perlDynamic | lib.AutotoolsPackage = {
+    sourceInputs = perl.sourceInputs, 
+    separateBuildDir = false,
+     configurePhase = [
+        m%"./Configure \
+        -Dprefix=/usr \
+        -Dvendorprefix=/usr  -Dusevendorprefix \
+        -Dcc='clang' \
+        -Dd_access=true \
+        -Dd_eaccess='undef' \
+        -des"%,
+        "make depend -j$(nproc)",
+      ],
+      isStatic = false,
+      biDrvs=[
+                drvs.muslShared,
+
+      ]
+
+  }
+}

@@ -153,10 +153,10 @@ let _services =
         "options" = "start-interruptible",
         "start-timeout" = "1200", # 20 minutes
         "depends-on" = [
-          # "udevd",
+          "udevd",
           "varrw"
         ],
-        #"waits-for" = ["udev-settle"],
+        "waits-for" = ["udev-settle"],
       },
 
       hostname = {
