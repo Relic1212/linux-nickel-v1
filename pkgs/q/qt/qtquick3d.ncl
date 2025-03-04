@@ -1,11 +1,12 @@
+
 {lib,
 drvs,
-qtdeclarative | lib.CmakePackage
+qtquick3d | lib.CmakePackage
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.8.2.tar.gz",
-        sha256sum = "1c29e98fac88f6d3b8a790248f4e6ad80439fe6e791116339d080e064ad8ae91"
+        uri =  "https://github.com/qt/qtquick3d/archive/refs/tags/v6.8.2.tar.gz",
+        sha256sum = "2901927d84fa3e55cd598575fa8a47dd97c770ed3c1893af9c9ee2aa167b7433"
       },
       llvmProvider = drvs.llvmFull,
 
@@ -37,6 +38,7 @@ qtdeclarative | lib.CmakePackage
           drvs.dbusForQt,
           drvs.qtbase,
           drvs.qtshadertools,
+          drvs.qtdeclarative,
 
           drvs.pythonFull,
 
@@ -48,12 +50,11 @@ qtdeclarative | lib.CmakePackage
         drvs.eudev,
         drvs.libinput,
 
-        ]
-        @ [
-          #drvs.cmake,
-          #drvs.samurai,
-          #drvs.pkgconf,
         ],
+        preConfigurePhase = [
+            "sed -i 's@QUIET @@g' ${SRC}/CMakeLists.txt"
+        ],
+  
         
     
 

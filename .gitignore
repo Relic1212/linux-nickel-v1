@@ -5,6 +5,7 @@ build
 build/
 test/
 tmp/
+tmp2/
 *.img
 oom
 **/__pycache__/**

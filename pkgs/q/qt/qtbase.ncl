@@ -31,7 +31,7 @@ qtbaseCmakeExtraArgsRecorf = {
    "-DFEATURE_gbm"="ON",
   # "-DBUILD_SHARED_LIBS"="OFF",
    "-DFEATURE_openssl_linked"="ON",
-   "-DFEATURE_dbus"="OFF",
+   "-DFEATURE_dbus"="ON",
 
    "-DFEATURE_egl"="ON",
         "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
@@ -80,7 +80,7 @@ in
         drvs.jsonC,
         drvs.pcre2,
         drvs.libxkbcommon,
-      drvs.dbus,
+      drvs.dbusForQt,
       drvs.eudev,
       drvs.kmod,
       drvs.utilLinux,
@@ -119,10 +119,32 @@ in
       },
     }
 }
+& {
+  lib,
+  drvs,
+  dbus,
+  dbusForQt| lib.MesonPackage = (dbus & {
+    postInstallPhase | priority 1 = dbus.postInstallPhase @ [
+      "sed -i 's@dbus-1.0 -pthread @dbus-1.0 @g' ${DEST}/usr/lib/pkgconfig/dbus-1.pc"
+    ]
+  } )
+}
 & (import "qtwayland.ncl")
 
 & (import "qtdeclarative.ncl")
 
 & (import "qtshadertools.ncl")
+
+& (import "qtquick3d.ncl")
+
+& (import "qt5compat.ncl")
+& (import "qt-tools.ncl")
+& (import "qtsensors.ncl")
+& (import "qtsvg.ncl")
+
+
+
+
+
 
 

@@ -32,6 +32,7 @@ qtshadertools | lib.CmakePackage
           drvs.llvmConfigStatic,
           drvs.spirvTools,
           drvs.spirvLlvmTranslator,
+          drvs.dbusForQt,
           ###
           drvs.qtbase,
 

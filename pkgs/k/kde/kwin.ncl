@@ -1,19 +1,19 @@
 {
     lib,
     drvs,
-    hyprlandQtutils | lib.CmakePackage = {
+    kwin | lib.CmakePackage={
         generator = "Ninja",
-        singleSource = {
-            uri ="https://github.com/hyprwm/hyprland-qtutils/archive/refs/tags/v0.1.3.tar.gz",
-            sha256sum = "3e57617ebd849ebf074c492bf828efa37a5b47fd6d43b392462874069170c5ed"
+        singleSource ={
+            uri="https://invent.kde.org/plasma/kwin/-/archive/v6.3.2.1/kwin-v6.3.2.1.tar.gz",
+            sha256sum = "2eae36bfc9c451a94bccedcd76b60e664d305a8b02e1a47b4612c85e0b679180"
         },
-      llvmProvider = drvs.llvmFull,
+        llvmProvider = drvs.llvmFull,
 
 
     biDrvs = [
         drvs.pixman,
         drvs.expat,
-    drvs.libffi,
+        drvs.libffi,
         drvs.libevdev,
         drvs.mtdev,
         drvs.pango,
@@ -26,12 +26,7 @@
         drvs.glib,
         drvs.hwdata,
         drvs.linuxHeaders,
-        drvs.hyprwaylandScanner,
-        drvs.aquamarine,
-        drvs.hyprUtils,
-        drvs.hyprlang,
-        drvs.hyprcursor,
-
+       
         drvs.libjpegTurboStatic,
 
         drvs.libspng,
@@ -44,7 +39,13 @@
         drvs.qtbase,
         drvs.qtshadertools,
         drvs.qtwayland,
+        drvs.qt5compat,
+        drvs.qtTools,
+        drvs.qtsensors,
+        drvs.qtsvg,
 
+        drvs.kconfig,
+        drvs.kcoreaddons,
 
 
 
@@ -76,6 +77,7 @@
         drvs.xz,
         drvs.eudev,
         drvs.libinput,
+        drvs.ecm,
     ],
     buildEnv = {
         EXTRA_LDFLAGS= [
@@ -87,22 +89,20 @@
         ]
     },
     cmakeExtraArgsRecord = {
-        "-DQT_DEBUG_FIND_PACKAGE"="ON",
+
+
+"-DKWIN_BUILD_DECORATIONS" = false,
+"-DKWIN_BUILD_KCMS"=false,
+"-DKWIN_BUILD_NOTIFICATIONS"=false,
+"-DKWIN_BUILD_SCREENLOCKER"=false,
+"-DKWIN_BUILD_TABBOX"=false,
+"-DKWIN_BUILD_X11"=false,
+"-DKWIN_BUILD_X11_BACKEND"=false,
+"-DKWIN_BUILD_GLOBALSHORTCUTS"=false,
+"-DKWIN_BUILD_RUNNERS"=false,
+
+
         "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
-
-    patches=[
-        {
-           sha256sum ="fa1305ef55b815c9f130f90cf55553baa9a39670fbc7e08a1a3f602d2fc594da" ,
-           file ="hyprland-qtutils.patch",
-        }
-    ],
-    cmakeExtraArgsRecord = {
-            "-DCMAKE_BUILD_TYPE" | priority 1 = "Release",
-
-    },
-
     }
 }
-&
-(import "./hyprland-qt-support.ncl")

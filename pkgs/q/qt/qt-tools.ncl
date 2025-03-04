@@ -1,13 +1,15 @@
-{lib,
-drvs,
-qtdeclarative | lib.CmakePackage
-    = {
-      generator = "Ninja",
-      singleSource = {
-        uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.8.2.tar.gz",
-        sha256sum = "1c29e98fac88f6d3b8a790248f4e6ad80439fe6e791116339d080e064ad8ae91"
-      },
-      llvmProvider = drvs.llvmFull,
+{
+    lib,
+    drvs,
+    qtTools | lib.CmakePackage = {
+        generator = "Ninja",
+        singleSource = {
+            # uri = "https://github.com/qt/qttools/archive/refs/tags/v6.8.2.tar.gz",
+            # sha256sum = "ead70f80f197fd746a5cbf57a8a2be6537cb0015a48361f108aa7e36d5a982fe",
+            uri = "https://download.qt.io/archive/qt/6.8/6.8.2/submodules/qttools-everywhere-src-6.8.2.tar.xz",
+            sha256sum ="326381b7d43f07913612f291abc298ae79bd95382e2233abce982cff2b53d2c0"
+        },
+         llvmProvider = drvs.llvmFull,
 
       biDrvs =
         [
@@ -32,15 +34,12 @@ qtdeclarative | lib.CmakePackage
           drvs.llvmConfigStatic,
           drvs.spirvTools,
           drvs.spirvLlvmTranslator,
-          drvs.openssl,
-          ###
           drvs.dbusForQt,
+          ###
           drvs.qtbase,
-          drvs.qtshadertools,
-
-          drvs.pythonFull,
 
             drvs.libxkbcommon,
+        drvs.openssl,
 
         drvs.kmod,
         drvs.zstd,
@@ -48,14 +47,10 @@ qtdeclarative | lib.CmakePackage
         drvs.eudev,
         drvs.libinput,
 
-        ]
-        @ [
-          #drvs.cmake,
-          #drvs.samurai,
-          #drvs.pkgconf,
+        drvs.perl,
+
         ],
-        
-    
+
 
     buildEnv = {
         EXTRA_LDFLAGS= [
@@ -67,8 +62,6 @@ qtdeclarative | lib.CmakePackage
         "-DQT_DEBUG_FIND_PACKAGE"="ON",
         "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
     },
-
         
-
     }
 }

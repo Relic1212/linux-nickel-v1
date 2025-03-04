@@ -1,11 +1,11 @@
 {lib,
 drvs,
-qtdeclarative | lib.CmakePackage
+qt5compat | lib.CmakePackage
     = {
       generator = "Ninja",
       singleSource = {
-        uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.8.2.tar.gz",
-        sha256sum = "1c29e98fac88f6d3b8a790248f4e6ad80439fe6e791116339d080e064ad8ae91"
+        uri = "https://github.com/qt/qt5compat/archive/refs/tags/v6.8.2.tar.gz",
+        sha256sum = "9b78a025f17d65eb826ee153f167546e6c12790235d75b7f4fcd03c166d9c689"
       },
       llvmProvider = drvs.llvmFull,
 
@@ -32,15 +32,12 @@ qtdeclarative | lib.CmakePackage
           drvs.llvmConfigStatic,
           drvs.spirvTools,
           drvs.spirvLlvmTranslator,
-          drvs.openssl,
-          ###
           drvs.dbusForQt,
+          ###
           drvs.qtbase,
-          drvs.qtshadertools,
-
-          drvs.pythonFull,
 
             drvs.libxkbcommon,
+        drvs.openssl,
 
         drvs.kmod,
         drvs.zstd,
@@ -48,14 +45,8 @@ qtdeclarative | lib.CmakePackage
         drvs.eudev,
         drvs.libinput,
 
-        ]
-        @ [
-          #drvs.cmake,
-          #drvs.samurai,
-          #drvs.pkgconf,
         ],
-        
-    
+
 
     buildEnv = {
         EXTRA_LDFLAGS= [
@@ -67,8 +58,6 @@ qtdeclarative | lib.CmakePackage
         "-DQT_DEBUG_FIND_PACKAGE"="ON",
         "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
     },
-
         
-
     }
 }
