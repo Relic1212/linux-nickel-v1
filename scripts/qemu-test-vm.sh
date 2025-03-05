@@ -8,12 +8,13 @@ P="./build/tmp/base-image/out"
 VMLINUZ="${P}/destdir/rootfs/boot/bzImage"
 
 
-#:DISPLAY_ARGS="-display gtk,gl=on,show-cursor=on,grab-on-hover=on 	-device virtio-vga-gl"
-DISPAY_ARGS=" -vga qxl  -display gtk,gl=on"
+DISPLAY_ARGS="-display gtk,gl=on,show-cursor=off,grab-on-hover=on 	-device virtio-vga-gl"
+#DISPAY_ARGS=" -vga qxl  -display gtk,gl=on"
 
 
 USB_ARGS=" -usb -device nec-usb-xhci,id=xhci -global nec-usb-xhci.msi=off 	-device usb-ehci,id=ehci -device usb-tablet"
 
+USB_ARGS=" -device qemu-xhci -usb -device usb-host,hostbus=1,hostport=1.4.1.4 -usbdevice tablet"
 
 CMDLINE="$( cat ${P}/image/image.img.cmdline.txt )"
 
