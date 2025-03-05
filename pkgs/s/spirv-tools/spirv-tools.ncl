@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  spirvTools | lib.CmakePackage
+  _spirvTools | lib.CmakePackage
     = {
       generator = "Ninja",
       sourceInputs = [
@@ -36,5 +36,31 @@
           sha256sum = "8f08d8582c8da16bd4e80ec3ec475988b3b2ad0f61d68fde74453c151f4ead7d",
         }
       ]
+    },
+    spirvTools = _spirvTools,
+
+    spirvHeaders2,
+    spirvTools2 | lib.CmakePackage = _spirvTools &{
+
+
+
+      sourceInputs  | priority 1 = [
+        {
+          src =  {
+            uri | priority 1= "https://github.com/KhronosGroup/SPIRV-Tools/archive/ce92630396c2fd2d6d04819369116af4fb141a28.zip",
+            sha256sum | priority 1= "43b981567354af80570eedbd7858718f7273b3d964101a358a5202b2fae2844d"
+          }
+          
+        },
+        {
+          dest| priority 1 = "external/spirv-headers",
+          src | priority 1=spirvHeaders2.singleSource,
+        },
+      ],
+
+       biDrvs | priority 1 = [
+        drvs.pythonFull,
+        drvs.spirvHeaders2,
+      ],
     }
 }

@@ -11,3 +11,18 @@
       }
     }
 }
+&
+{
+  lib,
+  drvs,
+  spirvHeaders2 | lib.CmakePackage
+    = {
+      generator = "Ninja",
+
+      singleSource =  {
+           uri| priority 1 = "https://github.com/KhronosGroup/SPIRV-Headers/archive/3f17b2af6784bfa2c5aa5dbb8e0e74a607dd8b3b.zip",
+            sha256sum | priority 1= "366a4a46f0e36293852119ad1cf5b91d72c2920eeb6aee3a3d8f2596e0a70167",
+            
+          }
+    }
+}
