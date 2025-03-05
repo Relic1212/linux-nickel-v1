@@ -23,7 +23,8 @@
           [
             {
               src = {
-                uri = "https://ftpmirror.gnu.org/gnu/gcc/gcc-9.4.0/gcc-9.4.0.tar.xz",
+                            uri = "https://ftp.gnu.org/gnu/gcc/gcc-9.4.0/gcc-9.4.0.tar.xz",
+
                 sha256sum = "c95da32f440378d7751dd95533186f7fc05ceb4fb65eb5b85234e6299eb9838e",
               },
               dest = "src_gcc",
@@ -38,7 +39,7 @@
             # },
             {
               src = {
-                uri = "https://ftpmirror.gnu.org/gnu/binutils/binutils-2.33.1.tar.xz",
+                uri = "https://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.xz",
                 sha256sum = "ab66fc2d1c3ec0359b8e08843c9f33b63e8707efdff5e4cc5c200eae24722cbf",
               },
               dest = "src_binutils",
@@ -52,21 +53,21 @@
             # },
             {
               src = {
-                uri = "https://ftpmirror.gnu.org/gnu/gmp/gmp-6.1.2.tar.bz2",
+                uri = "https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.bz2",
                 sha256sum = "5275bb04f4863a13516b2f39392ac5e272f5e1bb8057b18aec1c9b79d73d8fb2",
               },
               dest = "src_gcc/gmp",
             },
             {
               src = {
-                uri = "https://ftpmirror.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz",
+                uri = "https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz",
                 sha256sum = "6985c538143c1208dcb1ac42cedad6ff52e267b47e5f970183a3e75125b43c2e",
               },
               dest = "src_gcc/mpc",
             },
             {
               src = {
-                uri = "https://ftpmirror.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.bz2",
+                uri = "https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.bz2",
                 sha256sum = "c05e3f02d09e0e9019384cdd58e0f19c64e6db1fd6f5ecf77b4b1c61ca253acc",
               },
               dest = "src_gcc/mpfr",
