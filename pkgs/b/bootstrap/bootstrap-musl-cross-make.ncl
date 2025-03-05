@@ -12,7 +12,8 @@
         },
         {
           src = {
-            uri = "https://ftpmirror.gnu.org/gnu/gcc/gcc-9.4.0/gcc-9.4.0.tar.xz",
+            # uri = "https://ftpmirror.gnu.org/gnu/gcc/gcc-9.4.0/gcc-9.4.0.tar.xz",
+            uri = "https://ftp.gnu.org/gnu/gcc/gcc-9.4.0/gcc-9.4.0.tar.xz",
             sha256sum = "c95da32f440378d7751dd95533186f7fc05ceb4fb65eb5b85234e6299eb9838e",
           }
         },
