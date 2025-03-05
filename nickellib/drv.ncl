@@ -8,7 +8,8 @@ let DrvSchema = {
   extraFileDrvs | Array Dyn,
   patchDrvs | Array Dyn,
   buildInChroot | Bool,
-  enableCcache | Bool
+  enableCcache | Bool,
+  symlinkBuldInputs | Bool,
 }
 in
 let drvUtils = {
@@ -54,7 +55,8 @@ let drvUtils = {
         extraFileDrvs = p.extraFiles,
         scriptContent = p.scriptContent,
         buildInChroot = p.buildInChroot,
-        enableCcache = p.enableCcache
+        enableCcache = p.enableCcache,
+        symlinkBuldInputs = p.symlinkBuldInputs,
       }
       in d
   ),

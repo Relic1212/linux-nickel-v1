@@ -91,6 +91,7 @@ in
             let _sc = scriptContent in
             let _bic = buildInChroot in
             let _ec = enableCcache in
+            let _sbi = symlinkBuldInputs in
             drvUtils.pkgToHash {
               name = _name,
               buildInputs = _bs,
@@ -100,6 +101,7 @@ in
               scriptContent = _sc,
               buildInChroot = _bic,
               enableCcache = _ec,
+              symlinkBuldInputs = _sbi,
             },
         options | default = {},
 
@@ -142,7 +144,7 @@ in
             _isLlvm | force = isLlvm,
             _isStatic = isStatic,
           },
-
+        symlinkBuldInputs | Bool | default = false, # stage==-1,
         extraEnv | { _ : StringOrArray } | default
           = (
             if buildInChroot then

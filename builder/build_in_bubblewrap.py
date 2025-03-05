@@ -87,6 +87,7 @@ def copy_src(h, dest):
     subprocess.run(["cp", "-r", src_p, dest], check=True)
 
 
+
 def run_and_get_lines(**kwargs):
     p = subprocess.Popen(**kwargs)
     for l in p.stdout.readline():
@@ -175,11 +176,46 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     os.makedirs(f"{workdir}/patches")
     os.makedirs(f"{workdir}/files")
 
+    
+    bwrap_bi_drv_args =[]
+    if (  drv["buildInChroot"]) and (  drv['symlinkBuldInputs']):
+        bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
+        
     for bi_drv in drv["buildInputDrvs"]:
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
         
-        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-        util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
+        if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
+            print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
+            util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
+            continue
+
+
+        bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
+        sysroot_dirs = bi_dest_bwrap_args['dirs']
+        sysroot_files = bi_dest_bwrap_args['files']
+        # all the dirs so the symlinks will work
+        for bi_drv_dir in sysroot_dirs:
+            dst = workdir + "/sysroot/" + bi_drv_dir 
+            
+            if os.path.isdir(dst):
+                continue
+            # maybe it is better to reverse order anf just skip if it exists
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.remove(dst)
+            os.makedirs(dst)
+
+        # create intentianlly broken symlink 
+        for sd in sysroot_files:
+            link_source =  "/pkgs/"+bi_drv  + sd
+            link_target = workdir + "/sysroot" + sd 
+            if os.path.exists(link_target) or os.path.islink(link_target):
+                print(f"removing {link_target} to link")
+                subprocess.run(["rm","-rf",link_target],check=True)
+
+            # print(f"linking {link_source} to {link_target}")
+            subprocess.run(["ln","-s",link_source,link_target  ],check=True)
+        bwrap_bi_drv_args+=["--ro-bind" , bi_dest, "/pkgs/"+ bi_drv ]
+
 
     for si_drv in drv["sourceInputDrvs"]:
         dest = si_drv["dest"]
@@ -237,7 +273,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     uses_ccache = drv["enableCcache"]
     if sandboxed:
         sysroot = workdir + "/sysroot/"
-        for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev"]:
+        for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev","/pkgs"]:
             os.makedirs(sysroot + "/" + d, exist_ok=True)
         # os.environ.clear()
 
@@ -294,7 +330,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
         with open(f"{workdir}/error.log", "a", encoding="utf-8") as f_error:
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
             bwrap_wrap = bubblewrap.get_bwrap_wrap(
-                sysroot=sysroot, extra_bwrap_args=args
+                sysroot=sysroot,sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args
             )
             chroot_string =( "#!/bin/sh\n" + ''.join ([s+" " for s in  bwrap_wrap])[: -1-len  ("/tmp/workdir/build.sh")] + "sh\n")
 

@@ -3,7 +3,7 @@ FROM  library/archlinux:latest
 
 RUN pacman -Syu --noconfirm
 # RUN pacman -S --noconfirm doas base-devel rsync bubblewrap ccache cmake python3 nickel
-RUN pacman -S --noconfirm doas  rsync bubblewrap python3 gcc make patch
+RUN pacman -S --noconfirm doas  rsync bubblewrap python3 gcc make patch wget
 
 RUN useradd -m -s /bin/sh   user 
 

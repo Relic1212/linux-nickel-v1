@@ -90,6 +90,7 @@ def fetch(uri: str, sha256sum):
         cmd_arr = ["git", "reset" ,"--hard", sha256sum]
         bubblewrap.run_in_bwrap_chroot(
             sysroot="/",
+            sysroot_args=[],
             extra_bwrap_args=bwrap_args + [ "--chdir", f"/tmp/workdir/packed/{gitwd}" ] + cmd_arr,
             network=False,
             env=env
