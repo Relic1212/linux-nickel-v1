@@ -4,9 +4,13 @@
   flatpak | lib.MesonPackage
     = {
       singleSource = {
-        uri = "https://github.com/flatpak/flatpak/archive/refs/heads/main.zip",
+        # uri = "https://github.com/flatpak/flatpak/archive/refs/heads/main.zip",
 
-        sha256sum = "efa3b11337588af274ed6d22b9b0c681e857782f1c7bc6d4e1ef0e6a9bd54aff",
+        # sha256sum = "efa3b11337588af274ed6d22b9b0c681e857782f1c7bc6d4e1ef0e6a9bd54aff",
+        uri = "https://github.com/flatpak/flatpak/archive/fa252b865a9305a5ff01564140a7273f05503ece.zip",
+        sha256sum = "da812757a8e9aa7173603bffc349157709298f7fc8dbe225f1a0050f4950ecd0"
+
+
       },
       sourceInputs = [
         {
