@@ -11,6 +11,7 @@
         sha256sum = "7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7",
       },
       llvmProvider = drvs.llvmFull,
+      
       biDrvs = [
         drvs.fontconfig,
         drvs.freetype,
@@ -27,7 +28,7 @@
         drvs.readline,
         drvs.pcre2,
         drvs.pango,
-        drvs.cairo,
+        #drvs.cairo,
         drvs.libpng,
         drvs.harfbuzz,
         drvs.glibDynamic,
@@ -70,7 +71,7 @@
         "-Dprint_backends=file",
       ],
       unpackPhase = [
-        "tar -xf \"/tmp/workdir/packed/7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7/gtk%2B-3.24.43.tar.xz\" --strip-components=1 -C /tmp/workdir/src"
+        "tar -xf /tmp/workdir/packed/7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7/gtk*-3.24.43.tar.xz --strip-components=1 -C /tmp/workdir/src"
       ]
     }
 }
