@@ -1,10 +1,9 @@
  {
   drvs,
-  mesa,
   lib,
-  "mesa-25.0" | lib.MesonPackage
+  _mesa250 | lib.MesonPackage
     = {
-
+      # broken due to https://gitlab.freedesktop.org/mesa/mesa/-/commit/514df444ebc31b42707ffa10c1432d3c6e11ca60
       biDrvs = [
         drvs.libelf,
         drvs.libdrm,
@@ -25,7 +24,8 @@
         drvs.spirvTools2,
         drvs.spirvLlvmTranslator,
          drvs.wayland,
-        drvs."waylandProtocols-1.39",
+        # drvs."waylandProtocols-1.39",
+        drvs.waylandProtocols,
       ],
       llvmProvider = drvs.llvmFull,
       # symlinkBuldInputs = true,
@@ -81,6 +81,16 @@
             file = "0.patch",
             sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
           },
+          {
+            sha256sum = "adfc47568f88f58887f9ef33b20fb9fbabaa4ee23213fb0a6e35146b0fe44665" ,
+            file = "mesa-25.0-no-wl.patch",
+
+          },
+          {
+            sha256sum = "613b5f0e3eab9d62398d623092a2aca11e69623cdd91cd29df8d411b05d45e76",
+            
+            file = "mesa-25.0-dont-split-gbm.patch"
+          }
         ],
       preConfigurePhase | priority 1
         = [
@@ -97,7 +107,19 @@
           sed -i \
             "s@name_suffix : 'so',@name_suffix : 'a',@g" \
             ${SRC}/src/gallium/targets/dri/meson.build
-          "%
+          "%,
+
+
+          m%"
+          sed -i \
+            "s@libname_suffix = 'so'@libname_suffix = 'a'@g" \
+            ${SRC}/meson.build
+          "%,
+
         ],
+        postInstallPhase =[
+          "sed -i 's@-pthread -lm@-pthread -lm -lgallium-25.0.0 -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMDebugInfoCodeView -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -lrt@g' ${DEST}/usr/lib/pkgconfig/egl.pc"
+        ]
     },
+
 }

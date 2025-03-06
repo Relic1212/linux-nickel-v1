@@ -1,0 +1,346 @@
+diff --git a/src/gbm/backends/dri/gbm_dri.c b/src/gbm/backends/dri/gbm_dri.c
+index 316b251dd74..e2183de06ed 100644
+--- a/src/gbm/backends/dri/gbm_dri.c
++++ b/src/gbm/backends/dri/gbm_dri.c
+@@ -53,15 +53,11 @@
+ #include "pipe/p_screen.h"
+ #include "dri_screen.h"
+ 
+-#include "gbm_backend_abi.h"
+-
+ /* For importing wl_buffer */
+ #if HAVE_WAYLAND_PLATFORM
+ #include "wayland-drm.h"
+ #endif
+ 
+-static const struct gbm_core *core;
+-
+ static GLboolean
+ dri_validate_egl_image(void *image, void *data)
+ {
+@@ -332,7 +328,7 @@ static const struct gbm_dri_visual gbm_dri_visuals_table[] = {
+ static int
+ gbm_format_to_pipe_format(uint32_t gbm_format)
+ {
+-   gbm_format = core->v0.format_canonicalize(gbm_format);
++   gbm_format =gbm_core.v0.format_canonicalize(gbm_format);
+    for (size_t i = 0; i < ARRAY_SIZE(gbm_dri_visuals_table); i++) {
+       if (gbm_dri_visuals_table[i].gbm_format == gbm_format)
+          return gbm_dri_visuals_table[i].pipe_format;
+@@ -352,7 +348,7 @@ gbm_dri_is_format_supported(struct gbm_device *gbm,
+    if ((usage & GBM_BO_USE_CURSOR) && (usage & GBM_BO_USE_RENDERING))
+       return 0;
+ 
+-   format = core->v0.format_canonicalize(format);
++   format = gbm_core.v0.format_canonicalize(format);
+    if (gbm_format_to_pipe_format(format) == 0)
+       return 0;
+ 
+@@ -388,7 +384,7 @@ gbm_dri_get_format_modifier_plane_count(struct gbm_device *gbm,
+    if (!dri->has_dmabuf_import)
+       return -1;
+ 
+-   format = core->v0.format_canonicalize(format);
++   format = gbm_core.v0.format_canonicalize(format);
+    if (gbm_format_to_pipe_format(format) == 0)
+       return -1;
+ 
+@@ -710,7 +706,7 @@ gbm_dri_bo_import(struct gbm_device *gbm,
+       /* GBM's GBM_FORMAT_* tokens are a strict superset of the DRI FourCC
+        * tokens accepted by createImageFromDmaBufs, except for not supporting
+        * the sARGB format. */
+-      fourcc = core->v0.format_canonicalize(fd_data->format);
++      fourcc = gbm_core.v0.format_canonicalize(fd_data->format);
+ 
+       image = dri2_from_dma_bufs(dri->screen,
+                                  fd_data->width,
+@@ -738,7 +734,7 @@ gbm_dri_bo_import(struct gbm_device *gbm,
+       /* GBM's GBM_FORMAT_* tokens are a strict superset of the DRI FourCC
+        * tokens accepted by createImageFromDmaBufs, except for not supporting
+        * the sARGB format. */
+-      fourcc = core->v0.format_canonicalize(fd_data->format);
++      fourcc = gbm_core.v0.format_canonicalize(fd_data->format);
+ 
+       image = dri2_from_dma_bufs(dri->screen, fd_data->width,
+                                                  fd_data->height, fourcc,
+@@ -871,7 +867,7 @@ gbm_dri_bo_create(struct gbm_device *gbm,
+    uint64_t *mods_filtered = NULL;
+    unsigned int count_filtered = 0;
+ 
+-   format = core->v0.format_canonicalize(format);
++   format = gbm_core.v0.format_canonicalize(format);
+ 
+    if (usage & GBM_BO_USE_WRITE || !dri->has_dmabuf_export)
+       return create_dumb(gbm, width, height, format, usage);
+@@ -1078,17 +1074,11 @@ gbm_dri_surface_create(struct gbm_device *gbm,
+ 		       uint32_t format, uint32_t flags,
+                        const uint64_t *modifiers, const unsigned count)
+ {
+-   struct gbm_dri_device *dri = gbm_dri_device(gbm);
+    struct gbm_dri_surface *surf;
+ 
+    if (count)
+       assert(modifiers);
+ 
+-   if (count > 0 && !dri->screen->base.screen->resource_create_with_modifiers) {
+-      errno = ENOSYS;
+-      return NULL;
+-   }
+-
+    /* It's acceptable to create an image with INVALID modifier in the list,
+     * but it cannot be on the only modifier (since it will certainly fail
+     * later). While we could easily catch this after modifier creation, doing
+@@ -1109,7 +1099,7 @@ gbm_dri_surface_create(struct gbm_device *gbm,
+    surf->base.gbm = gbm;
+    surf->base.v0.width = width;
+    surf->base.v0.height = height;
+-   surf->base.v0.format = core->v0.format_canonicalize(format);
++   surf->base.v0.format = gbm_core.v0.format_canonicalize(format);
+    surf->base.v0.flags = flags;
+    if (!modifiers) {
+       assert(!count);
+@@ -1167,6 +1157,13 @@ dri_device_create(int fd, uint32_t gbm_backend_version)
+    int ret;
+    bool force_sw;
+ 
++   /*
++    * Since the DRI backend is built-in to the loader, the loader ABI version is
++    * guaranteed to match this backend's ABI version
++    */
++   assert(gbm_core.v0.core_version == GBM_BACKEND_ABI_VERSION);
++   assert(gbm_core.v0.core_version == gbm_backend_version);
++
+    dri = calloc(1, sizeof *dri);
+    if (!dri)
+       return NULL;
+@@ -1236,11 +1233,3 @@ struct gbm_backend gbm_dri_backend = {
+    .v0.backend_name = "dri",
+    .v0.create_device = dri_device_create,
+ };
+-
+-struct gbm_backend * gbmint_get_backend(const struct gbm_core *gbm_core);
+-
+-PUBLIC struct gbm_backend *
+-gbmint_get_backend(const struct gbm_core *gbm_core) {
+-   core = gbm_core;
+-   return &gbm_dri_backend;
+-};
+diff --git a/src/gbm/backends/dri/meson.build b/src/gbm/backends/dri/meson.build
+deleted file mode 100644
+index 9b5d13e9db8..00000000000
+--- a/src/gbm/backends/dri/meson.build
++++ /dev/null
+@@ -1,24 +0,0 @@
+-deps_gbm_dri = []
+-
+-# TODO: fix includes to delete this
+-incs_gbm_dri = [inc_mesa]
+-
+-if with_platform_wayland
+-  deps_gbm_dri += dep_wayland_server
+-  incs_gbm_dri += inc_wayland_drm
+-endif
+-
+-shared_library(
+-  'dri_gbm',
+-  files('gbm_dri.c', 'gbm_driint.h'),
+-  include_directories : [incs_gbm, incs_gbm_dri, inc_st_dri, inc_gallium_aux],
+-  link_args : [ld_args_gc_sections],
+-  link_with : [libloader, libgallium_dri],
+-  dependencies : [deps_gbm_dri, dep_dl, dep_libdrm, idep_mesautil, idep_xmlconfig],
+-  gnu_symbol_visibility : 'hidden',
+-  install : true,
+-  install_dir: join_paths(get_option('libdir'), 'gbm'),
+-  name_prefix : '',
+-)
+-
+-devenv.set('GBM_BACKENDS_PATH', meson.current_build_dir())
+diff --git a/src/gbm/main/backend.c b/src/gbm/main/backend.c
+index 321c7e10141..e05969844e9 100644
+--- a/src/gbm/main/backend.c
++++ b/src/gbm/main/backend.c
+@@ -42,12 +42,22 @@
+ #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
+ #define VER_MIN(a, b) ((a) < (b) ? (a) : (b))
+ 
++#ifdef HAVE_DRI
++extern const struct gbm_backend gbm_dri_backend;
++#endif
++
+ struct gbm_backend_desc {
+    const char *name;
+    const struct gbm_backend *backend;
+    void *lib;
+ };
+ 
++static const struct gbm_backend_desc builtin_backends[] = {
++#ifdef HAVE_DRI
++   { "dri", &gbm_dri_backend },
++#endif
++};
++
+ #define BACKEND_LIB_SUFFIX "_gbm"
+ static const char *backend_search_path_vars[] = {
+    "GBM_BACKENDS_PATH",
+@@ -106,16 +116,8 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
+ }
+ 
+ static struct gbm_device *
+-load_backend_by_name(const char *name, int fd, bool warn_on_fail)
++load_backend(void *lib, int fd, const char *name)
+ {
+-   void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
+-                                      backend_search_path_vars,
+-                                      DEFAULT_BACKENDS_PATH,
+-                                      warn_on_fail);
+-
+-   if (!lib)
+-      return NULL;
+-
+    struct gbm_device *dev = NULL;
+    struct gbm_backend_desc *backend_desc;
+    const struct gbm_backend *gbm_backend;
+@@ -144,25 +146,89 @@ fail:
+    return NULL;
+ }
+ 
+-struct gbm_device *
+-_gbm_create_device(int fd)
++static struct gbm_device *
++find_backend(const char *name, int fd)
+ {
+    struct gbm_device *dev = NULL;
++   const struct gbm_backend_desc *bd;
++   void *lib;
++   unsigned i;
++
++   for (i = 0; i < ARRAY_SIZE(builtin_backends); ++i) {
++      bd = &builtin_backends[i];
++
++      if (name && strcmp(bd->name, name))
++         continue;
++
++      dev = backend_create_device(bd, fd);
+ 
+-   const char *b = getenv("GBM_BACKEND");
+-   if (b) {
+-      dev = load_backend_by_name(b, fd, true);
+-      if (dev) return dev;
++      if (dev)
++         break;
+    }
+ 
+-   drmVersionPtr v = drmGetVersion(fd);
+-   if (v) {
+-      dev = load_backend_by_name(v->name, fd, false);
+-      drmFreeVersion(v);
+-      if (dev) return dev;
++   if (name && !dev) {
++      lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
++                                   backend_search_path_vars,
++                                   DEFAULT_BACKENDS_PATH,
++                                   true);
++
++      if (lib)
++         dev = load_backend(lib, fd, name);
+    }
+ 
+-   return load_backend_by_name("dri", fd, true);
++   return dev;
++}
++
++static struct gbm_device *
++override_backend(int fd)
++{
++   struct gbm_device *dev = NULL;
++   const char *b;
++
++   b = getenv("GBM_BACKEND");
++   if (b)
++      dev = find_backend(b, fd);
++
++   return dev;
++}
++
++static struct gbm_device *
++backend_from_driver_name(int fd)
++{
++   struct gbm_device *dev = NULL;
++   drmVersionPtr v = drmGetVersion(fd);
++   void *lib;
++
++   if (!v)
++      return NULL;
++
++   lib = loader_open_driver_lib(v->name, BACKEND_LIB_SUFFIX,
++                                backend_search_path_vars,
++                                DEFAULT_BACKENDS_PATH,
++                                false);
++
++   if (lib)
++      dev = load_backend(lib, fd, v->name);
++
++   drmFreeVersion(v);
++
++   return dev;
++}
++
++struct gbm_device *
++_gbm_create_device(int fd)
++{
++   struct gbm_device *dev;
++
++   dev = override_backend(fd);
++
++   if (!dev)
++      dev = backend_from_driver_name(fd);
++
++   if (!dev)
++      dev = find_backend(NULL, fd);
++
++   return dev;
+ }
+ 
+ void
+diff --git a/src/gbm/meson.build b/src/gbm/meson.build
+index eaed028d049..4592833154e 100644
+--- a/src/gbm/meson.build
++++ b/src/gbm/meson.build
+@@ -10,13 +10,24 @@ files_gbm = files(
+   'main/gbm.h',
+   'main/gbmint.h',
+ )
++deps_gbm = []
+ args_gbm = [
+   '-DDEFAULT_BACKENDS_PATH="@0@"'.format(gbm_backends_path),
+ ]
+-incs_gbm = [include_directories('main'), inc_loader, inc_gallium]
++deps_gbm = []
++incs_gbm = [
++  include_directories('main'), inc_include, inc_src, inc_loader, inc_gallium, inc_st_dri, inc_gallium_aux
++]
++
++# TODO: fix includes to delete this
++incs_gbm += inc_mesa
+ 
+ if with_dri2
+-  subdir('backends/dri')
++  files_gbm += files('backends/dri/gbm_dri.c', 'backends/dri/gbm_driint.h')
++endif
++if with_platform_wayland
++  deps_gbm += dep_wayland_server
++  incs_gbm += inc_wayland_drm
+ endif
+ 
+ libgbm_name = 'gbm'
+@@ -31,8 +42,8 @@ libgbm = shared_library(
+   include_directories : incs_gbm,
+   c_args : [args_gbm],
+   link_args : [ld_args_gc_sections],
+-  link_with : [libloader],
+-  dependencies : [dep_libdrm, idep_xmlconfig],
++  link_with : [libloader, libgallium_dri],
++  dependencies : [deps_gbm, dep_dl, dep_thread, dep_libdrm, idep_mesautil, idep_xmlconfig],
+   gnu_symbol_visibility : 'hidden',
+   version : '1.0.0',
+   install : true,

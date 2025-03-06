@@ -62,7 +62,7 @@
   drvs,
   mesa,
   lib,
-  mesa2 | lib.MesonPackage
+  _mesa2426 | lib.MesonPackage
     = {
 
       biDrvs = [
@@ -126,7 +126,7 @@
         "-Dllvm=enabled",
       ],
 
-      # name|force="mesa2",
+      
       singleSource | priority 1
         = {
           uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-24.2.6/mesa-mesa-24.2.6.tar.gz",
@@ -188,13 +188,19 @@
       ],
     },
 
+_mesa250,
+mesa2 = _mesa250,
+    # mesa2 = _mesa2426,
+
+        # "mesa-25.0" = _mesa250,
+
+
   mesaOpengl | lib.MesonPackage
     =
-      mesa2
+      _mesa2426
       & {
-        # name|force="mesa2",
 
-        extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" mesa2.extraMesonArgs,
+        extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true"     _mesa2426.extraMesonArgs,
 
         postInstallPhase = [
           "cd ${DEST}/usr/lib/pkgconfig",
@@ -204,9 +210,9 @@
 
   mesaGlx | lib.MesonPackage
     =
-      mesa2
+            _mesa2426
+
       & {
-        # name|force="mesa2",
 
         extraMesonArgs | priority 1 = 
         [
@@ -245,7 +251,7 @@
         "-Dintel-clc=enabled",
         "-Dllvm=enabled",
       ],
-      biDrvs|priority 1 = mesa2.biDrvs @ [
+      biDrvs|priority 1 =       _mesa2426.biDrvs @ [
         # drvs.wayland,
         # drvs.waylandProtocols,
         
