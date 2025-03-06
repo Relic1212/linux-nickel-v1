@@ -132,23 +132,6 @@
           drvs.hicolorIconTheme,
 
           drvs.terminusFont,
-          drvs.sndiod,
-
-          drvs.squeekboard,
-          drvs.lisgd,
-          drvs.glib,
-          drvs.gsettingsDesktopSchemas,
-          drvs.gnomeDesktop,
-          drvs.atSpi2Core,
-
-
-          drvs.hyprlandQtSupport,
-          drvs.hyprlandQtutils,
-
-          # ttyescape
-          drvs.buffybox,
-          drvs.hkdm,
-          drvs.ttyescape,
 
         ]
         @ (
@@ -224,6 +207,27 @@
               drvs.autotiling,
               drvs.i3ipcPython,
               drvs.tzdata,
+
+
+                        drvs.sndiod,
+                        drvs.desktopFileUtils,
+
+          drvs.squeekboard,
+          drvs.lisgd,
+          drvs.glib,
+          drvs.gsettingsDesktopSchemas,
+          drvs.gnomeDesktop,
+          drvs.atSpi2Core,
+
+
+          # drvs.hyprlandQtSupport,
+          # drvs.hyprlandQtutils,
+
+          # ttyescape
+          drvs.buffybox,
+          drvs.hkdm,
+          drvs.ttyescape,
+
             ]
           else
             [])

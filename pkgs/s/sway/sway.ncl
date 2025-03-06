@@ -30,9 +30,12 @@
         }
       ],
       buildEnv.EXTRA_LDFLAGS = ["-lc++"],
+            # baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
+
       extraMesonArgs = [
         "-Dwlroots:backends=drm,libinput",
         "-Dwlroots:color-management=enabled",
+        "-Dwlroots:renderers=gles2",
         "-Dgdk-pixbuf=enabled",
         "-Dtray=enabled",
         "-Dman-pages=enabled",
@@ -42,7 +45,11 @@
         m%"
             fix_symbol(){
                 echo    sed -i "s@${1}(@${1}_sway(@g"
-                for f in $(find ${SRC} -type f|grep -v subprojects);do
+                for f in $(find ${SRC} -type f -name '*.h' |grep -v subprojects);do
+                    sed -i "s@${1}(@${1}_sway(@g" $f
+                    sed -i "s@_${1}_sway(@_${1}(@g" $f
+                done
+                for f in $(find ${SRC} -type f -name '*.c' |grep -v subprojects);do
                     sed -i "s@${1}(@${1}_sway(@g" $f
                     sed -i "s@_${1}_sway(@_${1}(@g" $f
                 done
@@ -59,8 +66,11 @@
         drvs.jsonC,
         drvs.pcre2,
         drvs.mesa2,
+        drvs.spirvTools,
+
         drvs.wayland,
-        drvs."waylandProtocols-1.41",
+        #drvs."waylandProtocols-1.41",
+        drvs.waylandProtocols,
         drvs.libelf,
         drvs.libpciaccess,
         drvs.libdrm,

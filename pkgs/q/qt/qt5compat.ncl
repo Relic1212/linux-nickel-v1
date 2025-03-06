@@ -8,6 +8,7 @@ qt5compat | lib.CmakePackage
         sha256sum = "9b78a025f17d65eb826ee153f167546e6c12790235d75b7f4fcd03c166d9c689"
       },
       llvmProvider = drvs.llvmFull,
+      symlinkBuldInputs = true,
 
       biDrvs =
         [

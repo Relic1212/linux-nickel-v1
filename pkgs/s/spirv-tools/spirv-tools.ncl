@@ -37,10 +37,9 @@
         }
       ]
     },
-    spirvTools = _spirvTools,
 
     spirvHeaders2,
-    spirvTools2 | lib.CmakePackage = _spirvTools &{
+    _spirvTools2 | lib.CmakePackage = _spirvTools &{
 
 
 

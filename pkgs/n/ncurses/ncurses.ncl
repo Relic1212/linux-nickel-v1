@@ -5,8 +5,8 @@
     = {
       name = "ncurses",
       singleSource = {
-        uri = "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20240914.tgz",
-        sha256sum = "fe1c20f231c5a769ca6b1dbd5f367f6921082ce73417eb7d30db258d86822164",
+        uri = "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20250301.tgz",
+        sha256sum = "b19934a5ca9e4425c4ad82d7335cec3ab03526d99c9d2cb5ea1c4f9269b31b1c",
       },
       extraConfigureFlags = [
         "--without-ada",

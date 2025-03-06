@@ -21,7 +21,7 @@
         drvs.git,
         drvs.pyyaml,
         drvs.llvmConfigStatic,
-        drvs.spirvTools2,
+        drvs.spirvTools,
         drvs.spirvLlvmTranslator,
          drvs.wayland,
         # drvs."waylandProtocols-1.39",
@@ -29,6 +29,7 @@
       ],
       llvmProvider = drvs.llvmFull,
       # symlinkBuldInputs = true,
+      baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
       extraMesonArgs = [
         "-Dgles1=disabled",
         "-Dxmlconfig=disabled",

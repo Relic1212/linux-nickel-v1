@@ -129,7 +129,7 @@
           # drvs.rsync,
           drvs.pkgconf,
           drvs.muslShared,
-          drvs.clangCc,
+          (drvs.clangCc & {priority = 1}),
           drvs.llvmFullPic,
           drvs.libgccSymlinks,
           drvs.zlibNgPic,

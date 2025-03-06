@@ -7,9 +7,10 @@
         generator = "Ninja",
       
         llvmProvider = drvs.llvmFull,
+        symlinkBuldInputs = true,
 
 
-    biDrvs = [
+    biDrvs |priority -1= [
         drvs.pixman,
         drvs.expat,
         drvs.libffi,
@@ -117,6 +118,7 @@
             uri="https://download.kde.org/stable/frameworks/6.11/kauth-6.11.0.tar.xz",
             sha256sum = "479660eabe97198c31f228a18271bc739b234943c68e95383c361a835131179b"
         },
+        biDrvs = _kf.biDrvs @[drvs.kcoreaddons]
     },
 kdbusaddons | lib.CmakePackage = _kf &{
           singleSource ={
@@ -130,6 +132,8 @@ kcolorscheme | lib.CmakePackage = _kf &{
             uri="https://download.kde.org/stable/frameworks/6.11/kcolorscheme-6.11.0.tar.xz",
             sha256sum = "8b27bddb830f0173f44ae9aac05213579909b85fa696a2871b2ee11cb239bcc8"
         },
+                biDrvs = _kf.biDrvs @[drvs.kcoreaddons,drvs.kconfig]
+
     },
 
 kconfigwidgets | lib.CmakePackage = _kf &{
@@ -137,6 +141,8 @@ kconfigwidgets | lib.CmakePackage = _kf &{
             uri="https://download.kde.org/stable/frameworks/6.11/kconfigwidgets-6.11.0.tar.xz",
             sha256sum = "28a1bb125161fe9ab0dbfa899433512e928669be31ce149fa25191a24a50242a"
         },
+                biDrvs = _kf.biDrvs @[drvs.kcoreaddons]
+
     },
 
 }

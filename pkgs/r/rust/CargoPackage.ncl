@@ -32,6 +32,8 @@
         |> std.record.merge_all
       ),
 
+      importCargoLock =(fun toml => ((importCrates (toml.package)))),
+
       filterCrates = (fun j =>
         let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
         in _crates
@@ -139,7 +141,8 @@
 
         nonCrateSourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
 
-        crates | default = {},
+        lockfileImport | default = null,
+        crates | default = if (lockfileImport==null) then {} else (lib.functions.importCargoLock lockfileImport),
 
         cratesArray | not_exported | default = std.array.flatten (std.array.map (std.record.values) (std.record.values crates)),
 

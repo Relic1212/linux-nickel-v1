@@ -10,6 +10,8 @@
             sha256sum ="326381b7d43f07913612f291abc298ae79bd95382e2233abce982cff2b53d2c0"
         },
          llvmProvider = drvs.llvmFull,
+      symlinkBuldInputs = true,
+
 
       biDrvs =
         [

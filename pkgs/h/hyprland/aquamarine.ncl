@@ -49,6 +49,8 @@
         drvs.hyprwaylandScanner,
         drvs.hyprUtils,
         drvs.libzip,
+
+        drvs.spirvTools,
       ] @ (if options.glx then [
 
         drvs.mesaGlx,

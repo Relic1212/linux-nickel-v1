@@ -104,6 +104,7 @@
         ###################################################
         drvs.git,
         drvs.libzip,
+        drvs.spirvTools,
       ] @ ( if options.glx then [
         drvs.aquamarineGlx,
         drvs.mesaGlx,

@@ -9,6 +9,7 @@
         sha256sum = "8a817c9b001ad0abdbf15064826ca6a8ee6b66fef8f04b4343ac9f7b2ddbf4ca"
       },
       llvmProvider = drvs.llvmFull,
+      symlinkBuldInputs = true,
 
       biDrvs = [
         drvs.mesa2,
@@ -35,6 +36,7 @@
         drvs.qtbase,
         drvs.qtdeclarative,
                   drvs.qtshadertools,
+                  drvs.qtsvg,
 
         ###
         drvs.expat,
