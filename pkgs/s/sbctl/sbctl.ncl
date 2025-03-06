@@ -1,47 +1,46 @@
 {
   lib,
   drvs,
-  sbctl | lib.MakePackage
-    = {
-      sourceInputs = [
-        {
-          src = {
-            uri = "https://github.com/Foxboron/sbctl/releases/download/0.15.4/sbctl-0.15.4.tar.gz",
-            sha256sum = "0435097f79fc30c9b3567a50a8beb8d7d71fcea6121533b5da543ca64241cfff"
-          }
-        },
-        {
-          src = {
-            uri = "https://dev.gentoo.org/~ajak/distfiles/app-crypt/sbctl/sbctl-0.15.4-deps.tar.xz",
-            sha256sum = "69a1fef7f76f7e399cce6439843e52f3cd27ce6888036242617f28fa281dfb80"
-          },
-          dest = "go-mod",
+  sbctl | lib.MakePackage = {
+    sourceInputs = [
+      {
+        src = {
+          uri = "https://github.com/Foxboron/sbctl/releases/download/0.15.4/sbctl-0.15.4.tar.gz",
+          sha256sum = "0435097f79fc30c9b3567a50a8beb8d7d71fcea6121533b5da543ca64241cfff"
         }
-      ],
-      biDrvs = [
-        drvs."go-1.23",
-        drvs.utilLinux,
-      ],
-      configurePhase = [
-        "export GOROOT=/usr/lib/go",
-        "export GOMODCACHE=${SRC}/go-mod",
-        "export CGO_ENABLED=0",
-        "mkdir /tmp/home",
-        "export HOME=/tmp/home",
-      ],
-      makeTargets = [
-        "sbctl"
-      ],
-      buildPhase = [
-        m%"
+      },
+      {
+        src = {
+          uri = "https://dev.gentoo.org/~ajak/distfiles/app-crypt/sbctl/sbctl-0.15.4-deps.tar.xz",
+          sha256sum = "69a1fef7f76f7e399cce6439843e52f3cd27ce6888036242617f28fa281dfb80"
+        },
+        dest = "go-mod",
+      }
+    ],
+    biDrvs = [
+      drvs."go-1.23",
+      drvs.utilLinux,
+    ],
+    configurePhase = [
+      "export GOROOT=/usr/lib/go",
+      "export GOMODCACHE=${SRC}/go-mod",
+      "export CGO_ENABLED=0",
+      "mkdir /tmp/home",
+      "export HOME=/tmp/home",
+    ],
+    makeTargets = [
+      "sbctl"
+    ],
+    buildPhase = [
+      m%"
         go build  -ldflags="-extldflags -static -X github.com/foxboron/sbctl.Version=0.15.4" -o sbctl ./cmd/sbctl
 
 
         "%
-      ],
+    ],
 
-      installPhase = [
-        m%"
+    installPhase = [
+      m%"
         export DESTDIR=$DEST
         export BINDIR=/usr/bin
         export LIBDIR=/usr/lib
@@ -55,6 +54,6 @@
 
 
         "%
-      ]
-    }
+    ]
+  }
 }

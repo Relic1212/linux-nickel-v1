@@ -1,193 +1,156 @@
 {
   lib,
   drvs,
-  kwallet | lib.CmakePackage
-    = {
-      generator = "Ninja",
-      singleSource = {
-        uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.11.0/kwallet-v6.11.0.tar.gz",
-        sha256sum = "4b3ff3b81b0a61fd74bac5de48240d93453ab9e82517dc2b115cd8582f21b3c4"
-      },
-      llvmProvider = drvs.llvmFull,
-
+  kwallet | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.11.0/kwallet-v6.11.0.tar.gz",
+      sha256sum = "4b3ff3b81b0a61fd74bac5de48240d93453ab9e82517dc2b115cd8582f21b3c4"
+    },
+    llvmProvider = drvs.llvmFull,
 
     biDrvs = [
-        drvs.pixman,
-        drvs.expat,
-    drvs.libffi,
-        drvs.libevdev,
-        drvs.mtdev,
-        drvs.pango,
-        drvs.cairo,
-        drvs.libpng,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.zlibNg,
-        drvs.harfbuzz,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.linuxHeaders,
-       
-        drvs.libjpegTurboStatic,
-
-        drvs.libspng,
-
-        drvs.file,
-        drvs.libwebp,
-        drvs.dbusForQt,
-
-        drvs.qtdeclarative,
-        drvs.qtbase,
-        drvs.qtshadertools,
-        drvs.qtwayland,
-
-
-
-
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.m4,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
-        ###
-        drvs.jsonC,
-        drvs.pcre2,
-        drvs.libxkbcommon,
-        drvs.openssl,
-
-        drvs.kmod,
-        drvs.zstd,
-        drvs.xz,
-        drvs.eudev,
-        drvs.libinput,
-                drvs.ecm,
-
+      drvs.pixman,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libevdev,
+      drvs.mtdev,
+      drvs.pango,
+      drvs.cairo,
+      drvs.libpng,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.zlibNg,
+      drvs.harfbuzz,
+      drvs.glib,
+      drvs.hwdata,
+      drvs.linuxHeaders,
+      drvs.libjpegTurboStatic,
+      drvs.libspng,
+      drvs.file,
+      drvs.libwebp,
+      drvs.dbusForQt,
+      drvs.qtdeclarative,
+      drvs.qtbase,
+      drvs.qtshadertools,
+      drvs.qtwayland,
+      drvs.mesa2,
+      # drvs.pkgconf,
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.m4,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      ###
+      drvs.jsonC,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+      drvs.openssl,
+      drvs.kmod,
+      drvs.zstd,
+      drvs.xz,
+      drvs.eudev,
+      drvs.libinput,
+      drvs.ecm,
     ],
     buildEnv = {
-        EXTRA_LDFLAGS= [
-          
-            "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
-
-
-
-        ]
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
+      ]
     },
     cmakeExtraArgsRecord = {
       # "-DECM_DIR"="/usr/usr/share/ECM/",
-        "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
-
-   
-    }
+  }
 }
 & {
   lib,
   drvs,
-  ecm | lib.CmakePackage
-    = {
-      generator = "Ninja",
-      singleSource = {
-        uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.11.0/extra-cmake-modules-v6.11.0.tar.gz",
-        sha256sum = "3c7bdaf5947041d5397b3123e57e9a5ecd9ccab514e448ad8f1959cda1117fde"
+  ecm | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.11.0/extra-cmake-modules-v6.11.0.tar.gz",
+      sha256sum = "3c7bdaf5947041d5397b3123e57e9a5ecd9ccab514e448ad8f1959cda1117fde"
 
-        # uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.10.0/extra-cmake-modules-v6.10.0.tar.gz",
-       # sha256sum = "6025709712e075f06c3b9eebfffc50ce31605712d8947c748d9b2241e915f595"
-      },
-      
-      llvmProvider = drvs.llvmFull,
+      # uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.10.0/extra-cmake-modules-v6.10.0.tar.gz",
+      # sha256sum = "6025709712e075f06c3b9eebfffc50ce31605712d8947c748d9b2241e915f595"
+    },
 
+    llvmProvider = drvs.llvmFull,
 
     biDrvs = [
-        drvs.pixman,
-        drvs.expat,
-    drvs.libffi,
-        drvs.libevdev,
-        drvs.mtdev,
-        drvs.pango,
-        drvs.cairo,
-        drvs.libpng,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.zlibNg,
-        drvs.harfbuzz,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.linuxHeaders,
-       
-        drvs.libjpegTurboStatic,
-
-        drvs.libspng,
-
-        drvs.file,
-        drvs.libwebp,
-        
-
-        drvs.qtdeclarative,
-        drvs.qtbase,
-        drvs.qtshadertools,
-        drvs.qtwayland,
-
-
-
-
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.m4,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
-        ###
-        drvs.jsonC,
-        drvs.pcre2,
-        drvs.libxkbcommon,
-        drvs.openssl,
-
-        drvs.kmod,
-        drvs.zstd,
-        drvs.xz,
-        drvs.eudev,
-        drvs.libinput,
+      drvs.pixman,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libevdev,
+      drvs.mtdev,
+      drvs.pango,
+      drvs.cairo,
+      drvs.libpng,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.zlibNg,
+      drvs.harfbuzz,
+      drvs.glib,
+      drvs.hwdata,
+      drvs.linuxHeaders,
+      drvs.libjpegTurboStatic,
+      drvs.libspng,
+      drvs.file,
+      drvs.libwebp,
+      drvs.qtdeclarative,
+      drvs.qtbase,
+      drvs.qtshadertools,
+      drvs.qtwayland,
+      drvs.mesa2,
+      # drvs.pkgconf,
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.m4,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      ###
+      drvs.jsonC,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+      drvs.openssl,
+      drvs.kmod,
+      drvs.zstd,
+      drvs.xz,
+      drvs.eudev,
+      drvs.libinput,
     ],
     buildEnv = {
-        EXTRA_LDFLAGS= [
-          
-            "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
-
-
-
-        ]
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
+      ]
     },
     cmakeExtraArgsRecord = {
-      "-DBUILD_WITH_QT6"=true,
-        "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DBUILD_WITH_QT6" = true,
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
-
-    }
+  }
 }
-&
-(import "./kwin.ncl")
-
+& (import "./kwin.ncl")
 & (import "./kf6.ncl")

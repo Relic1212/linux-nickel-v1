@@ -3,21 +3,20 @@
   pkgs,
   lib,
   _pythonBase,
-  pythonFull | lib.AutotoolsPackage
-    =
-      _pythonBase
-      & {
-        # enableCcache|force=false,
-        name | priority 1 = "python-full",
-        isStatic,
+  pythonFull | lib.AutotoolsPackage =
+    _pythonBase
+    & {
+      # enableCcache|force=false,
+      name | priority 1 = "python-full",
+      isStatic,
 
-        configurePhase = (
-          ["cd ${SRC}"]
-          @ (_pythonBase.configurePhase)
-          @ (
-            if isStatic then
-              [
-                m%"
+      configurePhase = (
+        ["cd ${SRC}"]
+        @ (_pythonBase.configurePhase)
+        @ (
+          if isStatic then
+            [
+              m%"
         printf "
         *static*
         _asyncio _asynciomodule.c
@@ -113,41 +112,40 @@
         _bz2 _bz2module.c
 
         " > ./Modules/Setup.local"%
-              ]
-            else
-              []
-          )
-        ),
-        installPhase =
-          lib.AutotoolsPackage.installPhase
-          @ [
-            "cd $DEST/usr/bin",
-            "ln -s python3 python",
-          ],
-        biDrvs =
-          lib.biMap [
-            pkgs.linuxHeaders,
-            pkgs.zlibNg,
-            pkgs.pkgconf,
-            pkgs.libffi,
-            pkgs.openssl
-          ]
-      },
+            ]
+          else
+            []
+        )
+      ),
+      installPhase =
+        lib.AutotoolsPackage.installPhase
+        @ [
+          "cd $DEST/usr/bin",
+          "ln -s python3 python",
+        ],
+      biDrvs =
+        lib.biMap [
+          pkgs.linuxHeaders,
+          pkgs.zlibNg,
+          pkgs.pkgconf,
+          pkgs.libffi,
+          pkgs.openssl
+        ]
+    },
 
   pythonDynamic =
     pythonFull
     & {
       name | priority 20 = "python-dynamic",
       isStatic | priority 2 = false,
-      biDrvs | priority 1
-        =
-          lib.biMap [
-            pkgs.linuxHeaders,
-            pkgs.zlibNgPic,
-            pkgs.pkgconf,
-            pkgs.libffi,
-            pkgs.opensslPic,
-            pkgs.muslShared,
-          ]
+      biDrvs | priority 1 =
+        lib.biMap [
+          pkgs.linuxHeaders,
+          pkgs.zlibNgPic,
+          pkgs.pkgconf,
+          pkgs.libffi,
+          pkgs.opensslPic,
+          pkgs.muslShared,
+        ]
     }
 }

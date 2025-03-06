@@ -1,10 +1,9 @@
 {
   lib,
-  libestr | lib.AutomakePackage
-    = {
-      singleSource = {
-        uri = "http://libestr.adiscon.com/files/download/libestr-0.1.11.tar.gz",
-        sha256sum = "46632b2785ff4a231dcf241eeb0dcb5fc0c7d4da8ee49cf5687722cdbe8b2024",
-      }
+  libestr | lib.AutomakePackage = {
+    singleSource = {
+      uri = "http://libestr.adiscon.com/files/download/libestr-0.1.11.tar.gz",
+      sha256sum = "46632b2785ff4a231dcf241eeb0dcb5fc0c7d4da8ee49cf5687722cdbe8b2024",
     }
+  }
 }

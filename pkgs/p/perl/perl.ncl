@@ -1,20 +1,19 @@
 {
   lib,
 
-  perl | lib.AutotoolsPackage
-    = {
-      name = "perl",
-      sourceInputs = [
-        {
-          src = {
-            uri = "https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz",
-            sha256sum = "c740348f357396327a9795d3e8323bafd0fe8a5c7835fc1cbaba0cc8dfe7161f",
-          }
+  perl | lib.AutotoolsPackage = {
+    name = "perl",
+    sourceInputs = [
+      {
+        src = {
+          uri = "https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz",
+          sha256sum = "c740348f357396327a9795d3e8323bafd0fe8a5c7835fc1cbaba0cc8dfe7161f",
         }
-      ],
-      configurePhase = [
-        "cd ${SRC}",
-        m%"./Configure \
+      }
+    ],
+    configurePhase = [
+      "cd ${SRC}",
+      m%"./Configure \
     -Dprefix=/usr \
     -Ddlext='none' \
     -Dso='none' \
@@ -26,45 +25,40 @@
     -Dd_access=true \
     -Dd_eaccess='undef' \
     -des"%,
-        "make depend -j$(nproc)",
-      ],
-      postInstallPhase = [
-        "cd ${DEST}",
-        m%"
+      "make depend -j$(nproc)",
+    ],
+    postInstallPhase = [
+      "cd ${DEST}",
+      m%"
         for f in $(ls); do
           if [ -f "${f}" ]; then
             rm -f "${f}"
           fi
         done
         "%
-      ]
-    }
+    ]
+  }
 }
-
-&
-
-{
+& {
   lib,
   drvs,
   perl,
   perlDynamic | lib.AutotoolsPackage = {
-    sourceInputs = perl.sourceInputs, 
+    sourceInputs = perl.sourceInputs,
     separateBuildDir = false,
-     configurePhase = [
-        m%"./Configure \
+    configurePhase = [
+      m%"./Configure \
         -Dprefix=/usr \
         -Dvendorprefix=/usr  -Dusevendorprefix \
         -Dcc='clang' \
         -Dd_access=true \
         -Dd_eaccess='undef' \
         -des"%,
-        "make depend -j$(nproc)",
-      ],
-      isStatic = false,
-      biDrvs=[
-                drvs.muslShared,
-
-      ]
-
+      "make depend -j$(nproc)",
+    ],
+    isStatic = false,
+    biDrvs = [
+      drvs.muslShared,
+    ]
   }
 }

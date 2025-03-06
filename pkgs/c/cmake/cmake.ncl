@@ -38,63 +38,60 @@ in
   },
   # 2
 
-  cmakeStage2 | lib.CmakePackage
-    =
-      _cmakeCmakeBase
-      & {
-        stage = 2,
+  cmakeStage2 | lib.CmakePackage =
+    _cmakeCmakeBase
+    & {
+      stage = 2,
 
-        biDrvs =
-          lib.biMap [
-            pkgs.busyboxStage1,
-            pkgs.llvmStage1,
-            pkgs.muslStage2,
-            pkgs.samuraiStage2,
-            pkgs.cmakeStage1,
-            pkgs.ccacheBin,
-            pkgs.linuxHeadersStage2,
-          ]
-      },
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxStage1,
+          pkgs.llvmStage1,
+          pkgs.muslStage2,
+          pkgs.samuraiStage2,
+          pkgs.cmakeStage1,
+          pkgs.ccacheBin,
+          pkgs.linuxHeadersStage2,
+        ]
+    },
 
-  cmakeStage3 | lib.CmakePackage
-    =
-      _cmakeCmakeBase
-      & {
-        stage = -1,
+  cmakeStage3 | lib.CmakePackage =
+    _cmakeCmakeBase
+    & {
+      stage = -1,
 
-        utilsProviders = [],
-        baseBuildinputPackages = [],
-        biDrvs =
-          lib.biMap [
-            pkgs.busyboxStage2,
-            pkgs.llvmStage2,
-            pkgs.muslStage3,
-            pkgs.samuraiStage3,
-            pkgs.cmakeStage2,
-            pkgs.ccacheBin,
-            pkgs.linuxHeadersStage3,
-          ]
-      },
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxStage2,
+          pkgs.llvmStage2,
+          pkgs.muslStage3,
+          pkgs.samuraiStage3,
+          pkgs.cmakeStage2,
+          pkgs.ccacheBin,
+          pkgs.linuxHeadersStage3,
+        ]
+    },
 
   # final
 
-  cmake | lib.CmakePackage
-    =
-      _cmakeCmakeBase
-      & {
-        stage = -1,
+  cmake | lib.CmakePackage =
+    _cmakeCmakeBase
+    & {
+      stage = -1,
 
-        utilsProviders = [],
-        baseBuildinputPackages = [],
-        biDrvs =
-          lib.biMap [
-            pkgs.busyboxStage3,
-            pkgs.llvmStage3,
-            pkgs.musl,
-            pkgs.samurai,
-            pkgs.cmakeStage3,
-            pkgs.ccacheBin,
-            pkgs.linuxHeaders,
-          ]
-      },
+      utilsProviders = [],
+      baseBuildinputPackages = [],
+      biDrvs =
+        lib.biMap [
+          pkgs.busyboxStage3,
+          pkgs.llvmStage3,
+          pkgs.musl,
+          pkgs.samurai,
+          pkgs.cmakeStage3,
+          pkgs.ccacheBin,
+          pkgs.linuxHeaders,
+        ]
+    },
 }

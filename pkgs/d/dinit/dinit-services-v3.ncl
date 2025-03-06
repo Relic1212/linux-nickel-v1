@@ -48,41 +48,39 @@ let _services =
 
   (
     {
-      boot | Service
-        = {
-          type = "internal",
-          "depends-ms" = ["tty1", "tty2", "seatd"],
+      boot | Service = {
+        type = "internal",
+        "depends-ms" = ["tty1", "tty2", "seatd"],
 
-          "waits-for" =
-            [
-              "dbusd",
-              # "dhcpcd",
-              "iwd",
-              "make-shared-root",
-              "mount-others",
-              "earlyoom",
-              #"dropbear",
-              "upowerd",
-
-              "v4l2loopback",
-              "netdev",
-              "netdev-lo",
-            ]
-            @ (
-              if enableBluetooth then
-                [
-                  # "bluetooth"
-                ]
-              else
-                []
-            ),
-        },
+        "waits-for" =
+          [
+            "dbusd",
+            # "dhcpcd",
+            "iwd",
+            "make-shared-root",
+            "mount-others",
+            "earlyoom",
+            #"dropbear",
+            "upowerd",
+            "v4l2loopback",
+            "netdev",
+            "netdev-lo",
+          ]
+          @ (
+            if enableBluetooth then
+              [
+                # "bluetooth"
+              ]
+            else
+              []
+          ),
+      },
 
       cfg80211 = {
         type = "scripted",
         command = "/usr/bin/modprobe cfg80211",
         # command = "/usr/bin/modprobe -a cfg80211 iwlmvm",
-        # 
+        #
         restart = false,
         "depends-on" = ["early-filesystems"],
       },
@@ -107,7 +105,6 @@ let _services =
         ],
         "waits-for" = [
           "netdev",
-
           "udev-settle",
         ]
       },
@@ -318,12 +315,11 @@ let _services =
         logfile = [
           "/var/log/upowerd.log"
         ]
-        
       },
       v4l2loopback = {
         type = "scripted",
         command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
-         restart = false,
+        restart = false,
         "depends-on" = ["early-filesystems"],
       },
 
@@ -462,21 +458,20 @@ in
 
 {
   lib,
-  dinitServicesV3 | lib.Package
-    = {
+  dinitServicesV3 | lib.Package = {
 
-      preBuildPhase = [
-        "install -d -m0755 dinit.d",
-        "cd dinit.d",
-      ],
+    preBuildPhase = [
+      "install -d -m0755 dinit.d",
+      "cd dinit.d",
+    ],
 
-      buildPhase =
-        (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}") services))
-        @ (
-          std.array.map
-            (fun v =>
-              let vn = std.string.from_number v in
-              m%"
+    buildPhase =
+      (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}") services))
+      @ (
+        std.array.map
+          (fun v =>
+            let vn = std.string.from_number v in
+            m%"
         printf "
         type = process
         command = /usr/bin/agetty --login-program /usr/bin/crypto-login tty%{vn} linux-c
@@ -488,26 +483,26 @@ in
         inittab-line = tty%{vn}
         " > tty%{ vn}
         "%
-            )
-            [1, 2, 3, 4, 5, 6]
-        )
-        @ [
-          "install -d -m0755 scripts",
-          "cd scripts",
-        ]
-        @ (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}\nchmod +x %{k}") scripts))
-        @ [
-          "cd ../..",
-          "install -d -m0755 dinit",
-          "cd dinit",
-          "printf \"PATH=/usr/bin:/bin\n\" > environment",
-          "cd .."
-        ],
-
-      installPhase = [
-        "install -d -m0755 ${DEST}/etc",
-        "cp -r dinit.d ${DEST}/etc",
-        "cp -r dinit ${DEST}/etc",
+          )
+          [1, 2, 3, 4, 5, 6]
+      )
+      @ [
+        "install -d -m0755 scripts",
+        "cd scripts",
+      ]
+      @ (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}\nchmod +x %{k}") scripts))
+      @ [
+        "cd ../..",
+        "install -d -m0755 dinit",
+        "cd dinit",
+        "printf \"PATH=/usr/bin:/bin\n\" > environment",
+        "cd .."
       ],
-    }
+
+    installPhase = [
+      "install -d -m0755 ${DEST}/etc",
+      "cp -r dinit.d ${DEST}/etc",
+      "cp -r dinit ${DEST}/etc",
+    ],
+  }
 }

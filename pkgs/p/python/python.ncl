@@ -4,31 +4,30 @@
   pkgs,
   _pythonBase,
   #base with minimal modules
-  _pythonBaseMinimal | lib.AutotoolsPackage
-    =
-      _pythonBase
-      & {
-        buildEnv = {
-          _isLlvm = false,
-          STAGE_CFLAGS = [
-            "-I/include"
-          ],
-          STAGE_CPPFLAGS = [
-            "-I/include",
-          ],
-          CXX = ["x86_64-linux-musl-g++", "--verbose", "--sysroot=/"],
-          CXXFLAGS = [
-            "-I/include/c++/9.4.0",
-            # "-I/include",
-            #"-idirafter/include"
-          ],
-        },
-        # enableCcache|force=false,
+  _pythonBaseMinimal | lib.AutotoolsPackage =
+    _pythonBase
+    & {
+      buildEnv = {
+        _isLlvm = false,
+        STAGE_CFLAGS = [
+          "-I/include"
+        ],
+        STAGE_CPPFLAGS = [
+          "-I/include",
+        ],
+        CXX = ["x86_64-linux-musl-g++", "--verbose", "--sysroot=/"],
+        CXXFLAGS = [
+          "-I/include/c++/9.4.0",
+          # "-I/include",
+          #"-idirafter/include"
+        ],
+      },
+      # enableCcache|force=false,
 
-        configurePhase = (
-          (_pythonBase.configurePhase)
-          @ [
-            m%"
+      configurePhase = (
+        (_pythonBase.configurePhase)
+        @ [
+          m%"
         printf "
         *static*
         _random _randommodule.c
@@ -121,9 +120,9 @@
         _ctypes
         " > ./Modules/Setup.local
         "%
-          ]
-        ),
-      },
+        ]
+      ),
+    },
   # stage 1
   pythonStage1 =
     _pythonBaseMinimal

@@ -1,40 +1,39 @@
-
-
 {
   lib,
   drvs,
   hyprland,
-  hyprlandX11 | lib.MesonPackage = (hyprland &{
-    options={
+  hyprlandX11 | lib.MesonPackage = (
+    hyprland
+    & {
+      options = {
         glx = true,
-    },
-    biDrvs | priority 1 = hyprland.biDrvs @ [
-             
-              drvs.xcbRenderutil,
-              drvs.libxfont2,
-              drvs.libfontenc,
-              drvs.libxcvt,
-              drvs.libxshmfence,
-              drvs.xwayland,
-              drvs.libxkbfile,
-              drvs.openssl,
-              drvs.xcbUtilWm,
-              drvs.xcbUtilErrors,
-      
-    ]@ (if options.glx then [
-
-
-
-
+      },
+      biDrvs | priority 1 =
+        hyprland.biDrvs
+        @ [
+          drvs.xcbRenderutil,
+          drvs.libxfont2,
+          drvs.libfontenc,
+          drvs.libxcvt,
+          drvs.libxshmfence,
+          drvs.xwayland,
+          drvs.libxkbfile,
+          drvs.openssl,
+          drvs.xcbUtilWm,
+          drvs.xcbUtilErrors,
+        ]
+        @ (
+          if options.glx then
+            [
               drvs.libxext,
               drvs.libxf86vm,
               drvs.libxrandr,
-
-      ] else [
-        drvs.mesa2 
-      ])
-    
-    ,
+            ]
+          else
+            [
+              drvs.mesa2
+            ]
+        ),
 
       extraMesonArgs | priority 1 = [
         "-Dxwayland=enabled",
@@ -42,5 +41,6 @@
         "-Dhyprpm=disabled",
         # "-Dlegacy_renderer=enabled",
       ],
-  })
+    }
+  )
 }

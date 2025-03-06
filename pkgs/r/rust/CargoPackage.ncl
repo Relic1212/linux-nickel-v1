@@ -7,16 +7,15 @@
 
     functions = {
       importCrate = (fun j =>
-        let crate | Crate
-          = {
-            name | default = std.record.get_or "name" "NULL" j,
-            version | default = std.record.get_or "version" "NULL" j,
-            sha256sum | default = std.record.get_or "checksum" "NULL" j,
-            meta = {
-              source | default = std.record.get_or "source" "NULL" j,
-            }
+        let crate | Crate = {
+          name | default = std.record.get_or "name" "NULL" j,
+          version | default = std.record.get_or "version" "NULL" j,
+          sha256sum | default = std.record.get_or "checksum" "NULL" j,
+          meta = {
+            source | default = std.record.get_or "source" "NULL" j,
           }
-          in
+        }
+        in
         crate
       ),
       importCrates = (fun js =>
@@ -32,7 +31,7 @@
         |> std.record.merge_all
       ),
 
-      importCargoLock =(fun toml => ((importCrates (toml.package)))),
+      importCargoLock = (fun toml => ((importCrates (toml.package)))),
 
       filterCrates = (fun j =>
         let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
@@ -49,35 +48,32 @@
         buildEnv,
         target = (if buildEnv.TARGET == null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
         extraEnv = {
-          STATIC_RUSTFLAGS | default
-            = [
-              "-C target-feature=+crt-static",
-              "-C link-self-contained=yes",
-              "-C link-arg=-static",
-              "-C link-arg=--static"
-            ],
+          STATIC_RUSTFLAGS | default = [
+            "-C target-feature=+crt-static",
+            "-C link-self-contained=yes",
+            "-C link-arg=-static",
+            "-C link-arg=--static"
+          ],
           EXTRA_RUSTFLAGS | default = [],
           RUSTFLAGS | default = STATIC_RUSTFLAGS @ EXTRA_RUSTFLAGS,
         },
 
-        baseBuildinputPackages | priority -1000
-          =
-            [
-              drvs.rust,
-              drvs.muslShared,
-              drvs.pkgconf,
-              llvmProvider,
-              drvs.clangCc,
-            ]
-            @ utilsProviders,
+        baseBuildinputPackages | priority -1000 =
+          [
+            drvs.rust,
+            drvs.muslShared,
+            drvs.pkgconf,
+            llvmProvider,
+            drvs.clangCc,
+          ]
+          @ utilsProviders,
 
         enableCcache | priority -1000 = false,
         separateBuildDir | priority -1000 = false,
         extraCargoFlags | Array String | default = [],
         release | Bool | default = true,
-        preConfigurePhase | priority -1000
-          = [
-            m%"
+        preConfigurePhase | priority -1000 = [
+          m%"
             for d in $(ls  ${SRC}/vendor); do
               if [ -e ${SRC}/vendor/${d}/download ]; then
                 mv  ${SRC}/vendor/${d}/download  ${SRC}/vendor/${d}/download.tar.gz
@@ -86,8 +82,8 @@
               fi
             done
             "%,
-            "mkdir -p ${SRC}/.cargo",
-            m%"
+          "mkdir -p ${SRC}/.cargo",
+          m%"
             echo "
 
             [source.crates-io]
@@ -98,32 +94,28 @@
 
             " >> ${SRC}/.cargo/config.toml
             "%,
-            "export CARGO_HOME=${SRC}/.cargo",
-          ],
-        releaseFlags | default
-          =
-            if release then
-              [
-                "--release",
-              ]
-            else
-              [],
-        baseCargoFlags | default
-          = [
-            "--offline",
-            "--target %{target}"
-          ],
+          "export CARGO_HOME=${SRC}/.cargo",
+        ],
+        releaseFlags | default =
+          if release then
+            [
+              "--release",
+            ]
+          else
+            [],
+        baseCargoFlags | default = [
+          "--offline",
+          "--target %{target}"
+        ],
         cargoFlags | default = releaseFlags @ baseCargoFlags @ extraCargoFlags,
-        buildPhase | priority -1000
-          = [
-            "cargo build %{std.string.join "\t\\\n" cargoFlags}"
-          ],
+        buildPhase | priority -1000 = [
+          "cargo build %{std.string.join "\t\\\n" cargoFlags}"
+        ],
         artefactDir | default = if release then "${SRC}/target/%{target}/release" else "${SRC}/target/%{target}/debug",
 
-        installPhase | priority -1000
-          = [
-            "install -d -m0755 ${DEST}/usr/bin",
-            m%"
+        installPhase | priority -1000 = [
+          "install -d -m0755 ${DEST}/usr/bin",
+          m%"
           for f in $(ls %{artefactDir}); do
             file_end=$(echo $f| rev | cut -d '.' -f1|rev)
 
@@ -137,12 +129,12 @@
             fi
           done
           "%
-          ],
+        ],
 
         nonCrateSourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
 
         lockfileImport | default = null,
-        crates | default = if (lockfileImport==null) then {} else (lib.functions.importCargoLock lockfileImport),
+        crates | default = if (lockfileImport == null) then {} else (lib.functions.importCargoLock lockfileImport),
 
         cratesArray | not_exported | default = std.array.flatten (std.array.map (std.record.values) (std.record.values crates)),
 
@@ -160,23 +152,21 @@
         source | String | optional,
         dependencies | optional,
       },
-      unpackCommands | Array String | default
-        = [
-          "mkdir -p ${SRC}/vendor/%{name}",
-          "(cd  ${SRC}/vendor/%{name}; tar -xf /tmp/packed/%{sha256sum}/download --strip-components=1)",
-        ],
+      unpackCommands | Array String | default = [
+        "mkdir -p ${SRC}/vendor/%{name}",
+        "(cd  ${SRC}/vendor/%{name}; tar -xf /tmp/packed/%{sha256sum}/download --strip-components=1)",
+      ],
 
-      sourceInput | default
-        = {
-          dest = "vendor/%{name}-%{version}",
-          src =
-            let _uri = uri in
-            let _sha = sha256sum in
-            {
-              uri | priority -1 = _uri,
-              sha256sum | priority -1 = _sha,
-            }
-        }
+      sourceInput | default = {
+        dest = "vendor/%{name}-%{version}",
+        src =
+          let _uri = uri in
+          let _sha = sha256sum in
+          {
+            uri | priority -1 = _uri,
+            sha256sum | priority -1 = _sha,
+          }
+      }
     }
   }
 }

@@ -1,108 +1,92 @@
 {
-    lib,
-    drvs,
-    kwin | lib.CmakePackage={
-        generator = "Ninja",
-        singleSource ={
-            uri="https://invent.kde.org/plasma/kwin/-/archive/v6.3.2.1/kwin-v6.3.2.1.tar.gz",
-            sha256sum = "2eae36bfc9c451a94bccedcd76b60e664d305a8b02e1a47b4612c85e0b679180"
-        },
-        llvmProvider = drvs.llvmFull,
-
+  lib,
+  drvs,
+  kwin | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://invent.kde.org/plasma/kwin/-/archive/v6.3.2.1/kwin-v6.3.2.1.tar.gz",
+      sha256sum = "2eae36bfc9c451a94bccedcd76b60e664d305a8b02e1a47b4612c85e0b679180"
+    },
+    llvmProvider = drvs.llvmFull,
 
     biDrvs = [
-        drvs.pixman,
-        drvs.expat,
-        drvs.libffi,
-        drvs.libevdev,
-        drvs.mtdev,
-        drvs.pango,
-        drvs.cairo,
-        drvs.libpng,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.zlibNg,
-        drvs.harfbuzz,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.linuxHeaders,
-       
-        drvs.libjpegTurboStatic,
-
-        drvs.libspng,
-
-        drvs.file,
-        drvs.libwebp,
-        drvs.dbusForQt,
-
-        drvs.qtdeclarative,
-        drvs.qtbase,
-        drvs.qtshadertools,
-        drvs.qtwayland,
-        drvs.qt5compat,
-        drvs.qtTools,
-        drvs.qtsensors,
-        drvs.qtsvg,
-
-        drvs.kconfig,
-        drvs.kcoreaddons,
-
-
-
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.m4,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
-        ###
-        drvs.jsonC,
-        drvs.pcre2,
-        drvs.libxkbcommon,
-        drvs.openssl,
-
-        drvs.kmod,
-        drvs.zstd,
-        drvs.xz,
-        drvs.eudev,
-        drvs.libinput,
-        drvs.ecm,
+      drvs.pixman,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libevdev,
+      drvs.mtdev,
+      drvs.pango,
+      drvs.cairo,
+      drvs.libpng,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.zlibNg,
+      drvs.harfbuzz,
+      drvs.glib,
+      drvs.hwdata,
+      drvs.linuxHeaders,
+      drvs.libjpegTurboStatic,
+      drvs.libspng,
+      drvs.file,
+      drvs.libwebp,
+      drvs.dbusForQt,
+      drvs.qtdeclarative,
+      drvs.qtbase,
+      drvs.qtshadertools,
+      drvs.qtwayland,
+      drvs.qt5compat,
+      drvs.qtTools,
+      drvs.qtsensors,
+      drvs.qtsvg,
+      drvs.kconfig,
+      drvs.kcoreaddons,
+      drvs.mesa2,
+      # drvs.pkgconf,
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.m4,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      ###
+      drvs.jsonC,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+      drvs.openssl,
+      drvs.kmod,
+      drvs.zstd,
+      drvs.xz,
+      drvs.eudev,
+      drvs.libinput,
+      drvs.ecm,
     ],
     buildEnv = {
-        EXTRA_LDFLAGS= [
-          
-            "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
-
-
-
-        ]
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
+      ]
     },
     cmakeExtraArgsRecord = {
 
+      "-DKWIN_BUILD_DECORATIONS" = false,
+      "-DKWIN_BUILD_KCMS" = false,
+      "-DKWIN_BUILD_NOTIFICATIONS" = false,
+      "-DKWIN_BUILD_SCREENLOCKER" = false,
+      "-DKWIN_BUILD_TABBOX" = false,
+      "-DKWIN_BUILD_X11" = false,
+      "-DKWIN_BUILD_X11_BACKEND" = false,
+      "-DKWIN_BUILD_GLOBALSHORTCUTS" = false,
+      "-DKWIN_BUILD_RUNNERS" = false,
 
-"-DKWIN_BUILD_DECORATIONS" = false,
-"-DKWIN_BUILD_KCMS"=false,
-"-DKWIN_BUILD_NOTIFICATIONS"=false,
-"-DKWIN_BUILD_SCREENLOCKER"=false,
-"-DKWIN_BUILD_TABBOX"=false,
-"-DKWIN_BUILD_X11"=false,
-"-DKWIN_BUILD_X11_BACKEND"=false,
-"-DKWIN_BUILD_GLOBALSHORTCUTS"=false,
-"-DKWIN_BUILD_RUNNERS"=false,
-
-
-        "-DCMAKE_MODULE_LINKER_FLAGS:STRING"="\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
-    }
+  }
 }

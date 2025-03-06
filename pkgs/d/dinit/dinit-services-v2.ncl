@@ -43,13 +43,12 @@ let serviceToString = (fun service =>
 )
 in
 let _services = {
-  boot | Service
-    = {
-      type = "internal",
-      "depends-ms" = ["tty1", "tty2", "seatd"],
+  boot | Service = {
+    type = "internal",
+    "depends-ms" = ["tty1", "tty2", "seatd"],
 
-      "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
-    }
+    "waits-for" = ["dbusd", "dhcpcd", "dropbear"],
+  }
 }
 in
 
@@ -262,21 +261,20 @@ in
 
 {
   lib,
-  dinitServicesV2 | lib.Package
-    = {
+  dinitServicesV2 | lib.Package = {
 
-      preBuildPhase = [
-        "install -d -m0755 dinit.d",
-        "cd dinit.d",
-      ],
+    preBuildPhase = [
+      "install -d -m0755 dinit.d",
+      "cd dinit.d",
+    ],
 
-      buildPhase =
-        (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}") services))
-        @ (
-          std.array.map
-            (fun v =>
-              let vn = std.string.from_number v in
-              m%"
+    buildPhase =
+      (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}") services))
+      @ (
+        std.array.map
+          (fun v =>
+            let vn = std.string.from_number v in
+            m%"
         printf "
         type = process
         command = /usr/bin/agetty --login-program /usr/bin/crypto-login tty%{vn} linux-c
@@ -288,26 +286,26 @@ in
         inittab-line = tty%{vn}
         " > tty%{ vn}
         "%
-            )
-            [1, 2, 3, 4, 5, 6]
-        )
-        @ [
-          "install -d -m0755 scripts",
-          "cd scripts",
-        ]
-        @ (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}\nchmod +x %{k}") scripts))
-        @ [
-          "cd ../..",
-          "install -d -m0755 dinit",
-          "cd dinit",
-          "printf \"PATH=/usr/bin:/bin\n\" > environment",
-          "cd .."
-        ],
-
-      installPhase = [
-        "install -d -m0755 ${DEST}/etc",
-        "cp -r dinit.d ${DEST}/etc",
-        "cp -r dinit ${DEST}/etc",
+          )
+          [1, 2, 3, 4, 5, 6]
+      )
+      @ [
+        "install -d -m0755 scripts",
+        "cd scripts",
+      ]
+      @ (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}\nchmod +x %{k}") scripts))
+      @ [
+        "cd ../..",
+        "install -d -m0755 dinit",
+        "cd dinit",
+        "printf \"PATH=/usr/bin:/bin\n\" > environment",
+        "cd .."
       ],
-    }
+
+    installPhase = [
+      "install -d -m0755 ${DEST}/etc",
+      "cp -r dinit.d ${DEST}/etc",
+      "cp -r dinit ${DEST}/etc",
+    ],
+  }
 }

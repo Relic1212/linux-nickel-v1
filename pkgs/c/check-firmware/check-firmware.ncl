@@ -1,9 +1,8 @@
 {
   lib,
-  checkFirmware | lib.Package
-    = {
-      installPhase = [
-        m%"
+  checkFirmware | lib.Package = {
+    installPhase = [
+      m%"
             install -d -m0755 ${DEST}/usr/bin
             echo '#!/bin/sh
             for f in $(find /lib/modules/ -type f -print | xargs modinfo {}|grep "firmware:"| cut -d " " -f8);do
@@ -14,7 +13,7 @@
             ' > ${DEST}/usr/bin/check-firmware
             chmod +x ${DEST}/usr/bin/check-firmware
             "%,
-        m%"
+      m%"
             install -d -m0755 ${DEST}/usr/bin
             echo '#!/bin/sh
             for f in $(find /lib/modules/ -type f -print | xargs modinfo {}|grep "firmware:"| cut -d " " -f8);do
@@ -25,6 +24,6 @@
             ' > ${DEST}/usr/bin/check-unneded-firmware
             chmod +x ${DEST}/usr/bin/check-unneded-firmware
             "%
-      ],
-    }
+    ],
+  }
 }

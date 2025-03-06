@@ -1,10 +1,9 @@
 {
   lib,
-  libpsl | lib.MesonPackage
-    = {
-      singleSource = {
-        uri = "https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz",
-        sha256sum = "1dcc9ceae8b128f3c0b3f654decd0e1e891afc6ff81098f227ef260449dae208",
-      }
+  libpsl | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz",
+      sha256sum = "1dcc9ceae8b128f3c0b3f654decd0e1e891afc6ff81098f227ef260449dae208",
     }
+  }
 }

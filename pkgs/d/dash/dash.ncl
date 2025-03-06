@@ -1,17 +1,16 @@
 {
   lib,
   pkgs,
-  dash | lib.AutotoolsPackage
-    = {
-      buildEnv,
-      singleSource = {
-        uri = "http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.12.tar.gz",
-        sha256sum = "6a474ac46e8b0b32916c4c60df694c82058d3297d8b385b74508030ca4a8f28a",
-      },
-      extraMakeArgs = [
-        "CFLAGS_FOR_BUILD=\"-static --static\""
-      ],
+  dash | lib.AutotoolsPackage = {
+    buildEnv,
+    singleSource = {
+      uri = "http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.12.tar.gz",
+      sha256sum = "6a474ac46e8b0b32916c4c60df694c82058d3297d8b385b74508030ca4a8f28a",
     },
+    extraMakeArgs = [
+      "CFLAGS_FOR_BUILD=\"-static --static\""
+    ],
+  },
   dashAarch64 =
     dash
     & {
