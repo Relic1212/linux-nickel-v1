@@ -8,7 +8,7 @@
       sha256sum = "2eae36bfc9c451a94bccedcd76b60e664d305a8b02e1a47b4612c85e0b679180"
     },
     llvmProvider = drvs.llvmFull,
-
+    symlinkBuldInputs = true,
     biDrvs = [
       drvs.pixman,
       drvs.expat,
@@ -38,8 +38,7 @@
       drvs.qtTools,
       drvs.qtsensors,
       drvs.qtsvg,
-      drvs.kconfig,
-      drvs.kcoreaddons,
+    
       drvs.mesa2,
       # drvs.pkgconf,
       drvs.libelf,
@@ -68,6 +67,31 @@
       drvs.eudev,
       drvs.libinput,
       drvs.ecm,
+
+
+        drvs.kcoreaddons,
+        drvs.kcodecs,
+        drvs.kconfig,
+        drvs.kguiaddons,
+        drvs.ki18n,
+        drvs.gettext,
+        drvs.kwidgetsaddons,
+        drvs.kcolorscheme,
+        drvs.kauth,
+        drvs.kdbusaddons,
+        drvs.kconfigwidgets,
+        drvs.karchive,
+        drvs.kwindowsystem,
+        drvs.plasmaWaylandProtocols,
+        drvs.kservice,
+        drvs.kpackage,
+        drvs.kglobalaccel,
+        drvs.kidletime,
+        drvs.ksvg,
+        drvs.kcrash,
+        drvs.kirigami,
+
+
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [

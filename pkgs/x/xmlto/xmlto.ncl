@@ -12,6 +12,8 @@
     biDrvs = [
       drvs.bash,
       drvs.libxslt,
+      drvs.docbookXml,
+      drvs.libxml2,
     ]
   }
 }
@@ -28,13 +30,16 @@
 & {
   lib,
   drvs,
-  docbook-xsl | lib.MakePackage = {
+  docbookXsl | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/docbook/xslt10-stylesheets/releases/download/release/1.79.2/docbook-xsl-1.79.2.zip",
       sha256sum = "853dce096f5b32fe0b157d8018d8fecf92022e9c79b5947a98b365679c7e31d7"
     },
     biDrvs = [
       drvs.libxslt,
+      drvs.docbookXml,
+      drvs.libxml2,
+
     ],
     extraMakeArgs = [
       "XSLT=/usr/bin/xsltproc"
@@ -44,13 +49,24 @@
 & {
   lib,
   drvs,
-  docbook-xml | lib.MakePackage = {
+  docbookXml | lib.Package = {
     singleSource = {
-      uri = "https://docbook.org/xml/5.2b09/docbook-52b09.zip",
-      sha256sum = "748c1efb4c2133b77db0176405b0387d1c2517befe0be2c3090319f0b1dcd587"
+      uri = "https://www.docbook.org/xml/4.5/docbook-xml-4.5.zip",
+
+      sha256sum = "4e4e037a2b83c98c6c94818390d4bdd3f6e10f6ec62dd79188594e26190dc7b4"
     },
     biDrvs = [
       drvs.libxslt,
+      drvs.libxml2,
     ],
+    separateBuildDir = false,
+    # https://www.linuxfromscratch.org/blfs/view/svn/pst/docbook.html
+    installPhase =[
+      "install -d -m0755 ${DEST}/usr/share/xml/docbook/xml-dtd-4.5",
+      "install -d -m0755 ${DEST}/etc/xml",
+      "cp -v -af docbook.cat *.dtd ent/ *.mod  ${DEST}/usr/share/xml/docbook/xml-dtd-4.5",
+      "xmlcatalog --noout --create ${DEST}/etc/xml/docbook",
+    ]
+
   }
 }
