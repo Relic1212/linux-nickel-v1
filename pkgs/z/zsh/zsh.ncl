@@ -3,10 +3,10 @@
   drvs,
   zsh | lib.AutomakePackage = {
     singleSource = {
-      #uri = "https://ftp.funet.fi/pub/unix/shells/zsh/zsh-5.9.tar.xz",
-      #sha256sum = "9b8d1ecedd5b5e81fbf1918e876752a7dd948e05c1a0dba10ab863842d45acd5",
-      uri = "https://github.com/zsh-users/zsh/archive/435cb1b748ce1f2f5c38edc1d64f4ee2424f9b3a.tar.gz",
-      sha256sum = "1b8d95ce7bcb9eb03cbfa5c57c28639f24563283e528988c7509f515d93d935d",
+      uri = "https://ftp.funet.fi/pub/unix/shells/zsh/zsh-5.9.tar.xz",
+      sha256sum = "9b8d1ecedd5b5e81fbf1918e876752a7dd948e05c1a0dba10ab863842d45acd5",
+      # uri = "https://github.com/zsh-users/zsh/archive/435cb1b748ce1f2f5c38edc1d64f4ee2424f9b3a.tar.gz",
+      # sha256sum = "1b8d95ce7bcb9eb03cbfa5c57c28639f24563283e528988c7509f515d93d935d",
     },
     biDrvs = [
       drvs.ncurses,
