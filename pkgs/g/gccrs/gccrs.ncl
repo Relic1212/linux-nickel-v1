@@ -458,7 +458,7 @@
       cmakeArgsRecord = {
         "-DLLVM_ENABLE_PIC" | force = "ON",
         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" | force = false,
-        "-DLLVM_TARGETS_TO_BUILD" | force = "'X86'"
+        "-DLLVM_TARGETS_TO_BUILD" | priority 10000 = "'X86'"
       },
       llvmProvider = drvs.llvmPic,
       buildEnv = {

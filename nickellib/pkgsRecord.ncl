@@ -9,6 +9,7 @@ let r = {
     & (import "../pkgs/a/acpid/acpid.ncl")
 
     & (import "../pkgs/a/alsa-libs/alsa-libs.ncl")
+    & (import "../pkgs/a/android-tools/android-tools.ncl")
     & (import "../pkgs/a/appstream/appstream.ncl")
     & (import "../pkgs/a/argp-standalone/argp-standalone.ncl")
     & (import "../pkgs/a/atkmm/atkmm.ncl")
@@ -203,6 +204,7 @@ let r = {
 
     & (import "../pkgs/l/llvm/clang-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-baselibs-stage-0.ncl")
+    & (import "../pkgs/l/llvm/llvm-exp.ncl")
     & (import "../pkgs/l/llvm/llvm-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm.ncl")
     & (import "../pkgs/l/lvm2/lvm2.ncl")
@@ -234,6 +236,7 @@ let r = {
     & (import "../pkgs/n/newt/newt.ncl")
     & (import "../pkgs/n/ninja/ninja-stage-1.ncl")
     & (import "../pkgs/n/nwg-drawer/nwg-drawer.ncl")
+    & (import "../pkgs/o/oci-image/oci-image.ncl")
     & (import "../pkgs/o/opendoas/opendoas.ncl")
     & (import "../pkgs/o/openresolv/openresolv.ncl")
     & (import "../pkgs/o/openssl/openssl.ncl")
@@ -314,6 +317,7 @@ let r = {
     & (import "../pkgs/s/sysshell/sysshell.ncl")
 
     & (import "../pkgs/t/terminus-font/terminus-font.ncl")
+    & (import "../pkgs/t/tinycc/tinycc.ncl")
     & (import "../pkgs/t/tllist/tllist.ncl")
     & (import "../pkgs/t/tlp/tlp.ncl")
 
