@@ -13,5 +13,5 @@ podman run \
 	--network host \
 	--volume $DIR:$DIR \
 	--workdir $DIR \
-	--name nickel-llvm-alpine \
-	localhost/nickel-llvm-alpine:latest
+	--name nickel-arch \
+	localhost/nickel-arch:latest
