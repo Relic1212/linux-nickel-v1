@@ -62,5 +62,10 @@
         #  "/usr/bin/ld.lld" --sysroot=/aarch64-unknown-linux-musl -EL --hash-style=gnu --eh-frame-hdr -m aarch64linux -static -o conftest -L/aarch64-unknown-linux-musl/usr/lib -as-needed /tmp/conftest-880272.o
       ],
       # buildEnv.LD= [ "clang","--target=%{buildEnv.TARGET}", "--sysroot=/%{buildEnv.TARGET}"],
+
+      extraMakeArgs | priority 1 = dash.extraMakeArgs @ [
+        "CC=\"${CC}\"",
+        "CC_FOR_BUILD=\"clang -static --static\"",
+      ]
     }
 }

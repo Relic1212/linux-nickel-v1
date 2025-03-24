@@ -5,11 +5,15 @@
   _linuxHeadersBase | lib.MakePackage = {
     baseName = "linux-headers",
     makeTargets | priority -10 = ["headers"],
+    options ={
+      version = "6.13.8"
+      # version = "6.10"
+      },
     sourceInputs = [
       {
         src = {
-          uri = "https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-6.10.tar.gz",
-          sha256sum = "37041701dab67f8e1bd699d728fec07d6098abd147b366f0c7ad1a3fb1b58619",
+          uri = "https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-%{options.version}.tar.gz",
+          sha256sum = "a9f61a4db3e3f2d73129b99ef371686ac096e7ac6c40b81a9d60dda9527fe570",
         },
       },
     ],

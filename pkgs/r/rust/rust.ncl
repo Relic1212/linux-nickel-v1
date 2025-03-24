@@ -4,35 +4,42 @@
   rust | lib.AutotoolsPackage =
     let tgt = "x86_64-unknown-linux-musl" in
     {
+    # symlinkBuldInputs = true,
+
       sourceInputs = [
         {
           src = {
-            uri = "https://static.rust-lang.org/dist/rustc-1.82.0-src.tar.xz",
-            sha256sum = "1276a0bb8fa12288ba6fa96597d28b40e74c44257c051d3bc02c2b049bb38210",
+            uri = "https://static.rust-lang.org/dist/rustc-1.85.1-src.tar.xz",
+            sha256sum = "b1fbf809efe9f036939401e142631c201a53bcf43ec1696bd9f5290ba236a266",
           },
         },
         {
           dest = "local",
           src = {
-            uri = "https://static.rust-lang.org/dist/rust-std-1.81.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "3f2e47fff9320888993139fbd98f4bb44faf9355b25904f36a24a9808ff80240",
+            uri = "https://static.rust-lang.org/dist/rust-std-1.84.0-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "5f976818603468384bd78fde6c4e12f2b0a996d55f4985a33a68b5af54974ac0",
           }
         },
         {
           dest = "local1",
           src = {
-            uri = "https://static.rust-lang.org/dist/rustc-1.81.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "02c29b1e17105bb286c36d4f9b28ca21feacb4a98848db103af796411cff1ec5",
+            uri = "https://static.rust-lang.org/dist/rustc-1.84.0-x86_64-unknown-linux-musl.tar.xz",
+            
+            sha256sum = "bb96af675e34195588ab322ddaeabadd8bf4da08869aef3c91b7e7bbaf9a74b1",
           }
         },
         {
           dest = "local2",
           src = {
-            uri = "https://static.rust-lang.org/dist/cargo-1.81.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "ece99ea9b81e283bcaa3333ec01f6776d2a0840f956a4e7e5199fc3761354e36",
+            uri = "https://static.rust-lang.org/dist/cargo-1.84.0-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "0356fa019a7ee60fe6eec2f94c7d68e01b1a7710437bb6cf3422b42c2870d822",
           }
         },
       ],
+      patches = [{
+        sha256sum = "e96ebfd7e040e480d893c3e5ddd0a13e4f403fd1a9794700a70b84820fec0621" , file = "fc32dd49cb70c4b113353c7a060a875f30b9af04.patch"
+
+      }],
       separateBuildDir = false,
       isStatic = false,
       isLlvm = false,
@@ -62,7 +69,7 @@
 
       unpackPhase = [
         m%"
-        rust_src=$(find  /tmp/workdir/packed -name rustc-1.82.0-src.tar.xz)
+        rust_src=$(find  /tmp/workdir/packed -name rustc-1.85.1-src.tar.xz)
         (cd /tmp/workdir/src; tar -xf $rust_src --strip-components=1)
 
         "%,

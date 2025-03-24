@@ -26,15 +26,17 @@
       configureFlags | priority 1 =
         bash.configureFlags
         @ [
-          "--host=aarch64-unknown-linux-musl"
+          "--host=aarch64-unknown-linux-musl",
+          "ac_cv_func_dprintf='yes'" ,
         ],
       buildInputs = pkgs.busyboxAarch64.buildInputs,
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
       buildEnv.CROSS_LDFLAGS = ["-nostdlib", "-lc"],
       buildEnv.CPP = ["clang-cpp", "-target aarch64-unknown-linux-musl"],
 
-      extraEnv.CC_FOR_BUILD = ["clang"],
-      extraEnv.LD_FOR_BUILD = ["ls.llld"],
+      extraEnv.CC_FOR_BUILD = ["clang","-static","--static"],
+      extraEnv.LD_FOR_BUILD = ["ld.lld"],
       extraEnv.CPP_FOR_BUILD = ["clang-cpp"],
+
     }
 }

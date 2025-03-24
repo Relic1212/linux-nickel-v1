@@ -3,8 +3,8 @@
   pkgs,
   dropbear | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://matt.ucc.asn.au/dropbear/dropbear-2024.85.tar.bz2",
-      sha256sum = "86b036c433a69d89ce51ebae335d65c47738ccf90d13e5eb0fea832e556da502",
+      uri = "https://matt.ucc.asn.au/dropbear/dropbear-2025.87.tar.bz2",
+      sha256sum = "738b7f358547f0c64c3e1a56bbc5ef98d34d9ec6adf9ccdf01dc0bf2caa2bc8d",
     },
     extraConfigureFlags = [
       "--disable-lastlog",

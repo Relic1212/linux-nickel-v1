@@ -137,6 +137,16 @@
         file = "0.patch",
         sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
       },
+      # {
+      #   sha256sum="15af07497dd74b2d302af2ca7f41214fbe9f3da20ae3f78db716ea384079ec72", 
+      #   file="50783351bcff9be116cd6d714877ccd0952df2c4.patch",
+      # },
+      {
+
+        file = "32439.patch",
+
+        sha256sum = "0d324c58a955a5cfa475417e845d915b20e79d4a2efaf0d122dee5d0896b562f" ,
+      }
     ],
     preConfigurePhase | priority 1 = [
       m%"
@@ -152,7 +162,20 @@
           sed -i \
             "s@name_suffix : 'so',@name_suffix : 'a',@g" \
             ${SRC}/src/gallium/targets/dri/meson.build
-          "%
+          "%,
+          
+          # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32439/diffs?commit_id=8a453669e2bd44651cacdeac1c372d6e80cab0a7
+
+          # m%"
+          # sed -i \
+          #   's@#include <spirv-tools/optimizer.hpp>@#include <spirv-tools/optimizer.hpp>\n#include <llvm/Support/VirtualFileSystem.h>@g' \
+          #   ${SRC}/src/compiler/clc/clc_helpers.cpp
+
+          # sed -i \
+          #   's@c->createDiagnostics(new clang::TextDiagnosticPrinter(@c->createDiagnostics(*llvm::vfs::getRealFileSystem(), new clang::TextDiagnosticPrinter(@g' \
+          #   ${SRC}/src/compiler/clc/clc_helpers.cpp 
+
+          # "%
     ],
     baseBuildinputPackages = std.array.filter (fun v => v.drvHash != drvs.llvm.drvHash) lib.MesonPackage.baseBuildinputPackages,
   },
@@ -269,8 +292,7 @@
   drvs,
   llvm,
 
-  llvmFull
-    | lib.CmakePackage
+  llvmFull | lib.CmakePackage
     = {
       sourceInputs = llvm.sourceInputs,
       cmakeDir = llvm.cmakeDir,
@@ -328,7 +350,7 @@
         "-DCOMPILER_RT_TERMINFO_LIB" = "OFF",
         "-DCOMPILER_RT_USE_BUILTINS_LIBRARY" = true,
         "-DCOMPILER_RT_USE_LLVM_UNWINDER" = true,
-        "-DDCOMPILER_RT_DEFAULT_TARGET_ONLY" = true, #FIXME
+        # "-DCOMPILER_RT_DEFAULT_TARGET_ONLY" = true, #FIXME
         "-DLIBCXXABI_ENABLE_SHARED:BOOL" = "OFF",
         "-DLIBCXXABI_ENABLE_STATIC_UNWINDER:BOOL" = "ON",
         "-DLIBCXXABI_INSTALL_SHARED_LIBRARY:BOOL" = "OFF",

@@ -22,3 +22,16 @@
     }
   }
 }
+& {
+  lib,
+  drvs,
+  spirvHeaders3 | lib.CmakePackage = {
+    generator = "Ninja",
+
+    singleSource = {
+      uri | priority 1 = "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/vulkan-sdk-1.4.309.0.tar.gz",
+
+      sha256sum | priority 1 = "a96f8b4f2dfb18f7432e5c523e220ab0075372a9509e0c25fbff21c76af0de7c",
+    }
+  }
+}

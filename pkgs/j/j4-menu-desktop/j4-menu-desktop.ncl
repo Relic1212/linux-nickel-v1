@@ -20,8 +20,8 @@
   spdlog | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/gabime/spdlog/archive/refs/tags/v1.15.0.tar.gz",
-      sha256sum = "9962648c9b4f1a7bbc76fd8d9172555bad1871fdb14ff4f842ef87949682caa5"
+      uri = "https://github.com/gabime/spdlog/archive/refs/tags/v1.15.1.tar.gz",
+      sha256sum = "25c843860f039a1600f232c6eb9e01e6627f7d030a2ae5e232bdd3c9205d26cc"
     },
     cmakeArgsRecord = {
       "-DSPDLOG_FMT_EXTERNAL" = true,
@@ -36,9 +36,12 @@
   drvs,
   catch2 | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/catchorg/Catch2/archive/refs/tags/v3.7.1.tar.gz",
-      sha256sum = "c991b247a1a0d7bb9c39aa35faf0fe9e19764213f28ffba3109388e62ee0269c"
-    }
+      uri = "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz",
+      sha256sum = "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
+    },
+    extraMesonArgs = [
+      "-Dtests=false"
+    ],
   }
 }
 & {

@@ -192,7 +192,7 @@
       ]
     },
 
-  libcxxAarch64 =
+  libcxxAarch64 = let majorVersion = "20" in 
     _llvmBaseTarget
     & {
       cmakeArgs | priority 2 =
@@ -264,7 +264,7 @@
         "-DLLVM_CONFIG=/usr/bin/llvm-config",
         "-DLLVM_HOST_TRIPLE:STRING=x86_64-unknown-linux-musl",
         "-DLLVM_VERSION_SUFFIX=''",
-        "-DCOMPILER_RT_INSTALL_BINARY_DIR:PATH=lib/clang/19/bin",
+        "-DCOMPILER_RT_INSTALL_BINARY_DIR:PATH=lib/clang/%{majorVersion}/bin",
       ],
       configurePhase | priority 100 = [
         "cmake -S ${SRC}/runtimes %{std.string.join " \\\n\t" cmakeArgs}"
@@ -284,10 +284,10 @@
       installPhase | priority 2 = [
         "DESTDIR=${DEST} ninja install-cxx install-cxxabi install-unwind install-compiler-rt install-compiler-rt-headers",
         "DESTDIR=/tmp/workdir/out/destdir ninja install-cxx install-cxxabi install-unwind install-compiler-rt install-compiler-rt-headers",
-        "install -d m0755 ${DEST}/usr/lib/clang/19",
-        "cp -r ${DEST}/usr/lib ${DEST}/usr/lib/clang/19/lib || true",
-        "install -d m0755 /tmp/workdir/out/destdir/usr/lib/clang/19",
-        "cp -r /tmp/workdir/out/destdir/usr/lib /tmp/workdir/out/destdir/usr/lib/clang/19/lib || true",
+        "install -d m0755 ${DEST}/usr/lib/clang/%{majorVersion}",
+        "cp -r ${DEST}/usr/lib ${DEST}/usr/lib/clang/%{majorVersion}/lib || true",
+        "install -d m0755 /tmp/workdir/out/destdir/usr/lib/clang/%{majorVersion}",
+        "cp -r /tmp/workdir/out/destdir/usr/lib /tmp/workdir/out/destdir/usr/lib/clang/%{majorVersion}/lib || true",
       ],
 
       buildInputs | priority 1 =

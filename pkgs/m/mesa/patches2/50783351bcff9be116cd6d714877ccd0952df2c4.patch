@@ -1,0 +1,46 @@
+From 50783351bcff9be116cd6d714877ccd0952df2c4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Kai=20Wasserb=C3=A4ch?= <kai@dev.carbon-project.org>
+Date: Tue, 2 Apr 2024 11:10:18 +0200
+Subject: [PATCH] fix(FTBFS): clover: adapt to new LLVM 19 DiagnosticHandlerTy
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+LLVM 19 changed DiagnosticHandlerTy. Adapt to that.
+
+Reference: https://github.com/llvm/llvm-project/commit/44d037cc258dcf179d2c48c93996bb406ecd0fae
+Signed-off-by: Kai Wasserbäch <kai@dev.carbon-project.org>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/28520>
+---
+ src/gallium/frontends/clover/llvm/invocation.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/gallium/frontends/clover/llvm/invocation.cpp b/src/gallium/frontends/clover/llvm/invocation.cpp
+index 6ab32befbcd38..d49578e1272a0 100644
+--- a/src/gallium/frontends/clover/llvm/invocation.cpp
++++ b/src/gallium/frontends/clover/llvm/invocation.cpp
+@@ -128,11 +128,20 @@ namespace {
+    }
+ 
+    void
++#if LLVM_VERSION_MAJOR >= 19
++   diagnostic_handler(const ::llvm::DiagnosticInfo *di, void *data) {
++      if (di->getSeverity() == ::llvm::DS_Error) {
++#else
+    diagnostic_handler(const ::llvm::DiagnosticInfo &di, void *data) {
+       if (di.getSeverity() == ::llvm::DS_Error) {
++#endif
+          raw_string_ostream os { *reinterpret_cast<std::string *>(data) };
+          ::llvm::DiagnosticPrinterRawOStream printer { os };
++#if LLVM_VERSION_MAJOR >= 19
++         di->print(printer);
++#else
+          di.print(printer);
++#endif
+          throw build_error();
+       }
+    }
+-- 
+GitLab
+

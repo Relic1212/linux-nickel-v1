@@ -288,7 +288,9 @@
 
   aarch64Image | lib.Package = {
     biDrvs = [
-      drvs.busyboxAarch64,
+      # drvs.busyboxAarch64,
+      drvs.dashAarch64,
+      drvs.dashSh,
       drvs.linuxAarch64,
       drvs.basefiles,
       drvs.erofsUtils,

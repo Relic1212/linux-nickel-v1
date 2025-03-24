@@ -205,6 +205,7 @@ let r = {
     & (import "../pkgs/l/llvm/clang-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-baselibs-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-exp.ncl")
+    & (import "../pkgs/l/llvm/llvm-libc.ncl")
     & (import "../pkgs/l/llvm/llvm-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm.ncl")
     & (import "../pkgs/l/lvm2/lvm2.ncl")

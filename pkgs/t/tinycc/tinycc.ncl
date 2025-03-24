@@ -27,7 +27,8 @@
   _binutils,
   binutilsExp|lib.AutotoolsPackage = _binutils & {
     extraConfigureFlags=[
-        "--target=i686-elf"
+        "--target=i686-elf",
+        "--with-sysroot",
     ],
   }
 }

@@ -10,8 +10,11 @@ in
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.2/llvm-project-19.1.2.src.tar.xz",
-          sha256sum = "3666f01fc52d8a0b0da83e107d74f208f001717824be0b80007f529453aa1e19",
+          # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.2/llvm-project-19.1.2.src.tar.xz",
+          # sha256sum = "3666f01fc52d8a0b0da83e107d74f208f001717824be0b80007f529453aa1e19",
+
+          uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/llvm-project-20.1.1.src.tar.xz",
+          sha256sum = "4d5ebbd40ce1e984a650818a4bb5ae86fc70644dec2e6d54e78b4176db3332e0"
         },
       }
     ],
@@ -77,7 +80,7 @@ in
         "-DCOMPILER_RT_USE_BUILTINS_LIBRARY" = true,
         "-DCOMPILER_RT_USE_LLVM_UNWINDER" = true,
         "-DCOMPILER_RT_CXX_LIBRARY" = "libcxx",
-        "-DDCOMPILER_RT_DEFAULT_TARGET_ONLY" = true,
+        # "-DCOMPILER_RT_DEFAULT_TARGET_ONLY" = true, # breaks cross
         "-DCLANG_TOOL_APINOTES_TEST_BUILD" = "OFF",
         "-DCLANG_TOOL_ARCMT_TEST_BUILD:BOOL" = "OFF",
         "-DCLANG_TOOL_CLANG_CHECK_BUILD" = "OFF",

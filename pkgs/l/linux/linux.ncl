@@ -39,6 +39,7 @@ in
     {
       name = "linux",
       sourceInputs = pkgs.linuxHeaders.sourceInputs,
+      options = { version = pkgs.linuxHeaders.options.version},
       buildDir = "/tmp/workdir/src",
       separateBuildDir = true,
       buildEnv,
@@ -64,7 +65,7 @@ in
         "LLVM=1",
         "INSTALL_MOD_PATH=/tmp/workdir/out/destdir",
         #"DEPMOD=true",
-        "MODLIB=${DEST}/usr/lib/modules/6.10.0-standard",
+        "MODLIB=${DEST}/usr/lib/modules/%{options.version}-standard",
       ],
       makeInstallTargets = ["modules_install"],
 
@@ -216,6 +217,7 @@ in
         "ARCH=arm64",
         "LLVM=1",
       ],
+      options,
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
       buildEnv.READELF = "readelf",
 
@@ -229,7 +231,7 @@ in
         "DEPMOD=true",
 
         # "DEPMOD=\"/usr/bin/depmod -b /tmp/workdir/out/destdir\"",
-        "MODLIB=${DEST}/usr/lib/modules/6.10.0",
+        "MODLIB=${DEST}/usr/lib/modules/%{options.version}",
       ],
       preBuildPhase | priority 1 = [
 
@@ -272,31 +274,31 @@ in
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs | force =
-        lib.biMap [
-          pkgs.busybox,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          pkgs.llvm,
-          pkgs.muslAarch64,
-          pkgs.musl,
-          pkgs.libcxxAarch64,
-          pkgs.linuxHeadersAarch64,
-          pkgs.linuxHeaders,
-          pkgs.perl,
-          pkgs.m4,
-          pkgs.libtool,
-          pkgs.openssl, # tgt?
-          pkgs.zlibNg, # tgt?
-          pkgs.xz,
-          pkgs.flex,
-          pkgs.bison,
-          pkgs.libelf,
-          pkgs.diffutils,
-          pkgs.zstd,
-          pkgs.lz4,
-          pkgs.kmod, #, libModulesDirectory,
+         [
+          drvs.busybox,
+          drvs.gnumake,
+          drvs.ccacheBin,
+          drvs.llvm,
+          drvs.muslAarch64,
+          drvs.musl,
+          drvs.libcxxAarch64,
+          drvs.linuxHeadersAarch64,
+          drvs.linuxHeaders,
+          drvs.perl,
+          drvs.m4,
+          drvs.libtool,
+          drvs.openssl, # tgt?
+          drvs.zlibNg, # tgt?
+          drvs.xz,
+          drvs.flex,
+          drvs.bison,
+          drvs.libelf,
+          drvs.diffutils,
+          drvs.zstd,
+          drvs.lz4,
+          drvs.kmod, #, libModulesDirectory,
           #, pkgs.libarchive,
-          pkgs.pythonFull,
+          drvs.pythonFull,
         ],
     },
   linuxAarch64Virt =
