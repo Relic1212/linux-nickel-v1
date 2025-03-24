@@ -192,7 +192,8 @@
       ]
     },
 
-  libcxxAarch64 = let majorVersion = "20" in 
+  libcxxAarch64 =
+    let majorVersion = "20" in
     _llvmBaseTarget
     & {
       cmakeArgs | priority 2 =

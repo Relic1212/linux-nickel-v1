@@ -22,7 +22,6 @@
         file = "CVE-2025-26519-2.patch",
         sha256sum = "0620fcee4e8a4e52ebe1ea75e2b51d2197ebda242489c0586924eafa9e9606a1",
       },
-
     ],
     extraEnv | priority -10 = lib.AutotoolsPackage.extraEnv & (if isLlvm then { LIBCC_LDFLAGS = ["--rtlib=compiler-rt"] } else {}),
     #configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])

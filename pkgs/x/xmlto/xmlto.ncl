@@ -39,7 +39,6 @@
       drvs.libxslt,
       drvs.docbookXml,
       drvs.libxml2,
-
     ],
     extraMakeArgs = [
       "XSLT=/usr/bin/xsltproc"
@@ -61,12 +60,11 @@
     ],
     separateBuildDir = false,
     # https://www.linuxfromscratch.org/blfs/view/svn/pst/docbook.html
-    installPhase =[
+    installPhase = [
       "install -d -m0755 ${DEST}/usr/share/xml/docbook/xml-dtd-4.5",
       "install -d -m0755 ${DEST}/etc/xml",
       "cp -v -af docbook.cat *.dtd ent/ *.mod  ${DEST}/usr/share/xml/docbook/xml-dtd-4.5",
       "xmlcatalog --noout --create ${DEST}/etc/xml/docbook",
     ]
-
   }
 }

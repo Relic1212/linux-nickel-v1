@@ -16,97 +16,89 @@
     preConfigurePhase = [
       "export CC=\"${CC} -static\""
     ],
-    extraConfigureFlags=[
-        "--config-musl",
-        "--enable-cross",
+    extraConfigureFlags = [
+      "--config-musl",
+      "--enable-cross",
     ],
-    extraMakeArgs=[
-        "CC=\"${CC}\""
+    extraMakeArgs = [
+      "CC=\"${CC}\""
     ]
   },
   _binutils,
-  binutilsExp|lib.AutotoolsPackage = _binutils & {
-    extraConfigureFlags=[
+  binutilsExp | lib.AutotoolsPackage =
+    _binutils
+    & {
+      extraConfigureFlags = [
         "--target=i686-elf",
         "--with-sysroot",
-    ],
-  }
+      ],
+    }
 }
-  &
+& {
+  lib,
+  drvs,
 
-  {
-    lib,
-    drvs,
+  gcc,
+  mpc,
+  gmp,
+  mpfr,
+  gccExp | lib.AutotoolsPackage =
+    gcc
+    & {
 
-    gcc,
-    mpc,
-    gmp,
-    mpfr,
-  gccExp|lib.AutotoolsPackage = gcc & {
+      biDrvs | priority 1 = [
+        drvs.m4,
+        drvs.flex,
+        drvs.bison,
+        #   drvs.mpc,
+        #   drvs.gmp,
+        #   drvs.mpfr,
+        drvs.clangCc,
+        (drvs.binutils & { priority = 1 }),
+        drvs.binutilsExp,
+        drvs.muslShared,
+      ],
 
-    biDrvs | priority 1 = [
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-    #   drvs.mpc,
-    #   drvs.gmp,
-    #   drvs.mpfr,
-      drvs.clangCc,
-      (drvs.binutils & { priority = 1 }),
-    drvs.binutilsExp,
-      drvs.muslShared,
-    ],
+      sourceInputs = [
+        { src = gcc.singleSource },
+        { src = mpc.singleSource, dest = "mpc" },
+        { src = mpfr.singleSource, dest = "mpfr" },
+        { src = gmp.singleSource, dest = "gmp" },
+      ],
 
-    sourceInputs =[
-        { src = gcc.singleSource},
-        {src = mpc.singleSource ,dest = "mpc"},
-        { src=mpfr.singleSource , dest = "mpfr"},
-        {src=gmp.singleSource , dest = "gmp"},
+      # configureFlags|priority 1= lib.functions.replaceArrayElem "--disable-multilib" "--enable-multilib" (gcc.configureFlags @ [
+      #     "--target=i686-elf",
+      #     "--without-headers",
+      #     " --disable-hosted-libstdcxx",
+      # ]),
 
-    ],
-
-
-    # configureFlags|priority 1= lib.functions.replaceArrayElem "--disable-multilib" "--enable-multilib" (gcc.configureFlags @ [
-    #     "--target=i686-elf",
-    #     "--without-headers",
-    #     " --disable-hosted-libstdcxx",
-    # ]),
-
-
-
-
-
-
-
-      configureFlags|priority 1 =
-      lib.constants.configureFlags
-      @ [
-        "--enable-shared",
-        "--enable-static",
-        "--enable-languages=c,c++",
-        "--enable-multilib",
-        # "--disable-host-shared",
-        #"--with-static-standard-libraries",
-        "--disable-werror",
-        "--disable-nls",
-        # "--enable-checking=release",
-        "--enable-multiarch",
-        "--disable-lto",
-        #"--build=x86_64-unknown-linux-musl",
-        #"--host=x86_64-unknown-linux-musl",
-        #"--target=x86_64-unknown-linux-musl",
-        "--disable-libsanitizer",
-        # "--disable-bootstrap",
-        "--enable-install-libiberty",
-        " --enable-libstdcxx-time=rt",
-        " --disable-libstdcxx",
+      configureFlags | priority 1 =
+        lib.constants.configureFlags
+        @ [
+          "--enable-shared",
+          "--enable-static",
+          "--enable-languages=c,c++",
+          "--enable-multilib",
+          # "--disable-host-shared",
+          #"--with-static-standard-libraries",
+          "--disable-werror",
+          "--disable-nls",
+          # "--enable-checking=release",
+          "--enable-multiarch",
+          "--disable-lto",
+          #"--build=x86_64-unknown-linux-musl",
+          #"--host=x86_64-unknown-linux-musl",
+          #"--target=x86_64-unknown-linux-musl",
+          "--disable-libsanitizer",
+          # "--disable-bootstrap",
+          "--enable-install-libiberty",
+          " --enable-libstdcxx-time=rt",
+          " --disable-libstdcxx",
           "--target=i686-elf",
-        "--without-headers",
-        "--disable-hosted-libstdcxx",
-        "--disable-libssp",
-        "--disable-libquadmath",
-      ]
-  
-
-  }
+          "--without-headers",
+          "--disable-hosted-libstdcxx",
+          "--disable-libssp",
+          "--disable-libquadmath",
+        ]
+    }
 }

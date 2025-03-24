@@ -4,7 +4,7 @@
   rust | lib.AutotoolsPackage =
     let tgt = "x86_64-unknown-linux-musl" in
     {
-    # symlinkBuldInputs = true,
+      # symlinkBuldInputs = true,
 
       sourceInputs = [
         {
@@ -24,7 +24,7 @@
           dest = "local1",
           src = {
             uri = "https://static.rust-lang.org/dist/rustc-1.84.0-x86_64-unknown-linux-musl.tar.xz",
-            
+
             sha256sum = "bb96af675e34195588ab322ddaeabadd8bf4da08869aef3c91b7e7bbaf9a74b1",
           }
         },
@@ -36,10 +36,12 @@
           }
         },
       ],
-      patches = [{
-        sha256sum = "e96ebfd7e040e480d893c3e5ddd0a13e4f403fd1a9794700a70b84820fec0621" , file = "fc32dd49cb70c4b113353c7a060a875f30b9af04.patch"
-
-      }],
+      patches = [
+        {
+          sha256sum = "e96ebfd7e040e480d893c3e5ddd0a13e4f403fd1a9794700a70b84820fec0621",
+          file = "fc32dd49cb70c4b113353c7a060a875f30b9af04.patch"
+        }
+      ],
       separateBuildDir = false,
       isStatic = false,
       isLlvm = false,

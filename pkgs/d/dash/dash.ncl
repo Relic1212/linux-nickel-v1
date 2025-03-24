@@ -63,9 +63,11 @@
       ],
       # buildEnv.LD= [ "clang","--target=%{buildEnv.TARGET}", "--sysroot=/%{buildEnv.TARGET}"],
 
-      extraMakeArgs | priority 1 = dash.extraMakeArgs @ [
-        "CC=\"${CC}\"",
-        "CC_FOR_BUILD=\"clang -static --static\"",
-      ]
+      extraMakeArgs | priority 1 =
+        dash.extraMakeArgs
+        @ [
+          "CC=\"${CC}\"",
+          "CC_FOR_BUILD=\"clang -static --static\"",
+        ]
     }
 }

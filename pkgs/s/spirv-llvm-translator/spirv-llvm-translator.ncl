@@ -15,7 +15,7 @@
 
     cmakeExtraArgsRecord = {
       # "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "${SRC}/SPIRV-Headers",
-      "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR"="/usr/include/spirv",
+      "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "/usr/include/spirv",
     },
     sourceInputs = [
       {

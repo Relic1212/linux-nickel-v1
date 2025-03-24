@@ -39,7 +39,7 @@ in
     {
       name = "linux",
       sourceInputs = pkgs.linuxHeaders.sourceInputs,
-      options = { version = pkgs.linuxHeaders.options.version},
+      options = { version = pkgs.linuxHeaders.options.version },
       buildDir = "/tmp/workdir/src",
       separateBuildDir = true,
       buildEnv,
@@ -273,33 +273,32 @@ in
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs | force =
-         [
-          drvs.busybox,
-          drvs.gnumake,
-          drvs.ccacheBin,
-          drvs.llvm,
-          drvs.muslAarch64,
-          drvs.musl,
-          drvs.libcxxAarch64,
-          drvs.linuxHeadersAarch64,
-          drvs.linuxHeaders,
-          drvs.perl,
-          drvs.m4,
-          drvs.libtool,
-          drvs.openssl, # tgt?
-          drvs.zlibNg, # tgt?
-          drvs.xz,
-          drvs.flex,
-          drvs.bison,
-          drvs.libelf,
-          drvs.diffutils,
-          drvs.zstd,
-          drvs.lz4,
-          drvs.kmod, #, libModulesDirectory,
-          #, pkgs.libarchive,
-          drvs.pythonFull,
-        ],
+      biDrvs | force = [
+        drvs.busybox,
+        drvs.gnumake,
+        drvs.ccacheBin,
+        drvs.llvm,
+        drvs.muslAarch64,
+        drvs.musl,
+        drvs.libcxxAarch64,
+        drvs.linuxHeadersAarch64,
+        drvs.linuxHeaders,
+        drvs.perl,
+        drvs.m4,
+        drvs.libtool,
+        drvs.openssl, # tgt?
+        drvs.zlibNg, # tgt?
+        drvs.xz,
+        drvs.flex,
+        drvs.bison,
+        drvs.libelf,
+        drvs.diffutils,
+        drvs.zstd,
+        drvs.lz4,
+        drvs.kmod, #, libModulesDirectory,
+        #, pkgs.libarchive,
+        drvs.pythonFull,
+      ],
     },
   linuxAarch64Virt =
     linuxAarch64

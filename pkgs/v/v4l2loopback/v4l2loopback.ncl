@@ -7,7 +7,7 @@
       uri = "https://github.com/umlaeute/v4l2loopback/archive/refs/tags/v0.13.2.tar.gz",
       sha256sum = "1e57e1e382d7451aa2a88d63cc9f146eab1f425b90e76104d4c3d73127e34771"
     },
-    options={version = linuxWithBuild.options.version},
+    options = { version = linuxWithBuild.options.version },
     biDrvs = [
       drvs.linuxHeaders,
       drvs.linuxWithBuild,

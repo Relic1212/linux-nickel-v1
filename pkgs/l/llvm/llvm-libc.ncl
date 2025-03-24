@@ -1,10 +1,12 @@
 {
-    lib,
-    drvs,
-    llvmFull,
-    llvmLibc | lib.CmakePackage = llvmFull & {
-        configurePhase | priority 10 = [
-            m%"
+  lib,
+  drvs,
+  llvmFull,
+  llvmLibc | lib.CmakePackage =
+    llvmFull
+    & {
+      configurePhase | priority 10 = [
+        m%"
             cmake -B . -S ${SRC}/runtimes \
                 -G Ninja \
                 -DBUILD_STATIC_LIBS:BOOL=ON \
@@ -31,19 +33,19 @@
                 -DLIBC_CMAKE_VERBOSE_LOGGING=ON \
 
             "%
-        ],
-        buildPhase =[
-            "ninja libc libm"
-        ],
-        installPhase=[
-            "DESTDIR=${DEST} ninja install-libc"
-        ],
-        postInstallPhase | priority 2 = [],
+      ],
+      buildPhase = [
+        "ninja libc libm"
+      ],
+      installPhase = [
+        "DESTDIR=${DEST} ninja install-libc"
+      ],
+      postInstallPhase | priority 2 = [],
 
-        biDrvs |priority 1= [
-            drvs.pythonFull,
-            drvs.linuxHeaders,
-            drvs.pyyaml,
-        ],
+      biDrvs | priority 1 = [
+        drvs.pythonFull,
+        drvs.linuxHeaders,
+        drvs.pyyaml,
+      ],
     }
 }

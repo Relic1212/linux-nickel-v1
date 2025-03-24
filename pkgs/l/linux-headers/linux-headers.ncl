@@ -5,10 +5,10 @@
   _linuxHeadersBase | lib.MakePackage = {
     baseName = "linux-headers",
     makeTargets | priority -10 = ["headers"],
-    options ={
+    options = {
       version = "6.13.8"
       # version = "6.10"
-      },
+    },
     sourceInputs = [
       {
         src = {

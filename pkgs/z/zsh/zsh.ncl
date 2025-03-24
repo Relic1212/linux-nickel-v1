@@ -21,38 +21,34 @@
 
     # copied from OE
     extraConfigureFlags = [
-     #"--with-term-lib='ncurses ncursesw'",
+      #"--with-term-lib='ncurses ncursesw'",
       "--with-tcsetpgrp",
-       "--enable-cap",
+      "--enable-cap",
       "--enable-multibyte",
       "--enable-libc-musl",
       "--disable-dynamic-nss",
-      "--disable-dynamic",     
+      "--disable-dynamic",
       # "--enable-dynamic",
-
-		"--enable-function-subdirs",
-		"--enable-pcre",
-		"  --enable-zsh-secure-free",
+      "--enable-function-subdirs",
+      "--enable-pcre",
+      "  --enable-zsh-secure-free",
       "ac_cv_func_fpurge=no",
       "ac_cv_header_sys_capability_h='yes'",
     ],
 
     preConfigurePhase = [
-    #	m%"sed -i 's@@@g' ${SRC}/Src/utils.c"%
-   # "sed -i 's@link=dynamic@link=static@g' ${SRC}/Src/Modules/zpty.mdd",    
-   # "sed -i 's@load=no@load=yes@g' ${SRC}/Src/Modules/zpty.mdd",
-
-    m%"
+      #	m%"sed -i 's@@@g' ${SRC}/Src/utils.c"%
+      # "sed -i 's@link=dynamic@link=static@g' ${SRC}/Src/Modules/zpty.mdd",
+      # "sed -i 's@load=no@load=yes@g' ${SRC}/Src/Modules/zpty.mdd",
+      m%"
 	for f in $(find  ${SRC}/Src/Modules -name '*.mdd'); do
 		sed -i 's@link=dynamic@link=static@g' "${f}"
 		sed -i 's@link=no@link=static@g' "${f}"
 
-		#grep "link=static" "${f}" && 
+		#grep "link=static" "${f}" &&
 		sed -i 's@load=no@load=yes@g' "${f}"
 	done
     "%,
-
     ],
-    
   },
 }
