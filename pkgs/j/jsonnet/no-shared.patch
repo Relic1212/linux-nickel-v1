@@ -1,0 +1,88 @@
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 8ab3777..b7f8970 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -30,9 +30,9 @@ set(LIBJSONNET_SOURCE
+     string_utils.cpp
+     vm.cpp)
+ 
+-add_library(libjsonnet SHARED ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
+-add_dependencies(libjsonnet md5 stdlib)
+-target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json ryml)
++# add_library(libjsonnet SHARED ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
++# add_dependencies(libjsonnet md5 stdlib)
++# target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json ryml)
+ 
+ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/../include/libjsonnet.h JSONNET_VERSION_DEF
+      REGEX "[#]define[ \t]+LIB_JSONNET_VERSION[ \t]+")
+@@ -42,17 +42,17 @@ message("Extracted Jsonnet version: " ${JSONNET_VERSION})
+ 
+ # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
+ # this step the output would be |liblibjsonnet|.
+-set_target_properties(libjsonnet PROPERTIES OUTPUT_NAME jsonnet
+-	VERSION     "${JSONNET_VERSION}"
+-	SOVERSION   "0"
+-	PUBLIC_HEADER "${LIB_HEADER}")
+-install(TARGETS libjsonnet
+-	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+-target_include_directories(libjsonnet INTERFACE
+-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
++# set_target_properties(libjsonnet PROPERTIES OUTPUT_NAME jsonnet
++# 	VERSION     "${JSONNET_VERSION}"
++# 	SOVERSION   "0"
++# 	PUBLIC_HEADER "${LIB_HEADER}")
++# install(TARGETS libjsonnet
++# 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++# 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++# 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++# 	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++# target_include_directories(libjsonnet INTERFACE
++#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
+ 
+ if (BUILD_STATIC_LIBS)
+     # Static library for jsonnet command-line tool.
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 153a4a1..61e0a8b 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -8,23 +8,23 @@ set(LIBJSONNETPP_SOURCE
+     libjsonnet++.cpp
+ )
+ 
+-add_library(libjsonnet++ SHARED ${LIBJSONNETPP_HEADERS} ${LIBJSONNETPP_SOURCE})
+-add_dependencies(libjsonnet++ jsonnet)
+-target_link_libraries(libjsonnet++ libjsonnet)
++# add_library(libjsonnet++ SHARED ${LIBJSONNETPP_HEADERS} ${LIBJSONNETPP_SOURCE})
++# add_dependencies(libjsonnet++ jsonnet)
++# target_link_libraries(libjsonnet++ libjsonnet)
+ 
+ # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
+ # this step the output would be |liblibjsonnet|.
+-set_target_properties(libjsonnet++ PROPERTIES OUTPUT_NAME jsonnet++
+-	VERSION     "0.21.0-rc2"
+-	SOVERSION   "0"
+-	PUBLIC_HEADER "${LIB_HEADER}")
+-install(TARGETS libjsonnet++
+-	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+-target_include_directories(libjsonnet++ INTERFACE
+-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
++# set_target_properties(libjsonnet++ PROPERTIES OUTPUT_NAME jsonnet++
++# 	VERSION     "0.21.0-rc2"
++# 	SOVERSION   "0"
++# 	PUBLIC_HEADER "${LIB_HEADER}")
++# install(TARGETS libjsonnet++
++# 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++# 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++# 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++# 	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++# target_include_directories(libjsonnet++ INTERFACE
++#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
+ 
+ if (BUILD_STATIC_LIBS)
+     # Static library for jsonnet command-line tool.

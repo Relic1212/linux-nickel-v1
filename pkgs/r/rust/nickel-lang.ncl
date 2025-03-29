@@ -9,13 +9,18 @@
 
     {
       singleSource = {
-        uri = "https://github.com/tweag/nickel/archive/refs/tags/1.9.0.tar.gz",
-        sha256sum = "c5c0000e6b1618921c1ce23dc90eefb482bdfe9f9716d4ef5cf24a3b99ec4c7d",
+        # uri = "https://github.com/tweag/nickel/archive/refs/tags/1.9.0.tar.gz",
+        # sha256sum = "c5c0000e6b1618921c1ce23dc90eefb482bdfe9f9716d4ef5cf24a3b99ec4c7d",
 
         # uri = "https://github.com/tweag/nickel/archive/refs/tags/1.10.0.tar.gz",
         # sha256sum = "15404075e20e45da3ff0e6ad54e94109c8fba2fbde1c2def00c1f3f4e8e3cbc8",
         #uri = "https://github.com/tweag/nickel/archive/c6122527061ec95a9a58c90a3a97ad867f038d64.zip",
         #sha256sum = "4f086944d4e41ef3c9e41391bb12514011266a35b8118a1863aae5316c297aa3"
+
+
+
+        uri = "https://github.com/tweag/nickel/archive/7bcc0b7529a78807fa887d72a8528b87f8574e37.zip",
+        sha256sum = "08207155c3b14815d669b45cc56a3f2fb0752d0fb8e1d889e8c4637d1b67d4ed"
       },
       # release = false,
       crates = _crates,
