@@ -127,6 +127,7 @@ let r = {
     & (import "../pkgs/g/gobject/gobject.ncl")
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/g/grim/grim.ncl")
+    # & (import "../pkgs/h/haskell/haskell.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
     & (import "../pkgs/h/heirloom/heirloom.ncl")
     & (import "../pkgs/h/heirloom-ng/heirloom-ng.ncl")
@@ -143,6 +144,8 @@ let r = {
     & (import "../pkgs/i/iwd/iwd.ncl")
     & (import "../pkgs/j/json-c/json-c.ncl")
     & (import "../pkgs/j/jsoncpp/jsoncpp.ncl")
+    & (import "../pkgs/j/jsonnet/jsonnet.ncl")
+
 
     & (import "../pkgs/j/j4-menu-desktop/j4-menu-desktop.ncl")
     & (import "../pkgs/j/json-glib/json-glib.ncl")
@@ -232,6 +235,7 @@ let r = {
     & (import "../pkgs/n/netavark/netavark.ncl")
 
     & (import "../pkgs/n/ncurses/ncurses.ncl")
+    & (import "../pkgs/n/newlib/newlib.ncl")
     & (import "../pkgs/n/nettle/nettle.ncl")
     & (import "../pkgs/n/networkmanager/networkmanager.ncl")
     & (import "../pkgs/n/newt/newt.ncl")
