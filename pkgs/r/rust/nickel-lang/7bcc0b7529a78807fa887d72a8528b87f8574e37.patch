@@ -1,0 +1,167 @@
+From 7bcc0b7529a78807fa887d72a8528b87f8574e37 Mon Sep 17 00:00:00 2001
+From: Yann Hamdaoui <yann.hamdaoui@tweag.io>
+Date: Fri, 28 Mar 2025 11:09:16 +0100
+Subject: [PATCH] Fix panic with multiple contracts on field (#2199)
+
+This commit fixes two defect when deduplicating the contracts on a
+merged field:
+
+1. Do not uselessly run contract equality on contract coming from the
+   same side of the merge. Those are assumed to be already deduped.
+2. Properly use `borrow_orig` when comparing two closures, instead of
+   using it when comparing two variables.
+---
+ core/src/eval/contract_eq.rs                  | 14 ++++++---
+ core/src/eval/merge.rs                        | 12 ++++---
+ core/src/term/mod.rs                          | 31 ++++++++++++++++++-
+ .../inputs/contracts/dedup_multiple.ncl       | 19 ++++++++++++
+ 4 files changed, 66 insertions(+), 10 deletions(-)
+ create mode 100644 core/tests/integration/inputs/contracts/dedup_multiple.ncl
+
+diff --git a/core/src/eval/contract_eq.rs b/core/src/eval/contract_eq.rs
+index bd9fe1c96a..6574c4a1be 100644
+--- a/core/src/eval/contract_eq.rs
++++ b/core/src/eval/contract_eq.rs
+@@ -161,8 +161,8 @@ fn contract_eq_bounded(
+                     let had_gas = state.use_gas();
+                     state.use_gas();
+ 
+-                    let closure1 = idx1.borrow_orig();
+-                    let closure2 = idx2.borrow_orig();
++                    let closure1 = idx1.borrow();
++                    let closure2 = idx2.borrow();
+ 
+                     had_gas
+                         && contract_eq_bounded(
+@@ -184,8 +184,14 @@ fn contract_eq_bounded(
+             let had_gas = state.use_gas();
+             state.use_gas();
+ 
+-            let closure1 = idx1.borrow();
+-            let closure2 = idx2.borrow();
++            // If we find a closure that isn't coming from a variable, it might be the content of a
++            // recursive field. When deduplicating contracts at merge time, those fields have been
++            // reverted to a state where they don't have a cached value built yet. This state is
++            // not observable by the rest of the evaluator, but we do have to consider it here. We
++            // make use of `borrow_orig` built for this purpose, to get the original closure in
++            // this case instead of panicking as `borrow()` would.
++            let closure1 = idx1.borrow_orig();
++            let closure2 = idx2.borrow_orig();
+ 
+             had_gas
+                 && contract_eq_bounded(
+diff --git a/core/src/eval/merge.rs b/core/src/eval/merge.rs
+index da831aeca4..af85da97d2 100644
+--- a/core/src/eval/merge.rs
++++ b/core/src/eval/merge.rs
+@@ -427,14 +427,15 @@ fn merge_fields<'a, C: Cache, I: DoubleEndedIterator<Item = &'a LocIdent> + Clon
+         _ => unreachable!(),
+     };
+ 
+-    let mut pending_contracts = pending_contracts1.revert_closurize(cache);
+-
+     // Since contracts are closurized, they don't need another local environment
+     let empty = Environment::new();
+ 
+-    for ctr2 in pending_contracts2.revert_closurize(cache) {
+-        RuntimeContract::push_dedup(&mut pending_contracts, &empty, ctr2, &empty);
+-    }
++    let pending_contracts = RuntimeContract::combine_dedup(
++        pending_contracts1.revert_closurize(cache),
++        &empty,
++        pending_contracts2.revert_closurize(cache),
++        &empty,
++    );
+ 
+     Ok(Field {
+         metadata: FieldMetadata {
+@@ -495,6 +496,7 @@ impl Saturate for RichTerm {
+                 .saturate(idx.clone(), fields.map(LocIdent::ident))
+                 .with_pos(self.pos))
+         } else {
++            debug_assert!(self.as_ref().is_constant());
+             Ok(self)
+         }
+     }
+diff --git a/core/src/term/mod.rs b/core/src/term/mod.rs
+index 8aba319a65..31b6564425 100644
+--- a/core/src/term/mod.rs
++++ b/core/src/term/mod.rs
+@@ -523,6 +523,33 @@ impl RuntimeContract {
+         contracts.push(ctr);
+     }
+ 
++    /// Concatenate two deduplicated contract vectors into a deduplicated contract vector.
++    pub fn combine_dedup(
++        contracts1: Vec<RuntimeContract>,
++        env1: &Environment,
++        contracts2: Vec<RuntimeContract>,
++        env2: &Environment,
++    ) -> Vec<RuntimeContract> {
++        let len1 = contracts1.len();
++        let mut result = contracts1;
++        result.reserve(contracts2.len());
++
++        for ctr2 in contracts2 {
++            let is_duplicate = result[..len1].iter().any(|ctr1| {
++                increment!("contracts:equality-checks");
++                contract_eq::contract_eq(&ctr1.contract, env1, &ctr2.contract, env2)
++            });
++
++            if !is_duplicate {
++                result.push(ctr2);
++            } else {
++                increment!("contracts:deduped");
++            }
++        }
++
++        result
++    }
++
+     /// Check if this contract might have polymorphic subcontracts. See
+     /// [crate::label::Label::can_have_poly_ctrs].
+     pub fn can_have_poly_ctrs(&self) -> bool {
+@@ -892,7 +919,9 @@ impl TypeAnnotation {
+     /// notion of environment when considering mere annotations, we use an unsound contract
+     /// equality checking which correspond to comparing contracts syntactically.
+     pub fn combine_dedup(left: Self, right: Self) -> Self {
++        let len1 = left.contracts.len();
+         let mut contracts = left.contracts;
++        contracts.reserve(right.contracts.len() + 1);
+ 
+         let typ = match (left.typ, right.typ) {
+             (left_ty @ Some(_), Some(right_ty)) => {
+@@ -903,7 +932,7 @@ impl TypeAnnotation {
+         };
+ 
+         for ctr in right.contracts.into_iter() {
+-            if !contracts
++            if !contracts[..len1]
+                 .iter()
+                 .any(|c| contract_eq::type_eq_noenv(&c.typ, &ctr.typ))
+             {
+diff --git a/core/tests/integration/inputs/contracts/dedup_multiple.ncl b/core/tests/integration/inputs/contracts/dedup_multiple.ncl
+new file mode 100644
+index 0000000000..8bfad80256
+--- /dev/null
++++ b/core/tests/integration/inputs/contracts/dedup_multiple.ncl
+@@ -0,0 +1,19 @@
++# test.type = 'pass'
++
++# Regression test for https://github.com/tweag/nickel/issues/2189
++let Linktype = {
++  source,
++  target
++    | Dyn
++    | { file | default = source }
++}
++in
++(
++  {
++    source = "",
++    target | Dyn | Dyn = {},
++  } | Linktype
++) == {
++  source = "",
++  target.file = "",
++}

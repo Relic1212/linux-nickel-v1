@@ -11,7 +11,7 @@
       waylandSyms = false,
     },
 
-    biDrvs | priority -1 =
+    biDrvs | priority -2 =
       [
         drvs.pixman,
         drvs.expat,
@@ -138,7 +138,13 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kpackage-6.11.0.tar.xz",
         sha256sum = "bfc704ea1708f37150a9d14edcbb9eed8ebf8d54753930da63432cda954a1ea7"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.karchive, drvs.bzip2, drvs.ki18n, drvs.gettext]
+      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.karchive, drvs.bzip2, drvs.ki18n, drvs.gettext],
+      patches = [
+        {
+          sha256sum = "e3bee168feb7c615f984b3af01fd7712fdb2774c7851cf601998f4d037dfe622",
+          file = "kpackage-no-common.patch",
+        }
+      ]
     },
   kdoctools | lib.CmakePackage =
     _kf
@@ -303,6 +309,7 @@
         "-DBUILD_DESIGNERPLUGIN" = false,
       }
     },
+
   kwidgetsaddons | lib.CmakePackage =
     _kf
     & {
@@ -321,9 +328,352 @@
           drvs.gettext,
         ],
       cmakeExtraArgsRecord = {
+        "-DBUILD_TESTING:BOOL" = "OFF",
+        "-DBUILD_DESIGNERPLUGIN:BOOL" = "OFF",
+      }
+    },
+
+  kio | lib.CmakePackage = (
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kio-6.11.0.tar.xz",
+        sha256sum = "fe511e43a5386f963c9afef93a21c0df44a2c24fcc417777e4d0569102477ff8"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.acl,
+          drvs.attr,
+          drvs.breezeIcons,
+          drvs.bzip2,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kbookmarks,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kcompletion,
+          drvs.kconfig,
+          drvs.kconfigwidgets,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kded,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kirigami,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksolid,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.plasmaWaylandProtocols,
+          drvs.switcherooControl,
+          drvs.utilLinuxWeak,
+          drvs.vala,
+        ],
+
+      #    cmakeExtraArgsRecord = {
+      #   "-DBUILD_TESTING" = false,
+      #   "-DBUILD_DESIGNERPLUGIN" = false,
+
+      # }
+      symlinkBuldInputs | priority 1 = false,
+      buildEnv = {
+        EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lltdl"],
+      }
+    }
+  ),
+
+  kded | lib.CmakePackage = (
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kded-6.11.0.tar.xz",
+        sha256sum = "55c9921114299abd9bdc5e601ccc6a750ff2d331fc0836d79670ccbc508e06a4"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kservice,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+          drvs.ksolid,
+          drvs.utilLinuxWeak,
+          drvs.kcrash,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kiconthemes,
+          drvs.breezeIcons,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.knotifications,
+          drvs.vala,
+          drvs.libtool,
+          drvs.libogg,
+          drvs.libvorbis,
+          drvs.libcanberra,
+          drvs.kwindowsystem,
+          drvs.kauth,
+          drvs.kdbusaddons,
+        ],
+
+      cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
         "-DBUILD_DESIGNERPLUGIN" = false,
       }
+    }
+  ),
+
+  knotifications | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/knotifications-6.11.0.tar.xz",
+        sha256sum = "a2e0815ea6e5c294fdd36316ca9792a406f5c123ec01a1c73a7e54cb0be2ea31"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.vala,
+          drvs.libtool,
+          drvs.libogg,
+          drvs.libvorbis,
+          drvs.libcanberra,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+        ],
+
+      buildEnv = {
+        EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lltdl"],
+      }
+    },
+
+  kiconthemes | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kiconthemes-6.11.0.tar.xz",
+        sha256sum = "1671ab3fd9b1e0753a7062bab80f5489f3ac750ecb30b91db99a6689988afb87"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kconfigwidgets,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.breezeIcons,
+        ],
+
+      cmakeExtraArgsRecord = {
+        "-DBUILD_TESTING" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+      },
+      preConfigurePhase = [
+        "sed -i 's@ MODULE @ @g' ${SRC}/src/CMakeLists.txt",
+      ]
+    },
+
+  ksolid | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/solid-6.11.0.tar.xz",
+        sha256sum = "cdecc7665b801a508b9ad0929b025ac93fe287be503589c8d8c38a520c2508d7"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kconfigwidgets,
+          drvs.utilLinuxWeak,
+        ],
+      buildEnv = {
+        EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lblkid"],
+      }
+    },
+  kcmutils | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kcmutils-6.11.0.tar.xz",
+        sha256sum = "64d2c5cd8165189c2d741bb543aab72b5bc8db5c540ca4e88c2f8d0f93e77990"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.kio,
+          drvs.libtool,
+        ],
+    },
+  kbookmarks | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kbookmarks-6.11.0.tar.xz",
+        sha256sum = "b5c677453c70314b9eecc0011a73103f045eabc94bc5f2f223b5979780c801c7"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kservice,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+        ]
+    },
+
+  kcompletion | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kcompletion-6.11.0.tar.xz",
+        sha256sum = "c812b60de4530de3003916e45fbab121c5f9f576e2430ab2cdf0e3e4c9041852"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kservice,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+        ],
+      cmakeExtraArgsRecord = {
+        "-DBUILD_TESTING" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+      }
+    },
+
+  kitemviews | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kitemviews-6.11.0.tar.xz",
+        sha256sum = "e3625368e3f8cf6127218cc3e847fbf0176a5978c86228b11a320ad96fea2cbc"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kservice,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+        ],
+
+      cmakeExtraArgsRecord = {
+        "-DBUILD_TESTING" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+      },
+    },
+
+  kjobwidgets | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/kjobwidgets-6.11.0.tar.xz",
+        sha256sum = "2bb342e554f8ecf84d7218a6567628dcc73c1b914d0c5aad1c8bf7753986ddd7"
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kcodecs,
+          drvs.kconfig,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.kservice,
+          drvs.kwidgetsaddons,
+          drvs.kcolorscheme,
+          drvs.kconfigwidgets,
+          drvs.knotifications,
+          drvs.vala,
+          drvs.libtool,
+          drvs.libogg,
+          drvs.libvorbis,
+          drvs.libcanberra,
+        ],
+
+      cmakeExtraArgsRecord = {
+        "-DBUILD_TESTING" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+        "-DWITH_X11" = false,
+      },
     },
 
   karchive | lib.CmakePackage =
@@ -406,8 +756,21 @@
       biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
-        "-DKAUTH_BUILD_CODEGENERATOR_ONLY" = true,
-      }
+        "-DKAUTH_BUILD_CODEGENERATOR_ONLY" = false,
+      },
+      preConfigurePhase = [
+        "sed -i 's@ MODULE @ @g' ${SRC}/src/CMakeLists.txt"
+      ]
+    },
+
+  breezeIcons | lib.CmakePackage =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/frameworks/6.11/breeze-icons-6.11.0.tar.xz",
+        sha256sum = "f9cd9ec1b6a4111467cba31a7eed50ee5f03846fb1f5c32b3abdbf68877f8a4e",
+      },
+      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.gperf, drvs.isoCodes, drvs.pythonFull, drvs.gettext, ]
     },
 
   plasmaWaylandProtocols | lib.CmakePackage =
@@ -419,4 +782,43 @@
       },
       biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
     },
+}
+& {
+  lib,
+  drvs,
+  utilLinux,
+  utilLinuxWeak | lib.AutotoolsPackage =
+    utilLinux
+    & {
+      postInstallPhase | priority 1 =
+        utilLinux.postInstallPhase
+        @ [
+          "objcopy -W strappend ${DEST}/usr/lib/libmount.a",
+          "objcopy -W split ${DEST}/usr/lib/libmount.a",
+          "objcopy -W strappend ${DEST}/usr/lib/libblkid.a",
+          "objcopy -W split ${DEST}/usr/lib/libblkid.a",
+        ]
+    }
+}
+& {
+  lib,
+  drvs,
+  switcherooControl | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://gitlab.freedesktop.org/hadess/switcheroo-control/-/archive/2.6/switcheroo-control-2.6.tar.gz",
+      sha256sum = "b6413630b346aa132fb27ff1ee890061d3e86e0db42a991efe50b98eafd478b7"
+    },
+    biDrvs = [
+      drvs.glib,
+      drvs.pcre2,
+      drvs.libffi,
+      drvs.zlibNg,
+      drvs.gudev,
+      drvs.eudev,
+    ],
+
+    extraMesonArgs = [
+      "-Dsystemdsystemunitdir=no"
+    ]
+  }
 }

@@ -14,6 +14,10 @@
       drvs.tinycc,
       drvs.gccExp,
       drvs.binutilsExp,
+      drvs.grub2,
+                 drvs.libburn,
+            drvs.libisofs,
+            drvs.libisoburn,
     ],
   },
   dockerfile | lib.Package = {

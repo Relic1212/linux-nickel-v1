@@ -121,8 +121,10 @@
 
   "wlroots-18" | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.1/wlroots-0.18.1.tar.gz",
-      sha256sum = "10084bba57bf4162cd81eb79c2a0bee0d02c7ccd747eac0a7021b45b10bb821c"
+      # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.1/wlroots-0.18.1.tar.gz",
+      # sha256sum = "10084bba57bf4162cd81eb79c2a0bee0d02c7ccd747eac0a7021b45b10bb821c"
+        uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.2/wlroots-0.18.2.tar.gz",
+      sha256sum = "703c515917d9eb258e44296795f8626190e119b0ee8bfb32fe9f834dab1a1462"
     },
 
     extraMesonArgs = [
@@ -167,5 +169,14 @@
         "-lc++"
       ],
     },
+
+      postInstallPhase =
+        let symbols = [
+        "matrix_projection",
+        "buffer_is_opaque",
+        "output_pending_resolution",
+        ]
+        in
+        std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libwlroots-0.18.a") symbols,
   }
 }

@@ -1,0 +1,104 @@
+diff --git a/llvm/cmake/config.guess b/llvm/cmake/config.guess
+index 96cc554f1..7fd9be1b6 100644
+--- a/llvm/cmake/config.guess
++++ b/llvm/cmake/config.guess
+@@ -819,6 +819,8 @@ EOF
+     *:SerenityOS:*:*)
+ 	echo ${UNAME_MACHINE}-pc-serenity
+ 	exit ;;
++    *:BaltOS:*:*)
++	echo ${UNAME_MACHINE}-pc-baltos	exit ;;
+     *:Interix*:*)
+ 	case ${UNAME_MACHINE} in
+ 	    x86)
+diff --git a/llvm/include/llvm/TargetParser/Triple.h b/llvm/include/llvm/TargetParser/Triple.h
+index 7d67966d1..ba009c707 100644
+--- a/llvm/include/llvm/TargetParser/Triple.h
++++ b/llvm/include/llvm/TargetParser/Triple.h
+@@ -238,6 +238,7 @@ public:
+     ShaderModel, // DirectX ShaderModel
+     LiteOS,
+     Serenity,
++    BaltOS,
+     Vulkan, // Vulkan SPIR-V
+     LastOSType = Vulkan
+   };
+@@ -748,6 +749,11 @@ public:
+   bool isOSSerenity() const {
+     return getOS() == Triple::Serenity;
+   }
++  bool isOSBaltOS() const {
++    return getOS() == Triple::BaltOS;
++  }
++
++
+ 
+   /// Tests whether the OS uses the ELF binary format.
+   bool isOSBinFormatELF() const {
+diff --git a/llvm/lib/TargetParser/Triple.cpp b/llvm/lib/TargetParser/Triple.cpp
+index e9e6f130f..d6d5076c5 100644
+--- a/llvm/lib/TargetParser/Triple.cpp
++++ b/llvm/lib/TargetParser/Triple.cpp
+@@ -309,6 +309,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
+   case RTEMS: return "rtems";
+   case Solaris: return "solaris";
+   case Serenity: return "serenity";
++  case BaltOS: return "baltos";
+   case TvOS: return "tvos";
+   case UEFI: return "uefi";
+   case WASI: return "wasi";
+@@ -710,6 +711,7 @@ static Triple::OSType parseOS(StringRef OSName) {
+     .StartsWith("shadermodel", Triple::ShaderModel)
+     .StartsWith("liteos", Triple::LiteOS)
+     .StartsWith("serenity", Triple::Serenity)
++    .StartsWith("baltos", Triple::BaltOS)
+     .StartsWith("vulkan", Triple::Vulkan)
+     .Default(Triple::UnknownOS);
+ }
+diff --git a/llvm/unittests/TargetParser/TripleTest.cpp b/llvm/unittests/TargetParser/TripleTest.cpp
+index 61b3637bb..6200e74af 100644
+--- a/llvm/unittests/TargetParser/TripleTest.cpp
++++ b/llvm/unittests/TargetParser/TripleTest.cpp
+@@ -1313,6 +1313,42 @@ TEST(TripleTest, ParsedIDs) {
+   EXPECT_EQ(Triple::Serenity, T.getOS());
+   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
+ 
++  T = Triple("x86_64-pc-baltos");
++  EXPECT_EQ(Triple::x86_64, T.getArch());
++  EXPECT_EQ(Triple::PC, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
++  T = Triple("i686-pc-baltos");
++  EXPECT_EQ(Triple::i686, T.getArch());
++  EXPECT_EQ(Triple::PC, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
++  T = Triple("i386-pc-baltos");
++  EXPECT_EQ(Triple::i386, T.getArch());
++  EXPECT_EQ(Triple::PC, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
++  T = Triple("x86_64-unknown-baltos");
++  EXPECT_EQ(Triple::x86_64, T.getArch());
++  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
++  T = Triple("i686-unknown-baltos");
++  EXPECT_EQ(Triple::i686, T.getArch());
++  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
++  T = Triple("i386-unknown-baltos");
++  EXPECT_EQ(Triple::i386, T.getArch());
++  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
++  EXPECT_EQ(Triple::BaltOS, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
+   T = Triple("aarch64-unknown-linux-pauthtest");
+   EXPECT_EQ(Triple::aarch64, T.getArch());
+   EXPECT_EQ(Triple::UnknownVendor, T.getVendor());

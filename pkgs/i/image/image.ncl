@@ -137,7 +137,9 @@
         @ (
           if options.hasX11 then
             [
-              drvs.swayX11,
+              # drvs.swayX11,
+              drvs.swayfx,
+              drvs.mwc,
               drvs.xwayland,
               drvs.xkbcomp,
               drvs.hyprland,
@@ -222,6 +224,11 @@
                 drvs.buffybox,
                 drvs.hkdm,
                 drvs.ttyescape,
+
+                drvs.wld,
+                drvs.swc,
+                drvs.velox,
+                drvs.stWayland,
               ]
             else
               []

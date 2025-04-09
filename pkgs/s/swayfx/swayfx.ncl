@@ -5,29 +5,45 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/WillPower3309/swayfx/archive/3e4b6b75f4b42b4cb04d883033b04b4a1b57bc90.zip",
-          sha256sum = "2832e634289fed59d5d2b9b14c4d1c5580375e591a0f006951b8e2c5fa9bd03b"
+          uri = "https://github.com/WillPower3309/swayfx/archive/e8c689c2691f99b7ee883f1003c2f913575af5aa.tar.gz",
+          sha256sum = "204d2c19ed5744d3f27af1165d84dc7d58c8d1a2db3366154ef3a1fa3df9e137"
         }
       },
-      # {
-      #   dest = "subprojects/scenefx",
-      #   src = {
-      #     uri = "https://github.com/wlrfx/scenefx/archive/9fad3806102c73c2376114512c185e125d95136b.zip",
-      #     sha256sum = "94d048b14cd8bac6c0412ef282e52a2e004a9520b88dafba599661a3a53671a5"
-      #   },
-      # },
+      {
+        dest = "subprojects/scenefx",
+        src = {
+          uri = "https://github.com/wlrfx/scenefx/archive/7289eeec8239849385b87f127aae8fe0bd82b8e4.tar.gz",
+          sha256sum = "c0f5aca87102254f6670d30255a1a16fb76494f57fb3ac80246bd0cffe974824"
+        },
+      },
       {
         dest = "subprojects/wlroots",
+        # src = {
+        #   uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.0/wlroots-0.18.0.tar.gz",
+        #   sha256sum = "df347ddbf291d18710bd11d8228a49e7b0eafd88d0d7bbb4215d118374590516"
+        # },
         src = {
-          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.0/wlroots-0.18.0.tar.gz",
-          sha256sum = "df347ddbf291d18710bd11d8228a49e7b0eafd88d0d7bbb4215d118374590516"
-        },
+      uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.2/wlroots-0.18.2.tar.gz",
+      sha256sum = "703c515917d9eb258e44296795f8626190e119b0ee8bfb32fe9f834dab1a1462"
+    },
       }
     ],
     buildEnv.EXTRA_LDFLAGS = ["-lc++"],
 
     extraMesonArgs = [
-      "--force-fallback-for=wlroots"
+      "--force-fallback-for=wlroots",
+      "-Dwlroots:examples=false",
+        "-Dwlroots:backends=drm,libinput,x11",
+                "-Dwlroots:xwayland=enabled",
+
+      "-Dwlroots:renderers=gles2",
+      "-Dscenefx:examples=false",
+
+       "-Dwlroots:color-management=enabled",
+        "-Dgdk-pixbuf=enabled",
+        "-Dtray=enabled",
+        "-Dman-pages=enabled",
+
     ],
 
     preConfigurePhase = [
@@ -37,7 +53,22 @@
             sed -i 's@buffer_is_opaque@buffer_is_opaque_wlroots@g' ${f}
             sed -i 's@matrix_projection@matrix_projection_wlroots@g' ${f}
         done
-        "%
+        "%,
+             m%"
+            fix_symbol(){
+                echo    sed -i "s@${1}(@${1}_sway(@g"
+                for f in $(find ${SRC} -type f -name '*.h' |grep -v subprojects);do
+                    sed -i "s@${1}(@${1}_sway(@g" $f
+                    sed -i "s@_${1}_sway(@_${1}(@g" $f
+                done
+                for f in $(find ${SRC} -type f -name '*.c' |grep -v subprojects);do
+                    sed -i "s@${1}(@${1}_sway(@g" $f
+                    sed -i "s@_${1}_sway(@_${1}(@g" $f
+                done
+            }
+            "%,
+      "fix_symbol \"list_insert\"",
+      "fix_symbol \"parse_boolean\"",
     ],
 
     llvmProvider = drvs.llvmFull,
@@ -53,7 +84,7 @@
       drvs.libdrm,
       drvs.libxkbcommon,
       drvs.pixman,
-      # drvs.eudev,
+      drvs.eudev,
       drvs.libudevZero,
       drvs.seatd,
       drvs.libdisplayinfo,
@@ -71,8 +102,45 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
-      drvs.scenefx,
-    ]
+      # drvs.scenefx,
+
+      # for X
+       drvs.libxcursor,
+          drvs.xorgMacros,
+          drvs.xorgproto,
+          drvs.xtrans,
+          drvs.libxcb,
+          drvs.xcbProto,
+          drvs.libxau,
+          drvs.libx11,
+          drvs.libxrender,
+          drvs.libxfixes,
+          drvs.xcbRenderutil,
+          drvs.libxfont2,
+          drvs.libfontenc,
+          drvs.libxcvt,
+          drvs.libxshmfence,
+          drvs.xwayland,
+          drvs.libxkbfile,
+          drvs.openssl,
+          drvs.xcbUtilWm,
+
+
+      # For other optional features
+      drvs.gdkPixbufFull,
+      drvs.libjpegTurbo,
+      drvs.basu,
+      drvs.lcms,
+      drvs.scdoc,
+    ],
+
+    buildEnv={
+      EXTRA_CFLAGS=[
+        # ../src/sway/server.c:442:54: error: passing arguments to 'animation_manager_create' without a prototype is deprecated in all versions of C and is not supported in C23 [-Werror,-Wdeprecated-non-prototype]
+
+        "-Wno-deprecated-non-prototype",
+      ],
+    },
   }
 }
 & {
@@ -89,17 +157,19 @@
       {
         # dest = "subprojects/scenefx",
         src = {
-          uri = "https://github.com/wlrfx/scenefx/archive/9fad3806102c73c2376114512c185e125d95136b.zip",
-          sha256sum = "94d048b14cd8bac6c0412ef282e52a2e004a9520b88dafba599661a3a53671a5"
+          #uri = "https://github.com/wlrfx/scenefx/archive/9fad3806102c73c2376114512c185e125d95136b.zip",
+          #sha256sum = "94d048b14cd8bac6c0412ef282e52a2e004a9520b88dafba599661a3a53671a5"
+          uri = "https://github.com/wlrfx/scenefx/archive/refs/tags/0.2.1.tar.gz",
+          sha256sum = "e50cd8cbeb6564233dced39f21e78d755701fa7fe67f5b354f033f397b69a2b8"
         },
       },
-      {
-        dest = "subprojects/wlroots",
-        src = {
-          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.0/wlroots-0.18.0.tar.gz",
-          sha256sum = "df347ddbf291d18710bd11d8228a49e7b0eafd88d0d7bbb4215d118374590516"
-        },
-      }
+      # {
+      #   dest = "subprojects/wlroots",
+      #   src = {
+      #     uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.0/wlroots-0.18.0.tar.gz",
+      #     sha256sum = "df347ddbf291d18710bd11d8228a49e7b0eafd88d0d7bbb4215d118374590516"
+      #   },
+      # }
     ],
 
     buildEnv.EXTRA_LDFLAGS = ["-lc++"],
@@ -134,7 +204,7 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
-      # drvs."wlroots-18",
+      drvs."wlroots-18",
     ],
 
     preConfigurePhase = [

@@ -87,6 +87,8 @@
       drvs.ksvg,
       drvs.kcrash,
       drvs.kirigami,
+
+      drvs.kdecorations,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
@@ -109,3 +111,4 @@
     },
   }
 }
+&(import "plasma.ncl")

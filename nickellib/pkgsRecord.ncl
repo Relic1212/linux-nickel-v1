@@ -30,6 +30,7 @@ let r = {
     & (import "../pkgs/b/bluez4/bluez4.ncl")
     & (import "../pkgs/b/bmaptool/bmaptool.ncl")
     & (import "../pkgs/b/bonsai/bonsai.ncl")
+    & (import "../pkgs/b/boost/boost.ncl")
     & (import "../pkgs/b/bootstrap/bootstrap-toolchain.ncl")
     & (import "../pkgs/b/brightnessctl/brightnessctl.ncl")
     & (import "../pkgs/b/bsdutils/bsdutils.ncl")
@@ -48,6 +49,7 @@ let r = {
     & (import "../pkgs/c/cmake/cmake.ncl")
     & (import "../pkgs/c/conmon/conmon.ncl")
     & (import "../pkgs/c/coreutils/coreutils.ncl")
+    & (import "../pkgs/c/cproc/cproc.ncl")
     & (import "../pkgs/c/crun/crun.ncl")
     & (import "../pkgs/c/cryptsetup/cryptsetup.ncl")
     & (import "../pkgs/c/curl/curl.ncl")
@@ -127,6 +129,7 @@ let r = {
     & (import "../pkgs/g/gobject/gobject.ncl")
     & (import "../pkgs/g/gperf/gperf.ncl")
     & (import "../pkgs/g/grim/grim.ncl")
+    & (import "../pkgs/g/grub2/grub2.ncl")
     # & (import "../pkgs/h/haskell/haskell.ncl")
     & (import "../pkgs/h/harfbuzz/harfbuzz.ncl")
     & (import "../pkgs/h/heirloom/heirloom.ncl")
@@ -200,12 +203,14 @@ let r = {
     & (import "../pkgs/l/libxo/libxo.ncl")
     & (import "../pkgs/l/libxslt/libxslt.ncl")
     & (import "../pkgs/l/libyaml/libyaml.ncl")
+    & (import "../pkgs/l/limine/limine.ncl")
     & (import "../pkgs/l/linux-firmware/linux-firmware.ncl")
     & (import "../pkgs/l/linux-headers/linux-headers.ncl")
     & (import "../pkgs/l/linux/linux.ncl")
     & (import "../pkgs/l/lisgd/lisgd.ncl")
 
     & (import "../pkgs/l/llvm/clang-stage-0.ncl")
+    & (import "../pkgs/l/llvm/llvm-baltos.ncl")
     & (import "../pkgs/l/llvm/llvm-baselibs-stage-0.ncl")
     & (import "../pkgs/l/llvm/llvm-exp.ncl")
     & (import "../pkgs/l/llvm/llvm-libc.ncl")
@@ -232,6 +237,7 @@ let r = {
     & (import "../pkgs/m/musl-obstack/musl-obstack.ncl")
     & (import "../pkgs/m/musl-rpmatch/musl-rpmatch.ncl")
     & (import "../pkgs/m/musl/musl.ncl")
+    & (import "../pkgs/m/mwc/mwc.ncl")
     & (import "../pkgs/n/netavark/netavark.ncl")
 
     & (import "../pkgs/n/ncurses/ncurses.ncl")
@@ -350,6 +356,7 @@ let r = {
 
     & (import "../pkgs/w/wget/wget.ncl")
     & (import "../pkgs/w/wl-clipboard/wl-clipboard.ncl")
+    & (import "../pkgs/w/wld/wld.ncl")
 
     & (import "../pkgs/w/wldash/wldash.ncl")
     & (import "../pkgs/w/wmenu/wmenu.ncl")
@@ -390,7 +397,10 @@ let r = {
                       #&
                       imported
                     )
-                    & { lib, pkgs = __pkgs, drvs = std.record.map (fun k v => { name = v.name, drvHash = v.drvHash }) __pkgs }
+                    & { lib, pkgs = __pkgs, drvs = 
+                    #__pkgs 
+                    std.record.map (fun k v => { name = v.name, drvHash = v.drvHash }) __pkgs 
+                    }
                   )
                 # & { pkgs}
               )

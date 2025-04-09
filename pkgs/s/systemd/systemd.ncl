@@ -22,8 +22,8 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/systemd/systemd/archive/7354936ef71026a0ac7f5c592d065e91e5d9426f.zip",
-          sha256sum = "6d812b070d783f2ecab948bb00bb4672baea7041fd03d0bd29393b0299a08b53",
+          uri = "https://github.com/systemd/systemd/archive/refs/tags/v257.5.tar.gz",
+          sha256sum = "4d65f9482608cf9f7823df42a6d7796f0e0dfcfb94301df75effff86d40da33e",
         }
       }
     ],
@@ -61,10 +61,10 @@
       ],
 
     preConfigurePhase = [
-      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi/efi.h",
-      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi/efi-string.h",
-      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi/efi-string.c",
-      "sed -i 's@-lgcc@@g' ${SRC}/src/boot/efi/meson.build",
+      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi.h",
+      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi-string.h",
+      "sed -i 's@wchar_t@uint16_t@g' ${SRC}/src/boot/efi-string.c",
+      "sed -i 's@-lgcc@@g' ${SRC}/src/boot/meson.build",
     ],
 
     buildPhase = [
@@ -73,9 +73,9 @@
 
     installPhase = [
       "install -d -m0755 ${DEST}/usr/lib/systemd/boot/efi",
-      "install -m0755 ./src/boot/efi/systemd-bootx64.efi ${DEST}/usr/lib/systemd/boot/efi",
-      "install -m0755 ./src/boot/efi/linuxx64.efi.stub ${DEST}/usr/lib/systemd/boot/efi",
-      "install -m0755 ./src/boot/efi/addonx64.efi.stub ${DEST}/usr/lib/systemd/boot/efi",
+      "install -m0755 ./src/boot/systemd-bootx64.efi ${DEST}/usr/lib/systemd/boot/efi",
+      "install -m0755 ./src/boot/linuxx64.efi.stub ${DEST}/usr/lib/systemd/boot/efi",
+      "install -m0755 ./src/boot/addonx64.efi.stub ${DEST}/usr/lib/systemd/boot/efi",
     ],
 
     extraMesonArgs = [
@@ -175,7 +175,7 @@
       "-Dsbat-distro-summary=Linux",
       "-Dsbat-distro-pkgname=Systemd",
       "-Dsbat-distro-version=latest",
-      "-Dsbat-distro-url=http://localhost"
+      "-Dsbat-distro-url=http://localhost",
     ]
   }
 }

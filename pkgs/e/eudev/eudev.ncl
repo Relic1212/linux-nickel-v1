@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   eudev | lib.AutotoolsPackage = {
     singleSource = {
@@ -8,17 +8,17 @@
       sha256sum = "8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f"
     },
     biDrvs =
-      lib.biMap [
-        pkgs.gperf,
-        pkgs.kmod,
-        pkgs.zlibNg,
-        pkgs.xz,
-        pkgs.openssl,
-        pkgs.zstd,
-        pkgs.utilLinux,
-        pkgs.linuxHeaders,
-        pkgs.file,
-        pkgs.pkgconf
+       [
+        drvs.gperf,
+        drvs.kmod,
+        drvs.zlibNg,
+        drvs.xz,
+        drvs.openssl,
+        drvs.zstd,
+        drvs.utilLinux,
+        drvs.linuxHeaders,
+        drvs.file,
+        drvs.pkgconf
       ],
     patches = [
       {

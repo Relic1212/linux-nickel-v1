@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libinput | lib.MesonPackage = {
     name = "libinput",
     singleSource = {
@@ -12,12 +12,12 @@
     ],
     extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
     biDrvs =
-      lib.biMap [
-        pkgs.eudev,
-        # pkgs.libudevZero,
-        pkgs.mtdev,
-        pkgs.libevdev,
-        pkgs.linuxHeaders,
+       [
+        drvs.eudev,
+        # drvs.libudevZero,
+        drvs.mtdev,
+        drvs.libevdev,
+        drvs.linuxHeaders,
       ]
   }
 }

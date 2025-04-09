@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  drvs,
   libdrm | lib.MesonPackage = {
     name = "libdrm",
     singleSource = {
@@ -15,9 +16,9 @@
       "-Dnouveau=disabled",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.libpciaccess,
-        pkgs.linuxHeaders,
+       [
+        drvs.libpciaccess,
+        drvs.linuxHeaders,
       ],
 
     preConfigurePhase = [

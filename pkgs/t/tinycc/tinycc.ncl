@@ -12,6 +12,9 @@
       uri = "https://download.savannah.gnu.org/releases/tinycc/tcc-0.9.27.tar.bz2",
       sha256sum = "de23af78fca90ce32dff2dd45b3432b2334740bb9bb7b05bf60fdbfc396ceb9c",
     },
+    options={
+      targetOs="Linux"
+    },
 
     preConfigurePhase = [
       "export CC=\"${CC} -static\""
@@ -19,6 +22,7 @@
     extraConfigureFlags = [
       "--config-musl",
       "--enable-cross",
+      "--target-os=%{options.targetOs}",
     ],
     extraMakeArgs = [
       "CC=\"${CC}\""
