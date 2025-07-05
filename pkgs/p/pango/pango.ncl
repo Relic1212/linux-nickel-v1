@@ -47,6 +47,10 @@
         sha256sum = "426be66460c98b8378573e7f6b0b2ab450f6bb6d2ec7cecc33ae81178f246480"
       },
       patches | priority 1 = [],
-      biDrvs | priority 1 = pango.biDrvs @ [drvs.fribidi]
+      biDrvs | priority 1 =
+        pango.biDrvs
+        @ [
+          drvs.fribidi
+        ]
     }
 }

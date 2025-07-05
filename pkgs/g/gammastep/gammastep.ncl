@@ -129,6 +129,10 @@
         m%"echo 'export static_ext="$static_ext XML/Parser/Expat"' >> config.sh"%,
         "make depend -j1",
       ],
-      biDrvs | priority 1 = perl.biDrvs @ [drvs.expat]
+      biDrvs | priority 1 =
+        perl.biDrvs
+        @ [
+          drvs.expat
+        ]
     }
 }

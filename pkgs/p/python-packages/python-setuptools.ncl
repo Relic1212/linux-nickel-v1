@@ -12,6 +12,9 @@
     utilsProviders = [],
     baseBuildinputPackages = [],
 
-    buildInputs = [drvs.busybox, drvs.pythonFull]
+    buildInputs = [
+      drvs.busybox,
+      drvs.pythonFull
+    ]
   }
 }

@@ -23,7 +23,10 @@
             "sed -i \"s@disable('static', 'pic', 'threads');@disable('static', 'pic');@g\" ${SRC}/Configure",
           ]
           @ _openssl.configurePhase,
-        biDrvs = [drvs.perl, drvs.linuxHeaders]
+        biDrvs = [
+          drvs.perl,
+          drvs.linuxHeaders
+        ]
       }
     ),
 

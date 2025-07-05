@@ -41,7 +41,11 @@
   linuxWithBuild | lib.MakePackage =
     linux
     & {
-      biDrvs | priority 1 = linux.biDrvs @ [drvs.rsync],
+      biDrvs | priority 1 =
+        linux.biDrvs
+        @ [
+          drvs.rsync
+        ],
       options,
       postInstallPhase | priority 1 =
         linux.postInstallPhase

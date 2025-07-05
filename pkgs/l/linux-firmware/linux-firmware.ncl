@@ -23,7 +23,11 @@
     linuxFirmware
     & {
       name | priority 1 = "linux-firmware-smaller",
-      biDrvs | priority 1 = linuxFirmware.biDrvs @ [drvs.pythonFull],
+      biDrvs | priority 1 =
+        linuxFirmware.biDrvs
+        @ [
+          drvs.pythonFull
+        ],
       extraFiles = [
         {
           file = "split.py",

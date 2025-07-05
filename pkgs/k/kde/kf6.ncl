@@ -52,7 +52,16 @@
         drvs.bison,
         drvs.flex,
       ]
-      @ (if options.waylandSyms then [drvs.waylandWeaksyms] else [drvs.wayland])
+      @ (
+        if options.waylandSyms then
+          [
+            drvs.waylandWeaksyms
+          ]
+        else
+          [
+            drvs.wayland
+          ]
+      )
       @ [
         drvs.waylandProtocols,
         drvs.m4,
@@ -114,7 +123,11 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kauth-6.11.0.tar.xz",
         sha256sum = "479660eabe97198c31f228a18271bc739b234943c68e95383c361a835131179b"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons
+        ]
     },
 
   kglobalaccel | lib.CmakePackage =
@@ -124,7 +137,11 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kglobalaccel-6.11.0.tar.xz",
         sha256sum = "0552e4e5c58a244733af49cfdd0c8fc04a63828b6c2346b36820222d5e3bcef5"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons
+        ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
         "-DWITH_X11" = false,
@@ -138,7 +155,15 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kpackage-6.11.0.tar.xz",
         sha256sum = "bfc704ea1708f37150a9d14edcbb9eed8ebf8d54753930da63432cda954a1ea7"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.karchive, drvs.bzip2, drvs.ki18n, drvs.gettext],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.ki18n,
+          drvs.gettext
+        ],
       patches = [
         {
           sha256sum = "e3bee168feb7c615f984b3af01fd7712fdb2774c7851cf601998f4d037dfe622",
@@ -153,7 +178,15 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kdoctools-6.11.0.tar.xz",
         sha256sum = "dfcdc6a0258f5cc2e55d248f616cc7c6224e1b06140deb687e401b537959fc08"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.karchive, drvs.bzip2, drvs.ki18n, drvs.gettext]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.karchive,
+          drvs.bzip2,
+          drvs.ki18n,
+          drvs.gettext,
+        ]
     },
 
   kidletime | lib.CmakePackage =
@@ -193,7 +226,11 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kcrash-6.11.0.tar.xz",
         sha256sum = "ba13e9f5dd2b40125d5d61d29b612db6383315dc0f510cc1f0e33bb6c9b0ae89"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons
+        ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
       }
@@ -206,7 +243,14 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kservice-6.11.0.tar.xz",
         sha256sum = "161cd296577ff9802b088b06866ec5ab4c1c1a6fe19f76bb5134cdf8a6ab4005"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.kconfig, drvs.ki18n, drvs.gettext, ]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.kconfig,
+          drvs.ki18n,
+          drvs.gettext,
+        ]
     },
 
   ksvg | lib.CmakePackage =
@@ -683,7 +727,12 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/karchive-6.11.0.tar.xz",
         sha256sum = "12fc4ac53591fb1dd81d6c5243b900a6d48066559263fc66eb2f4995ceb9e380"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.bzip2, ]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.bzip2,
+        ]
     },
 
   kcodecs | lib.CmakePackage =
@@ -693,7 +742,12 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kcodecs-6.11.0.tar.xz",
         sha256sum = "fbddc437ba9969d89635b75f0ef7e41c925c61c64dac1fff008c2e9138139fe4"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.gperf]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.gperf
+        ]
     },
   ki18n | lib.CmakePackage =
     _kf
@@ -702,7 +756,15 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/ki18n-6.11.0.tar.xz",
         sha256sum = "658a05ceca184ba31ce58a6e9c51ee76f2829459c56dbcd3bad3aa157eaf11fe"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.gperf, drvs.isoCodes, drvs.pythonFull, drvs.gettext, ]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.gperf,
+          drvs.isoCodes,
+          drvs.pythonFull,
+          drvs.gettext,
+        ]
     },
 
   kguiaddons | lib.CmakePackage =
@@ -753,7 +815,11 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kauth-6.11.0.tar.xz",
         sha256sum = "479660eabe97198c31f228a18271bc739b234943c68e95383c361a835131179b"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons
+        ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
         "-DKAUTH_BUILD_CODEGENERATOR_ONLY" = false,
@@ -770,7 +836,15 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/breeze-icons-6.11.0.tar.xz",
         sha256sum = "f9cd9ec1b6a4111467cba31a7eed50ee5f03846fb1f5c32b3abdbf68877f8a4e",
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons, drvs.gperf, drvs.isoCodes, drvs.pythonFull, drvs.gettext, ]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons,
+          drvs.gperf,
+          drvs.isoCodes,
+          drvs.pythonFull,
+          drvs.gettext,
+        ]
     },
 
   plasmaWaylandProtocols | lib.CmakePackage =
@@ -780,7 +854,11 @@
         uri = "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.16.0.tar.xz",
         sha256sum = "da3fbbe3fa5603f9dc9aabe948a6fc8c3b451edd1958138628e96c83649c1f16"
       },
-      biDrvs = _kf.biDrvs @ [drvs.kcoreaddons],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.kcoreaddons
+        ],
     },
 }
 & {

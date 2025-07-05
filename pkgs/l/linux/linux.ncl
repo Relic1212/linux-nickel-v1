@@ -195,8 +195,8 @@ in
         (drvs.mawk & { priority = 1 }),
         drvs.basefiles,
 
-        #, libModulesDirectory,
-        #, drvs.libarchive,
+        #libModulesDirectory,
+        #drvs.libarchive,
       ],
     },
   linuxAarch64 =

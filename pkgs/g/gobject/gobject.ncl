@@ -91,7 +91,12 @@
       },
       postInstallPhase | priority 1 = [],
       extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=static"],
-      biDrvs | priority 1 = [drvs.pcre2, drvs.libffi, drvs.zlibNgPic, drvs.muslShared],
+      biDrvs | priority 1 = [
+        drvs.pcre2,
+        drvs.libffi,
+        drvs.zlibNgPic,
+        drvs.muslShared
+      ],
     },
 
   glibGobject =

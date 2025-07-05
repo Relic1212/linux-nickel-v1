@@ -34,7 +34,10 @@
           ]
         ),
 
-      buildInputs = [drvs.muslStage0, drvs.linuxHeadersStage0]
+      buildInputs = [
+        drvs.muslStage0,
+        drvs.linuxHeadersStage0
+      ]
     }
   ),
 }
