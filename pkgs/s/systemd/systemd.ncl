@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   busybox,
   busyboxMiscUtils | lib.MakePackage = (
     busybox
@@ -28,36 +28,36 @@
       }
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.kmod,
-        pkgs.libcap,
-        pkgs.pythonDynamic,
-        pkgs.pythonJinja2,
-        # pkgs.bash,
-        # pkgs.coreutils,
-        pkgs.muslShared,
-        pkgs.pythonFlitCore,
-        pkgs.pythonMarkupsafe,
-        pkgs.linuxHeaders,
-        pkgs.gperf,
-        pkgs.pythonElftools,
-        pkgs.muslGetent,
-        pkgs.utilLinux,
-        pkgs.libarchive,
-        pkgs.busyboxMiscUtils,
+      [
+        drvs.kmod,
+        drvs.libcap,
+        drvs.pythonDynamic,
+        drvs.pythonJinja2,
+        # drvs.bash,
+        # drvs.coreutils,
+        drvs.muslShared,
+        drvs.pythonFlitCore,
+        drvs.pythonMarkupsafe,
+        drvs.linuxHeaders,
+        drvs.gperf,
+        drvs.pythonElftools,
+        drvs.muslGetent,
+        drvs.utilLinux,
+        drvs.libarchive,
+        drvs.busyboxMiscUtils,
       ],
     # pulls in static python otherwise
     baseBuildinputPackages =
       lib.biMap [
-        pkgs.bash,
-        pkgs.coreutils,
-        pkgs.bashSh,
-        pkgs.meson,
-        pkgs.samurai,
-        pkgs.pkgconf,
-        pkgs.musl,
-        pkgs.llvm,
-        pkgs.ccacheBin,
+        drvs.bash,
+        drvs.coreutils,
+        drvs.bashSh,
+        drvs.meson,
+        drvs.samurai,
+        drvs.pkgconf,
+        drvs.musl,
+        drvs.llvm,
+        drvs.ccacheBin,
       ],
 
     preConfigurePhase = [

@@ -1,7 +1,6 @@
 {
   lib,
   drvs,
-  pkgs,
   hyprland
     | lib.MesonPackage
     = {
@@ -47,7 +46,7 @@
         #  sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
         #}
       ],
-      llvmProvider = pkgs.llvmFull,
+      llvmProvider = drvs.llvmFull,
 
       biDrvs =
         [

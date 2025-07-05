@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   coreutils | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://mirrors.ibiblio.org/gnu/coreutils/coreutils-9.5.tar.xz",

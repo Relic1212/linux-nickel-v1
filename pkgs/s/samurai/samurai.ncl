@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   # base
   _samurai | lib.MakePackage =
     let _makeInstallArgs = lib.MakePackage.makeInstallArgs @ ["PREFIX=/usr"] in
@@ -44,12 +44,12 @@
         },
       stage = 1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxBootstrapStage0,
-          pkgs.bootstrapStage0,
-          pkgs.bootstrapSymlinks,
-          pkgs.ccacheBin,
-          pkgs.gnumakeStage1
+        [
+          drvs.busyboxBootstrapStage0,
+          drvs.bootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.ccacheBin,
+          drvs.gnumakeStage1
         ]
     },
 
@@ -60,12 +60,12 @@
     & {
       stage = 2,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.muslStage2,
-          pkgs.llvmStage1,
-          pkgs.ccacheBin,
-          pkgs.gnumakeStage2
+        [
+          drvs.busyboxStage1,
+          drvs.muslStage2,
+          drvs.llvmStage1,
+          drvs.ccacheBin,
+          drvs.gnumakeStage2
         ]
     },
 
@@ -77,12 +77,12 @@
       baseBuildinputPackages = [],
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.muslStage3,
-          pkgs.llvmStage2,
-          pkgs.ccacheBin,
-          pkgs.gnumakeStage4
+        [
+          drvs.busyboxStage2,
+          drvs.muslStage3,
+          drvs.llvmStage2,
+          drvs.ccacheBin,
+          drvs.gnumakeStage4
         ]
     },
 
@@ -96,12 +96,12 @@
       baseBuildinputPackages = [],
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.musl,
-          pkgs.llvmStage3,
-          pkgs.ccacheBin,
-          pkgs.gnumake
+        [
+          drvs.busyboxStage3,
+          drvs.musl,
+          drvs.llvmStage3,
+          drvs.ccacheBin,
+          drvs.gnumake
         ]
     },
 }

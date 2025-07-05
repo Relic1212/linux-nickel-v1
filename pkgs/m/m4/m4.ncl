@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   # base
   _m4Base | lib.AutotoolsPackage = {
     baseName = "m4",
@@ -22,12 +22,12 @@
     & {
       stage = 1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0,
-          pkgs.muslStage1,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
+        [
+          drvs.busyboxStage0,
+          drvs.llvmStage0,
+          drvs.muslStage1,
+          drvs.gnumakeStage1,
+          drvs.ccacheBin,
         ]
     },
 
@@ -38,12 +38,12 @@
     & {
       stage = 2,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.muslStage2,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.muslStage2,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
         ]
     },
 
@@ -57,12 +57,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.musl,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.musl,
+          drvs.gnumake,
+          drvs.ccacheBin,
         ]
     },
 }

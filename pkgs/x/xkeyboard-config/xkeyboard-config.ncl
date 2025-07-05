@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   xkeyboardConfig | lib.MesonPackage = {
     name = "xkeyboard-config",
     singleSource = {
@@ -9,8 +9,8 @@
     },
     extraMesonArgs = ["-Dnls=false"],
     biDrvs =
-      lib.biMap [
-        pkgs.perl,
+      [
+        drvs.perl,
       ]
   }
 }

@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   wayland | lib.MesonPackage = {
     name = "wayland",
     singleSource = {
@@ -8,10 +8,10 @@
       sha256sum = "158ec49af498f2558c7fbf7e8b070d010d4e270cc6076003a18a6c813f87e244",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.linuxHeaders,
-        pkgs.expat,
-        pkgs.libffi,
+      [
+        drvs.linuxHeaders,
+        drvs.expat,
+        drvs.libffi,
       ],
     preConfigurePhase = [
       m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/os-compatibility.c"%,

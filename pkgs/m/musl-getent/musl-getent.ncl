@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   muslGetent | lib.Package = {
     name = "musl-getent",
     singleSource = {
@@ -16,10 +16,10 @@
             "%
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.musl,
-        pkgs.llvm,
-        pkgs.ccacheBin,
+      [
+        drvs.musl,
+        drvs.llvm,
+        drvs.ccacheBin,
       ]
   }
 }

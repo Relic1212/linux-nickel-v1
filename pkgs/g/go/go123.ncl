@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   "go-1.23" | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.23.3.src.tar.gz",
@@ -26,15 +26,15 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs."go-1.21",
-        pkgs.bash,
+      [
+        drvs."go-1.21",
+        drvs.bash,
       ]
   }
 }
 & {
   lib,
-  pkgs,
+  drvs,
   "go-1.22" | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.22.9.src.tar.gz",
@@ -60,15 +60,15 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs."go-1.9",
-        pkgs.bash,
+      [
+        drvs."go-1.9",
+        drvs.bash,
       ]
   }
 }
 & {
   lib,
-  pkgs,
+  drvs,
   "go-1.21" | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.21.13.src.tar.gz",
@@ -94,9 +94,9 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs."go-1.9",
-        pkgs.bash,
+      [
+        drvs."go-1.9",
+        drvs.bash,
       ]
   }
 }

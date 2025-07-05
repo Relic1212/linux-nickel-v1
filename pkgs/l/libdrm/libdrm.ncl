@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   drvs,
   libdrm | lib.MesonPackage = {
     name = "libdrm",

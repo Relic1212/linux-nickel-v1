@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   git | lib.AutotoolsPackage = {
     name = "git",
     singleSource = {
@@ -21,8 +21,8 @@
     ],
     extraMakeInstallArgs = extraMakeArgs,
     biDrvs =
-      lib.biMap [
-        pkgs.zlibNg,
+      [
+        drvs.zlibNg,
       ]
   }
 }

@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libdisplayinfo | lib.MesonPackage = {
     name = "libdisplayinfo",
     singleSource = {
@@ -8,8 +8,8 @@
       sha256sum = "f7331fcaf5527251b84c8fb84238d06cd2f458422ce950c80e86c72927aa8c2b",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.hwdata,
+      [
+        drvs.hwdata,
       ]
   }
 }

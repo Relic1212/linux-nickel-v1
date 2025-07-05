@@ -4,7 +4,7 @@ in
 (import "busybox-base.ncl")
 & {
   lib,
-  pkgs,
+  drvs,
   _busyboxBase,
 
   busyboxStage0 | lib.MakePackage =
@@ -104,9 +104,9 @@ in
         ),
       stage = 0,
       biDrvs =
-        lib.biMap [
-          pkgs.llvmStage0,
-          pkgs.muslStage0,
+         [
+          drvs.llvmStage0,
+          drvs.muslStage0,
         ]
     },
 
@@ -221,8 +221,8 @@ in
         ),
       stage = 0,
       biDrvs =
-        lib.biMap [
-          pkgs.bootstrapStage0,
+         [
+          drvs.bootstrapStage0,
         ]
     }
 }

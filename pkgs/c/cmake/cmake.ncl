@@ -1,7 +1,7 @@
 let misc = import "cmake-base.ncl"
 in
 {
-  pkgs,
+  drvs,
   lib,
   # base for non-bootstrap
   _cmakeCmakeBase #| lib.CmakePackage
@@ -44,14 +44,14 @@ in
       stage = 2,
 
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.muslStage2,
-          pkgs.samuraiStage2,
-          pkgs.cmakeStage1,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersStage2,
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.muslStage2,
+          drvs.samuraiStage2,
+          drvs.cmakeStage1,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage2,
         ]
     },
 
@@ -63,14 +63,14 @@ in
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.muslStage3,
-          pkgs.samuraiStage3,
-          pkgs.cmakeStage2,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersStage3,
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.muslStage3,
+          drvs.samuraiStage3,
+          drvs.cmakeStage2,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage3,
         ]
     },
 
@@ -84,14 +84,14 @@ in
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.musl,
-          pkgs.samurai,
-          pkgs.cmakeStage3,
-          pkgs.ccacheBin,
-          pkgs.linuxHeaders,
+        [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.musl,
+          drvs.samurai,
+          drvs.cmakeStage3,
+          drvs.ccacheBin,
+          drvs.linuxHeaders,
         ]
     },
 }

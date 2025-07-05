@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   xxhash | lib.MakePackage = {
     name = "xxhash",
     singleSource = {

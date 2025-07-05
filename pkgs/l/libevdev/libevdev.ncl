@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   libevdev | lib.MesonPackage = {
     name = "libevdev",
@@ -10,8 +10,8 @@
     },
     extraMesonArgs = ["-Ddocumentation=disabled", "-Dtests=disabled"],
     biDrvs =
-      lib.biMap [
-        pkgs.linuxHeaders,
+      [
+        drvs.linuxHeaders,
       ]
   }
 }

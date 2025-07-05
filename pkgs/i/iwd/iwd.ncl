@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   iwd | lib.AutotoolsPackage = {
     name = "iwd",
     singleSource = {
@@ -8,14 +8,14 @@
       sha256sum = "d911398242cdae78a474fe712de7bd138ddc39122f52709b52c8c3bf03716392",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.expat,
-        pkgs.zlibNg,
-        pkgs.readline,
-        pkgs.ncurses,
-        pkgs.dbus,
-        pkgs.linuxHeaders,
-        pkgs.pkgconf,
+      [
+        drvs.expat,
+        drvs.zlibNg,
+        drvs.readline,
+        drvs.ncurses,
+        drvs.dbus,
+        drvs.linuxHeaders,
+        drvs.pkgconf,
       ],
     extraConfigureFlags = [
       "--disable-systemd-service",

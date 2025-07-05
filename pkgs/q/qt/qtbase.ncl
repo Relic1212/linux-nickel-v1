@@ -39,14 +39,13 @@ in
 {
   lib,
   drvs,
-  pkgs,
   qtbase | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.8.2.tar.gz",
       sha256sum = "9dddbb2ea3c107e20a99b816c1c6ba1483915325918936dda2c762bd73836ad9"
     },
-    llvmProvider = pkgs.llvmFull,
+    llvmProvider = drvs.llvmFull,
 
     biDrvs =
       [

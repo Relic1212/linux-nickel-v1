@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   dhcpcd | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/NetworkConfiguration/dhcpcd/releases/download/v10.0.10/dhcpcd-10.0.10.tar.xz",
@@ -13,8 +13,8 @@
       "--runstatedir=/run/dhcpcd"
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.linuxHeaders,
+      [
+        drvs.linuxHeaders,
       ]
   }
 }

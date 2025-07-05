@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   pythonInstaller | lib.Package = {
     name = "python-installer",
     singleSource = {
@@ -8,8 +8,8 @@
       sha256sum = "e1589201863a6b6f570ce2f9994febe54a8d9196e0cc54fd331cd7ffd728fb86",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.pythonFull
+      [
+        drvs.pythonFull
       ],
     # buildDir = "${SRC}",
     # unpackPhase = [

@@ -2,7 +2,7 @@ let misc = import "cmake-base.ncl" in
 
 {
 
-  pkgs,
+  drvs,
   lib,
   cmakeStage1
     | lib.AutotoolsPackage
@@ -68,14 +68,14 @@ let misc = import "cmake-base.ncl" in
         singleSource = misc.cmakeSingleSource,
 
         biDrvs =
-          lib.biMap [
-            pkgs.busyboxBootstrapStage0,
-            pkgs.bootstrapStage0,
-            pkgs.bootstrapSymlinks,
-            pkgs.muslStage1,
-            pkgs.samuraiStage1,
-            pkgs.ccacheBin,
-            pkgs.linuxHeadersStage1,
+          [
+            drvs.busyboxBootstrapStage0,
+            drvs.bootstrapStage0,
+            drvs.bootstrapSymlinks,
+            drvs.muslStage1,
+            drvs.samuraiStage1,
+            drvs.ccacheBin,
+            drvs.linuxHeadersStage1,
           ]
       }
 }

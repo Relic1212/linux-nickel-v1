@@ -2,7 +2,7 @@
   import "./llvm-base.ncl"
 )
 & {
-  pkgs,
+  drvs,
   lib,
   _llvmBase,
   # base if stage!=0
@@ -60,16 +60,16 @@
         ],
       },
       buildInputs =
-        lib.biMap [
-          pkgs.bootstrapStage0,
-          pkgs.bootstrapSymlinks,
-          pkgs.busyboxBootstrapStage0,
-          pkgs.samuraiStage1,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersStage1,
-          pkgs.cmakeStage1,
-          pkgs.pythonStage1,
-          pkgs.muslStage1,
+        [
+          drvs.bootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.busyboxBootstrapStage0,
+          drvs.samuraiStage1,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage1,
+          drvs.cmakeStage1,
+          drvs.pythonStage1,
+          drvs.muslStage1,
         ],
       cmakeArgsRecord = {
         "-DLLVM_ENABLE_LLD:BOOL" | force = "OFF",
@@ -83,15 +83,15 @@
     & {
       stage = 2,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.muslStage2,
-          pkgs.samuraiStage2,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersStage2,
-          pkgs.cmakeStage2,
-          pkgs.pythonStage2,
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.muslStage2,
+          drvs.samuraiStage2,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage2,
+          drvs.cmakeStage2,
+          drvs.pythonStage2,
         ]
     },
 
@@ -102,15 +102,15 @@
     & {
       stage = -1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.muslStage3,
-          pkgs.samuraiStage3,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersStage3,
-          pkgs.cmakeStage3,
-          pkgs.pythonStage3,
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.muslStage3,
+          drvs.samuraiStage3,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage3,
+          drvs.cmakeStage3,
+          drvs.pythonStage3,
         ]
     },
   llvm =
@@ -118,15 +118,15 @@
     & {
       stage = -1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.musl,
-          pkgs.samurai,
-          pkgs.ccacheBin,
-          pkgs.linuxHeaders,
-          pkgs.cmake,
-          pkgs.python,
+        [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.musl,
+          drvs.samurai,
+          drvs.ccacheBin,
+          drvs.linuxHeaders,
+          drvs.cmake,
+          drvs.python,
         ]
     },
 
@@ -177,15 +177,15 @@
       #   ],
 
       buildInputs | priority 1 =
-        lib.biMap [
-          pkgs.busybox,
-          pkgs.llvm,
-          pkgs.musl,
-          pkgs.samurai,
-          pkgs.ccacheBin,
-          pkgs.linuxHeaders,
-          pkgs.cmake,
-          pkgs.python,
+        [
+          drvs.busybox,
+          drvs.llvm,
+          drvs.musl,
+          drvs.samurai,
+          drvs.ccacheBin,
+          drvs.linuxHeaders,
+          drvs.cmake,
+          drvs.python,
         ],
       postInstallPhase = [
         "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin"
@@ -292,16 +292,16 @@
       ],
 
       buildInputs | priority 1 =
-        lib.biMap [
-          pkgs.busybox,
-          pkgs.clangCross,
-          pkgs.musl,
-          pkgs.samurai,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersAarch64,
-          pkgs.cmake,
-          pkgs.python,
-          pkgs.muslAarch64,
+        [
+          drvs.busybox,
+          drvs.clangCross,
+          drvs.musl,
+          drvs.samurai,
+          drvs.ccacheBin,
+          drvs.linuxHeadersAarch64,
+          drvs.cmake,
+          drvs.python,
+          drvs.muslAarch64,
         ]
     },
 
@@ -316,18 +316,18 @@
       #     },
       buildEnv,
       buildInputs | priority 3 =
-        lib.biMap [
-          pkgs.busybox,
-          pkgs.clangCross,
-          pkgs.musl,
-          pkgs.libcxxAarch64,
-          pkgs.samurai,
-          pkgs.ccacheBin,
-          pkgs.linuxHeadersAarch64,
-          pkgs.linuxHeaders,
-          pkgs.cmake,
-          pkgs.python,
-          pkgs.muslAarch64,
+        [
+          drvs.busybox,
+          drvs.clangCross,
+          drvs.musl,
+          drvs.libcxxAarch64,
+          drvs.samurai,
+          drvs.ccacheBin,
+          drvs.linuxHeadersAarch64,
+          drvs.linuxHeaders,
+          drvs.cmake,
+          drvs.python,
+          drvs.muslAarch64,
         ],
       cmakeArgs | priority 2 =
         clangCross.cmakeArgs

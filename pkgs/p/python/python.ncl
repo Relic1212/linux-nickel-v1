@@ -1,7 +1,7 @@
 (import "python-base.ncl")
 & {
   lib,
-  pkgs,
+  drvs,
   _pythonBase,
   #base with minimal modules
   _pythonBaseMinimal | lib.AutotoolsPackage =
@@ -129,12 +129,12 @@
     & {
       stage = 1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxBootstrapStage0,
-          pkgs.bootstrapStage0,
-          pkgs.bootstrapSymlinks,
-          pkgs.ccacheBin,
-          pkgs.gnumakeStage1,
+        [
+          drvs.busyboxBootstrapStage0,
+          drvs.bootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.ccacheBin,
+          drvs.gnumakeStage1,
         ],
     },
 
@@ -145,12 +145,12 @@
     & {
       stage = 2,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
-          pkgs.muslStage1
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
+          drvs.muslStage1
         ],
     },
 
@@ -162,12 +162,12 @@
       baseBuildinputPackages = [],
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.gnumakeStage4,
-          pkgs.ccacheBin,
-          pkgs.muslStage3
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.gnumakeStage4,
+          drvs.ccacheBin,
+          drvs.muslStage3
         ],
     },
 
@@ -181,12 +181,12 @@
       baseBuildinputPackages = [],
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          pkgs.musl
+        [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.gnumake,
+          drvs.ccacheBin,
+          drvs.musl
         ],
     },
 }

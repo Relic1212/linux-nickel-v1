@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   "go-1.9" | lib.Package = {
     name = "go-1.9",
     singleSource = {
@@ -26,9 +26,9 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs."go-1.4",
-        pkgs.bash,
+      [
+        drvs."go-1.4",
+        drvs.bash,
       ]
   }
 }

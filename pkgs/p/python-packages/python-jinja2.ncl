@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   pythonJinja2 | lib.Package = {
     name = "python-jinja2",
     singleSource = {
@@ -13,12 +13,12 @@
       "python -m installer -d ${DEST} .dist/*.whl",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.pythonFull,
-        pkgs.pythonSetuptools,
-        pkgs.pythonInstaller,
-        pkgs.pythonGpep517,
-        pkgs.pythonFlitCore,
+      [
+        drvs.pythonFull,
+        drvs.pythonSetuptools,
+        drvs.pythonInstaller,
+        drvs.pythonGpep517,
+        drvs.pythonFlitCore,
       ]
   }
 }

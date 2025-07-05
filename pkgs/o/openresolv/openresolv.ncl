@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   openresolv | lib.AutotoolsPackage = {
     name = "openresolv",
     singleSource = {
@@ -20,8 +20,8 @@
       "ln -s /run/resolv.conf etc/resolv.conf",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.pkgconf,
+      [
+        drvs.pkgconf,
       ],
     extraConfigureFlags = [
       "--rundir=/run",

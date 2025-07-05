@@ -8,8 +8,9 @@ let drvUtils = import "drv.ncl"
 in
 
 {
-  pkgs, #| default = import "pkgsRecord.ncl",
+  # pkgs, #| default = import "pkgsRecord.ncl",
   # hashByName,
+  drvs,
 
   lib =
     (import "buildEnv.ncl")
@@ -130,11 +131,12 @@ in
               buildInputs
           )
         ),
-        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then (biMap [pkgs.busybox]) else [],
-        llvmProvider | default = pkgs.llvm,
+        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ( [drvs.busybox]) else [],
+        llvmProvider | default = drvs.llvm,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         biPkgs | Array Dyn | not_exported | default = [],
-        biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
+        # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
+        biDrvs | Array Dyn| not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
@@ -250,12 +252,12 @@ in
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
-              @ lib.biMap (
+              @  (
                 if (stage == -1) then
                   (
-                    [pkgs.gnumake, pkgs.musl]
+                    [drvs.gnumake, drvs.musl]
                     @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [pkgs.ccacheBin] else [])
+                    @ (if enableCcache then [drvs.ccacheBin] else [])
                   )
                 else
                   []
@@ -324,19 +326,19 @@ in
                 "(cd ${SRC}; autoreconf -fiv)",
                 configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
               ],
-              perlProvider | default =  pkgs.perl,
+              perlProvider | default =  drvs.perl,
           baseBuildinputPackages | priority -999
             =
               AutotoolsPackage.baseBuildinputPackages
-              @ lib.biMap (
+              @  (
                 if (stage == -1) then
                   [
                    perlProvider,
-                    pkgs.automake,
-                    pkgs.autoconf,
-                    pkgs.m4,
-                    pkgs.libtool,
-                    pkgs.pkgconf,
+                    drvs.automake,
+                    drvs.autoconf,
+                    drvs.m4,
+                    drvs.libtool,
+                    drvs.pkgconf,
                   ]
                 else
                   []
@@ -367,22 +369,22 @@ in
             = [
               "meson install --destdir ${DEST}"
             ],
-          pythonProvider | default = pkgs.pythonFull,
+          pythonProvider | default = drvs.pythonFull,
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
-              @ lib.biMap (
+              @ (
                 if (stage == -1) then
                   (
                     [
-                      pkgs.meson,
-                      pkgs.samurai,
+                      drvs.meson,
+                      drvs.samurai,
                       pythonProvider,
-                      pkgs.pkgconf,
-                      pkgs.musl,
+                      drvs.pkgconf,
+                      drvs.musl,
                     ]
                     @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [pkgs.ccacheBin] else [])
+                    @ (if enableCcache then [drvs.ccacheBin] else [])
                   )
                 else
                   []
@@ -465,17 +467,17 @@ in
           baseBuildinputPackages | priority -1000
             =
               utilsProviders
-              @ lib.biMap (
+              @  (
                 if (stage == -1) then
                   (
                     [
-                      pkgs.cmake,
-                      pkgs.pkgconf,
-                      pkgs.musl,
+                      drvs.cmake,
+                      drvs.pkgconf,
+                      drvs.musl,
                     ]
                     @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [pkgs.ccacheBin] else [])
-                    @ (if (generator == "Ninja") then [pkgs.samurai] else [])
+                    @ (if enableCcache then [drvs.ccacheBin] else [])
+                    @ (if (generator == "Ninja") then [drvs.samurai] else [])
                   )
                 else
                   []
@@ -517,17 +519,17 @@ in
           baseBuildinputPackages | priority -1000
             =
               Package.baseBuildinputPackages
-              @ lib.biMap (
+              @  (
                 if (stage == -1) then
                   (
                     [
-                      pkgs.pythonFull,
-                      # pkgs.pkgconf,
-                      # pkgs.musl,
-                      pkgs.pythonSetuptools,
+                      drvs.pythonFull,
+                      # drvs.pkgconf,
+                      # drvs.musl,
+                      drvs.pythonSetuptools,
                     ]
-                    # @ (if isLlvm then [pkgs.llvm] else [])
-                    @ (if enableCcache then [pkgs.ccacheBin] else [])
+                    # @ (if isLlvm then [drvs.llvm] else [])
+                    @ (if enableCcache then [drvs.ccacheBin] else [])
                   )
                 else
                   []

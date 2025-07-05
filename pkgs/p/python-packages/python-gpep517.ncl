@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   pythonGpep517 | lib.Package = {
     name = "python-gpep517",
@@ -9,8 +9,8 @@
       sha256sum = "965ff7cb2217fa03091face01fcb9a2b0205f58be80c8be9ccf832eab7a55414",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.pythonFull
+      [
+        drvs.pythonFull
       ],
     buildDir = "${SRC}",
     installPhase = [

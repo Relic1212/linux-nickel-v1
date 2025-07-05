@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   ############
   _linuxHeadersBase | lib.MakePackage = {
     baseName = "linux-headers",
@@ -48,8 +48,8 @@
       makeArgs | force = ["PREFIX=/usr"],
       stage = 0,
       buildInputs =
-        lib.biMap [
-          pkgs.muslStage0
+        [
+          drvs.muslStage0
         ]
     },
 
@@ -77,15 +77,15 @@
         @ lib.MakePackage.makeArgs,
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxBootstrapStage0,
-          pkgs.bootstrapStage0,
-          pkgs.bootstrapSymlinks,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
-          # pkgs.m4Stage1,
-          # pkgs.flexStage1,
-          # pkgs.bisonStage1,
+        [
+          drvs.busyboxBootstrapStage0,
+          drvs.bootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.gnumakeStage1,
+          drvs.ccacheBin,
+          # drvs.m4Stage1,
+          # drvs.flexStage1,
+          # drvs.bisonStage1,
         ]
     },
 
@@ -94,15 +94,15 @@
     & {
       stage | force = 2,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.muslStage2,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
-          # pkgs.m4Stage2,
-          # pkgs.flexStage2,
-          # pkgs.bisonStage2,
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.muslStage2,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
+          # drvs.m4Stage2,
+          # drvs.flexStage2,
+          # drvs.bisonStage2,
         ]
     },
 
@@ -111,15 +111,15 @@
     & {
       stage = -1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.muslStage3,
-          pkgs.gnumakeStage4,
-          pkgs.ccacheBin,
-          # pkgs.m4,
-          # pkgs.flex,
-          # pkgs.bison,
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.muslStage3,
+          drvs.gnumakeStage4,
+          drvs.ccacheBin,
+          # drvs.m4,
+          # drvs.flex,
+          # drvs.bison,
         ]
     },
 
@@ -130,15 +130,15 @@
     & {
       stage = -1,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.musl,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          # pkgs.m4,
-          # pkgs.flex,
-          # pkgs.bison,
+        [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.musl,
+          drvs.gnumake,
+          drvs.ccacheBin,
+          # drvs.m4,
+          # drvs.flex,
+          # drvs.bison,
         ]
     },
 

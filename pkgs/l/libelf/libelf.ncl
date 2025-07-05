@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   libelf | lib.AutotoolsPackage = {
     name = "libelf",
@@ -9,12 +9,12 @@
       sha256sum = "df76db71366d1d708365fc7a6c60ca48398f14367eb2b8954efc8897147ad871"
     },
     biDrvs =
-      lib.biMap [
-        pkgs.argpStandalone,
-        pkgs.muslFts,
-        pkgs.muslObstack,
-        pkgs.zlibNg,
-        pkgs.m4,
+      [
+        drvs.argpStandalone,
+        drvs.muslFts,
+        drvs.muslObstack,
+        drvs.zlibNg,
+        drvs.m4,
       ],
     preConfigurePhase = [
       "cd ${SRC}",

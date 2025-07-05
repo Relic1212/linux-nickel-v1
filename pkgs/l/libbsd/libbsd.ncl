@@ -1,7 +1,7 @@
 {
   lib,
   libmd,
-  pkgs,
+  drvs,
   libbsd | lib.AutotoolsPackage = {
     name = "libbsd",
     singleSource = {
@@ -9,8 +9,8 @@
       sha256sum = "b88cc9163d0c652aaf39a99991d974ddba1c3a9711db8f1b5838af2a14731014"
     },
     biDrvs =
-      lib.biMap [
-        pkgs.libmd,
+      [
+        drvs.libmd,
       ]
   }
 }

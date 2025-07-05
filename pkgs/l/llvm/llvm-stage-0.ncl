@@ -3,7 +3,7 @@
   lib,
   _llvmBase,
 
-  pkgs,
+  drvs,
   llvmStage0 =
     _llvmBase
     & {
@@ -77,11 +77,11 @@
         "ln -s clang-cpp cpp",
       ],
       buildInputs =
-        lib.biMap [
-          pkgs.muslStage0,
-          pkgs.linuxHeadersStage0,
-          pkgs.llvmBaselibsStage0,
-          pkgs.libsspNonsharedStage0
+        [
+          drvs.muslStage0,
+          drvs.linuxHeadersStage0,
+          drvs.llvmBaselibsStage0,
+          drvs.libsspNonsharedStage0
         ],
     },
 }

@@ -21,8 +21,8 @@ in
 
 {
   lib,
-  pkgs,
   drvs,
+  linuxHeaders,
   libModulesDirectory | lib.Package = {
     name = "lib-modules-directory",
     installPhase = [
@@ -38,8 +38,8 @@ in
     in
     {
       name = "linux",
-      sourceInputs = pkgs.linuxHeaders.sourceInputs,
-      options = { version = pkgs.linuxHeaders.options.version },
+      sourceInputs = linuxHeaders.sourceInputs,
+      options = { version = linuxHeaders.options.version },
       buildDir = "/tmp/workdir/src",
       separateBuildDir = true,
       buildEnv,
@@ -296,7 +296,7 @@ in
         drvs.zstd,
         drvs.lz4,
         drvs.kmod, #, libModulesDirectory,
-        #, pkgs.libarchive,
+        #, drvs.libarchive,
         drvs.pythonFull,
       ],
     },

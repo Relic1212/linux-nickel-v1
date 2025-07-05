@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   rdfind | lib.AutomakePackage = {
     name = "rdfind",
     singleSource = {
@@ -8,8 +8,8 @@
       sha256sum = "7a406e8ef1886a5869655604618dd98f672f12c6a6be4926d053be65070f3279",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.nettle,
+      [
+        drvs.nettle,
       ]
   }
 }

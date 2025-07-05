@@ -18,7 +18,7 @@
 & {
 
   lib,
-  pkgs,
+  drvs,
   pytest | lib.Package = {
     singleSource = {
       uri = "https://github.com/pytest-dev/pytest/releases/download/8.3.3/pytest-8.3.3.tar.gz",
@@ -30,12 +30,12 @@
       "python -m installer -d ${DEST} .dist/*.whl",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.pythonFull,
-        pkgs.pythonSetuptools,
-        pkgs.pythonInstaller,
-        pkgs.pythonGpep517,
-        pkgs.pythonFlitCore,
+      [
+        drvs.pythonFull,
+        drvs.pythonSetuptools,
+        drvs.pythonInstaller,
+        drvs.pythonGpep517,
+        drvs.pythonFlitCore,
       ]
   }
 }

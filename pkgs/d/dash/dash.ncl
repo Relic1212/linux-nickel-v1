@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  busyboxAarch64,
   dash | lib.AutotoolsPackage = {
     buildEnv,
     singleSource = {
@@ -30,8 +30,8 @@
         "--host" = "aarch64-unknown-linux-musl",
         "--target" = "aarch64-unknown-linux-musl",
       },
-      buildInputs = pkgs.busyboxAarch64.buildInputs,
-      buildEnv.TARGET = pkgs.busyboxAarch64.buildEnv.TARGET,
+      buildInputs = busyboxAarch64.buildInputs,
+      buildEnv.TARGET = busyboxAarch64.buildEnv.TARGET,
       # buildEnv.CPP=["clang-cpp","-target aarch64-unknown-linux-musl"],
       buildEnv.CPP = ["clang", "--target=aarch64-unknown-linux-musl", "--sysroot=/aarch64-unknown-linux-musl", "-E"],
 

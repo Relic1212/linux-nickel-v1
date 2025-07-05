@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   pythonPackaging | lib.Package = {
     name = "python-packaging",
     singleSource = {
@@ -8,12 +8,12 @@
       sha256sum = "7b31090ae4ddd6c48a5ed10073a880e6e2612ce8ac2f81e34f42aaabefd1b81b",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.pythonGpep517,
-        pkgs.pythonFull,
-        pkgs.pythonSetuptools,
-        pkgs.pythonInstaller,
-        pkgs.pythonFlitCore,
+      [
+        drvs.pythonGpep517,
+        drvs.pythonFull,
+        drvs.pythonSetuptools,
+        drvs.pythonInstaller,
+        drvs.pythonFlitCore,
       ],
     buildDir = "${SRC}",
     installPhase = [

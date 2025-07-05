@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   meson | lib.SetuptoolPackage = {
     name = "meson",
     singleSource = {
@@ -8,10 +8,10 @@
       sha256sum = "f955e09ab0d71ef180ae85df65991d58ed8430323de7d77a37e11c9ea630910b",
     },
     buildInputs =
-      lib.biMap [
-        pkgs.busybox,
-        pkgs.pythonSetuptools,
-        pkgs.pythonFull,
+      [
+        drvs.busybox,
+        drvs.pythonSetuptools,
+        drvs.pythonFull,
       ]
   }
 }

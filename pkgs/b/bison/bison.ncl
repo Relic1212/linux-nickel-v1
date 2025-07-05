@@ -1,5 +1,5 @@
 {
-  pkgs,
+  drvs,
   lib,
   # base
   _bisonBase | lib.AutotoolsPackage = {
@@ -17,13 +17,13 @@
     & {
       stage = 1,
       biDrvs =
-        lib.biMap [
-          pkgs.muslStage1,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
-          pkgs.m4Stage1,
-          pkgs.busyboxStage0,
-          pkgs.llvmStage0
+         [
+          drvs.muslStage1,
+          drvs.gnumakeStage1,
+          drvs.ccacheBin,
+          drvs.m4Stage1,
+          drvs.busyboxStage0,
+          drvs.llvmStage0
         ]
     },
 
@@ -34,13 +34,13 @@
     & {
       stage = 2,
       biDrvs =
-        lib.biMap [
-          pkgs.muslStage2,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
-          pkgs.m4Stage2,
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
+         [
+          drvs.muslStage2,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
+          drvs.m4Stage2,
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
         ]
     },
 
@@ -53,13 +53,13 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.musl,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          pkgs.m4,
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
+         [
+          drvs.musl,
+          drvs.gnumake,
+          drvs.ccacheBin,
+          drvs.m4,
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
         ]
     }
 }

@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   _rootfs | lib.Package = {
     buildInChroot = false,
     utilsProviders = [],

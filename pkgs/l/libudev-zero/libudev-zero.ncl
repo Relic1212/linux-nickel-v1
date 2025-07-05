@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libudevZero | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/illiliti/libudev-zero/archive/refs/tags/1.0.3.tar.gz",
@@ -16,8 +16,8 @@
     ],
 
     biDrvs =
-      lib.biMap [
-        pkgs.linuxHeaders,
+      [
+        drvs.linuxHeaders,
       ]
   },
 }

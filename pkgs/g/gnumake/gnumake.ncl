@@ -6,19 +6,19 @@ let _gnumake = {
 in
 {
   lib,
-  pkgs,
+  drvs,
 
   gnumakeStage2 | lib.AutotoolsPackage =
     _gnumake
     & {
       stage = 2,
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.muslStage1,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
+         [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.muslStage1,
+          drvs.gnumakeStage1,
+          drvs.ccacheBin,
         ]
     },
 
@@ -27,12 +27,12 @@ in
     & {
       stage = 3,
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.muslStage2,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
+         [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.muslStage2,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
         ]
     },
   gnumakeStage4 | lib.AutotoolsPackage =
@@ -43,12 +43,12 @@ in
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.muslStage3,
-          pkgs.gnumakeStage3,
-          pkgs.ccacheBin,
+         [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.muslStage3,
+          drvs.gnumakeStage3,
+          drvs.ccacheBin,
         ]
     },
 
@@ -61,12 +61,12 @@ in
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.musl,
-          pkgs.gnumakeStage4,
-          pkgs.ccacheBin,
+         [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.musl,
+          drvs.gnumakeStage4,
+          drvs.ccacheBin,
         ]
     },
 }

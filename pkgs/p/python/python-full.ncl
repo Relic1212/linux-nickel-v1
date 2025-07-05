@@ -1,6 +1,6 @@
 (import "python-base.ncl")
 & {
-  pkgs,
+  drvs,
   lib,
   _pythonBase,
   pythonFull | lib.AutotoolsPackage =
@@ -124,12 +124,12 @@
           "ln -s python3 python",
         ],
       biDrvs =
-        lib.biMap [
-          pkgs.linuxHeaders,
-          pkgs.zlibNg,
-          pkgs.pkgconf,
-          pkgs.libffi,
-          pkgs.openssl
+        [
+          drvs.linuxHeaders,
+          drvs.zlibNg,
+          drvs.pkgconf,
+          drvs.libffi,
+          drvs.openssl
         ]
     },
 
@@ -139,13 +139,13 @@
       name | priority 20 = "python-dynamic",
       isStatic | priority 2 = false,
       biDrvs | priority 1 =
-        lib.biMap [
-          pkgs.linuxHeaders,
-          pkgs.zlibNgPic,
-          pkgs.pkgconf,
-          pkgs.libffi,
-          pkgs.opensslPic,
-          pkgs.muslShared,
+        [
+          drvs.linuxHeaders,
+          drvs.zlibNgPic,
+          drvs.pkgconf,
+          drvs.libffi,
+          drvs.opensslPic,
+          drvs.muslShared,
         ]
     }
 }

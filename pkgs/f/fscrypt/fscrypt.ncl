@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   fscrypt | lib.MakePackage = {
     name = "fscrypt",
     sourceInputs = [
@@ -35,10 +35,10 @@
       "install -m0755 bin/fscrypt ${DEST}/usr/bin"
     ],
     biDrvs =
-      lib.biMap [
-        pkgs."go-1.9",
-        pkgs.findutils,
-        pkgs.libpam,
+      [
+        drvs."go-1.9",
+        drvs.findutils,
+        drvs.libpam,
       ]
   }
 }

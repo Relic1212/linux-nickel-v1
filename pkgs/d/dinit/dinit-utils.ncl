@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   dinitUtils | lib.Package = {
     extraFiles = [
       {
@@ -18,9 +18,9 @@
     ],
     enableCcache = false,
     biDrvs =
-      lib.biMap [
-        pkgs.llvm,
-        pkgs.musl,
+      [
+        drvs.llvm,
+        drvs.musl,
       ]
   }
 }

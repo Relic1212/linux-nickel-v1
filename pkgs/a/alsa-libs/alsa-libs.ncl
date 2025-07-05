@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   alsaLibs | lib.AutotoolsPackage = {
     singleSource = {
       #https://www.alsa-project.org/wiki/Download
@@ -11,7 +11,7 @@
       uri = "http://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.13.tar.bz2",
       sha256sum = "8c4ff37553cbe89618e187e4c779f71a9bb2a8b27b91f87ed40987cc9233d8f6",
     },
-    biDrvs = lib.biMap [pkgs.linuxHeaders],
+    biDrvs = [drvs.linuxHeaders],
     extraConfigureFlags = [
       "--without-libdl",
       "ac_cv_func_dlopen=no",

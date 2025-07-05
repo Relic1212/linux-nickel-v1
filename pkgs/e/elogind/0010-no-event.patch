@@ -1,0 +1,31 @@
+diff --git a/src/login/logind-session.c b/src/login/logind-session.c
+index 88914d2..15ff3fa 100644
+--- a/src/login/logind-session.c
++++ b/src/login/logind-session.c
+@@ -45,6 +45,10 @@
+ 
+ #define RELEASE_USEC (20*USEC_PER_SEC)
+ 
++#ifndef HAVE_FIVO_EVENT_SOURCE
++#define HAVE_FIVO_EVENT_SOURCE 1
++#endif
++
+ static void session_remove_fifo(Session *s);
+ static void session_restore_vt(Session *s);
+ 
+@@ -1268,6 +1272,7 @@ int session_create_fifo(Session *s) {
+                         return -errno;
+         }
+ 
++        #if HAVE_FIVO_EVENT_SOURCE
+         if (!s->fifo_event_source) {
+                 log_debug_elogind("Adding event source to fifo for session %s", s->id);
+                 r = sd_event_add_io(s->manager->event, &s->fifo_event_source, s->fifo_fd, 0, session_dispatch_fifo, s);
+@@ -1281,6 +1286,7 @@ int session_create_fifo(Session *s) {
+                 if (r < 0)
+                         return r;
+         }
++        #endif
+ 
+         /* Open writing side */
+         log_debug_elogind("Opening writing side of fifo for session %s", s->id);

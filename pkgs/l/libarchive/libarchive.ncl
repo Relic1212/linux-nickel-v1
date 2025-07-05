@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libarchive | lib.CmakePackage = {
     name = "libarchive",
     singleSource = {
@@ -15,10 +15,10 @@
       "ln -s bsdunzip unzip",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.zlibNg,
-        pkgs.zstd,
-        pkgs.lz4,
+      [
+        drvs.zlibNg,
+        drvs.zstd,
+        drvs.lz4,
       ],
     # extraCmakeArgs = [
     #   "-DENABLE_ZLIB:BOOL=ON",

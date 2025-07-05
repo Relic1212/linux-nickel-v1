@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   harfbuzz | lib.MesonPackage = {
     name = "harfbuzz",
     singleSource = {
@@ -12,14 +12,14 @@
       "-Dcairo=enabled"
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.freetype,
-        pkgs.cairo,
-        pkgs.zlibNg,
-        pkgs.pixman,
-        pkgs.fontconfig,
-        pkgs.libpng,
-        pkgs.expat
+      [
+        drvs.freetype,
+        drvs.cairo,
+        drvs.zlibNg,
+        drvs.pixman,
+        drvs.fontconfig,
+        drvs.libpng,
+        drvs.expat
       ]
   }
 }

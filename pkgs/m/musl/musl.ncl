@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   _muslBase | lib.AutotoolsPackage = {
     stage,
@@ -40,12 +40,12 @@
       },
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxBootstrapStage0,
-          pkgs.bootstrapSymlinks,
-          pkgs.bootstrapStage0,
-          pkgs.gnumakeStage1,
-          pkgs.ccacheBin,
+        [
+          drvs.busyboxBootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.bootstrapStage0,
+          drvs.gnumakeStage1,
+          drvs.ccacheBin,
         ]
     },
 
@@ -55,12 +55,12 @@
       stage = 2,
 
       buildInputs =
-        lib.biMap [
-          pkgs.busyboxStage1,
-          pkgs.llvmStage1,
-          pkgs.gnumakeStage2,
-          pkgs.ccacheBin,
-          pkgs.muslStage1
+        [
+          drvs.busyboxStage1,
+          drvs.llvmStage1,
+          drvs.gnumakeStage2,
+          drvs.ccacheBin,
+          drvs.muslStage1
         ]
     },
 
@@ -72,12 +72,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage2,
-          pkgs.llvmStage2,
-          pkgs.gnumakeStage3,
-          pkgs.ccacheBin,
-          pkgs.muslStage2
+        [
+          drvs.busyboxStage2,
+          drvs.llvmStage2,
+          drvs.gnumakeStage3,
+          drvs.ccacheBin,
+          drvs.muslStage2
         ]
     },
   musl | lib.AutotoolsPackage =
@@ -88,12 +88,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
       biDrvs =
-        lib.biMap [
-          pkgs.busyboxStage3,
-          pkgs.llvmStage3,
-          pkgs.gnumakeStage4,
-          pkgs.ccacheBin,
-          pkgs.muslStage3,
+        [
+          drvs.busyboxStage3,
+          drvs.llvmStage3,
+          drvs.gnumakeStage4,
+          drvs.ccacheBin,
+          drvs.muslStage3,
         ]
     },
   muslShared =
@@ -123,12 +123,12 @@
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
 
       biDrvs | priority 1 =
-        lib.biMap [
-          pkgs.busybox,
-          pkgs.clangCross,
-          pkgs.gnumake,
-          pkgs.ccacheBin,
-          # pkgs.muslStage2
+        [
+          drvs.busybox,
+          drvs.clangCross,
+          drvs.gnumake,
+          drvs.ccacheBin,
+          # drvs.muslStage2
         ],
     }
 }

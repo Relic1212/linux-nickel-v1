@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   gnumakeStage1 | lib.AutotoolsPackage = {
     name = "gnumake-stage-1",
@@ -46,10 +46,10 @@
         # STAGE_LDFLAGS=common,
       },
     buildInputs =
-      lib.biMap [
-        pkgs.busyboxBootstrapStage0,
-        pkgs.bootstrapStage0,
-        pkgs.bootstrapSymlinks,
+      [
+        drvs.busyboxBootstrapStage0,
+        drvs.bootstrapStage0,
+        drvs.bootstrapSymlinks,
       ]
   },
 }

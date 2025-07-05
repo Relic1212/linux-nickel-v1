@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libpng | lib.AutotoolsPackage = {
     name = "libpng",
     singleSource = {
@@ -8,8 +8,8 @@
       sha256sum = "8c25a7792099a0089fa1cc76c94260d0bb3f1ec52b93671b572f8bb61577b732",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.zlibNg
+      [
+        drvs.zlibNg
       ]
   }
 }

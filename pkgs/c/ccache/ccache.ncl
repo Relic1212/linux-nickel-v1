@@ -1,7 +1,7 @@
 {
   # busybox,
   lib,
-  pkgs,
+  drvs,
   ccache | lib.CmakePackage = {
     singleSource = {
       uri = "https://github.com/ccache/ccache/releases/download/v4.10.2/ccache-4.10.2.tar.xz",
@@ -15,9 +15,9 @@
       "-DSTATIC_LINK=ON"
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.xxhash,
-        pkgs.zstd,
+      [
+        drvs.xxhash,
+        drvs.zstd,
       ],
   }
 }

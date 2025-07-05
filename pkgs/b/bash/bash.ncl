@@ -18,7 +18,7 @@
       "ln -s /usr/bin/bash sh"
     ]
   },
-  pkgs,
+  busyboxAarch64,
   bashAarch64 =
     bash
     & {
@@ -29,7 +29,7 @@
           "--host=aarch64-unknown-linux-musl",
           "ac_cv_func_dprintf='yes'",
         ],
-      buildInputs = pkgs.busyboxAarch64.buildInputs,
+      buildInputs = busyboxAarch64.buildInputs,
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
       buildEnv.CROSS_LDFLAGS = ["-nostdlib", "-lc"],
       buildEnv.CPP = ["clang-cpp", "-target aarch64-unknown-linux-musl"],

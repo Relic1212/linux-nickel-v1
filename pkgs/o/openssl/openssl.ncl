@@ -1,7 +1,7 @@
 {
   lib,
 
-  pkgs,
+  drvs,
 
   openssl | lib.AutotoolsPackage =
     let _openssl | lib.AutotoolsPackage = {
@@ -23,7 +23,7 @@
             "sed -i \"s@disable('static', 'pic', 'threads');@disable('static', 'pic');@g\" ${SRC}/Configure",
           ]
           @ _openssl.configurePhase,
-        biDrvs = lib.biMap [pkgs.perl, pkgs.linuxHeaders]
+        biDrvs = [drvs.perl, drvs.linuxHeaders]
       }
     ),
 

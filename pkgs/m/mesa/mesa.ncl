@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   mesa | lib.MesonPackage = {
     symlinkBuldInputs = true,
     singleSource = {
@@ -14,21 +14,21 @@
       }
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.libelf,
-        pkgs.libdrm,
-        pkgs.zlibNg,
-        pkgs.pythonMako,
-        pkgs.pythonPackaging,
-        pkgs.pythonMarkupsafe,
-        pkgs.libpciaccess,
-        pkgs.libffi,
-        pkgs.bison,
-        pkgs.flex,
-        pkgs.wayland,
-        pkgs.waylandProtocols,
-        pkgs.linuxHeaders,
-        pkgs.m4
+      [
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.zlibNg,
+        drvs.pythonMako,
+        drvs.pythonPackaging,
+        drvs.pythonMarkupsafe,
+        drvs.libpciaccess,
+        drvs.libffi,
+        drvs.bison,
+        drvs.flex,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.linuxHeaders,
+        drvs.m4
       ],
     extraMesonArgs = [
       "-Dgles1=disabled",

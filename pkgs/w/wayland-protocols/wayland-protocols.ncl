@@ -1,15 +1,15 @@
 {
   lib,
-  pkgs,
+  drvs,
   _waylandProtocols | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.37/wayland-protocols-1.37.tar.gz",
       sha256sum = "c3b215084eb4cf318415533554c2c2714e58ed75847d7c3a8e50923215ffbbf3",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.wayland,
-        pkgs.linuxHeaders,
+      [
+        drvs.wayland,
+        drvs.linuxHeaders,
       ],
     extraMesonArgs = ["-Dtests=false"],
   }

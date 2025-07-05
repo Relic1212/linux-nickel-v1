@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   drvs,
   linuxFirmware | lib.MakePackage = {
     name = "linux-firmware",
@@ -23,7 +23,7 @@
     linuxFirmware
     & {
       name | priority 1 = "linux-firmware-smaller",
-      biDrvs | priority 1 = linuxFirmware.biDrvs @ (lib.biMap [pkgs.pythonFull]),
+      biDrvs | priority 1 = linuxFirmware.biDrvs @ [drvs.pythonFull],
       extraFiles = [
         {
           file = "split.py",

@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   libpam | lib.AutotoolsPackage = {
     name = "libpam",
     singleSource = {
@@ -8,8 +8,8 @@
       sha256sum = "f8923c740159052d719dbfc2a2f81942d68dd34fcaf61c706a02c9b80feeef8e",
     },
     biDrvs =
-      lib.biMap [
-        pkgs.linuxHeaders,
+      [
+        drvs.linuxHeaders,
       ],
     configureFlags = std.array.filter (fun flag => (flag != "--includedir=/usr/include")) lib.AutotoolsPackage.configureFlags,
   }

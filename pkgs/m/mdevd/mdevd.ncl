@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   mdevd | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://skarnet.org/software/mdevd/mdevd-0.1.6.5.tar.gz",
@@ -8,9 +8,9 @@
     },
     separateBuildDir = false,
     biDrvs =
-      lib.biMap [
-        pkgs.skalibs,
-        pkgs.linuxHeaders,
+      [
+        drvs.skalibs,
+        drvs.linuxHeaders,
       ],
   }
 }

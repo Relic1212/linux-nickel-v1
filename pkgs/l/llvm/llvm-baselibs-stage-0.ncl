@@ -1,7 +1,7 @@
 ((import "llvm-base.ncl"))
 & {
   lib,
-  pkgs,
+  drvs,
   _llvmBase,
   llvmBaselibsStage0 = (
     _llvmBase
@@ -34,7 +34,7 @@
           ]
         ),
 
-      buildInputs = lib.biMap [pkgs.muslStage0, pkgs.linuxHeadersStage0]
+      buildInputs = [drvs.muslStage0, drvs.linuxHeadersStage0]
     }
   ),
 }

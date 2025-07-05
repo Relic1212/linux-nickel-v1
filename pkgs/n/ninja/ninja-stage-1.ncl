@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   _ninja | lib.Package = {
     name = "ninja",
@@ -39,12 +39,12 @@
       baseBuildinputPackages = [],
 
       buildInputs | priority 10 =
-        lib.biMap [
-          pkgs.muslStage0,
-          pkgs.busyboxStage0,
-          pkgs.pythonStage1,
-          pkgs.llvmStage0,
-          pkgs.ccacheBin
+        [
+          drvs.muslStage0,
+          drvs.busyboxStage0,
+          drvs.pythonStage1,
+          drvs.llvmStage0,
+          drvs.ccacheBin
         ],
     }
 }

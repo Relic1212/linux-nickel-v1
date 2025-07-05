@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
 
   pythonSetuptools | lib.SetuptoolPackage = {
     name = "python-setuptools",
@@ -12,6 +12,6 @@
     utilsProviders = [],
     baseBuildinputPackages = [],
 
-    buildInputs = lib.biMap [pkgs.busybox, pkgs.pythonFull]
+    buildInputs = [drvs.busybox, drvs.pythonFull]
   }
 }

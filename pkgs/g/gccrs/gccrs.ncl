@@ -167,7 +167,6 @@
 & {
   lib,
   drvs,
-  pkgs,
   gcc | lib.AutotoolsPackage = {
     #configureScript="${SRC}/libstdc++-v3/configure",
     buildEnv = {
@@ -212,7 +211,7 @@
       uri = "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz",
       sha256sum = "7d376d445f93126dc545e2c0086d0f647c3094aae081cdb78f42ce2bc25e7293",
     },
-    llvmProvider = pkgs.llvmPic,
+    llvmProvider = drvs.llvmPic,
     biDrvs = [
       drvs.m4,
       drvs.flex,

@@ -1,0 +1,48 @@
+diff --git a/meson.build b/meson.build
+index a575f69..8223406 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2292,7 +2292,7 @@ subdir('src/shared')
+ alias_target('devel', libelogind_pc)
+ #endif // 0
+ 
+-libelogind = shared_library(
++libelogind_shared = shared_library(
+         'elogind',
+         version : libsystemd_version,
+         include_directories : libelogind_includes,
+@@ -2317,14 +2317,14 @@ libelogind = shared_library(
+         install_tag: 'libsystemd',
+         install_dir : rootlibdir)
+ 
+-alias_target('libelogind', libelogind)
++# alias_target('libelogind', libelogind)
+ 
+ #if 0 /// Do a real elogind masking else, diff always goes haywire here
+ # install_libsystemd_static = static_library(
+ #         'systemd',
+ #         libsystemd_sources,
+ #else // 0
+-install_libelogind_static = static_library(
++libelogind = static_library(
+         'elogind',
+         libelogind_sources,
+ #endif // 0
+@@ -2395,6 +2395,8 @@ install_libelogind_static = static_library(
+         c_args : libsystemd_c_args)
+ #endif // 0
+ 
++alias_target('libelogind', libelogind)
++
+ if conf.get('HAVE_LIBCRYPTSETUP_PLUGINS') == 1
+         if conf.get('HAVE_TPM2') == 1
+                 cryptsetup_token_elogind_tpm2 = shared_library(
+@@ -4493,7 +4495,7 @@ exe = executable(
+         'test-libelogind-static-sym',
+         test_libelogind_sym_c,
+         include_directories : includes,
+-        link_with : [install_libelogind_static],
++        link_with : [libelogind],
+         dependencies : [threads],
+         build_by_default : want_tests != 'false' and static_libelogind_pic,
+         install : install_tests and static_libelogind_pic,

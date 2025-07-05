@@ -1,6 +1,6 @@
 {
   lib,
-  pkgs,
+  drvs,
   pythonFlitCore | lib.Package = {
     name = "python-flit-core",
     singleSource = {
@@ -8,10 +8,10 @@
       sha256sum = "d75edf5eb324da20d53570a6a6f87f51e606eee8384925cd66a90611140844c7"
     },
     biDrvs =
-      lib.biMap [
-        pkgs.pythonFull,
-        pkgs.pythonInstaller,
-        pkgs.pythonSetuptools,
+      [
+        drvs.pythonFull,
+        drvs.pythonInstaller,
+        drvs.pythonSetuptools,
       ],
     buildDir = "${SRC}",
     buildPhase = [

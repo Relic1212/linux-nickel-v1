@@ -3,7 +3,7 @@
   # https://github.com/alpinelinux/aports/tree/330d303d57c584df80b7ec5ebe459b7f61132055/main/go
 
   lib,
-  pkgs,
+  drvs,
   varTmpDirectory | lib.Package = {
     name = "var-tmp-directory",
 
@@ -46,13 +46,13 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs =
-      lib.biMap [
-        pkgs.musl,
-        pkgs.llvm,
-        pkgs.gnumake,
-        pkgs.ccacheBin,
-        pkgs.varTmpDirectory,
-        pkgs.bash,
+      [
+        drvs.musl,
+        drvs.llvm,
+        drvs.gnumake,
+        drvs.ccacheBin,
+        drvs.varTmpDirectory,
+        drvs.bash,
       ],
   }
 }

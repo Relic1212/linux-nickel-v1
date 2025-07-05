@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   zstd | lib.MesonPackage = {
     name = "zstd",
     singleSource = {
