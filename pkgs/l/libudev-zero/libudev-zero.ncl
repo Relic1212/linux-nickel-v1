@@ -15,9 +15,8 @@
       "install-static"
     ],
 
-    biDrvs =
-      [
-        drvs.linuxHeaders,
-      ]
+    biDrvs = [
+      drvs.linuxHeaders,
+    ]
   },
 }

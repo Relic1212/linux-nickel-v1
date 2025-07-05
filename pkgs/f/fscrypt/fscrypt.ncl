@@ -34,11 +34,10 @@
       "install -d -m0755 ${DEST}/usr/bin",
       "install -m0755 bin/fscrypt ${DEST}/usr/bin"
     ],
-    biDrvs =
-      [
-        drvs."go-1.9",
-        drvs.findutils,
-        drvs.libpam,
-      ]
+    biDrvs = [
+      drvs."go-1.9",
+      drvs.findutils,
+      drvs.libpam,
+    ]
   }
 }

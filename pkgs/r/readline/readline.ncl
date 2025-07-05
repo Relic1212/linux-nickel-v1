@@ -40,9 +40,8 @@
       "--with-ticlib",
       "--with-terminfo=ticlib",
     ],
-    biDrvs =
-      [
-        drvs.ncurses,
-      ]
+    biDrvs = [
+      drvs.ncurses,
+    ]
   }
 }

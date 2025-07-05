@@ -33,11 +33,10 @@
     _libsspNonsharedBase
     & {
       stage = 0,
-      buildInputs =
-        [
-          # drvs.llvmBaselibsStage0,
-          drvs.muslStage0
-        ],
+      buildInputs = [
+        # drvs.llvmBaselibsStage0,
+        drvs.muslStage0
+      ],
 
       #buildEnv.LLVM_LDFLAGS = ["-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
 

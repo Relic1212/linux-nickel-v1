@@ -128,14 +128,13 @@
     _pythonBaseMinimal
     & {
       stage = 1,
-      buildInputs =
-        [
-          drvs.busyboxBootstrapStage0,
-          drvs.bootstrapStage0,
-          drvs.bootstrapSymlinks,
-          drvs.ccacheBin,
-          drvs.gnumakeStage1,
-        ],
+      buildInputs = [
+        drvs.busyboxBootstrapStage0,
+        drvs.bootstrapStage0,
+        drvs.bootstrapSymlinks,
+        drvs.ccacheBin,
+        drvs.gnumakeStage1,
+      ],
     },
 
   # 2
@@ -144,14 +143,13 @@
     _pythonBaseMinimal
     & {
       stage = 2,
-      buildInputs =
-        [
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-          drvs.gnumakeStage2,
-          drvs.ccacheBin,
-          drvs.muslStage1
-        ],
+      buildInputs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+        drvs.gnumakeStage2,
+        drvs.ccacheBin,
+        drvs.muslStage1
+      ],
     },
 
   pythonStage3 =
@@ -161,14 +159,13 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
 
-      buildInputs =
-        [
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-          drvs.gnumakeStage4,
-          drvs.ccacheBin,
-          drvs.muslStage3
-        ],
+      buildInputs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+        drvs.gnumakeStage4,
+        drvs.ccacheBin,
+        drvs.muslStage3
+      ],
     },
 
   # final
@@ -180,13 +177,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
 
-      buildInputs =
-        [
-          drvs.busyboxStage3,
-          drvs.llvmStage3,
-          drvs.gnumake,
-          drvs.ccacheBin,
-          drvs.musl
-        ],
+      buildInputs = [
+        drvs.busyboxStage3,
+        drvs.llvmStage3,
+        drvs.gnumake,
+        drvs.ccacheBin,
+        drvs.musl
+      ],
     },
 }

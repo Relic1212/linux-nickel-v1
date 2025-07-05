@@ -8,30 +8,28 @@
     _busyboxBaseTarget
     & {
       stage = 1,
-      biDrvs =
-         [
-          drvs.busyboxBootstrapStage0,
-          drvs.llvmStage1,
-          drvs.muslStage1,
-          drvs.linuxHeadersStage1,
-          drvs.ccacheBin,
-          drvs.gnumakeStage1
-        ]
+      biDrvs = [
+        drvs.busyboxBootstrapStage0,
+        drvs.llvmStage1,
+        drvs.muslStage1,
+        drvs.linuxHeadersStage1,
+        drvs.ccacheBin,
+        drvs.gnumakeStage1
+      ]
     },
 
   busyboxStage2 =
     _busyboxBaseTarget
     & {
       stage = 2,
-      biDrvs =
-         [
-          drvs.busyboxStage1,
-          drvs.llvmStage2,
-          drvs.muslStage2,
-          drvs.linuxHeadersStage2,
-          drvs.ccacheBin,
-          drvs.gnumakeStage2
-        ]
+      biDrvs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage2,
+        drvs.muslStage2,
+        drvs.linuxHeadersStage2,
+        drvs.ccacheBin,
+        drvs.gnumakeStage2
+      ]
     },
 
   #3
@@ -43,15 +41,14 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-         [
-          drvs.busyboxStage2,
-          drvs.llvmStage3,
-          drvs.muslStage3,
-          drvs.linuxHeadersStage3,
-          drvs.ccacheBin,
-          drvs.gnumakeStage4
-        ]
+      biDrvs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage3,
+        drvs.muslStage3,
+        drvs.linuxHeadersStage3,
+        drvs.ccacheBin,
+        drvs.gnumakeStage4
+      ]
     },
   busybox =
     _busyboxBaseTarget
@@ -60,15 +57,14 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-         [
-          drvs.busyboxStage3,
-          drvs.llvm,
-          drvs.musl,
-          drvs.linuxHeaders,
-          drvs.ccacheBin,
-          drvs.gnumake
-        ]
+      biDrvs = [
+        drvs.busyboxStage3,
+        drvs.llvm,
+        drvs.musl,
+        drvs.linuxHeaders,
+        drvs.ccacheBin,
+        drvs.gnumake
+      ]
     },
   busyboxAarch64 =
     _busyboxBaseTarget
@@ -79,20 +75,19 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      buildInputs =
-         [
-          drvs.busybox,
-          drvs.llvm,
-          drvs.muslAarch64,
-          drvs.musl,
-          drvs.libcxxAarch64,
-          drvs.linuxHeadersAarch64,
-          drvs.linuxHeaders,
-          drvs.ccacheBin,
-          drvs.gnumake,
-          # drvs.ncurses,
-          drvs.readline,
-        ],
+      buildInputs = [
+        drvs.busybox,
+        drvs.llvm,
+        drvs.muslAarch64,
+        drvs.musl,
+        drvs.libcxxAarch64,
+        drvs.linuxHeadersAarch64,
+        drvs.linuxHeaders,
+        drvs.ccacheBin,
+        drvs.gnumake,
+        # drvs.ncurses,
+        drvs.readline,
+      ],
       # buildEnv.EXTRA_CFLAGS = ["-nostdlib"],
       # buildEnv.EXTRA_LDFLAGS = ["-nostdlib", "-l:libc.a" ],
 

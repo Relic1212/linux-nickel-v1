@@ -45,14 +45,13 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs =
-      [
-        drvs.musl,
-        drvs.llvm,
-        drvs.gnumake,
-        drvs.ccacheBin,
-        drvs.varTmpDirectory,
-        drvs.bash,
-      ],
+    biDrvs = [
+      drvs.musl,
+      drvs.llvm,
+      drvs.gnumake,
+      drvs.ccacheBin,
+      drvs.varTmpDirectory,
+      drvs.bash,
+    ],
   }
 }

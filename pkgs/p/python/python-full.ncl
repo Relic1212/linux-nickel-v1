@@ -123,14 +123,13 @@
           "cd $DEST/usr/bin",
           "ln -s python3 python",
         ],
-      biDrvs =
-        [
-          drvs.linuxHeaders,
-          drvs.zlibNg,
-          drvs.pkgconf,
-          drvs.libffi,
-          drvs.openssl
-        ]
+      biDrvs = [
+        drvs.linuxHeaders,
+        drvs.zlibNg,
+        drvs.pkgconf,
+        drvs.libffi,
+        drvs.openssl
+      ]
     },
 
   pythonDynamic =
@@ -138,14 +137,13 @@
     & {
       name | priority 20 = "python-dynamic",
       isStatic | priority 2 = false,
-      biDrvs | priority 1 =
-        [
-          drvs.linuxHeaders,
-          drvs.zlibNgPic,
-          drvs.pkgconf,
-          drvs.libffi,
-          drvs.opensslPic,
-          drvs.muslShared,
-        ]
+      biDrvs | priority 1 = [
+        drvs.linuxHeaders,
+        drvs.zlibNgPic,
+        drvs.pkgconf,
+        drvs.libffi,
+        drvs.opensslPic,
+        drvs.muslShared,
+      ]
     }
 }

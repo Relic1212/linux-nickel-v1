@@ -21,14 +21,13 @@
     _m4Base
     & {
       stage = 1,
-      buildInputs =
-        [
-          drvs.busyboxStage0,
-          drvs.llvmStage0,
-          drvs.muslStage1,
-          drvs.gnumakeStage1,
-          drvs.ccacheBin,
-        ]
+      buildInputs = [
+        drvs.busyboxStage0,
+        drvs.llvmStage0,
+        drvs.muslStage1,
+        drvs.gnumakeStage1,
+        drvs.ccacheBin,
+      ]
     },
 
   #2
@@ -37,14 +36,13 @@
     _m4Base
     & {
       stage = 2,
-      buildInputs =
-        [
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-          drvs.muslStage2,
-          drvs.gnumakeStage2,
-          drvs.ccacheBin,
-        ]
+      buildInputs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+        drvs.muslStage2,
+        drvs.gnumakeStage2,
+        drvs.ccacheBin,
+      ]
     },
 
   #final
@@ -56,13 +54,12 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      buildInputs =
-        [
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-          drvs.musl,
-          drvs.gnumake,
-          drvs.ccacheBin,
-        ]
+      buildInputs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+        drvs.musl,
+        drvs.gnumake,
+        drvs.ccacheBin,
+      ]
     },
 }

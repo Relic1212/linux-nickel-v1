@@ -76,12 +76,11 @@
         "ln -s clang++ c++",
         "ln -s clang-cpp cpp",
       ],
-      buildInputs =
-        [
-          drvs.muslStage0,
-          drvs.linuxHeadersStage0,
-          drvs.llvmBaselibsStage0,
-          drvs.libsspNonsharedStage0
-        ],
+      buildInputs = [
+        drvs.muslStage0,
+        drvs.linuxHeadersStage0,
+        drvs.llvmBaselibsStage0,
+        drvs.libsspNonsharedStage0
+      ],
     },
 }

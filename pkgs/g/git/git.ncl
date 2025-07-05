@@ -20,9 +20,8 @@
       "NO_GETTEXT=YesPlease" #, "MSGFMT=/usr/bin/true",
     ],
     extraMakeInstallArgs = extraMakeArgs,
-    biDrvs =
-      [
-        drvs.zlibNg,
-      ]
+    biDrvs = [
+      drvs.zlibNg,
+    ]
   }
 }

@@ -8,11 +8,10 @@
       uri = "https://git.sr.ht/~kennylevinsen/seatd/archive/0.8.0.tar.gz",
       sha256sum = "a562a44ee33ccb20954a1c1ec9a90ecb2db7a07ad6b18d0ac904328efbcf65a0",
     },
-    biDrvs =
-      [
-        drvs.linuxHeadersStage0,
-        # drvs.linuxHeaders,
-      ],
+    biDrvs = [
+      drvs.linuxHeadersStage0,
+      # drvs.linuxHeaders,
+    ],
     preConfigurePhase = [
       m%"
             fix_symbol(){

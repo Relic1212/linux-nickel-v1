@@ -224,7 +224,6 @@
                 drvs.buffybox,
                 drvs.hkdm,
                 drvs.ttyescape,
-
                 drvs.wld,
                 drvs.swc,
                 drvs.velox,
@@ -256,18 +255,17 @@
     & {
       enableCcache = false,
       name = "base-image",
-      biDrvs =
-        [
-          drvs.baseBaseRootfs,
-          drvs.erofsUtils,
-          drvs.mtools,
-          drvs.genimage,
-          drvs.cryptsetup,
-          drvs.systemdBoot,
-          drvs.llvm, # objdump
-          drvs.pythonFull,
-          drvs.utilLinux,
-        ]
+      biDrvs = [
+        drvs.baseBaseRootfs,
+        drvs.erofsUtils,
+        drvs.mtools,
+        drvs.genimage,
+        drvs.cryptsetup,
+        drvs.systemdBoot,
+        drvs.llvm, # objdump
+        drvs.pythonFull,
+        drvs.utilLinux,
+      ]
     },
 
   vmImage | lib.Package =

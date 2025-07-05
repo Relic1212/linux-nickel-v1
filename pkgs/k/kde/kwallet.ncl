@@ -62,42 +62,30 @@
       drvs.eudev,
       drvs.libinput,
       drvs.ecm,
-
-
-
-         drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-           drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
-          drvs.ksolid,
-          drvs.utilLinuxWeak,
-          drvs.kcrash,
-          drvs.kbookmarks,
-          drvs.kcompletion,
-
-          drvs.kiconthemes,
-
-          drvs.breezeIcons,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-
-
-         
-          drvs.knotifications,
-
-
-
+      drvs.kcoreaddons,
+      drvs.kcodecs,
+      drvs.kconfig,
+      drvs.kguiaddons,
+      drvs.ki18n,
+      drvs.gettext,
+      drvs.karchive,
+      drvs.bzip2,
+      drvs.kservice,
+      drvs.kwidgetsaddons,
+      drvs.kcolorscheme,
+      drvs.kconfigwidgets,
+      drvs.ksolid,
+      drvs.utilLinuxWeak,
+      drvs.kcrash,
+      drvs.kbookmarks,
+      drvs.kcompletion,
+      drvs.kiconthemes,
+      drvs.breezeIcons,
+      drvs.kitemviews,
+      drvs.kjobwidgets,
+      drvs.knotifications,
       drvs.vala,
       drvs.libtool,
-   
       drvs.libogg,
       drvs.libvorbis,
       drvs.libcanberra,

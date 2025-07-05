@@ -29,13 +29,12 @@
       "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
       "python -m installer -d ${DEST} .dist/*.whl",
     ],
-    biDrvs =
-      [
-        drvs.pythonFull,
-        drvs.pythonSetuptools,
-        drvs.pythonInstaller,
-        drvs.pythonGpep517,
-        drvs.pythonFlitCore,
-      ]
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+    ]
   }
 }

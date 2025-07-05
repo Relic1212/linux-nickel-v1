@@ -43,14 +43,13 @@
           STAGE_LDFLAGS = common,
         },
       stage = 1,
-      buildInputs =
-        [
-          drvs.busyboxBootstrapStage0,
-          drvs.bootstrapStage0,
-          drvs.bootstrapSymlinks,
-          drvs.ccacheBin,
-          drvs.gnumakeStage1
-        ]
+      buildInputs = [
+        drvs.busyboxBootstrapStage0,
+        drvs.bootstrapStage0,
+        drvs.bootstrapSymlinks,
+        drvs.ccacheBin,
+        drvs.gnumakeStage1
+      ]
     },
 
   #2
@@ -59,14 +58,13 @@
     _samurai
     & {
       stage = 2,
-      buildInputs =
-        [
-          drvs.busyboxStage1,
-          drvs.muslStage2,
-          drvs.llvmStage1,
-          drvs.ccacheBin,
-          drvs.gnumakeStage2
-        ]
+      buildInputs = [
+        drvs.busyboxStage1,
+        drvs.muslStage2,
+        drvs.llvmStage1,
+        drvs.ccacheBin,
+        drvs.gnumakeStage2
+      ]
     },
 
   samuraiStage3 =
@@ -76,14 +74,13 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
 
-      buildInputs =
-        [
-          drvs.busyboxStage2,
-          drvs.muslStage3,
-          drvs.llvmStage2,
-          drvs.ccacheBin,
-          drvs.gnumakeStage4
-        ]
+      buildInputs = [
+        drvs.busyboxStage2,
+        drvs.muslStage3,
+        drvs.llvmStage2,
+        drvs.ccacheBin,
+        drvs.gnumakeStage4
+      ]
     },
 
   #final
@@ -95,13 +92,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
 
-      buildInputs =
-        [
-          drvs.busyboxStage3,
-          drvs.musl,
-          drvs.llvmStage3,
-          drvs.ccacheBin,
-          drvs.gnumake
-        ]
+      buildInputs = [
+        drvs.busyboxStage3,
+        drvs.musl,
+        drvs.llvmStage3,
+        drvs.ccacheBin,
+        drvs.gnumake
+      ]
     },
 }

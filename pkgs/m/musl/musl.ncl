@@ -39,14 +39,13 @@
         _isLlvm | force = false,
       },
 
-      buildInputs =
-        [
-          drvs.busyboxBootstrapStage0,
-          drvs.bootstrapSymlinks,
-          drvs.bootstrapStage0,
-          drvs.gnumakeStage1,
-          drvs.ccacheBin,
-        ]
+      buildInputs = [
+        drvs.busyboxBootstrapStage0,
+        drvs.bootstrapSymlinks,
+        drvs.bootstrapStage0,
+        drvs.gnumakeStage1,
+        drvs.ccacheBin,
+      ]
     },
 
   muslStage2 =
@@ -54,14 +53,13 @@
     & {
       stage = 2,
 
-      buildInputs =
-        [
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-          drvs.gnumakeStage2,
-          drvs.ccacheBin,
-          drvs.muslStage1
-        ]
+      buildInputs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+        drvs.gnumakeStage2,
+        drvs.ccacheBin,
+        drvs.muslStage1
+      ]
     },
 
   muslStage3 | lib.AutotoolsPackage =
@@ -71,14 +69,13 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-        [
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-          drvs.gnumakeStage3,
-          drvs.ccacheBin,
-          drvs.muslStage2
-        ]
+      biDrvs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+        drvs.gnumakeStage3,
+        drvs.ccacheBin,
+        drvs.muslStage2
+      ]
     },
   musl | lib.AutotoolsPackage =
     _muslBase
@@ -87,14 +84,13 @@
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-        [
-          drvs.busyboxStage3,
-          drvs.llvmStage3,
-          drvs.gnumakeStage4,
-          drvs.ccacheBin,
-          drvs.muslStage3,
-        ]
+      biDrvs = [
+        drvs.busyboxStage3,
+        drvs.llvmStage3,
+        drvs.gnumakeStage4,
+        drvs.ccacheBin,
+        drvs.muslStage3,
+      ]
     },
   muslShared =
     musl
@@ -122,13 +118,12 @@
 
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
 
-      biDrvs | priority 1 =
-        [
-          drvs.busybox,
-          drvs.clangCross,
-          drvs.gnumake,
-          drvs.ccacheBin,
-          # drvs.muslStage2
-        ],
+      biDrvs | priority 1 = [
+        drvs.busybox,
+        drvs.clangCross,
+        drvs.gnumake,
+        drvs.ccacheBin,
+        # drvs.muslStage2
+      ],
     }
 }

@@ -14,11 +14,10 @@
       "-Dvmwgfx=disabled",
       "-Dnouveau=disabled",
     ],
-    biDrvs =
-       [
-        drvs.libpciaccess,
-        drvs.linuxHeaders,
-      ],
+    biDrvs = [
+      drvs.libpciaccess,
+      drvs.linuxHeaders,
+    ],
 
     preConfigurePhase = [
       m%"

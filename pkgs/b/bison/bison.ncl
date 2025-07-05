@@ -16,15 +16,14 @@
     _bisonBase
     & {
       stage = 1,
-      biDrvs =
-         [
-          drvs.muslStage1,
-          drvs.gnumakeStage1,
-          drvs.ccacheBin,
-          drvs.m4Stage1,
-          drvs.busyboxStage0,
-          drvs.llvmStage0
-        ]
+      biDrvs = [
+        drvs.muslStage1,
+        drvs.gnumakeStage1,
+        drvs.ccacheBin,
+        drvs.m4Stage1,
+        drvs.busyboxStage0,
+        drvs.llvmStage0
+      ]
     },
 
   # 2
@@ -33,15 +32,14 @@
     _bisonBase
     & {
       stage = 2,
-      biDrvs =
-         [
-          drvs.muslStage2,
-          drvs.gnumakeStage2,
-          drvs.ccacheBin,
-          drvs.m4Stage2,
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-        ]
+      biDrvs = [
+        drvs.muslStage2,
+        drvs.gnumakeStage2,
+        drvs.ccacheBin,
+        drvs.m4Stage2,
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+      ]
     },
 
   # final
@@ -52,14 +50,13 @@
       stage = -1,
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-         [
-          drvs.musl,
-          drvs.gnumake,
-          drvs.ccacheBin,
-          drvs.m4,
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-        ]
+      biDrvs = [
+        drvs.musl,
+        drvs.gnumake,
+        drvs.ccacheBin,
+        drvs.m4,
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+      ]
     }
 }

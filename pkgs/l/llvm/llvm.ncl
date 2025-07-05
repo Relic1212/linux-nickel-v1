@@ -59,18 +59,17 @@
           # "--sysroot=/usr/x86_64-linux-musl",
         ],
       },
-      buildInputs =
-        [
-          drvs.bootstrapStage0,
-          drvs.bootstrapSymlinks,
-          drvs.busyboxBootstrapStage0,
-          drvs.samuraiStage1,
-          drvs.ccacheBin,
-          drvs.linuxHeadersStage1,
-          drvs.cmakeStage1,
-          drvs.pythonStage1,
-          drvs.muslStage1,
-        ],
+      buildInputs = [
+        drvs.bootstrapStage0,
+        drvs.bootstrapSymlinks,
+        drvs.busyboxBootstrapStage0,
+        drvs.samuraiStage1,
+        drvs.ccacheBin,
+        drvs.linuxHeadersStage1,
+        drvs.cmakeStage1,
+        drvs.pythonStage1,
+        drvs.muslStage1,
+      ],
       cmakeArgsRecord = {
         "-DLLVM_ENABLE_LLD:BOOL" | force = "OFF",
       },
@@ -82,17 +81,16 @@
     _llvmBaseTarget
     & {
       stage = 2,
-      buildInputs =
-        [
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-          drvs.muslStage2,
-          drvs.samuraiStage2,
-          drvs.ccacheBin,
-          drvs.linuxHeadersStage2,
-          drvs.cmakeStage2,
-          drvs.pythonStage2,
-        ]
+      buildInputs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+        drvs.muslStage2,
+        drvs.samuraiStage2,
+        drvs.ccacheBin,
+        drvs.linuxHeadersStage2,
+        drvs.cmakeStage2,
+        drvs.pythonStage2,
+      ]
     },
 
   # final
@@ -101,33 +99,31 @@
     _llvmBaseTarget
     & {
       stage = -1,
-      buildInputs =
-        [
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-          drvs.muslStage3,
-          drvs.samuraiStage3,
-          drvs.ccacheBin,
-          drvs.linuxHeadersStage3,
-          drvs.cmakeStage3,
-          drvs.pythonStage3,
-        ]
+      buildInputs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+        drvs.muslStage3,
+        drvs.samuraiStage3,
+        drvs.ccacheBin,
+        drvs.linuxHeadersStage3,
+        drvs.cmakeStage3,
+        drvs.pythonStage3,
+      ]
     },
   llvm =
     _llvmBaseTarget
     & {
       stage = -1,
-      buildInputs =
-        [
-          drvs.busyboxStage3,
-          drvs.llvmStage3,
-          drvs.musl,
-          drvs.samurai,
-          drvs.ccacheBin,
-          drvs.linuxHeaders,
-          drvs.cmake,
-          drvs.python,
-        ]
+      buildInputs = [
+        drvs.busyboxStage3,
+        drvs.llvmStage3,
+        drvs.musl,
+        drvs.samurai,
+        drvs.ccacheBin,
+        drvs.linuxHeaders,
+        drvs.cmake,
+        drvs.python,
+      ]
     },
 
   clangCross =
@@ -176,17 +172,16 @@
       #     "DESTDIR=${DEST} ninja install-clang install-lld"
       #   ],
 
-      buildInputs | priority 1 =
-        [
-          drvs.busybox,
-          drvs.llvm,
-          drvs.musl,
-          drvs.samurai,
-          drvs.ccacheBin,
-          drvs.linuxHeaders,
-          drvs.cmake,
-          drvs.python,
-        ],
+      buildInputs | priority 1 = [
+        drvs.busybox,
+        drvs.llvm,
+        drvs.musl,
+        drvs.samurai,
+        drvs.ccacheBin,
+        drvs.linuxHeaders,
+        drvs.cmake,
+        drvs.python,
+      ],
       postInstallPhase = [
         "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin"
       ]
@@ -291,18 +286,17 @@
         "cp -r /tmp/workdir/out/destdir/usr/lib /tmp/workdir/out/destdir/usr/lib/clang/%{majorVersion}/lib || true",
       ],
 
-      buildInputs | priority 1 =
-        [
-          drvs.busybox,
-          drvs.clangCross,
-          drvs.musl,
-          drvs.samurai,
-          drvs.ccacheBin,
-          drvs.linuxHeadersAarch64,
-          drvs.cmake,
-          drvs.python,
-          drvs.muslAarch64,
-        ]
+      buildInputs | priority 1 = [
+        drvs.busybox,
+        drvs.clangCross,
+        drvs.musl,
+        drvs.samurai,
+        drvs.ccacheBin,
+        drvs.linuxHeadersAarch64,
+        drvs.cmake,
+        drvs.python,
+        drvs.muslAarch64,
+      ]
     },
 
   clangAarch64 =
@@ -315,20 +309,19 @@
       #       # CROSS_CXXFLAGS=[ "--sysroot=/${TARGET}"],
       #     },
       buildEnv,
-      buildInputs | priority 3 =
-        [
-          drvs.busybox,
-          drvs.clangCross,
-          drvs.musl,
-          drvs.libcxxAarch64,
-          drvs.samurai,
-          drvs.ccacheBin,
-          drvs.linuxHeadersAarch64,
-          drvs.linuxHeaders,
-          drvs.cmake,
-          drvs.python,
-          drvs.muslAarch64,
-        ],
+      buildInputs | priority 3 = [
+        drvs.busybox,
+        drvs.clangCross,
+        drvs.musl,
+        drvs.libcxxAarch64,
+        drvs.samurai,
+        drvs.ccacheBin,
+        drvs.linuxHeadersAarch64,
+        drvs.linuxHeaders,
+        drvs.cmake,
+        drvs.python,
+        drvs.muslAarch64,
+      ],
       cmakeArgs | priority 2 =
         clangCross.cmakeArgs
         @ [

@@ -11,13 +11,12 @@
       m%"sed -i "s/shared_library/library/" ${SRC}/meson.build"%
     ],
     extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
-    biDrvs =
-       [
-        drvs.eudev,
-        # drvs.libudevZero,
-        drvs.mtdev,
-        drvs.libevdev,
-        drvs.linuxHeaders,
-      ]
+    biDrvs = [
+      drvs.eudev,
+      # drvs.libudevZero,
+      drvs.mtdev,
+      drvs.libevdev,
+      drvs.linuxHeaders,
+    ]
   }
 }

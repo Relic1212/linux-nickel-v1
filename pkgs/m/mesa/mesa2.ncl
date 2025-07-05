@@ -3,23 +3,22 @@
   drvs,
   _mesa | lib.MesonPackage = {
 
-    biDrvs =
-      [
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.zlibNg,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.libffi,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.linuxHeaders,
-        drvs.m4
-      ],
+    biDrvs = [
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.zlibNg,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.libffi,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.linuxHeaders,
+      drvs.m4
+    ],
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",

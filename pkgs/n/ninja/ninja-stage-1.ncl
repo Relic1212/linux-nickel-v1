@@ -38,13 +38,12 @@
       utilsProviders = [],
       baseBuildinputPackages = [],
 
-      buildInputs | priority 10 =
-        [
-          drvs.muslStage0,
-          drvs.busyboxStage0,
-          drvs.pythonStage1,
-          drvs.llvmStage0,
-          drvs.ccacheBin
-        ],
+      buildInputs | priority 10 = [
+        drvs.muslStage0,
+        drvs.busyboxStage0,
+        drvs.pythonStage1,
+        drvs.llvmStage0,
+        drvs.ccacheBin
+      ],
     }
 }

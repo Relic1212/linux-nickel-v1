@@ -39,9 +39,8 @@
       "ln -s ncursesw.pc ncurses.pc",
       "ln -s panelw.pc panel.pc",
     ],
-    biDrvs =
-      [
-        drvs.pkgconf,
-      ]
+    biDrvs = [
+      drvs.pkgconf,
+    ]
   }
 }

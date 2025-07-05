@@ -25,15 +25,14 @@
     _flexBase
     & {
       stage = 1,
-      biDrvs =
-        [
-          drvs.llvmStage0,
-          drvs.muslStage1,
-          drvs.gnumakeStage1,
-          drvs.ccacheBin,
-          drvs.m4Stage1,
-          drvs.busyboxStage0,
-        ]
+      biDrvs = [
+        drvs.llvmStage0,
+        drvs.muslStage1,
+        drvs.gnumakeStage1,
+        drvs.ccacheBin,
+        drvs.m4Stage1,
+        drvs.busyboxStage0,
+      ]
     },
 
   #2
@@ -42,15 +41,14 @@
     _flexBase
     & {
       stage = 2,
-      biDrvs =
-        [
-          drvs.llvmStage1,
-          drvs.muslStage2,
-          drvs.gnumakeStage2,
-          drvs.ccacheBin,
-          drvs.m4Stage2,
-          drvs.busyboxStage1,
-        ]
+      biDrvs = [
+        drvs.llvmStage1,
+        drvs.muslStage2,
+        drvs.gnumakeStage2,
+        drvs.ccacheBin,
+        drvs.m4Stage2,
+        drvs.busyboxStage1,
+      ]
     },
   #final
 
@@ -61,15 +59,14 @@
 
       # utilsProviders = [],
       # baseBuildinputPackages = [],
-      biDrvs =
-        [
-          drvs.gettext,
-          # drvs.llvm,
-          # drvs.musl,
-          # drvs.gnumake,
-          # drvs.ccacheBin,
-          # drvs.m4,
-          # drvs.busybox,
-        ]
+      biDrvs = [
+        drvs.gettext,
+        # drvs.llvm,
+        # drvs.musl,
+        # drvs.gnumake,
+        # drvs.ccacheBin,
+        # drvs.m4,
+        # drvs.busybox,
+      ]
     }
 }

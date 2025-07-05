@@ -9,9 +9,8 @@
     extraConfigureFlags = [
       "ac_cv_func_llseek='yes'"
     ],
-    biDrvs =
-      [
-        drvs.linuxHeaders,
-      ]
+    biDrvs = [
+      drvs.linuxHeaders,
+    ]
   }
 }

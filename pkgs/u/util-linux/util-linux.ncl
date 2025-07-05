@@ -26,10 +26,9 @@
         ]
         @ (lib.AutotoolsPackage & { configureFlags = conf }).configurePhase,
 
-      biDrvs =
-        [
-          drvs.linuxHeaders,
-          drvs.bash,
-        ]
+      biDrvs = [
+        drvs.linuxHeaders,
+        drvs.bash,
+      ]
     }
 }

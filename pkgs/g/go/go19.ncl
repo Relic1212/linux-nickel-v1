@@ -25,10 +25,9 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs =
-      [
-        drvs."go-1.4",
-        drvs.bash,
-      ]
+    biDrvs = [
+      drvs."go-1.4",
+      drvs.bash,
+    ]
   }
 }

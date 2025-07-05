@@ -103,11 +103,10 @@ in
           }
         ),
       stage = 0,
-      biDrvs =
-         [
-          drvs.llvmStage0,
-          drvs.muslStage0,
-        ]
+      biDrvs = [
+        drvs.llvmStage0,
+        drvs.muslStage0,
+      ]
     },
 
   busyboxBootstrapStage0 | lib.MakePackage =
@@ -220,9 +219,8 @@ in
         }
         ),
       stage = 0,
-      biDrvs =
-         [
-          drvs.bootstrapStage0,
-        ]
+      biDrvs = [
+        drvs.bootstrapStage0,
+      ]
     }
 }

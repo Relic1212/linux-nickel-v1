@@ -43,16 +43,15 @@ in
     & {
       stage = 2,
 
-      biDrvs =
-        [
-          drvs.busyboxStage1,
-          drvs.llvmStage1,
-          drvs.muslStage2,
-          drvs.samuraiStage2,
-          drvs.cmakeStage1,
-          drvs.ccacheBin,
-          drvs.linuxHeadersStage2,
-        ]
+      biDrvs = [
+        drvs.busyboxStage1,
+        drvs.llvmStage1,
+        drvs.muslStage2,
+        drvs.samuraiStage2,
+        drvs.cmakeStage1,
+        drvs.ccacheBin,
+        drvs.linuxHeadersStage2,
+      ]
     },
 
   cmakeStage3 | lib.CmakePackage =
@@ -62,16 +61,15 @@ in
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-        [
-          drvs.busyboxStage2,
-          drvs.llvmStage2,
-          drvs.muslStage3,
-          drvs.samuraiStage3,
-          drvs.cmakeStage2,
-          drvs.ccacheBin,
-          drvs.linuxHeadersStage3,
-        ]
+      biDrvs = [
+        drvs.busyboxStage2,
+        drvs.llvmStage2,
+        drvs.muslStage3,
+        drvs.samuraiStage3,
+        drvs.cmakeStage2,
+        drvs.ccacheBin,
+        drvs.linuxHeadersStage3,
+      ]
     },
 
   # final
@@ -83,15 +81,14 @@ in
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs =
-        [
-          drvs.busyboxStage3,
-          drvs.llvmStage3,
-          drvs.musl,
-          drvs.samurai,
-          drvs.cmakeStage3,
-          drvs.ccacheBin,
-          drvs.linuxHeaders,
-        ]
+      biDrvs = [
+        drvs.busyboxStage3,
+        drvs.llvmStage3,
+        drvs.musl,
+        drvs.samurai,
+        drvs.cmakeStage3,
+        drvs.ccacheBin,
+        drvs.linuxHeaders,
+      ]
     },
 }

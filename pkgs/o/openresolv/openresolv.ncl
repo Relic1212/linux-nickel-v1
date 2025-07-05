@@ -19,10 +19,9 @@
       # touch /run/resolv.conf
       "ln -s /run/resolv.conf etc/resolv.conf",
     ],
-    biDrvs =
-      [
-        drvs.pkgconf,
-      ],
+    biDrvs = [
+      drvs.pkgconf,
+    ],
     extraConfigureFlags = [
       "--rundir=/run",
       "--libexecdir=/usr/libexec/openresolv",

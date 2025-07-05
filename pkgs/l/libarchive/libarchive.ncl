@@ -14,12 +14,11 @@
       "ln -s bsdtar tar",
       "ln -s bsdunzip unzip",
     ],
-    biDrvs =
-      [
-        drvs.zlibNg,
-        drvs.zstd,
-        drvs.lz4,
-      ],
+    biDrvs = [
+      drvs.zlibNg,
+      drvs.zstd,
+      drvs.lz4,
+    ],
     # extraCmakeArgs = [
     #   "-DENABLE_ZLIB:BOOL=ON",
     #   "-DENABLE_ZSTD:BOOL=ON",

@@ -35,11 +35,10 @@
         "--with-staticdir=bin",
         "--with-usrsbindir=bin",
       ],
-    biDrvs =
-      [
-        drvs.pkgconf,
-        drvs.linuxHeaders,
-      ],
+    biDrvs = [
+      drvs.pkgconf,
+      drvs.linuxHeaders,
+    ],
     buildPhase = [
       "make DESTDIR=${DEST} install_device-mapper",
     ],

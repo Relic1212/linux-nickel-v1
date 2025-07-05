@@ -15,11 +15,10 @@
             install -m0755 getent ${DEST}/usr/bin
             "%
     ],
-    biDrvs =
-      [
-        drvs.musl,
-        drvs.llvm,
-        drvs.ccacheBin,
-      ]
+    biDrvs = [
+      drvs.musl,
+      drvs.llvm,
+      drvs.ccacheBin,
+    ]
   }
 }

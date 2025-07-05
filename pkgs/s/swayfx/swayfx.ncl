@@ -23,9 +23,9 @@
         #   sha256sum = "df347ddbf291d18710bd11d8228a49e7b0eafd88d0d7bbb4215d118374590516"
         # },
         src = {
-      uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.2/wlroots-0.18.2.tar.gz",
-      sha256sum = "703c515917d9eb258e44296795f8626190e119b0ee8bfb32fe9f834dab1a1462"
-    },
+          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.2/wlroots-0.18.2.tar.gz",
+          sha256sum = "703c515917d9eb258e44296795f8626190e119b0ee8bfb32fe9f834dab1a1462"
+        },
       }
     ],
     buildEnv.EXTRA_LDFLAGS = ["-lc++"],
@@ -33,17 +33,14 @@
     extraMesonArgs = [
       "--force-fallback-for=wlroots",
       "-Dwlroots:examples=false",
-        "-Dwlroots:backends=drm,libinput,x11",
-                "-Dwlroots:xwayland=enabled",
-
+      "-Dwlroots:backends=drm,libinput,x11",
+      "-Dwlroots:xwayland=enabled",
       "-Dwlroots:renderers=gles2",
       "-Dscenefx:examples=false",
-
-       "-Dwlroots:color-management=enabled",
-        "-Dgdk-pixbuf=enabled",
-        "-Dtray=enabled",
-        "-Dman-pages=enabled",
-
+      "-Dwlroots:color-management=enabled",
+      "-Dgdk-pixbuf=enabled",
+      "-Dtray=enabled",
+      "-Dman-pages=enabled",
     ],
 
     preConfigurePhase = [
@@ -54,7 +51,7 @@
             sed -i 's@matrix_projection@matrix_projection_wlroots@g' ${f}
         done
         "%,
-             m%"
+      m%"
             fix_symbol(){
                 echo    sed -i "s@${1}(@${1}_sway(@g"
                 for f in $(find ${SRC} -type f -name '*.h' |grep -v subprojects);do
@@ -105,26 +102,25 @@
       # drvs.scenefx,
 
       # for X
-       drvs.libxcursor,
-          drvs.xorgMacros,
-          drvs.xorgproto,
-          drvs.xtrans,
-          drvs.libxcb,
-          drvs.xcbProto,
-          drvs.libxau,
-          drvs.libx11,
-          drvs.libxrender,
-          drvs.libxfixes,
-          drvs.xcbRenderutil,
-          drvs.libxfont2,
-          drvs.libfontenc,
-          drvs.libxcvt,
-          drvs.libxshmfence,
-          drvs.xwayland,
-          drvs.libxkbfile,
-          drvs.openssl,
-          drvs.xcbUtilWm,
-
+      drvs.libxcursor,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.xcbRenderutil,
+      drvs.libxfont2,
+      drvs.libfontenc,
+      drvs.libxcvt,
+      drvs.libxshmfence,
+      drvs.xwayland,
+      drvs.libxkbfile,
+      drvs.openssl,
+      drvs.xcbUtilWm,
 
       # For other optional features
       drvs.gdkPixbufFull,
@@ -134,10 +130,9 @@
       drvs.scdoc,
     ],
 
-    buildEnv={
-      EXTRA_CFLAGS=[
+    buildEnv = {
+      EXTRA_CFLAGS = [
         # ../src/sway/server.c:442:54: error: passing arguments to 'animation_manager_create' without a prototype is deprecated in all versions of C and is not supported in C23 [-Werror,-Wdeprecated-non-prototype]
-
         "-Wno-deprecated-non-prototype",
       ],
     },

@@ -17,10 +17,9 @@
       "install -m0755 /tmp/workdir/build/mount-early ${DEST}/usr/libexec",
     ],
     enableCcache = false,
-    biDrvs =
-      [
-        drvs.llvm,
-        drvs.musl,
-      ]
+    biDrvs = [
+      drvs.llvm,
+      drvs.musl,
+    ]
   }
 }

@@ -12,9 +12,8 @@
       "--rundir=/run/dhcpcd",
       "--runstatedir=/run/dhcpcd"
     ],
-    biDrvs =
-      [
-        drvs.linuxHeaders,
-      ]
+    biDrvs = [
+      drvs.linuxHeaders,
+    ]
   }
 }

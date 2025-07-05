@@ -14,10 +14,9 @@
       "-DREDIS_STORAGE_BACKEND=OFF",
       "-DSTATIC_LINK=ON"
     ],
-    biDrvs =
-      [
-        drvs.xxhash,
-        drvs.zstd,
-      ],
+    biDrvs = [
+      drvs.xxhash,
+      drvs.zstd,
+    ],
   }
 }

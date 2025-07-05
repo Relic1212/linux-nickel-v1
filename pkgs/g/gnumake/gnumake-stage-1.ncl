@@ -45,11 +45,10 @@
         # ],
         # STAGE_LDFLAGS=common,
       },
-    buildInputs =
-      [
-        drvs.busyboxBootstrapStage0,
-        drvs.bootstrapStage0,
-        drvs.bootstrapSymlinks,
-      ]
+    buildInputs = [
+      drvs.busyboxBootstrapStage0,
+      drvs.bootstrapStage0,
+      drvs.bootstrapSymlinks,
+    ]
   },
 }

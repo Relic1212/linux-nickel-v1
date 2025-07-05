@@ -87,7 +87,6 @@
       drvs.ksvg,
       drvs.kcrash,
       drvs.kirigami,
-
       drvs.kdecorations,
     ],
     buildEnv = {
@@ -111,4 +110,4 @@
     },
   }
 }
-&(import "plasma.ncl")
+& (import "plasma.ncl")

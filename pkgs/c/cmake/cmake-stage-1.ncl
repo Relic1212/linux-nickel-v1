@@ -67,15 +67,14 @@ let misc = import "cmake-base.ncl" in
         ],
         singleSource = misc.cmakeSingleSource,
 
-        biDrvs =
-          [
-            drvs.busyboxBootstrapStage0,
-            drvs.bootstrapStage0,
-            drvs.bootstrapSymlinks,
-            drvs.muslStage1,
-            drvs.samuraiStage1,
-            drvs.ccacheBin,
-            drvs.linuxHeadersStage1,
-          ]
+        biDrvs = [
+          drvs.busyboxBootstrapStage0,
+          drvs.bootstrapStage0,
+          drvs.bootstrapSymlinks,
+          drvs.muslStage1,
+          drvs.samuraiStage1,
+          drvs.ccacheBin,
+          drvs.linuxHeadersStage1,
+        ]
       }
 }

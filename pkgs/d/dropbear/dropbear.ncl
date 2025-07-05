@@ -13,9 +13,8 @@
       "--disable-wtmp",
       "--disable-wtmpx",
     ],
-    biDrvs =
-      [
-        drvs.zlibNg,
-      ]
+    biDrvs = [
+      drvs.zlibNg,
+    ]
   }
 }

@@ -11,16 +11,15 @@
       "-Dfreetype=enabled",
       "-Dcairo=enabled"
     ],
-    biDrvs =
-      [
-        drvs.freetype,
-        drvs.cairo,
-        drvs.zlibNg,
-        drvs.pixman,
-        drvs.fontconfig,
-        drvs.libpng,
-        drvs.expat
-      ]
+    biDrvs = [
+      drvs.freetype,
+      drvs.cairo,
+      drvs.zlibNg,
+      drvs.pixman,
+      drvs.fontconfig,
+      drvs.libpng,
+      drvs.expat
+    ]
   }
 }
 & {
