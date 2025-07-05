@@ -27,38 +27,37 @@ in
       # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
 
       constants = _constants,
-      functions | not_exported
-        = {
-          computeSha256 = (fun s => (std.hash 'Sha256) s),
-          recordToHash = fun r => computeSha256 (std.serialize 'Json r),
-          isNullOrString = (fun s => std.is_string s || s == null),
-          isNullArray = (fun a => std.is_array a || a == null),
-          isStringOrArray = (fun a => std.is_array a || std.is_string a),
-          isNullOrStringOrArray = (fun a => std.is_array a || std.is_string a || a == null),
+      functions | not_exported = {
+        computeSha256 = (fun s => (std.hash 'Sha256) s),
+        recordToHash = fun r => computeSha256 (std.serialize 'Json r),
+        isNullOrString = (fun s => std.is_string s || s == null),
+        isNullArray = (fun a => std.is_array a || a == null),
+        isStringOrArray = (fun a => std.is_array a || std.is_string a),
+        isNullOrStringOrArray = (fun a => std.is_array a || std.is_string a || a == null),
 
-          varToExportvar = (fun var =>
-            if ((std.typeof var) == '"String") then
-              var
-            else
-              "\"" ++ (std.string.join " " var) ++ "\""
-          ),
-          createExport = (fun key env => (if (std.record.has_field key env) then "export %{key}=%{varToExportvar env."%{key}"}" else "")),
-          joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
-          replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
-          joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
-          # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
-          cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
-          replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
+        varToExportvar = (fun var =>
+          if ((std.typeof var) == '"String") then
+            var
+          else
+            "\"" ++ (std.string.join " " var) ++ "\""
+        ),
+        createExport = (fun key env => (if (std.record.has_field key env) then "export %{key}=%{varToExportvar env."%{key}"}" else "")),
+        joinArraysInSecondRecordWithArraysInFirstRecord = (fun a b => std.record.map (fun x y => if ((std.is_array y) && (std.record.has_field x b)) then y @ b."%{x}" else y) a),
+        replaceArraysWithEmptyArrays = (fun a => (std.record.map_values (fun x => (if (std.is_array x) then [] else x)) a)),
+        joinMerge = (fun a b => ((joinArraysInSecondRecordWithArraysInFirstRecord a b) & (std.record.filter (fun f v => ((std.is_array v) == false)) b))),
+        # cmakeVarToString=(fun v =>( if (std.is_string v) then "=%{v}" else if (std.is_record v) then ":%{v.type}=%{v.value}" else if (std.typeof v=="'Bool") then (if v then ":BOOL=ON" else ":BOOL=OFF") )),
+        cmakeRecordToArgs = (fun r => (std.record.values (std.record.map (fun field value => "-D%{field}=%{value}") r))),
+        replaceArrayElem = (fun old new arr => (std.array.map (fun elem => (if (elem == old) then new else elem)) arr)),
 
-          arrayContainsDups = (fun arr =>
-            (
-              (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a) || arrp.b) })) { a = [], b = false } arr).b
-            )
-          ),
-          hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
-          allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
-          isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
-        },
+        arrayContainsDups = (fun arr =>
+          (
+            (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a) || arrp.b) })) { a = [], b = false } arr).b
+          )
+        ),
+        hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
+        allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
+        isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
+      },
       nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
       nullOrArray = std.contract.from_predicate (functions.isNullArray),
@@ -74,42 +73,40 @@ in
         # busybox,
         #vars
         baseName | String | optional,
-        name | String | default
-          =
-            if ((stage == "final") || (stage == -1)) then
-              baseName
-            else
-              "%{baseName}-stage-%{ std.to_string stage}",
-        drvHash | force
-          =
-            let _name = name
-            in
-            let _bs = buildInputs
-            in
-            let _sis = sourceInputs in
-            let _pds = patches in
-            let _efs = extraFiles in
-            let _sc = scriptContent in
-            let _bic = buildInChroot in
-            let _ec = enableCcache in
-            let _sbi = symlinkBuldInputs in
-            drvUtils.pkgToHash {
-              name = _name,
-              buildInputs = _bs,
-              sourceInputs = _sis,
-              patches = _pds,
-              extraFiles = _efs,
-              scriptContent = _sc,
-              buildInChroot = _bic,
-              enableCcache = _ec,
-              symlinkBuldInputs = _sbi,
-            },
+        name | String | default =
+          if ((stage == "final") || (stage == -1)) then
+            baseName
+          else
+            "%{baseName}-stage-%{ std.to_string stage}",
+        drvHash | force =
+          let _name = name
+          in
+          let _bs = buildInputsValidated
+          in
+          let _sis = sourceInputs in
+          let _pds = patches in
+          let _efs = extraFiles in
+          let _sc = scriptContent in
+          let _bic = buildInChroot in
+          let _ec = enableCcache in
+          let _sbi = symlinkBuldInputs in
+          drvUtils.pkgToHash {
+            name = _name,
+            buildInputsValidated = _bs,
+            sourceInputs = _sis,
+            patches = _pds,
+            extraFiles = _efs,
+            scriptContent = _sc,
+            buildInChroot = _bic,
+            enableCcache = _ec,
+            symlinkBuldInputs = _sbi,
+          },
         options | default = {},
 
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
-        buildInputs
-          | not_exported
+        buildInputsValidated
+        # | not_exported
           | std.contract.from_validator (fun arr =>
             (
               if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
@@ -118,55 +115,55 @@ in
                 'Error {
                   message =
                     "%{name} has invalid buildInputs\n"
-                    ++ "        The buildInputs specified as packages are:\n        %{ std.string.join "\n        " (std.array.sort std.string.compare(std.array.map (fun x=> (x.name  )) (biPkgs @ baseBuildinputPackages ))) }"
+                    ++ "        The buildInputs specified as packages are:\n        %{ std.string.join "\n        " (std.array.sort std.string.compare(std.array.map (fun x=> (x.name  )) ( baseBuildinputPackages ))) }"
                 }
             )
           )
-          | default
-          = (biMap (biPkgs)) @ baseBuildinputPackages @ biDrvs,
+          | force
+          = buildInputs,
+
+        buildInputs | default =
+          baseBuildinputPackages @ biDrvs,
         hasValidBuildInputs = (
           functions.isValidShasumArray (
             std.array.map
               (fun x => x.drvHash)
-              buildInputs
+              buildInputsValidated
           )
         ),
-        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ( [drvs.busybox]) else [],
+        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
         llvmProvider | default = drvs.llvm,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
-        biPkgs | Array Dyn | not_exported | default = [],
+        # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
-        biDrvs | Array Dyn| not_exported | default = [],
+        biDrvs | Array Dyn | not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
-        buildEnv | BuildEnv | default
-          = {
-            _stage = stage,
-            _isLlvm | force = isLlvm,
-            _isStatic = isStatic,
-          },
+        buildEnv | BuildEnv | default = {
+          _stage = stage,
+          _isLlvm | force = isLlvm,
+          _isStatic = isStatic,
+        },
         symlinkBuldInputs | Bool | default = false, # stage==-1,
-        extraEnv | { _ : StringOrArray } | default
-          = (
-            if buildInChroot then
-              {}
-            else
-              {
-                LIBDIR = "/tmp/workdir/sysroot/usr/lib",
-                PATH = "/tmp/workdir/sysroot/usr/bin:${PATH}",
-                SYSROOT = "/tmp/workdir/sysroot",
-              }
-          ),
+        extraEnv | { _ : StringOrArray } | default = (
+          if buildInChroot then
+            {}
+          else
+            {
+              LIBDIR = "/tmp/workdir/sysroot/usr/lib",
+              PATH = "/tmp/workdir/sysroot/usr/bin:${PATH}",
+              SYSROOT = "/tmp/workdir/sysroot",
+            }
+        ),
 
-        unpackPhase | Array String | default
-          = [
-            if (std.array.length sourceInputs) == 0 then
-              ""
-            else
-              # TODO: these should be joined by newlines
-              # Fixed
-              m%"
+        unpackPhase | Array String | default = [
+          if (std.array.length sourceInputs) == 0 then
+            ""
+          else
+            # TODO: these should be joined by newlines
+            # Fixed
+            m%"
       %{shellFunctions.unpackMaybe}
       %{std.string.join "\n" ( std.array.map (fun x => let dest =if ((std.record.has_field "dest" x)==false) then "" else x.dest in
       m%"
@@ -176,7 +173,7 @@ in
         )
         ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) sourceInputs ) )}
       "%
-          ],
+        ],
         envSetupPhase =
           [
             "export WORKDIR=/tmp/workdir",
@@ -200,13 +197,11 @@ in
           @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
 
         # @ (functions.createExport "CC" buildEnv)
-        ,
-        patchPhase | Array String | default
-          =
-            if (std.array.length patches) == 0 then
-              []
-            else
-              (std.array.map (fun p => "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches),
+        ,patchPhase | Array String | default =
+          if (std.array.length patches) == 0 then
+            []
+          else
+            (std.array.map (fun p => "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches),
         preConfigurePhase | Array String | default = [],
         configurePhase | Array String | default = (if (buildDir == null) then [] else ["cd %{buildDir}"]),
         preBuildPhase | Array String | default = [],
@@ -249,28 +244,25 @@ in
           enableCcache,
           separateBuildDir | priority -1000 = false,
           llvmProvider,
-          baseBuildinputPackages | priority -1000
-            =
-              utilsProviders
-              @  (
-                if (stage == -1) then
-                  (
-                    [drvs.gnumake, drvs.musl]
-                    @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [drvs.ccacheBin] else [])
-                  )
-                else
-                  []
-              ),
+          baseBuildinputPackages | priority -1000 =
+            utilsProviders
+            @ (
+              if (stage == -1) then
+                (
+                  [drvs.gnumake, drvs.musl]
+                  @ (if isLlvm then [llvmProvider] else [])
+                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                )
+              else
+                []
+            ),
 
-          buildPhase | priority -10
-            = [
-              "make " ++ (std.string.join " " makeArgs) ++ (if makeTargets == null then "" else " " ++ std.string.join " " makeTargets)
-            ],
-          installPhase | priority -10
-            = [
-              "make " ++ (std.string.join " " makeInstallArgs) ++ " " ++ (std.string.join " " makeInstallTargets)
-            ]
+          buildPhase | priority -10 = [
+            "make " ++ (std.string.join " " makeArgs) ++ (if makeTargets == null then "" else " " ++ std.string.join " " makeTargets)
+          ],
+          installPhase | priority -10 = [
+            "make " ++ (std.string.join " " makeInstallArgs) ++ " " ++ (std.string.join " " makeInstallTargets)
+          ]
         },
 
       #  configureFieldToFlag = (fun k v =>
@@ -305,12 +297,11 @@ in
           configureScript | String | default = "${SRC}/configure",
           separateBuildDir | priority -999 = true,
 
-          configurePhase | priority -11
-            =
-              (if (buildDir == null) then [] else ["cd %{buildDir}"])
-              @ [
-                configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
-              ]
+          configurePhase | priority -11 =
+            (if (buildDir == null) then [] else ["cd %{buildDir}"])
+            @ [
+              configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
+            ]
         },
       AutomakePackage =
         AutotoolsPackage
@@ -319,30 +310,28 @@ in
           buildDir,
           configureScript,
           configureFlags,
-          configurePhase | priority -10
-            =
-              (if (buildDir == null) then [] else ["cd %{buildDir}"])
-              @ [
-                "(cd ${SRC}; autoreconf -fiv)",
-                configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
-              ],
-              perlProvider | default =  drvs.perl,
-          baseBuildinputPackages | priority -999
-            =
-              AutotoolsPackage.baseBuildinputPackages
-              @  (
-                if (stage == -1) then
-                  [
-                   perlProvider,
-                    drvs.automake,
-                    drvs.autoconf,
-                    drvs.m4,
-                    drvs.libtool,
-                    drvs.pkgconf,
-                  ]
-                else
-                  []
-              ),
+          configurePhase | priority -10 =
+            (if (buildDir == null) then [] else ["cd %{buildDir}"])
+            @ [
+              "(cd ${SRC}; autoreconf -fiv)",
+              configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
+            ],
+          perlProvider | default = drvs.perl,
+          baseBuildinputPackages | priority -999 =
+            AutotoolsPackage.baseBuildinputPackages
+            @ (
+              if (stage == -1) then
+                [
+                  perlProvider,
+                  drvs.automake,
+                  drvs.autoconf,
+                  drvs.m4,
+                  drvs.libtool,
+                  drvs.pkgconf,
+                ]
+              else
+                []
+            ),
         },
       MesonPackage =
         Package
@@ -357,38 +346,34 @@ in
           mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
           baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
           extraMesonArgs | Array String | default = [],
-          configurePhase | priority -1000
-            = [
-              "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
-            ],
-          buildPhase | priority -1000
-            = [
-              "meson compile"
-            ],
-          installPhase | priority -1000
-            = [
-              "meson install --destdir ${DEST}"
-            ],
+          configurePhase | priority -1000 = [
+            "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
+          ],
+          buildPhase | priority -1000 = [
+            "meson compile"
+          ],
+          installPhase | priority -1000 = [
+            "meson install --destdir ${DEST}"
+          ],
           pythonProvider | default = drvs.pythonFull,
-          baseBuildinputPackages | priority -1000
-            =
-              utilsProviders
-              @ (
-                if (stage == -1) then
-                  (
-                    [
-                      drvs.meson,
-                      drvs.samurai,
-                      pythonProvider,
-                      drvs.pkgconf,
-                      drvs.musl,
-                    ]
-                    @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [drvs.ccacheBin] else [])
-                  )
-                else
-                  []
-              ),
+          baseBuildinputPackages | priority -1000 =
+            utilsProviders
+            @ (
+              if (stage == -1) then
+                (
+                  [
+                    drvs.meson,
+                    drvs.samurai,
+                    pythonProvider,
+                    drvs.pkgconf,
+                    drvs.musl,
+                  ]
+                  @ (if isLlvm then [llvmProvider] else [])
+                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                )
+              else
+                []
+            ),
         },
       cmakeRecordFieldToCmakeArg = (fun k v =>
         let var =
@@ -441,21 +426,20 @@ in
           llvmProvider,
 
           enableParallel,
-          cmakeArgs | Array String | default
-            =
-              cmakeArgsPrepend
-              @ (
-              # std.array.sort (std.string.compare)
-              (
-                cmakeArgsTransform (
-                  constants.cmakeArgsByField
-                  & (if isStatic then constants.cmakeArgsStaticByField else {})
-                  & cmakeArgsRecord
-                  & cmakeExtraArgsRecord
-                )
+          cmakeArgs | Array String | default =
+            cmakeArgsPrepend
+            @ (
+            # std.array.sort (std.string.compare)
+            (
+              cmakeArgsTransform (
+                constants.cmakeArgsByField
+                & (if isStatic then constants.cmakeArgsStaticByField else {})
+                & cmakeArgsRecord
+                & cmakeExtraArgsRecord
               )
-              )
-              @ extraCmakeArgs,
+            )
+            )
+            @ extraCmakeArgs,
           cmakeArgsPrepend | Array String | default = [],
 
           extraCmakeArgs | Array String | default = [],
@@ -464,76 +448,71 @@ in
 
           generator | nullOrString | default = null,
 
-          baseBuildinputPackages | priority -1000
-            =
-              utilsProviders
-              @  (
-                if (stage == -1) then
-                  (
-                    [
-                      drvs.cmake,
-                      drvs.pkgconf,
-                      drvs.musl,
-                    ]
-                    @ (if isLlvm then [llvmProvider] else [])
-                    @ (if enableCcache then [drvs.ccacheBin] else [])
-                    @ (if (generator == "Ninja") then [drvs.samurai] else [])
-                  )
-                else
-                  []
-              ),
+          baseBuildinputPackages | priority -1000 =
+            utilsProviders
+            @ (
+              if (stage == -1) then
+                (
+                  [
+                    drvs.cmake,
+                    drvs.pkgconf,
+                    drvs.musl,
+                  ]
+                  @ (if isLlvm then [llvmProvider] else [])
+                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                  @ (if (generator == "Ninja") then [drvs.samurai] else [])
+                )
+              else
+                []
+            ),
 
           cmakeDir | String | default = "${SRC}",
 
           configurePhase | priority -10 = ["cmake -B . -S %{cmakeDir} %{std.string.join constants.buildFlagSep cmakeArgs}"],
           buildPhase | priority -10 = ["cmake --build ."],
           installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
-          extraEnv | priority -10
-            =
-              (
-                (if buildInChroot then Package.extraEnv else (Package & { buildInChroot = false }).extraEnv)
-                & (
-                  if enableParallel then
-                    { CMAKE_BUILD_PARALLEL_LEVEL = "$(nproc)" }
-                  else
-                    {}
-                )
+          extraEnv | priority -10 =
+            (
+              (if buildInChroot then Package.extraEnv else (Package & { buildInChroot = false }).extraEnv)
+              & (
+                if enableParallel then
+                  { CMAKE_BUILD_PARALLEL_LEVEL = "$(nproc)" }
+                else
+                  {}
               )
-              & (if (generator == null) then {} else { CMAKE_GENERATOR = generator })
+            )
+            & (if (generator == null) then {} else { CMAKE_GENERATOR = generator })
         },
       SetuptoolPackage =
         Package
         & {
           stage,
           pythonExecutable | String | default = "python",
-          buildPhase | priority -5
-            = [
-              "cd ${SRC}",
-              "%{pythonExecutable} setup.py build",
-            ],
-          installPhase | priority -5
-            = [
-              "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
-            ],
+          buildPhase | priority -5 = [
+            "cd ${SRC}",
+            "%{pythonExecutable} setup.py build",
+          ],
+          installPhase | priority -5 = [
+            "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
+          ],
           enableCcache | priority -1000 = false,
-          baseBuildinputPackages | priority -1000
-            =
-              Package.baseBuildinputPackages
-              @  (
-                if (stage == -1) then
-                  (
-                    [
-                      drvs.pythonFull,
-                      # drvs.pkgconf,
-                      # drvs.musl,
-                      drvs.pythonSetuptools,
-                    ]
-                    # @ (if isLlvm then [drvs.llvm] else [])
-                    @ (if enableCcache then [drvs.ccacheBin] else [])
-                  )
-                else
-                  []
-              ),
+          baseBuildinputPackages | priority -1000 =
+            Package.baseBuildinputPackages
+            @ (
+              if (stage == -1) then
+                (
+                  [
+                    drvs.pythonFull,
+                    # drvs.pkgconf,
+                    # drvs.musl,
+                    drvs.pythonSetuptools,
+                  ]
+                  # @ (if isLlvm then [drvs.llvm] else [])
+                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                )
+              else
+                []
+            ),
         },
 
       Src = {
