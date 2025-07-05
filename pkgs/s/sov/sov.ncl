@@ -38,7 +38,7 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
-      # drvs."wlroots-18",
+      # drvs.wlroots18,
     ],
   }
 }

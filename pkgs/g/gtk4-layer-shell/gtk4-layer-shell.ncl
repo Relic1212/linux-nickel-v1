@@ -39,7 +39,7 @@
       drvs.readline,
       drvs.pcre2,
       # drvs.pango, #??
-      drvs."pango-1.56",
+      drvs.pango_1_56,
       drvs.cairo,
       drvs.libpng,
       drvs.harfbuzzFull,

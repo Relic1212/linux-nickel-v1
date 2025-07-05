@@ -18,7 +18,7 @@
       }
     ],
     biDrvs = [
-      drvs."go-1.23",
+      drvs.go_1_23,
       drvs.utilLinux,
     ],
     configurePhase = [

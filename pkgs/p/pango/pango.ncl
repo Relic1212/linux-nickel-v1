@@ -39,7 +39,7 @@
   lib,
   drvs,
   pango,
-  "pango-1.56" =
+  pango_1_56 =
     pango
     & {
       singleSource | priority 1 = {

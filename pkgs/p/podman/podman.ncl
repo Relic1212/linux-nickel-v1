@@ -16,7 +16,7 @@
       # }
     ],
     biDrvs = [
-      drvs."go-1.23",
+      drvs.go_1_23,
       drvs.bash,
       drvs.linuxHeaders,
       drvs.pkgconf,

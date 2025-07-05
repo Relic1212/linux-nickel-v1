@@ -50,7 +50,7 @@
       drvs.llvmConfigStatic,
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
-      drvs."gtk+3",
+      drvs.gtk3,
       drvs.eudev,
       drvs.kmod,
       drvs.xz,

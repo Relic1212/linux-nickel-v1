@@ -87,7 +87,7 @@
       #drvs.spirvTools,
       #drvs.spirvLlvmTranslator,
 
-      #drvs."gtk+3",
+      #drvs.gtk3,
       drvs.libtool,
       drvs.perl,
       drvs.m4,

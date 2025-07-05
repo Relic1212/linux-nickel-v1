@@ -22,7 +22,7 @@
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
       drvs.wayland,
-      # drvs."waylandProtocols-1.39",
+      # drvs.waylandProtocols_1_39,
       drvs.waylandProtocols,
     ],
     llvmProvider = drvs.llvmFull,

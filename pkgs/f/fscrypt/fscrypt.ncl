@@ -35,7 +35,7 @@
       "install -m0755 bin/fscrypt ${DEST}/usr/bin"
     ],
     biDrvs = [
-      drvs."go-1.9",
+      drvs.go_1_9,
       drvs.findutils,
       drvs.libpam,
     ]

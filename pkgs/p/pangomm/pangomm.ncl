@@ -44,9 +44,9 @@
       drvs.llvmConfigStatic,
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
-      drvs."gtk+3",
-      drvs."libsigc++2",
-      drvs."cairomm-1.0",
+      drvs.gtk3,
+      drvs.libsigcpp2,
+      drvs.cairomm_1_0,
       drvs.glibmm
     ],
   }
@@ -54,7 +54,7 @@
 & {
   lib,
   drvs,
-  "pangomm-1.0" | lib.MesonPackage = {
+  pangomm_1_0 | lib.MesonPackage = {
     singleSource = {
       uri = "https://download.gnome.org/sources/pango/1.54/pango-1.54.0.tar.xz",
       sha256sum = "8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8"
@@ -99,9 +99,9 @@
       drvs.llvmConfigStatic,
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
-      drvs."gtk+3",
-      drvs."libsigc++2",
-      drvs."cairomm-1.0",
+      drvs.gtk3,
+      drvs.libsigcpp2,
+      drvs.cairomm_1_0,
       drvs.glibmm,
       drvs.pythonSetuptools,
     ],
@@ -113,7 +113,7 @@
 & {
   lib,
   drvs,
-  "pangomm-2.48" | lib.MesonPackage = {
+  pangomm_2_48 | lib.MesonPackage = {
     singleSource = {
       #uri = "https://download.gnome.org/sources/pangomm/2.48/pangomm-2.48.2.tar.xz",
       #sha256sum = "e1d75522c53f462799875cd247f9b49c91ced4b1abe68387ac35b271392d4ea5",
@@ -137,7 +137,7 @@
       drvs.ncurses,
       drvs.readline,
       drvs.pcre2,
-      drvs."pango-1.56",
+      drvs.pango_1_56,
       drvs.cairo,
       drvs.libpng,
       drvs.harfbuzzFull,
@@ -161,9 +161,9 @@
       drvs.gtk4,
       drvs.libtiff,
       drvs.graphene,
-      drvs."libsigc++",
-      drvs."cairomm-1.16",
-      drvs."glibmm-2.82",
+      drvs.libsigcpp,
+      drvs.cairomm_1_16,
+      drvs.glibmm_2_82,
     ],
   }
 }

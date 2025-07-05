@@ -15,14 +15,14 @@
       drvs.libpng,
       drvs.expat,
       drvs.cairo,
-      drvs."libsigc++"
+      drvs.libsigcpp
     ]
   }
 }
 & {
   lib,
   drvs,
-  "cairomm-1.0" | lib.MesonPackage = {
+  cairomm_1_0 | lib.MesonPackage = {
     singleSource = {
       uri = "https://www.cairographics.org/releases/cairomm-1.14.5.tar.xz",
       sha256sum = "70136203540c884e89ce1c9edfb6369b9953937f6cd596d97c78c9758a5d48db"
@@ -36,14 +36,14 @@
       drvs.libpng,
       drvs.expat,
       drvs.cairo,
-      drvs."libsigc++2"
+      drvs.libsigcpp2
     ]
   }
 }
 & {
   lib,
   drvs,
-  "cairomm-1.16" | lib.MesonPackage = {
+  cairomm_1_16 | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.freedesktop.org/cairo/cairomm/-/archive/1.16.0/cairomm-1.16.0.tar.gz",
       sha256sum = "96b281441b6836bf579139c3beeac527d1ae8cc6040344f52b20e6842a1bd937"
@@ -57,7 +57,7 @@
       drvs.libpng,
       drvs.expat,
       drvs.cairo,
-      drvs."libsigc++"
+      drvs.libsigcpp
     ]
   }
 }

@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  "gtk+3" | lib.MesonPackage = {
+  gtk3 | lib.MesonPackage = {
     singleSource = {
       # uri = "https://gitlab.gnome.org/GNOME/gtk/-/archive/3.24.43/gtk-3.24.43.tar.gz",
       # sha256sum = "ab197f76719fc875067671247533f8e5bd2bc090568ec17317de410d06397b7f"

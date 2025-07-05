@@ -15,7 +15,7 @@
       "export HOME=/tmp/home",
     ],
     biDrvs = [
-      drvs."go-1.9",
+      drvs.go_1_9,
     ]
   }
 }

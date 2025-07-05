@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  "go-1.23" | lib.Package = {
+  go_1_23 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.23.3.src.tar.gz",
       sha256sum = "8d6a77332487557c6afa2421131b50f83db4ae3c579c3bc72e670ee1f6968599",
@@ -26,7 +26,7 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs = [
-      drvs."go-1.21",
+      drvs.go_1_21,
       drvs.bash,
     ]
   }
@@ -34,7 +34,7 @@
 & {
   lib,
   drvs,
-  "go-1.22" | lib.Package = {
+  go_1_22 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.22.9.src.tar.gz",
       sha256sum = "e81a362f51aee2125722b018e46714e6a055a1954283414c0f937e737013db22",
@@ -59,7 +59,7 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs = [
-      drvs."go-1.9",
+      drvs.go_1_9,
       drvs.bash,
     ]
   }
@@ -67,7 +67,7 @@
 & {
   lib,
   drvs,
-  "go-1.21" | lib.Package = {
+  go_1_21 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.21.13.src.tar.gz",
       sha256sum = "71fb31606a1de48d129d591e8717a63e0c5565ffba09a24ea9f899a13214c34d",
@@ -92,7 +92,7 @@
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
     biDrvs = [
-      drvs."go-1.9",
+      drvs.go_1_9,
       drvs.bash,
     ]
   }

@@ -18,7 +18,7 @@
       drvs.mesa2,
       drvs.spirvTools,
       drvs.wayland,
-      #drvs."waylandProtocols-1.41",
+      #drvs.waylandProtocols_1_41,
       drvs.waylandProtocols,
       drvs.libelf,
       drvs.libpciaccess,
@@ -66,7 +66,7 @@
       drvs.libxkbfile,
       drvs.openssl,
       drvs.xcbUtilWm,
-      drvs."wlroots-18",
+      drvs.wlroots18,
       drvs.scenefx,
     ],
 

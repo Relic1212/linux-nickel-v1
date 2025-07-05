@@ -44,7 +44,7 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
-      drvs."wlroots-18",
+      drvs.wlroots18,
       drvs.pkgconf,
     ],
 
@@ -119,7 +119,7 @@
   lib,
   drvs,
 
-  "wlroots-18" | lib.MesonPackage = {
+  wlroots18 | lib.MesonPackage = {
     singleSource = {
       # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.18.1/wlroots-0.18.1.tar.gz",
       # sha256sum = "10084bba57bf4162cd81eb79c2a0bee0d02c7ccd747eac0a7021b45b10bb821c"

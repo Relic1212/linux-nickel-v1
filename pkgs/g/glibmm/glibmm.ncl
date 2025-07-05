@@ -11,14 +11,14 @@
       drvs.libffi,
       drvs.zlibNg,
       drvs.glib,
-      drvs."libsigc++2",
+      drvs.libsigcpp2,
     ]
   }
 }
 & {
   lib,
   drvs,
-  "glibmm-2.82" | lib.MesonPackage = {
+  glibmm_2_82 | lib.MesonPackage = {
     singleSource = {
       #uri = "https://download.gnome.org/sources/glibmm/2.68/glibmm-2.68.2.tar.xz",
       #sha256sum = "91e0a8618f7b82db4aaf2648932ea2bcfe626ad030068c18fa2d106fd838d8ad"
@@ -32,7 +32,7 @@
       drvs.libffi,
       drvs.zlibNg,
       drvs.glib,
-      drvs."libsigc++",
+      drvs.libsigcpp,
     ],
     extraMesonArgs = [
       "-Dbuild-examples=false",

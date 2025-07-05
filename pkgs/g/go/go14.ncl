@@ -15,9 +15,9 @@
     ]
   },
 
-  "go-1.4" | lib.Package = {
+  go_1_4 | lib.Package = {
 
-    name = "go-1.4",
+    name = go_1_4,
 
     singleSource = {
       uri = "http://golang.org/dl/go1.4.2.src.tar.gz",

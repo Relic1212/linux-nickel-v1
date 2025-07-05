@@ -11,7 +11,7 @@
       drvs.libffi,
       drvs.zlibNg,
       drvs.glib,
-      drvs."libsigc++2",
+      drvs.libsigcpp2,
       drvs.glibmm,
       drvs.libxml2,
       drvs.dbus,
