@@ -16,7 +16,6 @@ in
     (import "buildEnv.ncl")
     & {
       BuildEnv,
-      nullEnv,
       staticEnv,
       llvmEnv,
       staticLlvmEnv,
