@@ -1,12 +1,13 @@
 {
   lib,
-  llvm,
-  gnumake,
-  busybox,
-  musl,
-  ccacheBin,
-  pkgconf,
-  linuxHeaders,
+  # llvm,
+  # gnumake,
+  # busybox,
+  # musl,
+  # ccacheBin,
+  # pkgconf,
+  # linuxHeaders,
+  drvs,
   lvm2 | lib.AutotoolsPackage = {
     name = "lvm2",
     singleSource = {
@@ -35,9 +36,9 @@
         "--with-usrsbindir=bin",
       ],
     biDrvs =
-      lib.biMap [
-        pkgconf,
-        linuxHeaders,
+      [
+        drvs.pkgconf,
+        drvs.linuxHeaders,
       ],
     buildPhase = [
       "make DESTDIR=${DEST} install_device-mapper",

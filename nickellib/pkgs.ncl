@@ -2,7 +2,7 @@ let drvUtils = import "../nickellib/drv.ncl"
 in
 
 let pkgs =
-  (import "pkgsRecord.ncl").pkgs
+  (import "pkgsRecord.ncl")
 in
 let si_all =
   std.record.merge_all (

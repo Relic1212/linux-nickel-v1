@@ -177,7 +177,7 @@
 
       # "%
     ],
-    baseBuildinputPackages = std.array.filter (fun v => v.drvHash != drvs.llvm.drvHash) lib.MesonPackage.baseBuildinputPackages,
+    baseBuildinputPackages = std.array.filter (fun v => v.name != drvs.llvm.name) lib.MesonPackage.baseBuildinputPackages,
   },
 
   llvmConfigStatic | lib.Package = {

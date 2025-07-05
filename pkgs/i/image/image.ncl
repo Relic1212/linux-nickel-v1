@@ -257,8 +257,8 @@
       enableCcache = false,
       name = "base-image",
       biDrvs =
-        lib.biMap [
-          baseBaseRootfs,
+        [
+          drvs.baseBaseRootfs,
           drvs.erofsUtils,
           drvs.mtools,
           drvs.genimage,

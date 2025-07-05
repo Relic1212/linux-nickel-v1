@@ -11,7 +11,7 @@
       drvs.llvmConfigStatic,
       drvs.samurai,
     ],
-    baseBuildinputPackages = std.array.filter (fun v => v.drvHash != drvs.llvm.drvHash) lib.CmakePackage.baseBuildinputPackages,
+    baseBuildinputPackages = std.array.filter (fun v => v.name != drvs.llvm.name) lib.CmakePackage.baseBuildinputPackages,
 
     cmakeExtraArgsRecord = {
       # "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "${SRC}/SPIRV-Headers",

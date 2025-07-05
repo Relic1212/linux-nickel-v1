@@ -48,7 +48,7 @@ let drvUtils = {
       = {
         # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
 
-        buildInputDrvs = (std.array.map (fun x => x.drvHash) (std.array.sort (buildInputCmp) p.buildInputs)),
+        buildInputDrvs = (std.array.map (fun x => x.drvHash) (std.array.sort (buildInputCmp) p.buildInputsValidated)),
 
         sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
         patchDrvs = p.patches,
@@ -87,7 +87,7 @@ let drvUtils = {
         )
         (
           []
-          @ (std.array.flatten (std.array.map toDrvsByhashArray p.buildInputs))
+          @ (std.array.flatten (std.array.map toDrvsByhashArray p.buildInputsValidated))
           @ (std.array.map (fun s => sourceInputTohasBasedDrv s.src) p.sourceInputs)
           @ (std.array.map sourceInputTohasBasedDrv (p.patches @ p.extraFiles))
         )

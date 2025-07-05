@@ -61,7 +61,7 @@
 
       # utilsProviders = [],
       # baseBuildinputPackages = [],
-      biPkgs =
+      biDrvs =
         [
           drvs.gettext,
           # drvs.llvm,

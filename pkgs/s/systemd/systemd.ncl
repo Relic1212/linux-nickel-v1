@@ -48,7 +48,7 @@
       ],
     # pulls in static python otherwise
     baseBuildinputPackages =
-      lib.biMap [
+      [
         drvs.bash,
         drvs.coreutils,
         drvs.bashSh,
