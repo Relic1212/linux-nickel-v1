@@ -72,7 +72,7 @@ in
         # others
         # busybox,
         #vars
-        baseName | String | optional,
+        baseName | not_exported | String | optional,
         name | String | default =
           if ((stage == "final") || (stage == -1)) then
             baseName
@@ -106,7 +106,7 @@ in
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
         buildInputsValidated
-        # | not_exported
+          | not_exported
           | std.contract.from_validator (fun arr =>
             (
               if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
@@ -122,9 +122,9 @@ in
           | force
           = buildInputs,
 
-        buildInputs | default =
+        buildInputs | not_exported | default =
           baseBuildinputPackages @ biDrvs,
-        hasValidBuildInputs = (
+        hasValidBuildInputs | not_exported = (
           functions.isValidShasumArray (
             std.array.map
               (fun x => x.drvHash)
@@ -132,7 +132,7 @@ in
           )
         ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
-        llvmProvider | default = drvs.llvm,
+        llvmProvider | not_exported | default = drvs.llvm,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
@@ -243,7 +243,7 @@ in
           isLlvm,
           enableCcache,
           separateBuildDir | priority -1000 = false,
-          llvmProvider,
+          llvmProvider | not_exported,
           baseBuildinputPackages | priority -1000 =
             utilsProviders
             @ (
@@ -316,7 +316,7 @@ in
               "(cd ${SRC}; autoreconf -fiv)",
               configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
             ],
-          perlProvider | default = drvs.perl,
+          perlProvider | not_exported | default = drvs.perl,
           baseBuildinputPackages | priority -999 =
             AutotoolsPackage.baseBuildinputPackages
             @ (
@@ -340,8 +340,8 @@ in
           enableCcache,
           isLlvm,
           stage,
-          utilsProviders,
-          llvmProvider,
+          utilsProviders | not_exported,
+          llvmProvider | not_exported,
 
           mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
           baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
