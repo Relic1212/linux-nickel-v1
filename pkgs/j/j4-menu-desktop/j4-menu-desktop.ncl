@@ -1,22 +1,28 @@
 {
   lib,
-  drvs,
+  fmt,
+  spdlog,
+  catch2,
+  crazyComplete,
+
   j4MenuDesktop | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/enkore/j4-dmenu-desktop/archive/refs/tags/r3.1.tar.gz",
       sha256sum = "0e6cf25663cc220e3e3e2bc013fe957c3e4a44f900b5ee6a7609cd501021652d"
     },
-    biDrvs = [
-      drvs.fmt,
-      drvs.spdlog,
-      drvs.catch2,
-      drvs.crazyComplete,
-    ]
+    biDrvs =
+      lib.biMap [
+        fmt,
+        spdlog,
+        catch2,
+        crazyComplete,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  fmt,
+
   spdlog | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -26,14 +32,15 @@
     cmakeArgsRecord = {
       "-DSPDLOG_FMT_EXTERNAL" = true,
     },
-    biDrvs = [
-      drvs.fmt,
-    ]
+    biDrvs =
+      lib.biMap [
+        fmt,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+
   catch2 | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz",
@@ -46,7 +53,6 @@
 }
 & {
   lib,
-  drvs,
 
   crazyComplete | lib.SetuptoolPackage = {
     singleSource = {

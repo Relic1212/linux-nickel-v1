@@ -1,17 +1,22 @@
 {
   lib,
-  drvs,
+  libtermkey,
+  lua,
+  ncurses,
+  pkgconf,
+
   vis | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/martanne/vis/archive/refs/tags/v0.9.tar.gz",
       sha256sum = "bd37ffba5535e665c1e883c25ba5f4e3307569b6d392c60f3c7d5dedd2efcfca"
     },
-    biDrvs = [
-      drvs.libtermkey,
-      drvs.lua,
-      drvs.ncurses,
-      drvs.pkgconf,
-    ],
+    biDrvs =
+      lib.biMap [
+        libtermkey,
+        lua,
+        ncurses,
+        pkgconf,
+      ],
     separateBuildDir = false,
     # configurePhase=[
     #     "./configure"
@@ -20,35 +25,46 @@
 }
 & {
   lib,
-  drvs,
+  pkgconf,
+  m4,
+  libtool,
+  bison,
+
   libtickit | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/leonerd/libtickit/archive/refs/tags/v0.4.3.tar.gz",
       sha256sum = "ad654fcb5ff95609148f4745fbdf16d95119b94f132d8885e91809fd83e15526",
     },
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.m4,
-      drvs.libtool,
-      drvs.bison,
-    ]
+    biDrvs =
+      lib.biMap [
+        pkgconf,
+        m4,
+        libtool,
+        bison,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  pkgconf,
+  m4,
+  libtool,
+  bison,
+  ncurses,
+
   libtermkey | lib.MakePackage = {
     singleSource = {
       uri = "https://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz",
       sha256sum = "6945bd3c4aaa83da83d80a045c5563da4edd7d0374c62c0d35aec09eb3014600"
     },
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.m4,
-      drvs.libtool,
-      drvs.bison,
-      drvs.ncurses,
-    ],
+    biDrvs =
+      lib.biMap [
+        pkgconf,
+        m4,
+        libtool,
+        bison,
+        ncurses,
+      ],
     extraMakeInstallArgs = [
       "PREFIX=/usr",
     ]
@@ -56,7 +72,7 @@
 }
 & {
   lib,
-  drvs,
+
   lua | lib.MakePackage = {
     singleSource = {
       uri = "https://www.lua.org/ftp/lua-5.4.7.tar.gz",

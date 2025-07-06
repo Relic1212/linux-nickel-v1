@@ -1,6 +1,12 @@
 {
   lib,
-  drvs,
+  xz,
+  bzip2,
+  zlibNg,
+  lz4,
+  pkgconf,
+  zstd,
+
   gnutar | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/tar/tar-1.35.tar.xz",
@@ -9,13 +15,14 @@
     extraEnv = {
       FORCE_UNSAFE_CONFIGURE = "1",
     },
-    biDrvs = [
-      drvs.xz,
-      drvs.bzip2,
-      drvs.zlibNg,
-      drvs.lz4,
-      drvs.pkgconf,
-      drvs.zstd,
-    ]
+    biDrvs =
+      lib.biMap [
+        xz,
+        bzip2,
+        zlibNg,
+        lz4,
+        pkgconf,
+        zstd,
+      ]
   }
 }

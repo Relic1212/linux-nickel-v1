@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   # base
   _m4Base | lib.AutotoolsPackage = {
     baseName = "m4",
@@ -16,50 +16,63 @@
     # buildDir = "${SRC}",
   },
   ##
-
+  busyboxStage0,
+  llvmStage0,
+  muslStage1,
+  gnumakeStage1,
+  ccacheBin,
   m4Stage1 =
     _m4Base
     & {
       stage = 1,
-      buildInputs = [
-        drvs.busyboxStage0,
-        drvs.llvmStage0,
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage0,
+          llvmStage0,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+        ]
     },
 
   #2
-
+  busyboxStage1,
+  llvmStage1,
+  muslStage2,
+  gnumakeStage2,
   m4Stage2 =
     _m4Base
     & {
       stage = 2,
-      buildInputs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.muslStage2,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage2,
+          gnumakeStage2,
+          ccacheBin,
+        ]
     },
 
   #final
-
+  busyboxStage2,
+  llvmStage2,
+  musl,
+  gnumake,
   m4 =
     _m4Base
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      buildInputs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.musl,
-        drvs.gnumake,
-        drvs.ccacheBin,
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          musl,
+          gnumake,
+          ccacheBin,
+        ]
     },
 }

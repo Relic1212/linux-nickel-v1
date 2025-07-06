@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   llvmFull,
   llvmExp | lib.CmakePackage =
     llvmFull

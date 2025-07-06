@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+  abseilCpp,
+
   protobuf | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -11,15 +13,17 @@
       "-Dprotobuf_BUILD_TESTS" = "OFF",
       "-Dprotobuf_ABSL_PROVIDER" = "package",
     },
-    biDrvs = [
-      drvs.linuxHeaders,
-      drvs.abseilCpp,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+        abseilCpp,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  linuxHeaders,
+
   protobufC | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/protobuf-c/protobuf-c/releases/download/v1.5.0/protobuf-c-1.5.0.tar.gz",
@@ -29,15 +33,16 @@
 }
 & {
   lib,
-  drvs,
+  linuxHeaders,
   abseilCpp | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/abseil/abseil-cpp/releases/download/20240722.0/abseil-cpp-20240722.0.tar.gz",
       sha256sum = "f50e5ac311a81382da7fa75b97310e4b9006474f9560ac46f54a9967f07d4ae3"
     },
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ]
   }
 }

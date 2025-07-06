@@ -1,6 +1,70 @@
 {
   lib,
-  drvs,
+  pugixml,
+  expat,
+  jsonC,
+  pcre2,
+  wayland,
+  waylandProtocols,
+  libelf,
+  libpciaccess,
+  libdrm,
+  libxkbcommon,
+  pixman,
+  eudev,
+  seatd,
+  libdisplayinfo,
+  libinput,
+  libffi,
+  libevdev,
+  mtdev,
+  pango,
+  cairo,
+  libpng,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  glib,
+  hwdata,
+  linuxHeaders,
+  hyprwaylandScanner,
+  hyprUtils,
+  hyprlang,
+  hyprcursor,
+  #  cmake,
+  tomlplusplus,
+  utilLinux,
+  ###############################################################
+  hyprlandProtocols,
+  udis86,
+  hyprgraphics,
+  re2,
+  abseilCpp,
+  ###############################################################
+  libxcursor,
+  xorgMacros,
+  xorgproto,
+  xtrans,
+  libxcb,
+  xcbProto,
+  libxau,
+  libx11,
+  libxrender,
+  libxfixes,
+  ###################################################
+  git,
+  libzip,
+  spirvTools,
+
+  llvmFull,
+
+  aquamarineGlx,
+  mesaGlx,
+
+  aquamarine,
+  mesa2,
+
   hyprland
     | lib.MesonPackage
     = {
@@ -46,77 +110,79 @@
         #  sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
         #}
       ],
-      llvmProvider = drvs.llvmFull,
+      llvmProvider = lib.singleBiMap llvmFull,
 
       biDrvs =
-        [
-          drvs.expat,
-          drvs.jsonC,
-          drvs.pcre2,
-          drvs.wayland,
-          drvs.waylandProtocols,
-          drvs.libelf,
-          drvs.libpciaccess,
-          drvs.libdrm,
-          drvs.libxkbcommon,
-          drvs.pixman,
-          drvs.eudev,
-          drvs.seatd,
-          drvs.libdisplayinfo,
-          drvs.libinput,
-          drvs.libffi,
-          drvs.libevdev,
-          drvs.mtdev,
-          drvs.pango,
-          drvs.cairo,
-          drvs.libpng,
-          drvs.freetype,
-          drvs.fontconfig,
-          drvs.zlibNg,
-          drvs.harfbuzz,
-          drvs.glib,
-          drvs.hwdata,
-          drvs.linuxHeaders,
-          drvs.hyprwaylandScanner,
-          drvs.hyprUtils,
-          drvs.hyprlang,
-          drvs.hyprcursor,
-          #  drvs.cmake,
-          drvs.tomlplusplus,
-          drvs.utilLinux,
-          ###############################################################
-          drvs.hyprlandProtocols,
-          drvs.udis86,
-          drvs.hyprgraphics,
-          drvs.re2,
-          drvs.abseilCpp,
-          ###############################################################
-          drvs.libxcursor,
-          drvs.xorgMacros,
-          drvs.xorgproto,
-          drvs.xtrans,
-          drvs.libxcb,
-          drvs.xcbProto,
-          drvs.libxau,
-          drvs.libx11,
-          drvs.libxrender,
-          drvs.libxfixes,
-          ###################################################
-          drvs.git,
-          drvs.libzip,
-          drvs.spirvTools,
-        ]
-        @ (
-          if options.glx then
-            [
-              drvs.aquamarineGlx,
-              drvs.mesaGlx,
-            ]
-          else
-            [
-              drvs.aquamarine,
-              drvs.mesa2,
-            ]
+        lib.biMap (
+          [
+            expat,
+            jsonC,
+            pcre2,
+            wayland,
+            waylandProtocols,
+            libelf,
+            libpciaccess,
+            libdrm,
+            libxkbcommon,
+            pixman,
+            eudev,
+            seatd,
+            libdisplayinfo,
+            libinput,
+            libffi,
+            libevdev,
+            mtdev,
+            pango,
+            cairo,
+            libpng,
+            freetype,
+            fontconfig,
+            zlibNg,
+            harfbuzz,
+            glib,
+            hwdata,
+            linuxHeaders,
+            hyprwaylandScanner,
+            hyprUtils,
+            hyprlang,
+            hyprcursor,
+            #  cmake,
+            tomlplusplus,
+            utilLinux,
+            ###############################################################
+            hyprlandProtocols,
+            udis86,
+            hyprgraphics,
+            re2,
+            abseilCpp,
+            ###############################################################
+            libxcursor,
+            xorgMacros,
+            xorgproto,
+            xtrans,
+            libxcb,
+            xcbProto,
+            libxau,
+            libx11,
+            libxrender,
+            libxfixes,
+            ###################################################
+            git,
+            libzip,
+            spirvTools,
+          ]
+          @ (
+            if options.glx then
+              [
+                aquamarineGlx,
+                mesaGlx,
+              ]
+            else
+              [
+                aquamarine,
+                mesa2,
+              ]
+          )
         ),
 
       extraMesonArgs = [
@@ -179,9 +245,10 @@
       uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/refs/tags/v0.4.4.tar.gz",
       sha256sum = "ac73f626019f8d819ff79a5fca06ce4768ce8a3bded6f48c404445f3afaa25ac"
     },
-    biDrvs = [
-      drvs.pugixml,
-    ]
+    biDrvs =
+      lib.biMap [
+        pugixml,
+      ]
   },
 
   pugixml | lib.CmakePackage = {
@@ -200,9 +267,10 @@
       uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.5.1.tar.gz",
       sha256sum = "0ad1d873012568661667cb5b599ddd59b3bea945a0d03c0f2ca3c7f4dff55798"
     },
-    biDrvs = [
-      drvs.pixman,
-    ],
+    biDrvs =
+      lib.biMap [
+        pixman,
+      ],
     preConfigurePhase = [
       m%"
         sed -i \
@@ -214,7 +282,17 @@
 }
 & {
   lib,
-  drvs,
+  cairo,
+  libzip,
+  pixman,
+  zlibNg,
+  freetype,
+  fontconfig,
+  libpng,
+  expat,
+  hyprlang,
+  hyprUtils,
+
   hyprcursor1 | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -223,18 +301,19 @@
       uri = "https://github.com/hyprwm/hyprcursor/archive/14faee7ed14264c85505f95f800837bfb30487d0.zip",
       sha256sum = "752c945117176d3f2c6442b10b2d331f39a86369c6343ec48bb920b170f42ee9"
     },
-    biDrvs = [
-      drvs.cairo,
-      drvs.libzip,
-      drvs.pixman,
-      drvs.zlibNg,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
-      drvs.hyprlang,
-      drvs.hyprUtils,
-    ],
+    biDrvs =
+      lib.biMap [
+        cairo,
+        libzip,
+        pixman,
+        zlibNg,
+        freetype,
+        fontconfig,
+        libpng,
+        expat,
+        hyprlang,
+        hyprUtils,
+      ],
     buildEnv = {
       EXTRA_CXXFLAGS = [
         "-l:libhyprlang.a -l:libhyprutils.a"
@@ -261,7 +340,20 @@
 }
 & {
   lib,
-  drvs,
+  cairo,
+  libzip,
+  pixman,
+  zlibNg,
+  freetype,
+  fontconfig,
+  libpng,
+  expat,
+  hyprlang,
+  hyprUtils,
+  tomlplusplus,
+  librsvg,
+  zlibNg,
+
   hyprcursor | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -282,21 +374,22 @@
         sha256sum = "f4621359f73f2193a0e8162d40c5676608d77406139ca8cedd9f0b7e843fa669"
       }
     ],
-    biDrvs = [
-      drvs.cairo,
-      drvs.libzip,
-      drvs.pixman,
-      drvs.zlibNg,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
-      drvs.hyprlang,
-      drvs.hyprUtils,
-      drvs.tomlplusplus,
+    biDrvs =
+      lib.biMap [
+        cairo,
+        libzip,
+        pixman,
+        zlibNg,
+        freetype,
+        fontconfig,
+        libpng,
+        expat,
+        hyprlang,
+        hyprUtils,
+        tomlplusplus,
 
-      # drvs.librsvg,
-    ],
+        # librsvg,
+      ],
     buildEnv = {
       EXTRA_CXXFLAGS = [
         "-l:libhyprlang.a -l:libhyprutils.a"
@@ -313,7 +406,8 @@
 }
 & {
   lib,
-  drvs,
+  zlibNg,
+
   librsvg | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/librsvg/-/archive/2.59.2/librsvg-2.59.2.tar.gz",
@@ -323,21 +417,24 @@
 }
 & {
   lib,
-  drvs,
+  zlibNg,
+
   libzip | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/nih-at/libzip/releases/download/v1.11.2/libzip-1.11.2.tar.xz",
       sha256sum = "5d471308cef4c4752bbcf973d9cd37ba4cb53739116c30349d4764ba1410dfc1",
     },
-    biDrvs = [
-      drvs.zlibNg,
-    ]
+    biDrvs =
+      lib.biMap [
+        zlibNg,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  hyprUtils,
+
   hyprlang | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -347,9 +444,10 @@
       uri = "https://github.com/hyprwm/hyprlang/archive/refs/tags/v0.6.0.tar.gz",
       sha256sum = "b1a163606402041d92507936fb6dcbc40dd0035b8e8abbf44b0ab59be627b52c"
     },
-    biDrvs = [
-      drvs.hyprUtils,
-    ],
+    biDrvs =
+      lib.biMap [
+        hyprUtils,
+      ],
     preConfigurePhase = [
       m%"
         sed -i \
@@ -361,21 +459,24 @@
 }
 & {
   lib,
-  drvs,
+  cmake,
+
   tomlplusplus | lib.MesonPackage = {
     # generator="Ninja",
     singleSource = {
       uri = "https://github.com/marzer/tomlplusplus/archive/refs/tags/v3.4.0.tar.gz",
       sha256sum = "8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155",
     },
-    biDrvs = [
-      drvs.cmake,
-    ]
+    biDrvs =
+      lib.biMap [
+        cmake,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  pythonFull,
+
   udis86 | lib.AutomakePackage = {
     # generator = "Ninja",
     sourceInputs = [
@@ -387,14 +488,39 @@
       }
     ],
 
-    biDrvs = [
-      drvs.pythonFull,
-    ]
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  pixman,
+  expat,
+  libffi,
+  libevdev,
+  mtdev,
+  pango,
+  cairo,
+  libpng,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  glib,
+  hwdata,
+  linuxHeaders,
+  hyprwaylandScanner,
+  aquamarine,
+  hyprUtils,
+  hyprlang,
+  hyprcursor,
+  libjpegTurboStatic,
+  libspng,
+  file,
+  libwebp,
+
   hyprlandProtocols | lib.MesonPackage = {
     sourceInputs = [
       {
@@ -457,7 +583,7 @@
         "%
   in
   {
-    drvs,
+
     wayland,
     waylandProtocols,
 
@@ -480,7 +606,32 @@
 )
 & {
   lib,
-  drvs,
+
+  pixman,
+  expat,
+  libffi,
+  libevdev,
+  mtdev,
+  pango,
+  cairo,
+  libpng,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  glib,
+  hwdata,
+  linuxHeaders,
+  hyprwaylandScanner,
+  aquamarine,
+  hyprUtils,
+  hyprlang,
+  hyprcursor,
+  libjpegTurboStatic,
+  libspng,
+  file,
+  libwebp,
+
   hyprgraphics | lib.CmakePackage = {
     generator = "Ninja",
 
@@ -488,32 +639,33 @@
       uri = "https://github.com/hyprwm/hyprgraphics/archive/refs/tags/v0.1.2.tar.gz",
       sha256sum = "9409b29e80200e06237c124a9eaf5a367ab407e56f43a575bdc84ed2d551a154"
     },
-    biDrvs = [
-      drvs.pixman,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libevdev,
-      drvs.mtdev,
-      drvs.pango,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.zlibNg,
-      drvs.harfbuzz,
-      drvs.glib,
-      drvs.hwdata,
-      drvs.linuxHeaders,
-      drvs.hyprwaylandScanner,
-      drvs.aquamarine,
-      drvs.hyprUtils,
-      drvs.hyprlang,
-      drvs.hyprcursor,
-      drvs.libjpegTurboStatic,
-      drvs.libspng,
-      drvs.file,
-      drvs.libwebp,
-    ],
+    biDrvs =
+      lib.biMap [
+        pixman,
+        expat,
+        libffi,
+        libevdev,
+        mtdev,
+        pango,
+        cairo,
+        libpng,
+        freetype,
+        fontconfig,
+        zlibNg,
+        harfbuzz,
+        glib,
+        hwdata,
+        linuxHeaders,
+        hyprwaylandScanner,
+        aquamarine,
+        hyprUtils,
+        hyprlang,
+        hyprcursor,
+        libjpegTurboStatic,
+        libspng,
+        file,
+        libwebp,
+      ],
     preConfigurePhase = [
       "sed -i 's@hyprgraphics SHARED@hyprgraphics STATIC@g' ${SRC}/CMakeLists.txt"
     ]
@@ -521,43 +673,72 @@
 }
 & {
   lib,
-  drvs,
+  pixman,
+  expat,
+  libffi,
+  libevdev,
+  mtdev,
+  pango,
+  cairo,
+  libpng,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  glib,
+  hwdata,
+  linuxHeaders,
+  hyprwaylandScanner,
+  aquamarine,
+  hyprUtils,
+  hyprlang,
+  hyprcursor,
+  libjpegTurboStatic,
+  libspng,
+  file,
+  libwebp,
+  wayland,
+  waylandProtocols,
+  hyprgraphics,
+  pcre2,
+
   hyprpaper | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/hyprwm/hyprpaper/archive/refs/tags/v0.7.4.tar.gz",
       sha256sum = "a2375dae58d29293b942a60cd465771b2c3c85cfcac628ec4897f11e7008666f",
     },
-    biDrvs = [
-      drvs.pixman,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libevdev,
-      drvs.mtdev,
-      drvs.pango,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.zlibNg,
-      drvs.harfbuzz,
-      drvs.glib,
-      drvs.hwdata,
-      drvs.linuxHeaders,
-      drvs.hyprwaylandScanner,
-      drvs.aquamarine,
-      drvs.hyprUtils,
-      drvs.hyprlang,
-      drvs.hyprcursor,
-      drvs.libjpegTurboStatic,
-      drvs.libspng,
-      drvs.file,
-      drvs.libwebp,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.hyprgraphics,
-      drvs.pcre2,
-    ],
+    biDrvs =
+      lib.biMap [
+        pixman,
+        expat,
+        libffi,
+        libevdev,
+        mtdev,
+        pango,
+        cairo,
+        libpng,
+        freetype,
+        fontconfig,
+        zlibNg,
+        harfbuzz,
+        glib,
+        hwdata,
+        linuxHeaders,
+        hyprwaylandScanner,
+        aquamarine,
+        hyprUtils,
+        hyprlang,
+        hyprcursor,
+        libjpegTurboStatic,
+        libspng,
+        file,
+        libwebp,
+        wayland,
+        waylandProtocols,
+        hyprgraphics,
+        pcre2,
+      ],
     preConfigurePhase = [
       "sed -i 's@#include <GLES3/gl32.h>@@g' ${SRC}/src/includes.hpp",
       "sed -i 's@#include <GLES3/gl3ext.h>@@g' ${SRC}/src/includes.hpp",

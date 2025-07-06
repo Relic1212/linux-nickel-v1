@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   epollShim | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

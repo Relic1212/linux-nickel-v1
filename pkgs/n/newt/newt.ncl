@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  slang,
+  linuxHeaders,
+  popt,
 
   newt | lib.AutotoolsPackage = {
     singleSource = {
@@ -8,11 +10,12 @@
       sha256sum = "5ded7e221f85f642521c49b1826c8de19845aa372baf5d630a51774b544fbdbb",
     },
     separateBuildDir = false,
-    biDrvs = [
-      drvs.slang,
-      drvs.linuxHeaders,
-      drvs.popt,
-    ],
+    biDrvs =
+      lib.biMap [
+        slang,
+        linuxHeaders,
+        popt,
+      ],
     preConfigurePhase = [
       m%"
             sed -i 's@-Wl,--version-script,newt.0.52.ver -Wl,-soname,$(LIBNEWTSONAME)@@g' \

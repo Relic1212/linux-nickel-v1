@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  gnumake,
+  protobuf,
+
   netavark | lib.CargoPackage = {
     sourceInputs = [
       {
@@ -41,9 +43,10 @@
             install
         "%,
     ],
-    biDrvs = [
-      drvs.gnumake,
-      drvs.protobuf,
-    ]
+    biDrvs =
+      lib.biMap [
+        gnumake,
+        protobuf,
+      ]
   }
 }

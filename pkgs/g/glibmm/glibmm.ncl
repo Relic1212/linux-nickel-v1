@@ -1,23 +1,34 @@
 {
   lib,
-  drvs,
+  pcre2,
+  libffi,
+  zlibNg,
+  glib,
+  libsigcpp2,
+
   glibmm | lib.MesonPackage = {
     singleSource = {
       uri = "https://download.gnome.org/sources/glibmm/2.66/glibmm-2.66.7.tar.xz",
       sha256sum = "fe02c1e5f5825940d82b56b6ec31a12c06c05c1583cfe62f934d0763e1e542b3"
     },
-    biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.libsigcpp2,
-    ]
+    biDrvs =
+      lib.biMap [
+        pcre2,
+        libffi,
+        zlibNg,
+        glib,
+        libsigcpp2,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  pcre2,
+  libffi,
+  zlibNg,
+  glib,
+  libsigcpp,
+
   glibmm_2_82 | lib.MesonPackage = {
     singleSource = {
       #uri = "https://download.gnome.org/sources/glibmm/2.68/glibmm-2.68.2.tar.xz",
@@ -27,13 +38,14 @@
       uri = "https://download.gnome.org/sources/glibmm/2.82/glibmm-2.82.0.tar.xz",
       sha256sum = "38684cff317273615c67b8fa9806f16299d51e5506d9b909bae15b589fa99cb6"
     },
-    biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.libsigcpp,
-    ],
+    biDrvs =
+      lib.biMap [
+        pcre2,
+        libffi,
+        zlibNg,
+        glib,
+        libsigcpp,
+      ],
     extraMesonArgs = [
       "-Dbuild-examples=false",
     ]

@@ -1,6 +1,11 @@
 {
   lib,
-  drvs,
+  bison,
+  m4,
+  basefiles,
+  libbsd,
+  libmd,
+  shadow,
 
   opendoas | lib.AutotoolsPackage = {
     singleSource = {
@@ -8,14 +13,15 @@
       sha256sum = "6da058a0e70b7543bc60624389b0b00b686189ec933828c522bf8b2600495a67"
     },
     separateBuildDir = false,
-    biDrvs = [
-      drvs.bison,
-      drvs.m4,
-      drvs.basefiles,
-      drvs.libbsd,
-      drvs.libmd,
-      drvs.shadow,
-    ],
+    biDrvs =
+      lib.biMap [
+        bison,
+        m4,
+        basefiles,
+        libbsd,
+        libmd,
+        shadow,
+      ],
     configureFlags = [
       "--prefix=/usr",
       "--enable-static",

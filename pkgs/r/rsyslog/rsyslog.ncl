@@ -1,6 +1,11 @@
 {
   lib,
-  drvs,
+  libestr,
+  libfastjson,
+  zlibNg,
+  bison,
+  flex,
+
   rsyslog | lib.AutomakePackage = {
     singleSource = {
       uri = "https://github.com/rsyslog/rsyslog/archive/refs/tags/v8.2410.0.tar.gz",
@@ -24,12 +29,13 @@
       "--enable-liblogging-stdlog",
     ],
 
-    biDrvs = [
-      drvs.libestr,
-      drvs.libfastjson,
-      drvs.zlibNg,
-      drvs.bison,
-      drvs.flex,
-    ],
+    biDrvs =
+      lib.biMap [
+        libestr,
+        libfastjson,
+        zlibNg,
+        bison,
+        flex,
+      ],
   }
 }

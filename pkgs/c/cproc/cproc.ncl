@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   cproc | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/michaelforney/cproc/archive/a2ddee1be68e76a1ac7f83b55732be8e54fe08c4.tar.gz",
@@ -13,8 +13,14 @@
 }
 & {
   lib,
-  drvs,
+
   cproc,
+  binutils,
+  busybox,
+  gnumake,
+  mcpp,
+  qbe,
+  musl,
   cprocBaltos | lib.MakePackage =
     cproc
     & {
@@ -51,15 +57,16 @@ EOF
 "%
       ],
 
-      baseBuildinputPackages | priority 1 = [
-        drvs.binutils,
-        drvs.cproc,
-        drvs.busybox,
-        drvs.gnumake,
-        drvs.mcpp,
-        drvs.qbe,
-        drvs.musl,
-      ],
+      baseBuildinputPackages | priority 1 =
+        lib.biMap [
+          binutils,
+          cproc,
+          busybox,
+          gnumake,
+          mcpp,
+          qbe,
+          musl,
+        ],
       isLlvm = false,
       buildEnv = {
         _isLlvm = false,
@@ -71,7 +78,7 @@ EOF
 }
 & {
   lib,
-  drvs,
+
   cprocCpp | lib.Package = {
     installPhase = [
       "install -d -m0755 ${DEST}/usr/bin",
@@ -84,7 +91,7 @@ EOF
 }
 & {
   lib,
-  drvs,
+
   mcpp | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/museoa/mcpp/archive/7c1872d70b00df8e4d06d68e6f4911cbc81b9073.tar.gz",

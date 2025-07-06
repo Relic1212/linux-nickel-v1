@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  expat,
+  linuxHeaders,
+
   dbus | lib.MesonPackage = {
     singleSource = {
       uri = "https://dbus.freedesktop.org/releases/dbus/dbus-1.15.8.tar.xz",
@@ -10,10 +12,11 @@
     extraMesonArgs = [
       "-Druntime_dir=/run"
     ],
-    biDrvs = [
-      drvs.expat,
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        expat,
+        linuxHeaders,
+      ],
     preConfigurePhase = [
       "sed -i 's@    post_install_exe()@    # post_install_exe()@g' ${SRC}/meson_post_install.py"
     ]

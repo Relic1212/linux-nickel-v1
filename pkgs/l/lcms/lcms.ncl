@@ -1,6 +1,5 @@
 {
   lib,
-  drvs,
 
   lcms | lib.MesonPackage = {
     singleSource = {

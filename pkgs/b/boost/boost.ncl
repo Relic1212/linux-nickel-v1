@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  pythonFull,
+
   boost | lib.AutotoolsPackage = {
     # generator = "Ninja",
     singleSource = {
@@ -14,9 +15,10 @@
     buildPhase = [
       "./b2"
     ],
-    biDrvs = [
-      drvs.pythonFull,
-    ],
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+      ],
     buildEnv = {
       CC = ["clang", "-static", "--static"],
       CXX = ["clang++", "-static", "--static"],

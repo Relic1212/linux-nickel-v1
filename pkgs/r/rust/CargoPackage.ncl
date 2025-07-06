@@ -1,5 +1,5 @@
 {
-  drvs,
+
   lib = {
 
     Package,
@@ -39,6 +39,12 @@
       ),
     },
 
+    # rust,
+    # muslShared,
+    # pkgconf,
+    # llvmProvider,
+    # clangCc,
+
     CargoPackage =
       Package
       & {
@@ -59,7 +65,7 @@
         },
 
         baseBuildinputPackages | priority -1000 =
-          [
+          lib.biMap [
             drvs.rust,
             drvs.muslShared,
             drvs.pkgconf,

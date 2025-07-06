@@ -1,6 +1,12 @@
 {
   lib,
-  drvs,
+  llvmStage0,
+  muslStage1,
+  gnumakeStage1,
+  ccacheBin,
+  m4Stage1,
+  busyboxStage0,
+
   ## base
   _flexBase | lib.AutotoolsPackage = {
 
@@ -25,33 +31,41 @@
     _flexBase
     & {
       stage = 1,
-      biDrvs = [
-        drvs.llvmStage0,
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-        drvs.m4Stage1,
-        drvs.busyboxStage0,
-      ]
+      biDrvs =
+        lib.biMap [
+          llvmStage0,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+          m4Stage1,
+          busyboxStage0,
+        ]
     },
 
   #2
+  llvmStage1,
+  muslStage2,
+  gnumakeStage2,
+  ccacheBin,
+  m4Stage2,
+  busyboxStage1,
 
   flexStage2 | lib.AutotoolsPackage =
     _flexBase
     & {
       stage = 2,
-      biDrvs = [
-        drvs.llvmStage1,
-        drvs.muslStage2,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-        drvs.m4Stage2,
-        drvs.busyboxStage1,
-      ]
+      biDrvs =
+        lib.biMap [
+          llvmStage1,
+          muslStage2,
+          gnumakeStage2,
+          ccacheBin,
+          m4Stage2,
+          busyboxStage1,
+        ]
     },
   #final
-
+  gettext,
   flex | lib.AutomakePackage =
     _flexBase
     & {
@@ -59,14 +73,15 @@
 
       # utilsProviders = [],
       # baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.gettext,
-        # drvs.llvm,
-        # drvs.musl,
-        # drvs.gnumake,
-        # drvs.ccacheBin,
-        # drvs.m4,
-        # drvs.busybox,
-      ]
+      biDrvs =
+        lib.biMap [
+          gettext,
+          # llvm,
+          # musl,
+          # gnumake,
+          # ccacheBin,
+          # m4,
+          # busybox,
+        ]
     }
 }

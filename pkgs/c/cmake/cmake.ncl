@@ -1,7 +1,14 @@
 let misc = import "cmake-base.ncl"
 in
 {
-  drvs,
+  busyboxStage1,
+  llvmStage1,
+  muslStage2,
+  samuraiStage2,
+  cmakeStage1,
+  ccacheBin,
+  linuxHeadersStage2,
+
   lib,
   # base for non-bootstrap
   _cmakeCmakeBase #| lib.CmakePackage
@@ -43,17 +50,25 @@ in
     & {
       stage = 2,
 
-      biDrvs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.muslStage2,
-        drvs.samuraiStage2,
-        drvs.cmakeStage1,
-        drvs.ccacheBin,
-        drvs.linuxHeadersStage2,
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage2,
+          samuraiStage2,
+          cmakeStage1,
+          ccacheBin,
+          linuxHeadersStage2,
+        ]
     },
 
+  busyboxStage2,
+  llvmStage2,
+  muslStage3,
+  samuraiStage3,
+  cmakeStage2,
+  ccacheBin,
+  linuxHeadersStage3,
   cmakeStage3 | lib.CmakePackage =
     _cmakeCmakeBase
     & {
@@ -61,19 +76,26 @@ in
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.muslStage3,
-        drvs.samuraiStage3,
-        drvs.cmakeStage2,
-        drvs.ccacheBin,
-        drvs.linuxHeadersStage3,
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          muslStage3,
+          samuraiStage3,
+          cmakeStage2,
+          ccacheBin,
+          linuxHeadersStage3,
+        ]
     },
 
   # final
-
+  busyboxStage3,
+  llvmStage3,
+  musl,
+  samurai,
+  cmakeStage3,
+  ccacheBin,
+  linuxHeaders,
   cmake | lib.CmakePackage =
     _cmakeCmakeBase
     & {
@@ -81,14 +103,15 @@ in
 
       utilsProviders = [],
       baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage3,
-        drvs.llvmStage3,
-        drvs.musl,
-        drvs.samurai,
-        drvs.cmakeStage3,
-        drvs.ccacheBin,
-        drvs.linuxHeaders,
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxStage3,
+          llvmStage3,
+          musl,
+          samurai,
+          cmakeStage3,
+          ccacheBin,
+          linuxHeaders,
+        ]
     },
 }

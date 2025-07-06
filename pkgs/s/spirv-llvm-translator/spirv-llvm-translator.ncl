@@ -1,17 +1,24 @@
 {
-  drvs,
+  spirvHeaders3,
+  spirvTools,
+  llvmFull,
+  llvmConfigStatic,
+  samurai,
+  llvm,
+
   lib,
   spirvLlvmTranslator | lib.CmakePackage = {
     generator = "Ninja",
 
-    biDrvs = [
-      drvs.spirvHeaders3,
-      drvs.spirvTools,
-      drvs.llvmFull,
-      drvs.llvmConfigStatic,
-      drvs.samurai,
-    ],
-    baseBuildinputPackages = std.array.filter (fun v => v.name != drvs.llvm.name) lib.CmakePackage.baseBuildinputPackages,
+    biDrvs =
+      lib.biMap [
+        spirvHeaders3,
+        spirvTools,
+        llvmFull,
+        llvmConfigStatic,
+        samurai,
+      ],
+    baseBuildinputPackages = std.array.filter (fun v => v.name != llvm.name) lib.CmakePackage.baseBuildinputPackages,
 
     cmakeExtraArgsRecord = {
       # "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "${SRC}/SPIRV-Headers",

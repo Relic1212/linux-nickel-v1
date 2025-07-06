@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  go_1_21,
+  bash,
+
   go_1_23 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.23.3.src.tar.gz",
@@ -25,15 +27,18 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs = [
-      drvs.go_1_21,
-      drvs.bash,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_21,
+        bash,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  go_1_9,
+  bash,
+
   go_1_22 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.22.9.src.tar.gz",
@@ -58,15 +63,18 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs = [
-      drvs.go_1_9,
-      drvs.bash,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_9,
+        bash,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  go_1_9,
+  bash,
+
   go_1_21 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.21.13.src.tar.gz",
@@ -91,9 +99,10 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs = [
-      drvs.go_1_9,
-      drvs.bash,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_9,
+        bash,
+      ]
   }
 }

@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  googletest,
+  nlohmannJsonCmake,
+
   jsonnet | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -14,10 +16,11 @@
         file = "no-shared.patch",
       }
     ],
-    biDrvs = [
-      drvs.googletest,
-      drvs.nlohmannJsonCmake,
-    ],
+    biDrvs =
+      lib.biMap [
+        googletest,
+        nlohmannJsonCmake,
+      ],
     cmakeExtraArgsRecord = {
       "-DUSE_SYSTEM_JSON" = true,
 
@@ -32,7 +35,7 @@
 }
 & {
   lib,
-  drvs,
+
   googletest | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -43,7 +46,7 @@
 }
 & {
   lib,
-  drvs,
+
   nlohmannJson,
   nlohmannJsonCmake | lib.CmakePackage = {
     generator = "Ninja",

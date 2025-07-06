@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   jsoncpp | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

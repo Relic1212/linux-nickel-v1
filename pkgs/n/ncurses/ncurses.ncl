@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  pkgconf,
+
   ncurses | lib.AutotoolsPackage = {
     name = "ncurses",
     singleSource = {
@@ -39,8 +40,9 @@
       "ln -s ncursesw.pc ncurses.pc",
       "ln -s panelw.pc panel.pc",
     ],
-    biDrvs = [
-      drvs.pkgconf,
-    ]
+    biDrvs =
+      lib.biMap [
+        pkgconf,
+      ]
   }
 }

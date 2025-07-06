@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   llvmFull,
   llvm,
   llvmBaltos | lib.CmakePackage =
@@ -23,21 +23,29 @@
 }
 & {
   lib,
-  drvs,
+  busyboxStage3,
   llvmBaltos,
+  musl,
+  samurai,
+  ccacheBin,
+  linuxHeaders,
+  cmake,
+  python,
+
   llvmBaltos2 | lib.CmakePackage =
     llvmBaltos
     & {
-      buildInputs | priority 1 = [
-        drvs.busyboxStage3,
-        drvs.llvmBaltos,
-        drvs.musl,
-        drvs.samurai,
-        drvs.ccacheBin,
-        drvs.linuxHeaders,
-        drvs.cmake,
-        drvs.python,
-      ],
+      buildInputs | priority 1 =
+        lib.biMap [
+          busyboxStage3,
+          llvmBaltos,
+          musl,
+          samurai,
+          ccacheBin,
+          linuxHeaders,
+          cmake,
+          python,
+        ],
 
       cmakeArgsRecord = {
         "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING" = "'i686-unknown-baltos'",

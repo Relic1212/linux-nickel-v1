@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   fltk | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

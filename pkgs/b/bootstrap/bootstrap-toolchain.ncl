@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  busyboxBootstrapStage0,
+
   musl,
   linux,
   bootstrapStage0 | lib.Package =
@@ -279,8 +280,9 @@
           ]
       ),
 
-    biDrvs = [
-      drvs.busyboxBootstrapStage0,
-    ]
+    biDrvs =
+      lib.biMap [
+        busyboxBootstrapStage0,
+      ]
   }
 }

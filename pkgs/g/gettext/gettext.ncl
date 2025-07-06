@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   gettext | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/gettext/gettext-0.22.5.tar.gz",

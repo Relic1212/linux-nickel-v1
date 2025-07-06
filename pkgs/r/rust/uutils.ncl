@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  clangCc,
+
   uutils | lib.CargoPackage =
     let j = import "./uutils/uutils-packages.json"
     in
@@ -16,9 +17,10 @@
           }
         }
       ],
-      biDrvs = [
-        # drvs.clangCc,
-      ],
+      biDrvs =
+        lib.biMap [
+          # clangCc,
+        ],
 
       separateBuildDir = false,
       crates = _crates,

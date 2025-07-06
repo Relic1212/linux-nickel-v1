@@ -1,6 +1,10 @@
 {
   lib,
-  drvs,
+  bash,
+  libxslt,
+  docbookXml,
+  libxml2,
+
   xmlto | lib.AutomakePackage = {
     singleSource = {
       uri = "https://pagure.io/xmlto/archive/0.0.29/xmlto-0.0.29.tar.gz",
@@ -9,17 +13,21 @@
     extraConfigureFlags = [
       "BASH=/usr/bin/bash"
     ],
-    biDrvs = [
-      drvs.bash,
-      drvs.libxslt,
-      drvs.docbookXml,
-      drvs.libxml2,
-    ]
+    biDrvs =
+      lib.biMap [
+        bash,
+        libxslt,
+        docbookXml,
+        libxml2,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  libxslt,
+  docbookXml,
+  libxml2,
+
   docbook | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/docbook/docbook/archive/41f0c3d5dea67901a2f4874427665ec755243459.zip",
@@ -29,17 +37,20 @@
 }
 & {
   lib,
-  drvs,
+  libxslt,
+  docbookXml,
+  libxml2,
   docbookXsl | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/docbook/xslt10-stylesheets/releases/download/release/1.79.2/docbook-xsl-1.79.2.zip",
       sha256sum = "853dce096f5b32fe0b157d8018d8fecf92022e9c79b5947a98b365679c7e31d7"
     },
-    biDrvs = [
-      drvs.libxslt,
-      drvs.docbookXml,
-      drvs.libxml2,
-    ],
+    biDrvs =
+      lib.biMap [
+        libxslt,
+        docbookXml,
+        libxml2,
+      ],
     extraMakeArgs = [
       "XSLT=/usr/bin/xsltproc"
     ]
@@ -47,17 +58,20 @@
 }
 & {
   lib,
-  drvs,
+  libxslt,
+  libxml2,
+
   docbookXml | lib.Package = {
     singleSource = {
       uri = "https://www.docbook.org/xml/4.5/docbook-xml-4.5.zip",
 
       sha256sum = "4e4e037a2b83c98c6c94818390d4bdd3f6e10f6ec62dd79188594e26190dc7b4"
     },
-    biDrvs = [
-      drvs.libxslt,
-      drvs.libxml2,
-    ],
+    biDrvs =
+      lib.biMap [
+        libxslt,
+        libxml2,
+      ],
     separateBuildDir = false,
     # https://www.linuxfromscratch.org/blfs/view/svn/pst/docbook.html
     installPhase = [

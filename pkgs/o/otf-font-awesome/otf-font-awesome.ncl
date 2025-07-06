@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   fontAwesome | lib.Package = {
     singleSource = {
       uri = "https://github.com/FortAwesome/Font-Awesome/archive/6.7.1.tar.gz",

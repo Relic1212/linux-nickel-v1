@@ -28,15 +28,16 @@
       "install -m0755 libssp_nonshared.a ${DEST}/usr/lib",
     ]
   },
-  drvs,
+  muslStage0,
   libsspNonsharedStage0 =
     _libsspNonsharedBase
     & {
       stage = 0,
-      buildInputs = [
-        # drvs.llvmBaselibsStage0,
-        drvs.muslStage0
-      ],
+      buildInputs =
+        lib.biMap [
+          # llvmBaselibsStage0,
+          muslStage0,
+        ],
 
       #buildEnv.LLVM_LDFLAGS = ["-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
 

@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   alsaLibs | lib.AutotoolsPackage = {
     singleSource = {
       #https://www.alsa-project.org/wiki/Download
@@ -11,9 +12,10 @@
       uri = "http://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.13.tar.bz2",
       sha256sum = "8c4ff37553cbe89618e187e4c779f71a9bb2a8b27b91f87ed40987cc9233d8f6",
     },
-    biDrvs = [
-      drvs.linuxHeaders
-    ],
+    biDrvs =
+      lib.biMap [
+        linuxHeaders
+      ],
     extraConfigureFlags = [
       "--without-libdl",
       "ac_cv_func_dlopen=no",
@@ -48,7 +50,13 @@
 }
 & {
   lib,
-  drvs,
+  linuxHeaders,
+  alsaLibs,
+  ncurses,
+  readline,
+  eudev,
+  pkgconf,
+
   alsaUtils | lib.AutotoolsPackage = {
     singleSource = {
       #https://www.alsa-project.org/wiki/Download
@@ -59,14 +67,15 @@
       uri = "http://www.alsa-project.org/files/pub/utils/alsa-utils-1.2.13.tar.bz2",
       sha256sum = "1702a6b1cdf9ba3e996ecbc1ddcf9171e6808f5961d503d0f27e80ee162f1daa",
     },
-    biDrvs = [
-      drvs.linuxHeaders,
-      drvs.alsaLibs,
-      drvs.ncurses,
-      drvs.readline,
-      drvs.eudev,
-      drvs.pkgconf,
-    ],
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+        alsaLibs,
+        ncurses,
+        readline,
+        eudev,
+        pkgconf,
+      ],
     buildEnv = {
       EXTRA_CFLAGS = ["-fPIC"],
       EXTRA_CXXFLAGS = ["-fPIC"],
@@ -90,7 +99,9 @@
 }
 & {
   lib,
-  drvs,
+  autoconf,
+  automake,
+
   alsaFirmware | lib.AutomakePackage = {
     singleSource = {
       uri = "http://www.alsa-project.org/files/pub/firmware/alsa-firmware-1.2.4.tar.bz2",
@@ -112,9 +123,10 @@
         find ${SRC} -type f | xargs sed -i 's@u_int32_t@uint32_t@g'
         "%
     ],
-    biDrvs = [
-      # drvs.autoconf,
-      # drvs.automake,
-    ]
+    biDrvs =
+      lib.biMap [
+        # autoconf,
+        # automake,
+      ]
   }
 }

@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   uutilsLogin | lib.CargoPackage =
     let j = import "./uutils-login-crates.json"
     in

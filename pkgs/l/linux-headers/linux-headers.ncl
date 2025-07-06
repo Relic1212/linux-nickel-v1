@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   ############
   _linuxHeadersBase | lib.MakePackage = {
     baseName = "linux-headers",
@@ -40,6 +40,7 @@
     ]
   },
   ############
+  muslStage0,
   linuxHeadersStage0 =
     _linuxHeadersBase
     & {
@@ -47,13 +48,18 @@
       buildEnv | force = {},
       makeArgs | force = ["PREFIX=/usr"],
       stage = 0,
-      buildInputs = [
-        drvs.muslStage0
-      ]
+      buildInputs =
+        lib.biMap [
+          muslStage0
+        ]
     },
 
   ############
-
+  busyboxBootstrapStage0,
+  bootstrapStage0,
+  bootstrapSymlinks,
+  gnumakeStage1,
+  ccacheBin,
   linuxHeadersStage1 =
     _linuxHeadersBase
     & {
@@ -75,66 +81,81 @@
         ]
         @ lib.MakePackage.makeArgs,
 
-      buildInputs = [
-        drvs.busyboxBootstrapStage0,
-        drvs.bootstrapStage0,
-        drvs.bootstrapSymlinks,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-        # drvs.m4Stage1,
-        # drvs.flexStage1,
-        # drvs.bisonStage1,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxBootstrapStage0,
+          bootstrapStage0,
+          bootstrapSymlinks,
+          gnumakeStage1,
+          ccacheBin,
+          # m4Stage1,
+          # flexStage1,
+          # bisonStage1,
+        ]
     },
+  busyboxStage1,
+  llvmStage1,
+  muslStage2,
+  gnumakeStage2,
 
   linuxHeadersStage2 =
     _linuxHeadersBase
     & {
       stage | force = 2,
-      buildInputs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.muslStage2,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-        # drvs.m4Stage2,
-        # drvs.flexStage2,
-        # drvs.bisonStage2,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage2,
+          gnumakeStage2,
+          ccacheBin,
+          # m4Stage2,
+          # flexStage2,
+          # bisonStage2,
+        ]
     },
 
+  busyboxStage2,
+  llvmStage2,
+  muslStage3,
+  gnumakeStage4,
   linuxHeadersStage3 =
     _linuxHeadersBase
     & {
       stage = -1,
-      buildInputs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.muslStage3,
-        drvs.gnumakeStage4,
-        drvs.ccacheBin,
-        # drvs.m4,
-        # drvs.flex,
-        # drvs.bison,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          muslStage3,
+          gnumakeStage4,
+          ccacheBin,
+          # m4,
+          # flex,
+          # bison,
+        ]
     },
 
   #final
-
+  busyboxStage3,
+  llvmStage3,
+  musl,
+  gnumake,
   linuxHeaders =
     _linuxHeadersBase
     & {
       stage = -1,
-      buildInputs = [
-        drvs.busyboxStage3,
-        drvs.llvmStage3,
-        drvs.musl,
-        drvs.gnumake,
-        drvs.ccacheBin,
-        # drvs.m4,
-        # drvs.flex,
-        # drvs.bison,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage3,
+          llvmStage3,
+          musl,
+          gnumake,
+          ccacheBin,
+          # m4,
+          # flex,
+          # bison,
+        ]
     },
 
   linuxHeadersAarch64 =

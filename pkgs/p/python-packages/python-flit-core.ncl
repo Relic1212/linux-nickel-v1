@@ -1,17 +1,21 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  pythonInstaller,
+  pythonSetuptools,
+
   pythonFlitCore | lib.Package = {
     name = "python-flit-core",
     singleSource = {
       uri = "https://files.pythonhosted.org/packages/source/f/flit/flit-3.9.0.tar.gz",
       sha256sum = "d75edf5eb324da20d53570a6a6f87f51e606eee8384925cd66a90611140844c7"
     },
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.pythonInstaller,
-      drvs.pythonSetuptools,
-    ],
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        pythonInstaller,
+        pythonSetuptools,
+      ],
     buildDir = "${SRC}",
     buildPhase = [
       "rm -rf flit_core/flit_core/vendor",

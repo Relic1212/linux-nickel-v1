@@ -1,6 +1,20 @@
 {
   lib,
-  drvs,
+  libelf,
+  libdrm,
+  zlibNg,
+  pythonMako,
+  pythonPackaging,
+  pythonMarkupsafe,
+  libpciaccess,
+  libffi,
+  bison,
+  flex,
+  wayland,
+  waylandProtocols,
+  linuxHeaders,
+  m4,
+
   mesa | lib.MesonPackage = {
     symlinkBuldInputs = true,
     singleSource = {
@@ -13,22 +27,23 @@
         sha256sum = "9ae89539149379f36b0126a66b649e0e95e9a602dea416d73f447af53625d3ce"
       }
     ],
-    biDrvs = [
-      drvs.libelf,
-      drvs.libdrm,
-      drvs.zlibNg,
-      drvs.pythonMako,
-      drvs.pythonPackaging,
-      drvs.pythonMarkupsafe,
-      drvs.libpciaccess,
-      drvs.libffi,
-      drvs.bison,
-      drvs.flex,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.linuxHeaders,
-      drvs.m4
-    ],
+    biDrvs =
+      lib.biMap [
+        libelf,
+        libdrm,
+        zlibNg,
+        pythonMako,
+        pythonPackaging,
+        pythonMarkupsafe,
+        libpciaccess,
+        libffi,
+        bison,
+        flex,
+        wayland,
+        waylandProtocols,
+        linuxHeaders,
+        m4
+      ],
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",

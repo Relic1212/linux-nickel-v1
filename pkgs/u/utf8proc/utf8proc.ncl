@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   utf8proc | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.9.0.tar.gz",

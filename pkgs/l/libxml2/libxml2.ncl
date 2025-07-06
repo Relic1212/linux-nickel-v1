@@ -1,16 +1,17 @@
 {
   lib,
 
-  drvs,
+  git,
 
   libxml2 | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.4/libxml2-v2.13.4.tar.gz",
       sha256sum = "832f8c4c652f813c9d0a01adcaf86145b77c64e56c71ed85db8071aa78beb98f"
     },
-    biDrvs = [
-      drvs.git,
-    ],
+    biDrvs =
+      lib.biMap [
+        git,
+      ],
     extraMesonArgs = [
       "-Dpython=true",
     ]
@@ -18,7 +19,13 @@
 }
 & {
   lib,
-  drvs,
+  muslShared,
+  git,
+  zstd,
+  zlibNgPic,
+  xz,
+  pythonDynamic,
+
   libxml2,
   libxml2Dynamic | lib.MesonPackage = {
     singleSource = libxml2.singleSource,
@@ -26,16 +33,17 @@
     buildEnv = {
       _isStatic = false
     },
-    pythonProvider = drvs.pythonDynamic,
+    pythonProvider = lib.singleBiMap pythonDynamic,
     # separateBuildDir = false,
-    biDrvs = [
-      drvs.muslShared,
-      drvs.git,
-      drvs.zstd,
-      drvs.zlibNgPic,
-      drvs.xz,
-      # drvs.pythonDynamic,
-    ],
+    biDrvs =
+      lib.biMap [
+        muslShared,
+        git,
+        zstd,
+        zlibNgPic,
+        xz,
+        # pythonDynamic,
+      ],
 
     extraMesonArgs = [
       # "--with-python=/usr/bin/python",

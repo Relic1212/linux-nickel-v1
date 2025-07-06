@@ -1,6 +1,21 @@
 {
   lib,
-  drvs,
+  xxhash,
+  zstd,
+  lz4,
+  openssl,
+  mandoc,
+  pythonFull,
+  m4,
+  libtool,
+  pkgconf,
+  zlibNg,
+  xz,
+  mawk,
+  attr,
+  acl,
+  libcap,
+
   rsync
     |
     # lib.AutomakePackage
@@ -13,25 +28,26 @@
 
       # separateBuildDir=false,
 
-      biDrvs = [
-        # drvs.xxhash,
-        drvs.zstd,
-        drvs.lz4,
-        drvs.openssl,
-        # drvs.mandoc,
-        # drvs.pythonFull,
-        # drvs.m4,
-        # drvs.libtool,
-        drvs.pkgconf,
-        drvs.zlibNg,
-        drvs.xz,
-        drvs.mawk,
+      biDrvs =
+        lib.biMap [
+          # xxhash,
+          zstd,
+          lz4,
+          openssl,
+          # mandoc,
+          # pythonFull,
+          # m4,
+          # libtool,
+          pkgconf,
+          zlibNg,
+          xz,
+          mawk,
 
-        # optional
-        drvs.attr,
-        drvs.acl,
-        drvs.libcap,
-      ],
+          # optional
+          attr,
+          acl,
+          libcap,
+        ],
       extraConfigureFlags = [
         "--disable-md2man",
         "--disable-xxhash",

@@ -1,7 +1,9 @@
 (import "llvm-base.ncl")
 & {
   lib,
-  drvs,
+  muslStage0,
+  linuxHeadersStage0,
+
   _llvmBase,
   libcxxBaseStage0 | lib.CmakePackage =
     let srFlag = "--sysroot=/tmp/workdir/sysroot" in
@@ -107,10 +109,11 @@
         "export DESTDIR=/tmp/workdir/out/destdir",
         "cmake -S ${SRC}/runtimes %{std.string.join " \\\n\t" cmakeArgs}",
       ],
-      biDrvs = [
-        drvs.muslStage0,
-        drvs.linuxHeadersStage0,
-      ],
+      biDrvs =
+        lib.biMap [
+          muslStage0,
+          linuxHeadersStage0,
+        ],
       buildPhase = [
         "make -j$(nproc) cxx cxxabi unwind compiler-rt"
       ],
@@ -260,10 +263,11 @@
         "export DESTDIR=/tmp/workdir/out/destdir",
         "cmake -S ${SRC}/llvm %{std.string.join " \\\n\t" cmakeArgs}",
       ],
-      biDrvs = [
-        drvs.muslStage0,
-        drvs.libcxxBaseStage0,
-      ],
+      biDrvs =
+        lib.biMap [
+          muslStage0,
+          libcxxBaseStage0,
+        ],
       buildPhase = [
         "make -j$(nproc) clang lld"
       ],

@@ -1,6 +1,11 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+  pkgconf,
+  m4,
+  flex,
+  bison,
+
   iproute2 | lib.AutotoolsPackage = {
     # singleSource={
     #     uri="https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/snapshot/iproute2-6.11.0.tar.gz",
@@ -30,12 +35,13 @@
     extraMakeInstallArgs = [
       "SBINDIR=/usr/bin",
     ],
-    biDrvs = [
-      drvs.linuxHeaders,
-      drvs.pkgconf,
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+        pkgconf,
+        m4,
+        flex,
+        bison,
+      ]
   }
 }

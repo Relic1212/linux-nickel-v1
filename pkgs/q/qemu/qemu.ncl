@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   qemu | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://download.qemu.org/qemu-9.2.3.tar.xz",

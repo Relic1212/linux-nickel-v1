@@ -1,6 +1,21 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  rsync,
+  pkgconf,
+  muslShared,
+  llvmFullPic,
+  libgccSymlinks,
+  zlibNgPic,
+  opensslPic,
+  gcc,
+  gccSymlink,
+  libemptyGcc,
+  libempty,
+  clangCc,
+  llvmConfigStatic,
+  gnutar,
+
   rust | lib.AutotoolsPackage =
     let tgt = "x86_64-unknown-linux-musl" in
     {
@@ -131,25 +146,26 @@
         "DESTDIR=${DEST} ./x.py install",
       ],
 
-      biDrvs = [
-        drvs.pythonFull,
-        # drvs.rsync,
-        drvs.pkgconf,
-        drvs.muslShared,
-        (drvs.clangCc & { priority = 1 }),
-        drvs.llvmFullPic,
-        drvs.libgccSymlinks,
-        drvs.zlibNgPic,
-        drvs.opensslPic,
-        drvs.gcc,
+      biDrvs =
+        lib.biMap [
+          pythonFull,
+          # rsync,
+          pkgconf,
+          muslShared,
+          (clangCc & { priority = 1 }),
+          llvmFullPic,
+          libgccSymlinks,
+          zlibNgPic,
+          opensslPic,
+          gcc,
 
-        # drvs.gccSymlink,
-        #(drvs.binutils & { priority = 1 }),
-        # drvs.libemptyGcc,
-        # drvs.libempty,
-        (drvs.llvmConfigStatic & { priority = 1 }),
-        (drvs.gnutar & { priority = 1 }),
-      ],
+          # gccSymlink,
+          #(binutils & { priority = 1 }),
+          # libemptyGcc,
+          # libempty,
+          (llvmConfigStatic & { priority = 1 }),
+          (gnutar & { priority = 1 }),
+        ],
       configureFlags = [
         "--enable-verbose-configure",
         "--prefix=/usr",
@@ -190,7 +206,7 @@
     ]
   }
 }
-& (import "CargoPackage.ncl")
+# & (import "CargoPackage.ncl")
 & (import "uutils.ncl")
 & (import "niri.ncl")
 & (import "nickel-lang.ncl")

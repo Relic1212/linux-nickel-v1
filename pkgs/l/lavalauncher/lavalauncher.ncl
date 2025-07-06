@@ -1,6 +1,25 @@
 {
   lib,
-  drvs,
+  fontconfig,
+  freetype,
+  zlibNg,
+  gperf,
+  pixman,
+  wayland,
+  waylandProtocols,
+  libffi,
+  libxkbcommon,
+  expat,
+  linuxHeaders,
+  ncurses,
+  readline,
+  pcre2,
+  pango,
+  cairo,
+  libpng,
+  harfbuzz,
+  scdoc,
+
   lavalauncher | lib.MesonPackage = {
     singleSource = {
       # uri = m%"https://git.sr.ht/~leon_plickat/lavalauncher/archive/1050f33b0a3315bcd226f648392532c52467c9d7.tar.gz"%,
@@ -9,27 +28,28 @@
       sha256sum = "137f1726e61871b62d12d60528c8a73ac0a3c6dbd53193e4f7795a8f953a031e"
     },
 
-    biDrvs = [
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.zlibNg,
-      drvs.gperf,
-      drvs.pixman,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.libffi,
-      drvs.libxkbcommon,
-      drvs.expat,
-      drvs.linuxHeaders,
-      drvs.ncurses,
-      drvs.readline,
-      drvs.pcre2,
-      drvs.pango,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.harfbuzz,
-      drvs.scdoc,
-    ],
+    biDrvs =
+      lib.biMap [
+        fontconfig,
+        freetype,
+        zlibNg,
+        gperf,
+        pixman,
+        wayland,
+        waylandProtocols,
+        libffi,
+        libxkbcommon,
+        expat,
+        linuxHeaders,
+        ncurses,
+        readline,
+        pcre2,
+        pango,
+        cairo,
+        libpng,
+        harfbuzz,
+        scdoc,
+      ],
     preConfigurePhase = [
       m%"sed -i 's@werror=true@werror=false@g' ${SRC}/meson.build"%
     ],
@@ -37,7 +57,7 @@
 }
 & {
   lib,
-  drvs,
+
   scdoc | lib.MakePackage = {
     singleSource = {
       uri = "https://git.sr.ht/~sircmpwn/scdoc/archive/1.11.3.tar.gz",

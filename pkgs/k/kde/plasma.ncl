@@ -1,7 +1,26 @@
 {
   lib,
-  drvs,
   _kf,
+  kcoreaddons,
+  kcodecs,
+  kconfig,
+  kguiaddons,
+  ki18n,
+  gettext,
+  kwidgetsaddons,
+  kcolorscheme,
+  kauth,
+  kglobalaccel,
+  kpackage,
+  kidletime,
+  kcrash,
+  kservice,
+  ksvg,
+  kdbusaddons,
+  plasmaWaylandProtocols,
+  kwindowsystem,
+  kirigami,
+  karchive,
 
   _plasma | lib.CmakePackage = (
     _kf
@@ -9,27 +28,27 @@
 
       biDrvs | priority -1 =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kauth,
-          drvs.kglobalaccel,
-          drvs.kpackage,
-          drvs.kidletime,
-          drvs.kcrash,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kdbusaddons,
-          drvs.plasmaWaylandProtocols,
-          drvs.kwindowsystem,
-          drvs.kirigami,
-          drvs.karchive,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          kwidgetsaddons,
+          kcolorscheme,
+          kauth,
+          kglobalaccel,
+          kpackage,
+          kidletime,
+          kcrash,
+          kservice,
+          ksvg,
+          kdbusaddons,
+          plasmaWaylandProtocols,
+          kwindowsystem,
+          kirigami,
+          karchive,
         ]
     }
   ),
@@ -43,15 +62,15 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          kwidgetsaddons,
+          kcolorscheme,
         ],
 
       preConfigurePhase = [

@@ -40,28 +40,36 @@
 }
 & {
   lib,
-  drvs,
 
   gcc,
   mpc,
   gmp,
   mpfr,
+  m4,
+  flex,
+  bison,
+  clangCc,
+  binutils,
+  binutilsExp,
+  muslShared,
+
   gccExp | lib.AutotoolsPackage =
     gcc
     & {
 
-      biDrvs | priority 1 = [
-        drvs.m4,
-        drvs.flex,
-        drvs.bison,
-        #   drvs.mpc,
-        #   drvs.gmp,
-        #   drvs.mpfr,
-        drvs.clangCc,
-        (drvs.binutils & { priority = 1 }),
-        drvs.binutilsExp,
-        drvs.muslShared,
-      ],
+      biDrvs | priority 1 =
+        lib.biMap [
+          m4,
+          flex,
+          bison,
+          #   mpc,
+          #   gmp,
+          #   mpfr,
+          clangCc,
+          (binutils & { priority = 1 }),
+          binutilsExp,
+          muslShared,
+        ],
 
       sourceInputs = [
         { src = gcc.singleSource },

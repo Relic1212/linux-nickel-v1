@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  ncurses,
+
   readline | lib.AutotoolsPackage = {
     name = "readline",
     singleSource = {
@@ -40,8 +41,9 @@
       "--with-ticlib",
       "--with-terminfo=ticlib",
     ],
-    biDrvs = [
-      drvs.ncurses,
-    ]
+    biDrvs =
+      lib.biMap [
+        ncurses,
+      ]
   }
 }

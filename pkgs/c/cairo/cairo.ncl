@@ -1,17 +1,24 @@
 {
   lib,
-  drvs,
+  pixman,
+  zlibNg,
+  freetype,
+  fontconfig,
+  libpng,
+  expat,
+
   cairo | lib.MesonPackage = {
     singleSource.uri = "https://gitlab.freedesktop.org/cairo/cairo/-/archive/1.18.2/cairo-1.18.2.tar.gz",
     singleSource.sha256sum = "7bbfb469b89b1f60584b4f39a1366789b7625a5796905870e108b6c0e8ca8216",
-    biDrvs = [
-      drvs.pixman,
-      drvs.zlibNg,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
-    ],
+    biDrvs =
+      lib.biMap [
+        pixman,
+        zlibNg,
+        freetype,
+        fontconfig,
+        libpng,
+        expat,
+      ],
     extraMesonArgs = [
       "-Dzlib=enabled",
       "-Dfreetype=enabled",
@@ -22,7 +29,7 @@
 }
 & {
   lib,
-  drvs,
+
   cairo,
   cairo3 | lib.MesonPackage =
     cairo
@@ -35,9 +42,13 @@
     }
 }
 & {
-  drvs,
+
   lib,
   cairo,
+  glib,
+  gobjectDynamic,
+  libffi,
+  pcre2,
   cairoGobject =
     cairo
     & {
@@ -48,11 +59,11 @@
         ],
       biDrvs | priority 1 =
         cairo.biDrvs
-        @ [
-          drvs.glib,
-          drvs.gobjectDynamic,
-          drvs.libffi,
-          drvs.pcre2,
+        @ lib.biMap [
+          glib,
+          gobjectDynamic,
+          libffi,
+          pcre2,
         ]
     }
 }

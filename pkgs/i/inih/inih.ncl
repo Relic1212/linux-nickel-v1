@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   inih | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/benhoyt/inih/archive/refs/tags/r58.tar.gz",

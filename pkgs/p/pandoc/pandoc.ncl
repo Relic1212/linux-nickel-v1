@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   pandoc | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/jgm/pandoc/archive/refs/tags/3.5.tar.gz",

@@ -1,6 +1,24 @@
 {
   lib,
-  drvs,
+  pkgconf,
+  freetype,
+  zlibNg,
+  gperf,
+  expat,
+  fontconfig,
+  ncurses,
+  libxcursor,
+  xorgMacros,
+  xorgproto,
+  xtrans,
+  libxcb,
+  xcbProto,
+  libxau,
+  libx11,
+  libxrender,
+  libxfixes,
+  libxft,
+
   sbase | lib.MakePackage = {
     singleSource = {
       uri = "git://git.suckless.org/sbase",
@@ -13,7 +31,7 @@
 }
 & {
   lib,
-  drvs,
+
   ubase | lib.MakePackage = {
     singleSource = {
       uri = "git://git.suckless.org/ubase",
@@ -31,7 +49,7 @@
 }
 & {
   lib,
-  drvs,
+
   "9base" | lib.MakePackage = {
     singleSource = {
       uri = "git://git.suckless.org/9base",
@@ -49,7 +67,25 @@
 }
 & {
   lib,
-  drvs,
+  pkgconf,
+  freetype,
+  zlibNg,
+  gperf,
+  expat,
+  fontconfig,
+  ncurses,
+  ###############################################################
+  libxcursor,
+  xorgMacros,
+  xorgproto,
+  xtrans,
+  libxcb,
+  xcbProto,
+  libxau,
+  libx11,
+  libxrender,
+  libxfixes,
+  libxft,
   st | lib.MakePackage = {
     singleSource = {
       uri = "git://git.suckless.org/st",
@@ -72,33 +108,48 @@
     extraMakeInstallArgs = [
       "PREFIX=/usr"
     ],
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.freetype,
-      drvs.zlibNg,
-      drvs.gperf,
-      drvs.expat,
-      drvs.fontconfig,
-      drvs.ncurses,
-      ###############################################################
-      drvs.libxcursor,
-      drvs.xorgMacros,
-      drvs.xorgproto,
-      drvs.xtrans,
-      drvs.libxcb,
-      drvs.xcbProto,
-      drvs.libxau,
-      drvs.libx11,
-      drvs.libxrender,
-      drvs.libxfixes,
-      drvs.libxft,
-      ###################################################
-    ]
+    biDrvs =
+      lib.biMap [
+        pkgconf,
+        freetype,
+        zlibNg,
+        gperf,
+        expat,
+        fontconfig,
+        ncurses,
+        ###############################################################
+        libxcursor,
+        xorgMacros,
+        xorgproto,
+        xtrans,
+        libxcb,
+        xcbProto,
+        libxau,
+        libx11,
+        libxrender,
+        libxfixes,
+        libxft,
+        ###################################################
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  zlibNg,
+  freetype,
+  gperf,
+  expat,
+  fontconfig,
+  libxcursor,
+  xorgMacros,
+  xorgproto,
+  xtrans,
+  libxcb,
+  xcbProto,
+  libxau,
+  libx11,
+  libxrender,
+  libxfixes,
 
   libxft | lib.AutomakePackage = {
 
@@ -106,24 +157,25 @@
       uri = "https://gitlab.freedesktop.org/xorg/lib/libxft/-/archive/libXft-2.3.8/libxft-libXft-2.3.8.tar.gz",
       sha256sum = "ba82ef76123ab2ded4a0eab9732c0ad0073d69a6fefd997a78e858b47b222fca"
     },
-    biDrvs = [
-      drvs.zlibNg,
-      drvs.freetype,
-      drvs.gperf,
-      drvs.expat,
-      drvs.fontconfig,
-      ###############################################################
-      drvs.libxcursor,
-      drvs.xorgMacros,
-      drvs.xorgproto,
-      drvs.xtrans,
-      drvs.libxcb,
-      drvs.xcbProto,
-      drvs.libxau,
-      drvs.libx11,
-      drvs.libxrender,
-      drvs.libxfixes,
-      ###################################################
-    ]
+    biDrvs =
+      lib.biMap [
+        zlibNg,
+        freetype,
+        gperf,
+        expat,
+        fontconfig,
+        ###############################################################
+        libxcursor,
+        xorgMacros,
+        xorgproto,
+        xtrans,
+        libxcb,
+        xcbProto,
+        libxau,
+        libx11,
+        libxrender,
+        libxfixes,
+        ###################################################
+      ]
   },
 }

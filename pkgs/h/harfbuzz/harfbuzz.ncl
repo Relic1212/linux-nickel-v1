@@ -1,6 +1,13 @@
 {
   lib,
-  drvs,
+  freetype,
+  cairo,
+  zlibNg,
+  pixman,
+  fontconfig,
+  libpng,
+  expat,
+
   harfbuzz | lib.MesonPackage = {
     name = "harfbuzz",
     singleSource = {
@@ -11,20 +18,31 @@
       "-Dfreetype=enabled",
       "-Dcairo=enabled"
     ],
-    biDrvs = [
-      drvs.freetype,
-      drvs.cairo,
-      drvs.zlibNg,
-      drvs.pixman,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat
-    ]
+    biDrvs =
+      lib.biMap [
+        freetype,
+        cairo,
+        zlibNg,
+        pixman,
+        fontconfig,
+        libpng,
+        expat
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  freetype,
+  cairo,
+  zlibNg,
+  pixman,
+  fontconfig,
+  libpng,
+  expat,
+  pcre2,
+  libffi,
+  glib,
+
   harfbuzz,
   harfbuzzFull | lib.MesonPackage = {
     singleSource = harfbuzz.singleSource,
@@ -33,17 +51,18 @@
       "-Dcairo=enabled",
       "-Dglib=enabled",
     ],
-    biDrvs = [
-      drvs.freetype,
-      drvs.cairo,
-      drvs.zlibNg,
-      drvs.pixman,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.glib,
-    ]
+    biDrvs =
+      lib.biMap [
+        freetype,
+        cairo,
+        zlibNg,
+        pixman,
+        fontconfig,
+        libpng,
+        expat,
+        pcre2,
+        libffi,
+        glib,
+      ]
   }
 }

@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   newlib | lib.AutotoolsPackage = {
     separateBuildDir = false,
     singleSource = {

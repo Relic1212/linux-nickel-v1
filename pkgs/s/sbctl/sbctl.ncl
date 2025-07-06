@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  go_1_23,
+  utilLinux,
+
   sbctl | lib.MakePackage = {
     sourceInputs = [
       {
@@ -17,10 +19,11 @@
         dest = "go-mod",
       }
     ],
-    biDrvs = [
-      drvs.go_1_23,
-      drvs.utilLinux,
-    ],
+    biDrvs =
+      lib.biMap [
+        go_1_23,
+        utilLinux,
+      ],
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",

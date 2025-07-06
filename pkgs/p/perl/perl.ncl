@@ -41,7 +41,8 @@
 }
 & {
   lib,
-  drvs,
+  muslShared,
+
   perl,
   perlDynamic | lib.AutotoolsPackage = {
     sourceInputs = perl.sourceInputs,
@@ -57,8 +58,9 @@
       "make depend -j$(nproc)",
     ],
     isStatic = false,
-    biDrvs = [
-      drvs.muslShared,
-    ]
+    biDrvs =
+      lib.biMap [
+        muslShared,
+      ]
   }
 }

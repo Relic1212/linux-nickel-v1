@@ -1,7 +1,7 @@
 (import "python-base.ncl")
 & {
   lib,
-  drvs,
+
   _pythonBase,
   #base with minimal modules
   _pythonBaseMinimal | lib.AutotoolsPackage =
@@ -124,65 +124,85 @@
       ),
     },
   # stage 1
+  busyboxBootstrapStage0,
+  bootstrapStage0,
+  bootstrapSymlinks,
+  ccacheBin,
+  gnumakeStage1,
+
   pythonStage1 =
     _pythonBaseMinimal
     & {
       stage = 1,
-      buildInputs = [
-        drvs.busyboxBootstrapStage0,
-        drvs.bootstrapStage0,
-        drvs.bootstrapSymlinks,
-        drvs.ccacheBin,
-        drvs.gnumakeStage1,
-      ],
+      buildInputs =
+        lib.biMap [
+          busyboxBootstrapStage0,
+          bootstrapStage0,
+          bootstrapSymlinks,
+          ccacheBin,
+          gnumakeStage1,
+        ],
     },
 
   # 2
-
+  busyboxStage1,
+  llvmStage1,
+  gnumakeStage2,
+  muslStage1,
   pythonStage2 =
     _pythonBaseMinimal
     & {
       stage = 2,
-      buildInputs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-        drvs.muslStage1
-      ],
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          gnumakeStage2,
+          ccacheBin,
+          muslStage1
+        ],
     },
 
+  busyboxStage2,
+  llvmStage2,
+  gnumakeStage4,
+  muslStage3,
   pythonStage3 =
     _pythonBaseMinimal
     & {
       stage = 3,
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
 
-      buildInputs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.gnumakeStage4,
-        drvs.ccacheBin,
-        drvs.muslStage3
-      ],
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          gnumakeStage4,
+          ccacheBin,
+          muslStage3,
+        ],
     },
 
   # final
-
+  busyboxStage3,
+  llvmStage3,
+  gnumake,
+  musl,
   python =
     _pythonBaseMinimal
     & {
       stage = -1,
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
 
-      buildInputs = [
-        drvs.busyboxStage3,
-        drvs.llvmStage3,
-        drvs.gnumake,
-        drvs.ccacheBin,
-        drvs.musl
-      ],
+      buildInputs =
+        lib.biMap [
+          busyboxStage3,
+          llvmStage3,
+          gnumake,
+          ccacheBin,
+          musl,
+        ],
     },
 }

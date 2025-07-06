@@ -1,15 +1,18 @@
 {
   lib,
-  drvs,
+  libpam,
+  linuxHeaders,
+
   kbd | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://mirrors.edge.kernel.org/pub/linux/utils/kbd/kbd-2.6.4.tar.gz",
       sha256sum = "99b2a39e1c5475ffe8e1bb2004345cb8849c3cc1aedbe541beee2d45e270975f",
     },
-    biDrvs = [
-      drvs.libpam,
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        libpam,
+        linuxHeaders,
+      ],
     extraConfigureFlags = [
       "--disable-tests",
       "--disable-nls",

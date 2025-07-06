@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  go_1_9,
+  findutils,
+
   nwgDrawer | lib.MakePackage = {
     sourceInputs = [
       {
@@ -27,9 +29,10 @@
       "export HOME=/tmp/home",
     ],
 
-    biDrvs = [
-      drvs.go_1_9,
-      drvs.findutils,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_9,
+        findutils,
+      ]
   }
 }

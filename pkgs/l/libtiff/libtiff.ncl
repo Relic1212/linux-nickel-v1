@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   libtiff | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://download.osgeo.org/libtiff/tiff-4.7.0.tar.xz",

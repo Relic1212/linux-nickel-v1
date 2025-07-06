@@ -6,47 +6,62 @@ let _gnumake = {
 in
 {
   lib,
-  drvs,
+  busyboxStage1,
+  llvmStage1,
+  muslStage1,
+  gnumakeStage1,
+  ccacheBin,
+  busyboxStage2,
+
+  llvmStage2,
+  muslStage2,
+  muslStage3,
+  busyboxStage3,
+  llvmStage3,
+  musl,
 
   gnumakeStage2 | lib.AutotoolsPackage =
     _gnumake
     & {
       stage = 2,
-      biDrvs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          muslStage1,
+          gnumakeStage1,
+          ccacheBin,
+        ]
     },
 
   gnumakeStage3 | lib.AutotoolsPackage =
     _gnumake
     & {
       stage = 3,
-      buildInputs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.muslStage2,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          muslStage2,
+          gnumakeStage2,
+          ccacheBin,
+        ]
     },
   gnumakeStage4 | lib.AutotoolsPackage =
     _gnumake
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.muslStage3,
-        drvs.gnumakeStage3,
-        drvs.ccacheBin,
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          muslStage3,
+          gnumakeStage3,
+          ccacheBin,
+        ]
     },
 
   # final
@@ -55,14 +70,15 @@ in
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage3,
-        drvs.llvmStage3,
-        drvs.musl,
-        drvs.gnumakeStage4,
-        drvs.ccacheBin,
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage3,
+          llvmStage3,
+          musl,
+          gnumakeStage4,
+          ccacheBin,
+        ]
     },
 }

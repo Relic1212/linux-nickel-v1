@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  go_1_9,
+
   superd | lib.MakePackage = {
     singleSource = {
       uri = "https://git.sr.ht/~craftyguy/superd/archive/0.7.1.tar.gz",
@@ -14,8 +15,9 @@
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
     ],
-    biDrvs = [
-      drvs.go_1_9,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_9,
+      ]
   }
 }

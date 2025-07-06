@@ -7,7 +7,9 @@
   # ccacheBin,
   # pkgconf,
   # linuxHeaders,
-  drvs,
+  pkgconf,
+  linuxHeaders,
+
   lvm2 | lib.AutotoolsPackage = {
     name = "lvm2",
     singleSource = {
@@ -35,10 +37,11 @@
         "--with-staticdir=bin",
         "--with-usrsbindir=bin",
       ],
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        pkgconf,
+        linuxHeaders,
+      ],
     buildPhase = [
       "make DESTDIR=${DEST} install_device-mapper",
     ],

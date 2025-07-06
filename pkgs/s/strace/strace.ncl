@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   strace | lib.AutotoolsPackage = {
     buildEnv,
     singleSource = {
@@ -10,9 +11,10 @@
     extraConfigureFlags = [
       "--enable-mpers=no"
     ],
-    biDrvs = [
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ],
     extraEnv = {
       CFLAGS_FOR_BUILD = buildEnv.STATIC_CFLAGS,
       LDFLAGS_FOR_BUILD = buildEnv.STATIC_LDFLAGS,

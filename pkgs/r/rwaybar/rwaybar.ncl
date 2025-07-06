@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   rwaybar | lib.CargoPackage =
     let j = import "./rwaybar-crates.json"
     in

@@ -2,7 +2,7 @@
   lib,
   _rootfs | lib.Package = {
     buildInChroot = false,
-    utilsProviders = [],
+    utilsProviders = lib.biMap [],
     installPhase = [
       "echo 'copying the rootfs'",
 

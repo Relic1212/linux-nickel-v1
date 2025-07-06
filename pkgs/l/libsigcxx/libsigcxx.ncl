@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   libsigcpp | lib.MesonPackage = {
     singleSource = {
       uri = "https://download.gnome.org/sources/libsigc++/3.0/libsigc++-3.0.7.tar.xz",
@@ -10,7 +10,7 @@
 }
 & {
   lib,
-  drvs,
+
   libsigcpp2 | lib.MesonPackage = {
     singleSource = {
       uri = "https://download.gnome.org/sources/libsigc++/2.12/libsigc++-2.12.1.tar.xz",

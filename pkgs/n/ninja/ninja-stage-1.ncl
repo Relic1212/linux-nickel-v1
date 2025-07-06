@@ -1,6 +1,5 @@
 {
   lib,
-  drvs,
 
   _ninja | lib.Package = {
     name = "ninja",
@@ -29,21 +28,26 @@
       "install -m0755 ./ninja  ${DEST}/usr/bin",
     ]
   },
-
+  muslStage0,
+  busyboxStage0,
+  pythonStage1,
+  llvmStage0,
+  ccacheBin,
   ninjaStage1 =
     _ninja
     & {
       stage = 1,
       name | priority 1 = "ninja-stage-1",
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
 
-      buildInputs | priority 10 = [
-        drvs.muslStage0,
-        drvs.busyboxStage0,
-        drvs.pythonStage1,
-        drvs.llvmStage0,
-        drvs.ccacheBin
-      ],
+      buildInputs | priority 10 =
+        lib.biMap [
+          muslStage0,
+          busyboxStage0,
+          pythonStage1,
+          llvmStage0,
+          ccacheBin,
+        ],
     }
 }

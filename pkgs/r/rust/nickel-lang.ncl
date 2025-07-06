@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  pythonFull,
+
   nickelLang | lib.CargoPackage =
     let j = import "./nickel-lang/nickel-lang-crates-1.10.json"
     in
@@ -30,9 +31,10 @@
       # release = false,
       crates = _crates,
 
-      biDrvs = [
-        drvs.pythonFull,
-      ],
+      biDrvs =
+        lib.biMap [
+          pythonFull,
+        ],
       target,
       installPhase = [
         "install -d -m0755 ${DEST}/usr/bin",

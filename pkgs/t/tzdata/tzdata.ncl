@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   tzcode,
 
   tzdata | lib.MakePackage = {
@@ -30,7 +30,6 @@
 }
 & {
   lib,
-  drvs,
 
   tzdb | lib.MakePackage = {
     singleSource = {
@@ -41,7 +40,6 @@
 }
 & {
   lib,
-  drvs,
 
   tzcode | lib.MakePackage = {
     singleSource = {

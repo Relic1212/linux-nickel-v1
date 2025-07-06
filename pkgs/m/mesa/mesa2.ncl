@@ -1,24 +1,39 @@
 {
   lib,
-  drvs,
+  libelf,
+  libdrm,
+  zlibNg,
+  pythonMako,
+  pythonPackaging,
+  pythonMarkupsafe,
+  libpciaccess,
+  libffi,
+  bison,
+  flex,
+  wayland,
+  waylandProtocols,
+  linuxHeaders,
+  m4,
+
   _mesa | lib.MesonPackage = {
 
-    biDrvs = [
-      drvs.libelf,
-      drvs.libdrm,
-      drvs.zlibNg,
-      drvs.pythonMako,
-      drvs.pythonPackaging,
-      drvs.pythonMarkupsafe,
-      drvs.libpciaccess,
-      drvs.libffi,
-      drvs.bison,
-      drvs.flex,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.linuxHeaders,
-      drvs.m4
-    ],
+    biDrvs =
+      lib.biMap [
+        libelf,
+        libdrm,
+        zlibNg,
+        pythonMako,
+        pythonPackaging,
+        pythonMarkupsafe,
+        libpciaccess,
+        libffi,
+        bison,
+        flex,
+        wayland,
+        waylandProtocols,
+        linuxHeaders,
+        m4
+      ],
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",
@@ -57,35 +72,59 @@
   },
 }
 & {
-  drvs,
+  libelf,
+  libdrm,
+  zlibNg,
+  pythonMako,
+  pythonPackaging,
+  pythonMarkupsafe,
+  libpciaccess,
+  libffi,
+  bison,
+  flex,
+  wayland,
+  waylandProtocols,
+  linuxHeaders,
+  m4,
+  git,
+  pyyaml,
+  llvmFull,
+  llvmConfigStatic,
+  spirvTools,
+  spirvLlvmTranslator,
+  wayland,
+  waylandProtocols,
+  llvm,
+
   mesa,
   lib,
   _mesa2426 | lib.MesonPackage = {
 
-    biDrvs = [
-      drvs.libelf,
-      drvs.libdrm,
-      drvs.zlibNg,
-      drvs.pythonMako,
-      drvs.pythonPackaging,
-      drvs.pythonMarkupsafe,
-      drvs.libpciaccess,
-      drvs.libffi,
-      drvs.bison,
-      drvs.flex,
-      # drvs.wayland,
-      # drvs.waylandProtocols,
-      drvs.linuxHeaders,
-      drvs.m4,
-      drvs.git,
-      drvs.pyyaml,
-      drvs.llvmFull,
-      drvs.llvmConfigStatic,
-      drvs.spirvTools,
-      drvs.spirvLlvmTranslator,
-      drvs.wayland,
-      drvs.waylandProtocols,
-    ],
+    biDrvs =
+      lib.biMap [
+        libelf,
+        libdrm,
+        zlibNg,
+        pythonMako,
+        pythonPackaging,
+        pythonMarkupsafe,
+        libpciaccess,
+        libffi,
+        bison,
+        flex,
+        # wayland,
+        # waylandProtocols,
+        linuxHeaders,
+        m4,
+        git,
+        pyyaml,
+        llvmFull,
+        llvmConfigStatic,
+        spirvTools,
+        spirvLlvmTranslator,
+        wayland,
+        waylandProtocols,
+      ],
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",
@@ -176,7 +215,7 @@
 
       # "%
     ],
-    baseBuildinputPackages = std.array.filter (fun v => v.name != drvs.llvm.name) lib.MesonPackage.baseBuildinputPackages,
+    baseBuildinputPackages = std.array.filter (fun v => v.name != llvm.name) lib.MesonPackage.baseBuildinputPackages,
   },
 
   llvmConfigStatic | lib.Package = {
@@ -214,6 +253,30 @@
         "ln -s egl.pc opengl.pc",
       ]
     },
+
+  libxcursor,
+  xorgMacros,
+  xorgproto,
+  xtrans,
+  libxcb,
+  xcbProto,
+  libxau,
+  libx11,
+  libxrender,
+  libxfixes,
+  xcbRenderutil,
+  libxfont2,
+  libfontenc,
+  libxcvt,
+  libxshmfence,
+  xwayland,
+  libxkbfile,
+  openssl,
+  xcbUtilWm,
+  xcbUtilErrors,
+  libxext,
+  libxf86vm,
+  libxrandr,
 
   mesaGlx | lib.MesonPackage =
     _mesa2426
@@ -257,48 +320,51 @@
       ],
       biDrvs | priority 1 =
         _mesa2426.biDrvs
-        @ [
-          # drvs.wayland,
-          # drvs.waylandProtocols,
-          drvs.libxcursor,
-          drvs.xorgMacros,
-          drvs.xorgproto,
-          drvs.xtrans,
-          drvs.libxcb,
-          drvs.xcbProto,
-          drvs.libxau,
-          drvs.libx11,
-          drvs.libxrender,
-          drvs.libxfixes,
-          drvs.xcbRenderutil,
-          drvs.libxfont2,
-          drvs.libfontenc,
-          drvs.libxcvt,
-          drvs.libxshmfence,
-          drvs.xwayland,
-          drvs.libxkbfile,
-          drvs.openssl,
-          drvs.xcbUtilWm,
-          drvs.xcbUtilErrors,
-          drvs.libxext,
-          drvs.libxf86vm,
-          drvs.libxrandr,
+        @ lib.biMap [
+          # wayland,
+          # waylandProtocols,
+          libxcursor,
+          xorgMacros,
+          xorgproto,
+          xtrans,
+          libxcb,
+          xcbProto,
+          libxau,
+          libx11,
+          libxrender,
+          libxfixes,
+          xcbRenderutil,
+          libxfont2,
+          libfontenc,
+          libxcvt,
+          libxshmfence,
+          xwayland,
+          libxkbfile,
+          openssl,
+          xcbUtilWm,
+          xcbUtilErrors,
+          libxext,
+          libxf86vm,
+          libxrandr,
         ]
     },
 }
 & {
   lib,
-  drvs,
+  pythonFull,
+  linuxHeaders,
+
   llvm,
 
   llvmFull | lib.CmakePackage = {
     sourceInputs = llvm.sourceInputs,
     cmakeDir = llvm.cmakeDir,
     generator = "Ninja",
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        linuxHeaders,
+      ],
     cmakeExtraArgsRecord = {
       "-DCLANG_BUILD_TOOLS" = "ON",
       "-DCLANG_DEFAULT_CXX_STDLIB" = "libc++",
@@ -423,7 +489,10 @@
 }
 & {
   lib,
-  drvs,
+
+  pythonDynamic,
+  pythonSetuptools,
+  muslShared,
   pyyaml | lib.SetuptoolPackage = {
     singleSource = {
       uri = "https://github.com/yaml/pyyaml/archive/refs/tags/6.0.2.tar.gz",
@@ -431,10 +500,10 @@
     },
     baseBuildinputPackages | priority 1 =
       lib.Package.baseBuildinputPackages
-      @ [
-        drvs.pythonDynamic,
-        drvs.pythonSetuptools,
-        drvs.muslShared,
+      @ lib.biMap [
+        pythonDynamic,
+        pythonSetuptools,
+        muslShared,
       ]
   }
 }

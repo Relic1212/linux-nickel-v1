@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   fmt | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

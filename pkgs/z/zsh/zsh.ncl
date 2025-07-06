@@ -1,6 +1,14 @@
 {
   lib,
-  drvs,
+  ncurses,
+  readline,
+  pcre2,
+  libcap,
+  linuxHeaders,
+  bison,
+  pkgconf,
+  diffutils,
+
   zsh | lib.AutomakePackage = {
     singleSource = {
       uri = "https://ftp.funet.fi/pub/unix/shells/zsh/zsh-5.9.tar.xz",
@@ -8,16 +16,17 @@
       # uri = "https://github.com/zsh-users/zsh/archive/435cb1b748ce1f2f5c38edc1d64f4ee2424f9b3a.tar.gz",
       # sha256sum = "1b8d95ce7bcb9eb03cbfa5c57c28639f24563283e528988c7509f515d93d935d",
     },
-    biDrvs = [
-      drvs.ncurses,
-      drvs.readline,
-      drvs.pcre2,
-      drvs.libcap,
-      drvs.linuxHeaders,
-      drvs.bison,
-      # drvs.pkgconf,
-      (drvs.diffutils & { priority = 1 }),
-    ],
+    biDrvs =
+      lib.biMap [
+        ncurses,
+        readline,
+        pcre2,
+        libcap,
+        linuxHeaders,
+        bison,
+        # pkgconf,
+        (diffutils & { priority = 1 }),
+      ],
 
     # copied from OE
     extraConfigureFlags = [

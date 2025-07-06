@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   gnupg | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-1.4.23.tar.bz2",

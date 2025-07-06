@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   androidTools | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

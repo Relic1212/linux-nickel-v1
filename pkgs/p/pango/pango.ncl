@@ -1,6 +1,17 @@
 {
   lib,
-  drvs,
+  glib,
+  pcre2,
+  libffi,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  cairo,
+  pixman,
+  libpng,
+  expat,
+
   pango | lib.MesonPackage = {
     name = "pango",
     singleSource = {
@@ -20,25 +31,27 @@
     ],
     patches = [{ file = "kisslinux-no-fribidi.patch", sha256sum = "fb69568c89cc1c00a3d5f5aaffa048ffe2d1d846a6153f7c7c2665717e10191f" }],
 
-    biDrvs = [
-      drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.zlibNg,
-      drvs.harfbuzz,
-      drvs.cairo,
-      drvs.pixman,
-      drvs.libpng,
-      drvs.expat,
-    ]
+    biDrvs =
+      lib.biMap [
+        glib,
+        pcre2,
+        libffi,
+        freetype,
+        fontconfig,
+        zlibNg,
+        harfbuzz,
+        cairo,
+        pixman,
+        libpng,
+        expat,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+
   pango,
+  fribidi,
   pango_1_56 =
     pango
     & {
@@ -49,8 +62,8 @@
       patches | priority 1 = [],
       biDrvs | priority 1 =
         pango.biDrvs
-        @ [
-          drvs.fribidi
+        @ lib.biMap [
+          fribidi
         ]
     }
 }

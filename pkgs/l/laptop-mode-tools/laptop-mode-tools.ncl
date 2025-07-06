@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  basefiles,
+
   laptopModeTools | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/rickysarraf/laptop-mode-tools/archive/af33e93e79743bc49b2fe3a13ede1ee3b6f20c1a.zip",
@@ -26,8 +27,9 @@
       "PREFIX=/usr",
       "LIB_D=/usr/lib",
     ],
-    biDrvs = [
-      drvs.basefiles,
-    ]
+    biDrvs =
+      lib.biMap [
+        basefiles,
+      ]
   }
 }

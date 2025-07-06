@@ -1,6 +1,16 @@
 {
   lib,
-  drvs,
+  gettext,
+  intltool,
+  perlXmlParserDynamic,
+  muslShared,
+  wayland,
+  waylandProtocols,
+  linuxHeaders,
+  expat,
+  libffi,
+  perlDynamic,
+
   gammastep | lib.AutomakePackage = {
     singleSource = {
       uri = "https://gitlab.com/chinstrap/gammastep/-/archive/v2.0.9/gammastep-v2.0.9.tar.gz",
@@ -20,39 +30,46 @@
       "./bootstrap",
       configureScript ++ " " ++ (std.string.join lib.constants.buildFlagSep configureFlags),
     ],
-    biDrvs = [
-      drvs.gettext,
-      drvs.intltool,
-      #drvs.perl,
-      drvs.perlXmlParserDynamic,
-      drvs.muslShared,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-    ],
-    perlProvider = drvs.perlDynamic,
+    biDrvs =
+      lib.biMap [
+        gettext,
+        intltool,
+        #perl,
+        perlXmlParserDynamic,
+        muslShared,
+        wayland,
+        waylandProtocols,
+        linuxHeaders,
+        expat,
+        libffi,
+      ],
+    perlProvider = lib.singleBiMap perlDynamic,
   }
 }
 & {
   lib,
-  drvs,
+  perlDynamic,
+  perlXmlParserDynamic,
+  muslShared,
+
   intltool | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz",
       sha256sum = "67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd"
     },
-    biDrvs = [
-      drvs.perlDynamic,
-      drvs.perlXmlParserDynamic,
-      drvs.muslShared,
-    ]
+    biDrvs =
+      lib.biMap [
+        perlDynamic,
+        perlXmlParserDynamic,
+        muslShared,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  perl,
+  expat,
+
   perlXmlParser | lib.MakePackage = {
     singleSource = {
       uri = "http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/XML-Parser-2.47.tar.gz",
@@ -61,10 +78,11 @@
       #uri =  "https://cpan.metacpan.org/authors/id/M/MS/MSERGEANT/XML-Parser-2.36.tar.gz",
       #sha256sum = "9fd529867402456bd826fe0e5588d35b3a2e27e586a2fd838d1352b71c2ed73f"
     },
-    biDrvs = [
-      drvs.perl,
-      drvs.expat,
-    ],
+    biDrvs =
+      lib.biMap [
+        perl,
+        expat,
+      ],
     preConfigurePhase = [
       "perl Makefile.PL LINKTYPE=static"
     ]
@@ -72,15 +90,19 @@
 }
 & {
   lib,
-  drvs,
+  perlDynamic,
+  muslShared,
+  expat,
+
   perlXmlParser,
   perlXmlParserDynamic | lib.MakePackage = {
     singleSource = perlXmlParser.singleSource,
-    biDrvs = [
-      drvs.perlDynamic,
-      drvs.muslShared,
-      drvs.expat,
-    ],
+    biDrvs =
+      lib.biMap [
+        perlDynamic,
+        muslShared,
+        expat,
+      ],
     preConfigurePhase = [
       "perl Makefile.PL"
     ],
@@ -89,9 +111,10 @@
 }
 & {
   lib,
-  drvs,
+
   perl,
   perlXmlParser,
+  expat,
   perlWithXmlParser | lib.AutotoolsPackage =
     perl
     & {
@@ -131,8 +154,8 @@
       ],
       biDrvs | priority 1 =
         perl.biDrvs
-        @ [
-          drvs.expat
+        @ lib.biMap [
+          expat
         ]
     }
 }

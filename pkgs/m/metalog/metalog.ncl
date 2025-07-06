@@ -1,6 +1,11 @@
 {
   lib,
-  drvs,
+  pcre2,
+  bash,
+  coreutils,
+  bashSh,
+  samurai,
+
   metalog | lib.AutomakePackage = {
     singleSource = {
       uri = "https://github.com/hvisage/metalog/archive/refs/tags/metalog-20230719.tar.gz",
@@ -10,15 +15,17 @@
     #     uri="https://github.com/hvisage/metalog/archive/refs/tags/metalog-20220214.tar.gz",
     #     sha256sum="3a9dd6f1460d90296771c81aa71fc0f45dd25ef22af63f48e6cbe5422a88f3bf",
     # },
-    biDrvs = [
-      drvs.pcre2,
-    ],
-    utilsProviders = [
-      drvs.bash,
-      drvs.coreutils,
-      drvs.bashSh,
-      drvs.samurai,
-    ],
+    biDrvs =
+      lib.biMap [
+        pcre2,
+      ],
+    utilsProviders =
+      lib.biMap [
+        bash,
+        coreutils,
+        bashSh,
+        samurai,
+      ],
     patches = [
       {
         file = "metalog.patch",

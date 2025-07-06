@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  spirvHeaders,
+
   _spirvTools | lib.CmakePackage = {
     generator = "Ninja",
     sourceInputs = [
@@ -25,10 +27,11 @@
     # cmakeExtraArgsRecord={
     #     "-DBUILD_SHARED_LIBS" = 0,
     # },
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.spirvHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        spirvHeaders,
+      ],
     patches = [
       {
         file = "0001-no-shared.patch",
@@ -55,9 +58,10 @@
         },
       ],
 
-      biDrvs | priority 1 = [
-        drvs.pythonFull,
-        drvs.spirvHeaders2,
-      ],
+      biDrvs | priority 1 =
+        lib.biMap [
+          pythonFull,
+          spirvHeaders2,
+        ],
     }
 }

@@ -4,7 +4,9 @@ in
 (import "busybox-base.ncl")
 & {
   lib,
-  drvs,
+  llvmStage0,
+  muslStage0,
+
   _busyboxBase,
 
   busyboxStage0 | lib.MakePackage =
@@ -103,12 +105,13 @@ in
           }
         ),
       stage = 0,
-      biDrvs = [
-        drvs.llvmStage0,
-        drvs.muslStage0,
-      ]
+      biDrvs =
+        lib.biMap [
+          llvmStage0,
+          muslStage0,
+        ]
     },
-
+  bootstrapStage0,
   busyboxBootstrapStage0 | lib.MakePackage =
     let p = "x86_64-linux-musl" in
     _busyboxBase
@@ -219,8 +222,9 @@ in
         }
         ),
       stage = 0,
-      biDrvs = [
-        drvs.bootstrapStage0,
-      ]
+      biDrvs =
+        lib.biMap [
+          bootstrapStage0,
+        ]
     }
 }

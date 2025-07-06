@@ -79,84 +79,76 @@
     OBJCOPY | nullOrString | default = if _isLlvm then "llvm-objcopy" else null,
     LD | NullOrStringOrArray | default = if _isCross then ["lld", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "lld" else null,
 
-    CFLAGS | nullOrArray | default
-      =
-        functions.flattenNullOrArray [
-          BASE_CFLAGS,
-          CROSS_CFLAGS,
-          STATIC_CFLAGS,
-          LLVM_CFLAGS,
-          STAGE_CFLAGS,
-          EXTRA_CFLAGS
-        ],
-    CPPFLAGS | nullOrArray | default
-      =
-        functions.flattenNullOrArray [
-          BASE_CPPFLAGS,
-          CROSS_CPPFLAGS,
-          STATIC_CPPFLAGS,
-          LLVM_CPPFLAGS,
-          STAGE_CPPFLAGS,
-          EXTRA_CPPFLAGS
-        ],
-    CXXFLAGS | nullOrArray | default
-      =
-        functions.flattenNullOrArray [
-          BASE_CXXFLAGS,
-          CROSS_CXXFLAGS,
-          STATIC_CXXFLAGS,
-          LLVM_CXXFLAGS,
-          STAGE_CXXFLAGS,
-          EXTRA_CXXFLAGS
-        ],
-    LDFLAGS | nullOrArray | default
-      =
-        functions.flattenNullOrArray [
-          BASE_LDFLAGS,
-          CROSS_LDFLAGS,
-          STATIC_LDFLAGS,
-          LLVM_LDFLAGS,
-          STAGE_LDFLAGS,
-          EXTRA_LDFLAGS
-        ],
+    CFLAGS | nullOrArray | default =
+      functions.flattenNullOrArray [
+        BASE_CFLAGS,
+        CROSS_CFLAGS,
+        STATIC_CFLAGS,
+        LLVM_CFLAGS,
+        STAGE_CFLAGS,
+        EXTRA_CFLAGS
+      ],
+    CPPFLAGS | nullOrArray | default =
+      functions.flattenNullOrArray [
+        BASE_CPPFLAGS,
+        CROSS_CPPFLAGS,
+        STATIC_CPPFLAGS,
+        LLVM_CPPFLAGS,
+        STAGE_CPPFLAGS,
+        EXTRA_CPPFLAGS
+      ],
+    CXXFLAGS | nullOrArray | default =
+      functions.flattenNullOrArray [
+        BASE_CXXFLAGS,
+        CROSS_CXXFLAGS,
+        STATIC_CXXFLAGS,
+        LLVM_CXXFLAGS,
+        STAGE_CXXFLAGS,
+        EXTRA_CXXFLAGS
+      ],
+    LDFLAGS | nullOrArray | default =
+      functions.flattenNullOrArray [
+        BASE_LDFLAGS,
+        CROSS_LDFLAGS,
+        STATIC_LDFLAGS,
+        LLVM_LDFLAGS,
+        STAGE_LDFLAGS,
+        EXTRA_LDFLAGS
+      ],
 
     # Stage 0 is never cross-compiled, so we can always but stuff in /${TARGET}
-    CROSS_CFLAGS | nullOrArray | default
-      =
-        if (HOST == TARGET) then
-          null
-        else
-          [
-            # "-target %{TARGET}",
-            # "--sysroot=/%{TARGET}"
-          ],
-    CROSS_CPPFLAGS | nullOrArray | default
-      =
-        if (HOST == TARGET) then
-          null
-        else
-          [
-            # "-target %{TARGET}",
-            # "--sysroot=/%{TARGET}",
-          ],
-    CROSS_CXXFLAGS | nullOrArray | default
-      =
-        if (HOST == TARGET) then
-          null
-        else
-          [
-            # "-target %{TARGET}",
-            # "--sysroot=/%{TARGET}"
-          ],
-    CROSS_LDFLAGS | nullOrArray | default
-      =
-        if (HOST == TARGET) then
-          null
-        else
-          [
-            # "-target %{TARGET}",
-            # "--sysroot=/%{TARGET}"
-          ],
+    CROSS_CFLAGS | nullOrArray | default =
+      if (HOST == TARGET) then
+        null
+      else
+        [
+          # "-target %{TARGET}",
+          # "--sysroot=/%{TARGET}"
+        ],
+    CROSS_CPPFLAGS | nullOrArray | default =
+      if (HOST == TARGET) then
+        null
+      else
+        [
+          # "-target %{TARGET}",
+          # "--sysroot=/%{TARGET}",
+        ],
+    CROSS_CXXFLAGS | nullOrArray | default =
+      if (HOST == TARGET) then
+        null
+      else
+        [
+          # "-target %{TARGET}",
+          # "--sysroot=/%{TARGET}"
+        ],
+    CROSS_LDFLAGS | nullOrArray | default =
+      if (HOST == TARGET) then
+        null
+      else
+        [
+          # "-target %{TARGET}",
+          # "--sysroot=/%{TARGET}"
+        ],
 
     STATIC_CFLAGS | nullOrArray | default = if _isStatic then ["-static", "--static"] else null,
     STATIC_CPPFLAGS | nullOrArray | default = null,

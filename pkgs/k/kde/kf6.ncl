@@ -1,10 +1,76 @@
 {
   lib,
-  drvs,
+  glib,
+  pcre2,
+  libffi,
+  zlibNg,
+  gudev,
+  eudev,
+  llvmFull,
+  pixman,
+  expat,
+  libffi,
+  libevdev,
+  mtdev,
+  pango,
+  cairo,
+  libpng,
+  freetype,
+  fontconfig,
+  zlibNg,
+  harfbuzz,
+  glib,
+  hwdata,
+  linuxHeaders,
+  libjpegTurboStatic,
+  libspng,
+  file,
+  libwebp,
+  dbusForQt,
+  qtdeclarative,
+  qtbase,
+  qtshadertools,
+  qtwayland,
+  qt5compat,
+  qtTools,
+  qtsensors,
+  qtsvg,
+  mesa2,
+  # pkgconf,
+  libelf,
+  libdrm,
+  pythonMako,
+  pythonPackaging,
+  pythonMarkupsafe,
+  libpciaccess,
+  bison,
+  flex,
+
+  waylandWeaksyms,
+
+  wayland,
+  waylandProtocols,
+  m4,
+  pyyaml,
+  llvmConfigStatic,
+  spirvTools,
+  spirvLlvmTranslator,
+  ###
+  jsonC,
+  pcre2,
+  libxkbcommon,
+  openssl,
+  kmod,
+  zstd,
+  xz,
+  eudev,
+  libinput,
+  ecm,
+
   _kf | lib.CmakePackage = {
     generator = "Ninja",
 
-    llvmProvider = drvs.llvmFull,
+    llvmProvider = lib.singleBiMap llvmFull,
     symlinkBuldInputs = true,
 
     options = {
@@ -12,75 +78,77 @@
     },
 
     biDrvs | priority -2 =
-      [
-        drvs.pixman,
-        drvs.expat,
-        drvs.libffi,
-        drvs.libevdev,
-        drvs.mtdev,
-        drvs.pango,
-        drvs.cairo,
-        drvs.libpng,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.zlibNg,
-        drvs.harfbuzz,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.linuxHeaders,
-        drvs.libjpegTurboStatic,
-        drvs.libspng,
-        drvs.file,
-        drvs.libwebp,
-        drvs.dbusForQt,
-        drvs.qtdeclarative,
-        drvs.qtbase,
-        drvs.qtshadertools,
-        drvs.qtwayland,
-        drvs.qt5compat,
-        drvs.qtTools,
-        drvs.qtsensors,
-        drvs.qtsvg,
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.bison,
-        drvs.flex,
-      ]
-      @ (
-        if options.waylandSyms then
-          [
-            drvs.waylandWeaksyms
-          ]
-        else
-          [
-            drvs.wayland
-          ]
-      )
-      @ [
-        drvs.waylandProtocols,
-        drvs.m4,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
-        ###
-        drvs.jsonC,
-        drvs.pcre2,
-        drvs.libxkbcommon,
-        drvs.openssl,
-        drvs.kmod,
-        drvs.zstd,
-        drvs.xz,
-        drvs.eudev,
-        drvs.libinput,
-        drvs.ecm,
-      ],
+      lib.biMap (
+        [
+          pixman,
+          expat,
+          libffi,
+          libevdev,
+          mtdev,
+          pango,
+          cairo,
+          libpng,
+          freetype,
+          fontconfig,
+          zlibNg,
+          harfbuzz,
+          glib,
+          hwdata,
+          linuxHeaders,
+          libjpegTurboStatic,
+          libspng,
+          file,
+          libwebp,
+          dbusForQt,
+          qtdeclarative,
+          qtbase,
+          qtshadertools,
+          qtwayland,
+          qt5compat,
+          qtTools,
+          qtsensors,
+          qtsvg,
+          mesa2,
+          # pkgconf,
+          libelf,
+          libdrm,
+          pythonMako,
+          pythonPackaging,
+          pythonMarkupsafe,
+          libpciaccess,
+          bison,
+          flex,
+        ]
+        @ (
+          if options.waylandSyms then
+            [
+              waylandWeaksyms
+            ]
+          else
+            [
+              wayland
+            ]
+        )
+        @ [
+          waylandProtocols,
+          m4,
+          pyyaml,
+          llvmConfigStatic,
+          spirvTools,
+          spirvLlvmTranslator,
+          ###
+          jsonC,
+          pcre2,
+          libxkbcommon,
+          openssl,
+          kmod,
+          zstd,
+          xz,
+          eudev,
+          libinput,
+          ecm,
+        ]
+      ),
     buildEnv = {
       EXTRA_LDFLAGS = [
         "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
@@ -94,7 +162,6 @@
 }
 & {
   lib,
-  drvs,
   _kf,
   kconfig | lib.CmakePackage =
     _kf
@@ -125,8 +192,8 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
+        @ lib.biMap [
+          kcoreaddons
         ]
     },
 
@@ -139,15 +206,16 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
+        @ lib.biMap [
+          kcoreaddons
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
         "-DWITH_X11" = false,
       }
     },
-
+  bzip2,
+  gettext,
   kpackage | lib.CmakePackage =
     _kf
     & {
@@ -157,12 +225,12 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.ki18n,
-          drvs.gettext
+        @ lib.biMap [
+          kcoreaddons,
+          karchive,
+          bzip2,
+          ki18n,
+          gettext
         ],
       patches = [
         {
@@ -180,14 +248,17 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.ki18n,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          karchive,
+          bzip2,
+          ki18n,
+          gettext,
         ]
     },
+
+  libxml2,
+  libxslt,
 
   kidletime | lib.CmakePackage =
     _kf
@@ -198,11 +269,11 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.plasmaWaylandProtocols,
-          drvs.libxml2,
-          drvs.libxslt,
+        @ lib.biMap [
+          kcoreaddons,
+          plasmaWaylandProtocols,
+          libxml2,
+          libxslt,
         ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
@@ -228,8 +299,8 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
+        @ lib.biMap [
+          kcoreaddons
         ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
@@ -245,11 +316,11 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kconfig,
-          drvs.ki18n,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          kconfig,
+          ki18n,
+          gettext,
         ]
     },
 
@@ -262,17 +333,17 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.karchive,
-          drvs.kconfig,
-          drvs.kcolorscheme,
-          drvs.kguiaddons,
-          drvs.bzip2,
-          drvs.plasmaWaylandProtocols,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.kirigami,
+        @ lib.biMap [
+          kcoreaddons,
+          karchive,
+          kconfig,
+          kcolorscheme,
+          kguiaddons,
+          bzip2,
+          plasmaWaylandProtocols,
+          ki18n,
+          gettext,
+          kirigami,
         ]
     },
 
@@ -285,16 +356,16 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.karchive,
-          drvs.kconfig,
-          drvs.kcolorscheme,
-          drvs.kguiaddons,
-          drvs.bzip2,
-          drvs.plasmaWaylandProtocols,
-          drvs.ki18n,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          karchive,
+          kconfig,
+          kcolorscheme,
+          kguiaddons,
+          bzip2,
+          plasmaWaylandProtocols,
+          ki18n,
+          gettext,
         ]
     },
 
@@ -319,13 +390,13 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kconfig,
-          drvs.plasmaWaylandProtocols,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          kconfig,
+          plasmaWaylandProtocols,
+          kguiaddons,
+          ki18n,
+          gettext,
         ]
     },
 
@@ -338,15 +409,15 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          kwidgetsaddons,
+          kcolorscheme,
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
@@ -363,19 +434,60 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING:BOOL" = "OFF",
         "-DBUILD_DESIGNERPLUGIN:BOOL" = "OFF",
       }
     },
+
+  acl,
+  attr,
+  breezeIcons,
+  bzip2,
+  gettext,
+  karchive,
+  kauth,
+  kbookmarks,
+  kcodecs,
+  kcolorscheme,
+  kcompletion,
+  kconfig,
+  kconfigwidgets,
+  kcoreaddons,
+  kcrash,
+  kdbusaddons,
+  kded,
+  kglobalaccel,
+  kguiaddons,
+  ki18n,
+  kiconthemes,
+  kidletime,
+  kirigami,
+  kitemviews,
+  kjobwidgets,
+  knotifications,
+  kpackage,
+  kservice,
+  ksolid,
+  ksvg,
+  kwidgetsaddons,
+  kwindowsystem,
+  libcanberra,
+  libogg,
+  libtool,
+  libvorbis,
+  plasmaWaylandProtocols,
+  switcherooControl,
+  utilLinuxWeak,
+  vala,
 
   kio | lib.CmakePackage = (
     _kf
@@ -386,47 +498,47 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.acl,
-          drvs.attr,
-          drvs.breezeIcons,
-          drvs.bzip2,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kbookmarks,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kcompletion,
-          drvs.kconfig,
-          drvs.kconfigwidgets,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kded,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kirigami,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksolid,
-          drvs.ksvg,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.libcanberra,
-          drvs.libogg,
-          drvs.libtool,
-          drvs.libvorbis,
-          drvs.plasmaWaylandProtocols,
-          drvs.switcherooControl,
-          drvs.utilLinuxWeak,
-          drvs.vala,
+        @ lib.biMap [
+          acl,
+          attr,
+          breezeIcons,
+          bzip2,
+          gettext,
+          karchive,
+          kauth,
+          kbookmarks,
+          kcodecs,
+          kcolorscheme,
+          kcompletion,
+          kconfig,
+          kconfigwidgets,
+          kcoreaddons,
+          kcrash,
+          kdbusaddons,
+          kded,
+          kglobalaccel,
+          kguiaddons,
+          ki18n,
+          kiconthemes,
+          kidletime,
+          kirigami,
+          kitemviews,
+          kjobwidgets,
+          knotifications,
+          kpackage,
+          kservice,
+          ksolid,
+          ksvg,
+          kwidgetsaddons,
+          kwindowsystem,
+          libcanberra,
+          libogg,
+          libtool,
+          libvorbis,
+          plasmaWaylandProtocols,
+          switcherooControl,
+          utilLinuxWeak,
+          vala,
         ],
 
       #    cmakeExtraArgsRecord = {
@@ -450,37 +562,37 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
-          drvs.ksolid,
-          drvs.utilLinuxWeak,
-          drvs.kcrash,
-          drvs.kbookmarks,
-          drvs.kcompletion,
-          drvs.kiconthemes,
-          drvs.breezeIcons,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-          drvs.knotifications,
-          drvs.vala,
-          drvs.libtool,
-          drvs.libogg,
-          drvs.libvorbis,
-          drvs.libcanberra,
-          drvs.kwindowsystem,
-          drvs.kauth,
-          drvs.kdbusaddons,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kservice,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
+          ksolid,
+          utilLinuxWeak,
+          kcrash,
+          kbookmarks,
+          kcompletion,
+          kiconthemes,
+          breezeIcons,
+          kitemviews,
+          kjobwidgets,
+          knotifications,
+          vala,
+          libtool,
+          libogg,
+          libvorbis,
+          libcanberra,
+          kwindowsystem,
+          kauth,
+          kdbusaddons,
         ],
 
       cmakeExtraArgsRecord = {
@@ -499,21 +611,21 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.vala,
-          drvs.libtool,
-          drvs.libogg,
-          drvs.libvorbis,
-          drvs.libcanberra,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          vala,
+          libtool,
+          libogg,
+          libvorbis,
+          libcanberra,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
         ],
 
       buildEnv = {
@@ -530,19 +642,19 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kconfigwidgets,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.breezeIcons,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kconfigwidgets,
+          kwidgetsaddons,
+          kcolorscheme,
+          breezeIcons,
         ],
 
       cmakeExtraArgsRecord = {
@@ -563,17 +675,17 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kconfigwidgets,
-          drvs.utilLinuxWeak,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kconfigwidgets,
+          utilLinuxWeak,
         ],
       buildEnv = {
         EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lblkid"],
@@ -588,15 +700,15 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.kio,
-          drvs.libtool,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          kio,
+          libtool,
         ],
     },
   kbookmarks | lib.CmakePackage =
@@ -608,19 +720,19 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kservice,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
         ]
     },
 
@@ -633,19 +745,19 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kservice,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
@@ -662,19 +774,19 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kservice,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
         ],
 
       cmakeExtraArgsRecord = {
@@ -692,25 +804,25 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
-          drvs.knotifications,
-          drvs.vala,
-          drvs.libtool,
-          drvs.libogg,
-          drvs.libvorbis,
-          drvs.libcanberra,
+        @ lib.biMap [
+          kcoreaddons,
+          kcodecs,
+          kconfig,
+          kguiaddons,
+          ki18n,
+          gettext,
+          karchive,
+          bzip2,
+          kservice,
+          kwidgetsaddons,
+          kcolorscheme,
+          kconfigwidgets,
+          knotifications,
+          vala,
+          libtool,
+          libogg,
+          libvorbis,
+          libcanberra,
         ],
 
       cmakeExtraArgsRecord = {
@@ -729,9 +841,9 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.bzip2,
+        @ lib.biMap [
+          kcoreaddons,
+          bzip2,
         ]
     },
 
@@ -744,9 +856,9 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.gperf
+        @ lib.biMap [
+          kcoreaddons,
+          gperf
         ]
     },
   ki18n | lib.CmakePackage =
@@ -758,12 +870,12 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.gperf,
-          drvs.isoCodes,
-          drvs.pythonFull,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          gperf,
+          isoCodes,
+          pythonFull,
+          gettext,
         ]
     },
 
@@ -776,14 +888,15 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.plasmaWaylandProtocols,
+        @ lib.biMap [
+          kcoreaddons,
+          plasmaWaylandProtocols,
         ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
       }
     },
+  waylandWeaksyms,
 
   kwindowsystem | lib.CmakePackage =
     _kf
@@ -795,10 +908,10 @@
       options.waylandSyms = true,
       biDrvs =
         (std.array.filter (fun x => (x.name != "wayland")) _kf.biDrvs)
-        @ [
-          drvs.kcoreaddons,
-          drvs.plasmaWaylandProtocols,
-          drvs.waylandWeaksyms,
+        @ lib.biMap [
+          kcoreaddons,
+          plasmaWaylandProtocols,
+          waylandWeaksyms,
         ],
       cmakeExtraArgsRecord = {
         "-DKWINDOWSYSTEM_X11" = false,
@@ -817,8 +930,8 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
+        @ lib.biMap [
+          kcoreaddons
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
@@ -829,6 +942,10 @@
       ]
     },
 
+  gperf,
+  isoCodes,
+  pythonFull,
+
   breezeIcons | lib.CmakePackage =
     _kf
     & {
@@ -838,12 +955,12 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.gperf,
-          drvs.isoCodes,
-          drvs.pythonFull,
-          drvs.gettext,
+        @ lib.biMap [
+          kcoreaddons,
+          gperf,
+          isoCodes,
+          pythonFull,
+          gettext,
         ]
     },
 
@@ -856,14 +973,14 @@
       },
       biDrvs =
         _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
+        @ lib.biMap [
+          kcoreaddons
         ],
     },
 }
 & {
   lib,
-  drvs,
+
   utilLinux,
   utilLinuxWeak | lib.AutotoolsPackage =
     utilLinux
@@ -880,20 +997,27 @@
 }
 & {
   lib,
-  drvs,
+  glib,
+  pcre2,
+  libffi,
+  zlibNg,
+  gudev,
+  eudev,
+
   switcherooControl | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.freedesktop.org/hadess/switcheroo-control/-/archive/2.6/switcheroo-control-2.6.tar.gz",
       sha256sum = "b6413630b346aa132fb27ff1ee890061d3e86e0db42a991efe50b98eafd478b7"
     },
-    biDrvs = [
-      drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.gudev,
-      drvs.eudev,
-    ],
+    biDrvs =
+      lib.biMap [
+        glib,
+        pcre2,
+        libffi,
+        zlibNg,
+        gudev,
+        eudev,
+      ],
 
     extraMesonArgs = [
       "-Dsystemdsystemunitdir=no"

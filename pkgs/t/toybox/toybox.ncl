@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  bash,
+  linuxHeaders,
+
   toybox | lib.MakePackage = {
     makeArgs,
     buildEnv,
@@ -26,9 +28,10 @@
       "./scripts/genconfig.sh",
       "make %{std.string.join " " makeArgs } defconfig"
     ],
-    biDrvs = [
-      drvs.bash,
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        bash,
+        linuxHeaders,
+      ]
   }
 }

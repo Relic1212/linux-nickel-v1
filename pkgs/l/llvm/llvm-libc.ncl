@@ -1,7 +1,10 @@
 {
   lib,
-  drvs,
   llvmFull,
+  pythonFull,
+  linuxHeaders,
+  pyyaml,
+
   llvmLibc | lib.CmakePackage =
     llvmFull
     & {
@@ -42,10 +45,11 @@
       ],
       postInstallPhase | priority 2 = [],
 
-      biDrvs | priority 1 = [
-        drvs.pythonFull,
-        drvs.linuxHeaders,
-        drvs.pyyaml,
-      ],
+      biDrvs | priority 1 =
+        lib.biMap [
+          pythonFull,
+          linuxHeaders,
+          pyyaml,
+        ],
     }
 }

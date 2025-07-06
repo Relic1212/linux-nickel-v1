@@ -1,71 +1,100 @@
 (import "busybox-base.ncl")
 & {
   lib,
-  drvs,
+  busyboxBootstrapStage0,
+  llvmStage1,
+  muslStage1,
+  linuxHeadersStage1,
+  ccacheBin,
+  gnumakeStage1,
+
   _busyboxBaseTarget,
+  llvmStage2,
+  muslStage2,
+  linuxHeadersStage2,
+  gnumakeStage2,
+  llvmStage3,
+  muslStage3,
 
   busyboxStage1 =
     _busyboxBaseTarget
     & {
       stage = 1,
-      biDrvs = [
-        drvs.busyboxBootstrapStage0,
-        drvs.llvmStage1,
-        drvs.muslStage1,
-        drvs.linuxHeadersStage1,
-        drvs.ccacheBin,
-        drvs.gnumakeStage1
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxBootstrapStage0,
+          llvmStage1,
+          muslStage1,
+          linuxHeadersStage1,
+          ccacheBin,
+          gnumakeStage1
+        ]
     },
 
   busyboxStage2 =
     _busyboxBaseTarget
     & {
       stage = 2,
-      biDrvs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage2,
-        drvs.muslStage2,
-        drvs.linuxHeadersStage2,
-        drvs.ccacheBin,
-        drvs.gnumakeStage2
-      ]
+      biDrvs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage2,
+          muslStage2,
+          linuxHeadersStage2,
+          ccacheBin,
+          gnumakeStage2,
+        ]
     },
 
   #3
+  linuxHeadersStage3,
+  gnumakeStage4,
 
   busyboxStage3 =
     _busyboxBaseTarget
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage3,
-        drvs.muslStage3,
-        drvs.linuxHeadersStage3,
-        drvs.ccacheBin,
-        drvs.gnumakeStage4
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage3,
+          muslStage3,
+          linuxHeadersStage3,
+          ccacheBin,
+          gnumakeStage4,
+        ]
     },
+
+  llvm,
+  musl,
+  linuxHeaders,
+  gnumake,
   busybox =
     _busyboxBaseTarget
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage3,
-        drvs.llvm,
-        drvs.musl,
-        drvs.linuxHeaders,
-        drvs.ccacheBin,
-        drvs.gnumake
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage3,
+          llvm,
+          musl,
+          linuxHeaders,
+          ccacheBin,
+          gnumake
+        ]
     },
+
+  muslAarch64,
+  libcxxAarch64,
+  linuxHeadersAarch64,
+  readline,
+
   busyboxAarch64 =
     _busyboxBaseTarget
     & {
@@ -73,21 +102,22 @@
       makeArgs,
       buildDir,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      buildInputs = [
-        drvs.busybox,
-        drvs.llvm,
-        drvs.muslAarch64,
-        drvs.musl,
-        drvs.libcxxAarch64,
-        drvs.linuxHeadersAarch64,
-        drvs.linuxHeaders,
-        drvs.ccacheBin,
-        drvs.gnumake,
-        # drvs.ncurses,
-        drvs.readline,
-      ],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      buildInputs =
+        lib.biMap [
+          busybox,
+          llvm,
+          muslAarch64,
+          musl,
+          libcxxAarch64,
+          linuxHeadersAarch64,
+          linuxHeaders,
+          ccacheBin,
+          gnumake,
+          # ncurses,
+          readline,
+        ],
       # buildEnv.EXTRA_CFLAGS = ["-nostdlib"],
       # buildEnv.EXTRA_LDFLAGS = ["-nostdlib", "-l:libc.a" ],
 

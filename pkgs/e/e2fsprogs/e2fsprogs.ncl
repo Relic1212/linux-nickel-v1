@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   e2fsprogs | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://mirrors.edge.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v1.47.1/e2fsprogs-1.47.1.tar.gz",
@@ -9,8 +10,9 @@
     extraConfigureFlags = [
       "ac_cv_func_llseek='yes'"
     ],
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ]
   }
 }

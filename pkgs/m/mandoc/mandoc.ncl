@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  zlibNg,
+
   mandoc | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://mandoc.bsd.lv/snapshots/mandoc-1.14.6.tar.gz",
@@ -19,8 +20,9 @@
     ],
 
     separateBuildDir = false,
-    biDrvs = [
-      drvs.zlibNg,
-    ]
+    biDrvs =
+      lib.biMap [
+        zlibNg,
+      ]
   }
 }

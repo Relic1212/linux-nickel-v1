@@ -1,6 +1,18 @@
 {
   lib,
-  drvs,
+  pigz,
+  bison,
+  flex,
+  libarchive,
+  zlibNg,
+  m4,
+  linuxHeaders,
+  bzip2,
+  ncurses,
+  readline,
+  bash,
+  basefiles,
+
   heirloomNg | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/Projeto-Pindorama/heirloom-ng/archive/7ea2bf824dfedc5dfd35bd2ef421dc4201f5638b.zip",
@@ -9,20 +21,21 @@
       # uri="https://github.com/Projeto-Pindorama/heirloom-ng/archive/refs/tags/230503.tar.gz",
       # sha256sum="06d43edb31631469ec0b70b68b915efefc72a27d8ccd645bebef560b7497bd97"
     },
-    biDrvs = [
-      drvs.pigz,
-      drvs.bison,
-      drvs.flex,
-      drvs.libarchive,
-      drvs.zlibNg,
-      drvs.m4,
-      drvs.linuxHeaders,
-      drvs.bzip2,
-      drvs.ncurses,
-      drvs.readline,
-      drvs.bash,
-      drvs.basefiles,
-    ],
+    biDrvs =
+      lib.biMap [
+        pigz,
+        bison,
+        flex,
+        libarchive,
+        zlibNg,
+        m4,
+        linuxHeaders,
+        bzip2,
+        ncurses,
+        readline,
+        bash,
+        basefiles,
+      ],
     extraEnv = {
       HOSTCC = ["clang", "-static"],
       DESTDIR = "/tmp/workdir/out/destdir",

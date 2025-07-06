@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   pciutils | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/pciutils/pciutils/archive/refs/tags/v3.13.0.tar.gz",
@@ -14,8 +15,9 @@
       "PREFIX=/usr",
       "SBINDIR=/usr/bin",
     ],
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ]
   }
 }

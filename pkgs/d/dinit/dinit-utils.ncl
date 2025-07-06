@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  llvm,
+  musl,
+
   dinitUtils | lib.Package = {
     extraFiles = [
       {
@@ -17,9 +19,10 @@
       "install -m0755 /tmp/workdir/build/mount-early ${DEST}/usr/libexec",
     ],
     enableCcache = false,
-    biDrvs = [
-      drvs.llvm,
-      drvs.musl,
-    ]
+    biDrvs =
+      lib.biMap [
+        llvm,
+        musl,
+      ]
   }
 }

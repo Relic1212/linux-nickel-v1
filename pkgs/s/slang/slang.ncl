@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+  ncurses,
 
   slang | lib.AutotoolsPackage = {
     singleSource = {
@@ -11,8 +11,9 @@
     makeTargets = ["static"],
     makeInstallTargets = ["install-static"],
 
-    biDrvs = [
-      drvs.ncurses,
-    ]
+    biDrvs =
+      lib.biMap [
+        ncurses,
+      ]
   }
 }

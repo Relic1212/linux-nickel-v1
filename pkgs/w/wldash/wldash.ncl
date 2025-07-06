@@ -1,6 +1,18 @@
 {
   lib,
-  drvs,
+  fontconfig,
+  freetype,
+  zlibNg,
+  gperf,
+  pixman,
+  wayland,
+  waylandProtocols,
+  libffi,
+  libxkbcommon,
+  expat,
+  linuxHeaders,
+  alsaLibs,
+  dbus,
 
   wldash | lib.CargoPackage =
     let j = import "wldash-crates.json"
@@ -13,21 +25,22 @@
         sha256sum = "05ab0b90d6bdc46ef8768e5ed61094ca7fd4f5b938429c645a2e15cce5b96ea6"
       },
       crates = _crates,
-      biDrvs = [
-        drvs.fontconfig,
-        drvs.freetype,
-        drvs.zlibNg,
-        drvs.gperf,
-        drvs.pixman,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.libffi,
-        drvs.libxkbcommon,
-        drvs.expat,
-        drvs.linuxHeaders,
-        drvs.alsaLibs,
-        drvs.dbus,
-      ],
+      biDrvs =
+        lib.biMap [
+          fontconfig,
+          freetype,
+          zlibNg,
+          gperf,
+          pixman,
+          wayland,
+          waylandProtocols,
+          libffi,
+          libxkbcommon,
+          expat,
+          linuxHeaders,
+          alsaLibs,
+          dbus,
+        ],
       release = false,
       extraCargoFlags = [
         "--no-default-features",

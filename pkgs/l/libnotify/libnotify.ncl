@@ -1,6 +1,13 @@
 {
   lib,
-  drvs,
+  gdkPixbufFull,
+  libpng,
+  libjpegTurbo,
+  glib,
+  pcre2,
+  libffi,
+  zlibNg,
+
   libnotify | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/libnotify/-/archive/0.8.3/libnotify-0.8.3.tar.gz",
@@ -12,15 +19,16 @@
       "-Dman=false",
       "-Dgtk_doc=false",
     ],
-    biDrvs = [
-      drvs.gdkPixbufFull,
-      drvs.libpng,
-      drvs.libjpegTurbo,
-      drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-    ],
+    biDrvs =
+      lib.biMap [
+        gdkPixbufFull,
+        libpng,
+        libjpegTurbo,
+        glib,
+        pcre2,
+        libffi,
+        zlibNg,
+      ],
     preConfigurePhase = [
       m%"find "${SRC}" -name "meson.build"|xargs sed -i 's/shared_library/library/g'"%
     ],

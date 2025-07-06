@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+  bash,
+
   utilLinux | lib.AutotoolsPackage =
     let conf =
       lib.AutotoolsPackage.configureFlags
@@ -26,9 +28,10 @@
         ]
         @ (lib.AutotoolsPackage & { configureFlags = conf }).configurePhase,
 
-      biDrvs = [
-        drvs.linuxHeaders,
-        drvs.bash,
-      ]
+      biDrvs =
+        lib.biMap [
+          linuxHeaders,
+          bash,
+        ]
     }
 }

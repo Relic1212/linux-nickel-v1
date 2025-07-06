@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  libevdev,
+  linuxHeaders,
+
   hkdm | lib.CargoPackage = {
     singleSource = {
       uri = "https://gitlab.postmarketos.org/postmarketOS/hkdm/-/archive/0.2.1/hkdm-0.2.1.tar.gz",
@@ -8,15 +10,28 @@
     },
     crates = lib.functions.filterCrates (import "hkdm-crates.json"),
 
-    biDrvs = [
-      drvs.libevdev,
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        libevdev,
+        linuxHeaders,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  inih,
+  scdoc,
+  linuxHeaders,
+  expat,
+  libffi,
+  libpciaccess,
+  libxkbcommon,
+  libdrm,
+  mtdev,
+  libevdev,
+  eudev,
+  libinput,
+
   buffybox | lib.MesonPackage = {
     singleSource = {
       # uri = "https://gitlab.com/-/project/52322952/uploads/88ff83972a3c19d16d9d2560bfae8a7e/buffybox-3.2.0.tar.gz",
@@ -40,20 +55,21 @@
         dest = "lvgl"
       }
     ],
-    biDrvs = [
-      drvs.inih,
-      drvs.scdoc,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libpciaccess,
-      drvs.libxkbcommon,
-      drvs.libdrm,
-      drvs.mtdev,
-      drvs.libevdev,
-      drvs.eudev,
-      drvs.libinput,
-    ],
+    biDrvs =
+      lib.biMap [
+        inih,
+        scdoc,
+        linuxHeaders,
+        expat,
+        libffi,
+        libpciaccess,
+        libxkbcommon,
+        libdrm,
+        mtdev,
+        libevdev,
+        eudev,
+        libinput,
+      ],
     extraMesonArgs = [
       "-Dwith-drm=enabled"
     ]
@@ -61,7 +77,23 @@
 }
 & {
   lib,
-  drvs,
+  inih,
+  scdoc,
+  linuxHeaders,
+  expat,
+  libffi,
+  libpciaccess,
+  libxkbcommon,
+  libdrm,
+  mtdev,
+  libevdev,
+  eudev,
+  libinput,
+  glib,
+  gudev,
+  pcre2,
+  zlibNg,
+
   ttyescape | lib.Package = {
     singleSource = {
       uri = "https://gitlab.postmarketos.org/postmarketOS/ttyescape/-/archive/810a195f19f68e817d95da5169b1fc4f22242630/ttyescape-810a195f19f68e817d95da5169b1fc4f22242630.tar.gz",
@@ -79,7 +111,23 @@
 }
 & {
   lib,
-  drvs,
+  inih,
+  scdoc,
+  linuxHeaders,
+  expat,
+  libffi,
+  libpciaccess,
+  libxkbcommon,
+  libdrm,
+  mtdev,
+  libevdev,
+  eudev,
+  libinput,
+  glib,
+  gudev,
+  pcre2,
+  zlibNg,
+
   iioSensorProxy | lib.MesonPackage = {
     singleSource = {
       #uri = "https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/-/archive/3.6/iio-sensor-proxy-3.6.tar.gz",
@@ -89,24 +137,25 @@
       uri = "https://gitlab.freedesktop.org/-/project/5287/uploads/83c63a8dd585ef6d1568791369dc8877/iio-sensor-proxy-3.3.tar.xz",
       sha256sum = "ddb9ac0678f69fdd89f2012348428b705b03b146528ff68d93c8b284be1ab9a8",
     },
-    biDrvs = [
-      drvs.inih,
-      drvs.scdoc,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libpciaccess,
-      drvs.libxkbcommon,
-      drvs.libdrm,
-      drvs.mtdev,
-      drvs.libevdev,
-      drvs.eudev,
-      drvs.libinput,
-      drvs.glib,
-      drvs.gudev,
-      drvs.pcre2,
-      drvs.zlibNg,
-    ],
+    biDrvs =
+      lib.biMap [
+        inih,
+        scdoc,
+        linuxHeaders,
+        expat,
+        libffi,
+        libpciaccess,
+        libxkbcommon,
+        libdrm,
+        mtdev,
+        libevdev,
+        eudev,
+        libinput,
+        glib,
+        gudev,
+        pcre2,
+        zlibNg,
+      ],
     extraMesonArgs = [
       "-Dsystemdsystemunitdir=/no"
     ]
@@ -114,30 +163,48 @@
 }
 & {
   lib,
-  drvs,
+  inih,
+  scdoc,
+  linuxHeaders,
+  expat,
+  libffi,
+  libpciaccess,
+  libxkbcommon,
+  libdrm,
+  mtdev,
+  libevdev,
+  eudev,
+  libinput,
+  glib,
+  gudev,
+  pcre2,
+  zlibNg,
+  dbus,
+
   polkit | lib.MesonPackage = {
     singleSource = {
       uri = "https://www.freedesktop.org/software/polkit/releases/polkit-121.tar.gz",
       sha256sum = "9dc7ae341a797c994a5a36da21963f0c5c8e3e5a1780ccc2a5f52e7be01affaa"
     },
-    biDrvs = [
-      drvs.inih,
-      drvs.scdoc,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libpciaccess,
-      drvs.libxkbcommon,
-      drvs.libdrm,
-      drvs.mtdev,
-      drvs.libevdev,
-      drvs.eudev,
-      drvs.libinput,
-      drvs.glib,
-      drvs.gudev,
-      drvs.pcre2,
-      drvs.zlibNg,
-      drvs.dbus,
-    ]
+    biDrvs =
+      lib.biMap [
+        inih,
+        scdoc,
+        linuxHeaders,
+        expat,
+        libffi,
+        libpciaccess,
+        libxkbcommon,
+        libdrm,
+        mtdev,
+        libevdev,
+        eudev,
+        libinput,
+        glib,
+        gudev,
+        pcre2,
+        zlibNg,
+        dbus,
+      ]
   }
 }

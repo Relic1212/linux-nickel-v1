@@ -1,6 +1,13 @@
 {
   lib,
-  drvs,
+  m4,
+  flex,
+  bison,
+  mpc,
+  gmp,
+  mpfr,
+  llvm,
+
   gccrs | lib.AutotoolsPackage = {
     isLlvm = false,
     buildEnv = {
@@ -13,15 +20,16 @@
       uri = "https://github.com/Rust-GCC/gccrs/archive/b0d6abb923915451c6a90f1b328d8efbfdf22441.zip",
       sha256sum = "4f0141cda3362089c04ba194d8a443f7f33aaea82f0203267ebf298311dc89c5",
     },
-    biDrvs = [
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-      drvs.mpc,
-      drvs.gmp,
-      drvs.mpfr,
-      drvs.llvm,
-    ],
+    biDrvs =
+      lib.biMap [
+        m4,
+        flex,
+        bison,
+        mpc,
+        gmp,
+        mpfr,
+        llvm,
+      ],
     extraConfigureFlags = [
       "--disable-nls",
       "--disable-libquadmath",
@@ -56,50 +64,68 @@
   }
 }
 & {
-  drvs,
+  m4,
+
   lib,
   gmp | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
       sha256sum = "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
     },
-    biDrvs = [
-      drvs.m4,
-    ]
+    biDrvs =
+      lib.biMap [
+        m4,
+      ]
   }
 }
 & {
-  drvs,
+  m4,
+  gmp,
+
   lib,
   mpfr | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.0.tar.xz",
       sha256sum = "06a378df13501248c1b2db5aa977a2c8126ae849a9d9b7be2546fb4a9c26d993",
     },
-    biDrvs = [
-      drvs.m4,
-      drvs.gmp,
-    ]
+    biDrvs =
+      lib.biMap [
+        m4,
+        gmp,
+      ]
   }
 }
 & {
-  drvs,
+  m4,
+  gmp,
+  mpfr,
+
   lib,
   mpc | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz",
       sha256sum = "ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8",
     },
-    biDrvs = [
-      drvs.m4,
-      drvs.gmp,
-      drvs.mpfr,
-    ]
+    biDrvs =
+      lib.biMap [
+        m4,
+        gmp,
+        mpfr,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+  m4,
+  flex,
+  bison,
+  mpc,
+  gmp,
+  mpfr,
+  clangStatic,
+  linuxHeaders,
+  binutils,
+
   gcc0 | lib.AutotoolsPackage = {
 
     buildEnv = {
@@ -129,17 +155,18 @@
       uri = "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz",
       sha256sum = "7d376d445f93126dc545e2c0086d0f647c3094aae081cdb78f42ce2bc25e7293",
     },
-    biDrvs = [
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-      drvs.mpc,
-      drvs.gmp,
-      drvs.mpfr,
-      drvs.clangStatic,
-      (drvs.binutils & { priority = 1 }),
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        m4,
+        flex,
+        bison,
+        mpc,
+        gmp,
+        mpfr,
+        clangStatic,
+        (binutils & { priority = 1 }),
+        linuxHeaders,
+      ],
     extraConfigureFlags = [
       "--enable-languages=c,c++",
       "--disable-multilib",
@@ -166,7 +193,17 @@
 }
 & {
   lib,
-  drvs,
+  m4,
+  flex,
+  bison,
+  mpc,
+  gmp,
+  mpfr,
+  clangCc,
+  muslShared,
+  llvmPic,
+  binutils,
+
   gcc | lib.AutotoolsPackage = {
     #configureScript="${SRC}/libstdc++-v3/configure",
     buildEnv = {
@@ -211,20 +248,21 @@
       uri = "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz",
       sha256sum = "7d376d445f93126dc545e2c0086d0f647c3094aae081cdb78f42ce2bc25e7293",
     },
-    llvmProvider = drvs.llvmPic,
-    biDrvs = [
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-      drvs.mpc,
-      drvs.gmp,
-      drvs.mpfr,
-      drvs.clangCc,
-      #drvs.clangStatic,
-      (drvs.binutils & { priority = 1 }),
-      #(drvs.gcc0 & {priority = 1}),
-      drvs.muslShared,
-    ],
+    llvmProvider = lib.singleBiMap llvmPic,
+    biDrvs =
+      lib.biMap [
+        m4,
+        flex,
+        bison,
+        mpc,
+        gmp,
+        mpfr,
+        clangCc,
+        #clangStatic,
+        (binutils & { priority = 1 }),
+        #(gcc0 & {priority = 1}),
+        muslShared,
+      ],
     configureFlags =
       lib.constants.configureFlags
       @ [
@@ -252,7 +290,15 @@
 }
 & {
   lib,
-  drvs,
+  llvm,
+  musl,
+  muslShared,
+  ccacheBin,
+  m4,
+  gnumake,
+  libtool,
+  rsync,
+
   binutils | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/binutils/binutils-2.43.tar.xz",
@@ -276,8 +322,17 @@
 }
 & {
   lib,
-  drvs,
+
   bootstrapStage0,
+  llvm,
+  musl,
+  muslShared,
+  ccacheBin,
+  m4,
+  gnumake,
+  libtool,
+  rsync,
+
   gcc9 =
     bootstrapStage0
     & {
@@ -304,16 +359,17 @@
       },
       buildInChroot | force = true,
 
-      biDrvs = [
-        drvs.llvm,
-        drvs.musl,
-        drvs.muslShared,
-        drvs.ccacheBin,
-        drvs.m4,
-        drvs.gnumake,
-        drvs.libtool,
-        drvs.rsync,
-      ],
+      biDrvs =
+        lib.biMap [
+          llvm,
+          musl,
+          muslShared,
+          ccacheBin,
+          m4,
+          gnumake,
+          libtool,
+          rsync,
+        ],
 
       buildPhase | force =
         let B = "/tmp/workdir/build"
@@ -447,9 +503,11 @@
     }
 }
 & {
+  lib,
 
   llvmFull,
-  drvs,
+
+  llvmPic,
 
   llvmFullPic =
     llvmFull
@@ -459,7 +517,7 @@
         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" | force = false,
         "-DLLVM_TARGETS_TO_BUILD" | priority 10000 = "'X86'"
       },
-      llvmProvider = drvs.llvmPic,
+      llvmProvider = lib.singleBiMap llvmPic,
       buildEnv = {
         EXTRA_CFLAGS = ["-fPIC"],
         EXTRA_CXXFLAGS = ["-fPIC"],

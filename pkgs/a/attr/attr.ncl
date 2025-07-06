@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   attr | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://download.savannah.nongnu.org/releases/attr/attr-2.5.2.tar.xz",

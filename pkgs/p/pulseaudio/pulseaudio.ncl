@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  pythonDynamic,
+  muslShared,
+
   tdb | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://www.samba.org/ftp/tdb/tdb-1.4.13.tar.gz",
@@ -9,10 +11,11 @@
     extraEnv = {
       #HOST_CC = [ "clang", "-static"]
     },
-    biDrvs = [
-      drvs.pythonDynamic,
-      drvs.muslShared,
-    ],
+    biDrvs =
+      lib.biMap [
+        pythonDynamic,
+        muslShared,
+      ],
     #   extraMakeArgs = [
     #     "HOST_CC='clang -static --static'",
     #     "HOST_CXX='clang++ -static --static'",
@@ -41,72 +44,120 @@
 }
 & {
   lib,
-  drvs,
+  libsndfile,
+  fontconfig,
+  freetype,
+  zlibNg,
+  gperf,
+  pixman,
+  wayland,
+  waylandProtocols,
+  libffi,
+  libxkbcommon,
+  expat,
+  linuxHeaders,
+  ncurses,
+  readline,
+  pcre2,
+  pango,
+  cairo,
+  libpng,
+  harfbuzz,
+  glibDynamic,
+  muslShared,
+  hwdata,
+  gobjectDynamic,
+  cairoGobject,
+  fribidi,
+  gdkPixbufFull,
+  libjpegTurbo,
+  libepoxy,
+  atSpi2Core,
+  libtool,
+  perl,
+  m4,
+  dbus,
+  libcap,
+  eudev,
+  kmod,
+  xz,
+  openssl,
+  zstd,
+  utilLinux,
+  pkgconf,
+  alsaLibs,
+  bluez,
+  sbc,
+  ffmpeg,
+  speex,
+  speexdsp,
+
   pulseaudio14 | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://freedesktop.org/software/pulseaudio/releases/pulseaudio-14.2.tar.gz",
       sha256sum = "902dd1928801bb5dc7b121754aa4110ce55768b5dff94a700e7bd58d3f597970"
     },
 
-    #llvmProvider = drvs.llvmFull,
-    biDrvs = [
-      drvs.libsndfile,
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.zlibNg,
-      drvs.gperf,
-      drvs.pixman,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.libffi,
-      drvs.libxkbcommon,
-      drvs.expat,
-      drvs.linuxHeaders,
-      drvs.ncurses,
-      drvs.readline,
-      drvs.pcre2,
-      drvs.pango,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.harfbuzz,
-      drvs.glibDynamic,
-      drvs.muslShared,
-      drvs.hwdata,
-      drvs.gobjectDynamic,
-      drvs.cairoGobject,
-      drvs.fribidi,
-      drvs.gdkPixbufFull,
-      drvs.libjpegTurbo,
-      drvs.libepoxy,
-      drvs.atSpi2Core,
-      #drvs.mesa2,
-      #drvs.libelf,
-      #drvs.libdrm,
-      #drvs.libpciaccess,
-      #drvs.llvmConfigStatic,
-      #drvs.spirvTools,
-      #drvs.spirvLlvmTranslator,
+    #llvmProvider = lib.singleBiMap llvmFull,
+    biDrvs =
+      lib.biMap [
+        libsndfile,
+        fontconfig,
+        freetype,
+        zlibNg,
+        gperf,
+        pixman,
+        wayland,
+        waylandProtocols,
+        libffi,
+        libxkbcommon,
+        expat,
+        linuxHeaders,
+        ncurses,
+        readline,
+        pcre2,
+        pango,
+        cairo,
+        libpng,
+        harfbuzz,
+        glibDynamic,
+        muslShared,
+        hwdata,
+        gobjectDynamic,
+        cairoGobject,
+        fribidi,
+        gdkPixbufFull,
+        libjpegTurbo,
+        libepoxy,
+        atSpi2Core,
+        #mesa2,
+        #libelf,
+        #libdrm,
+        #libpciaccess,
+        #llvmConfigStatic,
+        #spirvTools,
+        #spirvLlvmTranslator,
 
-      #drvs.gtk3,
-      drvs.libtool,
-      drvs.perl,
-      drvs.m4,
-      drvs.dbus,
-      drvs.libcap,
-      drvs.eudev,
-      drvs.kmod,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
-      drvs.pkgconf,
-      drvs.alsaLibs,
-      drvs.bluez,
-      drvs.sbc,
-      drvs.ffmpeg,
-      drvs.speex,
-      drvs.speexdsp,
-    ],
+        #gtk3,
+        libtool,
+        perl,
+        m4,
+        dbus,
+        libcap,
+        eudev,
+        kmod,
+        xz,
+        openssl,
+        zstd,
+        utilLinux,
+        pkgconf,
+        alsaLibs,
+        bluez,
+        sbc,
+        ffmpeg,
+        speex,
+        speexdsp,
+      ],
 
     preConfigurePhase = [
       "sed -i 's@main ()@main (void)@g' ${SRC}/configure",
@@ -137,7 +188,7 @@
 }
 & {
   lib,
-  drvs,
+
   speex | lib.AutotoolsPackage = {
     singleSource = {
       uri = "http://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz",
@@ -147,7 +198,7 @@
 }
 & {
   lib,
-  drvs,
+
   speexdsp | lib.AutotoolsPackage = {
     singleSource = {
       uri = "http://downloads.xiph.org/releases/speex/speexdsp-1.2.1.tar.gz",
@@ -157,8 +208,11 @@
 }
 & {
   lib,
-  drvs,
+
   pulseaudio14,
+  libsamplerate,
+  liboil,
+
   pulseaudio8 | lib.AutotoolsPackage = (
     pulseaudio14
     & {
@@ -169,9 +223,9 @@
       preConfigurePhase | priority 1 = [],
       biDrvs | priority 1 =
         pulseaudio14.biDrvs
-        @ [
-          drvs.libsamplerate,
-          drvs.liboil,
+        @ lib.biMap [
+          libsamplerate,
+          liboil,
         ],
       extraConfigureFlags | priority 1 = [
         "--enable-static-bins",
@@ -187,7 +241,7 @@
 }
 & {
   lib,
-  drvs,
+
   libsamplerate | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/libsndfile/libsamplerate/releases/download/0.2.2/libsamplerate-0.2.2.tar.xz",
@@ -197,7 +251,7 @@
 }
 & {
   lib,
-  drvs,
+
   liboil | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://liboil.freedesktop.org/download/liboil-0.3.17.tar.gz",

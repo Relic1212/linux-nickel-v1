@@ -38,55 +38,89 @@ let qtbaseCmakeExtraArgsRecorf = {
 in
 {
   lib,
-  drvs,
+  llvmFull,
+  mesa2,
+  # pkgconf,
+  libelf,
+  libdrm,
+  zlibNg,
+  pythonMako,
+  pythonPackaging,
+  pythonMarkupsafe,
+  libpciaccess,
+  libffi,
+  bison,
+  flex,
+  wayland,
+  waylandProtocols,
+  linuxHeaders,
+  m4,
+  git,
+  pyyaml,
+  llvmConfigStatic,
+  spirvTools,
+  spirvLlvmTranslator,
+  ###
+
+  ###
+  jsonC,
+  pcre2,
+  libxkbcommon,
+  dbusForQt,
+  eudev,
+  kmod,
+  utilLinux,
+  libinput,
+  openssl,
+
   qtbase | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.8.2.tar.gz",
       sha256sum = "9dddbb2ea3c107e20a99b816c1c6ba1483915325918936dda2c762bd73836ad9"
     },
-    llvmProvider = drvs.llvmFull,
+    llvmProvider = lib.singleBiMap llvmFull,
 
     biDrvs =
-      [
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.zlibNg,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.libffi,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.linuxHeaders,
-        drvs.m4,
-        drvs.git,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
+      lib.biMap [
+        mesa2,
+        # pkgconf,
+        libelf,
+        libdrm,
+        zlibNg,
+        pythonMako,
+        pythonPackaging,
+        pythonMarkupsafe,
+        libpciaccess,
+        libffi,
+        bison,
+        flex,
+        wayland,
+        waylandProtocols,
+        linuxHeaders,
+        m4,
+        git,
+        pyyaml,
+        llvmConfigStatic,
+        spirvTools,
+        spirvLlvmTranslator,
         ###
 
         ###
-        drvs.jsonC,
-        drvs.pcre2,
-        drvs.libxkbcommon,
-        drvs.dbusForQt,
-        drvs.eudev,
-        drvs.kmod,
-        drvs.utilLinux,
-        drvs.libinput,
-        drvs.openssl,
+        jsonC,
+        pcre2,
+        libxkbcommon,
+        dbusForQt,
+        eudev,
+        kmod,
+        utilLinux,
+        libinput,
+        openssl,
       ]
       @ [
-        # drvs.cmake,
-        # drvs.samurai,
-        # drvs.pkgconf,
+        # cmake,
+        # samurai,
+        # pkgconf,
       ],
 
     preConfigurePhase = [
@@ -113,7 +147,7 @@ in
 }
 & {
   lib,
-  drvs,
+
   dbus,
   dbusForQt | lib.MesonPackage = (
     dbus

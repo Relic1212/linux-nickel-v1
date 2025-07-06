@@ -1,6 +1,10 @@
 {
   lib,
-  drvs,
+  busyboxStage2,
+  llvmStage2,
+  gnumakeStage3,
+  ccacheBin,
+  muslStage2,
 
   _muslBase | lib.AutotoolsPackage = {
     stage,
@@ -29,7 +33,11 @@
   },
 
   muslStage0 = _muslBase & { stage = 0 },
-
+  busyboxBootstrapStage0,
+  bootstrapSymlinks,
+  bootstrapStage0,
+  gnumakeStage1,
+  ccacheBin,
   muslStage1 | lib.AutotoolsPackage =
     _muslBase
     & {
@@ -39,27 +47,33 @@
         _isLlvm | force = false,
       },
 
-      buildInputs = [
-        drvs.busyboxBootstrapStage0,
-        drvs.bootstrapSymlinks,
-        drvs.bootstrapStage0,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxBootstrapStage0,
+          bootstrapSymlinks,
+          bootstrapStage0,
+          gnumakeStage1,
+          ccacheBin,
+        ]
     },
-
+  busyboxStage1,
+  llvmStage1,
+  gnumakeStage2,
+  ccacheBin,
+  muslStage1,
   muslStage2 =
     _muslBase
     & {
       stage = 2,
 
-      buildInputs = [
-        drvs.busyboxStage1,
-        drvs.llvmStage1,
-        drvs.gnumakeStage2,
-        drvs.ccacheBin,
-        drvs.muslStage1
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          llvmStage1,
+          gnumakeStage2,
+          ccacheBin,
+          muslStage1,
+        ]
     },
 
   muslStage3 | lib.AutotoolsPackage =
@@ -67,30 +81,38 @@
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage2,
-        drvs.llvmStage2,
-        drvs.gnumakeStage3,
-        drvs.ccacheBin,
-        drvs.muslStage2
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage2,
+          llvmStage2,
+          gnumakeStage3,
+          ccacheBin,
+          muslStage2
+        ]
     },
+
+  busyboxStage3,
+  llvmStage3,
+  gnumakeStage4,
+  ccacheBin,
+  muslStage3,
   musl | lib.AutotoolsPackage =
     _muslBase
     & {
       stage = -1,
 
-      utilsProviders = [],
-      baseBuildinputPackages = [],
-      biDrvs = [
-        drvs.busyboxStage3,
-        drvs.llvmStage3,
-        drvs.gnumakeStage4,
-        drvs.ccacheBin,
-        drvs.muslStage3,
-      ]
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
+      biDrvs =
+        lib.biMap [
+          busyboxStage3,
+          llvmStage3,
+          gnumakeStage4,
+          ccacheBin,
+          muslStage3,
+        ]
     },
   muslShared =
     musl
@@ -98,6 +120,10 @@
       name = "musl-shared",
       extraConfigureFlags | priority 1 = ["--disable-static", "--enable-shared"],
     },
+
+  busybox,
+  clangCross,
+  gnumake,
   muslAarch64 =
     musl
     & {
@@ -118,12 +144,13 @@
 
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
 
-      biDrvs | priority 1 = [
-        drvs.busybox,
-        drvs.clangCross,
-        drvs.gnumake,
-        drvs.ccacheBin,
-        # drvs.muslStage2
-      ],
+      biDrvs | priority 1 =
+        lib.biMap [
+          busybox,
+          clangCross,
+          gnumake,
+          ccacheBin,
+          # muslStage2
+        ],
     }
 }

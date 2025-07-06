@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   libwebp | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

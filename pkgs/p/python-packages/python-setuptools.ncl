@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  busybox,
+  pythonFull,
 
   pythonSetuptools | lib.SetuptoolPackage = {
     name = "python-setuptools",
@@ -9,12 +10,13 @@
       sha256sum = "514dc60688d3118c9883a3dd54a38b28128ea912c01ea325d6e204a93da3b524",
     },
     pythonExecutable = "python3",
-    utilsProviders = [],
-    baseBuildinputPackages = [],
+    utilsProviders = lib.biMap [],
+    baseBuildinputPackages = lib.biMap [],
 
-    buildInputs = [
-      drvs.busybox,
-      drvs.pythonFull
-    ]
+    buildInputs =
+      lib.biMap [
+        busybox,
+        pythonFull
+      ]
   }
 }

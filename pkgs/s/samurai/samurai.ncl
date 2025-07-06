@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   # base
   _samurai | lib.MakePackage =
     let _makeInstallArgs = lib.MakePackage.makeInstallArgs @ ["PREFIX=/usr"] in
@@ -21,7 +21,11 @@
         ],
     },
   ##
-
+  busyboxBootstrapStage0,
+  bootstrapStage0,
+  bootstrapSymlinks,
+  ccacheBin,
+  gnumakeStage1,
   samuraiStage1 =
     _samurai
     & {
@@ -43,61 +47,81 @@
           STAGE_LDFLAGS = common,
         },
       stage = 1,
-      buildInputs = [
-        drvs.busyboxBootstrapStage0,
-        drvs.bootstrapStage0,
-        drvs.bootstrapSymlinks,
-        drvs.ccacheBin,
-        drvs.gnumakeStage1
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxBootstrapStage0,
+          bootstrapStage0,
+          bootstrapSymlinks,
+          ccacheBin,
+          gnumakeStage1,
+        ]
     },
 
   #2
+  busyboxStage1,
+  muslStage2,
+  llvmStage1,
+  ccacheBin,
+  gnumakeStage2,
 
   samuraiStage2 =
     _samurai
     & {
       stage = 2,
-      buildInputs = [
-        drvs.busyboxStage1,
-        drvs.muslStage2,
-        drvs.llvmStage1,
-        drvs.ccacheBin,
-        drvs.gnumakeStage2
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage1,
+          muslStage2,
+          llvmStage1,
+          ccacheBin,
+          gnumakeStage2,
+        ]
     },
+
+  busyboxStage2,
+  muslStage3,
+  llvmStage2,
+  ccacheBin,
+  gnumakeStage4,
 
   samuraiStage3 =
     _samurai
     & {
       stage = -1,
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
 
-      buildInputs = [
-        drvs.busyboxStage2,
-        drvs.muslStage3,
-        drvs.llvmStage2,
-        drvs.ccacheBin,
-        drvs.gnumakeStage4
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage2,
+          muslStage3,
+          llvmStage2,
+          ccacheBin,
+          gnumakeStage4
+        ]
     },
 
   #final
+  busyboxStage3,
+  musl,
+  llvmStage3,
+  ccacheBin,
+  gnumake,
 
   samurai =
     _samurai
     & {
       stage = -1,
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+      utilsProviders = lib.biMap [],
+      baseBuildinputPackages = lib.biMap [],
 
-      buildInputs = [
-        drvs.busyboxStage3,
-        drvs.musl,
-        drvs.llvmStage3,
-        drvs.ccacheBin,
-        drvs.gnumake
-      ]
+      buildInputs =
+        lib.biMap [
+          busyboxStage3,
+          musl,
+          llvmStage3,
+          ccacheBin,
+          gnumake,
+        ]
     },
 }

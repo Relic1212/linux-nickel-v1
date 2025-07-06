@@ -1,6 +1,10 @@
 {
   lib,
-  drvs,
+  xz,
+  zlibNg,
+  zstd,
+  openssl,
+
   kmod | lib.AutomakePackage = {
     name = "kmod",
     singleSource = {
@@ -36,11 +40,12 @@
       "--with-zstd",
     ],
 
-    biDrvs = [
-      drvs.xz,
-      drvs.zlibNg,
-      drvs.zstd,
-      drvs.openssl,
-    ],
+    biDrvs =
+      lib.biMap [
+        xz,
+        zlibNg,
+        zstd,
+        openssl,
+      ],
   }
 }

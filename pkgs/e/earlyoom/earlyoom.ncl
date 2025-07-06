@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   earlyoom | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/rfjakob/earlyoom/archive/refs/tags/v1.8.2.tar.gz",

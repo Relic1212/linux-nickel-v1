@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   ghc | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://downloads.haskell.org/~ghc/9.12.2/ghc-9.12.2-src.tar.xz",

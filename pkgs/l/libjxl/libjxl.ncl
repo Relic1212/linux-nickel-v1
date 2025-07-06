@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   libjxl | lib.CmakePackage = {
     generator = "Ninja",
 

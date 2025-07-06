@@ -1,26 +1,39 @@
 {
   lib,
-  drvs,
+  glib,
+  pcre2,
+  libffi,
+  zlibNg,
+  curl,
+  openssl,
+  libpsl,
+  libxml2,
+  libyaml,
+  libxmlb,
+  gperf,
+  gettext,
+
   appstream | lib.MesonPackage = {
     singleSource = {
       uri = "https://www.freedesktop.org/software/appstream/releases/AppStream-1.0.3.tar.xz",
       sha256sum = "5ab6f6cf644e7875a9508593962e56bb430f4e59ae0bf03be6be7029deb6baa4"
     },
 
-    biDrvs = [
-      drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.curl,
-      drvs.openssl,
-      drvs.libpsl,
-      drvs.libxml2,
-      drvs.libyaml,
-      drvs.libxmlb,
-      drvs.gperf,
-      drvs.gettext,
-    ],
+    biDrvs =
+      lib.biMap [
+        glib,
+        pcre2,
+        libffi,
+        zlibNg,
+        curl,
+        openssl,
+        libpsl,
+        libxml2,
+        libyaml,
+        libxmlb,
+        gperf,
+        gettext,
+      ],
 
     # https://github.com/kiss-community/community/blob/153bd6c63fb8291b385e95d30da1dc6b9de87244/community/appstream/build
 

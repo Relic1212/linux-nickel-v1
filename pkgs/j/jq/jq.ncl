@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   jq | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-1.7.1.tar.gz",

@@ -1,6 +1,27 @@
 {
   lib,
-  drvs,
+  fontconfig,
+  freetype,
+  zlibNg,
+  gperf,
+  pixman,
+  wayland,
+  waylandProtocols,
+  libffi,
+  libxkbcommon,
+  expat,
+  linuxHeaders,
+  libdrm,
+  libpciaccess,
+  libelf,
+  mesa2,
+  nasm,
+  fribidi,
+  openssl,
+  pkgconf,
+  bison,
+  m4,
+  llvmFull,
 
   ffmpeg | lib.AutotoolsPackage = {
     singleSource = {
@@ -31,35 +52,36 @@
       # "--enable-opengl",
     ],
 
-    llvmProvider = drvs.llvmFull,
-    biDrvs = [
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.zlibNg,
-      drvs.gperf,
-      drvs.pixman,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.libffi,
-      drvs.libxkbcommon,
-      drvs.expat,
-      drvs.linuxHeaders,
-      drvs.libdrm,
-      drvs.libpciaccess,
-      drvs.libelf,
-      drvs.mesa2,
-      drvs.nasm,
-      drvs.fribidi,
-      drvs.openssl,
-      drvs.pkgconf,
-      drvs.bison,
-      drvs.m4,
-    ]
+    llvmProvider = lib.singleBiMap llvmFull,
+    biDrvs =
+      lib.biMap [
+        fontconfig,
+        freetype,
+        zlibNg,
+        gperf,
+        pixman,
+        wayland,
+        waylandProtocols,
+        libffi,
+        libxkbcommon,
+        expat,
+        linuxHeaders,
+        libdrm,
+        libpciaccess,
+        libelf,
+        mesa2,
+        nasm,
+        fribidi,
+        openssl,
+        pkgconf,
+        bison,
+        m4,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+
   nasm | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/nasm-2.16.03.tar.xz",

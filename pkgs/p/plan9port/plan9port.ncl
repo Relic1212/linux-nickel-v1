@@ -1,6 +1,10 @@
 {
   lib,
-  drvs,
+  musl,
+  llvm,
+  ccacheBin,
+  linuxHeaders,
+
   plan9port | lib.Package = {
     singleSource = {
       uri = "https://github.com/9fans/plan9port/archive/61e362add9e1485bec1ab8261d729016850ec270.zip",
@@ -12,12 +16,13 @@
       CC9FLAGS = buildEnv.CFLAGS @ buildEnv.LDFLAGS,
     },
 
-    biDrvs = [
-      drvs.musl,
-      drvs.llvm,
-      drvs.ccacheBin,
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        musl,
+        llvm,
+        ccacheBin,
+        linuxHeaders,
+      ],
 
     separateBuildDir = false,
 

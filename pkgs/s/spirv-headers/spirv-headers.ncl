@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   spirvHeaders | lib.CmakePackage = {
     generator = "Ninja",
 
@@ -12,7 +12,7 @@
 }
 & {
   lib,
-  drvs,
+
   spirvHeaders2 | lib.CmakePackage = {
     generator = "Ninja",
 
@@ -24,7 +24,7 @@
 }
 & {
   lib,
-  drvs,
+
   spirvHeaders3 | lib.CmakePackage = {
     generator = "Ninja",
 

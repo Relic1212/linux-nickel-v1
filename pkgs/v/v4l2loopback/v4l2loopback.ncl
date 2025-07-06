@@ -1,6 +1,10 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+  linuxWithBuild,
+  rsync,
+  kmod,
+
   linuxWithBuild,
   v4l2loopback | lib.MakePackage = {
     singleSource = {
@@ -8,12 +12,13 @@
       sha256sum = "1e57e1e382d7451aa2a88d63cc9f146eab1f425b90e76104d4c3d73127e34771"
     },
     options = { version = linuxWithBuild.options.version },
-    biDrvs = [
-      drvs.linuxHeaders,
-      drvs.linuxWithBuild,
-      (drvs.kmod & { priority = 1 }),
-      drvs.rsync,
-    ],
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+        linuxWithBuild,
+        (kmod & { priority = 1 }),
+        rsync,
+      ],
     extraMakeArgs = [
       "KERNELRELEASE=%{options.version}-standard",
       "KERNEL_DIR=/usr/lib/modules/%{options.version}-standard/build",
@@ -36,15 +41,17 @@
 }
 & {
   lib,
-  drvs,
+
   linux,
+  rsync,
+
   linuxWithBuild | lib.MakePackage =
     linux
     & {
       biDrvs | priority 1 =
         linux.biDrvs
-        @ [
-          drvs.rsync
+        @ lib.biMap [
+          rsync
         ],
       options,
       postInstallPhase | priority 1 =

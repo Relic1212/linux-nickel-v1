@@ -1,6 +1,21 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  cmake,
+  samurai,
+  bash,
+  zlibNg,
+  git,
+  clangStatic,
+  libempty,
+  libemptyGcc,
+
+  gnumake,
+  musl123,
+  llvm,
+  ccacheBin,
+  busybox,
+
   mrust | lib.MakePackage =
     let rustver =
       # "1.29.0"
@@ -68,25 +83,27 @@
       #     m%"make LDFLAGS="${LDFLAGS}" -C run_rustc"%,
 
       # ],
-      baseBuildinputPackages = [
-        drvs.gnumake,
-        drvs.musl123,
-        drvs.llvm,
-        drvs.ccacheBin,
-        drvs.busybox,
-      ],
+      baseBuildinputPackages =
+        lib.biMap [
+          gnumake,
+          musl123,
+          llvm,
+          ccacheBin,
+          busybox,
+        ],
       installPhase = [],
-      biDrvs = [
-        drvs.pythonFull,
-        drvs.cmake,
-        drvs.samurai,
-        drvs.bash,
-        drvs.zlibNg,
-        drvs.git,
-        drvs.clangStatic,
-        drvs.libempty,
-        drvs.libemptyGcc,
-      ]
+      biDrvs =
+        lib.biMap [
+          pythonFull,
+          cmake,
+          samurai,
+          bash,
+          zlibNg,
+          git,
+          clangStatic,
+          libempty,
+          libemptyGcc,
+        ]
     },
 
   clangStatic | lib.Package = {
@@ -148,7 +165,8 @@
 }
 & {
   lib,
-  drvs,
+  llvm,
+
   libempty | lib.Package = {
     buildPhase = [
       ": > a.c",
@@ -159,9 +177,10 @@
       "install -d -m0755 ${DEST}/usr/lib",
       "install -m0755 libempty.a ${DEST}/usr/lib",
     ],
-    biDrvs = [
-      drvs.llvm,
-    ],
+    biDrvs =
+      lib.biMap [
+        llvm,
+      ],
     enableCcache = false,
   },
 
@@ -186,7 +205,7 @@
   },
 }
 & {
-  drvs,
+
   lib,
   musl123 | lib.AutotoolsPackage = {
     singleSource = {

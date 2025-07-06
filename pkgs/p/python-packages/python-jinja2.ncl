@@ -1,6 +1,11 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  pythonSetuptools,
+  pythonInstaller,
+  pythonGpep517,
+  pythonFlitCore,
+
   pythonJinja2 | lib.Package = {
     name = "python-jinja2",
     singleSource = {
@@ -12,12 +17,13 @@
       "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
       "python -m installer -d ${DEST} .dist/*.whl",
     ],
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.pythonSetuptools,
-      drvs.pythonInstaller,
-      drvs.pythonGpep517,
-      drvs.pythonFlitCore,
-    ]
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        pythonSetuptools,
+        pythonInstaller,
+        pythonGpep517,
+        pythonFlitCore,
+      ]
   }
 }

@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   autotiling | lib.SetuptoolPackage = {
     singleSource = {
       uri = "https://github.com/nwg-piotr/autotiling/archive/refs/tags/v1.9.3.tar.gz",
@@ -10,7 +10,7 @@
 }
 & {
   lib,
-  drvs,
+
   i3ipcPython | lib.SetuptoolPackage = {
     singleSource = {
       uri = "https://github.com/altdesktop/i3ipc-python/archive/9de8e885536bf611c96cc7c8ea0b2f19dd40f4f2.zip",

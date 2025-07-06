@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   yajl | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {

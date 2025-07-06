@@ -10,7 +10,26 @@ in
 {
   # pkgs, #| default = import "pkgsRecord.ncl",
   # hashByName,
-  drvs,
+
+  rust,
+  muslShared,
+  pkgconf,
+  clangCc,
+  busybox,
+  llvm,
+  gnumake,
+  musl,
+  ccacheBin,
+  perl,
+  automake,
+  autoconf,
+  m4,
+  libtool,
+  pythonFull,
+  meson,
+  samurai,
+  cmake,
+  pythonSetuptools,
 
   lib =
     (import "buildEnv.ncl")
@@ -21,6 +40,7 @@ in
       staticLlvmEnv,
       shellFunctions = import "./shellFunctions.ncl",
       # biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
+      singleBiMap = (fun x => { name = x.name, drvHash = x.drvHash }),
       biMap = (fun arr => std.array.map (fun x => { name = x.name, drvHash = x.drvHash }) arr),
 
       # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
@@ -67,16 +87,23 @@ in
       ShasumArray = std.contract.from_validator (fun arr => (if (functions.isValidShasumArray arr) then 'Ok else 'Error { message = "hello", notes = "[notes here]" })),
 
       # pkgs=import "pkgsRecord.ncl",
+      BuildInputC = std.contract.from_validator (fun x => (if ((std.record.has_field "buildInputs" x) == false) then 'Ok else 'Error { message = "name: \"%{x.name}\"", notes = "failure" })),
+      BuildInput = {
+        name,
+        drvHash,
+        priority | optional,
+      },
       Package = {
         # others
         # busybox,
         #vars
-        baseName | not_exported | String | optional,
-        name | String | default =
-          if ((stage == "final") || (stage == -1)) then
-            baseName
-          else
-            "%{baseName}-stage-%{ std.to_string stage}",
+        baseName | not_exported | String | default = "WRONG",
+        name | String | default  = "NULL",
+        # default = 
+        #   if ((stage == "final") || (stage == -1)) then
+        #     baseName
+        #   else
+        #     "%{baseName}-stage-%{ std.to_string stage}",
         drvHash | force =
           let _name = name
           in
@@ -121,8 +148,9 @@ in
           | force
           = buildInputs,
 
-        buildInputs | not_exported | default =
+        buildInputs | Array BuildInput | not_exported | default =
           baseBuildinputPackages @ biDrvs,
+
         hasValidBuildInputs | not_exported = (
           functions.isValidShasumArray (
             std.array.map
@@ -130,12 +158,12 @@ in
               buildInputsValidated
           )
         ),
-        utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
-        llvmProvider | not_exported | default = drvs.llvm,
-        baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
+        utilsProviders | not_exported | Array BuildInput | default = if (stage == -1) then (lib.biMap [busybox]) else [],
+        llvmProvider | BuildInput | not_exported | default = singleBiMap llvm,
+        baseBuildinputPackages | not_exported | Array BuildInput | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
-        biDrvs | Array Dyn | not_exported | default = [],
+        biDrvs | Array BuildInput | not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
         buildDir | nullOrString | default = null,
@@ -245,12 +273,12 @@ in
           llvmProvider | not_exported,
           baseBuildinputPackages | priority -1000 =
             utilsProviders
-            @ (
+            @ lib.biMap (
               if (stage == -1) then
                 (
-                  [drvs.gnumake, drvs.musl]
+                  [gnumake, musl]
                   @ (if isLlvm then [llvmProvider] else [])
-                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                  @ (if enableCcache then [ccacheBin] else [])
                 )
               else
                 []
@@ -315,18 +343,18 @@ in
               "(cd ${SRC}; autoreconf -fiv)",
               configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
             ],
-          perlProvider | not_exported | default = drvs.perl,
+          perlProvider | BuildInput | not_exported | default = singleBiMap perl,
           baseBuildinputPackages | priority -999 =
             AutotoolsPackage.baseBuildinputPackages
-            @ (
+            @ lib.biMap (
               if (stage == -1) then
                 [
                   perlProvider,
-                  drvs.automake,
-                  drvs.autoconf,
-                  drvs.m4,
-                  drvs.libtool,
-                  drvs.pkgconf,
+                  automake,
+                  autoconf,
+                  m4,
+                  libtool,
+                  pkgconf,
                 ]
               else
                 []
@@ -354,21 +382,21 @@ in
           installPhase | priority -1000 = [
             "meson install --destdir ${DEST}"
           ],
-          pythonProvider | default = drvs.pythonFull,
+          pythonProvider | BuildInput | default = singleBiMap pythonFull,
           baseBuildinputPackages | priority -1000 =
             utilsProviders
-            @ (
+            @ lib.biMap (
               if (stage == -1) then
                 (
                   [
-                    drvs.meson,
-                    drvs.samurai,
+                    meson,
+                    samurai,
                     pythonProvider,
-                    drvs.pkgconf,
-                    drvs.musl,
+                    pkgconf,
+                    musl,
                   ]
                   @ (if isLlvm then [llvmProvider] else [])
-                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                  @ (if enableCcache then [ccacheBin] else [])
                 )
               else
                 []
@@ -449,17 +477,17 @@ in
 
           baseBuildinputPackages | priority -1000 =
             utilsProviders
-            @ (
+            @ lib.biMap (
               if (stage == -1) then
                 (
                   [
-                    drvs.cmake,
-                    drvs.pkgconf,
-                    drvs.musl,
+                    cmake,
+                    pkgconf,
+                    musl,
                   ]
                   @ (if isLlvm then [llvmProvider] else [])
-                  @ (if enableCcache then [drvs.ccacheBin] else [])
-                  @ (if (generator == "Ninja") then [drvs.samurai] else [])
+                  @ (if enableCcache then [ccacheBin] else [])
+                  @ (if (generator == "Ninja") then [samurai] else [])
                 )
               else
                 []
@@ -497,17 +525,17 @@ in
           enableCcache | priority -1000 = false,
           baseBuildinputPackages | priority -1000 =
             Package.baseBuildinputPackages
-            @ (
+            @ lib.biMap (
               if (stage == -1) then
                 (
                   [
-                    drvs.pythonFull,
-                    # drvs.pkgconf,
-                    # drvs.musl,
-                    drvs.pythonSetuptools,
+                    pythonFull,
+                    # pkgconf,
+                    # musl,
+                    pythonSetuptools,
                   ]
-                  # @ (if isLlvm then [drvs.llvm] else [])
-                  @ (if enableCcache then [drvs.ccacheBin] else [])
+                  # @ (if isLlvm then [llvm] else [])
+                  @ (if enableCcache then [ccacheBin] else [])
                 )
               else
                 []
@@ -523,5 +551,183 @@ in
         dest | String | optional,
         unpack | Bool | optional,
       },
+    },
+
+  ########### rust
+
+  lib = {
+
+    Package,
+    SourceInput,
+
+    functions = {
+      importCrate = (fun j =>
+        let crate | Crate = {
+          name | default = std.record.get_or "name" "NULL" j,
+          version | default = std.record.get_or "version" "NULL" j,
+          sha256sum | default = std.record.get_or "checksum" "NULL" j,
+          meta = {
+            source | default = std.record.get_or "source" "NULL" j,
+          }
+        }
+        in
+        crate
+      ),
+      importCrates = (fun js =>
+        std.array.map
+          (fun j =>
+            let _crate = importCrate j in
+            {
+              # "%{j.name}-%{j.version}"
+              "%{_crate.name}" = { "%{_crate.version}" = _crate },
+            }
+          )
+          js
+        |> std.record.merge_all
+      ),
+
+      importCargoLock = (fun toml => ((importCrates (toml.package)))),
+
+      filterCrates = (fun j =>
+        let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
+        in _crates
+      ),
+    },
+
+    # rust,
+    # muslShared,
+    # pkgconf,
+    # llvmProvider,
+    # clangCc,
+
+    CargoPackage =
+      Package
+      & {
+        utilsProviders,
+        llvmProvider,
+        singleSource,
+        buildEnv,
+        target = (if buildEnv.TARGET == null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
+        extraEnv = {
+          STATIC_RUSTFLAGS | default = [
+            "-C target-feature=+crt-static",
+            "-C link-self-contained=yes",
+            "-C link-arg=-static",
+            "-C link-arg=--static"
+          ],
+          EXTRA_RUSTFLAGS | default = [],
+          RUSTFLAGS | default = STATIC_RUSTFLAGS @ EXTRA_RUSTFLAGS,
+        },
+
+        baseBuildinputPackages | priority -1000 =
+          lib.biMap [
+            rust,
+            muslShared,
+            pkgconf,
+            llvmProvider,
+            clangCc,
+          ]
+          @ utilsProviders,
+
+        enableCcache | priority -1000 = false,
+        separateBuildDir | priority -1000 = false,
+        extraCargoFlags | Array String | default = [],
+        release | Bool | default = true,
+        preConfigurePhase | priority -1000 = [
+          m%"
+            for d in $(ls  ${SRC}/vendor); do
+              if [ -e ${SRC}/vendor/${d}/download ]; then
+                mv  ${SRC}/vendor/${d}/download  ${SRC}/vendor/${d}/download.tar.gz
+                tar -xf ${SRC}/vendor/${d}/download.tar.gz --strip-components=1 -C ${SRC}/vendor/${d}/
+                echo '{"package":"'"$(sha256sum ${SRC}/vendor/${d}/download.tar.gz|cut -d ' ' -f1)"'","files":{}}' >  ${SRC}/vendor/${d}/.cargo-checksum.json
+              fi
+            done
+            "%,
+          "mkdir -p ${SRC}/.cargo",
+          m%"
+            echo "
+
+            [source.crates-io]
+            replace-with = \"vendored-sources\"
+
+            [source.vendored-sources]
+            directory = \"vendor\"
+
+            " >> ${SRC}/.cargo/config.toml
+            "%,
+          "export CARGO_HOME=${SRC}/.cargo",
+        ],
+        releaseFlags | default =
+          if release then
+            [
+              "--release",
+            ]
+          else
+            [],
+        baseCargoFlags | default = [
+          "--offline",
+          "--target %{target}"
+        ],
+        cargoFlags | default = releaseFlags @ baseCargoFlags @ extraCargoFlags,
+        buildPhase | priority -1000 = [
+          "cargo build %{std.string.join "\t\\\n" cargoFlags}"
+        ],
+        artefactDir | default = if release then "${SRC}/target/%{target}/release" else "${SRC}/target/%{target}/debug",
+
+        installPhase | priority -1000 = [
+          "install -d -m0755 ${DEST}/usr/bin",
+          m%"
+          for f in $(ls %{artefactDir}); do
+            file_end=$(echo $f| rev | cut -d '.' -f1|rev)
+
+            if [ -f "%{artefactDir}/${f}" ] \
+              && [ ! "$file_end" = "d" ] \
+              && [ ! "$file_end" = "rlib" ]; then
+
+              install -m0755 "%{artefactDir}/${f}" \
+                ${DEST}/usr/bin
+
+            fi
+          done
+          "%
+        ],
+
+        nonCrateSourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
+
+        lockfileImport | default = null,
+        crates | default = if (lockfileImport == null) then {} else (lib.functions.importCargoLock lockfileImport),
+
+        cratesArray | not_exported | default = std.array.flatten (std.array.map (std.record.values) (std.record.values crates)),
+
+        crateSourceInputs | not_exported | Array SourceInput | default = (std.array.map (fun c => c.sourceInput) cratesArray),
+
+        sourceInputs | priority -1000 = nonCrateSourceInputs @ crateSourceInputs,
+      },
+
+    Crate = {
+      name | String,
+      version | String,
+      uri | String | default = "https://crates.io/api/v1/crates/%{name}/%{version}/download",
+      sha256sum | String,
+      meta = {
+        source | String | optional,
+        dependencies | optional,
+      },
+      unpackCommands | Array String | default = [
+        "mkdir -p ${SRC}/vendor/%{name}",
+        "(cd  ${SRC}/vendor/%{name}; tar -xf /tmp/packed/%{sha256sum}/download --strip-components=1)",
+      ],
+
+      sourceInput | default = {
+        dest = "vendor/%{name}-%{version}",
+        src =
+          let _uri = uri in
+          let _sha = sha256sum in
+          {
+            uri | priority -1 = _uri,
+            sha256sum | priority -1 = _sha,
+          }
+      }
     }
+  }
 }

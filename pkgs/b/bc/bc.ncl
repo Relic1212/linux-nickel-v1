@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   bc | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/gavinhoward/bc/releases/download/7.0.3/bc-7.0.3.tar.xz",

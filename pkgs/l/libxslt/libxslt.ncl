@@ -1,15 +1,18 @@
 {
   lib,
-  drvs,
+  libxml2,
+  pythonFull,
+
   libxslt | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/libxslt/-/archive/v1.1.42/libxslt-v1.1.42.tar.gz",
       sha256sum = "b950e8c873069eb570dbc5828eed5a522fc2486edc0cc1dc01d3a360b63a8a62",
     },
-    biDrvs = [
-      drvs.libxml2,
-      drvs.pythonFull,
-    ]
+    biDrvs =
+      lib.biMap [
+        libxml2,
+        pythonFull,
+      ]
   }
 }

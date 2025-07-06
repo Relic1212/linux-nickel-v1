@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   gnused | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz",

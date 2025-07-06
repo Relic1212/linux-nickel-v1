@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  zlibNg,
+
   dropbear | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://matt.ucc.asn.au/dropbear/dropbear-2025.87.tar.bz2",
@@ -13,8 +14,9 @@
       "--disable-wtmp",
       "--disable-wtmpx",
     ],
-    biDrvs = [
-      drvs.zlibNg,
-    ]
+    biDrvs =
+      lib.biMap [
+        zlibNg,
+      ]
   }
 }

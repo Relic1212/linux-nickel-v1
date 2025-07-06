@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  basu,
+
   brightnessctl | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/Hummer12007/brightnessctl/archive/7586bd231433325077adf32dfcd3e5382fb465e9.zip",
@@ -10,9 +11,10 @@
       "--prefix=/usr",
       "--udev-dir=/usr/lib/udev/rules.d"
     ],
-    biDrvs = [
-      drvs.basu,
-    ],
+    biDrvs =
+      lib.biMap [
+        basu,
+      ],
     separateBuildDir = false,
     preConfigurePhase = [
       m%"sed -i 's@\"\/bin\/@\"\/usr\/bin\/@g' ${SRC}/90-brightnessctl.rules"%

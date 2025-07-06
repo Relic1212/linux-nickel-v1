@@ -1,7 +1,9 @@
 {
   # busybox,
   lib,
-  drvs,
+  xxhash,
+  zstd,
+
   ccache | lib.CmakePackage = {
     singleSource = {
       uri = "https://github.com/ccache/ccache/releases/download/v4.10.2/ccache-4.10.2.tar.xz",
@@ -14,9 +16,10 @@
       "-DREDIS_STORAGE_BACKEND=OFF",
       "-DSTATIC_LINK=ON"
     ],
-    biDrvs = [
-      drvs.xxhash,
-      drvs.zstd,
-    ],
+    biDrvs =
+      lib.biMap [
+        xxhash,
+        zstd,
+      ],
   }
 }

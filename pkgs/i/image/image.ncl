@@ -1,8 +1,181 @@
 (import "rootfs.ncl")
 & {
   lib,
-  drvs,
-  drvs,
+  baseBaseRootfs,
+  erofsUtils,
+  mtools,
+  genimage,
+  cryptsetup,
+  systemdBoot,
+  llvm,
+  pythonFull,
+  utilLinux,
+  linuxFirmware,
+  uutils,
+
+  uutilsSymlinks,
+
+  sbase,
+  libarchive,
+  wget,
+  bzip2,
+
+  vim,
+  bc,
+  dash,
+  dashSh,
+  iproute2,
+
+  kbd,
+
+  pigz,
+  curl,
+  metalog,
+  #zsh,
+  fish,
+  mawk,
+  ncurses,
+  basefiles,
+  dinit,
+  dinitServicesV3,
+  dinitUtils,
+  shadow,
+  libcap,
+  utilLinux,
+  pciutils,
+  xz,
+  #linux,
+  v4l2loopback,
+
+  eudev,
+  dbus,
+  bkeymaps,
+  kmod,
+  keyutils,
+  mandoc,
+  less,
+  jq,
+  earlyoom,
+  # net
+  dhcpcd,
+  iwd,
+  dropbear,
+  openresolv,
+  caCertificates,
+
+  # enc
+  e2fsprogs,
+  fscryptUnlockHome,
+  openssl,
+  fscrypt,
+
+  # gui
+  seatd,
+  libinput,
+  libxkbcommon,
+  libx11,
+  libdrm,
+  xkeyboardConfig,
+  xdgRuntimeRun,
+  foot,
+  fontconfig,
+  ttfCroscore,
+  dejavuFonts,
+  hicolorIconTheme,
+  terminusFont,
+  # swayX11,
+  swayfx,
+  mwc,
+  xwayland,
+  xkbcomp,
+  hyprland,
+  hyprpaper,
+
+  sway,
+
+  rwaybar,
+  brightnessctl,
+  mako,
+  basu,
+  libnotify,
+  strace,
+  #dwl,
+  psmisc,
+  #uutilsProcps,
+  #uutilsProcpsSymlinks,
+  procps,
+  wob,
+  wmenu,
+  dmenuWayland,
+  sov,
+  swayidle,
+  swaylock,
+  swaybg,
+  wlClipboard,
+  slurp,
+  grim,
+  grimshot,
+  wfRecorder,
+  j4MenuDesktop,
+  lavalauncher,
+  waybar,
+  gammastep,
+  gebaarLibinput,
+  upower,
+  acpid,
+  laptopModeTools,
+  #tuned,
+  opendoas,
+  rsync,
+  file,
+  ripgrep,
+  # alsa
+  alsaFirmware,
+  alsaLibs,
+  alsaUtils,
+  # bt
+  bluez,
+  #blueAlsa,
+  #bluez4,
+  # pulseaudio14,
+  # flatpak
+  xdgDbusProxy,
+  mountOthers,
+  sbctl,
+  pythonFull,
+  autotiling,
+  i3ipcPython,
+  tzdata,
+  sndiod,
+  desktopFileUtils,
+  squeekboard,
+  lisgd,
+  glib,
+  gsettingsDesktopSchemas,
+  gnomeDesktop,
+  atSpi2Core,
+
+  # hyprlandQtSupport,
+  # hyprlandQtutils,
+
+  # ttyescape
+  buffybox,
+  hkdm,
+  ttyescape,
+  wld,
+  swc,
+  velox,
+  stWayland,
+
+  flatpak,
+  gnupg2,
+  gpgme,
+  bubblewrap,
+  podman,
+  conmon,
+  crun,
+  netavark,
+
   _rootfs,
   _rootfs2,
   busybox,
@@ -33,219 +206,221 @@
       },
       name = "base-base-rootfs",
       biDrvs =
-        (
-          if options.isVm then
-            []
-          else
-            [
-              drvs.linuxFirmware,
-            ]
-        )
-        @ [
-          # base
-          # drvs.busyboxFinal,
-
-          ## begin bsdutils
-          # drvs.bsdutils,
-          ## end bsdutils
-
-          ## begin uutils
-          drvs.uutils,
-          drvs.uutilsSymlinks,
-          #drvs.gnused,
-          #drvs.gnugrep,
-          (drvs.sbase & { priority = -1 }),
-          drvs.libarchive,
-          drvs.wget,
-          drvs.bzip2,
-          ## end uutils
-
-          ## begin sbase
-          #drvs.sbase,
-          #(drvs.emptyStty & { priority = 10 }),
-          #(drvs.ubase & { priority = -1 }),
-          ## end sbase
-          # drvs.vis,
-          drvs.vim,
-          drvs.bc,
-          drvs.dash,
-          drvs.dashSh,
-          drvs.iproute2,
-          (drvs.kbd & { priority = -1 }),
-          drvs.pigz,
-          drvs.curl,
-          drvs.metalog,
-          #drvs.zsh,
-          drvs.fish,
-          drvs.mawk,
-          drvs.ncurses,
-          drvs.basefiles,
-          drvs.dinit,
-          drvs.dinitServicesV3,
-          drvs.dinitUtils,
-          drvs.shadow,
-          drvs.libcap,
-          drvs.utilLinux,
-          drvs.pciutils,
-          drvs.xz,
-          #drvs.linux,
-          drvs.v4l2loopback,
-
-          # drvs.linuxFirmwareSmaller,
-          drvs.eudev,
-          # drvs.mdevd,
-          # drvs.mdevdConf,
-          drvs.dbus,
-          drvs.bkeymaps,
-          drvs.kmod,
-          drvs.keyutils,
-          drvs.mandoc,
-          drvs.less,
-          # drvs.checkFirmware,
-          drvs.jq,
-          drvs.earlyoom,
-          # net
-          drvs.dhcpcd,
-          drvs.iwd,
-          drvs.dropbear,
-          drvs.openresolv,
-          drvs.caCertificates,
-
-          # enc
-          drvs.e2fsprogs,
-          drvs.fscryptUnlockHome,
-          drvs.openssl,
-          drvs.fscrypt,
-
-          # gui
-          drvs.seatd,
-          #drvs.sway,
-          drvs.libinput,
-          drvs.libxkbcommon,
-          drvs.libx11,
-          drvs.libdrm,
-          drvs.xkeyboardConfig,
-          drvs.xdgRuntimeRun,
-          drvs.foot,
-          drvs.fontconfig,
-          drvs.ttfCroscore,
-          # drvs.fontAwesome,
-          drvs.dejavuFonts,
-          drvs.hicolorIconTheme,
-          drvs.terminusFont,
-        ]
-        @ (
-          if options.hasX11 then
-            [
-              # drvs.swayX11,
-              drvs.swayfx,
-              drvs.mwc,
-              drvs.xwayland,
-              drvs.xkbcomp,
-              drvs.hyprland,
-              drvs.hyprpaper,
-            ]
-          else
-            [
-              drvs.sway,
-            ]
-        )
-        @ (
+        lib.biMap (
           (
-            if options.full then
+            if options.isVm then
+              []
+            else
               [
-                #drvs.cagebreak,
-                drvs.rwaybar,
-                drvs.brightnessctl,
-                drvs.mako,
-                drvs.basu,
-                drvs.libnotify,
-                drvs.strace,
-                #drvs.dwl,
-                drvs.psmisc,
-                #drvs.uutilsProcps,
-                #drvs.uutilsProcpsSymlinks,
-                drvs.procps,
-                drvs.wob,
-                drvs.wmenu,
-                drvs.dmenuWayland,
-                drvs.sov,
-                drvs.swayidle,
-                drvs.swaylock,
-                drvs.swaybg,
-                drvs.wlClipboard,
-                drvs.slurp,
-                drvs.grim,
-                drvs.grimshot,
-                drvs.wfRecorder,
-                drvs.j4MenuDesktop,
-                drvs.lavalauncher,
-                drvs.waybar,
-                drvs.gammastep,
-                drvs.gebaarLibinput,
-                drvs.upower,
-                drvs.acpid,
-                drvs.laptopModeTools,
-                #drvs.tuned,
-                drvs.opendoas,
-                drvs.rsync,
-                drvs.file,
-                drvs.ripgrep,
-                # alsa
-                (drvs.alsaFirmware & { priority = -1 }),
-                drvs.alsaLibs,
-                drvs.alsaUtils,
-                # bt
-                drvs.bluez,
-                #drvs.blueAlsa,
-                #drvs.bluez4,
-                # drvs.pulseaudio14,
-                # flatpak
-                drvs.xdgDbusProxy,
-                drvs.mountOthers,
-                drvs.sbctl,
-                drvs.pythonFull,
-                drvs.autotiling,
-                drvs.i3ipcPython,
-                drvs.tzdata,
-                drvs.sndiod,
-                drvs.desktopFileUtils,
-                drvs.squeekboard,
-                drvs.lisgd,
-                drvs.glib,
-                drvs.gsettingsDesktopSchemas,
-                drvs.gnomeDesktop,
-                drvs.atSpi2Core,
+                linuxFirmware,
+              ]
+          )
+          @ [
+            # base
+            # busyboxFinal,
 
-                # drvs.hyprlandQtSupport,
-                # drvs.hyprlandQtutils,
+            ## begin bsdutils
+            # bsdutils,
+            ## end bsdutils
 
-                # ttyescape
-                drvs.buffybox,
-                drvs.hkdm,
-                drvs.ttyescape,
-                drvs.wld,
-                drvs.swc,
-                drvs.velox,
-                drvs.stWayland,
+            ## begin uutils
+            uutils,
+            uutilsSymlinks,
+            #gnused,
+            #gnugrep,
+            (sbase & { priority = -1 }),
+            libarchive,
+            wget,
+            bzip2,
+            ## end uutils
+
+            ## begin sbase
+            #sbase,
+            #(emptyStty & { priority = 10 }),
+            #(ubase & { priority = -1 }),
+            ## end sbase
+            # vis,
+            vim,
+            bc,
+            dash,
+            dashSh,
+            iproute2,
+            (kbd & { priority = -1 }),
+            pigz,
+            curl,
+            metalog,
+            #zsh,
+            fish,
+            mawk,
+            ncurses,
+            basefiles,
+            dinit,
+            dinitServicesV3,
+            dinitUtils,
+            shadow,
+            libcap,
+            utilLinux,
+            pciutils,
+            xz,
+            #linux,
+            v4l2loopback,
+
+            # linuxFirmwareSmaller,
+            eudev,
+            # mdevd,
+            # mdevdConf,
+            dbus,
+            bkeymaps,
+            kmod,
+            keyutils,
+            mandoc,
+            less,
+            # checkFirmware,
+            jq,
+            earlyoom,
+            # net
+            dhcpcd,
+            iwd,
+            dropbear,
+            openresolv,
+            caCertificates,
+
+            # enc
+            e2fsprogs,
+            fscryptUnlockHome,
+            openssl,
+            fscrypt,
+
+            # gui
+            seatd,
+            #sway,
+            libinput,
+            libxkbcommon,
+            libx11,
+            libdrm,
+            xkeyboardConfig,
+            xdgRuntimeRun,
+            foot,
+            fontconfig,
+            ttfCroscore,
+            # fontAwesome,
+            dejavuFonts,
+            hicolorIconTheme,
+            terminusFont,
+          ]
+          @ (
+            if options.hasX11 then
+              [
+                # swayX11,
+                swayfx,
+                mwc,
+                xwayland,
+                xkbcomp,
+                hyprland,
+                hyprpaper,
               ]
             else
-              []
+              [
+                sway,
+              ]
           )
           @ (
-            if options.haveContainers then
-              [
-                drvs.flatpak,
-                drvs.gnupg2,
-                drvs.gpgme,
-                drvs.bubblewrap,
-                drvs.podman,
-                drvs.conmon,
-                drvs.crun,
-                drvs.netavark,
-              ]
-            else
-              []
+            (
+              if options.full then
+                [
+                  #cagebreak,
+                  rwaybar,
+                  brightnessctl,
+                  mako,
+                  basu,
+                  libnotify,
+                  strace,
+                  #dwl,
+                  psmisc,
+                  #uutilsProcps,
+                  #uutilsProcpsSymlinks,
+                  procps,
+                  wob,
+                  wmenu,
+                  dmenuWayland,
+                  sov,
+                  swayidle,
+                  swaylock,
+                  swaybg,
+                  wlClipboard,
+                  slurp,
+                  grim,
+                  grimshot,
+                  wfRecorder,
+                  j4MenuDesktop,
+                  lavalauncher,
+                  waybar,
+                  gammastep,
+                  gebaarLibinput,
+                  upower,
+                  acpid,
+                  laptopModeTools,
+                  #tuned,
+                  opendoas,
+                  rsync,
+                  file,
+                  ripgrep,
+                  # alsa
+                  (alsaFirmware & { priority = -1 }),
+                  alsaLibs,
+                  alsaUtils,
+                  # bt
+                  bluez,
+                  #blueAlsa,
+                  #bluez4,
+                  # pulseaudio14,
+                  # flatpak
+                  xdgDbusProxy,
+                  mountOthers,
+                  sbctl,
+                  pythonFull,
+                  autotiling,
+                  i3ipcPython,
+                  tzdata,
+                  sndiod,
+                  desktopFileUtils,
+                  squeekboard,
+                  lisgd,
+                  glib,
+                  gsettingsDesktopSchemas,
+                  gnomeDesktop,
+                  atSpi2Core,
+
+                  # hyprlandQtSupport,
+                  # hyprlandQtutils,
+
+                  # ttyescape
+                  buffybox,
+                  hkdm,
+                  ttyescape,
+                  wld,
+                  swc,
+                  velox,
+                  stWayland,
+                ]
+              else
+                []
+            )
+            @ (
+              if options.haveContainers then
+                [
+                  flatpak,
+                  gnupg2,
+                  gpgme,
+                  bubblewrap,
+                  podman,
+                  conmon,
+                  crun,
+                  netavark,
+                ]
+              else
+                []
+            )
           )
         )
     }
@@ -255,17 +430,18 @@
     & {
       enableCcache = false,
       name = "base-image",
-      biDrvs = [
-        drvs.baseBaseRootfs,
-        drvs.erofsUtils,
-        drvs.mtools,
-        drvs.genimage,
-        drvs.cryptsetup,
-        drvs.systemdBoot,
-        drvs.llvm, # objdump
-        drvs.pythonFull,
-        drvs.utilLinux,
-      ]
+      biDrvs =
+        lib.biMap [
+          baseBaseRootfs,
+          erofsUtils,
+          mtools,
+          genimage,
+          cryptsetup,
+          systemdBoot,
+          llvm, # objdump
+          pythonFull,
+          utilLinux,
+        ]
     },
 
   vmImage | lib.Package =
@@ -291,16 +467,24 @@
       ]
     },
 
+  dashAarch64,
+  dashSh,
+  linuxAarch64,
+  basefiles,
+  erofsUtils,
+  basefilesAarch64,
+
   aarch64Image | lib.Package = {
-    biDrvs = [
-      # drvs.busyboxAarch64,
-      drvs.dashAarch64,
-      drvs.dashSh,
-      drvs.linuxAarch64,
-      drvs.basefiles,
-      drvs.erofsUtils,
-      drvs.basefilesAarch64,
-    ],
+    biDrvs =
+      lib.biMap [
+        # busyboxAarch64,
+        dashAarch64,
+        dashSh,
+        linuxAarch64,
+        basefiles,
+        erofsUtils,
+        basefilesAarch64,
+      ],
     buildPhase = [
       m%"
           mkfs.erofs \

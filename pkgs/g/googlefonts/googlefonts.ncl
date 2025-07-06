@@ -1,20 +1,23 @@
 {
   lib,
-  drvs,
+  pythonFull,
+  zopfli,
+
   googlefontsNotoEmoji | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/googlefonts/noto-emoji/archive/refs/tags/v2.047.tar.gz",
       sha256sum = "2cfaf5a427eb26334cdb30d98e4a0c005b660504a339249dc54373e566f09b50"
     },
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.zopfli,
-    ]
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        zopfli,
+      ]
   }
 }
 & {
   lib,
-  drvs,
+
   zopfli | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -25,7 +28,7 @@
 }
 & {
   lib,
-  drvs,
+
   nototools | lib.SetuptoolPackage = {
     singleSource = {
       uri = "https://github.com/notofonts/nototools/archive/refs/tags/v0.2.20.tar.gz",

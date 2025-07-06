@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  go_1_4,
+  bash,
+
   go_1_9 | lib.Package = {
     name = go_1_9,
     singleSource = {
@@ -25,9 +27,10 @@
       "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
       "cp -r ${SRC}/* ${DEST}/usr/lib/go",
     ],
-    biDrvs = [
-      drvs.go_1_4,
-      drvs.bash,
-    ]
+    biDrvs =
+      lib.biMap [
+        go_1_4,
+        bash,
+      ]
   }
 }

@@ -1,7 +1,11 @@
 {
   lib,
-  drvs,
-  drvs,
+  rdfind,
+  zstd,
+
+  coreutils,
+  pythonFull,
+
   linuxFirmware | lib.MakePackage = {
     name = "linux-firmware",
     singleSource = {
@@ -10,11 +14,12 @@
     },
     # buildDir = "${SRC}",
     separateBuildDir = false,
-    biDrvs = [
-      drvs.rdfind,
-      (drvs.coreutils & { priority = 1 }),
-      drvs.zstd,
-    ],
+    biDrvs =
+      lib.biMap [
+        rdfind,
+        (coreutils & { priority = 1 }),
+        zstd,
+      ],
     makeInstallTargets = [
       "install-zst"
     ],
@@ -25,8 +30,8 @@
       name | priority 1 = "linux-firmware-smaller",
       biDrvs | priority 1 =
         linuxFirmware.biDrvs
-        @ [
-          drvs.pythonFull
+        @ lib.biMap [
+          pythonFull
         ],
       extraFiles = [
         {

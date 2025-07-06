@@ -1,6 +1,9 @@
 {
   lib,
-  drvs,
+  musl,
+  llvm,
+  ccacheBin,
+
   muslGetent | lib.Package = {
     name = "musl-getent",
     singleSource = {
@@ -15,10 +18,11 @@
             install -m0755 getent ${DEST}/usr/bin
             "%
     ],
-    biDrvs = [
-      drvs.musl,
-      drvs.llvm,
-      drvs.ccacheBin,
-    ]
+    biDrvs =
+      lib.biMap [
+        musl,
+        llvm,
+        ccacheBin,
+      ]
   }
 }

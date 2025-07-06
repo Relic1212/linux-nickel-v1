@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   tlp | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/linrunner/TLP/archive/refs/tags/1.7.0.tar.gz",

@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   uutilsUtilLinux | lib.CargoPackage =
     let j = import "./uutils-util-linux-crates.json"
     in

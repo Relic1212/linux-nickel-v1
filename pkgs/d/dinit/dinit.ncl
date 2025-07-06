@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  m4,
+
   dinit | lib.MesonPackage = {
     singleSource = {
 
@@ -15,9 +16,10 @@
     extraMesonArgs = [
       "-Ddinit-sbindir=/usr/bin"
     ],
-    biDrvs = [
-      drvs.m4
-    ],
+    biDrvs =
+      lib.biMap [
+        m4
+      ],
     preConfigurePhase = [
       m%"sed -i 's@\/sbin\/swapoff@\/usr\/bin/swapoff@g' ${SRC}/src/shutdown.cc"%,
       m%"sed -i 's@\/bin\/umount@\/usr\/bin/umount@g' ${SRC}/src/shutdown.cc"%,

@@ -1,6 +1,9 @@
 {
   lib,
-  drvs,
+
+  busyboxBootstrapStage0,
+  bootstrapStage0,
+  bootstrapSymlinks,
 
   gnumakeStage1 | lib.AutotoolsPackage = {
     name = "gnumake-stage-1",
@@ -45,10 +48,11 @@
         # ],
         # STAGE_LDFLAGS=common,
       },
-    buildInputs = [
-      drvs.busyboxBootstrapStage0,
-      drvs.bootstrapStage0,
-      drvs.bootstrapSymlinks,
-    ]
+    buildInputs =
+      lib.biMap [
+        busyboxBootstrapStage0,
+        bootstrapStage0,
+        bootstrapSymlinks,
+      ]
   },
 }

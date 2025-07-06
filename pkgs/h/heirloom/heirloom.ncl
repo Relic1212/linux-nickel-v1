@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   heirloom | lib.MakePackage = {
     singleSource = {
       uri = "https://sourceforge.net/projects/heirloom/files/heirloom/070715/heirloom-070715.tar.bz2",
@@ -19,8 +20,9 @@
       # "SU3BIN=/usr/bin"
     ],
     extraMakeInstallArgs = extraMakeArgs,
-    biDrvs = [
-      drvs.linuxHeaders,
-    ],
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ],
   }
 }

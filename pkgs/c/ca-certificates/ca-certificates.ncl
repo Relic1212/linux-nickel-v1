@@ -13,7 +13,7 @@
 }
 & {
   lib,
-  drvs,
+
   mozillaCerts | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://archive.mozilla.org/pub/security/nss/releases/NSS_3_96_RTM/src/nss-3.96.tar.gz",

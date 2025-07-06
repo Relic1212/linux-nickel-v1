@@ -1,7 +1,22 @@
 {
   lib,
-  drvs,
+
   hyprland,
+  xcbRenderutil,
+  libxfont2,
+  libfontenc,
+  libxcvt,
+  libxshmfence,
+  xwayland,
+  libxkbfile,
+  openssl,
+  xcbUtilWm,
+  xcbUtilErrors,
+  libxext,
+  libxf86vm,
+  libxrandr,
+  mesa2,
+
   hyprlandX11 | lib.MesonPackage = (
     hyprland
     & {
@@ -10,29 +25,31 @@
       },
       biDrvs | priority 1 =
         hyprland.biDrvs
-        @ [
-          drvs.xcbRenderutil,
-          drvs.libxfont2,
-          drvs.libfontenc,
-          drvs.libxcvt,
-          drvs.libxshmfence,
-          drvs.xwayland,
-          drvs.libxkbfile,
-          drvs.openssl,
-          drvs.xcbUtilWm,
-          drvs.xcbUtilErrors,
-        ]
-        @ (
-          if options.glx then
-            [
-              drvs.libxext,
-              drvs.libxf86vm,
-              drvs.libxrandr,
-            ]
-          else
-            [
-              drvs.mesa2
-            ]
+        @ lib.biMap (
+          [
+            xcbRenderutil,
+            libxfont2,
+            libfontenc,
+            libxcvt,
+            libxshmfence,
+            xwayland,
+            libxkbfile,
+            openssl,
+            xcbUtilWm,
+            xcbUtilErrors,
+          ]
+          @ (
+            if options.glx then
+              [
+                libxext,
+                libxf86vm,
+                libxrandr,
+              ]
+            else
+              [
+                mesa2
+              ]
+          )
         ),
 
       extraMesonArgs | priority 1 = [

@@ -1,29 +1,46 @@
 {
   lib,
-  drvs,
+  dbus,
+  pcre2,
+  libffi,
+  zlibNg,
+  glib,
+  linuxHeaders,
+  pkgconf,
+  eudev,
+  gperf,
+  kmod,
+  xz,
+  utilLinux,
+  readline,
+  ncurses,
+  jsonC,
+  alsaLibs,
+
   bluez4 | lib.AutotoolsPackage = {
     singleSource = {
       uri = "http://www.kernel.org/pub/linux/bluetooth/bluez-4.101.tar.xz",
       sha256sum = "41f9578bef39b8c94a2d6ddeaa556afd22d136936d0f03100e422fe970a45a7d"
     },
-    biDrvs = [
-      drvs.dbus,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.linuxHeaders,
-      drvs.pkgconf,
-      drvs.eudev,
-      drvs.gperf,
-      drvs.kmod,
-      drvs.xz,
-      drvs.utilLinux,
-      drvs.readline,
-      drvs.ncurses,
-      drvs.jsonC,
-      drvs.alsaLibs,
-    ],
+    biDrvs =
+      lib.biMap [
+        dbus,
+        pcre2,
+        libffi,
+        zlibNg,
+        glib,
+        linuxHeaders,
+        pkgconf,
+        eudev,
+        gperf,
+        kmod,
+        xz,
+        utilLinux,
+        readline,
+        ncurses,
+        jsonC,
+        alsaLibs,
+      ],
     extraConfigureFlags = [
       "--enable-alsa",
       "--enable-tools",
@@ -80,7 +97,7 @@
 }
 & {
   lib,
-  drvs,
+
   bluezLibs | lib.AutotoolsPackage = {
     singleSource = {
       uri = "http://bluez.sf.net/download/bluez-utils-2.25.tar.gz",

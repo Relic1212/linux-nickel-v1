@@ -1,6 +1,9 @@
 {
   lib,
-  drvs,
+  pcre2,
+  musl,
+  gnumake,
+
   ripgrep | lib.CargoPackage = {
     singleSource = {
       uri = "https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz",
@@ -17,10 +20,11 @@
       EXTRA_CXXFLAGS = ["-L/usr/lib", "--verbose"],
       EXTRA_LDFLAGS = ["-L/usr/lib", "--verbose"],
     },
-    biDrvs = [
-      drvs.pcre2,
-      drvs.musl,
-      drvs.gnumake,
-    ]
+    biDrvs =
+      lib.biMap [
+        pcre2,
+        musl,
+        gnumake,
+      ]
   }
 }

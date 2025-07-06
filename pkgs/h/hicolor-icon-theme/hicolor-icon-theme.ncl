@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   hicolorIconTheme | lib.MesonPackage = {
     singleSource = {
       uri = "https://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.18.tar.xz",

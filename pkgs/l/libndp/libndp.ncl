@@ -1,5 +1,5 @@
 {
-  drvs,
+
   lib,
   libndp | lib.AutotoolsPackage = {
     singleSource = {

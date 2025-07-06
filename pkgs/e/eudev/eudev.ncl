@@ -1,24 +1,34 @@
 {
   lib,
-  drvs,
+  gperf,
+  kmod,
+  zlibNg,
+  xz,
+  openssl,
+  zstd,
+  utilLinux,
+  linuxHeaders,
+  file,
+  pkgconf,
 
   eudev | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/eudev-project/eudev/releases/download/v3.2.14/eudev-3.2.14.tar.gz",
       sha256sum = "8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f"
     },
-    biDrvs = [
-      drvs.gperf,
-      drvs.kmod,
-      drvs.zlibNg,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
-      drvs.linuxHeaders,
-      drvs.file,
-      drvs.pkgconf
-    ],
+    biDrvs =
+      lib.biMap [
+        gperf,
+        kmod,
+        zlibNg,
+        xz,
+        openssl,
+        zstd,
+        utilLinux,
+        linuxHeaders,
+        file,
+        pkgconf
+      ],
     patches = [
       {
         file = "0001-fix-static-kmod-in-eudev.patch",

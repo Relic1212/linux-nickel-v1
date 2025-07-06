@@ -1,6 +1,8 @@
 {
   lib,
-  drvs,
+  nasm,
+  mtools,
+
   limine | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://github.com/limine-bootloader/limine/releases/download/v9.2.1/limine-9.2.1.tar.xz",
@@ -12,9 +14,10 @@
     # extraMakeTargets=[
     #     "limine-uefi-x86-64"
     # ],
-    biDrvs = [
-      drvs.nasm,
-      drvs.mtools,
-    ]
+    biDrvs =
+      lib.biMap [
+        nasm,
+        mtools,
+      ]
   }
 }

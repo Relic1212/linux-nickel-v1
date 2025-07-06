@@ -1,6 +1,6 @@
 {
   lib,
-  drvs,
+
   grimshot | lib.Package = {
     singleSource = {
       uri = "https://github.com/OctopusET/sway-contrib/archive/refs/tags/1.10-contrib.0.tar.gz",

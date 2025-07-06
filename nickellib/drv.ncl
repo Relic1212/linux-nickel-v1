@@ -44,21 +44,20 @@ let drvUtils = {
   ),
 
   pkgToDrv = (fun p =>
-    let d | DrvSchema
-      = {
-        # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
+    let d | DrvSchema = {
+      # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
 
-        buildInputDrvs = (std.array.map (fun x => x.drvHash) (std.array.sort (buildInputCmp) p.buildInputsValidated)),
+      buildInputDrvs = (std.array.map (fun x => x.drvHash) (std.array.sort (buildInputCmp) p.buildInputsValidated)),
 
-        sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
-        patchDrvs = p.patches,
-        extraFileDrvs = p.extraFiles,
-        scriptContent = p.scriptContent,
-        buildInChroot = p.buildInChroot,
-        enableCcache = p.enableCcache,
-        symlinkBuldInputs = p.symlinkBuldInputs,
-      }
-      in d
+      sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
+      patchDrvs = p.patches,
+      extraFileDrvs = p.extraFiles,
+      scriptContent = p.scriptContent,
+      buildInChroot = p.buildInChroot,
+      enableCcache = p.enableCcache,
+      symlinkBuldInputs = p.symlinkBuldInputs,
+    }
+    in d
   ),
   pkgToJson = (fun p => let drv = pkgToDrv p in drvToJson drv),
   pkgToFullDrv = (fun p =>

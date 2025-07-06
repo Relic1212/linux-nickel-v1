@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   libudevZero | lib.MakePackage = {
     singleSource = {
       uri = "https://github.com/illiliti/libudev-zero/archive/refs/tags/1.0.3.tar.gz",
@@ -15,8 +16,9 @@
       "install-static"
     ],
 
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ]
   },
 }

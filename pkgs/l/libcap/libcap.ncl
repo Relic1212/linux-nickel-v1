@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  linuxHeaders,
+
   libcap | lib.MakePackage = {
     name = "libcap",
     singleSource = {
@@ -34,8 +35,9 @@
 
     extraMakeInstallArgs = extraMakeArgs,
 
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
+    biDrvs =
+      lib.biMap [
+        linuxHeaders,
+      ]
   }
 }

@@ -1,6 +1,7 @@
 {
   lib,
-  drvs,
+  pytest,
+
   bzip2 | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.com/bzip2/bzip2/-/archive/66c46b8c9436613fd81bc5d03f63a61933a4dcc3/bzip2-66c46b8c9436613fd81bc5d03f63a61933a4dcc3.tar.gz",
@@ -10,15 +11,21 @@
       "-Ddocs=disabled",
     ],
 
-    biDrvs = [
-      drvs.pytest,
-    ]
+    biDrvs =
+      lib.biMap [
+        pytest,
+      ]
   }
 }
 & {
 
   lib,
-  drvs,
+  pythonFull,
+  pythonSetuptools,
+  pythonInstaller,
+  pythonGpep517,
+  pythonFlitCore,
+
   pytest | lib.Package = {
     singleSource = {
       uri = "https://github.com/pytest-dev/pytest/releases/download/8.3.3/pytest-8.3.3.tar.gz",
@@ -29,12 +36,13 @@
       "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
       "python -m installer -d ${DEST} .dist/*.whl",
     ],
-    biDrvs = [
-      drvs.pythonFull,
-      drvs.pythonSetuptools,
-      drvs.pythonInstaller,
-      drvs.pythonGpep517,
-      drvs.pythonFlitCore,
-    ]
+    biDrvs =
+      lib.biMap [
+        pythonFull,
+        pythonSetuptools,
+        pythonInstaller,
+        pythonGpep517,
+        pythonFlitCore,
+      ]
   }
 }
