@@ -11,7 +11,7 @@
   bash,
 
   varTmpDirectory | lib.Package = {
-    name = "var-tmp-directory",
+    #name = "var-tmp-directory",
 
     installPhase = [
       "install -d -m 0755 ${DEST}/var",
@@ -23,7 +23,6 @@
 
   go_1_4 | lib.Package = {
 
-    name = go_1_4,
 
     singleSource = {
       uri = "http://golang.org/dl/go1.4.2.src.tar.gz",

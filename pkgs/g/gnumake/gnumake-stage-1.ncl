@@ -6,7 +6,7 @@
   bootstrapSymlinks,
 
   gnumakeStage1 | lib.AutotoolsPackage = {
-    name = "gnumake-stage-1",
+    #name = "gnumake-stage-1",
 
     singleSource = (import "gnumake-src.ncl"),
     configureFlags | priority 10 =

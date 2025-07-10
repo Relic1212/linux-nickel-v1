@@ -3,7 +3,7 @@
   pkgconf,
 
   ncurses | lib.AutotoolsPackage = {
-    name = "ncurses",
+    #name = "ncurses",
     singleSource = {
       uri = "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20250301.tgz",
       sha256sum = "b19934a5ca9e4425c4ad82d7335cec3ab03526d99c9d2cb5ea1c4f9269b31b1c",

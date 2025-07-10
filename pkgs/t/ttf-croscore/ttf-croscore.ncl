@@ -1,7 +1,7 @@
 {
   lib,
   ttfCroscore | lib.Package = {
-    name = "ttf-croscore",
+    #name = "ttf-croscore",
     singleSource = {
       uri = "https://gsdview.appspot.com/chromeos-localmirror/distfiles/croscorefonts-1.31.0.tar.bz2",
       sha256sum = "672c3487883ec1ef83d9254240d4327b014212abc823d06d15816095867315e1",

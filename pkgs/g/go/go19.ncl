@@ -4,7 +4,6 @@
   bash,
 
   go_1_9 | lib.Package = {
-    name = go_1_9,
     singleSource = {
       uri = "http://golang.org/dl/go1.19.5.src.tar.gz",
       sha256sum = "8e486e8e85a281fc5ce3f0bedc5b9d2dbf6276d7db0b25d3ec034f313da0375f",

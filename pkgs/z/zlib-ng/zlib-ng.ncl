@@ -2,7 +2,7 @@
   lib,
 
   zlibNg | lib.CmakePackage = {
-    name = "zlib-ng",
+    #name = "zlib-ng",
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.2.2.tar.gz",

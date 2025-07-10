@@ -35,13 +35,15 @@ in
     (import "buildEnv.ncl")
     & {
       BuildEnv,
-      staticEnv,
-      llvmEnv,
-      staticLlvmEnv,
       shellFunctions = import "./shellFunctions.ncl",
       # biMap = (fun arr => std.array.map (fun x => drvUtils.pkgToHash x) arr),
-      singleBiMap = (fun x => { name = x.name, drvHash = x.drvHash }),
-      biMap = (fun arr => std.array.map (fun x => { name = x.name, drvHash = x.drvHash }) arr),
+      singleBiMap = (fun x =>  ( if (
+        # true
+        # x.name != "NULL" 
+       std.record.get_or  "buildInputsEvaluated" false x
+      ) then (  { name = x.name, drvHash = x.drvHash }) else { name = x.name, drvHash = "204a9243c33380ce82fc6019dabcafc010a66c9b2a6cb0f99005b048248f08c5" }) ),
+      # singleBiMap = (fun x => x),
+      biMap = (fun arr => std.array.map (singleBiMap) arr),
 
       # biMap2 = (fun arr => std.array.map (fun x => (hashByName."%{x}") ) arr),
 
@@ -88,11 +90,13 @@ in
 
       # pkgs=import "pkgsRecord.ncl",
       BuildInputC = std.contract.from_validator (fun x => (if ((std.record.has_field "buildInputs" x) == false) then 'Ok else 'Error { message = "name: \"%{x.name}\"", notes = "failure" })),
-      BuildInput = {
+      _BuildInput = {
         name,
         drvHash,
         priority | optional,
+        ..
       },
+      BuildInput = std.contract.any_of [Number, _BuildInput],
       Package = {
         # others
         # busybox,
@@ -132,21 +136,23 @@ in
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
         buildInputsValidated
-          | not_exported
-          | std.contract.from_validator (fun arr =>
-            (
-              if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
-                'Ok
-              else
-                'Error {
-                  message =
-                    "%{name} has invalid buildInputs\n"
-                    ++ "        The buildInputs specified as packages are:\n        %{ std.string.join "\n        " (std.array.sort std.string.compare(std.array.map (fun x=> (x.name  )) ( baseBuildinputPackages ))) }"
-                }
-            )
-          )
+          # | not_exported
+          # | std.contract.from_validator (fun arr =>
+          #   (
+          #     if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
+          #       'Ok
+          #     else
+          #       'Error {
+          #         message =
+          #           "%{name} has invalid buildInputs\n"
+          #           ++ "        The buildInputs specified as packages are:\n        %{ std.string.join "\n        " (std.array.sort std.string.compare(std.array.map (fun x=> (x.name  )) ( baseBuildinputPackages ))) }"
+          #       }
+          #   )
+          # )
           | force
           = buildInputs,
+        
+        buildInputsEvaluated  = std.array.fold_left (&&) true (std.array.map (fun x => ( std.is_number x )==false) buildInputsValidated),
 
         buildInputs | Array BuildInput | not_exported | default =
           baseBuildinputPackages @ biDrvs,
@@ -546,7 +552,7 @@ in
         uri | nullOrString | default = null,
         sha256sum | String | default = "",
       },
-      SourceInput = {
+      SourceInput | not_exported = {
         src | Src,
         dest | String | optional,
         unpack | Bool | optional,

@@ -3,7 +3,7 @@
   pkgconf,
 
   openresolv | lib.AutotoolsPackage = {
-    name = "openresolv",
+    #name = "openresolv",
     singleSource = {
       uri = "https://github.com/NetworkConfiguration/openresolv/releases/download/v3.13.2/openresolv-3.13.2.tar.xz",
       sha256sum = "36b5bcbe257a940c884f0d74321a47407baabab9e265e38859851c8311f6f0b0",

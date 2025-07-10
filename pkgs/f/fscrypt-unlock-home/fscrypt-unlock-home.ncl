@@ -1,7 +1,7 @@
 {
   lib,
   fscryptUnlockHome | lib.Package = {
-    name = "fscrypt-unlock-home",
+    #name = "fscrypt-unlock-home",
     extraFiles = [
       {
         file = "crypto-login.sh",

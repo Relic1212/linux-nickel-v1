@@ -1,7 +1,7 @@
 {
   lib,
   ccacheBin | lib.Package = {
-    name = "ccache-bin",
+    #name = "ccache-bin",
     stage = 0,
     extraFiles = [
       {

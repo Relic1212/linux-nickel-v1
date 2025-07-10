@@ -1,7 +1,7 @@
 {
   lib,
   genimage | lib.Package = {
-    name = "genimage",
+    #name = "genimage",
     extraFiles = [
       {
         file = "genimage.sh",

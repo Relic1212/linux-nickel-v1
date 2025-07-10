@@ -1,7 +1,7 @@
 {
   lib,
   lz4 | lib.MesonPackage = {
-    name = "lz4",
+    #name = "lz4",
 
     singleSource = {
       uri = "https://github.com/lz4/lz4/releases/download/v1.10.0/lz4-1.10.0.tar.gz",

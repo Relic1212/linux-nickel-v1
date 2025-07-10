@@ -2,7 +2,7 @@
   lib,
 
   unzip | lib.MakePackage = {
-    name = "unzip",
+    #name = "unzip",
     singleSource = {
       uri = "https://dev.alpinelinux.org/archive/unzip/unzip60.tgz",
       sha256sum = "036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37"

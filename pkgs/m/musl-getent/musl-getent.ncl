@@ -5,7 +5,7 @@
   ccacheBin,
 
   muslGetent | lib.Package = {
-    name = "musl-getent",
+    #name = "musl-getent",
     singleSource = {
       uri = "https://github.com/alpinelinux/aports/raw/c20d637e3370e89a3e903771fd38374fa1654c9e/main/musl/getent.c",
       sha256sum = "002c1a216f6bed0f816ab1cfebde94a0b127193ef410c36b2190599983e015b8",

@@ -2,7 +2,7 @@
   lib,
 
   _ninja | lib.Package = {
-    name = "ninja",
+    #name = "ninja",
 
     sourceInputs = [
       {

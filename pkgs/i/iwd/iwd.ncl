@@ -9,7 +9,7 @@
   pkgconf,
 
   iwd | lib.AutotoolsPackage = {
-    name = "iwd",
+    #name = "iwd",
     singleSource = {
       uri = "https://mirrors.edge.kernel.org/pub/linux/network/wireless/iwd-2.21.tar.xz",
       sha256sum = "d911398242cdae78a474fe712de7bd138ddc39122f52709b52c8c3bf03716392",

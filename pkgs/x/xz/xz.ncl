@@ -1,7 +1,7 @@
 {
   lib,
   xz | lib.AutotoolsPackage = {
-    name = "xz",
+    #name = "xz",
     singleSource = {
       uri = "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.gz",
 

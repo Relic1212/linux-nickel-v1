@@ -5,7 +5,7 @@
   zlibNg,
 
   glib | lib.MesonPackage = {
-    name = "glib",
+    #name = "glib",
     singleSource = {
       uri = "https://download.gnome.org/sources/glib/2.82/glib-2.82.1.tar.xz",
       sha256sum = "478634440bf52ee4ec4428d558787398c0be6b043c521beb308334b3db4489a6",

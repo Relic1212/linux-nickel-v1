@@ -9,7 +9,7 @@
   expat,
 
   harfbuzz | lib.MesonPackage = {
-    name = "harfbuzz",
+    #name = "harfbuzz",
     singleSource = {
       uri = "https://github.com/harfbuzz/harfbuzz/releases/download/10.0.1/harfbuzz-10.0.1.tar.xz",
       sha256sum = "b2cb13bd351904cb9038f907dc0dee0ae07127061242fe3556b2795c4e9748fc"

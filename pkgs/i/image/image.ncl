@@ -204,7 +204,7 @@
         haveContainers = true,
         isVm = false,
       },
-      name = "base-base-rootfs",
+      #name = "base-base-rootfs",
       biDrvs =
         lib.biMap (
           (
@@ -429,7 +429,7 @@
     _rootfs2
     & {
       enableCcache = false,
-      name = "base-image",
+      #name = "base-image",
       biDrvs =
         lib.biMap [
           baseBaseRootfs,

@@ -28,7 +28,7 @@
   busyboxMiscUtils | lib.MakePackage = (
     busybox
     & {
-      name = "busybox-misc-utils",
+      #name = "busybox-misc-utils",
       installPhase | priority 100 = [
         "install -d -m0755 ${DEST}/usr/bin",
         "install -m0755 ${SRC}/busybox ${DEST}/usr/bin",
@@ -41,7 +41,7 @@
     }
   ),
   systemdBoot | lib.MesonPackage = {
-    name = "systemd-boot",
+    #name = "systemd-boot",
     sourceInputs = [
       {
         src = {

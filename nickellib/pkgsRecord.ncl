@@ -15,7 +15,7 @@ in
 
 let imported_unnanmed = import "pkgsImport.ncl"
 in
-let imported = imported_unnanmed
+let imported =  imported_unnanmed 
 in
 let filter_pkgs = (fun x =>
   (
@@ -74,13 +74,14 @@ let ro = {
     {
       __pkgs_unfiletered = # genpkgs __pkgs_unfiletered
         (
-          name_pkgs (
+          name_pkgs
+           (
             (
               importlib
               & imported
             )
-            & {
-              lib,
+           # & {
+             # lib,
               # pkgs = __pkgs_unfiletered,
               # drvs = std.record.map (fun k v => { name = keyToName k, drvHash = if std.record.has_field "drvHash" v then v.drvHash else "2" }) (__pkgs_unfiletered)
 
@@ -89,7 +90,7 @@ let ro = {
               # drvs  = std.record.map (fun k v =>  { name = keyToName k,
               # drvHash = std.record.get_or "drvHash" "0" v ,
               #  } )  drvs_nameonly
-            }
+           # }
           )
         )
     }

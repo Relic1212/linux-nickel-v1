@@ -2,7 +2,7 @@
   lib,
 
   perl | lib.AutotoolsPackage = {
-    name = "perl",
+    #name = "perl",
     sourceInputs = [
       {
         src = {

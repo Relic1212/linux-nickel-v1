@@ -38,7 +38,7 @@
   llvmFull,
 
   sway | lib.MesonPackage = {
-    name = "sway",
+    #name = "sway",
 
     sourceInputs = [
       {

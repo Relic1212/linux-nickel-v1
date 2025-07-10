@@ -7,7 +7,7 @@
   linuxHeaders,
 
   libinput | lib.MesonPackage = {
-    name = "libinput",
+    #name = "libinput",
     singleSource = {
       uri = "https://gitlab.freedesktop.org/libinput/libinput/-/archive/1.26.2/libinput-1.26.2.tar.gz",
       sha256sum = "5c1c4150f217fea1db2d1fd88e2607b2f1928cfde65c34da65a9f24dcfd69464",

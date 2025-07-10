@@ -2,7 +2,7 @@
   lib,
 
   llvmEtc | lib.Package = {
-    name = "llvm-etc",
+    #name = "llvm-etc",
     buildInChroot = false,
     installPhase = [
       "install -d -m0755 ${DEST}/etc/clang",

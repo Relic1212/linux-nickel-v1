@@ -6,7 +6,7 @@
   openssl,
 
   kmod | lib.AutomakePackage = {
-    name = "kmod",
+    #name = "kmod",
     singleSource = {
       uri = "https://github.com/kmod-project/kmod/archive/refs/tags/v33.tar.gz",
       sha256sum = "c72120a2582ae240221671ddc1aa53ee522764806f50f8bf1522bbf055679985",

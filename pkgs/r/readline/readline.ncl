@@ -3,7 +3,7 @@
   ncurses,
 
   readline | lib.AutotoolsPackage = {
-    name = "readline",
+    #name = "readline",
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz",
       sha256sum = "3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35",

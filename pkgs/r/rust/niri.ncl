@@ -35,7 +35,7 @@
   niri | lib.CargoPackage =
     let _xkbcommon_rs = {
       "0.1.0" | lib.Crate = {
-        name = "xkbcommon-rs",
+        #name = "xkbcommon-rs",
         version = "0.1.0",
         sha256sum = "1d02316af6831aee03a1ecc7b887ec1e983f4cc43792b80faade552cd7e710c6",
         sourceInput = {

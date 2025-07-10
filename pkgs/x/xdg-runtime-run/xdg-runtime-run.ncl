@@ -1,7 +1,7 @@
 {
   lib,
   xdgRuntimeRun | lib.Package = {
-    name = "xdg-runtime-run",
+    #name = "xdg-runtime-run",
     buildPhase = [
       m%"
 echo '#!/bin/sh

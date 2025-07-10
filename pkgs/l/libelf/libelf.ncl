@@ -7,7 +7,7 @@
   m4,
 
   libelf | lib.AutotoolsPackage = {
-    name = "libelf",
+    #name = "libelf",
     singleSource = {
       uri = "https://sourceware.org/elfutils/ftp/0.191/elfutils-0.191.tar.bz2",
       sha256sum = "df76db71366d1d708365fc7a6c60ca48398f14367eb2b8954efc8897147ad871"

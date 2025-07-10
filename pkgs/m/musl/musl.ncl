@@ -117,7 +117,7 @@
   muslShared =
     musl
     & {
-      name = "musl-shared",
+      #name = "musl-shared",
       extraConfigureFlags | priority 1 = ["--disable-static", "--enable-shared"],
     },
 

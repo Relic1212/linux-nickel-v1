@@ -6,7 +6,7 @@
 
   openssl | lib.AutotoolsPackage =
     let _openssl | lib.AutotoolsPackage = {
-      name = "openssl",
+      #name = "openssl",
       configureScript = "./Configure",
       configureFlags = ["--prefix=/usr", "--libdir=lib", "--openssldir=/etc/ssl"],
       singleSource = {

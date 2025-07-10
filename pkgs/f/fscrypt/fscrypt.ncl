@@ -5,7 +5,7 @@
   libpam,
 
   fscrypt | lib.MakePackage = {
-    name = "fscrypt",
+    #name = "fscrypt",
     sourceInputs = [
       {
         src = {

@@ -3,7 +3,7 @@
   pythonFull,
 
   pythonGpep517 | lib.Package = {
-    name = "python-gpep517",
+    #name = "python-gpep517",
     singleSource = {
       uri = "https://github.com/mgorny/gpep517/archive/v16/gpep517-v16.tar.gz",
       sha256sum = "965ff7cb2217fa03091face01fcb9a2b0205f58be80c8be9ccf832eab7a55414",

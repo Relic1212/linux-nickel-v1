@@ -905,7 +905,7 @@
         uri = "https://download.kde.org/stable/frameworks/6.11/kwindowsystem-6.11.0.tar.xz",
         sha256sum = "d872e85d0915dd5cf1e2baf89fbef62e9855ff3317ecc5939882bc1724628d5a"
       },
-      options.waylandSyms = true,
+      options.waylandSyms | priority 1 = true,
       biDrvs =
         (std.array.filter (fun x => (x.name != "wayland")) _kf.biDrvs)
         @ lib.biMap [

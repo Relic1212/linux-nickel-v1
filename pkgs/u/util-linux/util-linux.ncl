@@ -15,7 +15,7 @@
     in
 
     {
-      name = "util-linux",
+      #name = "util-linux",
       singleSource = {
         uri = "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.40/util-linux-2.40.tar.xz",
         sha256sum = "d57a626081f9ead02fa44c63a6af162ec19c58f53e993f206ab7c3a6641c2cd7"

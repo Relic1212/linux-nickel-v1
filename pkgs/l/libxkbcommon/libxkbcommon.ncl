@@ -7,7 +7,7 @@
   m4,
 
   libxkbcommon | lib.MesonPackage = {
-    name = "libxkbcommon",
+    #name = "libxkbcommon",
 
     singleSource = {
       uri = "https://xkbcommon.org/download/libxkbcommon-1.7.0.tar.xz",

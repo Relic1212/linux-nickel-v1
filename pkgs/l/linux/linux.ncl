@@ -53,7 +53,7 @@ in
 
   linuxHeaders,
   libModulesDirectory | lib.Package = {
-    name = "lib-modules-directory",
+    #name = "lib-modules-directory",
     installPhase = [
       "install -d -m0755 ${DEST}/lib/modules/6.10.0-standard"
     ],
@@ -66,7 +66,7 @@ in
     # let baseConfig = kconfigFiles.voidlinux
     in
     {
-      name = "linux",
+      #name = "linux",
       sourceInputs = linuxHeaders.sourceInputs,
       options = { version = linuxHeaders.options.version },
       buildDir = "/tmp/workdir/src",
