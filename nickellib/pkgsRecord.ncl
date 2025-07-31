@@ -19,11 +19,15 @@ let imported = imported_unnanmed
 in
 let filter_pkgs = (fun x =>
   (
-    std.record.remove
-      "drvs"
+    std.record.filter
+      (fun name _ =>
+        name != "drvs"
+      )
       (
-        std.record.remove
-          "lib"
+        std.record.filter
+          (fun name _ =>
+            name != "lib"
+          )
           (
           # std.record.remove
           #   "pkgs"
@@ -78,7 +82,16 @@ let ro = {
             & {
               lib,
               # pkgs = __pkgs_unfiletered,
-              drvs = std.record.map (fun k v => { name = keyToName k, drvHash = if std.record.has_field "drvHash" v then v.drvHash else "2" }) (__pkgs_unfiletered)
+              drvs =
+                std.record.map
+                  (fun k v =>
+                    {
+                      name = keyToName k,
+                      # drvHash = std.record.get_or "drvHash" "2" v
+                      drvHash = v.drvHash,
+                    }
+                  )
+                  (__pkgs_unfiletered)
 
               # drvs = __pkgs_unfiletered
 
@@ -96,6 +109,7 @@ in
 let __pkgs =
   # name_pkgs
   (filter_pkgs __pkgs_unfiletered)
+#( __pkgs_unfiletered)
 in
 let r = {
 

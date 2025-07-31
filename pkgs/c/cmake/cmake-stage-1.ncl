@@ -11,7 +11,8 @@ let misc = import "cmake-base.ncl" in
       # &
       {
         stage = 1,
-        extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" lib.AutotoolsPackage.extraEnv,
+        # extraEnv = std.record.update "CMAKE_BUILD_PARALLEL_LEVEL" "$(nproc)" lib.AutotoolsPackage.extraEnv,
+        extraEnv = lib.AutotoolsPackage.extraEnv & { "CMAKE_BUILD_PARALLEL_LEVEL" | force = "$(nproc)" },
 
         buildEnv = {
           _isLlvm = false,

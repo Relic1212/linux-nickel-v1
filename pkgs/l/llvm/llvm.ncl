@@ -32,10 +32,43 @@
       #     ]
     },
 
+  _llvmBaseTargetStage1 | lib.CmakePackage = {
+    baseName = "llvm",
+    cmakeArgsPrepend = ["-G Ninja"],
+    cmakeArgsRecord =
+      {
+        "-DLLVM_TOOL_LLVM_DRIVER_BUILD" = true,
+        "-DLLVM_ENABLE_RUNTIMES" = "'libcxx;libcxxabi;compiler-rt;libunwind'",
+        "-DLLVM_ENABLE_PROJECTS" = "'lld;clang'",
+        "-DLLVM_PARALLEL_LINK_JOBS" = "$(nproc)",
+        "-DLLVM_PARALLEL_COMPILE_JOBS" = "$(nproc)",
+      }
+      & _llvmBase.cmakeArgsRecord,
+    sourceInputs = _llvmBase.sourceInputs,
+    installPhase = _llvmBase.installPhase,
+    buildPhase = _llvmBase.buildPhase,
+    extraCmakeArgs = _llvmBase.extraCmakeArgs,
+    preConfigurePhase = _llvmBase.preConfigurePhase,
+    cmakeDir = _llvmBase.cmakeDir,
+    # installPhase | priority 1
+    #   =
+    #     b2.installPhase
+    #     @ [
+    #       "cd ${DEST}/usr/bin",
+    #       "ln -s clang cc",
+    #       "ln -s clang++ c++",
+    #       "ln -s clang-cpp cpp",
+    #       # "ln -s llvm-readobj llvm-readelf",
+    #       "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin",
+    #     ]
+  },
+
   # 1
 
   llvmStage1 =
-    (std.record.remove "buildEnv" _llvmBaseTarget)
+    # (std.record.remove "buildEnv" _llvmBaseTarget)
+    # _llvmBaseTargetStage1
+    _llvmBaseTarget
     & {
       stage = 1,
       isLlvm | force = false,

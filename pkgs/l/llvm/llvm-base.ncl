@@ -287,7 +287,9 @@ in
         "-idirafter=/tmp/workdir/sysroot/"
       ]
       in
-      (lib.CmakePackage & { isLlvm = true }).buildEnv
+      let _isLlvm = isLlvm
+      in
+      (lib.CmakePackage & { isLlvm = _isLlvm }).buildEnv
       & {
         STAGE_LDFLAGS = if (stage == 0) then ["-L/tmp/workdir/sysroot/usr/lib"] else null,
         STAGE_CPPFLAGS = if (stage == 0) then common_stage_flags else null,
