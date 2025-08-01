@@ -11,11 +11,29 @@
     configureFlags = [
       "--prefix=/usr",
     ],
+    separateBuildDir = false,
+    symlinkBuldInputs  = true,
     buildPhase = [
-      "./b2"
+      #"./b2"
+
+      # https://github.com/alpinelinux/aports/blob/master/main/boost1.84/APKBUILD
+      "./b2 --prefix=${DEST}/usr link=static toolset=clang --layout=system --without-graph_parallel --without-mpi",
+    ],
+
+    installPhase = [
+      "echo INSTALLING",
+      "./b2 --prefix=${DEST}/usr link=static toolset=clang --layout=system --without-graph_parallel --without-mpi --includedir=${DEST}/usr/include --libdir=${DEST}/usr/lib install",
+
     ],
     biDrvs = [
       drvs.pythonFull,
+      drvs.muslShared,
+      drvs.linuxHeaders,
+      drvs.bzip2,
+      drvs.zlibNg,
+      drvs.zstd,
+      drvs.xz,
+      
     ],
     buildEnv = {
       CC = ["clang", "-static", "--static"],
@@ -24,6 +42,7 @@
     extraEnv = {
       B2_CXXFLAGS = buildEnv.CXXFLAGS,
       B2_CXX = buildEnv.CXX,
+      # B2_VERBOSE_OPT = "0",
     },
   }
 }
