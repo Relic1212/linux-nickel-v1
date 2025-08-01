@@ -1,1 +1,0 @@
-nickel export --format json nickellib/pkgs.ncl  3.40s user 0.17s system 99% cpu 3.581 total
