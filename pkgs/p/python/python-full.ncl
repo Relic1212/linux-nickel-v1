@@ -145,5 +145,15 @@
         drvs.opensslPic,
         drvs.muslShared,
       ]
+    },
+
+    pythonDynamicPic =
+    pythonDynamic
+    & {
+      preConfigurePhase = [
+        "export CFLAGS=\"${CFLAGS} -fPIC\"",
+        "export CXXFLAGS=\"${CXXFLAGS} -fPIC\"",
+        "export LDFLAGS=\"${LDFLAGS} -fPIC\"",
+      ]
     }
 }

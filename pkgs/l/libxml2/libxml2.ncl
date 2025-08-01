@@ -26,6 +26,7 @@
     buildEnv = {
       _isStatic = false
     },
+    llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
     # separateBuildDir = false,
     biDrvs = [
@@ -50,5 +51,37 @@
       "-Dpython=true",
       "-Dmodules=enabled",
     ]
+  }
+}
+
+
+& {
+  lib,
+  drvs,
+  libxml2,
+  libxml2DynamicCmake | lib.CmakePackage = {
+    singleSource = libxml2.singleSource,
+    isStatic = false,
+    buildEnv = {
+      _isStatic = false
+    },
+    llvmProvider = drvs.llvmFull,
+    generator = "Ninja",
+    # separateBuildDir = false,
+    biDrvs = [
+      drvs.muslShared,
+      drvs.git,
+      drvs.zstd,
+      drvs.zlibNgPic,
+      drvs.xz,
+      drvs.pythonDynamicPic,
+    ],
+    cmakeExtraArgsRecord = {
+      "-DLIBXML2_WITH_PYTHON" = true,
+    "-DBUILD_STATIC_LIBS" = true,
+    "-DLIBXML2_PYTHON_INSTALL_DIR" = "/usr/lib/python3.12/",
+
+    }
+
   }
 }
