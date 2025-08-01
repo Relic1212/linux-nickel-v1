@@ -69,9 +69,9 @@
       drvs.scdoc,
       drvs.gtkLayerShell,
 
-      # drvs.libinput,
-      # drvs.epollShim,
-      # drvs.mtdev,
+      drvs.libinputFixedSyms,
+      drvs.epollShim,
+      drvs.mtdev,
       drvs.eudev,
       drvs.sndiod,
       drvs.upower,
@@ -80,7 +80,7 @@
     ],
 
     extraMesonArgs = [
-      "-Dlibinput=disabled",
+      "-Dlibinput=enabled",
       "-Dlibudev=enabled",
       "-Dlibevdev=enabled",
       "-Dupower_glib=enabled",
