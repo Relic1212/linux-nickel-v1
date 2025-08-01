@@ -22,9 +22,13 @@
     ]
   },
 
-  libinputFixedSyms | lib.MesonPackage  = libinput & {
-    preConfigurePhase | priority 1 = libinput.preConfigurePhase @ [
-       m%"
+  libinputFixedSyms | lib.MesonPackage =
+    libinput
+    & {
+      preConfigurePhase | priority 1 =
+        libinput.preConfigurePhase
+        @ [
+          m%"
             fix_symbol(){
                 echo    sed -i "s@${1}(@${1}_libinput_private(@g"
                 for f in $(find ${SRC} -type f -name '*.h' |grep -v subprojects);do
@@ -37,11 +41,11 @@
                 done
             }
             "%,
-      "fix_symbol \"list_insert\"",
-      "fix_symbol \"list_empty\"",
-      "fix_symbol \"list_init\"",
-      "fix_symbol \"list_append\"",
-      "fix_symbol \"list_remove\"",
-    ]
-  }
+          "fix_symbol \"list_insert\"",
+          "fix_symbol \"list_empty\"",
+          "fix_symbol \"list_init\"",
+          "fix_symbol \"list_append\"",
+          "fix_symbol \"list_remove\"",
+        ]
+    }
 }

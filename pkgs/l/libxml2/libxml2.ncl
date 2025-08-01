@@ -53,8 +53,6 @@
     ]
   }
 }
-
-
 & {
   lib,
   drvs,
@@ -78,10 +76,8 @@
     ],
     cmakeExtraArgsRecord = {
       "-DLIBXML2_WITH_PYTHON" = true,
-    "-DBUILD_STATIC_LIBS" = true,
-    "-DLIBXML2_PYTHON_INSTALL_DIR" = "/usr/lib/python3.12/",
-
+      "-DBUILD_STATIC_LIBS" = true,
+      "-DLIBXML2_PYTHON_INSTALL_DIR" = "/usr/lib/python3.12/",
     }
-
   }
 }
