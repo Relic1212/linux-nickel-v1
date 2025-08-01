@@ -12,7 +12,7 @@
       "--prefix=/usr",
     ],
     separateBuildDir = false,
-    symlinkBuldInputs  = true,
+    symlinkBuldInputs = true,
     buildPhase = [
       #"./b2"
 
@@ -23,7 +23,6 @@
     installPhase = [
       "echo INSTALLING",
       "./b2 --prefix=${DEST}/usr link=static toolset=clang --layout=system --without-graph_parallel --without-mpi --includedir=${DEST}/usr/include --libdir=${DEST}/usr/lib install",
-
     ],
     biDrvs = [
       drvs.pythonFull,
@@ -33,7 +32,6 @@
       drvs.zlibNg,
       drvs.zstd,
       drvs.xz,
-      
     ],
     buildEnv = {
       CC = ["clang", "-static", "--static"],
