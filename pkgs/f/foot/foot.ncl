@@ -4,8 +4,8 @@
   foot | lib.MesonPackage = {
     name = "foot",
     singleSource = {
-      uri = "https://codeberg.org/dnkl/foot/releases/download/1.18.1/foot-1.18.1.tar.gz",
-      sha256sum = "7bd2ff135fe611a049d19b89480a410eb0ae12befadf70cfa7055b6f359ee607",
+      uri = "https://codeberg.org/dnkl/foot/releases/download/1.23.1/foot-1.23.1.tar.gz",
+      sha256sum = "e42cc9d43f26d048cbe0eca9fc7e25a4759f2e6f4bca5835b12a17629cb10192",
     },
     biDrvs = [
       drvs.tllist,

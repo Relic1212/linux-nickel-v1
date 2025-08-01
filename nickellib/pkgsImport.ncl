@@ -274,6 +274,7 @@ let imported =
   & (import "../pkgs/s/samurai/samurai.ncl")
   & (import "../pkgs/s/sbase/sbase.ncl")
   & (import "../pkgs/s/sbctl/sbctl.ncl")
+  & (import "../pkgs/s/scroll/scroll.ncl")
   & (import "../pkgs/s/seatd/seatd.ncl")
   & (import "../pkgs/s/shadow/shadow.ncl")
   & (import "../pkgs/s/skalibs/skalibs.ncl")

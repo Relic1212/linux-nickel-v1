@@ -3,8 +3,8 @@
   drvs,
   fcft | lib.MesonPackage = {
     singleSource = {
-      uri = "https://codeberg.org/dnkl/fcft/releases/download/3.1.8/fcft-3.1.8.tar.gz",
-      sha256sum = "028099126692625873410889a1d76cd82d5a71b5e350bd618320e48db15a8636"
+      uri = "https://codeberg.org/dnkl/fcft/releases/download/3.3.1/fcft-3.3.1.tar.gz",
+      sha256sum = "480faa4ad86f7a4af3e21d4993c81d5e57f429e7b553d0103cd68f3fa340fe53"
     },
     biDrvs = [
       drvs.fontconfig,

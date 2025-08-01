@@ -10,20 +10,28 @@
           # uri = "https://github.com/swaywm/sway/archive/015e357fce8250cdde03844ca81e9ae982ef4bfb.zip",
           # sha256sum = "449a213107680cc234c093e3a21247406bac3fa6e1c9c345a3a9854bd804844c",
 
-          uri = "https://github.com/swaywm/sway/archive/962e1e70a60e9f39d2fdb6fa1810017682fd1f7b.zip",
-          sha256sum = "a1fcf4b802cc1a14b1627fc35cbe281284fadbdf99dc24473e4f1927879badfa",
+          #uri = "https://github.com/swaywm/sway/archive/962e1e70a60e9f39d2fdb6fa1810017682fd1f7b.zip",
+          #sha256sum = "a1fcf4b802cc1a14b1627fc35cbe281284fadbdf99dc24473e4f1927879badfa",
 
           # uri="https://github.com/swaywm/sway/releases/download/1.10.1/sway-1.10.1.tar.gz",
           # sha256sum = "b2fbf3a2f94c8926efa18d6af59bb9f5f1eafa6d46491284b1610c57bef2d105"
+
+          uri="https://github.com/swaywm/sway/releases/download/1.11/sway-1.11.tar.gz",
+          sha256sum = "0e37a55b7c3379230e97e1ad982542b75016a0c7d6676198604e557f9b373dae"
         }
       },
       {
         src = {
-          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/a9542b9565260a84c148f277fd9d6a0548405489/wlroots-a9542b9565260a84c148f277fd9d6a0548405489.tar.gz",
-          sha256sum = "210c49a37ef5c9f771f0dc334cde682d7339e2679011b9c7fbf494c32e1c6dd1"
+          #uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/a9542b9565260a84c148f277fd9d6a0548405489/wlroots-a9542b9565260a84c148f277fd9d6a0548405489.tar.gz",
+          #sha256sum = "210c49a37ef5c9f771f0dc334cde682d7339e2679011b9c7fbf494c32e1c6dd1"
 
           # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.18.2/downloads/wlroots-0.18.2.tar.gz",
           # sha256sum = "cf776c169169f279808d9eabc6583f484338dcd454c966a285ff178c88c105d4",
+        
+          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.0/downloads/wlroots-0.19.0.tar.gz",
+          sha256sum = "aefb0fe2633b0aad1d66123b2f41afab004fb625e2a7790492cdd39a805cac91",
+        
+        
         },
         dest = "wlroots"
       }

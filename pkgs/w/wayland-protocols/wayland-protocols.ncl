@@ -33,6 +33,14 @@
         sha256sum = "f25b0d00f3c610158b00b57b1b7b6e59c4bfd4d91aed46f24d9eba7acf220788",
       },
     },
+_waylandProtocols143 | lib.MesonPackage =
+    _waylandProtocols
+    & {
+      singleSource | priority 1 = {
+        uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.43/wayland-protocols-1.43.tar.gz",
+        sha256sum = "05fc0ff0c6b3081549d8f81c6b584076a20be18e8c2b9be65ae09ce05e5aea9e",
+      },
+    },
 
-  waylandProtocols = _waylandProtocols141,
+  waylandProtocols = _waylandProtocols143,
 }

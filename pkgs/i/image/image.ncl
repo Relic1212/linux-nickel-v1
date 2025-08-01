@@ -26,10 +26,10 @@
     & {
 
       options = {
-        full = true,
+        full = (true),
         hasX11 = true,
-        haveContainers = true,
-        isVm = false,
+        haveContainers = (true),
+        isVm = (false),
       },
       name = "base-base-rootfs",
       biDrvs =
@@ -137,12 +137,13 @@
         @ (
           if options.hasX11 then
             [
-              # drvs.swayX11,
-              drvs.swayfx,
+              drvs.swayX11,
+              drvs.scroll,
+              # drvs.swayfx,
               drvs.mwc,
               drvs.xwayland,
               drvs.xkbcomp,
-              drvs.hyprland,
+              drvs.hyprlandX11,
               drvs.hyprpaper,
             ]
           else

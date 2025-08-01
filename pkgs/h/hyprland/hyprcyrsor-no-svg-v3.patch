@@ -1,0 +1,166 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c1474c7..3e2435a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,6 @@ pkg_check_modules(
+   hyprlang>=0.4.2
+   libzip
+   cairo
+-  librsvg-2.0
+   tomlplusplus)
+ 
+ if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES DEBUG)
+diff --git a/libhyprcursor/hyprcursor.cpp b/libhyprcursor/hyprcursor.cpp
+index 7c71538..c552162 100644
+--- a/libhyprcursor/hyprcursor.cpp
++++ b/libhyprcursor/hyprcursor.cpp
+@@ -10,7 +10,6 @@
+ #include <cstring>
+ #include <algorithm>
+ #include <cmath>
+-#include <librsvg/rsvg.h>
+ 
+ #include "manifest.hpp"
+ #include "meta.hpp"
+@@ -319,7 +318,7 @@ SCursorImageData** CHyprcursorManager::getShapesC(int& outSize, const char* shap
+             foundAny = true;
+         }
+ 
+-        if (foundAny || shape->shapeType == SHAPE_SVG /* something broke, this shouldn't happen with svg */)
++        if (foundAny  /* something broke, this shouldn't happen with svg */)
+             break;
+ 
+         // if we get here, means loadThemeStyle wasn't called most likely. If resize algo is specified, this is an error.
+@@ -420,7 +419,7 @@ SCursorRawShapeDataC* CHyprcursorManager::getRawShapeDataC(const char* shape_) {
+         data->hotspotX    = shape->hotspotX;
+         data->hotspotY    = shape->hotspotY;
+         data->nominalSize = shape->nominalSize;
+-        data->type        = shape->shapeType == SHAPE_PNG ? HC_DATA_PNG : HC_DATA_SVG;
++        data->type        = HC_DATA_SVG;
+         break;
+     }
+ 
+@@ -441,7 +440,7 @@ bool CHyprcursorManager::loadThemeStyle(const SCursorStyleInfo& info) {
+     Debug::log(HC_LOG_INFO, logFn, "loadThemeStyle: loading for size {}", info.size);
+ 
+     for (auto& shape : impl->theme.shapes) {
+-        if (shape->resizeAlgo == HC_RESIZE_NONE && shape->shapeType != SHAPE_SVG) {
++        if (shape->resizeAlgo == HC_RESIZE_NONE) {
+             // don't resample NONE style cursors
+             Debug::log(HC_LOG_TRACE, logFn, "loadThemeStyle: ignoring {}", shape->directory);
+             continue;
+@@ -532,51 +531,6 @@ bool CHyprcursorManager::loadThemeStyle(const SCursorStyleInfo& info) {
+                 cairo_pattern_destroy(PTN);
+                 cairo_destroy(PCAIRO);
+             }
+-        } else if (shape->shapeType == SHAPE_SVG) {
+-            const auto FRAMES = impl->getFramesFor(shape.get(), 0);
+-
+-            Debug::log(HC_LOG_TRACE, logFn, "loadThemeStyle: svg shape {} has {} frames", shape->directory, FRAMES.size());
+-
+-            const int PIXELSIDE = std::round(info.size / shape->nominalSize);
+-
+-            Debug::log(HC_LOG_TRACE, logFn, "loadThemeStyle: svg shape has nominal {:.2f}, pixel size will be {}x", shape->nominalSize, PIXELSIDE);
+-
+-            for (auto& f : FRAMES) {
+-                auto& newImage           = impl->loadedShapes[shape.get()].images.emplace_back(std::make_unique<SLoadedCursorImage>());
+-                newImage->artificial     = true;
+-                newImage->side           = PIXELSIDE;
+-                newImage->artificialData = new char[static_cast<unsigned long>(PIXELSIDE * PIXELSIDE * 4)];
+-                newImage->cairoSurface   = cairo_image_surface_create_for_data((unsigned char*)newImage->artificialData, CAIRO_FORMAT_ARGB32, PIXELSIDE, PIXELSIDE, PIXELSIDE * 4);
+-                newImage->delay          = f->delay;
+-
+-                const auto PCAIRO = cairo_create(newImage->cairoSurface);
+-
+-                cairo_save(PCAIRO);
+-                cairo_set_operator(PCAIRO, CAIRO_OPERATOR_CLEAR);
+-                cairo_paint(PCAIRO);
+-                cairo_restore(PCAIRO);
+-
+-                GError*     error  = nullptr;
+-                RsvgHandle* handle = rsvg_handle_new_from_data((unsigned char*)f->data, f->dataLen, &error);
+-
+-                if (!handle) {
+-                    Debug::log(HC_LOG_ERR, logFn, "Failed reading svg: {}", error->message);
+-                    return false;
+-                }
+-
+-                RsvgRectangle rect = {0, 0, (double)PIXELSIDE, (double)PIXELSIDE};
+-
+-                if (!rsvg_handle_render_document(handle, PCAIRO, &rect, &error)) {
+-                    Debug::log(HC_LOG_ERR, logFn, "Failed rendering svg: {}", error->message);
+-                    g_object_unref(handle);
+-                    return false;
+-                }
+-
+-                // done
+-                cairo_surface_flush(newImage->cairoSurface);
+-                cairo_destroy(PCAIRO);
+-                g_object_unref(handle);
+-            }
+         } else {
+             Debug::log(HC_LOG_ERR, logFn, "Invalid shapetype in loadThemeStyle");
+             return false;
+@@ -588,11 +542,10 @@ bool CHyprcursorManager::loadThemeStyle(const SCursorStyleInfo& info) {
+ 
+ void CHyprcursorManager::cursorSurfaceStyleDone(const SCursorStyleInfo& info) {
+     for (auto& shape : impl->theme.shapes) {
+-        if (shape->resizeAlgo == HC_RESIZE_NONE && shape->shapeType != SHAPE_SVG)
++        if (shape->resizeAlgo == HC_RESIZE_NONE)
+             continue;
+ 
+         std::erase_if(impl->loadedShapes[shape.get()].images, [info, &shape](const auto& e) {
+-            const bool isSVG        = shape->shapeType == SHAPE_SVG;
+             const bool isArtificial = e->artificial;
+ 
+             // clean artificial rasters made for this
+@@ -600,7 +553,7 @@ void CHyprcursorManager::cursorSurfaceStyleDone(const SCursorStyleInfo& info) {
+                 return true;
+ 
+             // clean invalid non-svg rasters
+-            if (!isSVG && e->side == 0)
++            if (e->side == 0)
+                 return true;
+ 
+             return false;
+@@ -717,27 +670,23 @@ std::optional<std::string> CHyprcursorImplementation::loadTheme() {
+ 
+         for (auto& i : SHAPE->images) {
+             if (SHAPE->shapeType == SHAPE_INVALID) {
+-                if (i.filename.ends_with(".svg"))
+-                    SHAPE->shapeType = SHAPE_SVG;
+-                else if (i.filename.ends_with(".png"))
++                if (i.filename.ends_with(".png"))
+                     SHAPE->shapeType = SHAPE_PNG;
+                 else {
+                     Debug::log(HC_LOG_WARN, logFn, "WARNING: image {} has no known extension, assuming png.", i.filename);
+                     SHAPE->shapeType = SHAPE_PNG;
+                 }
+             } else {
+-                if (SHAPE->shapeType == SHAPE_SVG && !i.filename.ends_with(".svg"))
+-                    return "meta invalid: cannot add .png files to an svg shape";
+-                else if (SHAPE->shapeType == SHAPE_PNG && i.filename.ends_with(".svg"))
++                if (SHAPE->shapeType == SHAPE_PNG && i.filename.ends_with(".svg"))
+                     return "meta invalid: cannot add .svg files to a png shape";
+             }
+ 
+             // load image
+             Debug::log(HC_LOG_TRACE, logFn, "Loading {} for shape {}", i.filename, cursor.path().stem().string());
+             auto* IMAGE  = LOADEDSHAPE.images.emplace_back(std::make_unique<SLoadedCursorImage>()).get();
+-            IMAGE->side  = SHAPE->shapeType == SHAPE_SVG ? 0 : i.size;
++            IMAGE->side  = i.size;
+             IMAGE->delay = i.delay;
+-            IMAGE->isSVG = SHAPE->shapeType == SHAPE_SVG;
++            IMAGE->isSVG = false;
+ 
+             index = zip_name_locate(zip, i.filename.c_str(), ZIP_FL_ENC_GUESS);
+             if (index == -1)
+@@ -794,7 +743,7 @@ std::vector<SLoadedCursorImage*> CHyprcursorImplementation::getFramesFor(SCursor
+     std::vector<SLoadedCursorImage*> frames;
+ 
+     for (auto& image : loadedShapes[shape].images) {
+-        if (!image->isSVG && image->side != size)
++        if (image->side != size)
+             continue;
+ 
+         if (image->artificial)

@@ -70,6 +70,35 @@
     extraMakeInstallArgs = [
       "PREFIX=/usr",
       "INSTALL_TOP=${DEST}/usr",
-    ]
+    ],
+    postInstallPhase = [
+      "install -d -m0755 ${DEST}/usr/lib/pkgconfig",
+      # "make PREFIX=/usr INSTALL_TOP=${DEST}/usr pc > ${DEST}/usr/lib/pkgconfig/lua.pc",
+      # https://www.linuxfromscratch.org/~ken/fontconfig-systemd/general/lua.html
+      m%"
+      cat > ${DEST}/usr/lib/pkgconfig/lua.pc << "EOF"
+      V=5.4
+      R=5.4.7
+
+      prefix=/usr
+      INSTALL_BIN=${prefix}/bin
+      INSTALL_INC=${prefix}/include
+      INSTALL_LIB=${prefix}/lib
+      INSTALL_MAN=${prefix}/share/man/man1
+      INSTALL_LMOD=${prefix}/share/lua/${V}
+      INSTALL_CMOD=${prefix}/lib/lua/${V}
+      exec_prefix=${prefix}
+      libdir=${exec_prefix}/lib
+      includedir=${prefix}/include
+
+      Name: Lua
+      Description: An Extensible Extension Language
+      Version: ${R}
+      Requires:
+      Libs: -L${libdir} -llua -lm 
+      Cflags: -I${includedir}
+      EOF
+      "%
+    ],
   }
 }
