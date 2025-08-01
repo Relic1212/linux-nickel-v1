@@ -145,6 +145,8 @@
               drvs.xkbcomp,
               drvs.hyprlandX11,
               drvs.hyprpaper,
+              drvs.hyprpicker,
+              drvs.hyprlandContrib,
             ]
           else
             [
@@ -181,6 +183,7 @@
                 drvs.wfRecorder,
                 drvs.j4MenuDesktop,
                 drvs.lavalauncher,
+                drvs.rofiWayland,
                 drvs.waybar,
                 drvs.gammastep,
                 drvs.gebaarLibinput,
@@ -225,10 +228,10 @@
                 drvs.buffybox,
                 drvs.hkdm,
                 drvs.ttyescape,
-                drvs.wld,
-                drvs.swc,
-                drvs.velox,
-                drvs.stWayland,
+                # drvs.wld,
+                # drvs.swc,
+                # drvs.velox,
+                # drvs.stWayland,
               ]
             else
               []

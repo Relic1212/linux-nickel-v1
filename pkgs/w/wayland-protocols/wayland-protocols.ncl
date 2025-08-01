@@ -33,7 +33,7 @@
         sha256sum = "f25b0d00f3c610158b00b57b1b7b6e59c4bfd4d91aed46f24d9eba7acf220788",
       },
     },
-_waylandProtocols143 | lib.MesonPackage =
+  _waylandProtocols143 | lib.MesonPackage =
     _waylandProtocols
     & {
       singleSource | priority 1 = {

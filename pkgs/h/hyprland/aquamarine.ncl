@@ -12,7 +12,6 @@
         #uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.7.2.tar.gz",
         #sha256sum = "822ce38345bc4c1b95966c79ee72ff18d753aa923c83e9aa64e9d82eebf55a38"
 
-
         uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.9.2.tar.gz",
         sha256sum = "ffcaa394ad12920ee50e4a7872e4e27d35426b03fadd21de92578d7ff4908f46"
       },

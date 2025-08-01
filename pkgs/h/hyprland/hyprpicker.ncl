@@ -1,0 +1,42 @@
+{
+  lib,
+  drvs,
+  hyprpicker | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/hyprwm/hyprpicker/archive/refs/tags/v0.4.5.tar.gz",
+      sha256sum = "fe9611ec78524f9bbea0d39308da3d9c61cb20f6103179a269cad8013bb0c1f3"
+    },
+    biDrvs = [
+      drvs.pixman,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libevdev,
+      drvs.mtdev,
+      drvs.pango,
+      drvs.cairo,
+      drvs.libpng,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.zlibNg,
+      drvs.harfbuzz,
+      drvs.glib,
+      drvs.hwdata,
+      drvs.linuxHeaders,
+      drvs.hyprwaylandScanner,
+      drvs.aquamarine,
+      drvs.hyprUtils,
+      drvs.hyprlang,
+      drvs.hyprcursor,
+      drvs.libjpegTurboStatic,
+      drvs.libspng,
+      drvs.file,
+      drvs.libwebp,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.hyprgraphics,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+    ],
+  }
+}

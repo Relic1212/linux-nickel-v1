@@ -42,6 +42,10 @@
     ],
     extraMakeArgs = [
       "XSLT=/usr/bin/xsltproc"
+    ],
+    preConfigurePhase = [
+      m%"sed -i 's@$(MAKE) -C tests@echo NOTHING@g' ${SRC}/Makefile"%,
+      "rm -rf ${SRC}/tests",
     ]
   }
 }

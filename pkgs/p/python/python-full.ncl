@@ -147,7 +147,7 @@
       ]
     },
 
-    pythonDynamicPic =
+  pythonDynamicPic =
     pythonDynamic
     & {
       preConfigurePhase = [

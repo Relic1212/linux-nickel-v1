@@ -13,7 +13,6 @@
             # uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.47.2/source-v0.47.2.tar.gz",
             # sha256sum = "e7f4447c9e24149cf2fd57057410bc90cb3c4ecaa35b6ec2a60a9d44d2fb2feb"
 
-
             uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.50.1/source-v0.50.1.tar.gz",
             sha256sum = "2e7280e08d9b0460159bdfcdebdf6c532a79843a6a1e8417f78c15f6293fc956"
           },
@@ -207,7 +206,6 @@
       #uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.5.1.tar.gz",
       #sha256sum = "0ad1d873012568661667cb5b599ddd59b3bea945a0d03c0f2ca3c7f4dff55798"
 
-      
       uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.8.2.tar.gz",
       sha256sum = "932f8b0023edcbfd01106c634010cad1533dccf295c2817d66da0e455e12753a"
     },
@@ -282,7 +280,6 @@
       #uri = "https://github.com/hyprwm/hyprcursor/archive/refs/tags/v0.1.11.tar.gz",
       #sha256sum = "17e4576b884e6bdb463b445cffff099ad16647b826a87a67b78d38b8cad4c39e",
 
-
       uri = "https://github.com/hyprwm/hyprcursor/archive/refs/tags/v0.1.13.tar.gz",
       sha256sum = "82af8b2ce27242ffdd6baebaa71b3f6c8665dc25c52bfcfccc16912622896af8",
     },
@@ -296,9 +293,8 @@
 
         #sha256sum = "f4621359f73f2193a0e8162d40c5676608d77406139ca8cedd9f0b7e843fa669"
 
-
         sha256sum = "9a39fa9ec0b150627f34c6f64a5dda260f40918b2ae278c70a6992bb8b87a035",
-        
+
         file = "hyprcyrsor-no-svg-v3.patch",
       }
     ],
@@ -367,7 +363,6 @@
       # uri = "https://github.com/hyprwm/hyprlang/archive/refs/tags/v0.6.0.tar.gz",
       # sha256sum = "b1a163606402041d92507936fb6dcbc40dd0035b8e8abbf44b0ab59be627b52c",
 
-
       uri = "https://github.com/hyprwm/hyprlang/archive/refs/tags/v0.6.4.tar.gz",
       sha256sum = "cd7395eaeb1eee90ebeba9c1330a7635709dd0900ebbe349a7aa5702ba4d613f",
     },
@@ -428,7 +423,6 @@
 
           # uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.6.2.tar.gz",
           # sha256sum = "bba082af141599d4342e7b8505401a6e3a32be819d9eb23ce6c90f7407e62c1f",
-
 
           uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.6.4.tar.gz",
           sha256sum = "0d4f99abc21b04fc126dd754e306bb84cd334131d542ff2e0c172190c6570384"
