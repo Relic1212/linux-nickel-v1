@@ -36,6 +36,7 @@
       drvs.qtbase,
       drvs.qtshadertools,
       drvs.qtwayland,
+      drvs.qtsvg,
       drvs.mesa2,
       # drvs.pkgconf,
       drvs.libelf,
@@ -111,5 +112,27 @@
       "-DUSE_JEMALLOC" = false,
       "-DNO_PCH" = true,
     },
+
+    # preConfigurePhase = [
+
+    #   m%"
+    #   echo "
+    #   qt_import_plugins(quickshell INCLUDE 
+    #     Qt6::QWaylandIntegrationPlugin
+    #     Qt6::QWaylandXdgShellIntegrationPlugin
+    #     Qt6::QWaylandBradientDecorationPlugin
+	  #     Qt6::LabsPlatformplugin
+	  #     Qt6::qtquickdialogsplugin
+	  #     Qt6::labsmodelsplugin
+    #   )
+    #   " >> ${SRC}/src/CMakeLists.txt
+    #   "%
+    # ],
+    patches = [{
+      sha256sum = "9543268f9b2c4b2399c1ff171ffb13c644ba9036f3576de1cd5e40e3cb2a488e",
+     file =  "fix-quickshell.patch"
+    }
+
+    ]
   }
 }
