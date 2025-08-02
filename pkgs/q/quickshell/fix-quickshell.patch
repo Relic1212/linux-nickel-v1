@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 52db00a..7d5c1ed 100644
+index 52db00a..8c82f73 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1,5 +1,25 @@
+@@ -1,5 +1,26 @@
  qt_add_executable(quickshell main.cpp)
  
 +target_link_libraries(quickshell PRIVATE
@@ -24,11 +24,12 @@ index 52db00a..7d5c1ed 100644
 +	Qt6::qtquickdialogsplugin
 +	Qt6::labsmodelsplugin
 +)
++find_package(Qt6QmlImportScanner REQUIRED)
 +qt_import_qml_plugins(quickshell)
  install(TARGETS quickshell RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  
  add_subdirectory(build)
-@@ -33,3 +53,5 @@ add_subdirectory(services)
+@@ -33,3 +54,5 @@ add_subdirectory(services)
  if (BLUETOOTH)
  	add_subdirectory(bluetooth)
  endif()

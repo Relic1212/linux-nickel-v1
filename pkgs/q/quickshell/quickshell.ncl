@@ -6,7 +6,10 @@
 
     singleSource = {
       uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.2.0.tar.gz",
-      sha256sum = "bd000d6ab5fbf050d3c6157af63f1ee7b35755a350ff8064b9b55b8a7f1682df"
+      sha256sum = "bd000d6ab5fbf050d3c6157af63f1ee7b35755a350ff8064b9b55b8a7f1682df",
+
+      #uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.1.0.tar.gz",
+      #sha256sum = "4f37cc5301443de4456550c4b16a517d5478a65ec1c8a37bd006db3832a1ab42",
     },
 
     llvmProvider = drvs.llvmFull,
@@ -129,10 +132,9 @@
     #   "%
     # ],
     patches = [{
-      sha256sum = "9543268f9b2c4b2399c1ff171ffb13c644ba9036f3576de1cd5e40e3cb2a488e",
+      sha256sum = "23020ecf71890b5700bd83cc881342421f4e891778668f2dcc07a27aba227676",
      file =  "fix-quickshell.patch"
-    }
+    }]
 
-    ]
   }
 }
