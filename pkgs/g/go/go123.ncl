@@ -1,6 +1,39 @@
 {
   lib,
   drvs,
+  go_1_24 | lib.Package = {
+    singleSource = {
+      uri = "https://go.dev/dl/go1.24.5.src.tar.gz",
+      sha256sum = "74fdb09f2352e2b25b7943e56836c9b47363d28dec1c8b56c4a9570f30b8f59f",
+    },
+    configurePhase = [
+      "export HOME=/tmp",
+      "export CC=\"${CC} -static --static \"",
+      "export DESTDIR=${DEST}",
+      "cd ${SRC}",
+      "cd src",
+      "export GOROOT_FINAL=/usr/lib/go",
+      "cp -r /usr/lib/go /tmp/go",
+      "export GOROOT_BOOTSTRAP=/tmp/go",
+      "env CGO_ENABLED=0 ./make.bash",
+      "cd ..",
+    ],
+    installPhase = [
+      "install -d -m 0755 ${DEST}/usr",
+      "install -d -m 0755 ${DEST}/usr/bin",
+      "install -d -m 0755 ${DEST}/usr/lib/go",
+      "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
+      "cp -r ${SRC}/* ${DEST}/usr/lib/go",
+    ],
+    biDrvs = [
+      drvs.go_1_23,
+      drvs.bash,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
   go_1_23 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.23.3.src.tar.gz",
