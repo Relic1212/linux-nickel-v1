@@ -1,13 +1,14 @@
 {
   lib,
   drvs,
-  qtdeclarative | lib.CmakePackage = {
+  qtdeclarative | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.8.2.tar.gz",
       sha256sum = "1c29e98fac88f6d3b8a790248f4e6ad80439fe6e791116339d080e064ad8ae91"
     },
     llvmProvider = drvs.llvmFull,
+    symlinkBuldInputs = true,
 
     biDrvs =
       [
@@ -37,6 +38,7 @@
         drvs.dbusForQt,
         drvs.qtbase,
         drvs.qtshadertools,
+        drvs.qtsvg,
         drvs.pythonFull,
         drvs.libxkbcommon,
         drvs.kmod,
@@ -44,6 +46,17 @@
         drvs.xz,
         drvs.eudev,
         drvs.libinput,
+
+        ### font
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.harfbuzzFull,
+        drvs.cairo,
+        drvs.pixman,
+        drvs.libpng,
+        drvs.expat,
+        drvs.glib,
+        ### -font
       ]
       @ [
         #drvs.cmake,
@@ -52,11 +65,17 @@
       ],
 
     buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ]
+      # EXTRA_LDFLAGS = [
+      #   "$(pkg-config --libs --static gbm glesv2 dri egl)",
+      # ]
     },
     cmakeExtraArgsRecord = {
+      "-DQT_QPA_DEFAULT_PLATFORM" = "wayland",
+
+      "-DQT_QPA_PLATFORMS" = "wayland",
+      "-DINSTALL_QMLDIR" = "/usr/lib/qt6/qml",
+      "-DINSTALL_PLUGINSDIR" = "/usr/lib/qt6/plugins",
+
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
     },

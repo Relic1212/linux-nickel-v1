@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  qt5compat | lib.CmakePackage = {
+  qt5compat | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qt5compat/archive/refs/tags/v6.8.2.tar.gz",
@@ -42,13 +42,24 @@
       drvs.xz,
       drvs.eudev,
       drvs.libinput,
+
+      ### font
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.harfbuzzFull,
+      drvs.cairo,
+      drvs.pixman,
+      drvs.libpng,
+      drvs.expat,
+      drvs.glib,
+      ### -font
     ],
 
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ]
-    },
+    # buildEnv = {
+    #   EXTRA_LDFLAGS = [
+    #     "$(pkg-config --libs --static gbm glesv2 dri egl)",
+    #   ]
+    # },
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""

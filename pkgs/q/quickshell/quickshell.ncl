@@ -1,0 +1,115 @@
+{
+  lib,
+  drvs,
+  quickshell | lib.QtPackage = {
+    generator = "Ninja",
+
+    singleSource = {
+      uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.2.0.tar.gz",
+      sha256sum = "bd000d6ab5fbf050d3c6157af63f1ee7b35755a350ff8064b9b55b8a7f1682df"
+    },
+
+    llvmProvider = drvs.llvmFull,
+    symlinkBuldInputs = true,
+
+    biDrvs = [
+      drvs.pixman,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libevdev,
+      drvs.mtdev,
+      drvs.pango,
+      drvs.cairo,
+      drvs.libpng,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.zlibNg,
+      drvs.harfbuzz,
+      drvs.glib,
+      drvs.hwdata,
+      drvs.linuxHeaders,
+      drvs.libjpegTurboStatic,
+      drvs.libspng,
+      drvs.file,
+      drvs.libwebp,
+      drvs.qtdeclarative,
+      drvs.qtbase,
+      drvs.qtshadertools,
+      drvs.qtwayland,
+      drvs.mesa2,
+      # drvs.pkgconf,
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.m4,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      ###
+      drvs.jsonC,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+      drvs.openssl,
+      drvs.kmod,
+      drvs.zstd,
+      drvs.xz,
+      drvs.eudev,
+      drvs.libinput,
+
+      # drvs.dbusForQt,
+      drvs.dbus,
+      drvs.cli11,
+      drvs.qt5compat,
+
+      ## X
+      drvs.libxcursor,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.xcbRenderutil,
+      drvs.libxfont2,
+      drvs.libfontenc,
+      drvs.libxcvt,
+      drvs.libxshmfence,
+      drvs.xwayland,
+      drvs.libxkbfile,
+      drvs.xcbUtilWm,
+      ## -X
+    ],
+
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client) -pthread",
+      ]
+    },
+    cmakeExtraArgsRecord = {
+      # "-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
+      "-DINSTALL_QML_PREFIX" = "/usr/lib/qt6/qml",
+
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\"",
+
+      "-DCRASH_REPORTER" = false,
+      "-DX11" = false,
+      "-DSERVICE_PAM" = false,
+      "-DSERVICE_MPRIS" = false,
+      "-DSERVICE_PIPEWIRE" = false,
+      "-DBLUETOOTH" = false,
+      "-DUSE_JEMALLOC" = false,
+      "-DNO_PCH" = true,
+    },
+  }
+}

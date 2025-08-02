@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  hyprlandQtSupport | lib.CmakePackage = {
+  hyprlandQtSupport | lib.QtPackage = {
     generator = "Ninja",
 
     singleSource = {
@@ -66,19 +66,22 @@
       drvs.xz,
       drvs.eudev,
       drvs.libinput,
+      drvs.dbusForQt,
     ],
     preConfigurePhase = [
       "sed -i 's@SHARED@STATIC@g' ${SRC}/src/style/CMakeLists.txt",
       "sed -i 's@SHARED@STATIC@g' ${SRC}/src/style/impl/CMakeLists.txt",
     ],
     buildEnv = {
+      BASE_LDFLAGS | priority 1 = [],
       EXTRA_LDFLAGS = [
         "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
       ]
     },
     cmakeExtraArgsRecord = {
-      "-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      #"-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
+      "-DINSTALL_QML_PREFIX" = "/usr/lib/qt6/qml",
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
   }
 }

@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  qtshadertools | lib.CmakePackage = {
+  qtshadertools | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtshadertools/archive/refs/tags/v6.8.2.tar.gz",
@@ -44,13 +44,20 @@
     ],
 
     buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ]
+      # EXTRA_LDFLAGS = [
+      #   "$(pkg-config --libs --static gbm glesv2 dri egl)",
+      # ]
     },
+    symlinkBuldInputs = true,
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
+
+      "-DQT_QPA_DEFAULT_PLATFORM" = "wayland",
+
+      "-DQT_QPA_PLATFORMS" = "wayland",
+      "-DINSTALL_QMLDIR" = "/usr/lib/qt6/qml",
+      "-DINSTALL_PLUGINSDIR" = "/usr/lib/qt6/plugins",
     },
   }
 }

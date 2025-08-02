@@ -1,11 +1,14 @@
 {
   lib,
   drvs,
-  hyprlandQtutils | lib.CmakePackage = {
+  hyprlandQtutils | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/hyprwm/hyprland-qtutils/archive/refs/tags/v0.1.3.tar.gz",
-      sha256sum = "3e57617ebd849ebf074c492bf828efa37a5b47fd6d43b392462874069170c5ed"
+      sha256sum = "3e57617ebd849ebf074c492bf828efa37a5b47fd6d43b392462874069170c5ed",
+
+      #uri = "https://github.com/hyprwm/hyprland-qtutils/archive/refs/tags/v0.1.4.tar.gz",
+      #sha256sum = "56a83f4625feeed86bbc5d744b91d2074330c5aa41adf6e32c023f06f9fb9d34"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -68,13 +71,14 @@
       drvs.libinput,
     ],
     buildEnv = {
+      BASE_LDFLAGS | priority 1 = [],
       EXTRA_LDFLAGS = [
         "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
       ]
     },
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
 
     patches = [

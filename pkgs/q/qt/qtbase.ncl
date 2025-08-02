@@ -34,18 +34,26 @@ let qtbaseCmakeExtraArgsRecorf = {
 
   "-DFEATURE_egl" = "ON",
   "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
+
+  "-DQT_QPA_DEFAULT_PLATFORM" = "wayland",
+
+  "-DQT_QPA_PLATFORMS" = "wayland",
+  "-DINSTALL_QMLDIR" = "/usr/lib/qt6/qml",
+  "-DINSTALL_PLUGINSDIR" = "/usr/lib/qt6/plugins",
 }
 in
 {
   lib,
   drvs,
-  qtbase | lib.CmakePackage = {
+  qtbase | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.8.2.tar.gz",
       sha256sum = "9dddbb2ea3c107e20a99b816c1c6ba1483915325918936dda2c762bd73836ad9"
     },
     llvmProvider = drvs.llvmFull,
+
+    symlinkBuldInputs = true,
 
     biDrvs =
       [
@@ -82,6 +90,17 @@ in
         drvs.utilLinux,
         drvs.libinput,
         drvs.openssl,
+
+        ### font
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.harfbuzzFull,
+        drvs.cairo,
+        drvs.pixman,
+        drvs.libpng,
+        drvs.expat,
+        drvs.glib,
+        ### -font
       ]
       @ [
         # drvs.cmake,
@@ -101,14 +120,14 @@ in
     #  "DESTDIR=${DEST} ninja install"
     #],
 
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "-lc++",
-        "-lglapi",
-        "-ldrm",
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ],
-    },
+    # buildEnv = {
+    #   EXTRA_LDFLAGS = [
+    #     "-lc++",
+    #     "-lglapi",
+    #     "-ldrm",
+    #     "$(pkg-config --libs --static gbm glesv2 dri egl)",
+    #   ],
+    # },
   }
 }
 & {
@@ -134,3 +153,4 @@ in
 & (import "qt-tools.ncl")
 & (import "qtsensors.ncl")
 & (import "qtsvg.ncl")
+& (import "QtPackage.ncl")

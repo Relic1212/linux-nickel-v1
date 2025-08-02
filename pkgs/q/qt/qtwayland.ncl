@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  qtwayland | lib.CmakePackage = {
+  qtwayland | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.8.2.tar.gz",
@@ -49,13 +49,23 @@
       drvs.xz,
       drvs.eudev,
       drvs.libinput,
+
+      ### font
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.harfbuzzFull,
+      drvs.cairo,
+      drvs.pixman,
+      drvs.libpng,
+      drvs.glib,
+      ### -font
     ],
 
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ]
-    },
+    # buildEnv = {
+    #   EXTRA_LDFLAGS = [
+    #     "$(pkg-config --libs --static gbm glesv2 dri egl)",
+    #   ]
+    # },
 
     # TODO: investigae these
     #     FEATURE_egl_extension_platform_wayland:BOOL=OFF
