@@ -73,12 +73,12 @@
     buildEnv = {
       BASE_LDFLAGS | priority 1 = [],
       EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client)",
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
       ]
     },
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\""
     },
 
     patches = [
