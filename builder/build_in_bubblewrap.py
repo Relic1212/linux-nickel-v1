@@ -346,10 +346,20 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,
                 text=True,
+                errors="replace"
             ) as proc:
-                for line in proc.stdout:
-                    print(line, end="")
-                    f.write(line)
+                try:
+                    for line in proc.stdout:
+                        try:
+                            print(line, end="")
+                        except UnicodeDecodeError:
+                            print("UnicodeDecodeError")
+                        try:
+                            f.write(line)
+                        except UnicodeDecodeError:
+                            print("UnicodeDecodeError")
+                except UnicodeDecodeError:
+                    print("UnicodeDecodeError")
         f.close()
         status = proc.returncode
         if status != 0:
