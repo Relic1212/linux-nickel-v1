@@ -15,7 +15,7 @@
           uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.42.2-vendor.tar.xz",
           sha256sum = "4b14b91410c5e4c5c8f42bd308d346f30481b8a485bb66c13b67a09eb693484c"
         },
-        dest = "go-mod",
+        dest = "vendor-new",
       }
     ],
     llvmProvider = drvs.llvmFull,
@@ -74,7 +74,7 @@
       drvs.libxkbfile,
       drvs.openssl,
       drvs.xcbUtilWm,
-      drvs.go_1_23,
+      drvs.go_1_24,
       drvs.findutils,
       drvs.pythonDynamicPic,
       drvs.muslShared,
@@ -106,16 +106,21 @@
       "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
+      "rm -rf vendor",
+      "mv vendor-new/vendor vendor",
       m%"sed -i "s@pkg_config('gl'@pkg_config('egl'@g" ${SRC}/setup.py"%,
       m%"sed -i "s@'x11 wayland'@'wayland'@g" ${SRC}/setup.py"%,
       m%"sed -i "s@ldflags.append('-shared')@@g" ${SRC}/setup.py"%,
       m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
+      m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
       m%"sed -i "s@ans.cflags.append('-fPIC')@@g" ${SRC}/glfw/glfw.py"%,
     ],
 
     buildPhase = [
       # "python setup.py linux-package",
-      "python setup.py build-static-binaries",
+      #"python setup.py build-static-binaries",
+      #"python setup.py build-launcher",
+      "python setup.py linux-package --skip-building-kitten --ignore-compiler-warnings",
     ],
     installPhase = [],
   }

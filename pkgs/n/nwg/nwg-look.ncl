@@ -1,42 +1,22 @@
 {
   lib,
   drvs,
-  nwgDrawer | lib.MakePackage = {
+  nwgLook | lib.MakePackage = {
+    singleSource = {
+      uri = "https://github.com/nwg-piotr/nwg-look/archive/refs/tags/v1.0.6.tar.gz",
+      sha256sum = "ddaba674253fbbf8f3ee7392315e51408af445adb85ed4b0f70e50301801720d"
+    },
+
     sourceInputs = [
+      { src = singleSource },
       {
         src = {
-          uri = "https://github.com/nwg-piotr/nwg-drawer/archive/refs/tags/v0.7.4.tar.gz",
-          sha256sum = "0caa9f3a5efbd7492ce57fc6952e7f78e2d6ee71d4a430aeb0aa7535abecdab5",
-        }
-      },
-      {
-        src = {
-          uri = "https://slackware.lngn.net/pub/source/nwg-drawer/nwg-drawer-vendor-0.7.4.tar.xz",
-          sha256sum = "bf5934538e44ace20f8255ab1251546c7bb99bfce1963c8dd812c76257af5446"
+          uri = "https://slackware.lngn.net/pub/source/nwg-look/nwg-look-vendor-1.0.6.tar.xz",
+          sha256sum = "2851c2589bce9c1b4f3925ded6b7a9712361c66ac178266bc715a5215e28266c"
         },
         dest = "vendor",
       }
     ],
-
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static expat)"
-      ]
-    },
-    separateBuildDir = false,
-    configurePhase = [
-      # "cd ${SRC}",
-      "export GOROOT=/usr/lib/go",
-      "export GOMODCACHE=${SRC}/go-mod",
-      "export CGO_ENABLED=1",
-      "mkdir /tmp/home",
-      "export HOME=/tmp/home",
-    ],
-    buildPhase = [
-      "go build"
-    ],
-    installPhase = [],
-
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,
     biDrvs = [
@@ -129,8 +109,19 @@
       drvs.xxhash,
       drvs.zlibNg,
     ],
+
+    separateBuildDir = false,
+    configurePhase = [
+      "export GOROOT=/usr/lib/go",
+      "export GOMODCACHE=${SRC}/go-mod",
+      "export CGO_ENABLED=1",
+      "mkdir /tmp/home",
+      "export HOME=/tmp/home",
+    ],
+
+    buildPhase = [
+      "go build"
+    ],
+    installPhase = [],
   }
 }
-& (
-  import "../nwg/nwg-look.ncl"
-)
