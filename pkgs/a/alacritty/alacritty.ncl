@@ -1,12 +1,30 @@
+ 
+
+
 {
   lib,
   drvs,
+
+    _kbvm_crate = {
+      "0.1.4" | lib.Crate = {
+        name = "kbvm",
+        version = "0.1.4",
+        sha256sum = "474d0a1323fee9226a308be0ff72f1f699f1094a6ba3fc6c1495056bffa0dbbc",
+        # sourceInput = {
+        #   dest | priority 1 = ""
+        # }
+      },
+    },
+
   alacritty | lib.CargoPackage = {
     singleSource = {
       uri = "https://github.com/alacritty/alacritty/archive/refs/tags/v0.15.1.tar.gz",
       sha256sum = "b814e30c6271ae23158c66e0e2377c3600bb24041fa382a36e81be564eeb2e36"
     },
-    crates = lib.functions.filterCrates (import "alacritty-crates.json"),
+    crates = (lib.functions.filterCrates (import "alacritty-crates.json")) & 
+    { kbvm = _kbvm_crate} &
+    (lib.functions.filterCrates (import "kbvm-crates.json"))
+    ,
 
     biDrvs = [
       drvs.fontconfig,
@@ -83,6 +101,22 @@
             's@"x11",@@g' \
             ${SRC}/vendor/winit-0.30.9/Cargo.toml
         "%,
+
+
+        m%"
+        sed -i \
+            's@"x11-dlopen",@@g' \
+            ${SRC}/vendor/winit-0.30.9/Cargo.toml
+        "%,
+
+
+        m%"
+        sed -i \
+            's@"xkbcommon-dl/x11",@@g' \
+            ${SRC}/vendor/winit-0.30.9/Cargo.toml
+        "%,
+
+
         m%"
         sed -i \
             's@"winit/wayland-dlopen",@@g' \
@@ -109,9 +143,9 @@
 
         # sha256sum = "e20b9d6c40683943740ea69a2737c0ffaa8522f4bb1e9ff0cc8fc797cd720f83",
 
-
-        sha256sum = "262fd6c7c0153c49392a18171b797a834a4cb7c1a0b62a73eb5f343539d2e684",
         file =   "0001-https-github.com-rust-windowing-winit-pull-4086.patch",
+
+        sha256sum = "f2f0a9eafff40c32665f8ed1334385b7f81ae52434ef956ef366d41ce843d6ac",
     }],
     patchPhase = [],
 
