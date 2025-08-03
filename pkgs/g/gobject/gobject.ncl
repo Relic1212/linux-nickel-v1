@@ -98,6 +98,22 @@
         drvs.muslShared
       ],
     },
+  glibDynamic2 =
+    glib
+    & {
+      # all the stuff,
+      isStatic | force = false,
+      buildEnv = {
+        _isStatic | force = false
+      },
+      extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=static"],
+      biDrvs | priority 1 = [
+        drvs.pcre2,
+        drvs.libffi,
+        drvs.zlibNgPic,
+        drvs.muslShared
+      ],
+    },
 
   glibGobject =
     glib
