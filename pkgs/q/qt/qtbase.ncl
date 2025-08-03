@@ -48,8 +48,8 @@ in
   qtbase | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.8.2.tar.gz",
-      sha256sum = "9dddbb2ea3c107e20a99b816c1c6ba1483915325918936dda2c762bd73836ad9"
+      uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.9.1.tar.gz",
+      sha256sum = "487e49508b8b4bb74908882cde04d3473f2c783651c72c75ee4a2a4691788263"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -154,3 +154,4 @@ in
 & (import "qtsensors.ncl")
 & (import "qtsvg.ncl")
 & (import "QtPackage.ncl")
+& (import "qtgraphicaleffects.ncl")

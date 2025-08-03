@@ -4,8 +4,8 @@
   qtsvg | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://download.qt.io/archive/qt/6.8/6.8.2/submodules/qtsvg-everywhere-src-6.8.2.tar.xz",
-      sha256sum = "aa2579f21ca66d19cbcf31d87e9067e07932635d36869c8239d4decd0a9dc1fa"
+      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtsvg-everywhere-src-6.9.1.tar.xz",
+      sha256sum = "2dfc5de5fd891ff2afd9861e519bf1a26e6deb729b3133f68a28ba763c9abbd5"
     },
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,

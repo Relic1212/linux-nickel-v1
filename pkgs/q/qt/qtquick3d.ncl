@@ -1,11 +1,11 @@
 {
   lib,
   drvs,
-  qtquick3d | lib.CmakePackage = {
+  qtquick3d | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/qt/qtquick3d/archive/refs/tags/v6.8.2.tar.gz",
-      sha256sum = "2901927d84fa3e55cd598575fa8a47dd97c770ed3c1893af9c9ee2aa167b7433"
+      uri = "https://github.com/qt/qtquick3d/archive/refs/tags/v6.9.1.tar.gz",
+      sha256sum = "127ea0306c5ca1a67d90b13c8d60a21b8e52ade007853bac7bcbf55af61ae0db"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -44,6 +44,16 @@
       drvs.xz,
       drvs.eudev,
       drvs.libinput,
+
+      ### font
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.harfbuzzFull,
+      drvs.cairo,
+      drvs.pixman,
+      drvs.libpng,
+      drvs.glib,
+      ### -font
     ],
     preConfigurePhase = [
       "sed -i 's@QUIET @@g' ${SRC}/CMakeLists.txt"

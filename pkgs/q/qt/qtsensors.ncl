@@ -4,8 +4,8 @@
   qtsensors | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://download.qt.io/archive/qt/6.8/6.8.2/submodules/qtsensors-everywhere-src-6.8.2.tar.xz",
-      sha256sum = "8a817c9b001ad0abdbf15064826ca6a8ee6b66fef8f04b4343ac9f7b2ddbf4ca"
+      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtsensors-everywhere-src-6.9.1.tar.xz",
+      sha256sum = "f04b131acacfd42dfe056bd5861ff1e12e2ab57b3e20332becefa3644a409c6c"
     },
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,

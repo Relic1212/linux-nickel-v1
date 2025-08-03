@@ -4,8 +4,8 @@
   qtwayland | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.8.2.tar.gz",
-      sha256sum = "74d4f8ad98f86958c2d34c416ae24ad58d5b1c6b2361e63c0676db9d753b1f30"
+      uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.9.1.tar.gz",
+      sha256sum = "735bced5fc1ab11e3c3b6cc3ca321f148d2fe80675a2a27b41ddbd372ca4e6ea"
     },
     llvmProvider = drvs.llvmFull,
 

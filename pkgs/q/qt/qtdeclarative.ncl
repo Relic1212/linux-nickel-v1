@@ -4,8 +4,8 @@
   qtdeclarative | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.8.2.tar.gz",
-      sha256sum = "1c29e98fac88f6d3b8a790248f4e6ad80439fe6e791116339d080e064ad8ae91"
+      uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.9.1.tar.gz",
+      sha256sum = "00f09b210c7c4268646645baf39fa436563f1cfc232f12ce0b2d37f9bb83da94"
     },
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,

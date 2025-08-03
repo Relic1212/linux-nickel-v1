@@ -4,8 +4,8 @@
   qtshadertools | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/qt/qtshadertools/archive/refs/tags/v6.8.2.tar.gz",
-      sha256sum = "13d62df354ca2ca034d8a28263ee67104a6d94f5671417152556eb5eb3d64839"
+      uri = "https://github.com/qt/qtshadertools/archive/refs/tags/v6.9.1.tar.gz",
+      sha256sum = "c2aafc1f28a59e69f19494211763948cc8f69f71d22fdbdbefd418e40c267b86"
     },
     llvmProvider = drvs.llvmFull,
 

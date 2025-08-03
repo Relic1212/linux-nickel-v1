@@ -109,7 +109,7 @@
       "-DCRASH_REPORTER" = false,
       "-DX11" = false,
       "-DSERVICE_PAM" = false,
-      "-DSERVICE_MPRIS" = false,
+      "-DSERVICE_MPRIS" = true,
       "-DSERVICE_PIPEWIRE" = false,
       "-DBLUETOOTH" = false,
       "-DUSE_JEMALLOC" = false,
@@ -124,17 +124,18 @@
     #     Qt6::QWaylandIntegrationPlugin
     #     Qt6::QWaylandXdgShellIntegrationPlugin
     #     Qt6::QWaylandBradientDecorationPlugin
-	  #     Qt6::LabsPlatformplugin
-	  #     Qt6::qtquickdialogsplugin
-	  #     Qt6::labsmodelsplugin
+    #     Qt6::LabsPlatformplugin
+    #     Qt6::qtquickdialogsplugin
+    #     Qt6::labsmodelsplugin
     #   )
     #   " >> ${SRC}/src/CMakeLists.txt
     #   "%
     # ],
-    patches = [{
-      sha256sum = "23020ecf71890b5700bd83cc881342421f4e891778668f2dcc07a27aba227676",
-     file =  "fix-quickshell.patch"
-    }]
-
+    patches = [
+      {
+        sha256sum = "23020ecf71890b5700bd83cc881342421f4e891778668f2dcc07a27aba227676",
+        file = "fix-quickshell.patch"
+      }
+    ]
   }
 }
