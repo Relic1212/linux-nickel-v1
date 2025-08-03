@@ -11,8 +11,8 @@
       nonCrateSourceInputs = [
         {
           src = {
-            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.0.27.tar.gz",
-            sha256sum = "3076543a373c8e727018bd547cc74133f4a6538849e4990388f2bbea9a9aff6b"
+            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.1.0.tar.gz",
+            sha256sum = "55c528f2b53c1b30cb704550131a806e84721c87b3707b588a961a6c97f110d8"
           }
         }
       ],
@@ -23,7 +23,8 @@
       separateBuildDir = false,
       crates = _crates,
       extraCargoFlags = [
-        "--features=feat_os_unix_musl"
+        #"--features=feat_os_unix_musl",
+        "--features \"arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes\"",
       ],
 
       # crates.uuhelp_parser."0.0.27".sha256sum = "1",
