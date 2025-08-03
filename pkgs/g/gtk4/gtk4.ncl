@@ -3,11 +3,8 @@
   drvs,
   gtk4 | lib.MesonPackage = {
     singleSource = {
-      # uri = "https://gitlab.gnome.org/GNOME/gtk/-/archive/3.24.43/gtk-3.24.43.tar.gz",
-      # sha256sum = "ab197f76719fc875067671247533f8e5bd2bc090568ec17317de410d06397b7f"
-
-      uri = "https://download.gnome.org/sources/gtk/4.16/gtk-4.16.12.tar.xz",
-      sha256sum = "ef31bdbd6f082c4401634a20c850b0050c9bf252ef1e079764ee95a2a0c4c95a",
+      uri = "https://download.gnome.org/sources/gtk/4.18/gtk-4.18.6.tar.xz",
+      sha256sum = "e1817c650ddc3261f9a8345b3b22a26a5d80af154630dedc03cc7becefffd0fa",
     },
     llvmProvider = drvs.llvmFull,
     biDrvs = [
