@@ -1,0 +1,13 @@
+{
+  lib,
+  drvs,
+  fribidi | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://github.com/fribidi/fribidi/archive/refs/tags/v1.0.16.tar.gz",
+      sha256sum = "5a1d187a33daa58fcee2ad77f0eb9d136dd6fa4096239199ba31e850d397e8a8"
+    },
+    extraMesonArgs = [
+      "-Ddocs=false",
+    ]
+  }
+}
