@@ -1,47 +1,6 @@
 {
   lib,
   drvs,
-  tdb | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://www.samba.org/ftp/tdb/tdb-1.4.13.tar.gz",
-      sha256sum = "5ee276e7644d713e19e4b6adc00b440afb5851ff21e65821ffaed89e15a5e167"
-    },
-    extraEnv = {
-      #HOST_CC = [ "clang", "-static"]
-    },
-    biDrvs = [
-      drvs.pythonDynamic,
-      drvs.muslShared,
-    ],
-    #   extraMakeArgs = [
-    #     "HOST_CC='clang -static --static'",
-    #     "HOST_CXX='clang++ -static --static'",
-    #   ],
-    separateBuildDir = false,
-
-    configureFlags | force = [
-      "--prefix=/usr",
-      # "--exec_prefix=/usr",
-      "--bindir=/usr/bin",
-      "--sbindir=/usr/bin",
-      "--libexecdir=/usr/libexec",
-      "--datadir=/usr/share",
-      "--sysconfdir=/etc",
-      "--sharedstatedir=/com",
-      "--localstatedir=/var",
-      "--libdir=/usr/lib",
-      "--includedir=/usr/include",
-      "--oldincludedir=/usr/include",
-      "--infodir=/usr/share/info",
-      "--mandir=/usr/share/man",
-      # "--enable-static",
-      # "--disable-shared"
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
   pulseaudio14 | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://freedesktop.org/software/pulseaudio/releases/pulseaudio-14.2.tar.gz",
@@ -135,26 +94,7 @@
     ]
   }
 }
-& {
-  lib,
-  drvs,
-  speex | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "http://downloads.xiph.org/releases/speex/speex-1.2.1.tar.gz",
-      sha256sum = "4b44d4f2b38a370a2d98a78329fefc56a0cf93d1c1be70029217baae6628feea"
-    }
-  }
-}
-& {
-  lib,
-  drvs,
-  speexdsp | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "http://downloads.xiph.org/releases/speex/speexdsp-1.2.1.tar.gz",
-      sha256sum = "8c777343e4a6399569c72abc38a95b24db56882c83dbdb6c6424a5f4aeb54d3d"
-    }
-  }
-}
+
 & {
   lib,
   drvs,
@@ -184,29 +124,4 @@
       ]
     }
   )
-}
-& {
-  lib,
-  drvs,
-  libsamplerate | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://github.com/libsndfile/libsamplerate/releases/download/0.2.2/libsamplerate-0.2.2.tar.xz",
-      sha256sum = "3258da280511d24b49d6b08615bbe824d0cacc9842b0e4caf11c52cf2b043893"
-    }
-  }
-}
-& {
-  lib,
-  drvs,
-  liboil | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://liboil.freedesktop.org/download/liboil-0.3.17.tar.gz",
-      sha256sum = "105f02079b0b50034c759db34b473ecb5704ffa20a5486b60a8b7698128bfc69"
-    },
-    buildEnv = {
-      EXTRA_CFLAGS = [
-        "-fheinous-gnu-extensions",
-      ]
-    }
-  }
 }
