@@ -3,8 +3,8 @@
   drvs,
   gammastep | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://gitlab.com/chinstrap/gammastep/-/archive/v2.0.9/gammastep-v2.0.9.tar.gz",
-      sha256sum = "bbb9d90e1cf30920c1017db4ce5c4652e4c7843fd4c4e34164d99ecbc3bbb4c0"
+      uri = "https://gitlab.com/chinstrap/gammastep/-/archive/v2.0.11/gammastep-v2.0.11.tar.gz",
+      sha256sum = "e16026b8f21d5e02cfe7cd2f738c80f150c1f06a098e5e47e0fc088244a763bd"
     },
     separateBuildDir = false,
     configureScript,
