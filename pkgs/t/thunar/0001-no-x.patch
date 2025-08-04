@@ -1,0 +1,22 @@
+diff --git a/thunar/thunar-session-client.c b/thunar/thunar-session-client.c
+index c36719c..bc7b931 100644
+--- a/thunar/thunar-session-client.c
++++ b/thunar/thunar-session-client.c
+@@ -38,7 +38,7 @@
+ #include "thunar/thunar-private.h"
+ #include "thunar/thunar-session-client.h"
+ 
+-#include <gdk/gdkx.h>
++// #include <gdk/gdkx.h>
+ #include <glib/gstdio.h>
+ 
+ 
+@@ -172,7 +172,7 @@ thunar_session_client_connect (ThunarSessionClient *session_client,
+     return FALSE;
+ 
+   /* tell GDK about our new session id */
+-  gdk_x11_set_sm_client_id (id);
++  // gdk_x11_set_sm_client_id (id);
+ 
+   /* remember the returned client id */
+   session_client->id = id;
