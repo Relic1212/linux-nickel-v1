@@ -152,12 +152,15 @@
           drvs.ki18n,
           drvs.gettext
         ],
-      patches = [
-        {
-          sha256sum = "e3bee168feb7c615f984b3af01fd7712fdb2774c7851cf601998f4d037dfe622",
-          file = "kpackage-no-common.patch",
-        }
-      ]
+      preConfigurePhase = [
+        m%"sed -i 's@NOT BUILD_SHARED_LIBS@FALSE@g' ${SRC}/src/kpackage/CMakeLists.txt"%,
+      ],
+      # patches = [
+      #   {
+      #     sha256sum = "e3bee168feb7c615f984b3af01fd7712fdb2774c7851cf601998f4d037dfe622",
+      #     file = "kpackage-no-common.patch",
+      #   }
+      # ]
     },
   kdoctools | lib.CmakePackage =
     _kf
