@@ -5,29 +5,33 @@
     sourceInputs = [
       {
         src = {
-          # uri = "https://github.com/WillPower3309/swayfx/archive/e0b320417fa493099e8634ca01e00112ee04a8b7.tar.gz",
-          # sha256sum = "a34aefbc765505788230843399385ec2b173100c53148fd3bf93ffc50095970d",
+          uri = "https://github.com/WillPower3309/swayfx/archive/e0b320417fa493099e8634ca01e00112ee04a8b7.tar.gz",
+          sha256sum = "a34aefbc765505788230843399385ec2b173100c53148fd3bf93ffc50095970d",
 
-          uri = "https://github.com/WillPower3309/swayfx/archive/refs/tags/0.5.2.tar.gz",
-          sha256sum = "075e1a9577f96a71154c61997355dce569816fff05a2c535ec15b252a9acbbe1",
+          # uri = "https://github.com/WillPower3309/swayfx/archive/refs/tags/0.5.2.tar.gz",
+          # sha256sum = "075e1a9577f96a71154c61997355dce569816fff05a2c535ec15b252a9acbbe1",
         }
       },
       {
         dest = "subprojects/scenefx",
         src = {
+
+          ### - main
           # uri = "https://github.com/wlrfx/scenefx/archive/0466cac4be1333d0794b01f4726780be23535767.tar.gz",
           # sha256sum = "a8e2e9bcbd04273b4b900a0962ae4296beac5b3617112490f0e88510b3537fcb",
 
-          # uri = "https://github.com/wlrfx/scenefx/archive/026ba4eb9837f1374bd79e1c9b722fb898e91830.tar.gz",
-          # sha256sum = "ee7bcb2bb92d1bb0000b2c3da2a2b8ac4aebe96309cb14ea8d19251821cf3be4",
+          ### - blur branch
+          uri = "https://github.com/wlrfx/scenefx/archive/026ba4eb9837f1374bd79e1c9b722fb898e91830.tar.gz",
+          sha256sum = "ee7bcb2bb92d1bb0000b2c3da2a2b8ac4aebe96309cb14ea8d19251821cf3be4",
 
-          uri = "https://github.com/wlrfx/scenefx/archive/refs/tags/0.4.1.tar.gz",
-          sha256sum  = "fa23f6ff509168d4a5eb0c5a7ef3b8cf3d39e3fba18320c28256e6c91c85d9ff"
+          ### -release
+          # uri = "https://github.com/wlrfx/scenefx/archive/refs/tags/0.4.1.tar.gz",
+          # sha256sum  = "fa23f6ff509168d4a5eb0c5a7ef3b8cf3d39e3fba18320c28256e6c91c85d9ff"
         },
       },
       {
         dest = "subprojects/wlroots",
-     
+
         src = {
 
           uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.0/downloads/wlroots-0.19.0.tar.gz",
@@ -54,7 +58,6 @@
     ],
 
     preConfigurePhase = [
-
       m%"
       fix_symbol_wlroots(){
         for f in $(find ${SRC}/subprojects/wlroots -type f);do
@@ -62,7 +65,6 @@
         done
       }
       "%,
-
       "fix_symbol_wlroots output_pending_resolution",
       "fix_symbol_wlroots wlr_matrix_identity",
       "fix_symbol_wlroots wlr_matrix_multiply",
@@ -97,7 +99,6 @@
             "%,
       "fix_symbol \"list_insert\"",
       "fix_symbol \"parse_boolean\"",
-
 
       # "sed -i 's@0.20.0-dev@0.19.1@g' ${SRC}/subprojects/wlroots/meson.build",
     ],
