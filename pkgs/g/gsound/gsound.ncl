@@ -18,14 +18,12 @@
       drvs.libvorbis,
       drvs.alsaLibs,
       drvs.eudev,
-
       drvs.gperf,
       drvs.kmod,
       drvs.xz,
       drvs.openssl,
       drvs.zstd,
       drvs.utilLinux,
-
     ],
     extraMesonArgs = [
       "-Dgtk_doc=false",
