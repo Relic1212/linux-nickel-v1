@@ -14,18 +14,18 @@
     postInstallPhase = [
       m%"echo "
 prefix=/usr
-exec_prefix=${prefix}
+exec_prefix=\${prefix}
 libdir=/usr/lib
 includedir=/usr/include
 
 Name: libcanberra
 Description: Event Sound API
 Version: 0.30
-Libs: -L${libdir} -lcanberra  -lltdl
+Libs: -L\${libdir} -lcanberra  -lltdl
 Libs.private: -lltdl
-Cflags: -D_REENTRANT -I${includedir}
-Requires: ogg vorbis alsa
-Requires.private: ogg vorbis alsa
+Cflags: -D_REENTRANT -I\${includedir}
+Requires: ogg vorbis alsa vorbisfile
+Requires.private: ogg vorbis alsa vorbisfile
 " >> ${DEST}/usr/lib/pkgconfig/libcanberra.pc
 "%
     ],
