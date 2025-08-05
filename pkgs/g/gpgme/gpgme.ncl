@@ -28,5 +28,13 @@
       "--disable-gpgsm-test",
       "--disable-g13-test",
     ]
-  }
+  },
+  gpgmeForCmake =
+    gpgme
+    & {
+      postInstallPhase = [
+        "sed -i 's@libgpgme.so@libgpgme.a@g' ${DEST}/usr/lib/cmake/Gpgmepp/GpgmeppConfig.cmake",
+        "sed -i 's@libgpgmepp.so@libgpgmepp.a@g' ${DEST}/usr/lib/cmake/Gpgmepp/GpgmeppConfig.cmake",
+      ]
+    }
 }
