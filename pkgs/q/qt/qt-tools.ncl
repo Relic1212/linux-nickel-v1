@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  qtTools | lib.CmakePackage = {
+  qtTools | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       # uri = "https://github.com/qt/qttools/archive/refs/tags/v6.8.2.tar.gz",
@@ -13,49 +13,65 @@
     symlinkBuldInputs = true,
 
     biDrvs = [
-      drvs.mesa2,
-      # drvs.pkgconf,
-      drvs.libelf,
-      drvs.libdrm,
-      drvs.zlibNg,
-      drvs.pythonMako,
-      drvs.pythonPackaging,
-      drvs.pythonMarkupsafe,
-      drvs.libpciaccess,
-      drvs.libffi,
-      drvs.bison,
-      drvs.flex,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.linuxHeaders,
-      drvs.m4,
-      drvs.git,
-      drvs.pyyaml,
-      drvs.llvmConfigStatic,
-      drvs.spirvTools,
-      drvs.spirvLlvmTranslator,
-      drvs.dbusForQt,
-      ###
-      drvs.qtbase,
-      drvs.libxkbcommon,
-      drvs.openssl,
-      drvs.kmod,
-      drvs.zstd,
-      drvs.xz,
-      drvs.eudev,
-      drvs.libinput,
-      drvs.perl,
-      drvs.glib,
+
+drvs.bison,
+drvs.cairo,
+drvs.dbusForQt,
+drvs.eudev,
+drvs.expat,
+drvs.flex,
+drvs.fontconfig,
+drvs.freetype,
+drvs.git,
+drvs.glib,
+drvs.harfbuzzFull,
+drvs.jsonC,
+drvs.kmod,
+drvs.libdrm,
+drvs.libelf,
+drvs.libffi,
+drvs.libinput,
+drvs.libpciaccess,
+drvs.libpng,
+drvs.libxkbcommon,
+drvs.linuxHeaders,
+drvs.llvmConfigStatic,
+drvs.m4,
+drvs.mesa2,
+drvs.openssl,
+drvs.pcre2,
+drvs.perl,
+drvs.pixman,
+drvs.pythonMako,
+drvs.pythonMarkupsafe,
+drvs.pythonPackaging,
+drvs.pyyaml,
+drvs.qtbase,
+drvs.qtdeclarative,
+drvs.qtshadertools,
+drvs.qtsvg,
+drvs.qtwayland,
+drvs.spirvLlvmTranslator,
+drvs.spirvTools,
+drvs.wayland,
+drvs.waylandProtocols,
+drvs.xz,
+drvs.zlibNg,
+drvs.zstd,
+
     ],
 
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
+
       ]
     },
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
+      # "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
+
     },
   }
 }
