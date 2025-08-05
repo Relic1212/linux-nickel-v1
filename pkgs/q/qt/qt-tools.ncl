@@ -45,6 +45,7 @@
       drvs.eudev,
       drvs.libinput,
       drvs.perl,
+      drvs.glib,
     ],
 
     buildEnv = {
