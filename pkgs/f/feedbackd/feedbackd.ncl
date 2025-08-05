@@ -64,6 +64,7 @@
       drvs.libogg,
       drvs.libcanberra,
       drvs.gsound,
+      drvs.alsaLibs,
       drvs.libtool,
     ],
     extraMesonArgs = [
@@ -138,7 +139,6 @@
     ]
   }
 }
-
 & {
   lib,
   drvs,
