@@ -50,6 +50,13 @@
       drvs.xz,
       drvs.eudev,
       drvs.libinput,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.harfbuzzFull,
+      drvs.cairo,
+      drvs.pixman,
+      drvs.libpng,
+      drvs.glib,
     ],
 
     buildEnv = {
