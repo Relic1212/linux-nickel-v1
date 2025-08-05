@@ -4,8 +4,8 @@
   kwin | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/plasma/kwin/-/archive/v6.3.2.1/kwin-v6.3.2.1.tar.gz",
-      sha256sum = "2eae36bfc9c451a94bccedcd76b60e664d305a8b02e1a47b4612c85e0b679180"
+      uri = "https://download.kde.org/stable/plasma/6.4.3/kwin-6.4.3.tar.xz",
+      sha256sum = "a13568c918eca7803eb44a3a2778b860edc3f03b36797851c4f3aeeed4b502a8"
     },
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,
