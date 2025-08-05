@@ -9,11 +9,19 @@
     extraConfigureFlags = [
       "BASH=/usr/bin/bash"
     ],
+    preConfigurePhase = [
+      m%"
+      for f in $(find ${SRC} -type f); do
+        sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${f}
+      done
+      "%
+    ],
     biDrvs = [
       drvs.bash,
       drvs.libxslt,
       drvs.docbookXml,
       drvs.libxml2,
+      drvs.docbookXslNons,
     ]
   }
 }
@@ -70,5 +78,37 @@
       "cp -v -af docbook.cat *.dtd ent/ *.mod  ${DEST}/usr/share/xml/docbook/xml-dtd-4.5",
       "xmlcatalog --noout --create ${DEST}/etc/xml/docbook",
     ]
+  }
+}
+& {
+
+  lib,
+  drvs,
+  docbookXslNons | lib.Package = {
+    singleSource = {
+      uri = "https://github.com/docbook/xslt10-stylesheets/releases/download/release/1.79.2/docbook-xsl-nons-1.79.2.tar.bz2",
+      sha256sum = "ee8b9eca0b7a8f89075832a2da7534bce8c5478fc8fc2676f512d5d87d832102"
+    },
+    separateBuildDir = false,
+    biDrvs = [
+      # drvs.bash,
+    ],
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2",
+      # "for f in $(find . -type d -maxdepth 1); do install -m0755 ${f} ${DEST}/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2; done",
+      "cp -r * ${DEST}/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2",
+
+      # "for f in $(find . -name '*.xsl'); do install -m0755 ${f} ${DEST}/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2; done",
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  links | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "http://links.twibright.com/download/links-2.30.tar.gz",
+      sha256sum = "7f0d54f4f7d1f094c25c9cbd657f98bc998311122563b1d757c9aeb1d3423b9e"
+    }
   }
 }
