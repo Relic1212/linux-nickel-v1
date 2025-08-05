@@ -9,8 +9,8 @@
     {
 
       singleSource = {
-        uri = "https://github.com/uutils/util-linux/archive/81afa8a7bb849f81d397b228b015b8ba4d0f271a.zip",
-        sha256sum = "8e35c03dfc0fc6887e0d704d93fc35ed7c6b71a1a52d1d2e06c943e5c7ee4d82"
+        uri = "https://github.com/uutils/util-linux/archive/261332d6a5b9ada13a30462db4ed37435956c30a.tar.gz",
+        sha256sum = "3598e70f258935d50a66e8db114fc83b3719744ac5dfe2111349f0f1b0206312"
       },
       crates = _crates,
       # lockfileImport | priority 1 = (import "./Cargo.lock" as 'Toml),
@@ -26,11 +26,20 @@
       #     file = "0001-no-last.patch"
       #   },
       # ],
-      preConfigurePhase = [
+      configurePhase = [
         m%"sed -i 's@"last",@@g' ${SRC}/Cargo.toml"%,
+        m%"sed -i 's@"fsfreeze",@@g' ${SRC}/Cargo.toml"%,
+        m%"sed -i 's@"blockdev",@@g' ${SRC}/Cargo.toml"%,
 
         # # m%"sed -i 's@\["utmpx"\]@\[\]@g' ${SRC}/src/uu/last/Cargo.toml"%,
-      ]
+      ],
+
+      biDrvs = [
+        drvs.utilLinux,
+      ],
+      extraEnv = {
+        "LIBMOUNT_STATIC" = "1",
+      },
     }
 }
 & (import "../uutils-procps/uutils-procps.ncl")
