@@ -118,11 +118,12 @@
       ]
     },
     cmakeExtraArgsRecord = {
-      "-DBUILD_KSECRETD" = false,
+      "-DBUILD_KSECRETD" = true,
       "-DBUILD_KWALLETD" = true,
-      "-DBUILD_KWALLET_QUERY" = false,
+      "-DBUILD_KWALLET_QUERY" = true,
       "-DBUILD_TESTING" = false,
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
+      "-DWITH_X11" = false,
 
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat gpgme libcanberra vorbisfile)\"",
     },
