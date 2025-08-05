@@ -22,5 +22,16 @@
       "PREFIX=/usr",
       "SBINDIR=/usr/bin",
     ]
-  }
+  },
+  lmSensorsSensors | lib.MakePackage =
+    lmSensors
+    & {
+      postInstallPhase = [
+        "rm ${DEST}/usr/lib -rf",
+        "rm ${DEST}/usr/bin/sensors-conf-convert",
+        "rm ${DEST}/usr/bin/sensors-detect",
+        "rm ${DEST}/usr/bin/pwmconfig",
+        "rm ${DEST}/usr/bin/fancontrol",
+      ]
+    }
 }
