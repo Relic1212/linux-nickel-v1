@@ -186,11 +186,6 @@
     patches = [
       {
 
-        # file = "851b2218b8b68961443f11bad6a9f24bcc68f013.patch",
-        # sha256sum = "e20b9d6c40683943740ea69a2737c0ffaa8522f4bb1e9ff0cc8fc797cd720f83",
-        # file =   "0001-https-github.com-rust-windowing-winit-pull-4086.patch",
-        # sha256sum = "f2f0a9eafff40c32665f8ed1334385b7f81ae52434ef956ef366d41ce843d6ac",
-
         file = "513604e0cb15da96e6d3c76b4afc5148b1a8f873.patch",
         sha256sum = "ca62a08327c426ae8d16796e8ab6add94d9d9bab9507f4b8d8a7320baad6aff5",
       }
