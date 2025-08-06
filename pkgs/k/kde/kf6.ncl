@@ -420,15 +420,21 @@
           drvs.vala,
         ],
 
-      #    cmakeExtraArgsRecord = {
-      #   "-DBUILD_TESTING" = false,
-      #   "-DBUILD_DESIGNERPLUGIN" = false,
-
-      # }
-      symlinkBuldInputs | priority 1 = false,
+      cmakeExtraArgsRecord = {
+        # "-DBUILD_TESTING" = false,
+        # "-DBUILD_DESIGNERPLUGIN" = false,
+        "-DBUILD_TESTING" = false,
+      },
+      # symlinkBuldInputs | priority 1 = false,
       buildEnv = {
         EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lltdl"],
-      }
+      },
+      patches = [
+        {
+          file = "0001-kio.patch",
+          sha256sum = "3c6f7893391fc6e03eb65cb450c401af635139d17c5c22e85d4a343bd0c2cf08"
+        }
+      ]
     }
   ),
 
