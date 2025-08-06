@@ -30,6 +30,10 @@
           drvs.kwindowsystem,
           drvs.kirigami,
           drvs.karchive,
+          drvs.kiconthemes,
+          drvs.kio,
+          drvs.knotifications,
+          drvs.kcmutils,
         ]
     }
   ),
