@@ -45,7 +45,7 @@ def a():
 
 
 def get_drvs():
-    fp = "nickellib/pkgs.ncl"
+    fp = "nickellib/pkgs2.ncl"
     c = nickel_to_json(fp)
     return c
 
@@ -197,6 +197,15 @@ def test():
     print(pn_hash)
     hbn= drvs["hashByName"]
     nbh =reverse_dict(hbn)
+
+    name_to_sysroot = drvs["nameToSysroot"]
+    # print("name_to_sysroot",name_to_sysroot)
+    sysroot_drvs = drvs["sysrootDrvs"]
+    for k in drvs.keys():
+        if "buildInputs" in drvs[k].keys():
+            h = name_to_sysroot[k]
+            print("add",k, h)
+            drvs[k]["sysrootDrvHash"] = h
 
     build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],pkg_names=nbh)
 
