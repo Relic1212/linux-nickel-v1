@@ -3,8 +3,8 @@
   drvs,
   mako | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/emersion/mako/releases/download/v1.9.0/mako-1.9.0.tar.gz",
-      sha256sum = "16d821ef49acfc8503367e1a886d28b2f8578ae9ceb1a7e284888b1e32b3a337",
+      uri = "https://github.com/emersion/mako/releases/download/v1.10.0/mako-1.10.0.tar.gz",
+      sha256sum = "a72543f7b92568a0c3c45a5c0e3487ced65c18003eecd9b7d017a6464e7cef82",
     },
     biDrvs = [
       drvs.cairo,
@@ -23,11 +23,14 @@
       drvs.waylandProtocols,
       drvs.basu,
       drvs.linuxHeaders,
+      drvs.libjpegTurbo,
+      drvs.gdkPixbufFull,
+      drvs.scdoc,
     ],
     extraMesonArgs = [
       "-Dzsh-completions=true",
-      "-Dicons=disabled",
-      "-Dman-pages=disabled"
+      "-Dicons=enabled",
+      "-Dman-pages=enabled"
     ],
     preConfigurePhase = [
       m%"
