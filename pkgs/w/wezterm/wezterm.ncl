@@ -1,0 +1,193 @@
+{
+  lib,
+  drvs,
+  wezterm | lib.CargoPackage = {
+    singleSource = {
+      uri = "https://github.com/wezterm/wezterm/archive/refs/tags/20240203-110809-5046fc22.tar.gz",
+      sha256sum = "3a02a68016ef48cdb2127308be20acafe94a568411e95b0e64dc590cf877b401"
+    },
+
+    nonCrateSourceInputs = [
+      { src = singleSource },
+      {
+        src = {
+          uri = "https://github.com/wezterm/xcb-imdkit-rs/archive/215ce4b08ac9c4822e541efd4f4ffb1062806051.tar.gz",
+          sha256sum = "ccc3c08069eea1764eb72bf7e21e3e80bd9c0a528bae6eb41f7a4d68332ef63d"
+        },
+        dest = "vendor-xcb-imdkit-rs"
+      },
+
+      # https://github.com/gentoo/gentoo/blob/master/x11-terms/wezterm/wezterm-20240203.110809-r2.ebuild
+      {
+        src = {
+          uri = "https://github.com/wez/freetype2/archive/e4586d960f339cf75e2e0b34aee30a0ed8353c0d.tar.gz",
+          sha256sum = "2ca70adbd15be23569762319f7cac3cd92720f6042417916540bd120f18102f5"
+        },
+        dest = "deps/freetype/freetype2"
+        # dest = "deps/freetype/freetype2/subprojects/dlg"
+      },
+      {
+        src = {
+          uri = "https://github.com/glennrp/libpng/archive/8439534daa1d3a5705ba92e653eda9251246dd61.tar.gz",
+          sha256sum = "c73af438385b725238443ed9c23065b3ed614e04b24cd4b9560f1a587ce7f20f"
+        },
+        dest = "deps/freetype/libpng"
+      },
+      {
+        src = {
+          uri = "https://github.com/madler/zlib/archive/cacf7f1d4e3d44d871b605da3b647f07d718623f.tar.gz",
+          sha256sum = "6d4d6640ca3121620995ee255945161821218752b551a1a180f4215f7d124d45"
+        },
+        dest = "deps/freetype/zlib"
+      },
+      {
+        src = {
+          uri = "https://github.com/harfbuzz/harfbuzz/archive/894a1f72ee93a1fd8dc1d9218cb3fd8f048be29a.tar.gz",
+          sha256sum = "17eda8a9861d347a6e95cd2b3112301ce90dcc649b0e96623cc89c6ca4180e66"
+        },
+        dest = "deps/harfbuzz/harfbuzz"
+      },
+      {
+        src = {
+          uri = "https://github.com/wez/libssh-rs/archive/e57fdc813ed177738828ad73536f657cb2f91cf4.tar.gz",
+          sha256sum = "e144d05c5cafeb10b1c7921b61cfb3d6882de856b4c0cf8b4af846a6d59acf37"
+        },
+        dest = "submodule-libssh-rs"
+      },
+      {
+        src = {
+          uri = "https://gitlab.com/libssh/libssh-mirror/-/archive/6ad455a8acfe6032c2a87cf83f2d20463c30f8af/libssh-mirror-6ad455a8acfe6032c2a87cf83f2d20463c30f8af.tar.gz",
+          sha256sum = "42e7c11e4996d2b38e9fe8055dd2bf6da31fc1d7d13396127bab3e82845ba767"
+        },
+        dest = "submodule-libssh"
+      }
+    ],
+
+    configurePhase = [
+      "rm ${SRC}/.cargo/config",
+      m%"
+            echo "
+            [source.crates-io]
+            replace-with = \"vendored-sources\"
+            
+
+
+            [source.\"git+https://github.com/wez/xcb-imdkit-rs.git?rev=215ce4b08ac9c4822e541efd4f4ffb1062806051#215ce4b0\"]
+            rev = \"215ce4b08ac9c4822e541efd4f4ffb1062806051\"
+            git = \"https://github.com/wez/xcb-imdkit-rs.git\"
+            replace-with = \"vendored-sources\"
+
+
+            [source.vendored-sources]
+            directory = \"vendor\"
+
+            " > ${SRC}/.cargo/config.toml
+            "%,
+      "mv vendor-xcb-imdkit-rs vendor/xcb-imdkit-rs",
+      "cp vendor/log-0.4.20/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
+      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/newer.patch)",
+    ],
+
+    patches = [
+      {
+        sha256sum = "666d7a35fe843dfbf1491c67f4099ef7cdf74f6d7d617bb3988e35500880626d",
+        file = "newer.patch"
+      }
+    ],
+
+    patchPhase = [],
+
+    extraCargoFlags = [
+      "--no-default-features",
+      "--features wayland",
+    ],
+    extraEnv = {
+      CARGO_FEATURE_USE_SYSTEM_LIB = "1",
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=-lc++",
+        "-C link-arg=-lxkbcommon",
+        "-C link-arg=-lxcb",
+        "-C link-arg=-lXau",
+        "-C link-arg=-lxcb-xkb",
+        "-C link-arg=-lxcb",
+        "-C link-arg=-lXau",
+        "-C link-arg=-lxcb-shm",
+      ]
+    },
+
+    crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
+
+    biDrvs = [
+      drvs.expat,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.fribidi,
+      drvs.gdkPixbufFull,
+      drvs.glib,
+      drvs.gperf,
+      drvs.harfbuzz,
+      drvs.hwdata,
+      drvs.libdrm,
+      drvs.libelf,
+      drvs.libepoxy,
+      drvs.libffi,
+      drvs.libfontenc,
+      drvs.libjpegTurbo,
+      drvs.libpciaccess,
+      drvs.libpng,
+      drvs.libx11,
+      drvs.libxau,
+      drvs.libxcb,
+      drvs.libxcursor,
+      drvs.libxcvt,
+      drvs.libxfixes,
+      drvs.libxfont2,
+      drvs.libxkbfile,
+      drvs.libxrender,
+      drvs.libxshmfence,
+      drvs.linuxHeaders,
+      drvs.llvmConfigStatic,
+      drvs.mesa2,
+      drvs.ncurses,
+      drvs.openssl,
+      drvs.pango,
+      drvs.pcre2,
+      drvs.pixman,
+      drvs.readline,
+      drvs.spirvLlvmTranslator,
+      drvs.spirvTools,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.xcbProto,
+      drvs.xcbRenderutil,
+      drvs.xcbUtilWm,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.xwayland,
+      drvs.zlibNg,
+      drvs.isoCodes,
+      drvs.libxext,
+      drvs.libxf86vm,
+      drvs.libxrandr,
+      drvs.xcbUtil,
+      drvs.xcbUtilImage,
+      drvs.xcbUtilKeysyms,
+      drvs.xcbImdkit,
+      drvs.libxkbcommonX11,
+      drvs.libstdcppCompat,
+      # drvs.git,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  libstdcppCompat | lib.Package = {
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/lib",
+      "cd ${DEST}/usr/lib",
+      "ln -s libc++.a libstdc++.a",
+    ]
+  }
+}
