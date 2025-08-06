@@ -162,3 +162,50 @@
     ],
   }
 }
+& {
+  lib,
+  drvs,
+  libxi | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/archive//individual/lib/libXi-1.8.2.tar.xz",
+      sha256sum = "d0e0555e53d6e2114eabfa44226ba162d2708501a25e18d99cfb35c094c6c104"
+    },
+
+    biDrvs = [
+      drvs.pkgconf,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libxinerama | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/archive//individual/lib/libXinerama-1.1.5.tar.xz",
+      sha256sum = "5094d1f0fcc1828cb1696d0d39d9e866ae32520c54d01f618f1a3c1e30c2085c"
+    },
+    biDrvs = [
+      drvs.pkgconf,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}

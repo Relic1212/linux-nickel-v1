@@ -56,3 +56,47 @@
         ]
     }
 }
+& {
+  drvs,
+  lib,
+  cairo,
+  cairoXlib =
+    cairo
+    & {
+      extraMesonArgs | priority 1 =
+        cairo.extraMesonArgs
+        @ [
+          "-Dglib=enabled",
+          "-Dxlib=enabled",
+        ],
+      biDrvs | priority 1 =
+        cairo.biDrvs
+        @ [
+          drvs.glib,
+          drvs.libffi,
+          drvs.pcre2,
+          drvs.libxcursor,
+          drvs.xorgMacros,
+          drvs.xorgproto,
+          drvs.xtrans,
+          drvs.libxcb,
+          drvs.xcbProto,
+          drvs.libxau,
+          drvs.libx11,
+          drvs.libxrender,
+          drvs.libxfixes,
+          drvs.xcbRenderutil,
+          drvs.libxfont2,
+          drvs.libfontenc,
+          drvs.libxcvt,
+          drvs.libxshmfence,
+          drvs.xwayland,
+          drvs.libxkbfile,
+          drvs.openssl,
+          drvs.xcbUtilWm,
+          drvs.libxext,
+          drvs.libxf86vm,
+          drvs.libxrandr,
+        ]
+    }
+}

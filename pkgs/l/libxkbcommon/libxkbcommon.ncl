@@ -42,3 +42,40 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  libxkbcommon,
+  libxkbcommonX11 | lib.MesonPackage = {
+
+    singleSource = libxkbcommon.singleSource,
+    extraMesonArgs = ["-Denable-x11=true", "-Denable-xkbregistry=true"],
+
+    buildEnv = {
+      EXTRA_CPPFLAGS = ["-I/usr/include/libxml2"],
+      EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
+    },
+
+    biDrvs = [
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.libffi,
+      drvs.bison,
+      drvs.m4,
+      drvs.libxml2,
+      drvs.libxcursor,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.zlibNg,
+      drvs.xcbRenderutil,
+      drvs.xcbUtilWm,
+    ]
+  }
+}

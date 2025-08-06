@@ -20,5 +20,9 @@
       EXTRA_CPPFLAGS = ["-I/usr/include/libxml2"],
       EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
     },
+
+    postInstallPhase = [
+      m%"sed -i 's@-DG_LOG_DOMAIN="dbind"@@g' ${DEST}/usr/lib/pkgconfig/atspi-2.pc"%
+    ]
   }
 }

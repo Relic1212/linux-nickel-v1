@@ -49,5 +49,61 @@
       drvs.hwdata,
       drvs.linuxHeaders,
     ],
+  },
+
+  libepoxyNoEgl | lib.MesonPackage = {
+    singleSource = libepoxy.singleSource,
+    buildEnv = {
+      EXTRA_LDFLAGS = ["-lc++"],
+    },
+    extraMesonArgs = [
+      "-Dglx=no",
+      "-Degl=no",
+      "-Dx11=false",
+      "-Ddocs=false",
+      "-Dtests=false",
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  libepoxy,
+  libepoxyX11 | lib.MesonPackage = {
+    singleSource = libepoxy.singleSource,
+    buildEnv = {
+      EXTRA_LDFLAGS = ["-lc++"],
+    },
+    extraMesonArgs = [
+      "-Dglx=yes",
+      "-Degl=yes",
+      "-Dx11=true",
+      "-Ddocs=false",
+      "-Dtests=false",
+    ],
+    llvmProvider = drvs.llvmFull,
+    biDrvs =
+      libepoxy.biDrvs
+      @ [
+        drvs.libxcursor,
+        drvs.xorgMacros,
+        drvs.xorgproto,
+        drvs.xtrans,
+        drvs.libxcb,
+        drvs.xcbProto,
+        drvs.libxau,
+        drvs.libx11,
+        drvs.libxrender,
+        drvs.libxfixes,
+        drvs.xcbRenderutil,
+        drvs.libxfont2,
+        drvs.libfontenc,
+        drvs.libxcvt,
+        drvs.libxshmfence,
+        drvs.xwayland,
+        drvs.libxkbfile,
+        drvs.openssl,
+        drvs.xcbUtilWm,
+      ]
   }
 }
