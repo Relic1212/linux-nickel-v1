@@ -19,6 +19,7 @@ if [ $USER_IS_UNLOCK_USER -eq 0 ]; then
         exec ${LOGIN} "root"
     fi
     printf "%s" "${USER_NAME} does not exist"
+    sleep 2
     exit 1
 fi
 
@@ -131,6 +132,7 @@ else
     stty echo
     if [ ! "${PASSWORD}" = "${PASSWORD_CHECK}" ]; then 
         printf "Passwords don't match!\n"
+        sleep 2
         exit 1
     fi
 ################### BEGIN CREATE ######################################
@@ -170,6 +172,7 @@ if [ $unlock_status -eq 0 ]; then
     exit 0
 else 
     printf "wrong vault password"
+    sleep 2
     exit 1
 fi
 
