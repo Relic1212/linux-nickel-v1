@@ -20,10 +20,15 @@
 
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static expat)"
+        "$(pkg-config --libs --static expat gtk+-3.0 epoxy xi)"
       ]
     },
+
+    extraEnv = {
+      CGO_LDFLAGS = buildEnv.LDFLAGS
+    },
     separateBuildDir = false,
+
     configurePhase = [
       # "cd ${SRC}",
       "export GOROOT=/usr/lib/go",
@@ -33,19 +38,33 @@
       "export HOME=/tmp/home",
     ],
     buildPhase = [
-      "go build"
+      m%"go build -ldflags "-linkmode 'external' -extldflags '-static'"  -v -o bin/nwg-drawer ."%
     ],
-    installPhase = [],
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/share/nwg-drawer",
+      "cp -r desktop-directories ${DEST}/usr/share/nwg-drawer",
+      "cp -r img ${DEST}/usr/share/nwg-drawer",
+      "install -m0755 drawer.css ${DEST}/usr/share/nwg-drawer",
+      "install -m0755 bin/nwg-drawer ${DEST}/usr/bin",
+      "install -Dm 644 -t \"${DEST}/usr/share/licenses/nwg-drawer\" LICENSE",
+      "install -Dm 644 -t \"${DEST}/usr/share/doc/nwg-drawer\" README.md",
+    ],
+
+    makeTargets = [
+      "build"
+    ],
+    extraMakeInstallArgs = [
+      "PREFIX=/usr"
+    ],
 
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
+    # symlinkBuldInputs = true,
     biDrvs = [
 
       #drvs.pythonFull,
       drvs.atSpi2Core,
       drvs.basu,
-      drvs.cairo,
-      drvs.cairoGobject,
+      drvs.cairoXlib,
       drvs.dbus,
       drvs.eudev,
       drvs.expat,
@@ -55,21 +74,22 @@
       drvs.fribidi,
       drvs.gdkPixbufFull,
       drvs.gettext,
-      drvs.glib,
+      # drvs.glib,
       drvs.glibDynamic,
       drvs.go_1_24,
       drvs.gobjectDynamic,
       drvs.gperf,
-      drvs.gtk3,
+      drvs.gtk3X11,
       drvs.harfbuzz,
       drvs.hwdata,
+      drvs.isoCodes,
       drvs.jsonC,
       drvs.lcms,
       drvs.libcanberra,
       drvs.libdisplayinfo,
       drvs.libdrm,
       drvs.libelf,
-      drvs.libepoxy,
+      drvs.libepoxyX11,
       drvs.libevdev,
       drvs.libffi,
       drvs.libfontenc,
@@ -89,6 +109,7 @@
       drvs.libxf86vm,
       drvs.libxfixes,
       drvs.libxfont2,
+      drvs.libxi,
       drvs.libxkbcommon,
       drvs.libxkbfile,
       drvs.libxrandr,
@@ -128,6 +149,7 @@
       drvs.xwayland,
       drvs.xxhash,
       drvs.zlibNg,
+      drvs.gtkLayerShell,
     ],
   }
 }

@@ -17,15 +17,55 @@
         dest = "vendor",
       }
     ],
+    # buildEnv={
+    #   EXTRA_LDFLAGS = [
+    #     "$(pkg-config --static --libs gtk+-3.0)"
+    #   ],
+    # },
+
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static expat gtk+-3.0 epoxy xi)"
+      ]
+    },
+
+    extraEnv = {
+      CGO_LDFLAGS = buildEnv.LDFLAGS
+    },
+
+    # symlinkBuldInputs = true,
+
+    separateBuildDir = false,
+    configurePhase = [
+      "export GOROOT=/usr/lib/go",
+      "export GOMODCACHE=${SRC}/go-mod",
+      "export CGO_ENABLED=1",
+      "mkdir /tmp/home",
+      "export HOME=/tmp/home",
+    ],
+
+    # makeTargets=[
+    #   "build"
+    # ],
+    extraMakeInstallArgs = [
+      "PREFIX=/usr"
+    ],
+
+    # https://mt165.co.uk/blog/static-link-go/
+    buildPhase = [
+      m%"go build -ldflags "-linkmode 'external' -extldflags '-static'"  -v -o bin/nwg-look ."%,
+    ],
+    # installPhase = [],
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
+
     biDrvs = [
 
       #drvs.pythonFull,
       drvs.atSpi2Core,
       drvs.basu,
-      drvs.cairo,
-      drvs.cairoGobject,
+      drvs.cairoXlib,
+      # drvs.cairoGobject,
       drvs.dbus,
       drvs.eudev,
       drvs.expat,
@@ -40,7 +80,7 @@
       drvs.go_1_24,
       drvs.gobjectDynamic,
       drvs.gperf,
-      drvs.gtk3,
+      drvs.gtk3X11,
       drvs.harfbuzz,
       drvs.hwdata,
       drvs.jsonC,
@@ -49,7 +89,7 @@
       drvs.libdisplayinfo,
       drvs.libdrm,
       drvs.libelf,
-      drvs.libepoxy,
+      drvs.libepoxyX11,
       drvs.libevdev,
       drvs.libffi,
       drvs.libfontenc,
@@ -79,15 +119,12 @@
       drvs.mesa2,
       drvs.mpdecimal,
       drvs.mtdev,
-      drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
       drvs.pango,
       drvs.pcre2,
       drvs.pixman,
       drvs.pkgconf,
-      drvs.pythonDynamicPic,
-      drvs.pythonSetuptools,
       drvs.readline,
       drvs.scdoc,
       drvs.seatd,
@@ -108,20 +145,7 @@
       drvs.xwayland,
       drvs.xxhash,
       drvs.zlibNg,
+      drvs.libxi,
     ],
-
-    separateBuildDir = false,
-    configurePhase = [
-      "export GOROOT=/usr/lib/go",
-      "export GOMODCACHE=${SRC}/go-mod",
-      "export CGO_ENABLED=1",
-      "mkdir /tmp/home",
-      "export HOME=/tmp/home",
-    ],
-
-    buildPhase = [
-      "go build"
-    ],
-    installPhase = [],
   }
 }
