@@ -27,6 +27,7 @@ let sysroots =
           buildInputs = v.buildInputs,
           symlinkBuldInputs = v.symlinkBuldInputs,
           enableCcache = v.enableCcache,
+          drvHash = v.drvHash,
         }
       )
       pkgs
@@ -47,6 +48,7 @@ let sysroots =
   {
     nameToSysroot = r3,
     sysrootDrvs = std.record.merge_all (std.record.values r2),
+    pkghash2sysroothash =std.record.merge_all (std.record.values(std.record.map (fun k v => { "%{v.drvHash}" =v.hash} ) r1)),
   }
 in
 let data = {

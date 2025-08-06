@@ -17,12 +17,12 @@ def run_in_bwrap_chroot(
     if extra_bwrap_args is None:
         extra_bwrap_args = []
     net_args = []
-    if network and (sysroot!="/"):
-        net_args = ["--ro-bind", "/etc/resolv.conf", "/etc/resolv.conf"]
-        if not os.path.isdir(sysroot + "/etc"):
-            os.mkdir(sysroot + "/etc")
-        if not os.path.exists(sysroot + "/etc/resolv.conf"):
-            subprocess.run(["touch ", sysroot + "/etc/resolv.conf"], check=True)
+    # if network and (sysroot!="/"):
+    #     net_args = ["--ro-bind", "/etc/resolv.conf", "/etc/resolv.conf"]
+    #     if not os.path.isdir(sysroot + "/etc"):
+    #         os.mkdir(sysroot + "/etc")
+    #     if not os.path.exists(sysroot + "/etc/resolv.conf"):
+    #         subprocess.run(["touch ", sysroot + "/etc/resolv.conf"], check=True)
     bwrap_wrap = (
         [
             "unshare",

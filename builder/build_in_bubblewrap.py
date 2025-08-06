@@ -1,13 +1,18 @@
 import json
 import subprocess
 import sys
-import timeit 
+import timeit
 import datetime
 
 try:
-    from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
+    from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher, sysroot_utils
 except ModuleNotFoundError:
-    import bubblewrap, hashes, util_functions, dirpaths, fetcher
+    import bubblewrap
+    import hashes
+    import util_functions
+    import dirpaths
+    import fetcher
+    import sysroot_utils
 
 import os
 
@@ -68,7 +73,8 @@ def drv_to_workdir(drv: dict) -> str:
     """
     workdir0 = "build/" + drv["hash"] + "-workdir"
     workdir = (
-        "build/" + hashes.str_to_sha256sum(json.dumps(drv["manifest"])) + "-workdir"
+        "build/" +
+        hashes.str_to_sha256sum(json.dumps(drv["manifest"])) + "-workdir"
     )
 
     if workdir0 != workdir:
@@ -85,7 +91,6 @@ def copy_src(h, dest):
         raise Exception(f"{src_dir} does not contain exactly one item")
     src_p = src_dir + "/" + cont[0]
     subprocess.run(["cp", "-r", src_p, dest], check=True)
-
 
 
 def run_and_get_lines(**kwargs):
@@ -107,8 +112,6 @@ def run_and_get_lines(**kwargs):
 def link_workdir(h, name):
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
 
-
-
     os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
     subprocess.run(
         ["rm", "-f", dirpaths.get_basedir() + "/tmp/" + name], check=True
@@ -123,27 +126,28 @@ def link_workdir(h, name):
         check=True,
     )
 
-def prepare_sysroot(drv,workdir)->list:
-    bwrap_bi_drv_args =[]
-    if (  drv["buildInChroot"]) and (  drv['symlinkBuldInputs']):
+
+def prepare_sysroot(drv, workdir) -> list:
+    bwrap_bi_drv_args = []
+    if (drv["buildInChroot"]) and (drv['symlinkBuldInputs']):
         bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
-        
+
     for bi_drv in drv["buildInputDrvs"]:
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-        
+
         if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
             print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-            util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
+            util_functions.copy_root(
+                src=bi_dest + "/", dest=workdir + "/sysroot/")
             continue
-
 
         bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
         sysroot_dirs = bi_dest_bwrap_args['dirs']
         sysroot_files = bi_dest_bwrap_args['files']
         # all the dirs so the symlinks will work
         for bi_drv_dir in sysroot_dirs:
-            dst = workdir + "/sysroot/" + bi_drv_dir 
-            
+            dst = workdir + "/sysroot/" + bi_drv_dir
+
             if os.path.isdir(dst):
                 continue
             # maybe it is better to reverse order anf just skip if it exists
@@ -151,29 +155,29 @@ def prepare_sysroot(drv,workdir)->list:
                 os.remove(dst)
             os.makedirs(dst)
 
-        # create intentianlly broken symlink 
+        # create intentianlly broken symlink
         for sd in sysroot_files:
-            link_source =  "/pkgs/"+bi_drv  + sd
-            link_target = workdir + "/sysroot" + sd 
+            link_source = "/pkgs/"+bi_drv + sd
+            link_target = workdir + "/sysroot" + sd
             if os.path.exists(link_target) or os.path.islink(link_target):
                 print(f"removing {link_target} to link")
-                subprocess.run(["rm","-rf",link_target],check=True)
+                subprocess.run(["rm", "-rf", link_target], check=True)
 
             # print(f"linking {link_source} to {link_target}")
-            subprocess.run(["ln","-s",link_source,link_target  ],check=True)
-        bwrap_bi_drv_args+=["--ro-bind" , bi_dest, "/pkgs/"+ bi_drv ]
+            subprocess.run(["ln", "-s", link_source, link_target], check=True)
+        bwrap_bi_drv_args += ["--ro-bind", bi_dest, "/pkgs/" + bi_drv]
 
     return bwrap_bi_drv_args
 
 
-def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
+def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) -> None:
 
     # h=hash
     # drv_s=pkgs[hash]
 
     drv_s = pkg_drvs[h]
     drv = json.loads(drv_s)
-    name=pkg_names[h]
+    name = pkg_names[h]
 
     workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
     status_file = workdir + "/0.txt"
@@ -181,15 +185,22 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
         link_workdir(h, name)
 
         return
+
+    sandboxed = drv["buildInChroot"]
+    uses_ccache = drv["enableCcache"]
+    # sysroot_drv_hash = drv["sysrootDrvHash"] # the goal
+    sysroot_drv_hash = pkghash2sysroothash[h]
+
     subprocess.run(["rm", "-rf", workdir], check=True)
     for bi_drv in drv["buildInputDrvs"]:
-        build(h=bi_drv, pkg_drvs=pkg_drvs,pkg_names=pkg_names)
+        build(h=bi_drv, pkg_drvs=pkg_drvs, pkg_names=pkg_names,
+              pkghash2sysroothash=pkghash2sysroothash)
     for si_drv in drv["sourceInputDrvs"]:
         si_h = si_drv["src"]
 
         si = pkg_drvs[si_h]
         fetcher.fetch_by_drv_string(si)
-    
+
     print(f"building {name}")
 
     os.makedirs(workdir + "/build")
@@ -198,10 +209,11 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     os.makedirs(workdir + "/sysroot", exist_ok=True)
     os.makedirs(workdir + "/out/destdir", exist_ok=True)
     os.makedirs(workdir + "/src")
-    with open(workdir + f"/pn-{name}","w",encoding="utf-8") as f:
+    with open(workdir + f"/pn-{name}", "w", encoding="utf-8") as f:
         pass
 
-    subprocess.run(["rm", "-f", dirpaths.get_basedir() + "/latest"], check=True)
+    subprocess.run(
+        ["rm", "-f", dirpaths.get_basedir() + "/latest"], check=True)
     subprocess.run(
         [
             "ln",
@@ -217,9 +229,15 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
 
     os.makedirs(f"{workdir}/patches")
     os.makedirs(f"{workdir}/files")
+    symlink_build_inputs = drv['symlinkBuldInputs']
 
-    
-    bwrap_bi_drv_args = prepare_sysroot(drv, workdir)
+    if symlink_build_inputs or (not sandboxed):
+        bwrap_bi_drv_args = prepare_sysroot(drv, workdir)
+    else:
+        bwrap_bi_drv_args = []
+
+        sysroot_utils.build_sysroot(
+            sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
 
     for si_drv in drv["sourceInputDrvs"]:
         dest = si_drv["dest"]
@@ -251,7 +269,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
         if os.path.exists(ef_dest):
             raise FileExistsError(ef_dest)
         if os.path.isdir(ef_uri):
-            ef_cp_cmd = ["cp","-r"]
+            ef_cp_cmd = ["cp", "-r"]
         else:
             ef_cp_cmd = ["cp"]
 
@@ -276,9 +294,14 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     sandboxed = drv["buildInChroot"]
     uses_ccache = drv["enableCcache"]
     if sandboxed:
-        sysroot = workdir + "/sysroot/"
-        for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev","/pkgs"]:
-            os.makedirs(sysroot + "/" + d, exist_ok=True)
+        if symlink_build_inputs:
+            sysroot = workdir + "/sysroot/"
+            for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev", "/pkgs"]:
+                os.makedirs(sysroot + "/" + d, exist_ok=True)
+        else:
+            sysroot = dirpaths.get_basedir() + "/" + sysroot_drv_hash + \
+                "-sysroot" + "/sysroot/"
+
         # os.environ.clear()
 
         path = "/usr/bin:/usr/sbin:/bin:/sbin"
@@ -293,7 +316,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
                 "x86_64-pc-linux-musl-c++",
                 "x86_64-pc-linux-musl-g++",
                 "x86_64-pc-linux-musl-gcc",
-                  "x86_64-linux-musl-c++",
+                "x86_64-linux-musl-c++",
                 "x86_64-linux-musl-g++",
                 "x86_64-linux-musl-gcc",
             ]:
@@ -301,10 +324,13 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
                     cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
                     directory = sysroot + "/usr/lib/ccache"
                     senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
-                    subprocess.run(cmd, cwd=directory, env=senv, check=True)
+                    if symlink_build_inputs:
+                        subprocess.run(cmd, cwd=directory,
+                                       env=senv, check=True)
 
             os.environ["CCACHE_DIR"] = "/tmp/ccache"
-            args += ["--bind", f"{dirpaths.get_basedir()}/ccache", "/tmp/ccache"]
+            args += ["--bind",
+                     f"{dirpaths.get_basedir()}/ccache", "/tmp/ccache"]
 
         senv = {}
         senv["PATH"] = path
@@ -314,7 +340,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
 
     else:
         senv = os.environ.copy()
-        senv["TMPDIR"]="/tmp"
+        senv["TMPDIR"] = "/tmp"
         sysroot = "/"
         args += ["--ro-bind", f"{workdir}/sysroot", "/tmp/workdir/sysroot"]
 
@@ -329,19 +355,19 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     args += ["--chdir", "/tmp/workdir/build"]
     args += ["/tmp/workdir/build.sh"]
 
-    t1=timeit.default_timer()
+    t1 = timeit.default_timer()
     with open(f"{workdir}/b.log", "a", encoding="utf-8") as f:
         with open(f"{workdir}/error.log", "a", encoding="utf-8") as f_error:
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
             bwrap_wrap = bubblewrap.get_bwrap_wrap(
-                sysroot=sysroot,sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args
+                sysroot=sysroot, sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args
             )
-            chroot_string =( "#!/bin/sh\n" + ''.join ([s+" " for s in  bwrap_wrap])[: -1-len  ("/tmp/workdir/build.sh")] + "sh\n")
+            chroot_string = ("#!/bin/sh\n" + ''.join([s+" " for s in bwrap_wrap])[
+                             : -1-len("/tmp/workdir/build.sh")] + "sh\n")
 
-            with open(f"{workdir}/chroot.sh","w",encoding="utf-8") as f_chroot:
+            with open(f"{workdir}/chroot.sh", "w", encoding="utf-8") as f_chroot:
                 f_chroot.write(chroot_string)
-            subprocess.run(["chmod","+x",f"{workdir}/chroot.sh"],check=True)
-                
+            subprocess.run(["chmod", "+x", f"{workdir}/chroot.sh"], check=True)
 
             with subprocess.Popen(
                 args=bwrap_wrap,
@@ -371,12 +397,9 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
             print(f"Failed to build {name}")
             raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
     subprocess.run(["touch", status_file], check=True)
-    t2=timeit.default_timer()
-    buildtime=datetime.timedelta(seconds=t2-t1)
+    t2 = timeit.default_timer()
+    buildtime = datetime.timedelta(seconds=t2-t1)
     print(f"building {name} took {buildtime}")
-    with open (dirpaths.get_basedir() + "/tmp/buildtimes.txt","a",encoding="utf-8") as f:
+    with open(dirpaths.get_basedir() + "/tmp/buildtimes.txt", "a", encoding="utf-8") as f:
         f.write(f"{name}\t-\t{buildtime}\n")
     print(f"finished building {name}")
-
-
-
