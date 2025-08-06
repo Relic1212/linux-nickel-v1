@@ -418,16 +418,25 @@
           drvs.switcherooControl,
           drvs.utilLinuxWeak,
           drvs.vala,
+          drvs.kwallet,
+          drvs.alsaLibs,
         ],
 
       cmakeExtraArgsRecord = {
         # "-DBUILD_TESTING" = false,
         # "-DBUILD_DESIGNERPLUGIN" = false,
         "-DBUILD_TESTING" = false,
+        "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat gpgme libcanberra vorbisfile)\"",
       },
       # symlinkBuldInputs | priority 1 = false,
+      # buildEnv = {
+      #   EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lltdl"],
+      # },
+
       buildEnv = {
-        EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lltdl"],
+        EXTRA_LDFLAGS | priority 1 = [
+          "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat gpgme libcanberra vorbisfile)",
+        ]
       },
       patches = [
         {

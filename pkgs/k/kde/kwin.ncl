@@ -88,6 +88,7 @@
       drvs.kcrash,
       drvs.kirigami,
       drvs.kdecorations,
+      drvs.kwayland,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
