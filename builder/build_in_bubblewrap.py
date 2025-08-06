@@ -123,6 +123,48 @@ def link_workdir(h, name):
         check=True,
     )
 
+def prepare_sysroot(drv,workdir)->list:
+    bwrap_bi_drv_args =[]
+    if (  drv["buildInChroot"]) and (  drv['symlinkBuldInputs']):
+        bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
+        
+    for bi_drv in drv["buildInputDrvs"]:
+        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+        
+        if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
+            print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
+            util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
+            continue
+
+
+        bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
+        sysroot_dirs = bi_dest_bwrap_args['dirs']
+        sysroot_files = bi_dest_bwrap_args['files']
+        # all the dirs so the symlinks will work
+        for bi_drv_dir in sysroot_dirs:
+            dst = workdir + "/sysroot/" + bi_drv_dir 
+            
+            if os.path.isdir(dst):
+                continue
+            # maybe it is better to reverse order anf just skip if it exists
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.remove(dst)
+            os.makedirs(dst)
+
+        # create intentianlly broken symlink 
+        for sd in sysroot_files:
+            link_source =  "/pkgs/"+bi_drv  + sd
+            link_target = workdir + "/sysroot" + sd 
+            if os.path.exists(link_target) or os.path.islink(link_target):
+                print(f"removing {link_target} to link")
+                subprocess.run(["rm","-rf",link_target],check=True)
+
+            # print(f"linking {link_source} to {link_target}")
+            subprocess.run(["ln","-s",link_source,link_target  ],check=True)
+        bwrap_bi_drv_args+=["--ro-bind" , bi_dest, "/pkgs/"+ bi_drv ]
+
+    return bwrap_bi_drv_args
+
 
 def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
 
@@ -177,45 +219,7 @@ def build(h:str, pkg_drvs: dict,pkg_names:dict) -> None:
     os.makedirs(f"{workdir}/files")
 
     
-    bwrap_bi_drv_args =[]
-    if (  drv["buildInChroot"]) and (  drv['symlinkBuldInputs']):
-        bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
-        
-    for bi_drv in drv["buildInputDrvs"]:
-        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-        
-        if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
-            print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-            util_functions.copy_root(src=bi_dest + "/", dest=workdir + "/sysroot/")
-            continue
-
-
-        bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
-        sysroot_dirs = bi_dest_bwrap_args['dirs']
-        sysroot_files = bi_dest_bwrap_args['files']
-        # all the dirs so the symlinks will work
-        for bi_drv_dir in sysroot_dirs:
-            dst = workdir + "/sysroot/" + bi_drv_dir 
-            
-            if os.path.isdir(dst):
-                continue
-            # maybe it is better to reverse order anf just skip if it exists
-            if os.path.exists(dst) or os.path.islink(dst):
-                os.remove(dst)
-            os.makedirs(dst)
-
-        # create intentianlly broken symlink 
-        for sd in sysroot_files:
-            link_source =  "/pkgs/"+bi_drv  + sd
-            link_target = workdir + "/sysroot" + sd 
-            if os.path.exists(link_target) or os.path.islink(link_target):
-                print(f"removing {link_target} to link")
-                subprocess.run(["rm","-rf",link_target],check=True)
-
-            # print(f"linking {link_source} to {link_target}")
-            subprocess.run(["ln","-s",link_source,link_target  ],check=True)
-        bwrap_bi_drv_args+=["--ro-bind" , bi_dest, "/pkgs/"+ bi_drv ]
-
+    bwrap_bi_drv_args = prepare_sysroot(drv, workdir)
 
     for si_drv in drv["sourceInputDrvs"]:
         dest = si_drv["dest"]
