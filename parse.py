@@ -201,13 +201,20 @@ def test():
     name_to_sysroot = drvs["nameToSysroot"]
     # print("name_to_sysroot",name_to_sysroot)
     sysroot_drvs = drvs["sysrootDrvs"]
-    for k in drvs.keys():
-        if "buildInputs" in drvs[k].keys():
-            h = name_to_sysroot[k]
-            print("add",k, h)
-            drvs[k]["sysrootDrvHash"] = h
 
-    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],pkg_names=nbh)
+    # this is very much a workaround
+    # for k in drvs["drvByHash"].keys():
+    #     print("Key",k)
+    #     v= drvs["drvByHash"][k]
+    #     print("value",type(v))
+    #     if "buildInputDrvs" in v.keys():
+    #         h = name_to_sysroot[k]
+    #         print("add",k, h)
+    #         drvs["drvByHash"][k]["sysrootDrvHash"] = h
+
+    pkghash2sysroothash = drvs["pkghash2sysroothash"]
+
+    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],pkg_names=nbh,pkghash2sysroothash=pkghash2sysroothash)
 
 
 if __name__ == "__main__":
