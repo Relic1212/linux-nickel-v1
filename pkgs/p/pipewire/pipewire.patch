@@ -1,20 +1,3 @@
-diff --git a/meson.build b/meson.build
-index bfd47a5bc..cc4af5d23 100644
---- a/meson.build
-+++ b/meson.build
-@@ -565,9 +565,9 @@ endif
- configure_file(output : 'config.h',
-                configuration : cdata)
- 
--if get_option('pipewire-jack').allowed()
--  subdir('pipewire-jack')
--endif
-+# if get_option('pipewire-jack').allowed()
-+#   subdir('pipewire-jack')
-+# endif
- if get_option('pipewire-v4l2').allowed()
-   subdir('pipewire-v4l2')
- endif
 diff --git a/spa/plugins/support/dbus.c b/spa/plugins/support/dbus.c
 index d047fca0b..348b7d914 100644
 --- a/spa/plugins/support/dbus.c
