@@ -45,6 +45,7 @@
       "cp -r desktop-directories ${DEST}/usr/share/nwg-drawer",
       "cp -r img ${DEST}/usr/share/nwg-drawer",
       "install -m0755 drawer.css ${DEST}/usr/share/nwg-drawer",
+      "install -d -m0755 ${DEST}/usr/bin",
       "install -m0755 bin/nwg-drawer ${DEST}/usr/bin",
       "install -Dm 644 -t \"${DEST}/usr/share/licenses/nwg-drawer\" LICENSE",
       "install -Dm 644 -t \"${DEST}/usr/share/doc/nwg-drawer\" README.md",
