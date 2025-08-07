@@ -1,119 +1,1557 @@
-diff --git a/src/pipewire/conf.c b/src/pipewire/conf.c
-index 387a3ab..f2c00a8 100644
---- a/src/pipewire/conf.c
-+++ b/src/pipewire/conf.c
-@@ -601,7 +601,7 @@ static int load_module(struct pw_context *context, const char *key, const char *
- 		} else if (flags == NULL || strstr(flags, "nofail") == NULL) {
- 			pw_log_error("%p: could not load mandatory module \"%s\": %m",
- 					context, key);
--			return -errno;
-+			// return -errno;
- 		} else {
- 			pw_log_info("%p: could not load optional module \"%s\": %m",
- 					context, key);
-@@ -729,7 +729,7 @@ bool pw_conf_find_match(struct spa_json *arr, const struct spa_dict *props, bool
- 		/* empty match for condition means success */
- 		return true;
+diff --git a/meson.build b/meson.build
+index bfd47a5bc..cc4af5d23 100644
+--- a/meson.build
++++ b/meson.build
+@@ -565,9 +565,9 @@ endif
+ configure_file(output : 'config.h',
+                configuration : cdata)
  
--	return false;
-+	return true;
+-if get_option('pipewire-jack').allowed()
+-  subdir('pipewire-jack')
+-endif
++# if get_option('pipewire-jack').allowed()
++#   subdir('pipewire-jack')
++# endif
+ if get_option('pipewire-v4l2').allowed()
+   subdir('pipewire-v4l2')
+ endif
+diff --git a/spa/plugins/support/dbus.c b/spa/plugins/support/dbus.c
+index d047fca0b..348b7d914 100644
+--- a/spa/plugins/support/dbus.c
++++ b/spa/plugins/support/dbus.c
+@@ -558,10 +558,10 @@ static const struct spa_handle_factory dbus_factory = {
+ 	impl_enum_interface_info,
+ };
+ 
+-SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
++// SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
+ 
+ SPA_EXPORT
+-int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++int dbus__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
+ {
+ 	spa_return_val_if_fail(factory != NULL, -EINVAL);
+ 	spa_return_val_if_fail(index != NULL, -EINVAL);
+diff --git a/spa/plugins/support/plugin.c b/spa/plugins/support/plugin.c
+index 89e3dba51..ddea0ee8f 100644
+--- a/spa/plugins/support/plugin.c
++++ b/spa/plugins/support/plugin.c
+@@ -18,7 +18,7 @@ extern const struct spa_handle_factory spa_support_null_audio_sink_factory;
+ SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
+ 
+ SPA_EXPORT
+-int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++int support__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
+ {
+ 	spa_return_val_if_fail(factory != NULL, -EINVAL);
+ 	spa_return_val_if_fail(index != NULL, -EINVAL);
+diff --git a/src/meson.build b/src/meson.build
+index 5e5ecc4d5..d85b5027f 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -2,12 +2,12 @@
+ subdir('pipewire')
+ subdir('daemon')
+ subdir('tools')
+-subdir('modules')
+-subdir('examples')
+-if get_option('tests').allowed()
+-  subdir('tests')
+-endif
++# subdir('modules')
++# subdir('examples')
++# if get_option('tests').allowed()
++#   subdir('tests')
++# endif
+ 
+-if gst_dep.length() != 0
+-  subdir('gst')
+-endif
++# if gst_dep.length() != 0
++#   subdir('gst')
++# endif
+diff --git a/src/modules/module-access.c b/src/modules/module-access.c
+index 2e246ae91..b2ce9a776 100644
+--- a/src/modules/module-access.c
++++ b/src/modules/module-access.c
+@@ -357,7 +357,7 @@ static int parse_args(struct impl *impl, const struct pw_properties *props, cons
  }
  
- /*
-diff --git a/src/pipewire/loop.c b/src/pipewire/loop.c
-index 2e7fb47..650cebd 100644
---- a/src/pipewire/loop.c
-+++ b/src/pipewire/loop.c
-@@ -57,18 +57,18 @@ struct pw_loop *pw_loop_new(const struct spa_dict *props)
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args_str)
++int module_access__pipewire__module_init(struct pw_impl_module *module, const char *args_str)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	const struct pw_properties *props = pw_context_get_properties(context);
+diff --git a/src/modules/module-access.h b/src/modules/module-access.h
+new file mode 100644
+index 000000000..0772762b1
+--- /dev/null
++++ b/src/modules/module-access.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_ACCESS_INCLUDED
++#define MODULE_ACCESS_INCLUDED
++
++int module_access__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-adapter.c b/src/modules/module-adapter.c
+index ea913ebad..a36e52ce4 100644
+--- a/src/modules/module-adapter.c
++++ b/src/modules/module-adapter.c
+@@ -26,8 +26,8 @@
+  */
+ #define NAME "adapter"
  
- 	this = &impl->this;
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++// PW_LOG_TOPIC(mod_topic, "mod." NAME);
++// #define PW_LOG_TOPIC_DEFAULT mod_topic
  
--	if (props)
--		lib = spa_dict_lookup(props, PW_KEY_LIBRARY_NAME_SYSTEM);
--	else
-+	//if (props)
-+	//	lib = spa_dict_lookup(props, PW_KEY_LIBRARY_NAME_SYSTEM);
-+	//else
- 		lib = NULL;
+ #define FACTORY_USAGE	SPA_KEY_FACTORY_NAME"=<factory-name> " \
+ 			"("SPA_KEY_LIBRARY_NAME"=<library-name>) " \
+@@ -359,13 +359,13 @@ static const struct pw_impl_module_events module_events = {
+ };
  
- 	impl->system_handle = pw_load_spa_handle(lib,
- 			SPA_NAME_SUPPORT_SYSTEM,
- 			props, n_support, support);
- 	if (impl->system_handle == NULL) {
--		res = -errno;
-+		// res = -errno;
- 		pw_log_error("%p: can't make "SPA_NAME_SUPPORT_SYSTEM" handle: %m", this);
--		goto error_free;
-+		// goto error_free;
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_adapter__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+ 	struct factory_data *data;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	// PW_LOG_TOPIC_INIT(mod_topic);
+ 
+ 	factory = pw_context_create_factory(context,
+ 				 "adapter",
+diff --git a/src/modules/module-adapter.h b/src/modules/module-adapter.h
+new file mode 100644
+index 000000000..d79045a42
+--- /dev/null
++++ b/src/modules/module-adapter.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_ADAPTER_INCLUDED
++#define MODULE_ADAPTER_INCLUDED
++
++int module_adapter__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-client-device.c b/src/modules/module-client-device.c
+index 84b8456b2..e4d57512c 100644
+--- a/src/modules/module-client-device.c
++++ b/src/modules/module-client-device.c
+@@ -221,7 +221,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_client_device__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+diff --git a/src/modules/module-client-device.h b/src/modules/module-client-device.h
+new file mode 100644
+index 000000000..dd5ded953
+--- /dev/null
++++ b/src/modules/module-client-device.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_CLIENT_DEVICE_INCLUDED
++#define MODULE_CLIENT_DEVICE_INCLUDED
++
++int module_client_device__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-client-node.c b/src/modules/module-client-node.c
+index dc978084d..410975154 100644
+--- a/src/modules/module-client-node.c
++++ b/src/modules/module-client-node.c
+@@ -93,8 +93,8 @@
+ 
+ #define NAME "client-node"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++// PW_LOG_TOPIC(mod_topic, "mod." NAME);
++// #define PW_LOG_TOPIC_DEFAULT mod_topic
+ 
+ static const struct spa_dict_item module_props[] = {
+ 	{ PW_KEY_MODULE_AUTHOR, "Wim Taymans <wim.taymans@gmail.com>" },
+@@ -226,14 +226,14 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_client_node__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+ 	struct factory_data *data;
+ 	int res;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	// PW_LOG_TOPIC_INIT(mod_topic);
+ 
+ 	factory = pw_context_create_factory(context,
+ 				 "client-node",
+diff --git a/src/modules/module-client-node.h b/src/modules/module-client-node.h
+new file mode 100644
+index 000000000..c8c1b6457
+--- /dev/null
++++ b/src/modules/module-client-node.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_CLIENT_NODE_INCLUDED
++#define MODULE_CLIENT_NODE_INCLUDED
++
++int module_client_node__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-combine-stream.c b/src/modules/module-combine-stream.c
+index 38f3b0ae2..15dd1a5d1 100644
+--- a/src/modules/module-combine-stream.c
++++ b/src/modules/module-combine-stream.c
+@@ -1511,7 +1511,7 @@ static void copy_props(const struct pw_properties *props, struct pw_properties *
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_combine_stream__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-combine-stream.h b/src/modules/module-combine-stream.h
+new file mode 100644
+index 000000000..b3b206b42
+--- /dev/null
++++ b/src/modules/module-combine-stream.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_COMBINE_STREAM_INCLUDED
++#define MODULE_COMBINE_STREAM_INCLUDED
++
++int module_combine_stream__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-echo-cancel.c b/src/modules/module-echo-cancel.c
+index 113a89cea..c9816f8ff 100644
+--- a/src/modules/module-echo-cancel.c
++++ b/src/modules/module-echo-cancel.c
+@@ -1232,7 +1232,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_echo_cancel__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props, *aec_props;
+diff --git a/src/modules/module-echo-cancel.h b/src/modules/module-echo-cancel.h
+new file mode 100644
+index 000000000..9b84ec15c
+--- /dev/null
++++ b/src/modules/module-echo-cancel.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_ECHO_CANCEL_INCLUDED
++#define MODULE_ECHO_CANCEL_INCLUDED
++
++int module_echo_cancel__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-fallback-sink.c b/src/modules/module-fallback-sink.c
+index 86982e624..192065065 100644
+--- a/src/modules/module-fallback-sink.c
++++ b/src/modules/module-fallback-sink.c
+@@ -364,7 +364,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_fallback_sink__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-fallback-sink.h b/src/modules/module-fallback-sink.h
+new file mode 100644
+index 000000000..a4ff6c0a0
+--- /dev/null
++++ b/src/modules/module-fallback-sink.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_FALLBACK_SINK_INCLUDED
++#define MODULE_FALLBACK_SINK_INCLUDED
++
++int module_fallback_sink__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-filter-chain.c b/src/modules/module-filter-chain.c
+index 85b1bae8d..4d4ae82ac 100644
+--- a/src/modules/module-filter-chain.c
++++ b/src/modules/module-filter-chain.c
+@@ -1440,7 +1440,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_filter_chain__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	const struct pw_properties *p;
+diff --git a/src/modules/module-filter-chain.h b/src/modules/module-filter-chain.h
+new file mode 100644
+index 000000000..4035d2d4c
+--- /dev/null
++++ b/src/modules/module-filter-chain.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_FILTER_CHAIN_INCLUDED
++#define MODULE_FILTER_CHAIN_INCLUDED
++
++int module_filter_chain__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-link-factory.c b/src/modules/module-link-factory.c
+index ca2b8a75c..98f69afdf 100644
+--- a/src/modules/module-link-factory.c
++++ b/src/modules/module-link-factory.c
+@@ -619,7 +619,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_link_factory__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+diff --git a/src/modules/module-link-factory.h b/src/modules/module-link-factory.h
+new file mode 100644
+index 000000000..86e777190
+--- /dev/null
++++ b/src/modules/module-link-factory.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_LINK_FACTORY_INCLUDED
++#define MODULE_LINK_FACTORY_INCLUDED
++
++int module_link_factory__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-loopback.c b/src/modules/module-loopback.c
+index f4b068be7..747f87611 100644
+--- a/src/modules/module-loopback.c
++++ b/src/modules/module-loopback.c
+@@ -875,7 +875,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_loopback__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props;
+diff --git a/src/modules/module-loopback.h b/src/modules/module-loopback.h
+new file mode 100644
+index 000000000..bde8090aa
+--- /dev/null
++++ b/src/modules/module-loopback.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_LOOPBACK_INCLUDED
++#define MODULE_LOOPBACK_INCLUDED
++
++int module_loopback__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-metadata.c b/src/modules/module-metadata.c
+index a1255da30..cffb33b45 100644
+--- a/src/modules/module-metadata.c
++++ b/src/modules/module-metadata.c
+@@ -316,7 +316,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_metadata__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+diff --git a/src/modules/module-metadata.h b/src/modules/module-metadata.h
+new file mode 100644
+index 000000000..0352f0fbf
+--- /dev/null
++++ b/src/modules/module-metadata.h
+@@ -0,0 +1,9 @@
++
++
++
++#ifndef MODULE_METADATA_INCLUDED
++#define MODULE_METADATA_INCLUDED
++
++int module_metadata__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
+\ No newline at end of file
+diff --git a/src/modules/module-netjack2-driver.c b/src/modules/module-netjack2-driver.c
+index 011052e7b..2fc4cc02c 100644
+--- a/src/modules/module-netjack2-driver.c
++++ b/src/modules/module-netjack2-driver.c
+@@ -1240,7 +1240,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_netjack2_driver__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-netjack2-driver.h b/src/modules/module-netjack2-driver.h
+new file mode 100644
+index 000000000..732f45f1f
+--- /dev/null
++++ b/src/modules/module-netjack2-driver.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_NETJACK2_DRIVER_INCLUDED
++#define MODULE_NETJACK2_DRIVER_INCLUDED
++
++int module_netjack2_driver__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-netjack2-manager.c b/src/modules/module-netjack2-manager.c
+index fe482fd94..26cd99de7 100644
+--- a/src/modules/module-netjack2-manager.c
++++ b/src/modules/module-netjack2-manager.c
+@@ -1312,7 +1312,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_netjack2_manager__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-netjack2-manager.h b/src/modules/module-netjack2-manager.h
+new file mode 100644
+index 000000000..aeea9b7c9
+--- /dev/null
++++ b/src/modules/module-netjack2-manager.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_NETJACK2_MANAGER_INCLUDED
++#define MODULE_NETJACK2_MANAGER_INCLUDED
++
++int module_netjack2_manager__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-parametric-equalizer.c b/src/modules/module-parametric-equalizer.c
+index 315662f82..00404319e 100644
+--- a/src/modules/module-parametric-equalizer.c
++++ b/src/modules/module-parametric-equalizer.c
+@@ -307,7 +307,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_parametric_equalizer__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-parametric-equalizer.h b/src/modules/module-parametric-equalizer.h
+new file mode 100644
+index 000000000..6c0b506d2
+--- /dev/null
++++ b/src/modules/module-parametric-equalizer.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_PARAMETRIC_EQUALIZER_INCLUDED
++#define MODULE_PARAMETRIC_EQUALIZER_INCLUDED
++
++int module_parametric_equalizer__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-pipe-tunnel.c b/src/modules/module-pipe-tunnel.c
+index afc8e0f14..17e4827d9 100644
+--- a/src/modules/module-pipe-tunnel.c
++++ b/src/modules/module-pipe-tunnel.c
+@@ -803,7 +803,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_pipe_tunnel__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+diff --git a/src/modules/module-pipe-tunnel.h b/src/modules/module-pipe-tunnel.h
+new file mode 100644
+index 000000000..ae5052404
+--- /dev/null
++++ b/src/modules/module-pipe-tunnel.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_PIPE_TUNNEL_INCLUDED
++#define MODULE_PIPE_TUNNEL_INCLUDED
++
++int module_pipe_tunnel__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-portal.c b/src/modules/module-portal.c
+index 566e67d4b..c8f207ba9 100644
+--- a/src/modules/module-portal.c
++++ b/src/modules/module-portal.c
+@@ -273,7 +273,7 @@ static int init_dbus_connection(struct impl *impl)
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_portal__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+diff --git a/src/modules/module-portal.h b/src/modules/module-portal.h
+new file mode 100644
+index 000000000..9318ba075
+--- /dev/null
++++ b/src/modules/module-portal.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_PORTAL_INCLUDED
++#define MODULE_PORTAL_INCLUDED
++
++int module_portal__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-profiler.c b/src/modules/module-profiler.c
+index ec8c5c7f0..5ddb7de85 100644
+--- a/src/modules/module-profiler.c
++++ b/src/modules/module-profiler.c
+@@ -23,6 +23,8 @@
+ #include <pipewire/impl.h>
+ #include <pipewire/extensions/profiler.h>
+ 
++#include "modules/module-profiler.h"
++
+ /** \page page_module_profiler Profiler
+  *
+  * The profiler module provides a Profiler interface for applications that
+@@ -76,8 +78,8 @@
+ 
+ #define NAME "profiler"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++// PW_LOG_TOPIC(mod_topic, "mod." NAME);
++// #define PW_LOG_TOPIC_DEFAULT mod_topic
+ 
+ #define TMP_BUFFER		(16 * 1024)
+ #define DATA_BUFFER		(32 * 1024)
+@@ -505,13 +507,13 @@ static const struct pw_global_events global_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_profiler__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props;
+ 	struct impl *impl;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	// PW_LOG_TOPIC_INIT(mod_topic);
+ 
+ 	impl = calloc(1, sizeof(struct impl));
+ 	if (impl == NULL)
+diff --git a/src/modules/module-profiler.h b/src/modules/module-profiler.h
+new file mode 100644
+index 000000000..b6872e4b5
+--- /dev/null
++++ b/src/modules/module-profiler.h
+@@ -0,0 +1,8 @@
++
++
++#ifndef MODULE_PROFILER_INCLUDED
++#define MODULE_PROFILER_INCLUDED
++
++int module_profiler__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
+\ No newline at end of file
+diff --git a/src/modules/module-protocol-native.c b/src/modules/module-protocol-native.c
+index c7536bd0f..ef2fd6db1 100644
+--- a/src/modules/module-protocol-native.c
++++ b/src/modules/module-protocol-native.c
+@@ -52,6 +52,7 @@
+ #include "modules/module-protocol-native/defs.h"
+ #include "modules/module-protocol-native/protocol-footer.h"
+ 
++#include "modules/module-protocol-native.h"
+ 
+ #define NAME "protocol-native"
+ PW_LOG_TOPIC(mod_topic, "mod." NAME);
+@@ -1800,7 +1801,7 @@ error_invalid:
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args_str)
++int module_protocol__pipewire__module_init(struct pw_impl_module *module, const char *args_str)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_protocol *this;
+diff --git a/src/modules/module-protocol-native.h b/src/modules/module-protocol-native.h
+new file mode 100644
+index 000000000..85e21a29c
+--- /dev/null
++++ b/src/modules/module-protocol-native.h
+@@ -0,0 +1,8 @@
++
++
++#ifndef MODULE_PROTCOL_INCLUDED
++#define MODULE_PROTCOL_INCLUDED
++
++int module_protocol__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
+\ No newline at end of file
+diff --git a/src/modules/module-protocol-pulse.c b/src/modules/module-protocol-pulse.c
+index ea5eb6cbe..5667e18bb 100644
+--- a/src/modules/module-protocol-pulse.c
++++ b/src/modules/module-protocol-pulse.c
+@@ -398,8 +398,8 @@
+ 
+ #define NAME "protocol-pulse"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++PW_LOG_TOPIC(mod_topic_pulse, "mod." NAME);
++#define PW_LOG_TOPIC_DEFAULT mod_topic_pulse
+ PW_LOG_TOPIC(pulse_conn, "conn." NAME);
+ PW_LOG_TOPIC(pulse_ext_dev_restore, "mod." NAME ".device-restore");
+ PW_LOG_TOPIC(pulse_ext_stream_restore, "mod." NAME ".stream-restore");
+@@ -442,14 +442,14 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_protocol_pulse__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props;
+ 	struct impl *impl;
+ 	int res;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	PW_LOG_TOPIC_INIT(mod_topic_pulse);
+ 	PW_LOG_TOPIC_INIT(pulse_conn);
+ 	/* it's easier to init these here than adding an init() call to the
+ 	 * extensions */
+diff --git a/src/modules/module-protocol-pulse.h b/src/modules/module-protocol-pulse.h
+new file mode 100644
+index 000000000..e0b620263
+--- /dev/null
++++ b/src/modules/module-protocol-pulse.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_PROTOCOL_PULSE_INCLUDED
++#define MODULE_PROTOCOL_PULSE_INCLUDED
++
++int module_protocol_pulse__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-protocol-simple.c b/src/modules/module-protocol-simple.c
+index bbed3b5f7..a5c76ed22 100644
+--- a/src/modules/module-protocol-simple.c
++++ b/src/modules/module-protocol-simple.c
+@@ -949,7 +949,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_protocol_simple__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props;
+diff --git a/src/modules/module-protocol-simple.h b/src/modules/module-protocol-simple.h
+new file mode 100644
+index 000000000..b44eaaabf
+--- /dev/null
++++ b/src/modules/module-protocol-simple.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_PROTOCOL_SIMPLE_INCLUDED
++#define MODULE_PROTOCOL_SIMPLE_INCLUDED
++
++int module_protocol_simple__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-rt.c b/src/modules/module-rt.c
+index b2d0739cf..01f845959 100644
+--- a/src/modules/module-rt.c
++++ b/src/modules/module-rt.c
+@@ -1069,7 +1069,7 @@ static int set_uclamp(int uclamp_min, int uclamp_max, pid_t pid) {
+ 
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_rt__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+diff --git a/src/modules/module-rt.h b/src/modules/module-rt.h
+new file mode 100644
+index 000000000..1332f9285
+--- /dev/null
++++ b/src/modules/module-rt.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RT_INCLUDED
++#define MODULE_RT_INCLUDED
++
++int module_rt__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-rtkit.h b/src/modules/module-rtkit.h
+new file mode 100644
+index 000000000..1c4bf5a40
+--- /dev/null
++++ b/src/modules/module-rtkit.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RTKIT_INCLUDED
++#define MODULE_RTKIT_INCLUDED
++
++int module_rtkit__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-rtp-sap.c b/src/modules/module-rtp-sap.c
+index 9eeb85024..383c5da4e 100644
+--- a/src/modules/module-rtp-sap.c
++++ b/src/modules/module-rtp-sap.c
+@@ -1827,7 +1827,7 @@ static const struct pw_core_events core_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_rtp_sap__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+diff --git a/src/modules/module-rtp-sap.h b/src/modules/module-rtp-sap.h
+new file mode 100644
+index 000000000..ef9fc85d1
+--- /dev/null
++++ b/src/modules/module-rtp-sap.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RTP_SAP_INCLUDED
++#define MODULE_RTP_SAP_INCLUDED
++
++int module_rtp_sap__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-rtp-sink.c b/src/modules/module-rtp-sink.c
+index 7abd4d531..34cb6cd7c 100644
+--- a/src/modules/module-rtp-sink.c
++++ b/src/modules/module-rtp-sink.c
+@@ -120,8 +120,8 @@
+ 
+ #define NAME "rtp-sink"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++// PW_LOG_TOPIC(mod_topic, "mod." NAME);
++// #define PW_LOG_TOPIC_DEFAULT mod_topic
+ 
+ #define DEFAULT_PORT		46000
+ #define DEFAULT_SOURCE_IP	"0.0.0.0"
+@@ -478,7 +478,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_rtp_sink__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+@@ -489,7 +489,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
+ 	int res = 0;
+ 	uint32_t header_size;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	// PW_LOG_TOPIC_INIT(mod_topic);
+ 
+ 	impl = calloc(1, sizeof(struct impl));
+ 	if (impl == NULL)
+diff --git a/src/modules/module-rtp-sink.h b/src/modules/module-rtp-sink.h
+new file mode 100644
+index 000000000..0c5dc4611
+--- /dev/null
++++ b/src/modules/module-rtp-sink.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RTP_SINK_INCLUDED
++#define MODULE_RTP_SINK_INCLUDED
++
++int module_rtp_sink__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-rtp-source.c b/src/modules/module-rtp-source.c
+index 98a26065a..1b9fe048f 100644
+--- a/src/modules/module-rtp-source.c
++++ b/src/modules/module-rtp-source.c
+@@ -108,8 +108,8 @@
+ 
+ #define NAME "rtp-source"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++// PW_LOG_TOPIC(mod_topic, "mod." NAME);
++// #define PW_LOG_TOPIC_DEFAULT mod_topic
+ 
+ #define DEFAULT_CLEANUP_SEC		60
+ #define DEFAULT_SOURCE_IP		"224.0.0.56"
+@@ -554,7 +554,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_rtp_source__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+@@ -566,7 +566,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
+ 	int res = 0;
+ 	uint32_t header_size;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	// PW_LOG_TOPIC_INIT(mod_topic);
+ 
+ 	impl = calloc(1, sizeof(struct impl));
+ 	if (impl == NULL)
+diff --git a/src/modules/module-rtp-source.h b/src/modules/module-rtp-source.h
+new file mode 100644
+index 000000000..c7c596f95
+--- /dev/null
++++ b/src/modules/module-rtp-source.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RTP_SOURCE_INCLUDED
++#define MODULE_RTP_SOURCE_INCLUDED
++
++int module_rtp_source__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-session-manager.c b/src/modules/module-session-manager.c
+index 585947258..17b68fd01 100644
+--- a/src/modules/module-session-manager.c
++++ b/src/modules/module-session-manager.c
+@@ -37,7 +37,7 @@ static const struct spa_dict_item module_props[] = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_session_manager__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	int res;
+diff --git a/src/modules/module-session-manager.h b/src/modules/module-session-manager.h
+new file mode 100644
+index 000000000..670b65a8e
+--- /dev/null
++++ b/src/modules/module-session-manager.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_SESSION_MANAGER_INCLUDED
++#define MODULE_SESSION_MANAGER_INCLUDED
++
++int module_session_manager__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-spa-device-factory.c b/src/modules/module-spa-device-factory.c
+index eb8d2436a..dac60a676 100644
+--- a/src/modules/module-spa-device-factory.c
++++ b/src/modules/module-spa-device-factory.c
+@@ -230,7 +230,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_spa_device_factory__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+diff --git a/src/modules/module-spa-device-factory.h b/src/modules/module-spa-device-factory.h
+new file mode 100644
+index 000000000..d8d7c9da0
+--- /dev/null
++++ b/src/modules/module-spa-device-factory.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_SPA_DEVICE_FACTORY_INCLUDED
++#define MODULE_SPA_DEVICE_FACTORY_INCLUDED
++
++int module_spa_device_factory__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-spa-device.c b/src/modules/module-spa-device.c
+index 2d62ffb50..cda988152 100644
+--- a/src/modules/module-spa-device.c
++++ b/src/modules/module-spa-device.c
+@@ -52,7 +52,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_spa_device__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_properties *props = NULL;
+ 	spa_auto(pw_strv) argv = NULL;
+diff --git a/src/modules/module-spa-device.h b/src/modules/module-spa-device.h
+new file mode 100644
+index 000000000..177d38ab7
+--- /dev/null
++++ b/src/modules/module-spa-device.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_SPA_DEVICE_INCLUDED
++#define MODULE_SPA_DEVICE_INCLUDED
++
++int module_spa_device__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-spa-node-factory.c b/src/modules/module-spa-node-factory.c
+index 0f9a97020..e88a73067 100644
+--- a/src/modules/module-spa-node-factory.c
++++ b/src/modules/module-spa-node-factory.c
+@@ -338,7 +338,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_spa_node_factory__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_impl_factory *factory;
+diff --git a/src/modules/module-spa-node-factory.h b/src/modules/module-spa-node-factory.h
+new file mode 100644
+index 000000000..c901f884e
+--- /dev/null
++++ b/src/modules/module-spa-node-factory.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_SPA_NODE_FACTORY_INCLUDED
++#define MODULE_SPA_NODE_FACTORY_INCLUDED
++
++int module_spa_node_factory__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-spa-node.c b/src/modules/module-spa-node.c
+index 75009bc11..309efc361 100644
+--- a/src/modules/module-spa-node.c
++++ b/src/modules/module-spa-node.c
+@@ -53,7 +53,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_spa_node__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_properties *props = NULL;
+ 	spa_auto(pw_strv) argv = NULL;
+diff --git a/src/modules/module-spa-node.h b/src/modules/module-spa-node.h
+new file mode 100644
+index 000000000..d1a39d26b
+--- /dev/null
++++ b/src/modules/module-spa-node.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_SPA_NODE_INCLUDED
++#define MODULE_SPA_NODE_INCLUDED
++
++int module_spa_node__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-vban-recv.c b/src/modules/module-vban-recv.c
+index 902057965..fb3912069 100644
+--- a/src/modules/module-vban-recv.c
++++ b/src/modules/module-vban-recv.c
+@@ -653,7 +653,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_vban_recv__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct impl *impl;
+diff --git a/src/modules/module-vban-recv.h b/src/modules/module-vban-recv.h
+new file mode 100644
+index 000000000..ea447d17e
+--- /dev/null
++++ b/src/modules/module-vban-recv.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_VBAN_RECV_INCLUDED
++#define MODULE_VBAN_RECV_INCLUDED
++
++int module_vban_recv__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-vban-send.c b/src/modules/module-vban-send.c
+index 5fc6793a1..0b25fcaa5 100644
+--- a/src/modules/module-vban-send.c
++++ b/src/modules/module-vban-send.c
+@@ -352,7 +352,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_vban_send__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	uint32_t id = pw_global_get_id(pw_impl_module_get_global(module));
+diff --git a/src/modules/module-vban-send.h b/src/modules/module-vban-send.h
+new file mode 100644
+index 000000000..48e5831d2
+--- /dev/null
++++ b/src/modules/module-vban-send.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_VBAN_SEND_INCLUDED
++#define MODULE_VBAN_SEND_INCLUDED
++
++int module_vban_send__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/pipewire/impl-module.c b/src/pipewire/impl-module.c
+index 10aa432fe..adbd702a1 100644
+--- a/src/pipewire/impl-module.c
++++ b/src/pipewire/impl-module.c
+@@ -20,6 +20,40 @@
+ #include "pipewire/impl.h"
+ #include "pipewire/private.h"
+ 
++#include "modules/module-protocol-native.h"
++#include "modules/module-profiler.h"
++#include "modules/module-metadata.h"
++
++#include "modules/module-access.h"
++#include "modules/module-adapter.h"
++#include "modules/module-client-device.h"
++#include "modules/module-client-node.h"
++#include "modules/module-combine-stream.h"
++// #include "modules/module-echo-cancel.h"
++#include "modules/module-fallback-sink.h"
++#include "modules/module-filter-chain.h"
++#include "modules/module-link-factory.h"
++#include "modules/module-loopback.h"
++#include "modules/module-netjack2-driver.h"
++#include "modules/module-netjack2-manager.h"
++#include "modules/module-parametric-equalizer.h"
++#include "modules/module-pipe-tunnel.h"
++#include "modules/module-portal.h"
++// #include "modules/module-protocol-pulse.h"
++#include "modules/module-protocol-simple.h"
++#include "modules/module-rt.h"
++// #include "modules/module-rtkit.h"
++#include "modules/module-rtp-sap.h"
++#include "modules/module-rtp-sink.h"
++#include "modules/module-rtp-source.h"
++#include "modules/module-session-manager.h"
++#include "modules/module-spa-device-factory.h"
++#include "modules/module-spa-device.h"
++#include "modules/module-spa-node-factory.h"
++#include "modules/module-spa-node.h"
++#include "modules/module-vban-recv.h"
++#include "modules/module-vban-send.h"
++
+ PW_LOG_TOPIC_EXTERN(log_module);
+ #define PW_LOG_TOPIC_DEFAULT log_module
+ 
+@@ -165,30 +199,145 @@ pw_context_load_module(struct pw_context *context,
+ 		pw_log_debug("PIPEWIRE_MODULE_DIR set to: %s", module_dir);
  	}
  
-         if ((res = spa_handle_get_interface(impl->system_handle,
+-	while ((p = pw_split_walk(module_dir, ":", &len, &state))) {
+-		if ((res = spa_scnprintf(path_part, sizeof(path_part), "%.*s", (int)len, p)) > 0) {
+-			filename = find_module(path_part, name, 8);
+-			if (filename != NULL) {
+-				pw_log_debug("trying to load module: %s (%s) args(%s)", name, filename, args);
++	hnd = NULL;
+ 
+-				hnd = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
+-				if (hnd != NULL)
+-					break;
++	pw_log_info("name: \"%s\"", name);
++	
++	if (strcmp(spa_aprintf("%s", name), spa_aprintf("libpipewire-module-protocol-native")) == 0) {
++		pw_log_info("Registering function for \"%s\"", name);
+ 
+-				pw_log_debug("open failed: %s", dlerror());
+-				free(filename);
+-				filename = NULL;
+-			}
+-		}
+-	}
++		init_func = &module_protocol__pipewire__module_init;
+ 
+-	if (filename == NULL)
+-		goto error_not_found;
+-	if (hnd == NULL)
+-		goto error_open_failed;
++	} 
++	else if (strcmp(name, "libpipewire-module-profiler") == 0) {
++		init_func = &module_profiler__pipewire__module_init;
++
++	} 
++		else if (strcmp(name, "libpipewire-module-metadata") == 0) {
++		init_func = &module_metadata__pipewire__module_init;
++	} 
++
++	if (strcmp(name, "libpipewire-module-access") == 0) {
++		init_func = &module_access__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-adapter") == 0) {
++		init_func = &module_adapter__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-client-device") == 0) {
++		init_func = &module_client_device__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-client-node") == 0) {
++		init_func = &module_client_node__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-combine-stream") == 0) {
++		init_func = &module_combine_stream__pipewire__module_init;
++
++	} 
++	// else if (strcmp(name, "libpipewire-module-echo-cancel") == 0) {
++	// 	init_func = &module_echo_cancel__pipewire__module_init;
++
++	// } 
++	else if (strcmp(name, "libpipewire-module-fallback-sink") == 0) {
++		init_func = &module_fallback_sink__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-filter-chain") == 0) {
++		init_func = &module_filter_chain__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-link-factory") == 0) {
++		init_func = &module_link_factory__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-loopback") == 0) {
++		init_func = &module_loopback__pipewire__module_init;
++
++	} 
++
++	else if (strcmp(name, "libpipewire-module-netjack2-driver") == 0) {
++		init_func = &module_netjack2_driver__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-netjack2-manager") == 0) {
++		init_func = &module_netjack2_manager__pipewire__module_init;
+ 
+-	if ((init_func = dlsym(hnd, PIPEWIRE_SYMBOL_MODULE_INIT)) == NULL)
+-		goto error_no_pw_module;
++	} 
++	else if (strcmp(name, "libpipewire-module-parametric-equalizer") == 0) {
++		init_func = &module_parametric_equalizer__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-pipe-tunnel") == 0) {
++		init_func = &module_pipe_tunnel__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-portal") == 0) {
++		init_func = &module_portal__pipewire__module_init;
++
++	} 
++	// else if (strcmp(name, "libpipewire-module-protocol-pulse") == 0) {
++	// 	init_func = &module_protocol_pulse__pipewire__module_init;
++
++	// } 
++	else if (strcmp(name, "libpipewire-module-protocol-simple") == 0) {
++		init_func = &module_protocol_simple__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-rt") == 0) {
++		init_func = &module_rt__pipewire__module_init;
++
++	} 
++	// else if (strcmp(name, "libpipewire-module-rtkit") == 0) {
++	// 	init_func = &module_rtkit__pipewire__module_init;
++
++	// } 
++	else if (strcmp(name, "libpipewire-module-rtp-sap") == 0) {
++		init_func = &module_rtp_sap__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-rtp-sink") == 0) {
++		init_func = &module_rtp_sink__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-rtp-source") == 0) {
++		init_func = &module_rtp_source__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-session-manager") == 0) {
++		init_func = &module_session_manager__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-spa-device-factory") == 0) {
++		init_func = &module_spa_device_factory__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-spa-device") == 0) {
++		init_func = &module_spa_device__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-spa-node-factory") == 0) {
++		init_func = &module_spa_node_factory__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-spa-node") == 0) {
++		init_func = &module_spa_node__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-vban-recv") == 0) {
++		init_func = &module_vban_recv__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-vban-send") == 0) {
++		init_func = &module_vban_send__pipewire__module_init;
++
++	}  
++	else {
++		pw_log_info("name: \"%s\" not a built-in library", name);
++		
++	}
+ 
+ 	if (properties == NULL)
+ 		properties = pw_properties_new(NULL, NULL);
 diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
-index 900f13e..5ad96fe 100644
+index b19631a92..4e1cd1303 100644
 --- a/src/pipewire/meson.build
 +++ b/src/pipewire/meson.build
-@@ -106,7 +106,7 @@ libpipewire = library(pipewire_name, pipewire_sources,
+@@ -100,13 +100,196 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
+   ]
+ endif
+ 
++
++
++
++pipewire_sources +=   [ '../modules/module-protocol-native.c',
++    '../modules/module-protocol-native/local-socket.c',
++    '../modules/module-protocol-native/portal-screencast.c',
++    '../modules/module-protocol-native/protocol-native.c',
++    '../modules/module-protocol-native/v0/protocol-native.c',
++    '../modules/module-protocol-native/protocol-footer.c',
++    '../modules/module-protocol-native/security-context.c',
++    '../modules/module-protocol-native/connection.c' 
++    
++    ]
++
++pipewire_sources +=   [ '../modules/module-profiler.c',
++    '../modules/module-profiler/protocol-native.c', ]
++
++pipewire_sources +=  [ '../modules/module-metadata.c',
++    '../modules/module-metadata/proxy-metadata.c',
++    '../modules/module-metadata/metadata.c',
++    '../modules/module-metadata/protocol-native.c']
++
++pipewire_sources +=   [ '../modules/module-spa-device-factory.c', '../modules/spa/spa-device.c' ]
++
++pipewire_sources +=   [ '../modules/module-spa-node-factory.c', '../modules/spa/spa-node.c' ]
++
++pipewire_sources +=   [ '../modules/module-spa-node.c', '../modules/spa/spa-node.c' ]
++
++pipewire_sources +=   [ '../modules/module-spa-device.c', '../modules/spa/spa-device.c' ]
++
++pipewire_sources += [ '../modules/module-access.c' ]
++
++pipewire_sources +=   [ '../modules/module-loopback.c' ]
++
++pipewire_sources +=   [ '../modules/module-filter-chain.c' ]
++
++pipewire_sources +=  [ '../modules/module-combine-stream.c' ]
++
++pipewire_sources +=   [ '../modules/module-echo-cancel.c' ]
++
++pipewire_sources +=   [ '../modules/module-parametric-equalizer.c' ]
++
++pipewire_sources += [ '../modules/module-rt.c' ]
++
++
++pipewire_sources += [ '../modules/module-portal.c' ]
++
++pipewire_sources += [ '../modules/module-client-device.c',
++    '../modules/module-client-device/resource-device.c',
++    '../modules/module-client-device/proxy-device.c',
++    '../modules/module-client-device/protocol-native.c', ]
++
++pipewire_sources +=   [ '../modules/module-link-factory.c' ]
++
++
++pipewire_sources += [
++  '../modules/module-protocol-pulse.c',
++  '../modules/module-protocol-pulse/client.c',
++  '../modules/module-protocol-pulse/collect.c',
++  '../modules/module-protocol-pulse/cmd.c',
++  '../modules/module-protocol-pulse/extension.c',
++  '../modules/module-protocol-pulse/format.c',
++  '../modules/module-protocol-pulse/manager.c',
++  '../modules/module-protocol-pulse/message.c',
++  '../modules/module-protocol-pulse/message-handler.c',
++  '../modules/module-protocol-pulse/module.c',
++  '../modules/module-protocol-pulse/operation.c',
++  '../modules/module-protocol-pulse/pending-sample.c',
++  '../modules/module-protocol-pulse/pulse-server.c',
++  '../modules/module-protocol-pulse/quirks.c',
++  '../modules/module-protocol-pulse/remap.c',
++  '../modules/module-protocol-pulse/reply.c',
++  '../modules/module-protocol-pulse/sample.c',
++  '../modules/module-protocol-pulse/sample-play.c',
++  '../modules/module-protocol-pulse/server.c',
++  '../modules/module-protocol-pulse/stream.c',
++  '../modules/module-protocol-pulse/utils.c',
++  '../modules/module-protocol-pulse/volume.c',
++  '../modules/module-protocol-pulse/modules/module-alsa-sink.c',
++  '../modules/module-protocol-pulse/modules/module-alsa-source.c',
++  '../modules/module-protocol-pulse/modules/module-always-sink.c',
++  '../modules/module-protocol-pulse/modules/module-combine-sink.c',
++  '../modules/module-protocol-pulse/modules/module-device-manager.c',
++  '../modules/module-protocol-pulse/modules/module-device-restore.c',
++  '../modules/module-protocol-pulse/modules/module-echo-cancel.c',
++  '../modules/module-protocol-pulse/modules/module-jackdbus-detect.c',
++  '../modules/module-protocol-pulse/modules/module-ladspa-sink.c',
++  '../modules/module-protocol-pulse/modules/module-ladspa-source.c',
++  '../modules/module-protocol-pulse/modules/module-loopback.c',
++  '../modules/module-protocol-pulse/modules/module-native-protocol-tcp.c',
++  '../modules/module-protocol-pulse/modules/module-null-sink.c',
++  '../modules/module-protocol-pulse/modules/module-pipe-source.c',
++  '../modules/module-protocol-pulse/modules/module-pipe-sink.c',
++  '../modules/module-protocol-pulse/modules/module-raop-discover.c',
++  '../modules/module-protocol-pulse/modules/module-remap-sink.c',
++  '../modules/module-protocol-pulse/modules/module-remap-source.c',
++  '../modules/module-protocol-pulse/modules/module-roc-sink.c',
++  '../modules/module-protocol-pulse/modules/module-roc-sink-input.c',
++  '../modules/module-protocol-pulse/modules/module-roc-source.c',
++  '../modules/module-protocol-pulse/modules/module-rtp-recv.c',
++  '../modules/module-protocol-pulse/modules/module-rtp-send.c',
++  '../modules/module-protocol-pulse/modules/module-simple-protocol-tcp.c',
++  '../modules/module-protocol-pulse/modules/module-stream-restore.c',
++  '../modules/module-protocol-pulse/modules/module-switch-on-connect.c',
++  '../modules/module-protocol-pulse/modules/module-tunnel-sink.c',
++  '../modules/module-protocol-pulse/modules/module-tunnel-source.c',
++  '../modules/module-protocol-pulse/modules/module-virtual-sink.c',
++  '../modules/module-protocol-pulse/modules/module-virtual-source.c',
++  '../modules/module-protocol-pulse/modules/module-x11-bell.c',
++  '../modules/module-protocol-pulse/modules/module-zeroconf-discover.c',
++]
++
++
++pipewire_sources += [ '../modules/module-protocol-pulse/dbus-name.c',]
++
++pipewire_sources +=   [ '../modules/module-pipe-tunnel.c' ]
++
++pipewire_sources +=   [ '../modules/module-protocol-simple.c' ]
++
++
++
++pipewire_sources +=  [ '../modules/module-client-node.c',
++    '../modules/module-client-node/remote-node.c',
++    '../modules/module-client-node/client-node.c',
++    '../modules/module-client-node/protocol-native.c',
++    '../modules/module-client-node/v0/client-node.c',
++    '../modules/module-client-node/v0/transport.c',
++    '../modules/module-client-node/v0/protocol-native.c',
++    '../modules/spa/spa-node.c', ]
++
++
++pipewire_sources +=  [ '../modules/module-adapter.c',
++    '../modules/module-adapter/adapter.c',
++    '../modules/spa/spa-node.c' ]
++
++pipewire_sources += [ '../modules/module-session-manager.c',
++    '../modules/module-session-manager/client-endpoint/client-endpoint.c',
++    '../modules/module-session-manager/client-endpoint/endpoint-stream.c',
++    '../modules/module-session-manager/client-endpoint/endpoint.c',
++    '../modules/module-session-manager/client-session/client-session.c',
++    '../modules/module-session-manager/client-session/endpoint-link.c',
++    '../modules/module-session-manager/client-session/session.c',
++    '../modules/module-session-manager/endpoint-link.c',
++    '../modules/module-session-manager/endpoint-stream.c',
++    '../modules/module-session-manager/endpoint.c',
++    '../modules/module-session-manager/protocol-native.c',
++    '../modules/module-session-manager/proxy-session-manager.c',
++    '../modules/module-session-manager/session.c',
++  ]
++
++
++pipewire_sources += [ '../modules/module-rtp-source.c',
++    '../modules/module-rtp/stream.c' ]
++
++pipewire_sources +=   [ '../modules/module-rtp-sink.c',
++    '../modules/module-rtp/stream.c' ]
++
++
++pipewire_sources +=   [ '../modules/module-rtp-sap.c' ]
++
++pipewire_sources +=   [ '../modules/module-vban-send.c',
++    '../modules/module-vban/stream.c' ]
++
++pipewire_sources +=   [ '../modules/module-vban-recv.c',
++    '../modules/module-vban/stream.c' ]
++
++pipewire_sources +=   [ '../modules/module-fallback-sink.c' ]
++
++pipewire_sources +=   [ '../modules/module-netjack2-driver.c' ]
++
++pipewire_sources +=   [ '../modules/module-netjack2-manager.c' ]
++
++opus_custom_h = cc.has_header('opus/opus_custom.h', dependencies: opus_dep)
++opus_custom_lib = cc.has_function('opus_custom_encoder_ctl', dependencies: opus_dep)
++
++# One would imagine that opus_dep is a requirement but for some reason it's not, so we need to manually check that
++if opus_dep.found() and opus_custom_h and opus_custom_lib
++  opus_custom_dep = declare_dependency(compile_args: ['-DHAVE_OPUS_CUSTOM'], dependencies: opus_dep)
++else
++  opus_custom_dep = dependency('', required: false)
++endif
++
++
+ libpipewire = shared_library(pipewire_name, pipewire_sources,
+   version : libversion,
+   soversion : soversion,
    c_args : libpipewire_c_args,
-   include_directories : [pipewire_inc, configinc, includes_inc],
+-  include_directories : [pipewire_inc, configinc, includes_inc],
++  include_directories : [pipewire_inc, configinc, includes_inc, include_directories('../modules')],
    install : true,
 -  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ],
-+  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep, dbus_dep, glib2_dep, opus_dep, opus_custom_dep, ],
  )
  
  pipewire_dep = declare_dependency(link_with : libpipewire,
 diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
-index 4451fa5..deec3af 100644
+index 4451fa525..1767cfd09 100644
 --- a/src/pipewire/pipewire.c
 +++ b/src/pipewire/pipewire.c
-@@ -28,6 +28,7 @@
- #include "pipewire.h"
+@@ -29,6 +29,9 @@
  #include "private.h"
  #include "i18n.h"
-+#include "../include/spa/support/plugin.h"
  
++#include <spa/plugins/support/plugin.c>
++#include <spa/plugins/support/dbus.c>
++
  #define MAX_SUPPORT	32
  
-@@ -111,26 +112,27 @@ open_plugin(struct registry *registry,
- 	}
+ #define SUPPORTLIB	"support/libspa-support"
+@@ -99,6 +102,7 @@ open_plugin(struct registry *registry,
+ 	struct plugin *plugin;
+ 	char filename[PATH_MAX];
+ 	void *hnd;
++	pw_log_debug("requsted lib %s\n", lib);
+ 	spa_handle_factory_enum_func_t enum_func;
+ 	int res;
  
-         if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
--		res = -ENOENT;
-+		// res = -ENOENT;
+@@ -109,11 +113,22 @@ open_plugin(struct registry *registry,
+ 		plugin->ref++;
+ 		return plugin;
+ 	}
++		if (  strcmp(lib, SUPPORTLIB) == 0){
++			pw_log_debug("spa support lib %s requested\n", lib);
++			enum_func = &support__spa_handle_factory_enum;
++
+ 
+-        if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
++		} else if (strcmp(lib, "support/libspa-dbus") == 0){
++			pw_log_debug("dbus support lib %s requested\n", lib);
++			enum_func = &dbus__spa_handle_factory_enum;
++		}
++        else 
++		
++		{
++		if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
+ 		res = -ENOENT;
  		pw_log_debug("can't load %s: %s", filename, dlerror());
 -		goto error_out;
 +		// goto error_out;
          }
          if ((enum_func = dlsym(hnd, SPA_HANDLE_FACTORY_ENUM_FUNC_NAME)) == NULL) {
--		res = -ENOSYS;
-+		//res = -ENOSYS;
- 		pw_log_debug("can't find enum function: %s", dlerror());
--		goto error_dlclose;
-+		// goto error_dlclose;
+ 		res = -ENOSYS;
+@@ -121,6 +136,8 @@ open_plugin(struct registry *registry,
+ 		goto error_dlclose;
          }
  
++	}
++
  	if ((plugin = calloc(1, sizeof(struct plugin))) == NULL) {
  		res = -errno;
--		goto error_dlclose;
-+	//	goto error_dlclose;
- 	}
--
-+	
-+	
- 	pw_log_debug("loaded plugin:'%s'", filename);
- 	plugin->ref = 1;
- 	plugin->filename = strdup(filename);
- 	plugin->hnd = hnd;
--	plugin->enum_func = enum_func;
-+	plugin->enum_func = spa_handle_factory_enum;
- 	plugin->log_topic_enum = dlsym(hnd, SPA_LOG_TOPIC_ENUM_NAME);
- 
- 	spa_list_append(&registry->plugins, &plugin->link);
-@@ -574,7 +576,7 @@ void pw_init(int *argc, char **argv[])
- 		items[n_items++] = SPA_DICT_ITEM_INIT(SPA_KEY_CPU_VM_TYPE, str);
- 	info = SPA_DICT_INIT(items, n_items);
- 
--	add_interface(support, SPA_NAME_SUPPORT_CPU, SPA_TYPE_INTERFACE_CPU, &info);
-+	// add_interface(support, SPA_NAME_SUPPORT_CPU, SPA_TYPE_INTERFACE_CPU, &info);
- 
- 	add_i18n(support);
- 
+ 		goto error_dlclose;
