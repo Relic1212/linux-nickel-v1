@@ -12,39 +12,62 @@
 
       uri = "https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/1.4.7/pipewire-1.4.7.tar.gz",
       sha256sum = "9d54f025e1e7ae73b980a6c8be2e8e6387e24d554d58478d6495734ce1ee5a93"
+      # uri = "/run/data/user/Projects/pipewire-static-playground.tar.gz",
+      # sha256sum = "07b0d9f39a4ec30f87b0a33d8a42b177e3ba9e5ccc0ed29cd788a274658fe14c"
     },
-    # patches = [
-    #   {
-    #     sha256sum = "86cb1b6ff59ed947f8c2ad01b9c473e0a97946d6dde20b62dedf4f79385ff654",
-    #     file = "pipewire.patch"
-    #   }
-    # ],
 
-    patches=[{
-      file = "pipewire.patch",
-      sha256sum = "b508426048424e522da691bc4c90af7525310ee6da958a718578ba96ff18dfb2"
-    }],
+    sourceInputs = [
+      { src = singleSource },
+      {
+        src = {
+          uri = "https://gitlab.freedesktop.org/pipewire/wireplumber/-/archive/0.5.10/wireplumber-0.5.10.tar.gz",
+          sha256sum = "c2e021d8e6ef1db644facd4a97f5a644b67481c641da9100e851aab6752ba446"
+        },
+        dest = "subprojects/wireplumber"
+      }
+    ],
+
+    patches = [
+      {
+        file = "pipewire.patch",
+        sha256sum = "7cda51f444a144d8cc081574bef728a4119dac30c189690de6d2f73ed0f904aa"
+      },
+      {
+        file = "wireplumber.patch",
+        sha256sum = "3adcb61bc49928e58ce176cbc545e39ac64481a982db1d86d6b3a230bcb54810"
+      }
+    ],
+    patchPhase = [
+      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/pipewire.patch)",
+      "(cd ${SRC}/subprojects/wireplumber && patch -p1 < /tmp/workdir/patches/wireplumber.patch)",
+    ],
+    # https://github.com/kiss-community/community/blob/0715e574d128e1df6137f3959bacc9c66fffcb18/community/pipewire/build
     extraMesonArgs = [
-      "-Dsession-managers=[]",
+      "-Dsession-managers=wireplumber",
+      # "-Dsession-managers=[]",
       "-Dvideotestsrc=disabled",
       "-Dvideoconvert=disabled",
-      "-Dv4l2=disabled",
+      # "-Dv4l2=disabled",
       "-Dsupport=enabled",
       "-Dspa-plugins=enabled",
       "-Dtests=disabled",
-      "-Davb=disabled",
-      "-Draop=disabled",
+      # "-Davb=disabled",
+      # "-Draop=disabled",
       "-Dsndfile=enabled",
+      "-Dudev=enabled",
+      "-Dwireplumber:system-lua=true",
+      "-Dwireplumber:tests=false",
     ],
     preConfigurePhase = [
-      m%"
-            for f in $(find "${SRC}" -name meson.build); do
-                sed -i 's@shared_library@library@g' "${f}"
-            done
-            "%,
+      # m%"
+      # for f in $(find "${SRC}" -name meson.build); do
+      #   sed -i 's@shared_library@library@g' "${f}"
+      # done
+      # "%,
 
       # "sed -i 's@, plugin_dependencies@@g' ${SRC}/src/modules/meson.build",
     ],
+    llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.dbus,
       drvs.alsaLibs,
@@ -93,8 +116,9 @@
       drvs.libevdev,
       (drvs.findutils & { priority = 1 }),
       drvs.libsndfile,
+      drvs.libopus,
+      drvs.lua,
     ],
-
   },
   pipewire | lib.MesonPackage =
     _pipewire

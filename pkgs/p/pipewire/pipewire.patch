@@ -1,3 +1,118 @@
+From f54227b54ae90c4caf2496e4b9b0141b7b3bc15a Mon Sep 17 00:00:00 2001
+From: Relic1212 <john.doe@example.com>
+Date: Fri, 8 Aug 2025 01:27:56 +0200
+Subject: [PATCH 1/4] first attempt at static linking
+
+---
+ spa/plugins/support/dbus.c                |   4 +-
+ spa/plugins/support/plugin.c              |   2 +-
+ src/meson.build                           |  16 +-
+ src/modules/module-access.c               |   2 +-
+ src/modules/module-access.h               |   8 +
+ src/modules/module-adapter.c              |   8 +-
+ src/modules/module-adapter.h              |   8 +
+ src/modules/module-avb.c                  |   2 +-
+ src/modules/module-avb.h                  |   8 +
+ src/modules/module-client-device.c        |   2 +-
+ src/modules/module-client-device.h        |   8 +
+ src/modules/module-client-node.c          |   8 +-
+ src/modules/module-client-node.h          |   8 +
+ src/modules/module-combine-stream.c       |   2 +-
+ src/modules/module-combine-stream.h       |   8 +
+ src/modules/module-echo-cancel.c          |   2 +-
+ src/modules/module-echo-cancel.h          |   8 +
+ src/modules/module-fallback-sink.c        |   2 +-
+ src/modules/module-fallback-sink.h        |   8 +
+ src/modules/module-filter-chain.c         |   2 +-
+ src/modules/module-filter-chain.h         |   8 +
+ src/modules/module-link-factory.c         |   2 +-
+ src/modules/module-link-factory.h         |   8 +
+ src/modules/module-loopback.c             |   2 +-
+ src/modules/module-loopback.h             |   8 +
+ src/modules/module-metadata.c             |   2 +-
+ src/modules/module-metadata.h             |   9 +
+ src/modules/module-netjack2-driver.c      |   2 +-
+ src/modules/module-netjack2-driver.h      |   8 +
+ src/modules/module-netjack2-manager.c     |   2 +-
+ src/modules/module-netjack2-manager.h     |   8 +
+ src/modules/module-parametric-equalizer.c |   2 +-
+ src/modules/module-parametric-equalizer.h |   8 +
+ src/modules/module-pipe-tunnel.c          |   2 +-
+ src/modules/module-pipe-tunnel.h          |   8 +
+ src/modules/module-portal.c               |   2 +-
+ src/modules/module-portal.h               |   8 +
+ src/modules/module-profiler.c             |  10 +-
+ src/modules/module-profiler.h             |   8 +
+ src/modules/module-protocol-native.c      |   3 +-
+ src/modules/module-protocol-native.h      |   8 +
+ src/modules/module-protocol-pulse.c       |   8 +-
+ src/modules/module-protocol-pulse.h       |   8 +
+ src/modules/module-protocol-simple.c      |   2 +-
+ src/modules/module-protocol-simple.h      |   8 +
+ src/modules/module-raop-sink.c            |   8 +-
+ src/modules/module-raop-sink.h            |   8 +
+ src/modules/module-rt.c                   |   2 +-
+ src/modules/module-rt.h                   |   8 +
+ src/modules/module-rtkit.h                |   8 +
+ src/modules/module-rtp-sap.c              |   2 +-
+ src/modules/module-rtp-sap.h              |   8 +
+ src/modules/module-rtp-sink.c             |   8 +-
+ src/modules/module-rtp-sink.h             |   8 +
+ src/modules/module-rtp-source.c           |   8 +-
+ src/modules/module-rtp-source.h           |   8 +
+ src/modules/module-session-manager.c      |   2 +-
+ src/modules/module-session-manager.h      |   8 +
+ src/modules/module-spa-device-factory.c   |   2 +-
+ src/modules/module-spa-device-factory.h   |   8 +
+ src/modules/module-spa-device.c           |   2 +-
+ src/modules/module-spa-device.h           |   8 +
+ src/modules/module-spa-node-factory.c     |   2 +-
+ src/modules/module-spa-node-factory.h     |   8 +
+ src/modules/module-spa-node.c             |   2 +-
+ src/modules/module-spa-node.h             |   8 +
+ src/modules/module-vban-recv.c            |   2 +-
+ src/modules/module-vban-recv.h            |   8 +
+ src/modules/module-vban-send.c            |   2 +-
+ src/modules/module-vban-send.h            |   8 +
+ src/pipewire/impl-module.c                | 196 ++++++++++++++++++--
+ src/pipewire/meson.build                  | 208 +++++++++++++++++++++-
+ src/pipewire/pipewire.c                   |  21 ++-
+ 73 files changed, 743 insertions(+), 88 deletions(-)
+ create mode 100644 src/modules/module-access.h
+ create mode 100644 src/modules/module-adapter.h
+ create mode 100644 src/modules/module-avb.h
+ create mode 100644 src/modules/module-client-device.h
+ create mode 100644 src/modules/module-client-node.h
+ create mode 100644 src/modules/module-combine-stream.h
+ create mode 100644 src/modules/module-echo-cancel.h
+ create mode 100644 src/modules/module-fallback-sink.h
+ create mode 100644 src/modules/module-filter-chain.h
+ create mode 100644 src/modules/module-link-factory.h
+ create mode 100644 src/modules/module-loopback.h
+ create mode 100644 src/modules/module-metadata.h
+ create mode 100644 src/modules/module-netjack2-driver.h
+ create mode 100644 src/modules/module-netjack2-manager.h
+ create mode 100644 src/modules/module-parametric-equalizer.h
+ create mode 100644 src/modules/module-pipe-tunnel.h
+ create mode 100644 src/modules/module-portal.h
+ create mode 100644 src/modules/module-profiler.h
+ create mode 100644 src/modules/module-protocol-native.h
+ create mode 100644 src/modules/module-protocol-pulse.h
+ create mode 100644 src/modules/module-protocol-simple.h
+ create mode 100644 src/modules/module-raop-sink.h
+ create mode 100644 src/modules/module-rt.h
+ create mode 100644 src/modules/module-rtkit.h
+ create mode 100644 src/modules/module-rtp-sap.h
+ create mode 100644 src/modules/module-rtp-sink.h
+ create mode 100644 src/modules/module-rtp-source.h
+ create mode 100644 src/modules/module-session-manager.h
+ create mode 100644 src/modules/module-spa-device-factory.h
+ create mode 100644 src/modules/module-spa-device.h
+ create mode 100644 src/modules/module-spa-node-factory.h
+ create mode 100644 src/modules/module-spa-node.h
+ create mode 100644 src/modules/module-vban-recv.h
+ create mode 100644 src/modules/module-vban-send.h
+
 diff --git a/spa/plugins/support/dbus.c b/spa/plugins/support/dbus.c
 index d047fca0b..348b7d914 100644
 --- a/spa/plugins/support/dbus.c
@@ -123,6 +238,34 @@ index 000000000..d79045a42
 +#define MODULE_ADAPTER_INCLUDED
 +
 +int module_adapter__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
+diff --git a/src/modules/module-avb.c b/src/modules/module-avb.c
+index b730b17c1..f2a6d56e4 100644
+--- a/src/modules/module-avb.c
++++ b/src/modules/module-avb.c
+@@ -70,7 +70,7 @@ static const struct pw_impl_module_events module_events = {
+ };
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_avb__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props;
+diff --git a/src/modules/module-avb.h b/src/modules/module-avb.h
+new file mode 100644
+index 000000000..770265536
+--- /dev/null
++++ b/src/modules/module-avb.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_AVB_INCLUDED
++#define MODULE_AVB_INCLUDED
++
++int module_avb__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
 +
 +#endif
 +    
@@ -705,6 +848,54 @@ index 000000000..b44eaaabf
 +#endif
 +    
 \ No newline at end of file
+diff --git a/src/modules/module-raop-sink.c b/src/modules/module-raop-sink.c
+index 8eef429f0..cafb24278 100644
+--- a/src/modules/module-raop-sink.c
++++ b/src/modules/module-raop-sink.c
+@@ -127,8 +127,8 @@
+ 
+ #define NAME "raop-sink"
+ 
+-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+-#define PW_LOG_TOPIC_DEFAULT mod_topic
++PW_LOG_TOPIC(mod_topic_raop_sink, "mod." NAME);
++#define PW_LOG_TOPIC_DEFAULT mod_topic_raop_sink
+ 
+ #define BUFFER_SIZE		(1u<<22)
+ #define BUFFER_MASK		(BUFFER_SIZE-1)
+@@ -1799,7 +1799,7 @@ static void copy_props(struct impl *impl, struct pw_properties *props, const cha
+ }
+ 
+ SPA_EXPORT
+-int pipewire__module_init(struct pw_impl_module *module, const char *args)
++int module_raop_sink__pipewire__module_init(struct pw_impl_module *module, const char *args)
+ {
+ 	struct pw_context *context = pw_impl_module_get_context(module);
+ 	struct pw_properties *props = NULL;
+@@ -1807,7 +1807,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
+ 	const char *str, *name, *hostname, *ip, *port;
+ 	int res = 0;
+ 
+-	PW_LOG_TOPIC_INIT(mod_topic);
++	PW_LOG_TOPIC_INIT(mod_topic_raop_sink);
+ 
+ 	impl = calloc(1, sizeof(struct impl));
+ 	if (impl == NULL)
+diff --git a/src/modules/module-raop-sink.h b/src/modules/module-raop-sink.h
+new file mode 100644
+index 000000000..e7c353696
+--- /dev/null
++++ b/src/modules/module-raop-sink.h
+@@ -0,0 +1,8 @@
++
++#ifndef MODULE_RAOP_SINK_INCLUDED
++#define MODULE_RAOP_SINK_INCLUDED
++
++int module_raop_sink__pipewire__module_init(struct pw_impl_module *module, const char *args_str);
++
++#endif
++    
+\ No newline at end of file
 diff --git a/src/modules/module-rt.c b/src/modules/module-rt.c
 index b2d0739cf..01f845959 100644
 --- a/src/modules/module-rt.c
@@ -1069,10 +1260,10 @@ index 000000000..48e5831d2
 +    
 \ No newline at end of file
 diff --git a/src/pipewire/impl-module.c b/src/pipewire/impl-module.c
-index 10aa432fe..adbd702a1 100644
+index 10aa432fe..d4c70ef36 100644
 --- a/src/pipewire/impl-module.c
 +++ b/src/pipewire/impl-module.c
-@@ -20,6 +20,40 @@
+@@ -20,6 +20,42 @@
  #include "pipewire/impl.h"
  #include "pipewire/private.h"
  
@@ -1082,6 +1273,7 @@ index 10aa432fe..adbd702a1 100644
 +
 +#include "modules/module-access.h"
 +#include "modules/module-adapter.h"
++#include "modules/module-avb.h"
 +#include "modules/module-client-device.h"
 +#include "modules/module-client-node.h"
 +#include "modules/module-combine-stream.h"
@@ -1095,8 +1287,9 @@ index 10aa432fe..adbd702a1 100644
 +#include "modules/module-parametric-equalizer.h"
 +#include "modules/module-pipe-tunnel.h"
 +#include "modules/module-portal.h"
-+// #include "modules/module-protocol-pulse.h"
++#include "modules/module-protocol-pulse.h"
 +#include "modules/module-protocol-simple.h"
++#include "modules/module-raop-sink.h"
 +#include "modules/module-rt.h"
 +// #include "modules/module-rtkit.h"
 +#include "modules/module-rtp-sap.h"
@@ -1113,7 +1306,7 @@ index 10aa432fe..adbd702a1 100644
  PW_LOG_TOPIC_EXTERN(log_module);
  #define PW_LOG_TOPIC_DEFAULT log_module
  
-@@ -165,30 +199,145 @@ pw_context_load_module(struct pw_context *context,
+@@ -165,30 +201,152 @@ pw_context_load_module(struct pw_context *context,
  		pw_log_debug("PIPEWIRE_MODULE_DIR set to: %s", module_dir);
  	}
  
@@ -1137,13 +1330,8 @@ index 10aa432fe..adbd702a1 100644
 -				filename = NULL;
 -			}
 -		}
--	}
 +		init_func = &module_protocol__pipewire__module_init;
- 
--	if (filename == NULL)
--		goto error_not_found;
--	if (hnd == NULL)
--		goto error_open_failed;
++
 +	} 
 +	else if (strcmp(name, "libpipewire-module-profiler") == 0) {
 +		init_func = &module_profiler__pipewire__module_init;
@@ -1161,9 +1349,16 @@ index 10aa432fe..adbd702a1 100644
 +		init_func = &module_adapter__pipewire__module_init;
 +
 +	} 
++	if (strcmp(name, "libpipewire-module-avb") == 0) {
++		init_func = &module_avb__pipewire__module_init;
+ 	}
 +	else if (strcmp(name, "libpipewire-module-client-device") == 0) {
 +		init_func = &module_client_device__pipewire__module_init;
-+
+ 
+-	if (filename == NULL)
+-		goto error_not_found;
+-	if (hnd == NULL)
+-		goto error_open_failed;
 +	} 
 +	else if (strcmp(name, "libpipewire-module-client-node") == 0) {
 +		init_func = &module_client_node__pipewire__module_init;
@@ -1200,13 +1395,13 @@ index 10aa432fe..adbd702a1 100644
 +	} 
 +	else if (strcmp(name, "libpipewire-module-netjack2-manager") == 0) {
 +		init_func = &module_netjack2_manager__pipewire__module_init;
- 
--	if ((init_func = dlsym(hnd, PIPEWIRE_SYMBOL_MODULE_INIT)) == NULL)
--		goto error_no_pw_module;
++
 +	} 
 +	else if (strcmp(name, "libpipewire-module-parametric-equalizer") == 0) {
 +		init_func = &module_parametric_equalizer__pipewire__module_init;
-+
+ 
+-	if ((init_func = dlsym(hnd, PIPEWIRE_SYMBOL_MODULE_INIT)) == NULL)
+-		goto error_no_pw_module;
 +	} 
 +	else if (strcmp(name, "libpipewire-module-pipe-tunnel") == 0) {
 +		init_func = &module_pipe_tunnel__pipewire__module_init;
@@ -1222,6 +1417,10 @@ index 10aa432fe..adbd702a1 100644
 +	// } 
 +	else if (strcmp(name, "libpipewire-module-protocol-simple") == 0) {
 +		init_func = &module_protocol_simple__pipewire__module_init;
++
++	} 
++	else if (strcmp(name, "libpipewire-module-raop-sink") == 0) {
++		init_func = &module_raop_sink__pipewire__module_init;
 +
 +	} 
 +	else if (strcmp(name, "libpipewire-module-rt") == 0) {
@@ -1280,10 +1479,10 @@ index 10aa432fe..adbd702a1 100644
  	if (properties == NULL)
  		properties = pw_properties_new(NULL, NULL);
 diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
-index b19631a92..4e1cd1303 100644
+index b19631a92..a2d31a17f 100644
 --- a/src/pipewire/meson.build
 +++ b/src/pipewire/meson.build
-@@ -100,13 +100,196 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
+@@ -100,13 +100,217 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
    ]
  endif
  
@@ -1459,6 +1658,27 @@ index b19631a92..4e1cd1303 100644
 +
 +pipewire_sources +=   [ '../modules/module-netjack2-manager.c' ]
 +
++
++pipewire_sources +=  [ '../modules/module-avb.c',
++      '../modules/module-avb/avb.c',
++      '../modules/module-avb/adp.c',
++      '../modules/module-avb/acmp.c',
++      '../modules/module-avb/aecp.c',
++      '../modules/module-avb/aecp-aem.c',
++      '../modules/module-avb/avdecc.c',
++      '../modules/module-avb/maap.c',
++      '../modules/module-avb/mmrp.c',
++      '../modules/module-avb/mrp.c',
++      '../modules/module-avb/msrp.c',
++      '../modules/module-avb/mvrp.c',
++      '../modules/module-avb/srp.c',
++      '../modules/module-avb/stream.c'
++      ]
++
++pipewire_sources +=  [ '../modules/module-raop-sink.c',
++      '../modules/module-raop/rtsp-client.c',
++      '../modules/module-rtp/stream.c' ]
++
 +opus_custom_h = cc.has_header('opus/opus_custom.h', dependencies: opus_dep)
 +opus_custom_lib = cc.has_function('opus_custom_encoder_ctl', dependencies: opus_dep)
 +
@@ -1478,7 +1698,7 @@ index b19631a92..4e1cd1303 100644
 +  include_directories : [pipewire_inc, configinc, includes_inc, include_directories('../modules')],
    install : true,
 -  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ],
-+  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep, dbus_dep, glib2_dep, opus_dep, opus_custom_dep, ],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep, dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib],
  )
  
  pipewire_dep = declare_dependency(link_with : libpipewire,
@@ -1538,3 +1758,1179 @@ index 4451fa525..1767cfd09 100644
  	if ((plugin = calloc(1, sizeof(struct plugin))) == NULL) {
  		res = -errno;
  		goto error_dlclose;
+-- 
+2.39.0
+
+
+From 08647b0395ac3477a0f779ae816d5b95217c3faf Mon Sep 17 00:00:00 2001
+From: Relic1212 <john.doe@example.com>
+Date: Fri, 8 Aug 2025 18:11:58 +0200
+Subject: [PATCH 2/4] finally pw-cat -p <>.wav works
+
+---
+ pipewire-alsa/alsa-plugins/meson.build       |  4 +-
+ pipewire-jack/src/meson.build                | 22 ++++-----
+ pipewire-v4l2/src/meson.build                |  2 +-
+ spa/lib/meson.build                          |  2 +-
+ spa/plugins/aec/meson.build                  |  4 +-
+ spa/plugins/alsa/alsa.c                      |  4 +-
+ spa/plugins/alsa/meson.build                 |  2 +-
+ spa/plugins/audioconvert/audioconvert.c      |  4 +-
+ spa/plugins/audioconvert/meson.build         | 50 ++++++++++----------
+ spa/plugins/audioconvert/plugin.c            |  4 +-
+ spa/plugins/audioconvert/test-audioadapter.c |  2 +-
+ spa/plugins/audioconvert/test-audioconvert.c |  2 +-
+ spa/plugins/audiomixer/meson.build           |  2 +-
+ spa/plugins/audiotestsrc/meson.build         |  2 +-
+ spa/plugins/avb/meson.build                  |  2 +-
+ spa/plugins/bluez5/meson.build               | 22 ++++-----
+ spa/plugins/control/meson.build              |  2 +-
+ spa/plugins/ffmpeg/meson.build               |  2 +-
+ spa/plugins/filter-graph/meson.build         | 12 ++---
+ spa/plugins/jack/meson.build                 |  2 +-
+ spa/plugins/libcamera/meson.build            |  2 +-
+ spa/plugins/support/meson.build              |  8 ++--
+ spa/plugins/test/meson.build                 |  2 +-
+ spa/plugins/v4l2/meson.build                 |  2 +-
+ spa/plugins/videoconvert/meson.build         |  2 +-
+ spa/plugins/videotestsrc/meson.build         |  2 +-
+ spa/plugins/volume/meson.build               |  2 +-
+ spa/plugins/vulkan/meson.build               |  2 +-
+ src/gst/meson.build                          |  2 +-
+ src/pipewire/meson.build                     |  5 +-
+ src/pipewire/pipewire.c                      | 10 ++++
+ 31 files changed, 99 insertions(+), 88 deletions(-)
+
+diff --git a/pipewire-alsa/alsa-plugins/meson.build b/pipewire-alsa/alsa-plugins/meson.build
+index cbc34adc6..221723e2a 100644
+--- a/pipewire-alsa/alsa-plugins/meson.build
++++ b/pipewire-alsa/alsa-plugins/meson.build
+@@ -9,7 +9,7 @@ pipewire_alsa_plugin_c_args = [
+   '-DPIC',
+ ]
+ 
+-pipewire_alsa_pcm_plugin = shared_library('asound_module_pcm_pipewire',
++pipewire_alsa_pcm_plugin = library('asound_module_pcm_pipewire',
+     pipewire_alsa_plugin_pcm_sources,
+     c_args : pipewire_alsa_plugin_c_args,
+     include_directories : [configinc],
+@@ -17,7 +17,7 @@ pipewire_alsa_pcm_plugin = shared_library('asound_module_pcm_pipewire',
+     install : true,
+     install_dir : pipewire_libdir / 'alsa-lib',
+ )
+-pipewire_alsa_ctl_plugin = shared_library('asound_module_ctl_pipewire',
++pipewire_alsa_ctl_plugin = library('asound_module_ctl_pipewire',
+     pipewire_alsa_plugin_ctl_sources,
+     c_args : pipewire_alsa_plugin_c_args,
+     include_directories : [configinc],
+diff --git a/pipewire-jack/src/meson.build b/pipewire-jack/src/meson.build
+index 0630d96a8..6cd30dbad 100644
+--- a/pipewire-jack/src/meson.build
++++ b/pipewire-jack/src/meson.build
+@@ -40,7 +40,7 @@ configure_file(input : 'pw-jack.in',
+                configuration : tools_config,
+                install_dir : pipewire_bindir)
+ 
+-pipewire_jack = shared_library('jack',
++pipewire_jack = library('jack',
+     pipewire_jack_sources,
+     soversion : soversion,
+     version : libjackversion,
+@@ -51,7 +51,7 @@ pipewire_jack = shared_library('jack',
+     install_dir : libjack_path,
+ )
+ 
+-pipewire_jackserver = shared_library('jackserver',
++pipewire_jackserver = library('jackserver',
+     pipewire_jackserver_sources,
+     soversion : soversion,
+     version : libjackversion,
+@@ -62,7 +62,7 @@ pipewire_jackserver = shared_library('jackserver',
+     install_dir : libjack_path,
+ )
+ 
+-pipewire_jacknet = shared_library('jacknet',
++pipewire_jacknet = library('jacknet',
+     pipewire_net_sources,
+     soversion : soversion,
+     version : libjackversion,
+@@ -110,11 +110,11 @@ if sdl_dep.found()
+     link_with: pipewire_jack,
+   )
+ endif
+-executable('ump-source',
+-  '../examples/ump-source.c',
+-  include_directories : [jack_inc],
+-  install : installed_tests_enabled,
+-  install_dir : installed_tests_execdir / 'examples' / 'jack',
+-  dependencies : [mathlib],
+-  link_with: pipewire_jack,
+-)
++# executable('ump-source',
++#   '../examples/ump-source.c',
++#   include_directories : [jack_inc],
++#   install : installed_tests_enabled,
++#   install_dir : installed_tests_execdir / 'examples' / 'jack',
++#   dependencies : [mathlib],
++#   link_with: pipewire_jack,
++# )
+diff --git a/pipewire-v4l2/src/meson.build b/pipewire-v4l2/src/meson.build
+index d59dccf3a..1b095cf43 100644
+--- a/pipewire-v4l2/src/meson.build
++++ b/pipewire-v4l2/src/meson.build
+@@ -32,7 +32,7 @@ configure_file(input : 'pw-v4l2.in',
+                configuration : tools_config,
+                install_dir : pipewire_bindir)
+ 
+-pipewire_v4l2 = shared_library('pw-v4l2',
++pipewire_v4l2 = library('pw-v4l2',
+     pipewire_v4l2_sources,
+     c_args : pipewire_v4l2_c_args,
+     include_directories : [configinc],
+diff --git a/spa/lib/meson.build b/spa/lib/meson.build
+index a12c30431..3b513d498 100644
+--- a/spa/lib/meson.build
++++ b/spa/lib/meson.build
+@@ -1,4 +1,4 @@
+-spa_lib = shared_library('spa',
++spa_lib = library('spa',
+   [ 'lib.c' ],
+   include_directories : [ configinc ],
+   dependencies : [ spa_dep, pthread_lib, mathlib ],
+diff --git a/spa/plugins/aec/meson.build b/spa/plugins/aec/meson.build
+index 2b1a2c05a..f9a40edde 100644
+--- a/spa/plugins/aec/meson.build
++++ b/spa/plugins/aec/meson.build
+@@ -1,4 +1,4 @@
+-aec_null = shared_library('spa-aec-null',
++aec_null = library('spa-aec-null',
+   [ 'aec-null.c' ],
+   include_directories : [ configinc ],
+   dependencies : [ spa_dep ],
+@@ -6,7 +6,7 @@ aec_null = shared_library('spa-aec-null',
+   install_dir : spa_plugindir / 'aec')
+ 
+ if webrtc_dep.found()
+-  aec_webrtc = shared_library('spa-aec-webrtc',
++  aec_webrtc = library('spa-aec-webrtc',
+     [ 'aec-webrtc.cpp' ],
+     include_directories : [ configinc ],
+     dependencies : [ spa_dep, webrtc_dep ],
+diff --git a/spa/plugins/alsa/alsa.c b/spa/plugins/alsa/alsa.c
+index 1bc836097..cddb26a94 100644
+--- a/spa/plugins/alsa/alsa.c
++++ b/spa/plugins/alsa/alsa.c
+@@ -24,10 +24,10 @@ extern const struct spa_handle_factory spa_alsa_compress_offload_device_factory;
+ 
+ SPA_LOG_TOPIC_DEFINE(alsa_log_topic, "spa.alsa");
+ 
+-SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
++// SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
+ 
+ SPA_EXPORT
+-int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++int alsa__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
+ {
+ 	spa_return_val_if_fail(factory != NULL, -EINVAL);
+ 	spa_return_val_if_fail(index != NULL, -EINVAL);
+diff --git a/spa/plugins/alsa/meson.build b/spa/plugins/alsa/meson.build
+index 4282e0bbf..178a03780 100644
+--- a/spa/plugins/alsa/meson.build
++++ b/spa/plugins/alsa/meson.build
+@@ -25,7 +25,7 @@ if compress_offload_option.allowed()
+                        'compress-offload-api.c']
+ endif
+ 
+-spa_alsa = shared_library(
++spa_alsa = library(
+   'spa-alsa',
+   [ spa_alsa_sources ],
+   c_args : acp_c_args,
+diff --git a/spa/plugins/audioconvert/audioconvert.c b/spa/plugins/audioconvert/audioconvert.c
+index 3aaaa7a94..3826df258 100644
+--- a/spa/plugins/audioconvert/audioconvert.c
++++ b/spa/plugins/audioconvert/audioconvert.c
+@@ -988,7 +988,7 @@ static void graph_props_changed(void *object, enum spa_direction direction)
+ 	impl->params[IDX_Props].user++;
+ }
+ 
+-struct spa_filter_graph_events graph_events = {
++struct spa_filter_graph_events graph_events__pw_audioconvert= {
+ 	SPA_VERSION_FILTER_GRAPH_EVENTS,
+ 	.info = graph_info,
+ 	.apply_props = graph_apply_props,
+@@ -1123,7 +1123,7 @@ static int load_filter_graph(struct impl *impl, const char *graph, int order)
+ 	 * before we switch */
+ 	if (pending->active)
+ 		spa_filter_graph_add_listener(pending->graph,
+-				&pending->listener, &graph_events, pending);
++				&pending->listener, &graph_events__pw_audioconvert, pending);
+ 
+ 	spa_loop_invoke(impl->data_loop, do_sync_filter_graph, 0, NULL, 0, true, impl);
+ 
+diff --git a/spa/plugins/audioconvert/meson.build b/spa/plugins/audioconvert/meson.build
+index 394bc11eb..99e1be06e 100644
+--- a/spa/plugins/audioconvert/meson.build
++++ b/spa/plugins/audioconvert/meson.build
+@@ -162,7 +162,7 @@ audioconvert_lib = static_library('audioconvert',
+   )
+ audioconvert_dep = declare_dependency(link_with: audioconvert_lib)
+ 
+-spa_audioconvert_lib = shared_library('spa-audioconvert',
++spa_audioconvert_lib = library('spa-audioconvert',
+   audioconvert_sources,
+   c_args : simd_cargs,
+   dependencies : [ spa_dep, mathlib, audioconvert_dep ],
+@@ -188,31 +188,31 @@ test_apps = [
+   'test-resample-delay',
+   ]
+ 
+-foreach a : test_apps
+-  test(a,
+-    executable(a, a + '.c',
+-      dependencies : [ spa_dep, dl_lib, pthread_lib, mathlib, audioconvert_dep, spa_audioconvert_dep ],
+-      include_directories : [ configinc, test_inc ],
+-      link_with : [ test_lib ],
+-      install_rpath : spa_plugindir / 'audioconvert',
+-      c_args : [ simd_cargs ],
+-      install : installed_tests_enabled,
+-      install_dir : installed_tests_execdir / 'audioconvert'),
+-      env : [
+-        'SPA_PLUGIN_DIR=@0@'.format(spa_dep.get_variable('plugindir')),
+-        ])
++# foreach a : test_apps
++#   test(a,
++#     executable(a, a + '.c',
++#       dependencies : [ spa_dep, dl_lib, pthread_lib, mathlib, audioconvert_dep, spa_audioconvert_dep ],
++#       include_directories : [ configinc, test_inc ],
++#       link_with : [ test_lib ],
++#       install_rpath : spa_plugindir / 'audioconvert',
++#       c_args : [ simd_cargs ],
++#       install : installed_tests_enabled,
++#       install_dir : installed_tests_execdir / 'audioconvert'),
++#       env : [
++#         'SPA_PLUGIN_DIR=@0@'.format(spa_dep.get_variable('plugindir')),
++#         ])
+ 
+-    if installed_tests_enabled
+-      test_conf = configuration_data()
+-      test_conf.set('exec', installed_tests_execdir / 'audioconvert' / a)
+-      configure_file(
+-        input: installed_tests_template,
+-        output: a + '.test',
+-        install_dir: installed_tests_metadir / 'audioconvert',
+-        configuration: test_conf
+-        )
+-  endif
+-endforeach
++#     if installed_tests_enabled
++#       test_conf = configuration_data()
++#       test_conf.set('exec', installed_tests_execdir / 'audioconvert' / a)
++#       configure_file(
++#         input: installed_tests_template,
++#         output: a + '.test',
++#         install_dir: installed_tests_metadir / 'audioconvert',
++#         configuration: test_conf
++#         )
++#   endif
++# endforeach
+ 
+ benchmark_apps = [
+   'benchmark-fmt-ops',
+diff --git a/spa/plugins/audioconvert/plugin.c b/spa/plugins/audioconvert/plugin.c
+index 4d1a7f664..49d1132b1 100644
+--- a/spa/plugins/audioconvert/plugin.c
++++ b/spa/plugins/audioconvert/plugin.c
+@@ -10,10 +10,10 @@
+ extern const struct spa_handle_factory spa_audioconvert_factory;
+ extern const struct spa_handle_factory spa_audioadapter_factory;
+ 
+-SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
++// SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
+ 
+ SPA_EXPORT
+-int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++int audioconvert__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
+ {
+ 	spa_return_val_if_fail(factory != NULL, -EINVAL);
+ 	spa_return_val_if_fail(index != NULL, -EINVAL);
+diff --git a/spa/plugins/audioconvert/test-audioadapter.c b/spa/plugins/audioconvert/test-audioadapter.c
+index 5dfa7d234..df6e89a6a 100644
+--- a/spa/plugins/audioconvert/test-audioadapter.c
++++ b/spa/plugins/audioconvert/test-audioadapter.c
+@@ -36,7 +36,7 @@ static const struct spa_handle_factory *find_factory(const char *name)
+ 	uint32_t index = 0;
+ 	const struct spa_handle_factory *factory;
+ 
+-	while (spa_handle_factory_enum(&factory, &index) == 1) {
++	while (audioconvert__spa_handle_factory_enum(&factory, &index) == 1) {
+ 		if (spa_streq(factory->name, name))
+ 			return factory;
+ 	}
+diff --git a/spa/plugins/audioconvert/test-audioconvert.c b/spa/plugins/audioconvert/test-audioconvert.c
+index 0546e629a..2de231f77 100644
+--- a/spa/plugins/audioconvert/test-audioconvert.c
++++ b/spa/plugins/audioconvert/test-audioconvert.c
+@@ -41,7 +41,7 @@ static const struct spa_handle_factory *find_factory(const char *name)
+ 	uint32_t index = 0;
+ 	const struct spa_handle_factory *factory;
+ 
+-	while (spa_handle_factory_enum(&factory, &index) == 1) {
++	while (audioconvert__spa_handle_factory_enum(&factory, &index) == 1) {
+ 		if (spa_streq(factory->name, name))
+ 			return factory;
+ 	}
+diff --git a/spa/plugins/audiomixer/meson.build b/spa/plugins/audiomixer/meson.build
+index 65aafee20..956e6b70f 100644
+--- a/spa/plugins/audiomixer/meson.build
++++ b/spa/plugins/audiomixer/meson.build
+@@ -56,7 +56,7 @@ audiomixer_lib = static_library('audiomixer',
+   )
+ audiomixer_dep = declare_dependency(link_with: audiomixer_lib)
+ 
+-spa_audiomixer_lib = shared_library('spa-audiomixer',
++spa_audiomixer_lib = library('spa-audiomixer',
+   audiomixer_sources,
+   c_args : simd_cargs,
+   link_with : simd_dependencies,
+diff --git a/spa/plugins/audiotestsrc/meson.build b/spa/plugins/audiotestsrc/meson.build
+index d1b22428d..7fd081204 100644
+--- a/spa/plugins/audiotestsrc/meson.build
++++ b/spa/plugins/audiotestsrc/meson.build
+@@ -1,6 +1,6 @@
+ audiotestsrc_sources = ['audiotestsrc.c', 'plugin.c']
+ 
+-audiotestsrclib = shared_library('spa-audiotestsrc',
++audiotestsrclib = library('spa-audiotestsrc',
+                           audiotestsrc_sources,
+                           dependencies : [ spa_dep, mathlib ],
+                           install : true,
+diff --git a/spa/plugins/avb/meson.build b/spa/plugins/avb/meson.build
+index 2d9759ec7..f2716bf4d 100644
+--- a/spa/plugins/avb/meson.build
++++ b/spa/plugins/avb/meson.build
+@@ -4,7 +4,7 @@ spa_avb_sources = ['avb.c',
+                 'avb-pcm-source.c',
+                 'avb-pcm.c' ]
+ 
+-spa_avb = shared_library(
++spa_avb = library(
+   'spa-avb',
+   [ spa_avb_sources ],
+   include_directories : [configinc],
+diff --git a/spa/plugins/bluez5/meson.build b/spa/plugins/bluez5/meson.build
+index b0990eaf6..05897a35d 100644
+--- a/spa/plugins/bluez5/meson.build
++++ b/spa/plugins/bluez5/meson.build
+@@ -74,7 +74,7 @@ endif
+ # The library uses GObject, and cannot be unloaded
+ bluez5_link_args = [ '-Wl,-z', '-Wl,nodelete' ]
+ 
+-bluez5lib = shared_library('spa-bluez5',
++bluez5lib = library('spa-bluez5',
+   bluez5_sources,
+   include_directories : [ configinc ],
+   dependencies : [ spa_dep, bluez5_deps ],
+@@ -84,7 +84,7 @@ bluez5lib = shared_library('spa-bluez5',
+ 
+ codec_args = [ '-DCODEC_PLUGIN' ]
+ 
+-bluez_codec_sbc = shared_library('spa-codec-bluez5-sbc',
++bluez_codec_sbc = library('spa-codec-bluez5-sbc',
+   [ 'a2dp-codec-sbc.c', 'media-codecs.c' ],
+   include_directories : [ configinc ],
+   c_args : codec_args,
+@@ -92,7 +92,7 @@ bluez_codec_sbc = shared_library('spa-codec-bluez5-sbc',
+   install : true,
+   install_dir : spa_plugindir / 'bluez5')
+ 
+-bluez_codec_faststream = shared_library('spa-codec-bluez5-faststream',
++bluez_codec_faststream = library('spa-codec-bluez5-faststream',
+   [ 'a2dp-codec-faststream.c', 'media-codecs.c' ],
+   include_directories : [ configinc ],
+   c_args : codec_args,
+@@ -101,7 +101,7 @@ bluez_codec_faststream = shared_library('spa-codec-bluez5-faststream',
+   install_dir : spa_plugindir / 'bluez5')
+ 
+ if fdk_aac_dep.found()
+-  bluez_codec_aac = shared_library('spa-codec-bluez5-aac',
++  bluez_codec_aac = library('spa-codec-bluez5-aac',
+     [ 'a2dp-codec-aac.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : codec_args,
+@@ -111,7 +111,7 @@ if fdk_aac_dep.found()
+ endif
+ 
+ if aptx_dep.found()
+-  bluez_codec_aptx = shared_library('spa-codec-bluez5-aptx',
++  bluez_codec_aptx = library('spa-codec-bluez5-aptx',
+     [ 'a2dp-codec-aptx.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : codec_args,
+@@ -125,7 +125,7 @@ if ldac_dep.found()
+   if ldac_abr_dep.found()
+     ldac_args += [ '-DENABLE_LDAC_ABR' ]
+   endif
+-  bluez_codec_ldac = shared_library('spa-codec-bluez5-ldac',
++  bluez_codec_ldac = library('spa-codec-bluez5-ldac',
+     [ 'a2dp-codec-ldac.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : ldac_args,
+@@ -135,7 +135,7 @@ if ldac_dep.found()
+ endif
+ 
+ if get_option('bluez5-codec-lc3plus').allowed() and lc3plus_dep.found()
+-  bluez_codec_lc3plus = shared_library('spa-codec-bluez5-lc3plus',
++  bluez_codec_lc3plus = library('spa-codec-bluez5-lc3plus',
+     [ 'a2dp-codec-lc3plus.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : codec_args,
+@@ -146,7 +146,7 @@ endif
+ 
+ if get_option('bluez5-codec-opus').allowed() and opus_dep.found()
+   opus_args = codec_args
+-  bluez_codec_opus = shared_library('spa-codec-bluez5-opus',
++  bluez_codec_opus = library('spa-codec-bluez5-opus',
+     [ 'a2dp-codec-opus.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : opus_args,
+@@ -154,7 +154,7 @@ if get_option('bluez5-codec-opus').allowed() and opus_dep.found()
+     install : true,
+     install_dir : spa_plugindir / 'bluez5')
+ 
+-  bluez_codec_opus_g = shared_library('spa-codec-bluez5-opus-g',
++  bluez_codec_opus_g = library('spa-codec-bluez5-opus-g',
+     [ 'a2dp-codec-opus-g.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : opus_args,
+@@ -164,7 +164,7 @@ if get_option('bluez5-codec-opus').allowed() and opus_dep.found()
+ endif
+ 
+ if get_option('bluez5-codec-lc3').allowed() and lc3_dep.found()
+-  bluez_codec_lc3 = shared_library('spa-codec-bluez5-lc3',
++  bluez_codec_lc3 = library('spa-codec-bluez5-lc3',
+     [ 'bap-codec-lc3.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : codec_args,
+@@ -174,7 +174,7 @@ if get_option('bluez5-codec-lc3').allowed() and lc3_dep.found()
+ endif
+ 
+ if get_option('bluez5-codec-g722').allowed()
+-  bluez_codec_g722 = shared_library('spa-codec-bluez5-g722',
++  bluez_codec_g722 = library('spa-codec-bluez5-g722',
+     [ 'g722/g722_encode.c', 'asha-codec-g722.c', 'media-codecs.c' ],
+     include_directories : [ configinc ],
+     c_args : codec_args,
+diff --git a/spa/plugins/control/meson.build b/spa/plugins/control/meson.build
+index adabdfab3..ccb88920e 100644
+--- a/spa/plugins/control/meson.build
++++ b/spa/plugins/control/meson.build
+@@ -3,7 +3,7 @@ control_sources = [
+   'plugin.c'
+ ]
+ 
+-controllib = shared_library('spa-control',
++controllib = library('spa-control',
+   control_sources,
+   dependencies : [ spa_dep, mathlib ],
+   install : true,
+diff --git a/spa/plugins/ffmpeg/meson.build b/spa/plugins/ffmpeg/meson.build
+index 0e41ecb6e..6b7924379 100644
+--- a/spa/plugins/ffmpeg/meson.build
++++ b/spa/plugins/ffmpeg/meson.build
+@@ -2,7 +2,7 @@ ffmpeg_sources = ['ffmpeg.c',
+                   'ffmpeg-dec.c',
+                   'ffmpeg-enc.c']
+ 
+-ffmpeglib = shared_library('spa-ffmpeg',
++ffmpeglib = library('spa-ffmpeg',
+                           ffmpeg_sources,
+                           dependencies : [ spa_dep, avcodec_dep ],
+                           install : true,
+diff --git a/spa/plugins/filter-graph/meson.build b/spa/plugins/filter-graph/meson.build
+index c346a9649..c3674440d 100644
+--- a/spa/plugins/filter-graph/meson.build
++++ b/spa/plugins/filter-graph/meson.build
+@@ -51,7 +51,7 @@ filter_graph_c = static_library('filter_graph_c',
+ )
+ simd_dependencies += filter_graph_c
+ 
+-spa_filter_graph = shared_library('spa-filter-graph',
++spa_filter_graph = library('spa-filter-graph',
+   ['filter-graph.c' ],
+   include_directories : [configinc],
+   dependencies : [ spa_dep, sndfile_dep, plugin_dependencies, mathlib ],
+@@ -66,7 +66,7 @@ filter_graph_dependencies = [
+   spa_dep, mathlib, sndfile_dep, plugin_dependencies
+ ]
+ 
+-spa_filter_graph_plugin_builtin = shared_library('spa-filter-graph-plugin-builtin',
++spa_filter_graph_plugin_builtin = library('spa-filter-graph-plugin-builtin',
+   [ 'builtin_plugin.c',
+     'convolver.c' ],
+   include_directories : [configinc],
+@@ -76,7 +76,7 @@ spa_filter_graph_plugin_builtin = shared_library('spa-filter-graph-plugin-builti
+   objects : audioconvert_c.extract_objects('biquad.c')
+ )
+ 
+-spa_filter_graph_plugin_ladspa = shared_library('spa-filter-graph-plugin-ladspa',
++spa_filter_graph_plugin_ladspa = library('spa-filter-graph-plugin-ladspa',
+   [ 'ladspa_plugin.c' ],
+   include_directories : [configinc],
+   install : true,
+@@ -85,7 +85,7 @@ spa_filter_graph_plugin_ladspa = shared_library('spa-filter-graph-plugin-ladspa'
+ )
+ 
+ if libmysofa_dep.found()
+-spa_filter_graph_plugin_sofa = shared_library('spa-filter-graph-plugin-sofa',
++spa_filter_graph_plugin_sofa = library('spa-filter-graph-plugin-sofa',
+   [ 'sofa_plugin.c',
+     'convolver.c' ],
+   include_directories : [configinc],
+@@ -96,7 +96,7 @@ spa_filter_graph_plugin_sofa = shared_library('spa-filter-graph-plugin-sofa',
+ endif
+ 
+ if lilv_lib.found()
+-spa_filter_graph_plugin_lv2 = shared_library('spa-filter-graph-plugin-lv2',
++spa_filter_graph_plugin_lv2 = library('spa-filter-graph-plugin-lv2',
+   [ 'lv2_plugin.c' ],
+   include_directories : [configinc],
+   install : true,
+@@ -106,7 +106,7 @@ spa_filter_graph_plugin_lv2 = shared_library('spa-filter-graph-plugin-lv2',
+ endif
+ 
+ if ebur128_lib.found()
+-spa_filter_graph_plugin_ebur128 = shared_library('spa-filter-graph-plugin-ebur128',
++spa_filter_graph_plugin_ebur128 = library('spa-filter-graph-plugin-ebur128',
+   [ 'ebur128_plugin.c' ],
+   include_directories : [configinc],
+   install : true,
+diff --git a/spa/plugins/jack/meson.build b/spa/plugins/jack/meson.build
+index 312a54061..989104d85 100644
+--- a/spa/plugins/jack/meson.build
++++ b/spa/plugins/jack/meson.build
+@@ -5,7 +5,7 @@ spa_jack_sources = [
+                 'jack-sink.c',
+                 'jack-source.c']
+ 
+-spa_jack = shared_library('spa-jack',
++spa_jack = library('spa-jack',
+   spa_jack_sources,
+   dependencies : [ spa_dep, jack_dep, mathlib ],
+   install : true,
+diff --git a/spa/plugins/libcamera/meson.build b/spa/plugins/libcamera/meson.build
+index 9f396aba2..b503295f1 100644
+--- a/spa/plugins/libcamera/meson.build
++++ b/spa/plugins/libcamera/meson.build
+@@ -5,7 +5,7 @@ libcamera_sources = [
+   'libcamera-source.cpp'
+ ]
+ 
+-libcameralib = shared_library('spa-libcamera',
++libcameralib = library('spa-libcamera',
+   libcamera_sources,
+   include_directories : [ configinc ],
+   dependencies : [ spa_dep, libcamera_dep, pthread_lib  ],
+diff --git a/spa/plugins/support/meson.build b/spa/plugins/support/meson.build
+index 678845774..dc7617776 100644
+--- a/spa/plugins/support/meson.build
++++ b/spa/plugins/support/meson.build
+@@ -16,7 +16,7 @@ endif
+ 
+ stdthreads_lib = cc.find_library('stdthreads', required: false)
+ 
+-spa_support_lib = shared_library('spa-support',
++spa_support_lib = library('spa-support',
+   spa_support_sources,
+   c_args : [ simd_cargs ],
+   include_directories : [ configinc ],
+@@ -33,7 +33,7 @@ if get_option('evl').allowed()
+ 
+   spa_evl_sources = ['evl-system.c', 'evl-plugin.c']
+ 
+-  spa_evl_lib = shared_library('spa-evl',
++  spa_evl_lib = library('spa-evl',
+     spa_evl_sources,
+     include_directories : [ evl_inc],
+     dependencies : [ spa_dep, pthread_lib, evl_lib ],
+@@ -44,7 +44,7 @@ endif
+ if dbus_dep.found()
+   spa_dbus_sources = ['dbus.c']
+ 
+-  spa_dbus_lib = shared_library('spa-dbus',
++  spa_dbus_lib = library('spa-dbus',
+     spa_dbus_sources,
+     dependencies : [ spa_dep, dbus_dep ],
+     install : true,
+@@ -60,7 +60,7 @@ if systemd_dep.found()
+     'journal.c',
+   ]
+ 
+-  spa_journal_lib = shared_library('spa-journal',
++  spa_journal_lib = library('spa-journal',
+     spa_journal_sources,
+     include_directories : [ configinc ],
+     dependencies : [ spa_dep, systemd_dep ],
+diff --git a/spa/plugins/test/meson.build b/spa/plugins/test/meson.build
+index 950ee7c38..d74e00b95 100644
+--- a/spa/plugins/test/meson.build
++++ b/spa/plugins/test/meson.build
+@@ -1,6 +1,6 @@
+ test_sources = ['fakesrc.c', 'fakesink.c', 'plugin.c']
+ 
+-testlib = shared_library('spa-test',
++testlib = library('spa-test',
+                           test_sources,
+                           dependencies : [ spa_dep, pthread_lib ],
+                           install : true,
+diff --git a/spa/plugins/v4l2/meson.build b/spa/plugins/v4l2/meson.build
+index 22746a161..8b509c73a 100644
+--- a/spa/plugins/v4l2/meson.build
++++ b/spa/plugins/v4l2/meson.build
+@@ -11,7 +11,7 @@ if libudev_dep.found()
+   endif
+ endif
+ 
+-v4l2lib = shared_library('spa-v4l2',
++v4l2lib = library('spa-v4l2',
+                           v4l2_sources,
+                           include_directories : [ configinc ],
+                           dependencies : v4l2_dependencies,
+diff --git a/spa/plugins/videoconvert/meson.build b/spa/plugins/videoconvert/meson.build
+index c345257d4..b8c8a359f 100644
+--- a/spa/plugins/videoconvert/meson.build
++++ b/spa/plugins/videoconvert/meson.build
+@@ -17,7 +17,7 @@ if avcodec_dep.found() and avutil_dep.found() and swscale_dep.found()
+   extra_dependencies += videoconvert_ffmpeg
+ endif
+ 
+-videoconvertlib = shared_library('spa-videoconvert',
++videoconvertlib = library('spa-videoconvert',
+   videoconvert_sources,
+   c_args : extra_cargs,
+   dependencies : [ spa_dep, mathlib ],
+diff --git a/spa/plugins/videotestsrc/meson.build b/spa/plugins/videotestsrc/meson.build
+index 01a33ee29..bfa8f02b6 100644
+--- a/spa/plugins/videotestsrc/meson.build
++++ b/spa/plugins/videotestsrc/meson.build
+@@ -1,6 +1,6 @@
+ videotestsrc_sources = ['videotestsrc.c', 'plugin.c']
+ 
+-videotestsrclib = shared_library('spa-videotestsrc',
++videotestsrclib = library('spa-videotestsrc',
+   videotestsrc_sources,
+   dependencies : [ spa_dep, pthread_lib ],
+   install : true,
+diff --git a/spa/plugins/volume/meson.build b/spa/plugins/volume/meson.build
+index 2445e2bbd..a7dcf0176 100644
+--- a/spa/plugins/volume/meson.build
++++ b/spa/plugins/volume/meson.build
+@@ -1,6 +1,6 @@
+ volume_sources = ['volume.c', 'plugin.c']
+ 
+-volumelib = shared_library('spa-volume',
++volumelib = library('spa-volume',
+   volume_sources,
+   dependencies : [ spa_dep ],
+   install : true,
+diff --git a/spa/plugins/vulkan/meson.build b/spa/plugins/vulkan/meson.build
+index 17ab1d630..17595fb91 100644
+--- a/spa/plugins/vulkan/meson.build
++++ b/spa/plugins/vulkan/meson.build
+@@ -19,7 +19,7 @@ else
+   spa_vulkan_sources += files('dmabuf_fallback.c')
+ endif
+ 
+-spa_vulkan = shared_library('spa-vulkan',
++spa_vulkan = library('spa-vulkan',
+   spa_vulkan_sources,
+   dependencies : [ spa_dep, vulkan_dep, mathlib, drm ],
+   install : true,
+diff --git a/src/gst/meson.build b/src/gst/meson.build
+index 1e39bcf89..5ac6298cf 100644
+--- a/src/gst/meson.build
++++ b/src/gst/meson.build
+@@ -24,7 +24,7 @@ pipewire_gst_headers = [
+   'gstpipewirestream.h',
+ ]
+ 
+-pipewire_gst = shared_library('gstpipewire',
++pipewire_gst = library('gstpipewire',
+     pipewire_gst_sources,
+     include_directories : [ configinc ],
+     dependencies : [ spa_dep, gst_dep, pipewire_dep, mathlib ],
+diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
+index a2d31a17f..280aff637 100644
+--- a/src/pipewire/meson.build
++++ b/src/pipewire/meson.build
+@@ -304,13 +304,14 @@ else
+ endif
+ 
+ 
+-libpipewire = shared_library(pipewire_name, pipewire_sources,
++libpipewire = library(pipewire_name, pipewire_sources,
+   version : libversion,
+   soversion : soversion,
+   c_args : libpipewire_c_args,
+   include_directories : [pipewire_inc, configinc, includes_inc, include_directories('../modules')],
+   install : true,
+-  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep, dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep],
++  link_with : [ spa_alsa],
+ )
+ 
+ pipewire_dep = declare_dependency(link_with : libpipewire,
+diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
+index 1767cfd09..917e24cca 100644
+--- a/src/pipewire/pipewire.c
++++ b/src/pipewire/pipewire.c
+@@ -31,6 +31,8 @@
+ 
+ #include <spa/plugins/support/plugin.c>
+ #include <spa/plugins/support/dbus.c>
++#include <spa/plugins/alsa/alsa.c>
++#include <spa/plugins/audioconvert/plugin.c>
+ 
+ #define MAX_SUPPORT	32
+ 
+@@ -121,6 +123,14 @@ open_plugin(struct registry *registry,
+ 		} else if (strcmp(lib, "support/libspa-dbus") == 0){
+ 			pw_log_debug("dbus support lib %s requested\n", lib);
+ 			enum_func = &dbus__spa_handle_factory_enum;
++		} else if (strcmp(lib, "alsa/libspa-alsa") == 0) {
++			pw_log_debug("alsa lib %s requested\n", lib);
++			enum_func = &alsa__spa_handle_factory_enum;
++		
++		} else if (strcmp(lib, "audioconvert/libspa-audioconvert") == 0) {
++			pw_log_debug("alsa lib %s requested\n", lib);
++			enum_func = &audioconvert__spa_handle_factory_enum;
++		
+ 		}
+         else 
+ 		
+-- 
+2.39.0
+
+
+From 8d12da8a52533f7624e9d7f617cca2360a6dee3b Mon Sep 17 00:00:00 2001
+From: Relic1212 <john.doe@example.com>
+Date: Fri, 8 Aug 2025 22:52:54 +0200
+Subject: [PATCH 3/4] sound works sporadically in chromium flatpak
+
+---
+ src/modules/module-protocol-pulse/module.c  | 214 +++++++++++++++++++-
+ src/modules/module-protocol-pulse/registy.h |  37 ++++
+ src/pipewire/impl-module.c                  |   6 +-
+ src/pipewire/meson.build                    |  29 ++-
+ 4 files changed, 271 insertions(+), 15 deletions(-)
+ create mode 100644 src/modules/module-protocol-pulse/registy.h
+
+diff --git a/src/modules/module-protocol-pulse/module.c b/src/modules/module-protocol-pulse/module.c
+index 0d45399c3..bd432f3e1 100644
+--- a/src/modules/module-protocol-pulse/module.c
++++ b/src/modules/module-protocol-pulse/module.c
+@@ -293,19 +293,217 @@ void audioinfo_to_properties(struct spa_audio_info_raw *info, struct pw_properti
+ 	}
+ }
+ 
++// https://gitlab.freedesktop.org/pipewire/pipewire/-/merge_requests/1208/diffs#01b6c74d4be1f950b38483f05b8820e6fffe1821
++extern const struct module_info * module_alsa_sink;
++extern const struct module_info * module_alsa_source;
++extern const struct module_info * module_always_sink;
++extern const struct module_info * module_combine_sink;
++extern const struct module_info * module_device_manager;
++extern const struct module_info * module_device_restore;
++extern const struct module_info * module_echo_cancel;
++// extern const struct module_info * module_gsettings;
++extern const struct module_info * module_jackdbus_detect;
++// extern const struct module_info * module_ladspa_sink;
++// extern const struct module_info * module_ladspa_source;
++extern const struct module_info * module_loopback;
++extern const struct module_info * module_native_protocol_tcp;
++extern const struct module_info * module_null_sink;
++extern const struct module_info * module_pipe_sink;
++extern const struct module_info * module_pipe_source;
++extern const struct module_info * module_raop_discover;
++extern const struct module_info * module_remap_sink;
++extern const struct module_info * module_remap_source;
++// extern const struct module_info * module_roc_sink_input;
++// extern const struct module_info * module_roc_sink;
++// extern const struct module_info * module_roc_source;
++extern const struct module_info * module_rtp_recv;
++extern const struct module_info * module_rtp_send;
++extern const struct module_info * module_simple_protocol_tcp;
++extern const struct module_info * module_stream_restore;
++extern const struct module_info * module_switch_on_connect;
++extern const struct module_info * module_tunnel_sink;
++extern const struct module_info * module_tunnel_source;
++extern const struct module_info * module_virtual_sink;
++extern const struct module_info * module_virtual_source;
++// extern const struct module_info * module_x11_bell;
++// extern const struct module_info * module_zeroconf_discover;
++// extern const struct module_info * module_zeroconf_publish;
++
++struct module_list_elem
++{
++	const char* name;
++	struct module_info * i_module_info;
++};
++
++extern const struct module_info * module_alsa_sink;
++
++const static struct module_list_elem module_list[] = {
++//  { "module-alsa-sink" ,  *module_alsa_sink},
++// { "module-alsa-source" , module_alsa_source},
++// { "module-always-sink" , module_always_sink},
++// { "module-combine-sink" , module_combine_sink},
++// { "module-device-manager" , module_device_manager},
++// { "module-device-restore" , module_device_restore},
++// { "module-echo-cancel" , module_echo_cancel},
++// { "module-gsettings" , module_gsettings},
++// { "module-jackdbus-detect" , module_jackdbus_detect},
++// { "module-ladspa-sink" , module_ladspa_sink},
++// { "module-ladspa-source" , module_ladspa_source},
++// { "module-loopback" , module_loopback},
++// { "module-native-protocol-tcp" , module_native_protocol_tcp},
++// { "module-null-sink" , module_null_sink},
++// { "module-pipe-sink" , module_pipe_sink},
++// { "module-pipe-source" , module_pipe_source},
++// { "module-raop-discover" , module_raop_discover},
++// { "module-remap-sink" , module_remap_sink},
++// { "module-remap-source" , module_remap_source},
++// { "module-roc-sink-input" , module_roc_sink_input},
++// { "module-roc-sink" , module_roc_sink},
++// { "module-roc-source" , module_roc_source},
++// { "module-rtp-recv" , module_rtp_recv},
++// { "module-rtp-send" , module_rtp_send},
++// { "module-simple-protocol-tcp" , module_simple_protocol_tcp},
++// { "module-stream-restore" , module_stream_restore},
++// { "module-switch-on-connect" , module_switch_on_connect},
++// { "module-tunnel-sink" , module_tunnel_sink},
++// { "module-tunnel-source" , module_tunnel_source},
++// { "module-virtual-sink" , module_virtual_sink},
++// { "module-virtual-source" , module_virtual_source},
++// { "module-x11-bell" , module_x11_bell},
++// { "module-zeroconf-discover" , module_zeroconf_discover},
++// { "module-zeroconf-publish" , module_zeroconf_publish},
++};
++
+ const struct module_info *module_info_find(struct impl *impl, const char *name)
+ {
+-	extern const struct module_info __start_pw_mod_pulse_modules[];
+-	extern const struct module_info __stop_pw_mod_pulse_modules[];
++	// extern const struct module_info __start_pw_mod_pulse_modules[];
++	// extern const struct module_info __stop_pw_mod_pulse_modules[];
++
++	// const struct module_info *info = __start_pw_mod_pulse_modules;
++
++	// for (; info < __stop_pw_mod_pulse_modules; info++) {
++	// 	if (spa_streq(info->name, name))
++	// 		return info;
++	// }
++
++	// spa_assert(info == __stop_pw_mod_pulse_modules);
++
++	// if (spa_streq(name, "module-alsa-sink")){
++	// 	return module_alsa_sink;
++	// }
++
++
++
++
++
++
++
++	if (spa_streq(name,"module-alsa-sink")){
++        return module_alsa_sink;
++    } else
++if (spa_streq(name,"module-alsa-source")){
++        return module_alsa_source;
++    } else
++if (spa_streq(name,"module-always-sink")){
++        return module_always_sink;
++    } else
++if (spa_streq(name,"module-combine-sink")){
++        return module_combine_sink;
++    } else
++if (spa_streq(name,"module-device-manager")){
++        return module_device_manager;
++    } else
++if (spa_streq(name,"module-device-restore")){
++        return module_device_restore;
++    } else
++if (spa_streq(name,"module-echo-cancel")){
++        return module_echo_cancel;
++    } else
++// if (spa_streq(name,"module-gsettings")){
++//         return module_gsettings;
++//     } else
++if (spa_streq(name,"module-jackdbus-detect")){
++        return module_jackdbus_detect;
++    } else
++// if (spa_streq(name,"module-ladspa-sink")){
++//         return module_ladspa_sink;
++//     } else
++// if (spa_streq(name,"module-ladspa-source")){
++//         return module_ladspa_source;
++//     } else
++if (spa_streq(name,"module-loopback")){
++        return module_loopback;
++    } else
++if (spa_streq(name,"module-native-protocol-tcp")){
++        return module_native_protocol_tcp;
++    } else
++if (spa_streq(name,"module-null-sink")){
++        return module_null_sink;
++    } else
++if (spa_streq(name,"module-pipe-sink")){
++        return module_pipe_sink;
++    } else
++if (spa_streq(name,"module-pipe-source")){
++        return module_pipe_source;
++    } else
++if (spa_streq(name,"module-raop-discover")){
++        return module_raop_discover;
++    } else
++if (spa_streq(name,"module-remap-sink")){
++        return module_remap_sink;
++    } else
++if (spa_streq(name,"module-remap-source")){
++        return module_remap_source;
++    } else
++// if (spa_streq(name,"module-roc-sink-input")){
++//         return module_roc_sink_input;
++//     } else
++// if (spa_streq(name,"module-roc-sink")){
++//         return module_roc_sink;
++//     } else
++// if (spa_streq(name,"module-roc-source")){
++//         return module_roc_source;
++//     } else
++// if (spa_streq(name,"module-rtp-recv")){
++//         return module_rtp_recv;
++//     } else
++// if (spa_streq(name,"module-rtp-send")){
++//         return module_rtp_send;
++//     } else
++if (spa_streq(name,"module-simple-protocol-tcp")){
++        return module_simple_protocol_tcp;
++    } else
++if (spa_streq(name,"module-stream-restore")){
++        return module_stream_restore;
++    } else
++if (spa_streq(name,"module-switch-on-connect")){
++        return module_switch_on_connect;
++    } else
++if (spa_streq(name,"module-tunnel-sink")){
++        return module_tunnel_sink;
++    } else
++if (spa_streq(name,"module-tunnel-source")){
++        return module_tunnel_source;
++    } else
++if (spa_streq(name,"module-virtual-sink")){
++        return module_virtual_sink;
++    } else
++if (spa_streq(name,"module-virtual-source")){
++        return module_virtual_source;
++     } 
++// else
++// if (spa_streq(name,"module-x11-bell")){
++//         return module_x11_bell;
++//     } else
++// if (spa_streq(name,"module-zeroconf-discover")){
++//         return module_zeroconf_discover;
++//     } else
++// if (spa_streq(name,"module-zeroconf-publish")){
++//         return module_zeroconf_publish;
++//     } 
+ 
+-	const struct module_info *info = __start_pw_mod_pulse_modules;
+ 
+-	for (; info < __stop_pw_mod_pulse_modules; info++) {
+-		if (spa_streq(info->name, name))
+-			return info;
+-	}
+ 
+-	spa_assert(info == __stop_pw_mod_pulse_modules);
+ 
+ 	return NULL;
+ }
+diff --git a/src/modules/module-protocol-pulse/registy.h b/src/modules/module-protocol-pulse/registy.h
+new file mode 100644
+index 000000000..4375ce792
+--- /dev/null
++++ b/src/modules/module-protocol-pulse/registy.h
+@@ -0,0 +1,37 @@
++
++
++
++extern module_info module_alsa_sink;
++extern module_info module_alsa_source;
++extern module_info module_always_sink;
++extern module_info module_combine_sink;
++extern module_info module_device_manager;
++extern module_info module_device_restore;
++extern module_info module_echo_cancel;
++extern module_info module_gsettings;
++extern module_info module_jackdbus_detect;
++extern module_info module_ladspa_sink;
++extern module_info module_ladspa_source;
++extern module_info module_loopback;
++extern module_info module_native_protocol_tcp;
++extern module_info module_null_sink;
++extern module_info module_pipe_sink;
++extern module_info module_pipe_source;
++extern module_info module_raop_discover;
++extern module_info module_remap_sink;
++extern module_info module_remap_source;
++extern module_info module_roc_sink_input;
++extern module_info module_roc_sink;
++extern module_info module_roc_source;
++extern module_info module_rtp_recv;
++extern module_info module_rtp_send;
++extern module_info module_simple_protocol_tcp;
++extern module_info module_stream_restore;
++extern module_info module_switch_on_connect;
++extern module_info module_tunnel_sink;
++extern module_info module_tunnel_source;
++extern module_info module_virtual_sink;
++extern module_info module_virtual_source;
++extern module_info module_x11_bell;
++extern module_info module_zeroconf_discover;
++extern module_info module_zeroconf_publish;
+diff --git a/src/pipewire/impl-module.c b/src/pipewire/impl-module.c
+index d4c70ef36..35d21d1b9 100644
+--- a/src/pipewire/impl-module.c
++++ b/src/pipewire/impl-module.c
+@@ -283,10 +283,10 @@ pw_context_load_module(struct pw_context *context,
+ 		init_func = &module_portal__pipewire__module_init;
+ 
+ 	} 
+-	// else if (strcmp(name, "libpipewire-module-protocol-pulse") == 0) {
+-	// 	init_func = &module_protocol_pulse__pipewire__module_init;
++	else if (strcmp(name, "libpipewire-module-protocol-pulse") == 0) {
++		init_func = &module_protocol_pulse__pipewire__module_init;
+ 
+-	// } 
++	} 
+ 	else if (strcmp(name, "libpipewire-module-protocol-simple") == 0) {
+ 		init_func = &module_protocol_simple__pipewire__module_init;
+ 
+diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
+index 280aff637..1fefc293a 100644
+--- a/src/pipewire/meson.build
++++ b/src/pipewire/meson.build
+@@ -155,7 +155,7 @@ pipewire_sources += [ '../modules/module-client-device.c',
+ pipewire_sources +=   [ '../modules/module-link-factory.c' ]
+ 
+ 
+-pipewire_sources += [
++pipewire_module_protocol_pulse_sources = [
+   '../modules/module-protocol-pulse.c',
+   '../modules/module-protocol-pulse/client.c',
+   '../modules/module-protocol-pulse/collect.c',
+@@ -213,7 +213,28 @@ pipewire_sources += [
+ ]
+ 
+ 
+-pipewire_sources += [ '../modules/module-protocol-pulse/dbus-name.c',]
++
++pipewire_module_protocol_pulse_sources += [ '../modules/module-protocol-pulse/dbus-name.c',]
++
++pipewire_module_protocol_pulse_lib = library('pipewire-module-protocol-pulse',
++  pipewire_module_protocol_pulse_sources,
++  include_directories : [configinc, include_directories('../modules'), pipewire_inc,  includes_inc, include_directories('../..'),include_directories('../../spa/include') ],
++  install : true,
++
++  # link_args : [ '-z' ,'nostart-stop-gc' ],
++  # install_rpath: modules_install_dir,
++  dependencies : [ mathlib, dl_lib, ] + dbus_dep + glib2_dep ,
++)
++
++pulse_mod_dep = declare_dependency(
++  link_with:pipewire_module_protocol_pulse_lib,  
++  #  link_args : [ '-z' ,'nostart-stop-gc' ], 
++  ) 
++
++
++# the alternative - just build everything into one lib
++# pipewire_sources += protocol_pulse_sources
++
+ 
+ pipewire_sources +=   [ '../modules/module-pipe-tunnel.c' ]
+ 
+@@ -310,8 +331,8 @@ libpipewire = library(pipewire_name, pipewire_sources,
+   c_args : libpipewire_c_args,
+   include_directories : [pipewire_inc, configinc, includes_inc, include_directories('../modules')],
+   install : true,
+-  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep],
+-  link_with : [ spa_alsa],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep, pulse_mod_dep],
++  link_with : [ spa_alsa ],
+ )
+ 
+ pipewire_dep = declare_dependency(link_with : libpipewire,
+-- 
+2.39.0
+
+
+From 05a823c2d9c5c906619212f5da391a1905182d52 Mon Sep 17 00:00:00 2001
+From: Relic1212 <john.doe@example.com>
+Date: Fri, 8 Aug 2025 22:57:16 +0200
+Subject: [PATCH 4/4] also works in flatpak
+
+---
+ src/pipewire/meson.build | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
+index 1fefc293a..aaed4b3a4 100644
+--- a/src/pipewire/meson.build
++++ b/src/pipewire/meson.build
+@@ -216,24 +216,21 @@ pipewire_module_protocol_pulse_sources = [
+ 
+ pipewire_module_protocol_pulse_sources += [ '../modules/module-protocol-pulse/dbus-name.c',]
+ 
+-pipewire_module_protocol_pulse_lib = library('pipewire-module-protocol-pulse',
+-  pipewire_module_protocol_pulse_sources,
+-  include_directories : [configinc, include_directories('../modules'), pipewire_inc,  includes_inc, include_directories('../..'),include_directories('../../spa/include') ],
+-  install : true,
++# pipewire_module_protocol_pulse_lib = library('pipewire-module-protocol-pulse',
++#   pipewire_module_protocol_pulse_sources,
++#   include_directories : [configinc, include_directories('../modules'), pipewire_inc,  includes_inc, include_directories('../..'),include_directories('../../spa/include') ],
++#   install : true,
+ 
+-  # link_args : [ '-z' ,'nostart-stop-gc' ],
+-  # install_rpath: modules_install_dir,
+-  dependencies : [ mathlib, dl_lib, ] + dbus_dep + glib2_dep ,
+-)
++#   dependencies : [ mathlib, dl_lib, ] + dbus_dep + glib2_dep ,
++# )
+ 
+-pulse_mod_dep = declare_dependency(
+-  link_with:pipewire_module_protocol_pulse_lib,  
+-  #  link_args : [ '-z' ,'nostart-stop-gc' ], 
+-  ) 
++# pulse_mod_dep = declare_dependency(
++#   link_with:pipewire_module_protocol_pulse_lib,  
++#   ) 
+ 
+ 
+ # the alternative - just build everything into one lib
+-# pipewire_sources += protocol_pulse_sources
++pipewire_sources += pipewire_module_protocol_pulse_sources
+ 
+ 
+ pipewire_sources +=   [ '../modules/module-pipe-tunnel.c' ]
+@@ -331,7 +328,7 @@ libpipewire = library(pipewire_name, pipewire_sources,
+   c_args : libpipewire_c_args,
+   include_directories : [pipewire_inc, configinc, includes_inc, include_directories('../modules')],
+   install : true,
+-  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep, pulse_mod_dep],
++  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep, ],
+   link_with : [ spa_alsa ],
+ )
+ 
+-- 
+2.39.0
+
