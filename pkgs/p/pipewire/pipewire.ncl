@@ -13,7 +13,10 @@
       uri = "https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/1.4.7/pipewire-1.4.7.tar.gz",
       sha256sum = "9d54f025e1e7ae73b980a6c8be2e8e6387e24d554d58478d6495734ce1ee5a93"
       # uri = "/run/data/user/Projects/pipewire-static-playground.tar.gz",
-      # sha256sum = "07b0d9f39a4ec30f87b0a33d8a42b177e3ba9e5ccc0ed29cd788a274658fe14c"
+      # sha256sum = "07b0d9f39a4ec30f87b0a33d8a42b177e3ba9e5ccc0ed29cd788a274658fe14c",
+
+      # uri = "/run/data/user/Projects/pipewire-static-playground.tar.gz",
+      # sha256sum = "778c297988beefc78f6b2d0c6b43dcd69c8ab5500cb7e818603d06abb2bc588a"
     },
 
     sourceInputs = [
@@ -30,11 +33,11 @@
     patches = [
       {
         file = "pipewire.patch",
-        sha256sum = "7cda51f444a144d8cc081574bef728a4119dac30c189690de6d2f73ed0f904aa"
+        sha256sum = "17591c93532946973fb06a07a9179ce3b8aa5e3c0564320cb7d34fff1488435e"
       },
       {
         file = "wireplumber.patch",
-        sha256sum = "3adcb61bc49928e58ce176cbc545e39ac64481a982db1d86d6b3a230bcb54810"
+        sha256sum = "0c62cf982e30a67c170cda38481e7453f99eeae5f04353f0e862a626dfb2fec9"
       }
     ],
     patchPhase = [
@@ -123,6 +126,6 @@
   pipewire | lib.MesonPackage =
     _pipewire
     & {
-      mesonArgs | force = lib.functions.replaceArrayElem "--buildtype=release" "--buildtype=debug" _pipewire.mesonArgs
+      # mesonArgs | force = lib.functions.replaceArrayElem "--buildtype=release" "--buildtype=debug" _pipewire.mesonArgs
     }
 }

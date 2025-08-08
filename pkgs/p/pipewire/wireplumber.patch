@@ -1,58 +1,8 @@
-From d2da91eb53daeabe35a661d83f1845e6d6698737 Mon Sep 17 00:00:00 2001
-From: Relic1212 <john.doe@example.com>
-Date: Fri, 8 Aug 2025 12:56:50 +0200
-Subject: [PATCH 1/5] wireplumber works but shows no devices
-
----
- lib/wp/meson.build                      |  25 +++-
- lib/wp/private/internal-comp-loader.c   | 154 ++++++++++++++++++++++--
- modules/.h                              |   8 ++
- modules/meson.build                     |  28 ++---
- modules/module-dbus-connection.c        |   2 +-
- modules/module-dbus-connection.h        |   8 ++
- modules/module-default-nodes-api.c      |   2 +-
- modules/module-default-nodes-api.h      |   8 ++
- modules/module-file-monitor-api.c       |   2 +-
- modules/module-file-monitor-api.h       |   8 ++
- modules/module-log-settings.c           |   2 +-
- modules/module-log-settings.h           |   8 ++
- modules/module-lua-scripting.h          |   8 ++
- modules/module-mixer-api.c              |   2 +-
- modules/module-mixer-api.h              |   8 ++
- modules/module-portal-permissionstore.c |   2 +-
- modules/module-portal-permissionstore.h |   8 ++
- modules/module-reserve-device.h         |   8 ++
- modules/module-settings.c               |   2 +-
- modules/module-settings.h               |   8 ++
- modules/module-si-audio-adapter.c       |   2 +-
- modules/module-si-audio-adapter.h       |   8 ++
- modules/module-si-node.c                |   2 +-
- modules/module-si-node.h                |   8 ++
- modules/module-si-standard-link.c       |   2 +-
- modules/module-si-standard-link.h       |   8 ++
- modules/module-standard-event-source.c  |   2 +-
- modules/module-standard-event-source.h  |   8 ++
- 28 files changed, 307 insertions(+), 34 deletions(-)
- create mode 100644 modules/.h
- create mode 100644 modules/module-dbus-connection.h
- create mode 100644 modules/module-default-nodes-api.h
- create mode 100644 modules/module-file-monitor-api.h
- create mode 100644 modules/module-log-settings.h
- create mode 100644 modules/module-lua-scripting.h
- create mode 100644 modules/module-mixer-api.h
- create mode 100644 modules/module-portal-permissionstore.h
- create mode 100644 modules/module-reserve-device.h
- create mode 100644 modules/module-settings.h
- create mode 100644 modules/module-si-audio-adapter.h
- create mode 100644 modules/module-si-node.h
- create mode 100644 modules/module-si-standard-link.h
- create mode 100644 modules/module-standard-event-source.h
-
 diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 9aacc624..8164d25c 100644
+index 9aacc624..d8926a4e 100644
 --- a/lib/wp/meson.build
 +++ b/lib/wp/meson.build
-@@ -124,14 +124,35 @@ wpbuildbasedirs = configure_file (
+@@ -124,18 +124,137 @@ wpbuildbasedirs = configure_file (
    configuration : wpbuildbasedirs_data,
  )
  
@@ -77,6 +27,99 @@ index 9aacc624..8164d25c 100644
 +)
 +wp_lib_sources += [dbus_connection_enums]
 +
++
++wplua_include_dir = include_directories('../../modules/module-lua-scripting')
++wplua_lib_sources = [
++  '../../modules/module-lua-scripting/wplua/boxed.c',
++  '../../modules/module-lua-scripting/wplua/closure.c',
++  '../../modules/module-lua-scripting/wplua/object.c',
++  '../../modules/module-lua-scripting/wplua/userdata.c',
++  '../../modules/module-lua-scripting/wplua/value.c',
++  '../../modules/module-lua-scripting/wplua/wplua.c',
++]
++
++
++wplua_resources = gnome.compile_resources(
++    'wplua-resources',
++    '../../modules/module-lua-scripting/wplua/gresource.xml',
++    c_name: '_wplua',
++    extra_args: '--manual-register',
++    source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'wplua' 
++)
++
++
++
++wp_lib_sources +=  wplua_lib_sources
++wp_lib_sources += wplua_resources 
++
++m_lua_scripting_resources = gnome.compile_resources(
++    'm-lua-scripting-resources',
++    '../../modules/module-lua-scripting/api/gresource.xml',
++    source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'api',
++    c_name: '_m_lua_scripting_resources',
++    export: true,
++)
++
++
++# wp_lib_sources +=[
++#     '../../modules/module-lua-scripting/module.c',
++#     '../../modules/module-lua-scripting/script.c',
++#     '../../modules/module-lua-scripting/api/pod.c',
++#     '../../modules/module-lua-scripting/api/json.c',
++#     '../../modules/module-lua-scripting/api/api.c',
++#      m_lua_scripting_resources,
++#   ]
++
++
++reserve_device_interface_src = gnome.gdbus_codegen('reserve-device-interface',
++  sources: '../../modules/module-reserve-device/org.freedesktop.ReserveDevice1.xml',
++  interface_prefix : 'org.freedesktop.ReserveDevice1.',
++  namespace : 'Wp'
++)
++reserve_device_enums = gnome.mkenums_simple('reserve-device-enums',
++  sources: [ '../../modules/module-reserve-device/plugin.h', '../../modules/module-reserve-device/reserve-device.h' ],
++)
++reserve_device_includes = include_directories('../../modules/module-reserve-device')
++
++wp_lib_sources +=   [
++    '../../modules/module-reserve-device/plugin.c',
++    '../../modules/module-reserve-device/reserve-device.c',
++    '../../modules/module-reserve-device/transitions.c',
++    reserve_device_interface_src,
++    reserve_device_enums,
++  ]
++
++wplua_lib_i = static_library('wplua-1-' + wireplumber_api_version,
++  [ wplua_lib_sources, wplua_resources ],
++  install: false,
++  include_directories: [wplua_include_dir,wp_lib_include_dir],
++  dependencies : [lua_dep, giounix_dep, gobject_dep, gio_dep],
++)
++
++wplua_dep_i = declare_dependency(
++  link_with: wplua_lib_i,
++  include_directories: wplua_include_dir,
++  dependencies: [gobject_dep, gio_dep, lua_dep],
++)
++wp_lua_scripting_lib = library(
++  'wireplumber-module-lua-scripting-1',
++  [
++    '../../modules/module-lua-scripting/module.c',
++    '../../modules/module-lua-scripting/script.c',
++    '../../modules/module-lua-scripting/api/pod.c',
++    '../../modules/module-lua-scripting/api/json.c',
++    '../../modules/module-lua-scripting/api/api.c',
++     m_lua_scripting_resources,
++  ],
++  install : true,
++  # install_dir : wireplumber_module_dir,
++  include_directories: [wplua_include_dir,wp_lib_include_dir],
++  
++  dependencies : [gobject_dep, gio_dep, pipewire_dep, wplua_dep_i, libintl_dep],
++)
++
++
++
  wp_lib = library('wireplumber-' + wireplumber_api_version,
    wp_lib_sources, wp_lib_priv_sources, wpenums_c, wpenums_h, wpversion, wpbuildbasedirs,
    c_args : [
@@ -85,13 +128,22 @@ index 9aacc624..8164d25c 100644
    install: true,
 -  include_directories: wp_lib_include_dir,
 -  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep],
-+  include_directories: [ wp_lib_include_dir , include_directories('../../modules')],
-+  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib],
++  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), 
++  # include_directories('../../modules/module-lua-scripting'), 
++  reserve_device_includes],
++  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep],
    soversion: wireplumber_so_version,
    version: wireplumber_libversion,
++  # link_with: wplua_lib_i,
++  link_with: wp_lua_scripting_lib,
  )
+ 
++
+ wp_dep = declare_dependency(
+   link_with: wp_lib,
+   sources: wp_gen_sources,
 diff --git a/lib/wp/private/internal-comp-loader.c b/lib/wp/private/internal-comp-loader.c
-index b6435335..59a3b28c 100644
+index b6435335..71a33642 100644
 --- a/lib/wp/private/internal-comp-loader.c
 +++ b/lib/wp/private/internal-comp-loader.c
 @@ -12,6 +12,20 @@
@@ -115,7 +167,7 @@ index b6435335..59a3b28c 100644
  WP_DEFINE_LOCAL_LOG_TOPIC ("wp-internal-comp-loader")
  
  /*** ComponentData ***/
-@@ -789,6 +803,24 @@ static const struct {
+@@ -789,6 +803,26 @@ static const struct {
    { "settings-instance", load_settings_instance },
  };
  
@@ -128,8 +180,10 @@ index b6435335..59a3b28c 100644
 +  { "libwireplumber-module-default-nodes-api", libwireplumber_module_default_nodes_api__wireplumber__module_init },
 +  { "libwireplumber-module-file-monitor-api", libwireplumber_module_file_monitor_api__wireplumber__module_init },
 +  { "libwireplumber-module-log-settings", libwireplumber_module_log_settings__wireplumber__module_init},
++  { "libwireplumber-module-lua-scripting", libwireplumber_module_lua_scripting__wireplumber__module_init},
 +  { "libwireplumber-module-mixer-api", libwireplumber_module_mixer_api__wireplumber__module_init},
 +  { "libwireplumber-module-portal-permissionstore", libwireplumber_module_portal_permissionstore__wireplumber__module_init},
++  { "libwireplumber-module-reserve-device", libwireplumber_module_reserve_device__wireplumber__module_init },
 +  { "libwireplumber-module-settings", libwireplumber_module_settings__wireplumber__module_init },
 +  { "libwireplumber-module-si-audio-adapter" , libwireplumber_module_si_audio_adapter__wireplumber__module_init},
 +  {"libwireplumber-module-si-node", libwireplumber_module_si_node__wireplumber__module_init},
@@ -140,7 +194,7 @@ index b6435335..59a3b28c 100644
  /*** WpInternalCompLoader ***/
  
  struct _WpInternalCompLoader
-@@ -838,6 +870,96 @@ load_module (WpCore * core, const gchar * module_name, WpSpaJson * args,
+@@ -838,6 +872,96 @@ load_module (WpCore * core, const gchar * module_name, WpSpaJson * args,
          "Failed to open %s: %s", module_path, g_module_error ());
      return NULL;
    }
@@ -237,7 +291,7 @@ index b6435335..59a3b28c 100644
  
    if (!g_module_symbol (gmodule, WP_MODULE_INIT_SYMBOL, &module_init)) {
      g_set_error (error, WP_DOMAIN_LIBRARY, WP_LIBRARY_ERROR_OPERATION_FAILED,
-@@ -975,13 +1097,31 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
+@@ -975,13 +1099,40 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
        g_autoptr (GError) error = NULL;
        g_autoptr (GObject) o = NULL;
  
@@ -252,7 +306,7 @@ index b6435335..59a3b28c 100644
 +      // else
 +      //   g_task_return_error (task, g_steal_pointer (&error));
 +
-+
++      int found = 0;
 +      for (guint i = 0; i < G_N_ELEMENTS (builtin_components_ii); i++) {
 +          wp_trace_object (core, "checking if %s == %s\n", component, builtin_components_ii[i].name);
 +        if (g_str_equal (component, builtin_components_ii[i].name)) {
@@ -262,9 +316,18 @@ index b6435335..59a3b28c 100644
 +            g_task_return_pointer (task, g_steal_pointer (&o), g_object_unref);
 +          else
 +            g_task_return_error (task, g_steal_pointer (&error));
++          found = 1;
 +          break;
 +        }
++
++        
 +      }
++      if (found == 0){
++         g_task_return_new_error (task, WP_DOMAIN_LIBRARY,
++          WP_LIBRARY_ERROR_INVALID_ARGUMENT,
++          "invalid 'module' component: %s", component);
++         }
++    
 +
 +
 +
@@ -275,7 +338,7 @@ index b6435335..59a3b28c 100644
        if (!pw_context_load_module (wp_core_get_pw_context (core), component,
                args ? wp_spa_json_get_data (args) : NULL, NULL)) {
          g_task_return_new_error (task, WP_DOMAIN_LIBRARY,
-@@ -995,7 +1135,7 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
+@@ -995,7 +1146,7 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
      else if (g_str_equal (type, "virtual")) {
        g_task_return_pointer (task, NULL, NULL);
      }
@@ -284,6 +347,23 @@ index b6435335..59a3b28c 100644
        for (guint i = 0; i < G_N_ELEMENTS (builtin_components); i++) {
          if (g_str_equal (component, builtin_components[i].name)) {
            builtin_components[i].load (task, core, args);
+diff --git a/meson.build b/meson.build
+index e197d837..a2059247 100644
+--- a/meson.build
++++ b/meson.build
+@@ -161,9 +161,9 @@ common_args = [
+ add_project_arguments(common_args, language: 'c')
+ 
+ subdir('lib')
+-if build_modules
+-  subdir('modules')
+-endif
++# if build_modules
++#   subdir('modules')
++# endif
+ subdir('src')
+ subdir('po')
+ subdir('docs')
 diff --git a/modules/.h b/modules/.h
 new file mode 100644
 index 00000000..b87b5cea
@@ -547,6 +627,19 @@ index 00000000..7b37e21f
 +libwireplumber_module_lua_scripting__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error);
 +
 +#endif
+diff --git a/modules/module-lua-scripting/module.c b/modules/module-lua-scripting/module.c
+index df64922d..3eb37e54 100644
+--- a/modules/module-lua-scripting/module.c
++++ b/modules/module-lua-scripting/module.c
+@@ -218,7 +218,7 @@ wp_lua_scripting_component_loader_init (WpComponentLoaderInterface * iface)
+ }
+ 
+ WP_PLUGIN_EXPORT GObject *
+-wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
++libwireplumber_module_lua_scripting__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
+ {
+   return G_OBJECT (g_object_new (wp_lua_scripting_plugin_get_type (),
+       "name", "lua-scripting",
 diff --git a/modules/module-mixer-api.c b/modules/module-mixer-api.c
 index 502640c6..666fabe2 100644
 --- a/modules/module-mixer-api.c
@@ -615,6 +708,19 @@ index 00000000..a3474742
 +libwireplumber_module_reserve_device__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error);
 +
 +#endif
+diff --git a/modules/module-reserve-device/plugin.c b/modules/module-reserve-device/plugin.c
+index e6789ffc..bc02414d 100644
+--- a/modules/module-reserve-device/plugin.c
++++ b/modules/module-reserve-device/plugin.c
+@@ -256,7 +256,7 @@ wp_reserve_device_plugin_class_init (WpReserveDevicePluginClass * klass)
+ }
+ 
+ WP_PLUGIN_EXPORT GObject *
+-wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
++libwireplumber_module_reserve_device__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
+ {
+   return G_OBJECT (g_object_new (wp_reserve_device_plugin_get_type (),
+       "name", "reserve-device",
 diff --git a/modules/module-settings.c b/modules/module-settings.c
 index f13aa77a..59754c12 100644
 --- a/modules/module-settings.c
@@ -750,407 +856,6 @@ index 00000000..85ffe71e
 +libwireplumber_module_standard_event_source__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error);
 +
 +#endif
--- 
-2.39.0
-
-
-From fb553ac56bdc1310279fbbc007dd58649de1a132 Mon Sep 17 00:00:00 2001
-From: Relic1212 <john.doe@example.com>
-Date: Fri, 8 Aug 2025 15:10:38 +0200
-Subject: [PATCH 2/5] break it
-
----
- lib/wp/private/internal-comp-loader.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/lib/wp/private/internal-comp-loader.c b/lib/wp/private/internal-comp-loader.c
-index 59a3b28c..49d13730 100644
---- a/lib/wp/private/internal-comp-loader.c
-+++ b/lib/wp/private/internal-comp-loader.c
-@@ -1103,7 +1103,7 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
-       // else
-       //   g_task_return_error (task, g_steal_pointer (&error));
- 
--
-+      int found = 0;
-       for (guint i = 0; i < G_N_ELEMENTS (builtin_components_ii); i++) {
-           wp_trace_object (core, "checking if %s == %s\n", component, builtin_components_ii[i].name);
-         if (g_str_equal (component, builtin_components_ii[i].name)) {
-@@ -1113,9 +1113,18 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
-             g_task_return_pointer (task, g_steal_pointer (&o), g_object_unref);
-           else
-             g_task_return_error (task, g_steal_pointer (&error));
-+          found = 1;
-           break;
-         }
-+
-+        
-       }
-+      if (found == 0){
-+         g_task_return_new_error (task, WP_DOMAIN_LIBRARY,
-+          WP_LIBRARY_ERROR_INVALID_ARGUMENT,
-+          "invalid 'module' component: %s", component);
-+         }
-+    
- 
- 
- 
--- 
-2.39.0
-
-
-From 67c9594ad7ff0555a7093732a464fa2838ce1c3d Mon Sep 17 00:00:00 2001
-From: Relic1212 <john.doe@example.com>
-Date: Fri, 8 Aug 2025 15:34:29 +0200
-Subject: [PATCH 3/5] lua scripting
-
----
- lib/wp/meson.build                    | 46 +++++++++++++++++++++++++--
- lib/wp/private/internal-comp-loader.c |  1 +
- modules/module-lua-scripting/module.c |  2 +-
- 3 files changed, 46 insertions(+), 3 deletions(-)
-
-diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 8164d25c..2a9bf4b0 100644
---- a/lib/wp/meson.build
-+++ b/lib/wp/meson.build
-@@ -145,14 +145,56 @@ dbus_connection_enums = gnome.mkenums_simple('dbus-connection-enums',
- )
- wp_lib_sources += [dbus_connection_enums]
- 
-+
-+wplua_include_dir = include_directories('../../modules/module-lua-scripting')
-+wplua_lib_sources = [
-+  '../../modules/module-lua-scripting/wplua/boxed.c',
-+  '../../modules/module-lua-scripting/wplua/closure.c',
-+  '../../modules/module-lua-scripting/wplua/object.c',
-+  '../../modules/module-lua-scripting/wplua/userdata.c',
-+  '../../modules/module-lua-scripting/wplua/value.c',
-+  '../../modules/module-lua-scripting/wplua/wplua.c',
-+]
-+
-+
-+wplua_resources = gnome.compile_resources(
-+    'wplua-resources',
-+    '../../modules/module-lua-scripting/wplua/gresource.xml',
-+    c_name: '_wplua',
-+    extra_args: '--manual-register',
-+    source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'wplua' 
-+)
-+
-+wp_lib_sources +=  wplua_lib_sources
-+wp_lib_sources += wplua_resources 
-+
-+m_lua_scripting_resources = gnome.compile_resources(
-+    'm-lua-scripting-resources',
-+    '../../modules/module-lua-scripting/api/gresource.xml',
-+    source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'api',
-+    c_name: '_m_lua_scripting_resources'
-+)
-+
-+
-+wp_lib_sources +=[
-+    '../../modules/module-lua-scripting/module.c',
-+    '../../modules/module-lua-scripting/script.c',
-+    '../../modules/module-lua-scripting/api/pod.c',
-+    '../../modules/module-lua-scripting/api/json.c',
-+    '../../modules/module-lua-scripting/api/api.c',
-+     m_lua_scripting_resources,
-+  ]
-+
-+
-+
- wp_lib = library('wireplumber-' + wireplumber_api_version,
-   wp_lib_sources, wp_lib_priv_sources, wpenums_c, wpenums_h, wpversion, wpbuildbasedirs,
-   c_args : [
-     '-DBUILDING_WP',
-   ],
-   install: true,
--  include_directories: [ wp_lib_include_dir , include_directories('../../modules')],
--  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib],
-+  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), include_directories('../../modules/module-lua-scripting')],
-+  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep],
-   soversion: wireplumber_so_version,
-   version: wireplumber_libversion,
- )
-diff --git a/lib/wp/private/internal-comp-loader.c b/lib/wp/private/internal-comp-loader.c
-index 49d13730..6ef4fd4d 100644
---- a/lib/wp/private/internal-comp-loader.c
-+++ b/lib/wp/private/internal-comp-loader.c
-@@ -812,6 +812,7 @@ static const struct {
-   { "libwireplumber-module-default-nodes-api", libwireplumber_module_default_nodes_api__wireplumber__module_init },
-   { "libwireplumber-module-file-monitor-api", libwireplumber_module_file_monitor_api__wireplumber__module_init },
-   { "libwireplumber-module-log-settings", libwireplumber_module_log_settings__wireplumber__module_init},
-+  { "libwireplumber-module-lua-scripting", libwireplumber_module_lua_scripting__wireplumber__module_init},
-   { "libwireplumber-module-mixer-api", libwireplumber_module_mixer_api__wireplumber__module_init},
-   { "libwireplumber-module-portal-permissionstore", libwireplumber_module_portal_permissionstore__wireplumber__module_init},
-   { "libwireplumber-module-settings", libwireplumber_module_settings__wireplumber__module_init },
-diff --git a/modules/module-lua-scripting/module.c b/modules/module-lua-scripting/module.c
-index df64922d..3eb37e54 100644
---- a/modules/module-lua-scripting/module.c
-+++ b/modules/module-lua-scripting/module.c
-@@ -218,7 +218,7 @@ wp_lua_scripting_component_loader_init (WpComponentLoaderInterface * iface)
- }
- 
- WP_PLUGIN_EXPORT GObject *
--wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
-+libwireplumber_module_lua_scripting__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
- {
-   return G_OBJECT (g_object_new (wp_lua_scripting_plugin_get_type (),
-       "name", "lua-scripting",
--- 
-2.39.0
-
-
-From 3a781d6f9ad660d47317e9ee9c7c5d1bfd2d2446 Mon Sep 17 00:00:00 2001
-From: Relic1212 <john.doe@example.com>
-Date: Fri, 8 Aug 2025 15:42:53 +0200
-Subject: [PATCH 4/5] reserve device
-
----
- lib/wp/meson.build                     | 21 ++++++++++++++++++++-
- lib/wp/private/internal-comp-loader.c  |  1 +
- modules/module-reserve-device/plugin.c |  2 +-
- 3 files changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 2a9bf4b0..85d743a1 100644
---- a/lib/wp/meson.build
-+++ b/lib/wp/meson.build
-@@ -186,6 +186,25 @@ wp_lib_sources +=[
-   ]
- 
- 
-+reserve_device_interface_src = gnome.gdbus_codegen('reserve-device-interface',
-+  sources: '../../modules/module-reserve-device/org.freedesktop.ReserveDevice1.xml',
-+  interface_prefix : 'org.freedesktop.ReserveDevice1.',
-+  namespace : 'Wp'
-+)
-+reserve_device_enums = gnome.mkenums_simple('reserve-device-enums',
-+  sources: [ '../../modules/module-reserve-device/plugin.h', '../../modules/module-reserve-device/reserve-device.h' ],
-+)
-+reserve_device_includes = include_directories('../../modules/module-reserve-device')
-+
-+wp_lib_sources +=   [
-+    '../../modules/module-reserve-device/plugin.c',
-+    '../../modules/module-reserve-device/reserve-device.c',
-+    '../../modules/module-reserve-device/transitions.c',
-+    reserve_device_interface_src,
-+    reserve_device_enums,
-+  ]
-+
-+
- 
- wp_lib = library('wireplumber-' + wireplumber_api_version,
-   wp_lib_sources, wp_lib_priv_sources, wpenums_c, wpenums_h, wpversion, wpbuildbasedirs,
-@@ -193,7 +212,7 @@ wp_lib = library('wireplumber-' + wireplumber_api_version,
-     '-DBUILDING_WP',
-   ],
-   install: true,
--  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), include_directories('../../modules/module-lua-scripting')],
-+  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), include_directories('../../modules/module-lua-scripting'), reserve_device_includes],
-   dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep],
-   soversion: wireplumber_so_version,
-   version: wireplumber_libversion,
-diff --git a/lib/wp/private/internal-comp-loader.c b/lib/wp/private/internal-comp-loader.c
-index 6ef4fd4d..71a33642 100644
---- a/lib/wp/private/internal-comp-loader.c
-+++ b/lib/wp/private/internal-comp-loader.c
-@@ -815,6 +815,7 @@ static const struct {
-   { "libwireplumber-module-lua-scripting", libwireplumber_module_lua_scripting__wireplumber__module_init},
-   { "libwireplumber-module-mixer-api", libwireplumber_module_mixer_api__wireplumber__module_init},
-   { "libwireplumber-module-portal-permissionstore", libwireplumber_module_portal_permissionstore__wireplumber__module_init},
-+  { "libwireplumber-module-reserve-device", libwireplumber_module_reserve_device__wireplumber__module_init },
-   { "libwireplumber-module-settings", libwireplumber_module_settings__wireplumber__module_init },
-   { "libwireplumber-module-si-audio-adapter" , libwireplumber_module_si_audio_adapter__wireplumber__module_init},
-   {"libwireplumber-module-si-node", libwireplumber_module_si_node__wireplumber__module_init},
-diff --git a/modules/module-reserve-device/plugin.c b/modules/module-reserve-device/plugin.c
-index e6789ffc..bc02414d 100644
---- a/modules/module-reserve-device/plugin.c
-+++ b/modules/module-reserve-device/plugin.c
-@@ -256,7 +256,7 @@ wp_reserve_device_plugin_class_init (WpReserveDevicePluginClass * klass)
- }
- 
- WP_PLUGIN_EXPORT GObject *
--wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
-+libwireplumber_module_reserve_device__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
- {
-   return G_OBJECT (g_object_new (wp_reserve_device_plugin_get_type (),
-       "name", "reserve-device",
--- 
-2.39.0
-
-
-From f6c80f621f293b6d920a479d58ee62111f9ffaed Mon Sep 17 00:00:00 2001
-From: Relic1212 <john.doe@example.com>
-Date: Fri, 8 Aug 2025 17:52:40 +0200
-Subject: [PATCH 5/5] shows audio  but no sinks
-
----
- lib/wp/meson.build                            |  57 +++++++++++++++---
- .../api/gresource.gresource                   | Bin 0 -> 2592 bytes
- src/meson.build                               |   2 +-
- 3 files changed, 48 insertions(+), 11 deletions(-)
- create mode 100644 modules/module-lua-scripting/api/gresource.gresource
-
-diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 85d743a1..d8926a4e 100644
---- a/lib/wp/meson.build
-+++ b/lib/wp/meson.build
-@@ -165,6 +165,8 @@ wplua_resources = gnome.compile_resources(
-     source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'wplua' 
- )
- 
-+
-+
- wp_lib_sources +=  wplua_lib_sources
- wp_lib_sources += wplua_resources 
- 
-@@ -172,18 +174,19 @@ m_lua_scripting_resources = gnome.compile_resources(
-     'm-lua-scripting-resources',
-     '../../modules/module-lua-scripting/api/gresource.xml',
-     source_dir: meson.current_source_dir() / '..' / '..' / 'modules' / 'module-lua-scripting' / 'api',
--    c_name: '_m_lua_scripting_resources'
-+    c_name: '_m_lua_scripting_resources',
-+    export: true,
- )
- 
- 
--wp_lib_sources +=[
--    '../../modules/module-lua-scripting/module.c',
--    '../../modules/module-lua-scripting/script.c',
--    '../../modules/module-lua-scripting/api/pod.c',
--    '../../modules/module-lua-scripting/api/json.c',
--    '../../modules/module-lua-scripting/api/api.c',
--     m_lua_scripting_resources,
--  ]
-+# wp_lib_sources +=[
-+#     '../../modules/module-lua-scripting/module.c',
-+#     '../../modules/module-lua-scripting/script.c',
-+#     '../../modules/module-lua-scripting/api/pod.c',
-+#     '../../modules/module-lua-scripting/api/json.c',
-+#     '../../modules/module-lua-scripting/api/api.c',
-+#      m_lua_scripting_resources,
-+#   ]
- 
- 
- reserve_device_interface_src = gnome.gdbus_codegen('reserve-device-interface',
-@@ -204,6 +207,35 @@ wp_lib_sources +=   [
-     reserve_device_enums,
-   ]
- 
-+wplua_lib_i = static_library('wplua-1-' + wireplumber_api_version,
-+  [ wplua_lib_sources, wplua_resources ],
-+  install: false,
-+  include_directories: [wplua_include_dir,wp_lib_include_dir],
-+  dependencies : [lua_dep, giounix_dep, gobject_dep, gio_dep],
-+)
-+
-+wplua_dep_i = declare_dependency(
-+  link_with: wplua_lib_i,
-+  include_directories: wplua_include_dir,
-+  dependencies: [gobject_dep, gio_dep, lua_dep],
-+)
-+wp_lua_scripting_lib = library(
-+  'wireplumber-module-lua-scripting-1',
-+  [
-+    '../../modules/module-lua-scripting/module.c',
-+    '../../modules/module-lua-scripting/script.c',
-+    '../../modules/module-lua-scripting/api/pod.c',
-+    '../../modules/module-lua-scripting/api/json.c',
-+    '../../modules/module-lua-scripting/api/api.c',
-+     m_lua_scripting_resources,
-+  ],
-+  install : true,
-+  # install_dir : wireplumber_module_dir,
-+  include_directories: [wplua_include_dir,wp_lib_include_dir],
-+  
-+  dependencies : [gobject_dep, gio_dep, pipewire_dep, wplua_dep_i, libintl_dep],
-+)
-+
- 
- 
- wp_lib = library('wireplumber-' + wireplumber_api_version,
-@@ -212,12 +244,17 @@ wp_lib = library('wireplumber-' + wireplumber_api_version,
-     '-DBUILDING_WP',
-   ],
-   install: true,
--  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), include_directories('../../modules/module-lua-scripting'), reserve_device_includes],
-+  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), 
-+  # include_directories('../../modules/module-lua-scripting'), 
-+  reserve_device_includes],
-   dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep],
-   soversion: wireplumber_so_version,
-   version: wireplumber_libversion,
-+  # link_with: wplua_lib_i,
-+  link_with: wp_lua_scripting_lib,
- )
- 
-+
- wp_dep = declare_dependency(
-   link_with: wp_lib,
-   sources: wp_gen_sources,
-diff --git a/modules/module-lua-scripting/api/gresource.gresource b/modules/module-lua-scripting/api/gresource.gresource
-new file mode 100644
-index 0000000000000000000000000000000000000000..5b63117e3320968cdcb1e27131b57ed923bcf90c
-GIT binary patch
-literal 2592
-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
-G4F>?0a*K@s
-
-literal 0
-HcmV?d00001
-
 diff --git a/src/meson.build b/src/meson.build
 index 04f42c2f..e75209aa 100644
 --- a/src/meson.build
@@ -1164,6 +869,3 @@ index 04f42c2f..e75209aa 100644
  
    wireplumber = executable('wireplumber',
      wp_sources,
--- 
-2.39.0
-
