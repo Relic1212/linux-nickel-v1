@@ -65,6 +65,9 @@ def fetch(uri: str, sha256sum):
     os.makedirs(packedwd)
     env = {"PATH": os.environ.get("PATH"), "HOME": "/"}
     carr = [cmd, uri]
+    if t == "local":
+        # -r?
+        carr.append(".")
     bwrap_args = ["--bind", packedwd, "/tmp/workdir/packed"]
     # bubblewrap.run_in_bwrap_chroot(
     #     sysroot="/",
