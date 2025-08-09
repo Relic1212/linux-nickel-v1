@@ -32,29 +32,13 @@ let sysroots =
       )
       pkgs
   in
-  let r2 =
-    std.record.map
-      (fun k v =>
-        {
-          "%{v.hash}" =
-            # v.buildInputs
-            { symlinkBuldInputs = v.symlinkBuldInputs, enableCcache = v.enableCcache, buildInputs = std.array.map (fun bi => bi.drvHash) v.buildInputs }
-        }
-      )
-      r1
-  in
-  let r3 = std.record.map (fun k v => v.hash) r1
-  in
-  {
-    nameToSysroot = r3,
-    sysrootDrvs = std.record.merge_all (std.record.values r2),
+  
+ {
     pkghash2sysroothash =std.record.merge_all (std.record.values(std.record.map (fun k v => { "%{v.drvHash}" =v.hash} ) r1)),
   }
 in
 let data = {
   drvByHash = (std.record.from_array (std.record.values (std.record.map_values (fun x => { field = "%{drvUtils.pkgToHash x}", value = drvUtils.pkgToJson x }) pkgs))) & si_all,
-
-  # hashByName = std.record.from_array (std.record.values (std.record.map_values (fun x => { field = x.name, value = drvUtils.pkgToHash x }) pkgs)),
 
   hashByName = std.record.merge_all (std.record.values (std.record.map_values (fun v => { "%{v.name}" = v.drvHash }) pkgs)),
 }
