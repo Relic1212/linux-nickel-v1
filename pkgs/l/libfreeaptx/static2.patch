@@ -1,0 +1,60 @@
+diff --git a/Makefile b/Makefile
+index 1b83bfa..a6ee5eb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -23,9 +23,9 @@ MAJOR = 0
+ MINOR = 2
+ PATCH = 2
+ 
+-LIBNAME = lib$(NAME).so
+-SONAME = $(LIBNAME).$(MAJOR)
+-SOFILENAME = $(SONAME).$(MINOR).$(PATCH)
++LIBNAME = lib$(NAME).a
++SONAME = $(LIBNAME)
++SOFILENAME = $(SONAME)
+ PCNAME = lib$(NAME).pc
+ 
+ UTILITIES = $(NAME)enc $(NAME)dec
+@@ -36,9 +36,9 @@ SOURCES = $(NAME).c
+ AOBJECTS = $(NAME).o
+ IOBJECTS = $(NAME)enc.o $(NAME)dec.o
+ 
+-BUILD = $(SOFILENAME) $(SONAME) $(LIBNAME) $(IOBJECTS) $(UTILITIES)
++BUILD = $(SOFILENAME) $(SONAME) $(LIBNAME) $(IOBJECTS) 
+ 
+-default: $(SOFILENAME) $(SONAME) $(LIBNAME) $(UTILITIES) $(HEADERS)
++default: $(SOFILENAME) $(SONAME) $(LIBNAME)  $(HEADERS)
+ 
+ all: $(BUILD)
+ 
+@@ -47,9 +47,7 @@ clean:
+ 
+ install: default
+ 	$(MKDIR) $(DESTDIR)$(PREFIX)/$(LIBDIR)
+-	$(CP) $(SOFILENAME) $(SONAME) $(LIBNAME) $(DESTDIR)$(PREFIX)/$(LIBDIR)
+-	$(MKDIR) $(DESTDIR)$(PREFIX)/$(BINDIR)
+-	$(CP) $(UTILITIES) $(DESTDIR)$(PREFIX)/$(BINDIR)
++	$(CP)  $(LIBNAME) $(DESTDIR)$(PREFIX)/$(LIBDIR)
+ 	$(MKDIR) $(DESTDIR)$(PREFIX)/$(INCDIR)
+ 	$(CP) $(HEADERS) $(DESTDIR)$(PREFIX)/$(INCDIR)
+ 	$(MKDIR) $(DESTDIR)$(PREFIX)/$(PKGDIR)
+@@ -63,18 +61,12 @@ uninstall:
+ 	for f in $(HEADERS); do $(RM) $(DESTDIR)$(PREFIX)/$(INCDIR)/$$f; done
+ 	$(RM) $(DESTDIR)$(PREFIX)/$(PKGDIR)/$(PCNAME)
+ 
+-$(UTILITIES): $(LIBNAME)
+ 
+ $(IOBJECTS): $(HEADERS)
+ 
+-$(LIBNAME): $(SONAME)
+-	$(LNS) $(SONAME) $@
+-
+-$(SONAME): $(SOFILENAME)
+-	$(LNS) $(SOFILENAME) $@
+ 
+ $(SOFILENAME): $(SOURCES) $(HEADERS)
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -I. -shared -fPIC -Wl,-soname,$(SONAME) -o $@ $(SOURCES)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -I. -c -static  -o $@ $(SOURCES)
+ 
+ .SUFFIXES: .o .c .static
+ 
