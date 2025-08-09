@@ -37,7 +37,7 @@
       },
       {
         file = "wireplumber.patch",
-        sha256sum = "0c62cf982e30a67c170cda38481e7453f99eeae5f04353f0e862a626dfb2fec9"
+        sha256sum = "3fcbce7548a529d55bd3df7fa8b8e94cb2706ada1bc8298d3c934fa5c4e7e7d3"
       }
     ],
     patchPhase = [
@@ -60,6 +60,7 @@
       "-Dudev=enabled",
       "-Dwireplumber:system-lua=true",
       "-Dwireplumber:tests=false",
+      "-Dbluez5=enabled",
     ],
     preConfigurePhase = [
       # m%"
@@ -69,6 +70,9 @@
       # "%,
 
       # "sed -i 's@, plugin_dependencies@@g' ${SRC}/src/modules/meson.build",
+    ],
+    buildPhase = [
+            "meson compile -j1"
     ],
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -121,6 +125,12 @@
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
+
+      drvs.bluez,
+      drvs.sbc,
+      drvs.libusb,
+      # drvs.ffmpeg,
+      drvs.jansson,
     ],
   },
   pipewire | lib.MesonPackage =

@@ -1,5 +1,5 @@
 diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 9aacc624..d8926a4e 100644
+index 9aacc624..54f00a85 100644
 --- a/lib/wp/meson.build
 +++ b/lib/wp/meson.build
 @@ -124,18 +124,137 @@ wpbuildbasedirs = configure_file (
@@ -90,7 +90,7 @@ index 9aacc624..d8926a4e 100644
 +  ]
 +
 +wplua_lib_i = static_library('wplua-1-' + wireplumber_api_version,
-+  [ wplua_lib_sources, wplua_resources ],
++  [ wplua_lib_sources, wplua_resources , wpenums_h, ],
 +  install: false,
 +  include_directories: [wplua_include_dir,wp_lib_include_dir],
 +  dependencies : [lua_dep, giounix_dep, gobject_dep, gio_dep],
@@ -109,7 +109,7 @@ index 9aacc624..d8926a4e 100644
 +    '../../modules/module-lua-scripting/api/pod.c',
 +    '../../modules/module-lua-scripting/api/json.c',
 +    '../../modules/module-lua-scripting/api/api.c',
-+     m_lua_scripting_resources,
++     m_lua_scripting_resources,  wpenums_c, wpenums_h,
 +  ],
 +  install : true,
 +  # install_dir : wireplumber_module_dir,
