@@ -25,3 +25,39 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  git,
+  gitFull | lib.AutotoolsPackage = {
+    singleSource = git.singleSource,
+
+    extraMakeArgs = [
+      "CURL_LDFLAGS='-lcurl -lpsl -lssl -lcrypto -lz'",
+      "NO_TCLTK=YesPlease",
+      "NO_GETTEXT=YesPlease" #, "MSGFMT=/usr/bin/true",
+    ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-lcurl",
+        "-lpsl",
+        "-lssl",
+        "-lcrypto",
+        "-lz"
+      ]
+    },
+    extraMakeInstallArgs = extraMakeArgs,
+    separateBuildDir = false,
+    biDrvs = [
+      drvs.zlibNg,
+      drvs.curl,
+      drvs.openssl,
+      drvs.pkgconf,
+      drvs.libpsl,
+      drvs.openssh,
+      drvs.linuxHeaders,
+      drvs.expat,
+      drvs.perl,
+    ],
+  }
+}
