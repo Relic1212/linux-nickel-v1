@@ -33,7 +33,7 @@
     patches = [
       {
         file = "pipewire.patch",
-        sha256sum = "17591c93532946973fb06a07a9179ce3b8aa5e3c0564320cb7d34fff1488435e"
+        sha256sum = "866b1200cc34041561221915a65503baddcb03c8151e5577c0aef7fc79059aab"
       },
       {
         file = "wireplumber.patch",
@@ -49,7 +49,7 @@
       "-Dsession-managers=wireplumber",
       # "-Dsession-managers=[]",
       "-Dvideotestsrc=disabled",
-      "-Dvideoconvert=disabled",
+      "-Dvideoconvert=enabled",
       # "-Dv4l2=disabled",
       "-Dsupport=enabled",
       "-Dspa-plugins=enabled",
@@ -61,6 +61,16 @@
       "-Dwireplumber:system-lua=true",
       "-Dwireplumber:tests=false",
       "-Dbluez5=enabled",
+      "-Dbluez5-backend-hsp-native=enabled",
+      "-Dbluez5-backend-hfp-native=enabled",
+      "-Dbluez5-backend-ofono=enabled",
+      "-Dbluez5-backend-hsphfpd=enabled",
+      "-Dbluez5-codec-aptx=enabled",
+      # "-Dbluez5-codec-ldac=enabled",
+      "-Dbluez5-codec-aac=enabled",
+
+      # TODO: lc3plus and lc3
+
     ],
     preConfigurePhase = [
       # m%"
@@ -71,9 +81,9 @@
 
       # "sed -i 's@, plugin_dependencies@@g' ${SRC}/src/modules/meson.build",
     ],
-    buildPhase = [
-            "meson compile -j1"
-    ],
+    # buildPhase = [
+    #         "meson compile -j1"
+    # ],
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.dbus,
@@ -129,8 +139,13 @@
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
-      # drvs.ffmpeg,
+      drvs.ffmpeg,
       drvs.jansson,
+
+      drvs.libfreeaptx,
+      drvs.fdkAac,
+      drvs.ldacbt,
+
     ],
   },
   pipewire | lib.MesonPackage =
