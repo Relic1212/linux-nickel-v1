@@ -83,6 +83,17 @@
       drvs.gudev,
       drvs.libxslt,
       drvs.docutils,
+
+
+      drvs.bluez,
+      drvs.sbc,
+      drvs.libusb,
+      drvs.ffmpeg,
+      drvs.jansson,
+
+      drvs.libfreeaptx,
+      drvs.fdkAac,
+      drvs.ldacbt,
     ]
   }
 }

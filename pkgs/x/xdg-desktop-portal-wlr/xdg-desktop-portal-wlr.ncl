@@ -83,6 +83,17 @@
       drvs.scdoc,
       drvs.basuUdevCompatible,
       drvs.inih,
+
+
+      drvs.bluez,
+      drvs.sbc,
+      drvs.libusb,
+      drvs.ffmpeg,
+      drvs.jansson,
+
+      drvs.libfreeaptx,
+      drvs.fdkAac,
+      drvs.ldacbt,
     ]
   }
 }
