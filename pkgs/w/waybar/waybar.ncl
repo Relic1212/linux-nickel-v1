@@ -15,6 +15,7 @@
 
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
+  
 
     biDrvs = [
       drvs.fontconfig,
@@ -67,14 +68,40 @@
       drvs.scdoc,
       drvs.gtkLayerShell,
       drvs.libinputFixedSyms,
-      drvs.epollShim,
       drvs.mtdev,
       drvs.eudev,
       drvs.sndiod,
       drvs.upower,
 
-      # drvs.libnl,
+      drvs.libnl,
       drvs.dbusmenuGtk,
+      drvs.catch2,
+
+
+      drvs.pipewire,
+        drvs.libsndfile,
+      drvs.libopus,
+      drvs.lua,
+      drvs.bluez,
+      drvs.sbc,
+      drvs.libusb,
+      drvs.ffmpeg,
+      drvs.jansson,
+      drvs.libfreeaptx,
+      drvs.fdkAac,
+      drvs.ldacbt,
+      drvs.libcamera,
+      drvs.libyaml,
+      drvs.openssl,
+      drvs.alsaLibs,
+      drvs.dbus,
+
+      drvs.libmpdclient,
+      drvs.playerctl,
+      drvs.cava,
+      drvs.fftw,
+      drvs.iniparser,
+
     ],
 
     extraMesonArgs = [
@@ -87,6 +114,9 @@
       "-Dsndio=enabled",
       "-Dlibnl=disabled",
       "-Ddbusmenu-gtk=enabled",
+
+      "-Dwireplumber=enabled",
+      "-Dpipewire=enabled",
     ]
   }
 }

@@ -1,0 +1,11 @@
+{
+    lib,
+    drvs,
+    iniparser | lib.CmakePackage = {
+        generator  = "Ninja",
+        singleSource = {
+            uri = "https://gitlab.com/iniparser/iniparser/-/archive/v4.2.6/iniparser-v4.2.6.tar.gz",
+            sha256sum = "67575ed032a544d5359610e5f697af786371bbc3eb01311218ef8adfd3e5e329"
+        }
+    }
+}
