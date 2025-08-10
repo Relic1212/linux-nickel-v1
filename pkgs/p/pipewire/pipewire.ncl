@@ -33,7 +33,7 @@
     patches = [
       {
         file = "pipewire.patch",
-        sha256sum = "866b1200cc34041561221915a65503baddcb03c8151e5577c0aef7fc79059aab"
+        sha256sum = "89b03d8fd3dc2f5b506236ce68ad94f5e61a76b055a2d3faac5347e1754e8284"
       },
       {
         file = "wireplumber.patch",

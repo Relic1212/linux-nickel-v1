@@ -389,6 +389,40 @@ index 2d9759ec7..f2716bf4d 100644
    'spa-avb',
    [ spa_avb_sources ],
    include_directories : [configinc],
+diff --git a/spa/plugins/bluez5/a2dp-codec-aac.h b/spa/plugins/bluez5/a2dp-codec-aac.h
+new file mode 100644
+index 000000000..8cc5579c4
+--- /dev/null
++++ b/spa/plugins/bluez5/a2dp-codec-aac.h
+@@ -0,0 +1,10 @@
++
++
++
++#ifndef SPA_PLUGINS_BLUEZ_ADP_AAC_H
++#define SPA_PLUGINS_BLUEZ_ADP_AAC_H
++
++
++int bluez5_libspa_codec_bluez5_aac__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index);
++
++#endif
+\ No newline at end of file
+diff --git a/spa/plugins/bluez5/a2dp-codec-aptx.h b/spa/plugins/bluez5/a2dp-codec-aptx.h
+new file mode 100644
+index 000000000..f41883dd0
+--- /dev/null
++++ b/spa/plugins/bluez5/a2dp-codec-aptx.h
+@@ -0,0 +1,10 @@
++
++
++
++#ifndef SPA_PLUGINS_BLUEZ_ADP_APTX_H
++#define SPA_PLUGINS_BLUEZ_ADP_APTX_H
++
++
++int bluez5_libspa_bluez5_aptx__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index);
++
++#endif
+\ No newline at end of file
 diff --git a/spa/plugins/bluez5/a2dp-codec-faststream.c b/spa/plugins/bluez5/a2dp-codec-faststream.c
 index bbf9e96ab..8991e02af 100644
 --- a/spa/plugins/bluez5/a2dp-codec-faststream.c
@@ -477,6 +511,153 @@ index 000000000..6b18903e8
 +
 +#endif
 \ No newline at end of file
+diff --git a/spa/plugins/bluez5/a2dp-codec-ldac.h b/spa/plugins/bluez5/a2dp-codec-ldac.h
+new file mode 100644
+index 000000000..63ba96d99
+--- /dev/null
++++ b/spa/plugins/bluez5/a2dp-codec-ldac.h
+@@ -0,0 +1,10 @@
++
++
++
++#ifndef SPA_PLUGINS_BLUEZ_LDAC_H
++#define SPA_PLUGINS_BLUEZ_LDAC_H
++
++
++int bluez5_libspa_bluez5_ldac__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index);
++
++#endif
+\ No newline at end of file
+diff --git a/spa/plugins/bluez5/a2dp-codec-opus.h b/spa/plugins/bluez5/a2dp-codec-opus.h
+new file mode 100644
+index 000000000..8c7ecde30
+--- /dev/null
++++ b/spa/plugins/bluez5/a2dp-codec-opus.h
+@@ -0,0 +1,10 @@
++
++
++
++#ifndef SPA_PLUGINS_BLUEZ_ADP_OPUS_SBC_H
++#define SPA_PLUGINS_BLUEZ_ADP_OPUS_SBC_H
++
++
++int bluez5_libspa_codec_bluez5_opus__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index);
++
++#endif
+\ No newline at end of file
+diff --git a/spa/plugins/bluez5/a2dp-codec-sbc.c b/spa/plugins/bluez5/a2dp-codec-sbc.c
+index fc55a031d..7eb4ce40d 100644
+--- a/spa/plugins/bluez5/a2dp-codec-sbc.c
++++ b/spa/plugins/bluez5/a2dp-codec-sbc.c
+@@ -17,7 +17,7 @@
+ 
+ #define MAX_FRAME_COUNT 16
+ 
+-struct impl {
++struct impl_sbc {
+ 	sbc_t sbc;
+ 
+ 	struct rtp_header *header;
+@@ -68,7 +68,7 @@ static int codec_fill_caps(const struct media_codec *codec, uint32_t flags,
+ 
+ static uint8_t default_bitpool(uint8_t freq, uint8_t mode, bool xq)
+ {
+-	/* A2DP spec v1.2 states that all SNK implementation shall handle bitrates
++	/* A2DP spec v1.2 states that all SNK impl_sbcementation shall handle bitrates
+ 	 * of up to 512 kbps (~ bitpool = 86 stereo, or 2x43 dual channel at 44.1KHz
+ 	 * or ~ bitpool = 78 stereo, or 2x39 dual channel at 48KHz). */
+ 	switch (freq) {
+@@ -326,7 +326,7 @@ static int codec_validate_config(const struct media_codec *codec, uint32_t flags
+ 	return 0;
+ }
+ 
+-static int codec_set_bitpool(struct impl *this, int bitpool)
++static int codec_set_bitpool(struct impl_sbc *this, int bitpool)
+ {
+ 	size_t rtp_size = sizeof(struct rtp_header) + sizeof(struct rtp_payload);
+ 
+@@ -419,19 +419,19 @@ static int codec_enum_config(const struct media_codec *codec, uint32_t flags,
+ 
+ static int codec_reduce_bitpool(void *data)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	return codec_set_bitpool(this, this->sbc.bitpool - 2);
+ }
+ 
+ static int codec_increase_bitpool(void *data)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	return codec_set_bitpool(this, this->sbc.bitpool + 1);
+ }
+ 
+ static int codec_get_block_size(void *data)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	return this->codesize;
+ }
+ 
+@@ -439,11 +439,11 @@ static void *codec_init(const struct media_codec *codec, uint32_t flags,
+ 		void *config, size_t config_len, const struct spa_audio_info *info,
+ 		void *props, size_t mtu)
+ {
+-	struct impl *this;
++	struct impl_sbc *this;
+ 	a2dp_sbc_t *conf = config;
+ 	int res;
+ 
+-	this = calloc(1, sizeof(struct impl));
++	this = calloc(1, sizeof(struct impl_sbc));
+ 	if (this == NULL) {
+ 		res = -errno;
+ 		goto error;
+@@ -546,7 +546,7 @@ error:
+ 
+ static void codec_deinit(void *data)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	sbc_finish(&this->sbc);
+ 	free(this);
+ }
+@@ -559,7 +559,7 @@ static int codec_abr_process (void *data, size_t unsent)
+ static int codec_start_encode (void *data,
+ 		void *dst, size_t dst_size, uint16_t seqnum, uint32_t timestamp)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 
+ 	this->header = (struct rtp_header *)dst;
+ 	this->payload = SPA_PTROFF(dst, sizeof(struct rtp_header), struct rtp_payload);
+@@ -579,7 +579,7 @@ static int codec_encode(void *data,
+ 		void *dst, size_t dst_size,
+ 		size_t *dst_out, int *need_flush)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	int res;
+ 
+ 	res = sbc_encode(&this->sbc, src, src_size,
+@@ -613,7 +613,7 @@ static int codec_decode(void *data,
+ 		void *dst, size_t dst_size,
+ 		size_t *dst_out)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 	int res;
+ 
+ 	res = sbc_decode(&this->sbc, src, src_size,
+@@ -624,7 +624,7 @@ static int codec_decode(void *data,
+ 
+ static void codec_get_delay(void *data, uint32_t *encoder, uint32_t *decoder)
+ {
+-	struct impl *this = data;
++	struct impl_sbc *this = data;
+ 
+ 	if (encoder)
+ 		*encoder = this->enc_delay;
 diff --git a/spa/plugins/bluez5/a2dp-codec-sbc.h b/spa/plugins/bluez5/a2dp-codec-sbc.h
 new file mode 100644
 index 000000000..1de528534
@@ -513,7 +694,7 @@ index 6fd1d0430..5bf5cf089 100644
  	if (!has_sbc) {
  		spa_log_error(impl->log, "failed to load A2DP SBC codec from plugins");
 diff --git a/spa/plugins/bluez5/media-codecs.c b/spa/plugins/bluez5/media-codecs.c
-index 718e54ea2..765540877 100644
+index 718e54ea2..c9c01dbc8 100644
 --- a/spa/plugins/bluez5/media-codecs.c
 +++ b/spa/plugins/bluez5/media-codecs.c
 @@ -13,6 +13,8 @@
@@ -543,7 +724,7 @@ index 718e54ea2..765540877 100644
  
  static const struct spa_dict_item handle_info_items[] = {
          { SPA_KEY_FACTORY_DESCRIPTION, "Bluetooth codec plugin" },
-@@ -204,8 +208,23 @@ static struct spa_handle_factory handle_factory = {
+@@ -204,15 +208,71 @@ static struct spa_handle_factory handle_factory = {
  	impl_enum_interface_info,
  };
  
@@ -551,12 +732,37 @@ index 718e54ea2..765540877 100644
 +
 +SPA_EXPORT
 +int bluez5_libspa_codec_bluez5_faststream__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("faststream")
 +
 +#elif defined(SPA_PLUGINS_BLUEZ_ADP_CODEC_SBC_H)
 +
 +SPA_EXPORT
 +int bluez5_libspa_codec_bluez5_sbc__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("sbc")
 +
++#elif defined(SPA_PLUGINS_BLUEZ_ADP_CODEC_OPUS)
++
++SPA_EXPORT
++int bluez5_libspa_codec_bluez5_opus__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("opus")
++
++#elif defined(SPA_PLUGINS_BLUEZ_ADP_CODEC_AAC)
++
++SPA_EXPORT
++int bluez5_libspa_codec_bluez5_aac__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("aac")
++
++
++#elif defined(SPA_PLUGINS_BLUEZ_ADP_CODEC_APTX)
++
++SPA_EXPORT 
++int bluez5_libspa_bluez5_aptx__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("aptx")
++
++#elif defined(SPA_PLUGINS_BLUEZ_ADP_CODEC_LDAC)
++SPA_EXPORT
++int bluez5_libspa_bluez5_ldac__spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index)
++#define FACTORY_STATIC_NAME 		MEDIA_CODEC_FACTORY_NAME("ldac")
 +
 +#else
 +
@@ -565,8 +771,32 @@ index 718e54ea2..765540877 100644
 +
 +#endif
  {
++	// fprintf(stderr,"if_fail factory null\n");
  	spa_return_val_if_fail(factory != NULL, -EINVAL);
++	// fprintf(stderr,"if_fail index null\n");
  	spa_return_val_if_fail(index != NULL, -EINVAL);
++	// fprintf(stderr,"both spa_return_val_if_fail done\n");
++
++	if (handle_factory.name == NULL){
++		// fprintf(stderr,"handle_factory.name was null, changing\n");
++	#ifdef FACTORY_STATIC_NAME
++		// fprintf(stderr,"using predefined FACTORY_STATIC_NAME\n");
++
++		handle_factory.name = FACTORY_STATIC_NAME;
++	#undef FACTORY_STATIC_NAME
++	#else
++		// fprintf(stderr,"not available - FACTORY_STATIC_NAME\n");
+ 
+-	if (handle_factory.name == NULL)
+ 		handle_factory.name = codec_plugin_factory_name;
+ 
++	#endif // FACTORY_STATIC_NAME
++	}
++	// fprintf(stderr,"handle_factory.name=\"%s\"\n",handle_factory.name);
++	
+ 	switch (*index) {
+ 	case 0:
+ 		*factory = &handle_factory;
 diff --git a/spa/plugins/bluez5/media-codecs.h b/spa/plugins/bluez5/media-codecs.h
 index c9a00f7bf..f8c2cceb4 100644
 --- a/spa/plugins/bluez5/media-codecs.h
@@ -598,7 +828,7 @@ index c9a00f7bf..f8c2cceb4 100644
  
  #endif
 diff --git a/spa/plugins/bluez5/meson.build b/spa/plugins/bluez5/meson.build
-index b0990eaf6..b80346324 100644
+index b0990eaf6..8e1c71cf6 100644
 --- a/spa/plugins/bluez5/meson.build
 +++ b/spa/plugins/bluez5/meson.build
 @@ -74,7 +74,7 @@ endif
@@ -610,7 +840,7 @@ index b0990eaf6..b80346324 100644
    bluez5_sources,
    include_directories : [ configinc ],
    dependencies : [ spa_dep, bluez5_deps ],
-@@ -84,24 +84,24 @@ bluez5lib = shared_library('spa-bluez5',
+@@ -84,37 +84,37 @@ bluez5lib = shared_library('spa-bluez5',
  
  codec_args = [ '-DCODEC_PLUGIN' ]
  
@@ -639,8 +869,11 @@ index b0990eaf6..b80346324 100644
 +  bluez_codec_aac = library('spa-codec-bluez5-aac',
      [ 'a2dp-codec-aac.c', 'media-codecs.c' ],
      include_directories : [ configinc ],
-     c_args : codec_args,
-@@ -111,7 +111,7 @@ if fdk_aac_dep.found()
+-    c_args : codec_args,
++    c_args : codec_args + ['-DCODEC_PLUGIN_STATIC', '-DSPA_PLUGINS_BLUEZ_ADP_CODEC_AAC'],
+     dependencies : [ spa_dep, fdk_aac_dep ],
+     install : true,
+     install_dir : spa_plugindir / 'bluez5')
  endif
  
  if aptx_dep.found()
@@ -648,8 +881,12 @@ index b0990eaf6..b80346324 100644
 +  bluez_codec_aptx = library('spa-codec-bluez5-aptx',
      [ 'a2dp-codec-aptx.c', 'media-codecs.c' ],
      include_directories : [ configinc ],
-     c_args : codec_args,
-@@ -125,7 +125,7 @@ if ldac_dep.found()
+-    c_args : codec_args,
++    c_args : codec_args + [ '-DSPA_PLUGINS_BLUEZ_ADP_CODEC_APTX', '-DCODEC_PLUGIN_STATIC',],
+     dependencies : [ spa_dep, aptx_dep, sbc_dep ],
+     install : true,
+     install_dir : spa_plugindir / 'bluez5')
+@@ -125,17 +125,17 @@ if ldac_dep.found()
    if ldac_abr_dep.found()
      ldac_args += [ '-DENABLE_LDAC_ABR' ]
    endif
@@ -657,8 +894,11 @@ index b0990eaf6..b80346324 100644
 +  bluez_codec_ldac = library('spa-codec-bluez5-ldac',
      [ 'a2dp-codec-ldac.c', 'media-codecs.c' ],
      include_directories : [ configinc ],
-     c_args : ldac_args,
-@@ -135,7 +135,7 @@ if ldac_dep.found()
+-    c_args : ldac_args,
++    c_args : ldac_args + ['-DSPA_PLUGINS_BLUEZ_ADP_CODEC_LDAC','-DCODEC_PLUGIN_STATIC',],
+     dependencies : [ spa_dep, ldac_dep, ldac_abr_dep ],
+     install : true,
+     install_dir : spa_plugindir / 'bluez5')
  endif
  
  if get_option('bluez5-codec-lc3plus').allowed() and lc3plus_dep.found()
@@ -667,7 +907,7 @@ index b0990eaf6..b80346324 100644
      [ 'a2dp-codec-lc3plus.c', 'media-codecs.c' ],
      include_directories : [ configinc ],
      c_args : codec_args,
-@@ -146,7 +146,7 @@ endif
+@@ -146,15 +146,15 @@ endif
  
  if get_option('bluez5-codec-opus').allowed() and opus_dep.found()
    opus_args = codec_args
@@ -675,8 +915,9 @@ index b0990eaf6..b80346324 100644
 +  bluez_codec_opus = library('spa-codec-bluez5-opus',
      [ 'a2dp-codec-opus.c', 'media-codecs.c' ],
      include_directories : [ configinc ],
-     c_args : opus_args,
-@@ -154,7 +154,7 @@ if get_option('bluez5-codec-opus').allowed() and opus_dep.found()
+-    c_args : opus_args,
++    c_args : opus_args + [ '-DSPA_PLUGINS_BLUEZ_ADP_CODEC_OPUS', '-DCODEC_PLUGIN_STATIC'],
+     dependencies : [ spa_dep, opus_dep, mathlib ],
      install : true,
      install_dir : spa_plugindir / 'bluez5')
  
@@ -2614,10 +2855,10 @@ index 10aa432fe..35d21d1b9 100644
  	if (properties == NULL)
  		properties = pw_properties_new(NULL, NULL);
 diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
-index b19631a92..9361ab3be 100644
+index b19631a92..45868cc55 100644
 --- a/src/pipewire/meson.build
 +++ b/src/pipewire/meson.build
-@@ -100,13 +100,243 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
+@@ -100,13 +100,253 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
    ]
  endif
  
@@ -2849,7 +3090,10 @@ index b19631a92..9361ab3be 100644
 +
 +bluez_codec_faststream_dep = declare_dependency(link_with: bluez_codec_faststream)
 +bluez_codec_sbc_dep = declare_dependency(link_with: bluez_codec_sbc)
-+
++bluez_codec_opus_dep = declare_dependency(link_with: bluez_codec_opus)
++bluez_codec_aac_dep = declare_dependency(link_with: bluez_codec_aac)
++bluez_codec_aptx_dep = declare_dependency(link_with: bluez_codec_aptx)
++bluez_codec_ldac_dep = declare_dependency(link_with: bluez_codec_ldac)
 +libpipewire = library(pipewire_name, pipewire_sources,
    version : libversion,
    soversion : soversion,
@@ -2859,16 +3103,23 @@ index b19631a92..9361ab3be 100644
    install : true,
 -  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ],
 +  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, spa_support_dep, spa_support_dep,dbus_dep, glib2_dep, opus_dep, opus_custom_dep, openssl_lib, spa_audioconvert_dep, aes_null_dep, 
-+  spa_audiomixer_dep, v4l2lib_dep, bluez5lib_dep, bluez_codec_faststream_dep, bluez_codec_sbc_dep],
++    spa_audiomixer_dep, v4l2lib_dep, bluez5lib_dep, 
++    bluez_codec_sbc_dep,
++    bluez_codec_faststream_dep, 
++    bluez_codec_opus_dep,
++    bluez_codec_aac_dep, 
++    bluez_codec_ldac_dep,
++    bluez_codec_aptx_dep,
++  ],
 +  link_with : [ spa_alsa ],
  )
  
  pipewire_dep = declare_dependency(link_with : libpipewire,
 diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
-index 4451fa525..94dd2dc7f 100644
+index 4451fa525..5c866e3c1 100644
 --- a/src/pipewire/pipewire.c
 +++ b/src/pipewire/pipewire.c
-@@ -29,6 +29,21 @@
+@@ -29,6 +29,29 @@
  #include "private.h"
  #include "i18n.h"
  
@@ -2883,14 +3134,22 @@ index 4451fa525..94dd2dc7f 100644
 +
 +#include <spa/plugins/v4l2/v4l2.c>
 +#include <spa/plugins/bluez5/plugin.c>
-+#include <spa/plugins/bluez5/a2dp-codec-faststream.h>
++
 +#include <spa/plugins/bluez5/a2dp-codec-sbc.h>
++
++#include <spa/plugins/bluez5/a2dp-codec-faststream.h>
++
++#include <spa/plugins/bluez5/a2dp-codec-opus.h>
++#include <spa/plugins/bluez5/a2dp-codec-aac.h>
++#include <spa/plugins/bluez5/a2dp-codec-ldac.h>
++#include <spa/plugins/bluez5/a2dp-codec-aptx.h>
++
 +
 +
  #define MAX_SUPPORT	32
  
  #define SUPPORTLIB	"support/libspa-support"
-@@ -99,6 +114,7 @@ open_plugin(struct registry *registry,
+@@ -99,6 +122,7 @@ open_plugin(struct registry *registry,
  	struct plugin *plugin;
  	char filename[PATH_MAX];
  	void *hnd;
@@ -2898,7 +3157,7 @@ index 4451fa525..94dd2dc7f 100644
  	spa_handle_factory_enum_func_t enum_func;
  	int res;
  
-@@ -109,11 +125,106 @@ open_plugin(struct registry *registry,
+@@ -109,11 +133,121 @@ open_plugin(struct registry *registry,
  		plugin->ref++;
  		return plugin;
  	}
@@ -2929,8 +3188,7 @@ index 4451fa525..94dd2dc7f 100644
 +		pw_log_debug("aec-null lib %s requested\n", lib);
 +		enum_func = &aec_libspa_aec_null__spa_handle_factory_enum;
 +	}
- 
--        if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
++
 +	else if (strcmp(lib, "audiomixer/libspa-audiomixer") == 0)
 +	{
 +		pw_log_debug("audiomixer lib %s requested\n", lib);
@@ -2950,6 +3208,16 @@ index 4451fa525..94dd2dc7f 100644
 +		pw_log_debug("bluez5 lib %s requested\n", lib);
 +		enum_func = &bluez5_libspa_bluez5__spa_handle_factory_enum;
 +	}
++	else if (strcmp(lib, "bluez5/libspa-codec-bluez5-aac") == 0)
++	{
++		pw_log_debug("bluez5 aac lib %s requested\n", lib);
++		enum_func = &bluez5_libspa_codec_bluez5_aac__spa_handle_factory_enum;
++	}
++	else if (strcmp(lib, "bluez5/libspa-codec-bluez5-aptx") == 0)
++	{
++		pw_log_debug("bluez5 lib %s requested\n", lib);
++		enum_func = &bluez5_libspa_bluez5_aptx__spa_handle_factory_enum;
++	}
 +	else if (strcmp(lib, "bluez5/libspa-codec-bluez5-faststream") == 0)
 +	{
 +		pw_log_debug("codec-bluez5-faststream lib %s requested\n", lib);
@@ -2959,10 +3227,15 @@ index 4451fa525..94dd2dc7f 100644
 +	// 			pw_log_debug("codec-bluez5-g722 lib %s requested\n", lib);
 +	// 			enum_func = &bluez5_libspa_codec_bluez5_g722__spa_handle_factory_enum;
 +	// 		}
-+	//  else if (strcmp(lib, "bluez5/libspa-codec-bluez5-opus") == 0) {
-+	// 			pw_log_debug("bluez5-opus lib %s requested\n", lib);
-+	// 			enum_func = &bluez5_libspa_codec_bluez5_opus__spa_handle_factory_enum;
-+	// 		}
++	else if (strcmp(lib, "bluez5/libspa-codec-bluez5-ldac") == 0)
++	{
++		pw_log_debug("bluez5 lib %s requested\n", lib);
++		enum_func = &bluez5_libspa_bluez5_ldac__spa_handle_factory_enum;
++	}
++	 else if (strcmp(lib, "bluez5/libspa-codec-bluez5-opus") == 0) {
++				pw_log_debug("bluez5-opus lib %s requested\n", lib);
++				enum_func = &bluez5_libspa_codec_bluez5_opus__spa_handle_factory_enum;
++			}
 +	//  else if (strcmp(lib, "bluez5/libspa-codec-bluez5-opus-g") == 0) {
 +	// 			pw_log_debug("bluez5-opus-g lib %s requested\n", lib);
 +	// 			enum_func = &bluez5_libspa_codec_bluez5_opus_g__spa_handle_factory_enum;
@@ -2994,7 +3267,8 @@ index 4451fa525..94dd2dc7f 100644
 +		pw_log_debug("v4l2 lib %s requested\n", lib);
 +		enum_func = &v4l2_libspa_v4l2__spa_handle_factory_enum;
 +	}
-+
+ 
+-        if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
 +		
 +		else 
 +
@@ -3007,7 +3281,7 @@ index 4451fa525..94dd2dc7f 100644
          }
          if ((enum_func = dlsym(hnd, SPA_HANDLE_FACTORY_ENUM_FUNC_NAME)) == NULL) {
  		res = -ENOSYS;
-@@ -121,6 +232,8 @@ open_plugin(struct registry *registry,
+@@ -121,6 +255,8 @@ open_plugin(struct registry *registry,
  		goto error_dlclose;
          }
  
