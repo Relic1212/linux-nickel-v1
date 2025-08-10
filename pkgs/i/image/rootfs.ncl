@@ -21,6 +21,19 @@
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/objects-Release",
+      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/gdb",
+
+      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/bash-completion",
+      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/emacs",
+      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/common-lisp",
 
       # "echo 'stripping binaries'",
       # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
@@ -83,6 +96,8 @@
         "setcap cap_setgid=ep /usr/bin/newgidmap",
         "setcap cap_setuid=ep /usr/bin/newuidmap",
 
+        "(cd /etc && ln -s  ../proc/mounts mtab)",
+
         # https://github.com/flatpak/flatpak/issues/5488
         "mkdir -p /var/lib/flatpak",
         "cd /var/lib/flatpak",
@@ -95,6 +110,7 @@
           min-free-space-size=500MB
           " > repo/config
           "%,
+        "if [ -f /usr/bin/glib-compile-schemas  ]; then /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas; fi"
 
         # m%"
         # mv /lib/firmware /lib/firmware.unneeded
@@ -130,6 +146,18 @@
             chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/doas
           fi
           "%,
+          m%"
+          if [ -e /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3 ]; then
+            chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3
+          fi
+          "%,
+
+           m%"
+          if [ -e /tmp/workdir/out/destdir/rootfs/usr/libexec/dbus-daemon-launch-helper ]; then
+            chmod u+s /tmp/workdir/out/destdir/rootfs/usr/libexec/dbus-daemon-launch-helper
+          fi
+          "%,
+          # "touch /tmp/workdir/out/destdir/rootfs/etc/mtab",
         m%"
           genimage \
           -r image \
