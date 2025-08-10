@@ -62,14 +62,14 @@ let _services =
             "earlyoom",
             #"dropbear",
             "upowerd",
-            "v4l2loopback",
+            # "v4l2loopback",
             "netdev",
             "netdev-lo",
           ]
           @ (
             if enableBluetooth then
               [
-                # "bluetooth"
+                 "bluetooth"
               ]
             else
               []
