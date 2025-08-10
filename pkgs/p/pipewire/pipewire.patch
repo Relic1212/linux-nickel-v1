@@ -1058,6 +1058,23 @@ index 312a54061..989104d85 100644
    spa_jack_sources,
    dependencies : [ spa_dep, jack_dep, mathlib ],
    install : true,
+diff --git a/spa/plugins/libcamera/libcamera.c b/spa/plugins/libcamera/libcamera.c
+index 207b85735..67854e06d 100644
+--- a/spa/plugins/libcamera/libcamera.c
++++ b/spa/plugins/libcamera/libcamera.c
+@@ -11,10 +11,10 @@
+ 
+ SPA_LOG_TOPIC_DEFINE(libcamera_log_topic, "spa.libcamera");
+ 
+-SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
++// SPA_LOG_TOPIC_ENUM_DEFINE_REGISTERED;
+ 
+ SPA_EXPORT
+-int spa_handle_factory_enum(const struct spa_handle_factory **factory,
++int v4l2_libspa_libcamera__spa_handle_factory_enum(const struct spa_handle_factory **factory,
+ 			uint32_t *index)
+ {
+ 	spa_return_val_if_fail(factory != NULL, -EINVAL);
 diff --git a/spa/plugins/libcamera/meson.build b/spa/plugins/libcamera/meson.build
 index 9f396aba2..b503295f1 100644
 --- a/spa/plugins/libcamera/meson.build
@@ -2855,10 +2872,10 @@ index 10aa432fe..35d21d1b9 100644
  	if (properties == NULL)
  		properties = pw_properties_new(NULL, NULL);
 diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
-index b19631a92..45868cc55 100644
+index b19631a92..cdcc45f7e 100644
 --- a/src/pipewire/meson.build
 +++ b/src/pipewire/meson.build
-@@ -100,13 +100,253 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
+@@ -100,13 +100,258 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
    ]
  endif
  
@@ -3094,6 +3111,9 @@ index b19631a92..45868cc55 100644
 +bluez_codec_aac_dep = declare_dependency(link_with: bluez_codec_aac)
 +bluez_codec_aptx_dep = declare_dependency(link_with: bluez_codec_aptx)
 +bluez_codec_ldac_dep = declare_dependency(link_with: bluez_codec_ldac)
++
++libcameralib_dep = declare_dependency(link_with: libcameralib)
++
 +libpipewire = library(pipewire_name, pipewire_sources,
    version : libversion,
    soversion : soversion,
@@ -3110,16 +3130,18 @@ index b19631a92..45868cc55 100644
 +    bluez_codec_aac_dep, 
 +    bluez_codec_ldac_dep,
 +    bluez_codec_aptx_dep,
++    libcameralib_dep,
++    libcamera_dep,
 +  ],
 +  link_with : [ spa_alsa ],
  )
  
  pipewire_dep = declare_dependency(link_with : libpipewire,
 diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
-index 4451fa525..5c866e3c1 100644
+index 4451fa525..e684ef109 100644
 --- a/src/pipewire/pipewire.c
 +++ b/src/pipewire/pipewire.c
-@@ -29,6 +29,29 @@
+@@ -29,6 +29,30 @@
  #include "private.h"
  #include "i18n.h"
  
@@ -3143,13 +3165,14 @@ index 4451fa525..5c866e3c1 100644
 +#include <spa/plugins/bluez5/a2dp-codec-aac.h>
 +#include <spa/plugins/bluez5/a2dp-codec-ldac.h>
 +#include <spa/plugins/bluez5/a2dp-codec-aptx.h>
++#include <spa/plugins/libcamera/libcamera.c>
 +
 +
 +
  #define MAX_SUPPORT	32
  
  #define SUPPORTLIB	"support/libspa-support"
-@@ -99,6 +122,7 @@ open_plugin(struct registry *registry,
+@@ -99,6 +123,7 @@ open_plugin(struct registry *registry,
  	struct plugin *plugin;
  	char filename[PATH_MAX];
  	void *hnd;
@@ -3157,7 +3180,7 @@ index 4451fa525..5c866e3c1 100644
  	spa_handle_factory_enum_func_t enum_func;
  	int res;
  
-@@ -109,11 +133,121 @@ open_plugin(struct registry *registry,
+@@ -109,11 +134,127 @@ open_plugin(struct registry *registry,
  		plugin->ref++;
  		return plugin;
  	}
@@ -3194,7 +3217,8 @@ index 4451fa525..5c866e3c1 100644
 +		pw_log_debug("audiomixer lib %s requested\n", lib);
 +		enum_func = &audiomixer_libspa_audiomixer__spa_handle_factory_enum;
 +	}
-+
+ 
+-        if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
 +	//  else if (strcmp(lib, "audiotestsrc/libspa-audiotestsrc") == 0) {
 +	// 			pw_log_debug("audiotestsrc lib %s requested\n", lib);
 +	// 			enum_func = &audiotestsrc_libspa_audiotestsrc__spa_handle_factory_enum;
@@ -3267,8 +3291,13 @@ index 4451fa525..5c866e3c1 100644
 +		pw_log_debug("v4l2 lib %s requested\n", lib);
 +		enum_func = &v4l2_libspa_v4l2__spa_handle_factory_enum;
 +	}
- 
--        if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
++
++	else if (strcmp(lib, "libcamera/libspa-libcamera") == 0)
++	{
++		pw_log_debug("libcamera lib %s requested\n", lib);
++		enum_func = &v4l2_libspa_libcamera__spa_handle_factory_enum;
++	}
++
 +		
 +		else 
 +
@@ -3281,7 +3310,7 @@ index 4451fa525..5c866e3c1 100644
          }
          if ((enum_func = dlsym(hnd, SPA_HANDLE_FACTORY_ENUM_FUNC_NAME)) == NULL) {
  		res = -ENOSYS;
-@@ -121,6 +255,8 @@ open_plugin(struct registry *registry,
+@@ -121,6 +262,8 @@ open_plugin(struct registry *registry,
  		goto error_dlclose;
          }
  
@@ -3290,3 +3319,20 @@ index 4451fa525..5c866e3c1 100644
  	if ((plugin = calloc(1, sizeof(struct plugin))) == NULL) {
  		res = -errno;
  		goto error_dlclose;
+diff --git a/src/pipewire/stream.c b/src/pipewire/stream.c
+index f5684d5e7..d84eb7baf 100644
+--- a/src/pipewire/stream.c
++++ b/src/pipewire/stream.c
+@@ -2120,8 +2120,10 @@ pw_stream_connect(struct pw_stream *stream,
+ 	if (pw_properties_get(props, PW_KEY_PORT_GROUP) == NULL)
+ 		pw_properties_set(props, PW_KEY_PORT_GROUP, "stream.0");
+ 
+-	if (impl->media_type == SPA_MEDIA_TYPE_audio ||
+-	    impl->media_type == SPA_MEDIA_TYPE_video) {
++	// https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/4819
++	if (impl->media_type == SPA_MEDIA_TYPE_audio
++			|| (impl->media_type == SPA_MEDIA_TYPE_video
++				&& pw_properties_get(props, "video.adapt.converter"))) {
+ 		factory = pw_context_find_factory(impl->context, "adapter");
+ 		if (factory == NULL) {
+ 			pw_log_error("%p: no adapter factory found", stream);

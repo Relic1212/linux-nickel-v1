@@ -24,6 +24,13 @@
       done
       "%,
         ],
+        patches = [
+          # https://lists.libcamera.org/pipermail/libcamera-devel/2020-February/006780.html
+          {
+            file ="libcamera-no-dynamic.patch",
+            sha256sum = "085bf4ffb743f6d19afbe8bef991a9bb66419cc993dd7bfca341a2c3a67c04f4"
+          }
+        ],
         pythonProvider = drvs.pythonDynamic,
         biDrvs = [
 drvs.gperf,

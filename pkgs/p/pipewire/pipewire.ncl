@@ -33,7 +33,7 @@
     patches = [
       {
         file = "pipewire.patch",
-        sha256sum = "89b03d8fd3dc2f5b506236ce68ad94f5e61a76b055a2d3faac5347e1754e8284"
+        sha256sum = "ff8f28a8a8c4eb57cad4466e3d83fe57268c0f34c5ec0b287990a807fac68a51"
       },
       {
         file = "wireplumber.patch",
@@ -70,6 +70,9 @@
       "-Dbluez5-codec-aac=enabled",
 
       # TODO: lc3plus and lc3
+
+      "-Dlibcamera=enabled",
+      "-Dgsettings=disabled",
 
     ],
     preConfigurePhase = [
@@ -145,6 +148,9 @@
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
+
+      drvs.libcamera,
+      drvs.libyaml,
 
     ],
   },
