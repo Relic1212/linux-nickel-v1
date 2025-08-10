@@ -93,6 +93,28 @@
       drvs.libxkbfile,
       drvs.xcbUtilWm,
       ## -X
+
+
+      drvs.bluez,
+      drvs.sbc,
+      drvs.libusb,
+      drvs.ffmpeg,
+      drvs.jansson,
+
+      drvs.libfreeaptx,
+      drvs.fdkAac,
+      drvs.ldacbt,
+
+      drvs.libcamera,
+      drvs.libyaml,
+
+      drvs.libsndfile,
+      drvs.libopus,
+      drvs.lua,
+      drvs.pipewire,
+      drvs.alsaLibs,
+
+
     ],
 
     buildEnv = {
@@ -110,8 +132,8 @@
       "-DX11" = false,
       "-DSERVICE_PAM" = false,
       "-DSERVICE_MPRIS" = true,
-      "-DSERVICE_PIPEWIRE" = false,
-      "-DBLUETOOTH" = false,
+      "-DSERVICE_PIPEWIRE" = true,
+      "-DBLUETOOTH" = true,
       "-DUSE_JEMALLOC" = false,
       "-DNO_PCH" = true,
     },
@@ -133,8 +155,8 @@
     # ],
     patches = [
       {
-        sha256sum = "23020ecf71890b5700bd83cc881342421f4e891778668f2dcc07a27aba227676",
-        file = "fix-quickshell.patch"
+        sha256sum = "824be543637bae3ccfde47547ff1e32a103a84b3b4a7fe2abc21c7569aebd399",
+        file = "fix-quickshell2.patch"
       }
     ]
   }
