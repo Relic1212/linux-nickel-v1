@@ -46,7 +46,6 @@
         drvs.waylandProtocols,
         drvs.glu,
         drvs.libxkbcommon,
-        drvs.epollShim,
         drvs.pixman,
         drvs.freetype,
         drvs.fontconfig,

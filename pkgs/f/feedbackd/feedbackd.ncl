@@ -93,7 +93,6 @@
       sha256sum = "7e02fb5df110da70d85abac7d28cb8159b4456f5080e35ea892dc5df2e64b7f4"
     },
     biDrvs = [
-      drvs.epollShim,
       drvs.glib,
       drvs.pcre2,
       drvs.libffi,
