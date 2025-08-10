@@ -91,7 +91,6 @@
       drvs.jsoncpp,
       drvs.scdoc,
       drvs.libinputFixedSyms,
-      drvs.epollShim,
       drvs.mtdev,
       drvs.eudev,
     ],

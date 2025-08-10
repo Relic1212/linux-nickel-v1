@@ -60,7 +60,6 @@
       drvs.scdoc,
       drvs.gtkLayerShell,
       drvs.libinputFixedSyms,
-      drvs.epollShim,
       drvs.mtdev,
       drvs.eudev,
       drvs.sndiod,
