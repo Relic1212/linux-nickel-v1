@@ -3,8 +3,10 @@
   drvs,
   xdgDesktopPortalWlr | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/emersion/xdg-desktop-portal-wlr/archive/refs/tags/v0.7.1.tar.gz",
-      sha256sum = "4bddc236aa9d1a2b33e7f0bef09a8712ded51e8bc335a2b6c8cd1d088863e676"
+      # uri = "https://github.com/emersion/xdg-desktop-portal-wlr/archive/refs/tags/v0.7.1.tar.gz",
+      # sha256sum = "4bddc236aa9d1a2b33e7f0bef09a8712ded51e8bc335a2b6c8cd1d088863e676".
+      uri = "https://github.com/emersion/xdg-desktop-portal-wlr/archive/e471c3dfe5fe03921fd7109e6affe7740f9503c3.tar.gz",
+      sha256sum = "c70c6b7bffa0a3e6565f3a11d0d67f9ef4ef1e288c380feb77259b5b8632a362"
     },
   
 
@@ -94,6 +96,10 @@
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
+
+       drvs.libcamera,
+      drvs.libyaml,
+
     ]
   }
 }

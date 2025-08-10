@@ -12,8 +12,18 @@
     }],
 
     extraMesonArgs = [
-      "-Dtests=disabled"
+      "-Dtests=disabled",
+      "-Dflatpak-interfaces=enabled",
+      "-Dgudev=enabled",
+      "-Dman-pages=enabled",
+
     ],
+
+    # libcamera needs this
+       buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-lc++"
+      ],},
 
     biDrvs = [
       drvs.alsaLibs,
@@ -94,6 +104,15 @@
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
+
+       drvs.libcamera,
+
+
+       drvs.flatpak,
+
+
+
+
     ]
   }
 }

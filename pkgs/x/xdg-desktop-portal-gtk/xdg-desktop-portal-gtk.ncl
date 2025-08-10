@@ -8,8 +8,16 @@
     },
  
     extraMesonArgs = [
-      # "-Dtests=disabled"
+      "-Dsettings=enabled",
+      "-Dappchooser=enabled",
+      "-Dlockdown=enabled",
     ],
+
+    # libcamera needs this
+       buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-lc++"
+      ],},
 llvmProvider = drvs.llvmFull,
     biDrvs = [
     
@@ -100,6 +108,11 @@ drvs.gnomeDesktop,
 drvs.xdgDesktopPortal,
 drvs.gettext,
 drvs.inih,
+
+ drvs.libcamera,
+
+ drvs.flatpak,
+
     ]
   }
 }
