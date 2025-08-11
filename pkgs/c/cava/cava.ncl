@@ -1,16 +1,18 @@
 {
-    lib,
-    drvs,
-    cava | lib.CmakePackage = {
-        generator = "Ninja",
-        singleSource = {
-            uri ="https://github.com/karlstav/cava/archive/refs/tags/0.10.4.tar.gz",
-            sha256sum = "5a2efedf2d809d70770f49349f28a5c056f1ba9b3f5476e78744291a468e206a"
-        },
-        llvmProvider = drvs.llvmFull,
-        symlinkBuldInputs = true,
-        biDrvs  =[
-                  drvs.dbus,
+  lib,
+  drvs,
+  cava | lib.AutomakePackage = {
+    # generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/karlstav/cava/archive/refs/tags/0.10.4.tar.gz",
+      sha256sum = "5a2efedf2d809d70770f49349f28a5c056f1ba9b3f5476e78744291a468e206a"
+    },
+    buildEnv.EXTRA_LDFLAGS = ["-lc++"],
+
+    llvmProvider = drvs.llvmFull,
+    symlinkBuldInputs = true,
+    biDrvs = [
+      drvs.dbus,
       drvs.alsaLibs,
       drvs.fontconfig,
       drvs.freetype,
@@ -54,25 +56,19 @@
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
-
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-
       drvs.libcamera,
       drvs.libyaml,
       drvs.pipewire,
       drvs.fftw,
       drvs.iniparser,
-
-      
-
-        ]
-    }
+    ]
+  }
 }
