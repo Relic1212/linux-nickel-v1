@@ -1,0 +1,10 @@
+{
+  lib,
+  drvs,
+  pv | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://ivarch.com/s/pv-1.9.34.tar.gz",
+      sha256sum = "c0626bed6cbef5006b53d3281e8e3ae4b2838729462b21eccf28140eefef6bb1"
+    }
+  }
+}
