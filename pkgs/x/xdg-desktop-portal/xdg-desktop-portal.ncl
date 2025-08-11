@@ -6,24 +6,26 @@
       uri = "https://github.com/flatpak/xdg-desktop-portal/archive/refs/tags/1.20.3.tar.gz",
       sha256sum = "01d2a8ceaab06fa1d0638abe541dbb415a0a19be271d9669a93ec1640f87ea4a"
     },
-    patches = [{
-      file = "no-gst.patch",
-      sha256sum = "4b2461cdc0310a097996021d4ef70d995aa345f3d8a27e3c613dd5c7af978a81"
-    }],
+    patches = [
+      {
+        file = "no-gst.patch",
+        sha256sum = "4b2461cdc0310a097996021d4ef70d995aa345f3d8a27e3c613dd5c7af978a81"
+      }
+    ],
 
     extraMesonArgs = [
       "-Dtests=disabled",
       "-Dflatpak-interfaces=enabled",
       "-Dgudev=enabled",
       "-Dman-pages=enabled",
-
     ],
 
     # libcamera needs this
-       buildEnv = {
+    buildEnv = {
       EXTRA_LDFLAGS = [
         "-lc++"
-      ],},
+      ],
+    },
 
     biDrvs = [
       drvs.alsaLibs,
@@ -93,26 +95,16 @@
       drvs.gudev,
       drvs.libxslt,
       drvs.docutils,
-
-
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-
-       drvs.libcamera,
-
-
-       drvs.flatpak,
-
-
-
-
+      drvs.libcamera,
+      drvs.flatpak,
     ]
   }
 }

@@ -8,23 +8,20 @@
       uri = "https://github.com/emersion/xdg-desktop-portal-wlr/archive/e471c3dfe5fe03921fd7109e6affe7740f9503c3.tar.gz",
       sha256sum = "c70c6b7bffa0a3e6565f3a11d0d67f9ef4ef1e288c380feb77259b5b8632a362"
     },
-  
 
     extraMesonArgs = [
       "-Dsd-bus-provider=basu",
       "-Dman-pages=enabled",
     ],
-        preConfigurePhase = [
+    preConfigurePhase = [
       m%"sed -i 's@werror=true@werror=false@g' ${SRC}/meson.build"%
     ],
-
 
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lc++"
       ],
     },
-
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -58,7 +55,6 @@
       drvs.libpsl,
       drvs.libsndfile,
       drvs.libxkbcommon,
-    
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.lua,
@@ -85,21 +81,16 @@
       drvs.scdoc,
       drvs.basuUdevCompatible,
       drvs.inih,
-
-
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-
-       drvs.libcamera,
+      drvs.libcamera,
       drvs.libyaml,
-
     ]
   }
 }
