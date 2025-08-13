@@ -70,10 +70,8 @@
       "-Dbluez5-codec-aac=enabled",
 
       # TODO: lc3plus and lc3
-
       "-Dlibcamera=enabled",
       "-Dgsettings=disabled",
-
     ],
     preConfigurePhase = [
       # m%"
@@ -138,20 +136,16 @@
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
-
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-
       drvs.libcamera,
       drvs.libyaml,
-
     ],
   },
   pipewire | lib.MesonPackage =
