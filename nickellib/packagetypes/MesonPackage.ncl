@@ -18,11 +18,17 @@
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
         baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
-        configurePhase | priority -1000 = [
+        configurePhase | priority -1000 = if (!useMuon) then [
           "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
+        ] else [ 
+          "(cd ${SRC} && meson setup %{std.string.join constants.buildFlagSep mesonArgs} ../build .)"
+
         ],
-        buildPhase | priority -1000 = [
+        buildPhase | priority -1000 = if (!useMuon) then [
           "meson compile"
+        ] else [
+          "(cd ${SRC} && meson compile -C ../build)"
+
         ],
         installPhase | priority -1000 = [
           "meson install --destdir ${DEST}"
