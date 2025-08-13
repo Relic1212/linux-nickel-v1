@@ -223,6 +223,7 @@
       "-DBUILD_TOOLS" = false,
       # "-DBUILD_PLUGINS" = "none",
       # "-DBUILD_PLUGINS" = "all",
+      "-DSTATIC_PLUGINS" = true,
     },
 
     postInstallPhase = [
