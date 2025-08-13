@@ -32,9 +32,9 @@ let sysroots =
       )
       pkgs
   in
-  
- {
-    pkghash2sysroothash =std.record.merge_all (std.record.values(std.record.map (fun k v => { "%{v.drvHash}" =v.hash} ) r1)),
+
+  {
+    pkghash2sysroothash = std.record.merge_all (std.record.values (std.record.map (fun k v => { "%{v.drvHash}" = v.hash }) r1)),
   }
 in
 let data = {
