@@ -7,8 +7,14 @@
       sha256sum = "ef554d3d0e7ee65833150b9af4fb2efeadd666c739d3de7b2e26ecaeb9bb026a"
     },
 
+    preConfigurePhase = [
+      m%"sed -i "s@'--no-source-map',@@g" ${SRC}/src/theme-light/meson.build"%,
+      m%"sed -i "s@'--no-source-map',@@g" ${SRC}/src/theme-dark/meson.build"%,
+    ],
+
     biDrvs = [
-      drvs.sassc
+      drvs.sassc,
+      drvs.libsass,
     ]
   }
 }
