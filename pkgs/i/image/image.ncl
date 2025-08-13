@@ -52,9 +52,11 @@
           ## begin uutils
           drvs.uutils,
           drvs.uutilsSymlinks,
-          #drvs.gnused,
-          #drvs.gnugrep,
+          drvs.uutilsFindutils,
+          drvs.gnused,
+          drvs.gnugrep,
           (drvs.sbase & { priority = -1 }),
+          # (drvs.utilLinux & { priority = -1 }),
           drvs.libarchive,
           drvs.wget,
           drvs.bzip2,
@@ -66,6 +68,7 @@
           #(drvs.ubase & { priority = -1 }),
           ## end sbase
           # drvs.vis,
+          drvs.gitFull,
           drvs.vim,
           drvs.bc,
           drvs.dash,
@@ -108,6 +111,7 @@
           drvs.dhcpcd,
           drvs.iwd,
           drvs.dropbear,
+          drvs.openssh,
           drvs.openresolv,
           drvs.caCertificates,
 
@@ -129,24 +133,39 @@
           drvs.foot,
           drvs.fontconfig,
           drvs.ttfCroscore,
-          # drvs.fontAwesome,
+          drvs.fontAwesome,
           drvs.dejavuFonts,
           drvs.hicolorIconTheme,
           drvs.terminusFont,
+          drvs.symbolsNerdFont,
         ]
         @ (
           if options.hasX11 then
             [
-              drvs.swayX11,
+              drvs.sway,
               drvs.scroll,
               # drvs.swayfx,
-              drvs.mwc,
-              drvs.xwayland,
-              drvs.xkbcomp,
-              drvs.hyprlandX11,
+              # drvs.mwc,
+              #drvs.xwayland,
+              #drvs.xkbcomp,
+              drvs.hyprland,
               drvs.hyprpaper,
               drvs.hyprpicker,
               drvs.hyprlandContrib,
+
+              # ### QT
+              # drvs.qtdeclarative,
+              # drvs.qtbase,
+              # drvs.qtshadertools,
+              # drvs.qtwayland,
+              # # drvs.hyprlandQtSupport,
+              # # drvs.hyprlandQtutils,
+              # drvs.qt5compat,
+              drvs.quickshell,
+              drvs.ddcutil,
+              drvs.lmSensorsSensors,
+
+              ## -QT
             ]
           else
             [
@@ -157,6 +176,8 @@
           (
             if options.full then
               [
+                drvs.kwallet,
+                drvs.qca,
                 #drvs.cagebreak,
                 drvs.rwaybar,
                 drvs.brightnessctl,
@@ -176,6 +197,7 @@
                 drvs.swayidle,
                 drvs.swaylock,
                 drvs.swaybg,
+                drvs.breezeIcons,
                 drvs.wlClipboard,
                 drvs.slurp,
                 drvs.grim,
@@ -185,6 +207,8 @@
                 drvs.lavalauncher,
                 drvs.rofiWayland,
                 drvs.waybar,
+                # drvs.eww,
+                drvs.thunar,
                 drvs.gammastep,
                 drvs.gebaarLibinput,
                 drvs.upower,
@@ -199,12 +223,21 @@
                 (drvs.alsaFirmware & { priority = -1 }),
                 drvs.alsaLibs,
                 drvs.alsaUtils,
+                # pw (EXP!)
+                drvs.pipewire,
+                drvs.lua,
+                drvs.xdgDesktopPortal,
+                drvs.xdgDesktopPortalWlr,
+                drvs.xdgDesktopPortalGtk,
+                drvs.pulseaudioBin,
+                drvs.playerctl,
                 # bt
                 drvs.bluez,
                 #drvs.blueAlsa,
                 #drvs.bluez4,
                 # drvs.pulseaudio14,
                 # flatpak
+                drvs.xdgUtils,
                 drvs.xdgDbusProxy,
                 drvs.mountOthers,
                 drvs.sbctl,
@@ -220,9 +253,22 @@
                 drvs.gsettingsDesktopSchemas,
                 drvs.gnomeDesktop,
                 drvs.atSpi2Core,
-
-                # drvs.hyprlandQtSupport,
-                # drvs.hyprlandQtutils,
+                drvs.gnomeKeyring,
+                drvs.gcr,
+                drvs.gtk3,
+                # drvs.ptyxis,
+                # drvs.libadwaita,
+                # drvs.vte,
+                drvs.cliphist,
+                drvs.inotifyTools,
+                drvs.btop,
+                drvs.starship,
+                drvs.papyrusIconTheme,
+                drvs.socat,
+                drvs.pv,
+                drvs.cava,
+                drvs.adwGtk3,
+                drvs.swappy,
 
                 # ttyescape
                 drvs.buffybox,
@@ -232,6 +278,12 @@
                 # drvs.swc,
                 # drvs.velox,
                 # drvs.stWayland,
+
+                ### nwg
+                drvs.nwgDrawer,
+                drvs.nwgLook,
+                ### -nwg
+                drvs.yad,
               ]
             else
               []
@@ -240,10 +292,12 @@
             if options.haveContainers then
               [
                 drvs.flatpak,
+                drvs.fuse,
                 drvs.gnupg2,
                 drvs.gpgme,
                 drvs.bubblewrap,
                 drvs.podman,
+                drvs.distrobox,
                 drvs.conmon,
                 drvs.crun,
                 drvs.netavark,
@@ -272,10 +326,9 @@
       ]
     },
 
-  vmImage | lib.Package =
+  vmImage =
     baseImage
     & {
-      name | priority 1 = "vm-image",
       installPhase = [
         "mkdir -p /tmp/workdir/out/efipart/EFI/BOOT",
         "mkdir -p /tmp/workdir/out/efipart/EFI/loader",

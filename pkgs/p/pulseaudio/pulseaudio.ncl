@@ -94,12 +94,11 @@
     ]
   }
 }
-
 & {
   lib,
   drvs,
   pulseaudio14,
-  pulseaudio8 | lib.AutotoolsPackage = (
+  pulseaudio8 = (
     pulseaudio14
     & {
       singleSource | priority 200 = {
@@ -125,3 +124,5 @@
     }
   )
 }
+& (import "./pulseaudio-lennart.ncl")
+& (import "./pulseaudio17.ncl")

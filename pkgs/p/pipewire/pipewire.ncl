@@ -148,7 +148,7 @@
       drvs.libyaml,
     ],
   },
-  pipewire | lib.MesonPackage =
+  pipewire =
     _pipewire
     & {
       # mesonArgs | force = lib.functions.replaceArrayElem "--buildtype=release" "--buildtype=debug" _pipewire.mesonArgs

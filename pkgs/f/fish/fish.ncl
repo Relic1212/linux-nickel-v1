@@ -35,3 +35,13 @@
     }
   }
 }
+& {
+  lib,
+  drvs,
+  fish4 | lib.CargoPackage = {
+    singleSource = {
+      uri = "https://github.com/fish-shell/fish-shell/archive/refs/tags/4.0.2.tar.gz",
+      sha256sum = "a463dd599a0233c88999051af8a54a51a4ff5e4aa4673d318bf273ae8a1c2fd0"
+    },
+  }
+}

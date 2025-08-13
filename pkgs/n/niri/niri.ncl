@@ -19,21 +19,39 @@
         EXTRA_LDFLAGS = ["-lc++"],
       },
       extraEnv = {
-        RUSTFLAGS = ["-C target-feature=+crt-static -C link-self-contained=yes -C link-arg=-lc++ -C link-arg=-levdev -C link-arg=-lmtdev -C link-arg=-static -C link-arg=--static"],
+        # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
+        EXTRA_RUSTFLAGS = [
+          "-C link-arg=-Wl,--push-state,--no-as-needed",
+          "-C link-arg=-lEGL",
+          "-C link-arg=-lwayland-client",
+          "-C link-arg=-Wl,--pop-state",
+        ],
+        # RUSTFLAGS = ["-C target-feature=+crt-static -C link-self-contained=yes -C link-arg=-lc++ -C link-arg=-levdev -C link-arg=-lmtdev -C link-arg=-static -C link-arg=--static"],
       },
+      extraCargoFlags = [
+        "--no-default-features",
+        # "--verbose",
+      ],
       nonCrateSourceInputs = [
         {
           src = {
-            uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v0.1.10.tar.gz",
-            sha256sum = "2a6e6c21b05c14498eb84e58853c0a4c9d96d4215b8aec53388e89266fccca1b",
+            uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.05.1.tar.gz",
+            sha256sum = "2df192fa85adbb0eabcfddbd8aa812c3d3329a582a7e62212ea9fcddafa79b00",
           }
         },
         {
           dest = "vendor",
           src = {
-            uri = "https://github.com/YaLTeR/niri/releases/download/v0.1.10/niri-0.1.10-vendored-dependencies.tar.xz",
-            sha256sum = "2246443925ad4e7e730e2c556ebf3ac86f0f302dc626bce1193fa84deaded8b8"
+            uri = "https://github.com/YaLTeR/niri/releases/download/v25.05.1/niri-25.05.1-vendored-dependencies.tar.xz",
+            sha256sum = "4c2b2b3fc8340c02f3ba2581b50847f1d9e0fab986bebf53aaf045fa54b9a3c2"
           }
+        },
+        {
+          src = {
+            uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
+            sha256sum = "f53ca2163ab21fe746b4697c18438453b2563e3dc94358a259abd78c047af567",
+          },
+          dest = "vendor-winit",
         }
       ],
       crates = {
@@ -74,100 +92,72 @@
       ],
 
       unpackPhase = [
-        "(cd /tmp/workdir/src; tar -xf $(find /tmp/workdir/packed -name v0.1.10.tar.gz) --strip-components=1)",
+        "(cd /tmp/workdir/src; tar -xf $(find /tmp/workdir/packed -name 'v*.tar.gz') --strip-components=1)",
         "mkdir /tmp/workdir/src/vendor -p",
-        "(cd /tmp/workdir/src/vendor; tar -xf $(find /tmp/workdir/packed -name niri-0.1.10-vendored-dependencies.tar.xz) --strip-components=1)",
+        "(cd /tmp/workdir/src/vendor; tar -xf $(find /tmp/workdir/packed -name 'niri-*-vendored-dependencies.tar.xz') --strip-components=1)",
+        "mkdir /tmp/workdir/src/vendor-winit -p",
+        "(cd /tmp/workdir/src/vendor-winit; tar -xf $(find /tmp/workdir/packed -name '58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz') --strip-components=1)",
       ],
 
-      preConfigurePhase = [
-        "mkdir -p /tmp/home",
-        "export HOME=/tmp/home",
-        "mkdir -p ${HOME}/.cargo",
-        "ln -s $(realpath vendor) ${HOME}/vendor",
-        m%"
-                echo "
-                [source.crates-io]
-                replace-with = \"vendored-sources\"
+      configurePhase =
+        [
 
-                [source.\"git+https://github.com/Smithay/smithay.git\"]
-                git = \"https://github.com/Smithay/smithay.git\"
-                replace-with = \"vendored-sources\"
+          # checksum removal from Alpine
+          #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+          #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+          m%"
+            echo "
+            [source.crates-io]
+            replace-with = \"vendored-sources\"
+            
+            [source.\"git+https://github.com/Smithay/smithay.git\"]
+            git = \"https://github.com/Smithay/smithay.git\"
+            replace-with = \"vendored-sources\"
 
-                [source.\"git+https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"]
-                git = \"https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"
-                replace-with = \"vendored-sources\"
+            [source.\"git+https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"]
+            git = \"https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"
+            replace-with = \"vendored-sources\"
 
 
-                [source.vendored-sources]
-                directory = \"vendor\"
+            [source.vendored-sources]
+            directory = \"vendor\"
 
-                " > ${HOME}/.cargo/config.toml
-                "%,
-        "cp -r ${HOME}/.cargo .",
-        "CARGO_HOME=$(realpath .cargo)",
-        "export CARGO_HOME",
-        "RUST_BACKTRACE=full",
-
-        # checksum removal from Alpine
-        m%"
-            sed -i \
-                's@"wayland-dlopen",@@g' \
-                ${SRC}/vendor/winit/Cargo.toml
+            " > ${SRC}/.cargo/config.toml
             "%,
-        m%"
-            sed -i \
-                's@"x11",@@g' \
-                ${SRC}/vendor/winit/Cargo.toml
-            "%,
+          m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
+          # sct
+          # m%"
+          # sed -i \
+          #   's@"xkbcommon",@@g' \
+          #   ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
+          # "%, # echo "
+          # [target.'cfg(all(unix))'.dependencies.xkbcommon]
+          # version = \"0.8.0\"
 
-        m%"
-        echo "
-        [target.'cfg(all(unix))'.dependencies.xkbcommon]
-        version = \"0.8.0\"
+          # " >> ${SRC}/vendor/winit/Cargo.toml
+          # "%,
 
-        " >> ${SRC}/vendor/winit/Cargo.toml
-        "%,
+          # winit checksum
+          m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json"%,
+          m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json"%,
+          # "rm -rf vendor/x11-dl",
+          m%"sed -i 's@"backend_winit",@@g' ${SRC}/Cargo.toml"%
+        ]
+        @ [
 
-       
-        # winit checksum
-        m%"
-        	sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json
-            "%,
-        # end winit, befin smithay
-        m%"
-            sed -i \
-                's@"wayland-dlopen",@@g' \
-                ${SRC}/vendor/smithay/Cargo.toml
-            "%,
-        m%"
-            sed -i \
-                's@"x11",@@g' \
-                ${SRC}/vendor/smithay/Cargo.toml
-            "%,
-        m%"
-        	sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json
-            "%,
-        # sct
-        m%"
-            sed -i \
-                's@"xkbcommon",@@g' \
-                ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
-            "%,
-        m%"
-        	sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json
-            "%,
-        "rm -rf vendor/x11-dl",
-        
+          #"(cd ${SRC}/vendor/winit-0.30.9 && patch -p1 < /tmp/workdir/patches/513604e0cb15da96e6d3c76b4afc5148b1a8f873.patch)",
+        ],
+
+      patches = [
+        {
+
+          file = "513604e0cb15da96e6d3c76b4afc5148b1a8f873.patch",
+          sha256sum = "ca62a08327c426ae8d16796e8ab6add94d9d9bab9507f4b8d8a7320baad6aff5",
+        }
       ],
+      patchPhase = [],
 
-      # always pass target? https://github.com/rust-lang/rust/issues/78210
-      buildPhase = [
-        "cargo build --target x86_64-unknown-linux-musl --offline --no-default-features"
-      ],
-      installPhase = [
-        "install -d -m0755 ${DEST}/usr/bin",
-        "install -m0755 target/x86_64-unknown-linux-musl/debug/niri ${DEST}/usr/bin",
-      ]
+      release = false,
     },
   cairoGobjectEmpty | lib.Package = {
     installPhase = [

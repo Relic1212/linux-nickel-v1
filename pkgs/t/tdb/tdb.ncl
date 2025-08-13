@@ -10,14 +10,22 @@
       #HOST_CC = [ "clang", "-static"]
     },
     biDrvs = [
-      drvs.pythonDynamic,
+      drvs.pythonFull,
       drvs.muslShared,
+      drvs.linuxHeaders,
+      drvs.libbsd,
+      drvs.libmd,
+      drvs.openssl,
     ],
     #   extraMakeArgs = [
     #     "HOST_CC='clang -static --static'",
     #     "HOST_CXX='clang++ -static --static'",
     #   ],
     separateBuildDir = false,
+    buildEnv = {
+      EXTRA_CFLAGS = ["-v"],
+      EXTRA_LDFLAGS = ["-v"],
+    },
 
     configureFlags | force = [
       "--prefix=/usr",
@@ -35,7 +43,14 @@
       "--infodir=/usr/share/info",
       "--mandir=/usr/share/man",
       # "--enable-static",
-      # "--disable-shared"
+      # "--disable-shared",
+
+      # https://github.com/alpinelinux/aports/blob/97bb462b84ed78f318fdd67b02713969eccfbd04/main/tdb/APKBUILD#L4
+      "--bundled-libraries=NONE",
+      "--builtin-libraries=replace",
+      "--disable-rpath",
+      "--disable-warnings-as-errors",
+      "--disable-dependency-tracking",
     ]
   }
 }

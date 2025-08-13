@@ -32,3 +32,29 @@
       ]
     }
 }
+& {
+  lib,
+  drvs,
+  utilLinux241 | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.gz",
+      sha256sum = "c014b5861695b603d0be2ad1e6f10d5838b9d7859e1dd72d01504556817d8a87"
+    },
+    biDrvs = [
+      drvs.linuxHeaders,
+      drvs.bash,
+    ],
+    preConfigurePhase = [
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
+      m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/configure"%
+    ],
+    # extraConfigureFlags=[
+
+    # "--disable-use-tty-group",
+    # "--disable-makeinstall-chown",
+    # "--disable-liblastlog2",
+    # "--disable-login-stat-mail",
+
+    # ]
+  }
+}

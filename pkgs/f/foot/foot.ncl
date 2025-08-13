@@ -2,7 +2,6 @@
   lib,
   drvs,
   foot | lib.MesonPackage = {
-    name = "foot",
     singleSource = {
       uri = "https://codeberg.org/dnkl/foot/releases/download/1.23.1/foot-1.23.1.tar.gz",
       sha256sum = "e42cc9d43f26d048cbe0eca9fc7e25a4759f2e6f4bca5835b12a17629cb10192",

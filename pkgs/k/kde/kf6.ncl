@@ -98,7 +98,7 @@
   lib,
   drvs,
   _kf,
-  kconfig | lib.CmakePackage =
+  kconfig =
     _kf
     & {
       singleSource = {
@@ -106,7 +106,7 @@
         sha256sum = "ba6cc58f025fef9525bc640f7967b7c09053b592c42368e096d97a94661a3525"
       },
     },
-  kcoreaddons | lib.CmakePackage =
+  kcoreaddons =
     _kf
     & {
       singleSource = {
@@ -118,7 +118,7 @@
       }
     },
 
-  kglobalaccel | lib.CmakePackage =
+  kglobalaccel =
     _kf
     & {
       singleSource = {
@@ -136,7 +136,7 @@
       }
     },
 
-  kpackage | lib.CmakePackage =
+  kpackage =
     _kf
     & {
       singleSource = {
@@ -162,7 +162,7 @@
       #   }
       # ]
     },
-  kdoctools | lib.CmakePackage =
+  kdoctools =
     _kf
     & {
       singleSource = {
@@ -180,7 +180,7 @@
         ]
     },
 
-  kidletime | lib.CmakePackage =
+  kidletime =
     _kf
     & {
       singleSource = {
@@ -210,7 +210,7 @@
       ]
     },
 
-  kcrash | lib.CmakePackage =
+  kcrash =
     _kf
     & {
       singleSource = {
@@ -227,7 +227,7 @@
       }
     },
 
-  kservice | lib.CmakePackage =
+  kservice =
     _kf
     & {
       singleSource = {
@@ -244,7 +244,7 @@
         ]
     },
 
-  ksvg | lib.CmakePackage =
+  ksvg =
     _kf
     & {
       singleSource = {
@@ -267,7 +267,7 @@
         ]
     },
 
-  kirigami | lib.CmakePackage =
+  kirigami =
     _kf
     & {
       singleSource = {
@@ -289,7 +289,7 @@
         ]
     },
 
-  kdbusaddons | lib.CmakePackage =
+  kdbusaddons =
     _kf
     & {
       singleSource = {
@@ -301,7 +301,7 @@
       }
     },
 
-  kcolorscheme | lib.CmakePackage =
+  kcolorscheme =
     _kf
     & {
       singleSource = {
@@ -320,7 +320,7 @@
         ]
     },
 
-  kconfigwidgets | lib.CmakePackage =
+  kconfigwidgets =
     _kf
     & {
       singleSource = {
@@ -345,7 +345,7 @@
       }
     },
 
-  kwidgetsaddons | lib.CmakePackage =
+  kwidgetsaddons =
     _kf
     & {
       singleSource = {
@@ -368,7 +368,7 @@
       }
     },
 
-  kio | lib.CmakePackage = (
+  kio = (
     _kf
     & {
       singleSource = {
@@ -447,7 +447,7 @@
     }
   ),
 
-  kded | lib.CmakePackage = (
+  kded = (
     _kf
     & {
       singleSource = {
@@ -496,7 +496,7 @@
     }
   ),
 
-  knotifications | lib.CmakePackage =
+  knotifications =
     _kf
     & {
       singleSource = {
@@ -530,7 +530,7 @@
       },
     },
 
-  kiconthemes | lib.CmakePackage =
+  kiconthemes =
     _kf
     & {
       singleSource = {
@@ -563,7 +563,7 @@
       ]
     },
 
-  ksolid | lib.CmakePackage =
+  ksolid =
     _kf
     & {
       singleSource = {
@@ -588,7 +588,7 @@
         EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lblkid"],
       }
     },
-  kcmutils | lib.CmakePackage =
+  kcmutils =
     _kf
     & {
       singleSource = {
@@ -608,7 +608,7 @@
           drvs.libtool,
         ],
     },
-  kbookmarks | lib.CmakePackage =
+  kbookmarks =
     _kf
     & {
       singleSource = {
@@ -633,7 +633,7 @@
         ]
     },
 
-  kcompletion | lib.CmakePackage =
+  kcompletion =
     _kf
     & {
       singleSource = {
@@ -662,7 +662,7 @@
       }
     },
 
-  kitemviews | lib.CmakePackage =
+  kitemviews =
     _kf
     & {
       singleSource = {
@@ -692,7 +692,7 @@
       },
     },
 
-  kjobwidgets | lib.CmakePackage =
+  kjobwidgets =
     _kf
     & {
       singleSource = {
@@ -729,7 +729,7 @@
       },
     },
 
-  karchive | lib.CmakePackage =
+  karchive =
     _kf
     & {
       singleSource = {
@@ -744,7 +744,7 @@
         ]
     },
 
-  kcodecs | lib.CmakePackage =
+  kcodecs =
     _kf
     & {
       singleSource = {
@@ -758,7 +758,7 @@
           drvs.gperf
         ]
     },
-  ki18n | lib.CmakePackage =
+  ki18n =
     _kf
     & {
       singleSource = {
@@ -776,7 +776,7 @@
         ]
     },
 
-  kguiaddons | lib.CmakePackage =
+  kguiaddons =
     _kf
     & {
       singleSource = {
@@ -794,7 +794,7 @@
       }
     },
 
-  kwindowsystem | lib.CmakePackage =
+  kwindowsystem =
     _kf
     & {
       singleSource = {
@@ -817,7 +817,7 @@
       ]
     },
 
-  kauth | lib.CmakePackage =
+  kauth =
     _kf
     & {
       singleSource = {
@@ -838,7 +838,7 @@
       ]
     },
 
-  breezeIcons | lib.CmakePackage =
+  breezeIcons =
     _kf
     & {
       singleSource = {
@@ -856,7 +856,7 @@
         ]
     },
 
-  plasmaWaylandProtocols | lib.CmakePackage =
+  plasmaWaylandProtocols =
     _kf
     & {
       singleSource = {
@@ -874,7 +874,7 @@
   lib,
   drvs,
   utilLinux,
-  utilLinuxWeak | lib.AutotoolsPackage =
+  utilLinuxWeak =
     utilLinux
     & {
       postInstallPhase | priority 1 =

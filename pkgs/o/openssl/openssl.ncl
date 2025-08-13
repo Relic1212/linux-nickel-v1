@@ -3,7 +3,7 @@
 
   drvs,
 
-  openssl | lib.AutotoolsPackage =
+  openssl =
     let _openssl | lib.AutotoolsPackage = {
       name = "openssl",
       configureScript = "./Configure",

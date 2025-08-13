@@ -22,7 +22,21 @@
       drvs.gobjectDynamic,
       drvs.graphviz,
     ]
-  }
+  },
+  valaShared =
+    vala
+    & {
+      isStatic = false,
+      buildEnv = {
+        _isStatic = false
+      },
+      llvmProvider = drvs.llvmFull,
+      separateBuildDir = false,
+      extraConfigureFlags = [
+        # "--enable-static",
+        "--enable-shared",
+      ]
+    }
 }
 & {
   lib,

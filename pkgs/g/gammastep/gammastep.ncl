@@ -92,7 +92,7 @@
   drvs,
   perl,
   perlXmlParser,
-  perlWithXmlParser | lib.AutotoolsPackage =
+  perlWithXmlParser =
     perl
     & {
       sourceInputs | priority 1 =

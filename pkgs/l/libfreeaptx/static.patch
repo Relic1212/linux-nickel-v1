@@ -1,0 +1,22 @@
+diff --git a/Makefile b/Makefile
+index 1b83bfa..755fad4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -23,7 +23,7 @@ MAJOR = 0
+ MINOR = 2
+ PATCH = 2
+ 
+-LIBNAME = lib$(NAME).so
++LIBNAME = lib$(NAME).a
+ SONAME = $(LIBNAME).$(MAJOR)
+ SOFILENAME = $(SONAME).$(MINOR).$(PATCH)
+ PCNAME = lib$(NAME).pc
+@@ -74,7 +74,7 @@ $(SONAME): $(SOFILENAME)
+ 	$(LNS) $(SOFILENAME) $@
+ 
+ $(SOFILENAME): $(SOURCES) $(HEADERS)
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -I. -shared -fPIC -Wl,-soname,$(SONAME) -o $@ $(SOURCES)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -I.  -o $@ $(SOURCES)
+ 
+ .SUFFIXES: .o .c .static
+ 

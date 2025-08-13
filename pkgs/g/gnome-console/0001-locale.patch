@@ -1,0 +1,14 @@
+diff --git a/src/main.c b/src/main.c
+index af9c5a5..42ca6fe 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -17,7 +17,8 @@
+  */
+ 
+ #include <glib/gi18n.h>
+-
++// https://gitlab.gnome.org/GNOME/console/-/merge_requests/171/diffs
++#include <locale.h>
+ #include <kgx.h>
+ 
+ int

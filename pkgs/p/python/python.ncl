@@ -4,7 +4,7 @@
   drvs,
   _pythonBase,
   #base with minimal modules
-  _pythonBaseMinimal | lib.AutotoolsPackage =
+  _pythonBaseMinimal =
     _pythonBase
     & {
       buildEnv = {

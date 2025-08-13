@@ -3,7 +3,7 @@
   drvs,
   _kf,
 
-  _plasma | lib.CmakePackage = (
+  _plasma = (
     _kf
     & {
 
@@ -38,7 +38,7 @@
     }
   ),
 
-  kdecorations | lib.CmakePackage =
+  kdecorations =
     _kf
     & {
       singleSource = {
@@ -64,7 +64,7 @@
       ]
     },
 
-  kwayland | lib.CmakePackage =
+  kwayland =
     _plasma
     & {
       singleSource = {
@@ -73,7 +73,7 @@
       },
     },
 
-  plasmaActivities | lib.CmakePackage =
+  plasmaActivities =
     _plasma
     & {
       singleSource = {
@@ -83,7 +83,7 @@
       }
     },
 
-  libplasma | lib.CmakePackage =
+  libplasma =
     _plasma
     & {
       singleSource = {
@@ -92,7 +92,7 @@
       }
     },
 
-  breeze | lib.CmakePackage =
+  breeze =
     _plasma
     & {
       singleSource = {

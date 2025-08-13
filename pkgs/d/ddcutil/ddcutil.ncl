@@ -50,3 +50,36 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  ddcui | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/rockowitz/ddcui/archive/refs/tags/v0.6.0.tar.gz",
+      sha256sum = "89a0e33314c7bf046ab09b0e68aa3c758b8eba69f06973987522c75843237c39"
+    },
+
+    separateBuildDir = false,
+
+    biDrvs = [
+      drvs.pcre2,
+      drvs.libffi,
+      drvs.zlibNg,
+      drvs.glib,
+      drvs.jansson,
+      drvs.gperf,
+      drvs.kmod,
+      drvs.xz,
+      drvs.openssl,
+      drvs.zstd,
+      drvs.utilLinux,
+      drvs.linuxHeaders,
+      drvs.eudev,
+      drvs.libusb,
+      drvs.libdrm,
+      drvs.libpciaccess,
+      drvs.ddcutil,
+    ],
+  }
+}

@@ -1,13 +1,13 @@
 {
   lib,
   drvs,
-  libnl | lib.AutotoolsPackage = {
+  libnl | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://www.infradead.org/~tgr/libnl/files/libnl-3.2.25.tar.gz",
-      sha256sum = "8beb7590674957b931de6b7f81c530b85dc7c1ad8fbda015398bc1e8d1ce8ec5"
+      uri = "https://github.com/thom311/libnl/archive/refs/tags/libnl3_11_0.tar.gz",
+      sha256sum = "871d8f9f05b86dab080988bb994748384c1416a5d03de1f9f5e811f265094b04"
     },
     biDrvs = [
-      drvs.m4,
+      # drvs.m4,
       drvs.flex,
       drvs.bison,
       drvs.linuxHeaders,

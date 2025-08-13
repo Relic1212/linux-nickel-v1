@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  nettle | lib.AutotoolsPackage =
+  nettle =
     let _nettle | lib.AutotoolsPackage = {
       name = "nettle",
       singleSource = {

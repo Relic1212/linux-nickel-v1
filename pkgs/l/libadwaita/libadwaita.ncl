@@ -6,7 +6,21 @@
       uri = "https://gitlab.gnome.org/GNOME/libadwaita/-/archive/1.7.6/libadwaita-1.7.6.tar.gz",
       sha256sum = "8112df4e98dcfd249c0a38bcb7100212cb8e69ac53371fc8e875200752a360df"
     },
-
+    patches = [
+      {
+        sha256sum = "5200537f94e707b32fd58442bff1970f48feafe7894ee5c7a1eabfaf66e60122",
+        file = "0001-libadwaita.patch"
+      }
+    ],
+    extraMesonArgs = [
+      "-Dintrospection=disabled",
+      "-Dvapi=false",
+      "-Dtests=false",
+      "-Dexamples=false",
+      # "--prefer-static",
+      # "-Ddefault_library=both",
+      # "-Ddefault_library=shared",
+    ],
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
 
@@ -83,15 +97,6 @@
       drvs.appstream,
       drvs.curl,
       # drvs.vte,
-    ],
-    extraMesonArgs = [
-      "-Dintrospection=disabled",
-      "-Dvapi=false",
-      "-Dtests=false",
-      "-Dexamples=false",
-      # "--prefer-static",
-      # "-Ddefault_library=both",
-      # "-Ddefault_library=shared",
     ],
   },
 

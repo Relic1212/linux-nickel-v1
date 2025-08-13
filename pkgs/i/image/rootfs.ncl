@@ -26,14 +26,39 @@
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
+      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
+      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/objects-Release",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/gdb",
-
+      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.a'); do rm -rf $d; done",
+      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.prl'); do rm -rf $d; done",
+      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -empty); do rm -rf $d; done",
       "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/bash-completion",
       "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/emacs",
       "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/common-lisp",
+
+      # bash files 
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
+
+      # perl
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
+      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
+
+      # to mount a tmpfs here for debugging
+      "mkdir -p tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/"
 
       # "echo 'stripping binaries'",
       # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
@@ -95,7 +120,6 @@
         m%"echo "root:1000000:65536\nuser:100000:165536\n" > /etc/subuid"%,
         "setcap cap_setgid=ep /usr/bin/newgidmap",
         "setcap cap_setuid=ep /usr/bin/newuidmap",
-
         "(cd /etc && ln -s  ../proc/mounts mtab)",
 
         # https://github.com/flatpak/flatpak/issues/5488
@@ -146,18 +170,17 @@
             chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/doas
           fi
           "%,
-          m%"
+        m%"
           if [ -e /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3 ]; then
             chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3
           fi
           "%,
-
-           m%"
+        m%"
           if [ -e /tmp/workdir/out/destdir/rootfs/usr/libexec/dbus-daemon-launch-helper ]; then
             chmod u+s /tmp/workdir/out/destdir/rootfs/usr/libexec/dbus-daemon-launch-helper
           fi
           "%,
-          # "touch /tmp/workdir/out/destdir/rootfs/etc/mtab",
+        # "touch /tmp/workdir/out/destdir/rootfs/etc/mtab",
         m%"
           genimage \
           -r image \

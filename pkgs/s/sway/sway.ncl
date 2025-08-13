@@ -112,7 +112,7 @@
   lib,
   drvs,
   sway,
-  swayX11 | lib.MesonPackage =
+  swayX11 =
     sway
     & {
       biDrvs | priority 1 =

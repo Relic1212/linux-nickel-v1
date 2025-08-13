@@ -6,7 +6,6 @@ in
   # base for non-bootstrap
   _cmakeCmakeBase #| lib.CmakePackage
   = {
-    baseName = "cmake",
     singleSource = misc.cmakeSingleSource,
     cmakeArgs =
       lib.CmakePackage.cmakeArgs

@@ -3,7 +3,7 @@
   drvs,
   lib,
   _pythonBase,
-  pythonFull | lib.AutotoolsPackage =
+  pythonFull =
     _pythonBase
     & {
       # enableCcache|force=false,
