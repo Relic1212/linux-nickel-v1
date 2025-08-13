@@ -1,0 +1,10 @@
+{
+  lib,
+  drvs,
+  inotifyTools | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/inotify-tools/inotify-tools/archive/refs/tags/4.23.9.0.tar.gz",
+      sha256sum = "1dfa33f80b6797ce2f6c01f454fd486d30be4dca1b0c5c2ea9ba3c30a5c39855"
+    }
+  }
+}
