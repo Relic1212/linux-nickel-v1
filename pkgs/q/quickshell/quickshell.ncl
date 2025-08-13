@@ -93,28 +93,21 @@
       drvs.libxkbfile,
       drvs.xcbUtilWm,
       ## -X
-
-
       drvs.bluez,
       drvs.sbc,
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-
       drvs.libcamera,
       drvs.libyaml,
-
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
       drvs.pipewire,
       drvs.alsaLibs,
-
-
     ],
 
     buildEnv = {
