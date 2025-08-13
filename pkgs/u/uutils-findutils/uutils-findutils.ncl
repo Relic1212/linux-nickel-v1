@@ -8,9 +8,13 @@
     in
     {
       singleSource = {
-        uri = "https://github.com/uutils/findutils/archive/refs/tags/0.7.0.tar.gz",
-        sha256sum = "129c263c6953b5c6aa756666aa9f5e968e04c1d0315d9d8ad9e93ec3d1823bc0"
+        uri = "https://github.com/uutils/findutils/archive/refs/tags/0.8.0.tar.gz",
+        sha256sum = "932f153d256f7a4cf40255a948689bf59a10f14c8804151817ab50fa1b46429a"
       },
       crates = _crates,
+
+      postInstallPhase = [
+        "rm ${DEST}/usr/bin/testing-commandline",
+      ]
     }
 }
