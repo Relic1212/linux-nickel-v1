@@ -69,7 +69,7 @@ let _services =
           @ (
             if enableBluetooth then
               [
-                 "bluetooth"
+                "bluetooth"
               ]
             else
               []
