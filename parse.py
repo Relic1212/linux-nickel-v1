@@ -14,9 +14,12 @@ class GraphNode:
         self.packages = packages
 
 
-def nickel_to_json(fp):
+def nickel_to_json(fp, args=None):
+    if args == None:
+        args = []
+
     c = subprocess.run(
-        ["nickel", "export", fp, "--format", "json"], check=False, capture_output=True
+        ["nickel", "export", fp, "--format", "json"] + args, check=False, capture_output=True
     )
 
     if c.returncode != 0:
@@ -44,10 +47,11 @@ def a():
             print("sha", hashlib.sha256(json.dumps(d).encode()).hexdigest())
 
 
-def get_drvs():
+def get_drvs(pn):
     fp = "nickellib/pkgs2.ncl"
-    c = nickel_to_json(fp)
-    return c
+    c = nickel_to_json(fp, args=["--", f"pn=\"{pn}\""])
+    data = c["data"]
+    return data
 
 
 def get_graph(drvs=None):
@@ -68,7 +72,8 @@ def get_graph(drvs=None):
         drv = json.loads(dbh[hk])
         name2 = drv["name"]
         buildinput_hashes = drv["buildInputDrvs"]
-        buildinput_names = [json.loads(dbh[h])["name"] for h in buildinput_hashes]
+        buildinput_names = [json.loads(dbh[h])["name"]
+                            for h in buildinput_hashes]
 
         for bname in buildinput_names:
             g.edge(name, bname)
@@ -103,7 +108,7 @@ def build_all(drvs):
         print(failed)
 
 
-def what_is_not_built(drvs:dict):
+def what_is_not_built(drvs: dict):
     """Print all derivations in the tree that do not have a successful buils
 
     Args:
@@ -121,28 +126,29 @@ def what_is_not_built(drvs:dict):
     for n in non_built:
         print(n)
 
+
 def diff2(drvs):
     non_built = []
-    subprocess.run(["unlink","build/hypothetical"], check=False)
-    tmp = subprocess.run(["mktemp","-d"], check=True,capture_output=True).stdout.decode().strip()
-    subprocess.run(["ln","-s",tmp, "build/hypothetical" ],check=True)
+    subprocess.run(["unlink", "build/hypothetical"], check=False)
+    tmp = subprocess.run(["mktemp", "-d"], check=True,
+                         capture_output=True).stdout.decode().strip()
+    subprocess.run(["ln", "-s", tmp, "build/hypothetical"], check=True)
 
-    diffs=0
-    same=0
-    notbuilt=0
-    diffing =[]
+    diffs = 0
+    same = 0
+    notbuilt = 0
+    diffing = []
     for k in drvs["hashByName"].keys():
         old_path = f"build/tmp/{k}"
         old = old_path + "/drv.json"
-        old_status=old + "/0.txt"
+        old_status = old + "/0.txt"
         # print(old)
 
-        if os.path.exists(old)  :
-            with open(old,encoding="utf-8") as f:
-                old_drv=json.load(f)
+        if os.path.exists(old):
+            with open(old, encoding="utf-8") as f:
+                old_drv = json.load(f)
 
-         
-            old_script=old_drv["scriptContent"]
+            old_script = old_drv["scriptContent"]
 
             new_h = drvs["hashByName"][k]
 
@@ -150,38 +156,39 @@ def diff2(drvs):
 
             # print(new_drv)
             # print(type(new_drv))
-            new_script=new_drv["scriptContent"]
-            if not old_script==new_script:
+            new_script = new_drv["scriptContent"]
+            if not old_script == new_script:
                 print(f"{k} differs")
-                diffs+=1
+                diffs += 1
                 diffing.append(k)
-                kd = (tmp + "/" + k  )
+                kd = (tmp + "/" + k)
                 os.makedirs(kd)
-                with open (kd + "/drv.json" , "w") as f:
-                    json.dump(new_drv,f)
-                
-                with open (kd + "/build.sh" , "w") as f:
+                with open(kd + "/drv.json", "w") as f:
+                    json.dump(new_drv, f)
+
+                with open(kd + "/build.sh", "w") as f:
                     f.write(new_script)
-                bdiff=subprocess.run(["diff", old_path + "/build.sh",  kd + "/build.sh" ],capture_output=True,check=False).stdout.decode()
+                bdiff = subprocess.run(["diff", old_path + "/build.sh",  kd +
+                                       "/build.sh"], capture_output=True, check=False).stdout.decode()
                 print(bdiff)
-                with open(kd + "build.diff","w") as f:
+                with open(kd + "build.diff", "w") as f:
                     f.write(bdiff)
             else:
-                same+=1
+                same += 1
         else:
-            notbuilt+=1
-    print(notbuilt,same,diffs)
+            notbuilt += 1
+    print(notbuilt, same, diffs)
 
     for k in diffing:
-        print("diffs:",k)
-    if (diffs)==0:
+        print("diffs:", k)
+    if (diffs) == 0:
         print("zero packages which have a successfull build in build/tmp would be built")
-
 
 
 def test():
     pn = sys.argv[1]
-    drvs = get_drvs()
+    drvs = get_drvs(pn)
+    # with open("test/0813.json") as f : drvs = json.load(f)
     if pn == "all":
         build_all(drvs)
         return
@@ -191,16 +198,16 @@ def test():
     if pn == "diff2":
         diff2(drvs)
         return
-  
-  
+
     pn_hash = drvs["hashByName"][pn]
     print(pn_hash)
-    hbn= drvs["hashByName"]
-    nbh =reverse_dict(hbn)
+    hbn = drvs["hashByName"]
+    nbh = reverse_dict(hbn)
 
     pkghash2sysroothash = drvs["pkghash2sysroothash"]
 
-    build_in_bubblewrap.build(pn_hash, drvs["drvByHash"],pkg_names=nbh,pkghash2sysroothash=pkghash2sysroothash)
+    build_in_bubblewrap.build(
+        pn_hash, drvs["drvByHash"], pkg_names=nbh, pkghash2sysroothash=pkghash2sysroothash)
 
 
 if __name__ == "__main__":
