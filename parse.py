@@ -46,6 +46,22 @@ def a():
             print("d", d)
             print("sha", hashlib.sha256(json.dumps(d).encode()).hexdigest())
 
+def pn_to_pn_key(pn:str):
+    pn_key = ""
+    upper = False
+    for c in pn:
+
+        if c == "-":
+            upper = True
+        else:
+            if upper:
+                pn_key += c.upper()
+                upper = False
+            else:
+                pn_key += c 
+    return pn_key
+            
+        
 
 def get_drvs(pn):
     fp = "nickellib/pkgs2.ncl"
@@ -187,7 +203,8 @@ def diff2(drvs):
 
 def test():
     pn = sys.argv[1]
-    drvs = get_drvs(pn)
+    pn_key = pn_to_pn_key(pn)
+    drvs = get_drvs(pn_key)
     # with open("test/0813.json") as f : drvs = json.load(f)
     if pn == "all":
         build_all(drvs)
