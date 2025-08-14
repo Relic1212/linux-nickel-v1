@@ -60,6 +60,10 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
 
 
 def build_sysroot(drv_hash, build_inputs, uses_ccache):
+    # build_sysroot_copy(drv_hash, build_inputs, uses_ccache)
+    build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache)
+
+def build_sysroot_copy(drv_hash, build_inputs, uses_ccache):
     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
     if os.path.isfile(sysroot_drvdir + "/0.txt"):
         return
@@ -81,6 +85,75 @@ def build_sysroot(drv_hash, build_inputs, uses_ccache):
     rwpaths = ["src", "build", "out"]
 
     sysroot = sysroot_drvdir + "/sysroot/"
+    for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev", "/pkgs"]:
+        os.makedirs(sysroot + d, exist_ok=True)
+
+    # uses_ccache = drv["enableCcache"]
+    if uses_ccache:
+        for compiler in [
+            "gcc",
+            "cc",
+            "clang",
+            "g++",
+            "clang++",
+            "x86_64-pc-linux-musl-c++",
+            "x86_64-pc-linux-musl-g++",
+            "x86_64-pc-linux-musl-gcc",
+            "x86_64-linux-musl-c++",
+            "x86_64-linux-musl-g++",
+            "x86_64-linux-musl-gcc",
+        ]:
+            if os.path.exists(sysroot + "/usr/bin/" + compiler):
+                cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
+                directory = sysroot + "/usr/lib/ccache"
+                senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
+                subprocess.run(cmd, cwd=directory, env=senv, check=True)
+
+    subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
+
+def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
+    sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
+    sysroot = sysroot_drvdir + "/sysroot/"
+
+    if os.path.isfile(sysroot_drvdir + "/0.txt"):
+        return
+
+    subprocess.run(["rm", "-rf", sysroot_drvdir], check=True)
+
+    os.makedirs(sysroot_drvdir + "/sysroot/")
+
+    for bi_drv in build_inputs:
+        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv + "-workdir"
+        bi_dest = bi_workdir + "/out/destdir"
+        if not os.path.isfile(bi_workdir + "/0.txt"):
+            raise Exception(f"dependency in {bi_dest} not built!")
+        
+        drv_paths = bubblewrap.get_paths_from_sysroot(bi_dest)
+        sysroot_dirs = drv_paths['dirs']
+        sysroot_files = drv_paths['files']
+        # all the dirs so the symlinks will work
+        for bi_drv_dir in sysroot_dirs:
+            dst = sysroot + bi_drv_dir
+
+            if os.path.isdir(dst):
+                continue
+            # maybe it is better to reverse order anf just skip if it exists
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.remove(dst)
+            os.makedirs(dst)
+        for sd in sysroot_files:
+            link_source =  bi_dest + sd
+            link_target =sysroot+ sd
+            if os.path.exists(link_target) or os.path.islink(link_target):
+                print(f"removing {link_target} to link")
+                subprocess.run(["rm", "-rf", link_target], check=True)
+
+            print(f"linking {link_source} to {link_target}")
+            subprocess.run(["ln", link_source, link_target], check=True)
+
+    ropaths = ["packed", "files", "patches", "build.sh"]
+    rwpaths = ["src", "build", "out"]
+
     for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev", "/pkgs"]:
         os.makedirs(sysroot + d, exist_ok=True)
 
