@@ -17,13 +17,6 @@ except ModuleNotFoundError:
 import os
 
 
-class LogFile:
-    def __init__(self, file_objects: str) -> None:
-        self.file_objects = file_objects
-
-    def write(self, obj):
-        for f in self.file_objects:
-            f.write(obj)
 
 
 def get_src_dir(src_uri, src_uri_sha256sum) -> str:
@@ -42,25 +35,6 @@ def find_extrafile(name, sha256sum, files_dir="") -> str:
                     return p
     print("ERROR, could not find", name)
     raise Exception()
-
-
-# def fetch_src(src_uri: str, src_uri_sha256sum: str) -> None:
-#     src_dir = get_src_dir(src_uri, src_uri_sha256sum)
-#     status_file = src_dir + "/0.txt"
-#     if os.path.isfile(status_file):
-#         return
-#     if src_uri == "":
-#         return
-
-#     os.system(f"rm -rf {src_dir}")
-#     os.makedirs(f"{src_dir}/unpacked")
-#     if src_uri.startswith("http"):
-#         cmd = f"wget {src_uri}"
-#     else:
-#         cmd = f"cp -r {os.path.realpath(src_uri)} ."
-#     util_functions.run_in_directory(cmd=cmd, directory=f"{src_dir}/unpacked")
-
-#     os.system(f"touch {status_file}")
 
 
 def drv_to_workdir(drv: dict) -> str:
@@ -131,12 +105,12 @@ def prepare_sysroot(drv, workdir) -> list:
     build_in_chroot = drv["buildInChroot"]
     symlink_build_inputs = drv['symlinkBuldInputs']
     if (not symlink_build_inputs):
-        return prepare_sysroot_copy(drv,workdir)
+        return prepare_sysroot_copy(drv, workdir)
     elif build_in_chroot:
         print("FAIL for", drv)
         raise Exception("symlink is incompatible with chroot")
     else:
-        return prepare_sysroot_symlink(drv,workdir)
+        return prepare_sysroot_symlink(drv, workdir)
 
 
 def prepare_sysroot_symlink(drv, workdir) -> list:
