@@ -17,8 +17,6 @@ except ModuleNotFoundError:
 import os
 
 
-
-
 def get_src_dir(src_uri, src_uri_sha256sum) -> str:
     return dirpaths.get_basedir() + "/" + src_uri_sha256sum + "-src"
 
@@ -101,54 +99,6 @@ def link_workdir(h, name):
     )
 
 
-def prepare_sysroot(drv, workdir) -> list:
-    build_in_chroot = drv["buildInChroot"]
-    symlink_build_inputs = drv['symlinkBuldInputs']
-    if (not symlink_build_inputs):
-        return prepare_sysroot_copy(drv, workdir)
-    elif build_in_chroot:
-        print("FAIL for", drv)
-        raise Exception("symlink is incompatible with chroot")
-    else:
-        return prepare_sysroot_symlink(drv, workdir)
-
-
-def prepare_sysroot_symlink(drv, workdir) -> list:
-    bwrap_bi_drv_args = []
-    bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
-
-    for bi_drv in drv["buildInputDrvs"]:
-        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-
-        bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
-        sysroot_dirs = bi_dest_bwrap_args['dirs']
-        sysroot_files = bi_dest_bwrap_args['files']
-        # all the dirs so the symlinks will work
-        for bi_drv_dir in sysroot_dirs:
-            dst = workdir + "/sysroot/" + bi_drv_dir
-
-            if os.path.isdir(dst):
-                continue
-            # maybe it is better to reverse order anf just skip if it exists
-            if os.path.exists(dst) or os.path.islink(dst):
-                os.remove(dst)
-            os.makedirs(dst)
-
-        # create intentianlly broken symlink
-        for sd in sysroot_files:
-            link_source = "/pkgs/"+bi_drv + sd
-            link_target = workdir + "/sysroot" + sd
-            if os.path.exists(link_target) or os.path.islink(link_target):
-                print(f"removing {link_target} to link")
-                subprocess.run(["rm", "-rf", link_target], check=True)
-
-            # print(f"linking {link_source} to {link_target}")
-            subprocess.run(["ln", "-s", link_source, link_target], check=True)
-        bwrap_bi_drv_args += ["--ro-bind", bi_dest, "/pkgs/" + bi_drv]
-
-    return bwrap_bi_drv_args
-
-
 def prepare_sysroot_copy(drv, workdir) -> list:
     bwrap_bi_drv_args = []
 
@@ -223,7 +173,7 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     symlink_build_inputs = drv['symlinkBuldInputs']
 
     if symlink_build_inputs or (not sandboxed):
-        bwrap_bi_drv_args = prepare_sysroot(drv, workdir)
+        bwrap_bi_drv_args = sysroot_utils.prepare_sysroot(drv, workdir)
     else:
         bwrap_bi_drv_args = []
 

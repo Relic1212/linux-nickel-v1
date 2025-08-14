@@ -12,18 +12,23 @@ except ModuleNotFoundError:
 
 
 def prepare_sysroot(drv, workdir) -> list:
+    build_in_chroot = drv["buildInChroot"]
+    symlink_build_inputs = drv['symlinkBuldInputs']
+    if (not symlink_build_inputs):
+        return prepare_sysroot_copy(drv, workdir)
+    elif build_in_chroot:
+        print("FAIL for", drv)
+        raise Exception("symlink is incompatible with chroot")
+    else:
+        return prepare_sysroot_symlink(drv, workdir)
+
+
+def prepare_sysroot_symlink(drv, workdir) -> list:
     bwrap_bi_drv_args = []
-    if (drv["buildInChroot"]) and (drv['symlinkBuldInputs']):
-        bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
+    bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
 
     for bi_drv in drv["buildInputDrvs"]:
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-
-        if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
-            print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-            util_functions.copy_root(
-                src=bi_dest + "/", dest=workdir + "/sysroot/")
-            continue
 
         bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
         sysroot_dirs = bi_dest_bwrap_args['dirs']
@@ -103,39 +108,39 @@ def build_sysroot(drv_hash, build_inputs, uses_ccache):
     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
 
 
-
-def gen_recursice_overlay(script,dirs,sysroot):
-    if len(dirs)==1:
+def gen_recursice_overlay(script, dirs, sysroot):
+    if len(dirs) == 1:
         d = dirs[0]
         script += f"mkdir -p /tmp/empty_last\n"
-        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d} {sysroot}\n"
-        return gen_recursice_overlay(script,[])
+        script += f"mount -v -t overlay overlay -o ro,lowerdir={d} {sysroot}\n"
+        return gen_recursice_overlay(script, [])
 
-    elif len(dirs)==2:
-        d1 = dirs [0]
-        d2 = dirs [1]
-        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {sysroot}\n"
+    elif len(dirs) == 2:
+        d1 = dirs[0]
+        d2 = dirs[1]
+        script += f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {sysroot}\n"
         return script
     count = len(dirs)
-    if (count % 2 )== 0:
-        n = count //2 
+    if (count % 2) == 0:
+        n = count // 2
         one_left = False
     else:
-        n = (count -1)//2
+        n = (count - 1)//2
         one_left = True
-    
+
     new_dirs = []
-    for i in range(0,n*2,2):
-        d1 = dirs [i]
-        d2 = dirs [i+1]
+    for i in range(0, n*2, 2):
+        d1 = dirs[i]
+        d2 = dirs[i+1]
         new_dir = f"/tmp/{hashlib.sha256((d1 + d1).encode()).hexdigest()}"
 
-        script+=f"mkdir -p {new_dir}\n"
-        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {new_dir}\n"
+        script += f"mkdir -p {new_dir}\n"
+        script += f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {new_dir}\n"
         new_dirs.append(new_dir)
     if one_left:
         new_dirs.append(dirs[-1])
-    return gen_recursice_overlay(script, new_dirs,sysroot)
+    return gen_recursice_overlay(script, new_dirs, sysroot)
+
 
 def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
     sysroot = f"{workdir}/sysroot"
@@ -150,7 +155,6 @@ def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
     script = "#!/bin/sh -e\n"
     script += "mount -t tmpfs none /tmp\n"
     script += f"mount -t tmpfs none {sysroot}\n"
-
 
     script += "mkdir /tmp/build\n"
     script += "mount -v --bind ./build /tmp/build\n"
@@ -221,11 +225,11 @@ def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
                     #                f"/usr/lib/ccache/{compiler}"]
                     # symlink_args += symlink_arg
 
-    script += gen_recursice_overlay("",lowerdirs,sysroot)
+    script += gen_recursice_overlay("", lowerdirs, sysroot)
 
-    if lowerdirs_s!="":
+    if lowerdirs_s != "":
         # raise Exception("lowerdirs reamaining!")
-        mount_command= f"mount -v -t overlay overlay -o lowerdir={lowerdirs_s[1:]}:/tmp/rest $(realpath {sysroot})"
+        mount_command = f"mount -v -t overlay overlay -o lowerdir={lowerdirs_s[1:]}:/tmp/rest $(realpath {sysroot})"
 
         script += "mkdir -v /tmp/rest\n"
         script += f"{mount_command}\n"
@@ -246,7 +250,6 @@ def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
         script += f"mkdir -v -p /tmp/sysroot_procsysdev/tmp\n"
         script += f"touch /tmp/sysroot_procsysdev/build.sh\n"
 
-
         script += "mkdir  -v -p /tmp/rest2\n"
         script += f"mount -v -t overlay overlay -o lowerdir=/tmp/sysroot_procsysdev:/tmp/rest2 {sysroot}\n"
 
@@ -255,12 +258,12 @@ def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
         script += f"mount -v -t tmpfs none {sysroot}/dev\n"
         script += f"mount -v -t tmpfs none {sysroot}/tmp\n"
 
-        #https://github.com/containers/bubblewrap/blob/d6180f25b164c708b8b0a0d86d6a9642f30cd9a9/bubblewrap.c#L1378
+        # https://github.com/containers/bubblewrap/blob/d6180f25b164c708b8b0a0d86d6a9642f30cd9a9/bubblewrap.c#L1378
 
-        for device in ["null", "zero", "full", "random","urandom", "tty"]:
+        for device in ["null", "zero", "full", "random", "urandom", "tty"]:
             script += f"touch {sysroot}/dev/{device}\n"
             script += f"mount -v --bind /dev/{device} {sysroot}/dev/{device}\n"
-        
+
         # script += f"mount --bind /proc {sysroot}/proc\n"
 
         script += f"mkdir -v -p {sysroot}/tmp/workdir/packed\n"
@@ -308,9 +311,8 @@ def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
 
     return script
 
-def unshare_wite_wrapper(workdir,script):
-    fp = f"{workdir}/wrap-build.sh"
-    with open(fp,"w", encoding="utf-8") as f:
-        f.writa(script)
-    
 
+def unshare_wite_wrapper(workdir, script):
+    fp = f"{workdir}/wrap-build.sh"
+    with open(fp, "w", encoding="utf-8") as f:
+        f.writa(script)
