@@ -1,5 +1,6 @@
 import os
 import subprocess
+import hashlib
 try:
     from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
 except ModuleNotFoundError:
@@ -100,3 +101,216 @@ def build_sysroot(drv_hash, build_inputs, uses_ccache):
                 subprocess.run(cmd, cwd=directory, env=senv, check=True)
 
     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
+
+
+
+def gen_recursice_overlay(script,dirs,sysroot):
+    if len(dirs)==1:
+        d = dirs[0]
+        script += f"mkdir -p /tmp/empty_last\n"
+        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d} {sysroot}\n"
+        return gen_recursice_overlay(script,[])
+
+    elif len(dirs)==2:
+        d1 = dirs [0]
+        d2 = dirs [1]
+        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {sysroot}\n"
+        return script
+    count = len(dirs)
+    if (count % 2 )== 0:
+        n = count //2 
+        one_left = False
+    else:
+        n = (count -1)//2
+        one_left = True
+    
+    new_dirs = []
+    for i in range(0,n*2,2):
+        d1 = dirs [i]
+        d2 = dirs [i+1]
+        new_dir = f"/tmp/{hashlib.sha256((d1 + d1).encode()).hexdigest()}"
+
+        script+=f"mkdir -p {new_dir}\n"
+        script+=f"mount -v -t overlay overlay -o ro,lowerdir={d1}:{d2} {new_dir}\n"
+        new_dirs.append(new_dir)
+    if one_left:
+        new_dirs.append(dirs[-1])
+    return gen_recursice_overlay(script, new_dirs,sysroot)
+
+def build_overlay_sysroot(workdir, build_inputs, uses_ccache, build_in_sandbox):
+    sysroot = f"{workdir}/sysroot"
+    if (not build_in_sandbox) and (uses_ccache):
+        raise Exception("ccache in non-chroot is not supported")
+
+    max_len = 800  # TODO
+
+    # build() should delete
+    # subprocess.run(["rm", "-rf", sysroot_drvdir], check=True)
+
+    script = "#!/bin/sh -e\n"
+    script += "mount -t tmpfs none /tmp\n"
+    script += f"mount -t tmpfs none {sysroot}\n"
+
+
+    script += "mkdir /tmp/build\n"
+    script += "mount -v --bind ./build /tmp/build\n"
+
+    # lowerdirs = []
+    # mount_commands = []
+    args = []
+
+    known_compilers = [
+        "gcc",
+        "cc",
+        "clang",
+        "g++",
+        "clang++",
+        "x86_64-pc-linux-musl-c++",
+        "x86_64-pc-linux-musl-g++",
+        "x86_64-pc-linux-musl-gcc",
+        "x86_64-linux-musl-c++",
+        "x86_64-linux-musl-g++",
+        "x86_64-linux-musl-gcc",
+    ]
+    compilers = []
+    # symlink_args = []
+    lowerdirs_s = ""
+    lowerdirs = []
+    for index, bi_drv in enumerate(build_inputs):
+        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv + "-workdir"
+        bi_dest = bi_workdir + "/out/destdir"
+        if not os.path.isfile(bi_workdir + "/0.txt"):
+            raise Exception(f"dependency in {bi_dest} not built!")
+
+        lowerdir = f"/tmp{bi_dest[1:]}"
+        lowerdirs.append(lowerdir)
+        # lowerdirs_s += f":{lowerdir}"
+
+        # if (len(lowerdirs_s) + len(lowerdir) + 2 > max_len) or \
+        #     ((len(lowerdirs_s) + 3 * len(lowerdir) + 2 > max_len) and (index > len(build_inputs) - 3)) \
+        #         or (index == len(build_inputs)-1):
+        #     lowerdirs_s = lowerdirs_s[1:]
+        #     if not (":" in lowerdirs_s):
+        #         script += "mkdir /tmp/rest\n"
+
+        #         lowerdirs_s += ":/tmp/rest"
+        #     mount_command = f"mount -v -t overlay overlay -o lowerdir={lowerdirs_s} $(realpath {sysroot})"
+        #     script += f"echo -- \"{mount_command}\"\n"
+        #     script += f"{mount_command}\n"
+        #     lowerdirs_s = ""
+
+        # print(f"overlay  from {bi_dest}/ to sysroot/")
+
+        # arg = ["--overlay-src", bi_dest ]
+        # arg =  [ "--overlay-src",
+        #          bi_dest,
+        #            "--overlay" ,
+        #            "/tmp/w" ,
+        #            "/tmp/empty",
+        #              sysroot,
+        #         ]
+        # args += arg
+        # script += "mount -t overlay overlay -o"
+        # print("adding arg", arg)
+
+        if uses_ccache:
+            for compiler in known_compilers:
+                if os.path.exists(bi_dest + "/usr/bin/" + compiler):
+                    compilers.append(compiler)
+                    # symlink_arg = ["--symlink", "/usr/bin/ccache",
+                    #                f"/usr/lib/ccache/{compiler}"]
+                    # symlink_args += symlink_arg
+
+    script += gen_recursice_overlay("",lowerdirs,sysroot)
+
+    if lowerdirs_s!="":
+        # raise Exception("lowerdirs reamaining!")
+        mount_command= f"mount -v -t overlay overlay -o lowerdir={lowerdirs_s[1:]}:/tmp/rest $(realpath {sysroot})"
+
+        script += "mkdir -v /tmp/rest\n"
+        script += f"{mount_command}\n"
+
+    # this directory exists thanks do ccache but it is mounted ro
+    if uses_ccache and False:
+        script += f"mount -v -t tmpfs none '$(realpath {sysroot})'/usr/lib/ccache\n"
+        for compiler in compilers:
+            script += f"(cd {sysroot}/usr/lib/ccache ln -s /usr/bin/ccache {compiler})\n"
+
+    # args += ["--tmp-overlay", "/"]
+    # args += symlink_args
+
+    if build_in_sandbox:
+        script += f"mkdir -v -p /tmp/sysroot_procsysdev/run\n"
+        script += f"mkdir -v -p /tmp/sysroot_procsysdev/dev\n"
+        script += f"mkdir -v -p /tmp/sysroot_procsysdev/proc\n"
+        script += f"mkdir -v -p /tmp/sysroot_procsysdev/tmp\n"
+        script += f"touch /tmp/sysroot_procsysdev/build.sh\n"
+
+
+        script += "mkdir  -v -p /tmp/rest2\n"
+        script += f"mount -v -t overlay overlay -o lowerdir=/tmp/sysroot_procsysdev:/tmp/rest2 {sysroot}\n"
+
+        script += f"mount -v -t tmpfs none {sysroot}/run\n"
+
+        script += f"mount -v -t tmpfs none {sysroot}/dev\n"
+        script += f"mount -v -t tmpfs none {sysroot}/tmp\n"
+
+        #https://github.com/containers/bubblewrap/blob/d6180f25b164c708b8b0a0d86d6a9642f30cd9a9/bubblewrap.c#L1378
+
+        for device in ["null", "zero", "full", "random","urandom", "tty"]:
+            script += f"touch {sysroot}/dev/{device}\n"
+            script += f"mount -v --bind /dev/{device} {sysroot}/dev/{device}\n"
+        
+        # script += f"mount --bind /proc {sysroot}/proc\n"
+
+        script += f"mkdir -v -p {sysroot}/tmp/workdir/packed\n"
+        script += f"mount -v --bind -o ro {workdir}/packed {sysroot}/tmp/workdir/packed\n"
+
+        script += f"mkdir -v -p {sysroot}/tmp/workdir/files\n"
+        script += f"mount -v --bind -o ro {workdir}/files {sysroot}/tmp/workdir/files\n"
+
+        script += f"mkdir -v -p {sysroot}/tmp/workdir/patches\n"
+        script += f"mount -v --bind -o ro {workdir}/patches {sysroot}/tmp/workdir/patches\n"
+
+        script += f"touch {sysroot}/tmp/workdir/build.sh\n"
+        script += f"mount -v --bind -o ro {workdir}/build.sh {sysroot}/tmp/workdir/build.sh\n"
+
+        script += f"mkdir -p {sysroot}/tmp/workdir/src\n"
+        script += f"mount -v --bind {workdir}/src {sysroot}/tmp/workdir/src\n"
+
+        script += f"mkdir -p {sysroot}/tmp/workdir/build\n"
+        script += f"mount -v --bind {workdir}/build {sysroot}/tmp/workdir/build\n"
+        # script += f"mount -v --bind {sysroot} /\n"
+
+    else:
+
+        script += f"mkdir -p /tmp/workdir/packed\n"
+        script += f"mount -v --bind -o ro {workdir}/packed /tmp/workdir/packed\n"
+
+        script += f"mkdir -p /tmp/workdir/files\n"
+        script += f"mount -v --bind -o ro {workdir}/files /tmp/workdir/files\n"
+
+        script += f"mkdir -p /tmp/workdir/patches\n"
+        script += f"mount -v --bind -o ro {workdir}/patches /tmp/workdir/patches\n"
+
+        script += f"touch /tmp/workdir/build.sh\n"
+        script += f"mount -v --bind -o ro {workdir}/build.sh /tmp/workdir/build.sh\n"
+
+        script += f"mkdir -p /tmp/workdir/src\n"
+        script += "mount -v --bind {workdir}/src /tmp/workdir/src\n"
+
+        script += f"mkdir -p /tmp/workdir/build\n"
+        script += f"mount -v --bind {workdir}/build /tmp/workdir/build\n"
+
+        script += f"mount -v --bind -o ro {sysroot} {sysroot}\n"
+
+    script += f"chroot {sysroot} $@\n"
+
+    return script
+
+def unshare_wite_wrapper(workdir,script):
+    fp = f"{workdir}/wrap-build.sh"
+    with open(fp,"w", encoding="utf-8") as f:
+        f.writa(script)
+    
+
