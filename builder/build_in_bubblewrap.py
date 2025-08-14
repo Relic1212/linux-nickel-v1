@@ -128,18 +128,23 @@ def link_workdir(h, name):
 
 
 def prepare_sysroot(drv, workdir) -> list:
+    build_in_chroot = drv["buildInChroot"]
+    symlink_build_inputs = drv['symlinkBuldInputs']
+    if (not symlink_build_inputs):
+        return prepare_sysroot_copy(drv,workdir)
+    elif build_in_chroot:
+        print("FAIL for", drv)
+        raise Exception("symlink is incompatible with chroot")
+    else:
+        return prepare_sysroot_symlink(drv,workdir)
+
+
+def prepare_sysroot_symlink(drv, workdir) -> list:
     bwrap_bi_drv_args = []
-    if (drv["buildInChroot"]) and (drv['symlinkBuldInputs']):
-        bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
+    bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
 
     for bi_drv in drv["buildInputDrvs"]:
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-
-        if (not drv["buildInChroot"]) or (not drv['symlinkBuldInputs']):
-            print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-            util_functions.copy_root(
-                src=bi_dest + "/", dest=workdir + "/sysroot/")
-            continue
 
         bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
         sysroot_dirs = bi_dest_bwrap_args['dirs']
@@ -167,6 +172,18 @@ def prepare_sysroot(drv, workdir) -> list:
             subprocess.run(["ln", "-s", link_source, link_target], check=True)
         bwrap_bi_drv_args += ["--ro-bind", bi_dest, "/pkgs/" + bi_drv]
 
+    return bwrap_bi_drv_args
+
+
+def prepare_sysroot_copy(drv, workdir) -> list:
+    bwrap_bi_drv_args = []
+
+    for bi_drv in drv["buildInputDrvs"]:
+        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+
+        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
+        util_functions.copy_root(
+            src=bi_dest + "/", dest=workdir + "/sysroot/")
     return bwrap_bi_drv_args
 
 
