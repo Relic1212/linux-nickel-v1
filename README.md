@@ -32,6 +32,7 @@ Misc:
 * Figure out how to handle file conflicts
 * set KCONFIG_NOTIMESTAMP for busybox
 * add ssl-certificates
+* quickshell:  QT_QPA_FONTDIR=/usr/share/fonts/TTF/ (http://git-nas03.anwsoft.com:8088/anw_si_a5/one_dime/-/issues/2)
 
 Long run:
 * Investigate use of clang in stage 0
@@ -41,3 +42,5 @@ Links:
 
 * Clang cross: https://mcilloni.ovh/2021/02/09/cxx-cross-clang/
 * https://maskray.me/blog/2021-03-28-compiler-driver-and-cross-compilation
+
+
