@@ -38,24 +38,6 @@ let filter_pkgs = (fun x =>
 )
 in
 
-let rec genpkgs = fun pkgs =>
-  (
-    let v1 = {
-      lib,
-      drvs = std.record.map (fun k v => { name = v.name, drvHash = v.drvHash }) pkgs
-    }
-    in
-    (
-      name_pkgs (
-        (
-          importlib
-          & imported
-        )
-        & v1
-      )
-    )
-  )
-in
 let ro = {
 
   __pkgs_unfiletered,
@@ -72,35 +54,29 @@ let ro = {
         (imported & { drvs = std.record.map (fun k v => { name = keyToName k }) (imported & { drvs = {} }) } & importlib)
     in
     {
-      __pkgs_unfiletered = # genpkgs __pkgs_unfiletered
-        (
-          name_pkgs (
-            (
-              importlib
-              & imported
-            )
-            & {
-              lib,
-              # pkgs = __pkgs_unfiletered,
-              drvs =
-                std.record.map
-                  (fun k v =>
-                    {
-                      name = keyToName k,
-                      # drvHash = std.record.get_or "drvHash" "2" v
-                      drvHash = v.drvHash,
-                    }
-                  )
-                  (__pkgs_unfiletered)
-
-              # drvs = __pkgs_unfiletered
-
-              # drvs  = std.record.map (fun k v =>  { name = keyToName k,
-              # drvHash = std.record.get_or "drvHash" "0" v ,
-              #  } )  drvs_nameonly
-            }
+      __pkgs_unfiletered = (
+        name_pkgs (
+          (
+            importlib
+            & imported
           )
+          & {
+            lib,
+            # pkgs = __pkgs_unfiletered,
+            drvs =
+              std.record.map
+                (fun k v =>
+                  # std.trace k
+                  {
+                    name = keyToName k,
+                    keyName = k,
+                    drvHash = v.drvHash,
+                  }
+                )
+                (__pkgs_unfiletered)
+          }
         )
+      )
     }
 }
 in
