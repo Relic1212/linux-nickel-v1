@@ -15,7 +15,16 @@
                 sed -i 's@\/bin\/ip@\/usr\/bin\/ip@g' "${f}"
                 sed -i 's@\/bin\/modprobe@\/usr\/bin\/modprobe@g' "${f}"
                 sed -i 's@\/bin\/blockdev@\/usr\/bin\/blockdev@g' "${f}"
-
+            done
+            "%,
+      m%"
+            for f in $(find ${SRC}/etc -type f); do
+                sed -i 's@\/lib@\/usr\/lib@g' "${f}"
+            done
+            "%,
+      m%"
+            for f in $(find ${SRC}/usr -type f); do
+                sed -i 's@\/lib@\/usr\/lib@g' "${f}"
             done
             "%,
       "mv ${SRC}/usr/sbin ${SRC}/usr/bin"
