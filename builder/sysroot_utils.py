@@ -29,13 +29,12 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
 
     for bi_drv in drv["buildInputDrvs"]:
         if type(bi_drv) is str:
-            bi_drv_drv_hash = bi_drv 
+            bi_drv_drv_hash = bi_drv
             bi_drv_dest_subdir = ""
         else:
             bi_drv_drv_hash = bi_drv["drvHash"]
-            
-            bi_drv_dest_subdir = bi_drv["dest"]
 
+            bi_drv_dest_subdir = bi_drv["dest"]
 
         bi_dest = dirpaths.get_basedir() + "/" + bi_drv_drv_hash + "-workdir/out/destdir"
 
@@ -165,12 +164,20 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
         for bi_drv_dir in sysroot_dirs:
             dst = sysroot + bi_drv_subdir_dest + bi_drv_dir
 
-            if os.path.isdir(dst):
-                continue
-            # maybe it is better to reverse order anf just skip if it exists
-            if os.path.exists(dst) or os.path.islink(dst):
-                os.remove(dst)
-            os.makedirs(dst)
+            dir_source = bi_dest + bi_drv_dir
+
+            if not os.path.islink(dir_source):  # it's a real dir
+                if os.path.isdir(dst):
+                    continue
+                # maybe it is better to reverse order anf just skip if it exists
+                if os.path.exists(dst) or os.path.islink(dst):
+                    os.remove(dst)
+                os.makedirs(dst)
+            else:  # it's a symlink
+                # TODO: is there a risk that the parent directory does not exist?
+                subprocess.run(["cp", "--no-dereference",
+                               "--preserve", dir_source, dst], check=True)
+
         for sd in sysroot_files:
             link_source = bi_dest + sd
             link_target = sysroot + bi_drv_subdir_dest + sd
