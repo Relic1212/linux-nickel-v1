@@ -160,6 +160,62 @@
       [
         "echo 'copying rootfs to chroot dir'",
         "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
+        "echo 'removing useless stuff'",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/pkgconfig",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
+        # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
+        # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/objects-Release",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/gdb",
+        "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.a'); do rm -rf $d; done",
+        "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.prl'); do rm -rf $d; done",
+        "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -empty); do rm -rf $d; done",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/bash-completion",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/emacs",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/common-lisp",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/hypr/wall0.png",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/hypr/wall1.png",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/*.a",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/python3.12/test/__pycache__/*",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/python3.12/__pycache__/*",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/gtk-query-im*",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/bin/gtk-builder-tool",
+
+        # bash files 
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
+
+        # perl
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
+        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
+
+        # to mount a tmpfs here for debugging
+        "mkdir -p tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/",
+
+        # "echo 'stripping binaries'",
+        # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
         m%"
           chroot /tmp/workdir/out/destdir/rootfs <<"EOT"
           %{std.string.join "\n" chrootPhase}
