@@ -308,22 +308,36 @@
         )
     }
   ),
+
+  # TODO: uneccesary paths
+  # /usr/share/hypr/wall0.png
+  # /usr/share/hypr/wall1.png
+  # /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/*.a
+  # /usr/lib/python3.12/test/__pycache__/
+  # /usr/lib/python3.12/__pycache__/
+  # /usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so
+  # /usr/bin/gtk-builder-tool
+  # /usr/bin/gtk-query-im*
   baseImage =
     _rootfs2
     & {
       enableCcache = false,
       name = "base-image",
-      biDrvs = [
-        drvs.baseBaseRootfs,
-        drvs.erofsUtils,
-        drvs.mtools,
-        drvs.genimage,
-        drvs.cryptsetup,
-        drvs.systemdBoot,
-        drvs.llvm, # objdump
-        drvs.pythonFull,
-        drvs.utilLinux,
-      ]
+      biDrvs =
+        [
+          # drvs.baseBaseRootfs,
+          drvs.erofsUtils,
+          drvs.mtools,
+          drvs.genimage,
+          drvs.cryptsetup,
+          drvs.systemdBoot,
+          drvs.llvm, # objdump
+          drvs.pythonFull,
+          drvs.utilLinux,
+        ]
+        @ (
+          std.array.map (fun x => (x & { dest = "rootfs/" })) baseBaseRootfs.biDrvs
+        ),
     },
 
   vmImage =

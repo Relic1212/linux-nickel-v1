@@ -11,16 +11,16 @@ except ModuleNotFoundError:
     import fetcher
 
 
-def prepare_sysroot(drv, workdir) -> list:
-    build_in_chroot = drv["buildInChroot"]
-    symlink_build_inputs = drv['symlinkBuldInputs']
-    if (not symlink_build_inputs):
-        return prepare_sysroot_copy(drv, workdir)
-    elif build_in_chroot:
-        print("FAIL for", drv)
-        raise Exception("symlink is incompatible with chroot")
-    else:
-        return prepare_sysroot_symlink(drv, workdir)
+# def prepare_sysroot(drv, workdir) -> list:
+#     build_in_chroot = drv["buildInChroot"]
+#     symlink_build_inputs = drv['symlinkBuldInputs']
+#     if (not symlink_build_inputs):
+#         return prepare_sysroot_copy(drv, workdir)
+#     elif build_in_chroot:
+#         print("FAIL for", drv)
+#         raise Exception("symlink is incompatible with chroot")
+#     else:
+#         return prepare_sysroot_symlink(drv, workdir)
 
 
 def prepare_sysroot_symlink(drv, workdir) -> list:
@@ -28,14 +28,23 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
     bwrap_bi_drv_args = ["--tmpfs", "/pkgs"]
 
     for bi_drv in drv["buildInputDrvs"]:
-        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+        if type(bi_drv) is str:
+            bi_drv_drv_hash = bi_drv 
+            bi_drv_dest_subdir = ""
+        else:
+            bi_drv_drv_hash = bi_drv["drvHash"]
+            
+            bi_drv_dest_subdir = bi_drv["dest"]
+
+
+        bi_dest = dirpaths.get_basedir() + "/" + bi_drv_drv_hash + "-workdir/out/destdir"
 
         bi_dest_bwrap_args = bubblewrap.get_paths_from_sysroot(bi_dest)
         sysroot_dirs = bi_dest_bwrap_args['dirs']
         sysroot_files = bi_dest_bwrap_args['files']
         # all the dirs so the symlinks will work
         for bi_drv_dir in sysroot_dirs:
-            dst = workdir + "/sysroot/" + bi_drv_dir
+            dst = workdir + "/sysroot/" + bi_drv_dest_subdir + bi_drv_dir
 
             if os.path.isdir(dst):
                 continue
@@ -47,7 +56,7 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
         # create intentianlly broken symlink
         for sd in sysroot_files:
             link_source = "/pkgs/"+bi_drv + sd
-            link_target = workdir + "/sysroot" + sd
+            link_target = workdir + "/sysroot" + bi_drv_dest_subdir + sd
             if os.path.exists(link_target) or os.path.islink(link_target):
                 print(f"removing {link_target} to link")
                 subprocess.run(["rm", "-rf", link_target], check=True)
@@ -59,16 +68,16 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
     return bwrap_bi_drv_args
 
 
-def prepare_sysroot_copy(drv, workdir) -> list:
-    bwrap_bi_drv_args = []
+# def prepare_sysroot_copy(drv, workdir) -> list:
+#     bwrap_bi_drv_args = []
 
-    for bi_drv in drv["buildInputDrvs"]:
-        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+#     for bi_drv in drv["buildInputDrvs"]:
+#         bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
 
-        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-        util_functions.copy_root(
-            src=bi_dest + "/", dest=workdir + "/sysroot/")
-    return bwrap_bi_drv_args
+#         print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
+#         util_functions.copy_root(
+#             src=bi_dest + "/", dest=workdir + "/sysroot/")
+#     return bwrap_bi_drv_args
 
 
 def build_sysroot(drv_hash, build_inputs, uses_ccache):
@@ -76,53 +85,53 @@ def build_sysroot(drv_hash, build_inputs, uses_ccache):
     build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache)
 
 
-def build_sysroot_copy(drv_hash, build_inputs, uses_ccache):
-    sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
-    if os.path.isfile(sysroot_drvdir + "/0.txt"):
-        return
+# def build_sysroot_copy(drv_hash, build_inputs, uses_ccache):
+#     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
+#     if os.path.isfile(sysroot_drvdir + "/0.txt"):
+#         return
 
-    subprocess.run(["rm", "-rf", sysroot_drvdir], check=True)
+#     subprocess.run(["rm", "-rf", sysroot_drvdir], check=True)
 
-    os.makedirs(sysroot_drvdir + "/sysroot/")
+#     os.makedirs(sysroot_drvdir + "/sysroot/")
 
-    for bi_drv in build_inputs:
-        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv + "-workdir"
-        bi_dest = bi_workdir + "/out/destdir"
-        if not os.path.isfile(bi_workdir + "/0.txt"):
-            raise Exception(f"dependency in {bi_dest} not built!")
-        print(f"copying from {bi_dest}/ to {sysroot_drvdir}/sysroot/")
-        util_functions.copy_root(
-            src=bi_dest + "/", dest=sysroot_drvdir + "/sysroot/")
+#     for bi_drv in build_inputs:
+#         bi_workdir = dirpaths.get_basedir() + "/" + bi_drv + "-workdir"
+#         bi_dest = bi_workdir + "/out/destdir"
+#         if not os.path.isfile(bi_workdir + "/0.txt"):
+#             raise Exception(f"dependency in {bi_dest} not built!")
+#         print(f"copying from {bi_dest}/ to {sysroot_drvdir}/sysroot/")
+#         util_functions.copy_root(
+#             src=bi_dest + "/", dest=sysroot_drvdir + "/sysroot/")
 
-    ropaths = ["packed", "files", "patches", "build.sh"]
-    rwpaths = ["src", "build", "out"]
+#     ropaths = ["packed", "files", "patches", "build.sh"]
+#     rwpaths = ["src", "build", "out"]
 
-    sysroot = sysroot_drvdir + "/sysroot/"
-    for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev", "/pkgs"]:
-        os.makedirs(sysroot + d, exist_ok=True)
+#     sysroot = sysroot_drvdir + "/sysroot/"
+#     for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev", "/pkgs"]:
+#         os.makedirs(sysroot + d, exist_ok=True)
 
-    # uses_ccache = drv["enableCcache"]
-    if uses_ccache:
-        for compiler in [
-            "gcc",
-            "cc",
-            "clang",
-            "g++",
-            "clang++",
-            "x86_64-pc-linux-musl-c++",
-            "x86_64-pc-linux-musl-g++",
-            "x86_64-pc-linux-musl-gcc",
-            "x86_64-linux-musl-c++",
-            "x86_64-linux-musl-g++",
-            "x86_64-linux-musl-gcc",
-        ]:
-            if os.path.exists(sysroot + "/usr/bin/" + compiler):
-                cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
-                directory = sysroot + "/usr/lib/ccache"
-                senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
-                subprocess.run(cmd, cwd=directory, env=senv, check=True)
+#     # uses_ccache = drv["enableCcache"]
+#     if uses_ccache:
+#         for compiler in [
+#             "gcc",
+#             "cc",
+#             "clang",
+#             "g++",
+#             "clang++",
+#             "x86_64-pc-linux-musl-c++",
+#             "x86_64-pc-linux-musl-g++",
+#             "x86_64-pc-linux-musl-gcc",
+#             "x86_64-linux-musl-c++",
+#             "x86_64-linux-musl-g++",
+#             "x86_64-linux-musl-gcc",
+#         ]:
+#             if os.path.exists(sysroot + "/usr/bin/" + compiler):
+#                 cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
+#                 directory = sysroot + "/usr/lib/ccache"
+#                 senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
+#                 subprocess.run(cmd, cwd=directory, env=senv, check=True)
 
-    subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
+#     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
 
 
 def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
@@ -137,7 +146,14 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
     os.makedirs(sysroot_drvdir + "/sysroot/")
 
     for bi_drv in build_inputs:
-        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv + "-workdir"
+        if type(bi_drv) is str:
+            bi_drv_drv_hash = bi_drv
+            bi_drv_subdir_dest = ""
+        else:
+            bi_drv_drv_hash = bi_drv["drvHash"]
+            bi_drv_subdir_dest = bi_drv["dest"]
+
+        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv_drv_hash + "-workdir"
         bi_dest = bi_workdir + "/out/destdir"
         if not os.path.isfile(bi_workdir + "/0.txt"):
             raise Exception(f"dependency in {bi_dest} not built!")
@@ -147,7 +163,7 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
         sysroot_files = drv_paths['files']
         # all the dirs so the symlinks will work
         for bi_drv_dir in sysroot_dirs:
-            dst = sysroot + bi_drv_dir
+            dst = sysroot + bi_drv_subdir_dest + bi_drv_dir
 
             if os.path.isdir(dst):
                 continue
@@ -157,7 +173,7 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
             os.makedirs(dst)
         for sd in sysroot_files:
             link_source = bi_dest + sd
-            link_target = sysroot + sd
+            link_target = sysroot + bi_drv_subdir_dest + sd
             if os.path.exists(link_target) or os.path.islink(link_target):
                 # print(f"removing {link_target} to link")
                 subprocess.run(["rm", "-rf", link_target], check=True)

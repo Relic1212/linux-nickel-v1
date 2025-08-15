@@ -99,16 +99,23 @@ def link_workdir(h, name):
     )
 
 
-def prepare_sysroot_copy(drv, workdir) -> list:
-    bwrap_bi_drv_args = []
+# def prepare_sysroot_copy(drv, workdir) -> list:
+#     bwrap_bi_drv_args = []
 
-    for bi_drv in drv["buildInputDrvs"]:
-        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+#     for bi_drv in drv["buildInputDrvs"]:
+#         if type(bi_drv) is str:
+#             bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+#             bi_sysroot_dest = workdir + "/sysroot/"
+#         else:
+#             bi_dest = dirpaths.get_basedir() + "/" + bi_drv["drvHash"] + "-workdir/out/destdir"
+#             bi_sysroot_dest = workdir + "/sysroot/" + bi_drv["dest"]
 
-        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
-        util_functions.copy_root(
-            src=bi_dest + "/", dest=workdir + "/sysroot/")
-    return bwrap_bi_drv_args
+
+
+#         print(f"copying from {bi_dest}/ to {bi_sysroot_dest}")
+#         util_functions.copy_root(
+#             src=bi_dest + "/", dest=bi_sysroot_dest)
+#     return bwrap_bi_drv_args
 
 
 def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) -> None:
@@ -134,7 +141,11 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
 
     subprocess.run(["rm", "-rf", workdir], check=True)
     for bi_drv in drv["buildInputDrvs"]:
-        build(h=bi_drv, pkg_drvs=pkg_drvs, pkg_names=pkg_names,
+        if type(bi_drv) is str:
+            bi_drv_drv_hash = bi_drv
+        else:
+            bi_drv_drv_hash = bi_drv["drvHash"]
+        build(h=bi_drv_drv_hash, pkg_drvs=pkg_drvs, pkg_names=pkg_names,
               pkghash2sysroothash=pkghash2sysroothash)
     for si_drv in drv["sourceInputDrvs"]:
         si_h = si_drv["src"]
@@ -173,9 +184,8 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     symlink_build_inputs = drv['symlinkBuldInputs']
 
     if symlink_build_inputs:
-        bwrap_bi_drv_args = sysroot_utils.prepare_sysroot(drv, workdir)
+        bwrap_bi_drv_args = sysroot_utils.prepare_sysroot_symlink(drv, workdir)
     elif not sandboxed:
-        # bwrap_bi_drv_args = sysroot_utils.prepare_sysroot(drv, workdir)
         bwrap_bi_drv_args = []
 
         sysroot_utils.build_sysroot(

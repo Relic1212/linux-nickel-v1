@@ -106,9 +106,13 @@ in
         isLlvm | Bool | default = true,
         buildInputsValidated
           | not_exported
-          | std.contract.from_validator (fun arr =>
+          | std.contract.from_validator (fun arr => 
             (
-              if (functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)) then
+              if (
+                # functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)
+                functions.hasNoDups arr 
+                # true
+                ) then
                 'Ok
               else
                 'Error {
