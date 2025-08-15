@@ -7,7 +7,7 @@ import hashlib
 import sys
 from builder import build_in_bubblewrap
 
-
+KNOWN_SLOW = ["base-image"]
 class GraphNode:
     def __init__(self, name, packages):
         self.name = name
@@ -203,7 +203,14 @@ def diff2(drvs):
 
 def test():
     pn = sys.argv[1]
-    pn_key = pn_to_pn_key(pn)
+
+    if not pn in KNOWN_SLOW:
+        pn_key = pn_to_pn_key(pn)
+        if pn in ["all", "diff","diff2"]:
+            pn_key = ""
+    else:
+        pn_key = ""
+
     drvs = get_drvs(pn_key)
     # with open("test/0813.json") as f : drvs = json.load(f)
     if pn == "all":
