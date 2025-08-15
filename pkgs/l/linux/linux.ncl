@@ -38,8 +38,22 @@ in
     in
     {
       name = "linux",
-      sourceInputs = linuxHeaders.sourceInputs,
-      options = { version = linuxHeaders.options.version },
+      # sourceInputs = linuxHeaders.sourceInputs,
+      sourceInputs = [
+        {
+          src = {
+            # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz",
+            # sha256sum = "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
+
+            uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz",
+            sha256sum = "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d"
+          }
+        }
+      ],
+      options = {
+        #  version = linuxHeaders.options.version ,
+        version = "6.15.9",
+      },
       buildDir = "/tmp/workdir/src",
       separateBuildDir = true,
       buildEnv,
@@ -76,7 +90,7 @@ in
         "cp /tmp/workdir/files/%{baseConfig.file} .config",
 
         # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
-        m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+        # m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
 
         # https://github.com/umlaeute/v4l2loopback/discussions/604
         m%"

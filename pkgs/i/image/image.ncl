@@ -91,8 +91,8 @@
           drvs.utilLinux,
           drvs.pciutils,
           drvs.xz,
-          #drvs.linux,
-          drvs.v4l2loopback,
+          drvs.linux,
+          # drvs.v4l2loopback,
 
           # drvs.linuxFirmwareSmaller,
           drvs.eudev,

@@ -3,6 +3,7 @@
   drvs,
   musl,
   linux,
+  linuxHeaders,
   bootstrapStage0 | lib.Package =
     let B = "/tmp/workdir/build"
     in
@@ -17,7 +18,7 @@
         # let muslSrc = std.record.update "dest" "src_musl" _muslSrc in
         let muslSrc = _muslSrc & { dest | force = "src_musl" } in
 
-        let _linuxSrc = std.array.at 0 linux.sourceInputs in
+        let _linuxSrc = std.array.at 0 linuxHeaders.sourceInputs in
         # let linuxSrc = std.record.update "dest" "src_kernel_headers" _linuxSrc in
         let linuxSrc = _linuxSrc & { "dest" | force = "src_kernel_headers" } in
 
