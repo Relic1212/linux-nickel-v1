@@ -59,9 +59,22 @@ def prepare_sysroot_symlink(drv, workdir) -> list:
     return bwrap_bi_drv_args
 
 
+def prepare_sysroot_copy(drv, workdir) -> list:
+    bwrap_bi_drv_args = []
+
+    for bi_drv in drv["buildInputDrvs"]:
+        bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
+
+        print(f"copying from {bi_dest}/ to {workdir}/sysroot/")
+        util_functions.copy_root(
+            src=bi_dest + "/", dest=workdir + "/sysroot/")
+    return bwrap_bi_drv_args
+
+
 def build_sysroot(drv_hash, build_inputs, uses_ccache):
     # build_sysroot_copy(drv_hash, build_inputs, uses_ccache)
     build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache)
+
 
 def build_sysroot_copy(drv_hash, build_inputs, uses_ccache):
     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
@@ -111,6 +124,7 @@ def build_sysroot_copy(drv_hash, build_inputs, uses_ccache):
 
     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
 
+
 def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
     sysroot = sysroot_drvdir + "/sysroot/"
@@ -127,7 +141,7 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
         bi_dest = bi_workdir + "/out/destdir"
         if not os.path.isfile(bi_workdir + "/0.txt"):
             raise Exception(f"dependency in {bi_dest} not built!")
-        
+
         drv_paths = bubblewrap.get_paths_from_sysroot(bi_dest)
         sysroot_dirs = drv_paths['dirs']
         sysroot_files = drv_paths['files']
@@ -142,13 +156,13 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
                 os.remove(dst)
             os.makedirs(dst)
         for sd in sysroot_files:
-            link_source =  bi_dest + sd
-            link_target =sysroot+ sd
+            link_source = bi_dest + sd
+            link_target = sysroot + sd
             if os.path.exists(link_target) or os.path.islink(link_target):
-                print(f"removing {link_target} to link")
+                # print(f"removing {link_target} to link")
                 subprocess.run(["rm", "-rf", link_target], check=True)
 
-            print(f"linking {link_source} to {link_target}")
+            # print(f"linking {link_source} to {link_target}")
             subprocess.run(["ln", link_source, link_target], check=True)
 
     ropaths = ["packed", "files", "patches", "build.sh"]

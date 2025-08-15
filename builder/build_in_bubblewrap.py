@@ -172,8 +172,15 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     os.makedirs(f"{workdir}/files")
     symlink_build_inputs = drv['symlinkBuldInputs']
 
-    if symlink_build_inputs or (not sandboxed):
+    if symlink_build_inputs:
         bwrap_bi_drv_args = sysroot_utils.prepare_sysroot(drv, workdir)
+    elif not sandboxed:
+        # bwrap_bi_drv_args = sysroot_utils.prepare_sysroot(drv, workdir)
+        bwrap_bi_drv_args = []
+
+        sysroot_utils.build_sysroot(
+            sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
+
     else:
         bwrap_bi_drv_args = []
 
@@ -283,7 +290,9 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
         senv = os.environ.copy()
         senv["TMPDIR"] = "/tmp"
         sysroot = "/"
-        args += ["--ro-bind", f"{workdir}/sysroot", "/tmp/workdir/sysroot"]
+        deps_sysroot = dirpaths.get_basedir() + "/" + sysroot_drv_hash + \
+            "-sysroot" + "/sysroot/"
+        args += ["--ro-bind", deps_sysroot, "/tmp/workdir/sysroot"]
 
         try:
             ce = os.environ.get("CCACHE_DIR")
