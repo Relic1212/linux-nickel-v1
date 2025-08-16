@@ -3,8 +3,8 @@
   drvs,
   bluez | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://www.kernel.org/pub/linux/bluetooth/bluez-5.79.tar.xz",
-      sha256sum = "4164a5303a9f71c70f48c03ff60be34231b568d93a9ad5e79928d34e6aa0ea8a"
+      uri = "https://www.kernel.org/pub/linux/bluetooth/bluez-5.83.tar.xz",
+      sha256sum = "108522d909d220581399bfec93daab62035539ceef3dda3e79970785c63bd24c"
     },
     biDrvs = [
       drvs.dbus,
@@ -23,6 +23,9 @@
       drvs.ncurses,
       drvs.jsonC,
       drvs.alsaLibs,
+      drvs.libical,
+      drvs.pythonFull,
+      drvs.docutils,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
@@ -34,10 +37,10 @@
       LIBS = buildEnv.EXTRA_LDFLAGS,
     },
     extraConfigureFlags = [
-      "--disable-obex",
+      "--enable-obex",
       "--disable-systemd",
       "--disable-cups",
-      "--disable-manpages",
+      "--enable-manpages",
       "--enable-library",
     ],
     preConfigurePhase = [
