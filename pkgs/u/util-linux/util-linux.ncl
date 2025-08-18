@@ -40,21 +40,37 @@
       uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.gz",
       sha256sum = "c014b5861695b603d0be2ad1e6f10d5838b9d7859e1dd72d01504556817d8a87"
     },
+
+    preConfigurePhase = [
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
+
+      # https://github.com/util-linux/util-linux/pull/3538/files
+      m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
+
+      # m%"sed -i 's@both_libraries@both_libraries@g' ${SRC}/libsmartcols/meson.build"%,
+
+      # "lib_smartcols.get_static_lib()"
+      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@both_libraries@library@g' ${f};done"%,
+      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@.get_static_lib()@@g' ${f};done"%,
+    ],
+
+    extraMesonArgs = [
+      "-Dprogram-tests=false",
+      "-Dfs-search-path=/usr/bin",
+      "-Dbuild-python=disabled",
+      "-Dbuild-pylibmount=disabled",
+      "-Dbuild-fdisks=enabled",
+    ],
+
     biDrvs = [
       drvs.linuxHeaders,
       drvs.bash,
-    ],
-    preConfigurePhase = [
-      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
-      m%"sed -i 's/\/sbin/\/bin/g' ${SRC}/configure"%
-    ],
-    # extraConfigureFlags=[
-
-    # "--disable-use-tty-group",
-    # "--disable-makeinstall-chown",
-    # "--disable-liblastlog2",
-    # "--disable-login-stat-mail",
-
-    # ]
+      drvs.bison,
+      drvs.flex,
+      drvs.m4,
+      (drvs.coreutils & { priority = 1 }),
+      drvs.ncurses,
+    ]
   }
 }
