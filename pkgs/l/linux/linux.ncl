@@ -1,22 +1,206 @@
-let kconfigFiles = {
-  fedora = {
-    file = "kernel-x86_64-fedora.config",
+let
+  extra = [
+    m%"
+        echo "
+        # CONFIG_PM_DEBUG is not set
+        # CONFIG_PM_SLEEP_DEBUG is not set
+        # CONFIG_AF_RXRPC_DEBUG is not set
+        # CONFIG_FW_LOADER_DEBUG is not set
+        # CONFIG_SCSI_DEBUG is not set
+        # CONFIG_DM_DEBUG is not set
+        # CONFIG_MLX4_DEBUG is not set
+        # CONFIG_ATH5K_DEBUG is not set
+        # CONFIG_ATH9K_COMMON_DEBUG is not set
+        # CONFIG_ATH6KL_DEBUG is not set
+        # CONFIG_IWLEGACY_DEBUG is not set
+        # CONFIG_IWLWIFI_DEBUG is not set
+        # CONFIG_NOUVEAU_DEBUG is not set
+        # CONFIG_USB_SERIAL_DEBUG is not set
+        # CONFIG_INFINIBAND_MTHCA_DEBUG is not set
+        # CONFIG_INFINIBAND_IPOIB_DEBUG is not set
+        # CONFIG_JFFS2_FS_DEBUG is not set
+        # CONFIG_NFS_DEBUG is not set
+        # CONFIG_SUNRPC_DEBUG is not set
+        # CONFIG_CIFS_DEBUG is not set
+        # CONFIG_AFS_DEBUG is not set
+        # CONFIG_DLM_DEBUG is not set
+        # CONFIG_DYNAMIC_DEBUG is not set
+        # CONFIG_ARCH_HAS_EARLY_DEBUG is not set
+        # CONFIG_SLUB_DEBUG is not set
+        
+        # CONFIG_UAPI_HEADER_TEST is not set
+        # CONFIG_TIME_KUNIT_TEST is not set
+        # CONFIG_NET_HANDSHAKE_KUNIT_TEST is not set
+        # CONFIG_MPTCP_KUNIT_TEST is not set
+        # CONFIG_PRP_DUP_DISCARD_KUNIT_TEST is not set
+        # CONFIG_CFG80211_KUNIT_TEST is not set
+        # CONFIG_MAC80211_KUNIT_TEST is not set
+        # CONFIG_NETDEV_ADDR_LIST_TEST is not set
+        # CONFIG_NET_TEST is not set
+        # CONFIG_DRIVER_PE_KUNIT_TEST is not set
+        # CONFIG_FW_CS_DSP_KUNIT_TEST is not set
+        # CONFIG_EFI_TEST is not set
+        # CONFIG_SCSI_LIB_KUNIT_TEST is not set
+        # CONFIG_SCSI_PROTO_TEST is not set
+        # CONFIG_FIREWIRE_KUNIT_UAPI_TEST is not set
+        # CONFIG_FIREWIRE_KUNIT_PACKET_SERDES_TEST is not set
+        # CONFIG_FIREWIRE_KUNIT_SELF_ID_SEQUENCE_HELPER_TEST is not set
+        # CONFIG_FIREWIRE_KUNIT_OHCI_SERDES_TEST is not set
+        # CONFIG_INPUT_KUNIT_TEST is not set
+        # CONFIG_DRM_KUNIT_TEST is not set
+        # CONFIG_SND_CORE_TEST is not set
+        # CONFIG_SND_HDA_CIRRUS_SCODEC_KUNIT_TEST is not set
+        # CONFIG_SND_SOC_TOPOLOGY_KUNIT_TEST is not set
+        # CONFIG_SND_SOC_CARD_KUNIT_TEST is not set
+        # CONFIG_SND_SOC_UTILS_KUNIT_TEST is not set
+        # CONFIG_SND_SOC_OPS_KUNIT_TEST is not set
+        # CONFIG_SND_SOC_INTEL_AVS_MACH_I2S_TEST is not set
+        # CONFIG_SND_SOC_CS_AMP_LIB_TEST is not set
+        # CONFIG_HID_KUNIT_TEST is not set
+        # CONFIG_RTC_LIB_KUNIT_TEST is not set
+        # CONFIG_CROS_KUNIT_EC_PROTO_TEST is not set
+        # CONFIG_CLK_KUNIT_TEST is not set
+        # CONFIG_CLK_FIXED_RATE_KUNIT_TEST is not set
+        # CONFIG_CLK_GATE_KUNIT_TEST is not set
+        # CONFIG_CLK_FD_KUNIT_TEST is not set
+        # CONFIG_IIO_GTS_KUNIT_TEST is not set
+        # CONFIG_IIO_RESCALE_KUNIT_TEST is not set
+        # CONFIG_IIO_FORMAT_KUNIT_TEST is not set
+        # CONFIG_MEAN_AND_VARIANCE_UNIT_TEST is not set
+        # CONFIG_FAT_KUNIT_TEST is not set
+        # CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST is not set
+        # CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST is not set
+        # CONFIG_CRYPTO_TEST is not set
+        # CONFIG_PACKING_KUNIT_TEST is not set
+        # CONFIG_KFENCE_KUNIT_TEST is not set
+        # CONFIG_LOCK_TORTURE_TEST is not set
+        # CONFIG_TORTURE_TEST is not set
+        # CONFIG_RCU_TORTURE_TEST is not set
+        # CONFIG_KUNIT_TEST is not set
+        # CONFIG_KUNIT_EXAMPLE_TEST is not set
+        # CONFIG_CPUMASK_KUNIT_TEST is not set
+        # CONFIG_KPROBES_SANITY_TEST is not set
+        # CONFIG_ASYNC_RAID6_TEST is not set
+        # CONFIG_PRINTF_KUNIT_TEST is not set
+        # CONFIG_SCANF_KUNIT_TEST is not set
+        # CONFIG_STRING_KUNIT_TEST is not set
+        # CONFIG_STRING_HELPERS_KUNIT_TEST is not set
+        # CONFIG_HASH_KUNIT_TEST is not set
+        # CONFIG_RESOURCE_KUNIT_TEST is not set
+        # CONFIG_SYSCTL_KUNIT_TEST is not set
+        # CONFIG_KFIFO_KUNIT_TEST is not set
+        # CONFIG_LIST_KUNIT_TEST is not set
+        # CONFIG_HASHTABLE_KUNIT_TEST is not set
+        # CONFIG_LINEAR_RANGES_TEST is not set
+        # CONFIG_CMDLINE_KUNIT_TEST is not set
+        # CONFIG_BITS_TEST is not set
+        # CONFIG_SLUB_KUNIT_TEST is not set
+        # CONFIG_RATIONAL_KUNIT_TEST is not set
+        # CONFIG_MEMCPY_KUNIT_TEST is not set
+        # CONFIG_IS_SIGNED_TYPE_KUNIT_TEST is not set
+        # CONFIG_OVERFLOW_KUNIT_TEST is not set
+        # CONFIG_STACKINIT_KUNIT_TEST is not set
+        # CONFIG_FORTIFY_KUNIT_TEST is not set
+        # CONFIG_LONGEST_SYM_KUNIT_TEST is not set
+        # CONFIG_CRC_KUNIT_TEST is not set
+        # CONFIG_SIPHASH_KUNIT_TEST is not set
+        # CONFIG_USERCOPY_KUNIT_TEST is not set
+        # CONFIG_BLACKHOLE_DEV_KUNIT_TEST is not set
+        # CONFIG_INT_POW_KUNIT_TEST is not set
+        # CONFIG_INT_SQRT_KUNIT_TEST is not set
+        # CONFIG_INT_LOG_KUNIT_TEST is not set
+        # CONFIG_GCD_KUNIT_TEST is not set
+        # CONFIG_PRIME_NUMBERS_KUNIT_TEST is not set
+        " > /tmp/workdir/build/no-test-no-debug.diffconfig
+        "%,
+    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/no-test-no-debug.diffconfig",
+    m%"
+        echo "
+        # CONFIG_JFS_FS is not set
+        # CONFIG_XFS_FS is not set
+        # CONFIG_GFS2_FS is not set
+        # CONFIG_OCFS2_FS is not set
+        # CONFIG_NILFS2_FS is not set
+        # CONFIG_ORANGEFS_FS is not set
+        # CONFIG_HFS_FS is not set
+        # CONFIG_HFSPLUS_FS is not set
+        # CONFIG_JFFS2_FS is not set
+        # CONFIG_UBIFS_FS is not set
+        # CONFIG_UFS_FS is not set
+        # CONFIG_CEPH_FS is not set
+        " > /tmp/workdir/build/fewer-fs.diffconfig
+        "%,
+    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/fewer-fs.diffconfig",
+    m%"
+        echo "
+        # CONFIG_KERNEL_BZIP2 is not set
+        # CONFIG_KERNEL_GZIP is not set
+        # CONFIG_KERNEL_LZ4 is not set
+        # CONFIG_KERNEL_LZMA is not set
+        # CONFIG_KERNEL_LZO is not set
+        # CONFIG_KERNEL_UNCOMPRESSED is not set
+        # CONFIG_KERNEL_XZ is not set
+        CONFIG_KERNEL_ZSTD=y
+        CONFIG_MODULE_COMPRESS=y
+        # CONFIG_MODULE_COMPRESS_GZIP is not set
+        # CONFIG_MODULE_COMPRESS_NONE is not set
+        # CONFIG_MODULE_COMPRESS_XZ is not set
+        CONFIG_MODULE_COMPRESS_ZSTD=y
+        " > /tmp/workdir/build/compression.diffconfig
+        "%,
+    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/compression.diffconfig",
+    m%"
+        echo "
+        # CONFIG_INFINIBAND is not set
+        # CONFIG_XEN is not set
+        # CONFIG_INTEL_TDX_GUEST is not set
+        # CONFIG_NUMA is not set
+        # CONFIG_EFI_MIXED is not set
+        # CONFIG_LEGACY_VSYSCALL_NONE is not set
+        # CONFIG_UEVENT_HELPER is not set
+        # CONFIG_VMWARE_BALLOON is not set
+        # CONFIG_VMWARE_VMCI is not set
+        # CONFIG_VMWARE_BALLOON is not set
+        # CONFIG_VMWARE_VMCI_VSOCKETS is not set
+        # CONFIG_VMWARE_PVSCSI is not set
+        # CONFIG_XEN_SCSI_FRONTEND is not set
+        # CONFIG_HYPERV is not set
+        # CONFIG_XEN_VIRTIO is not set
+        # CONFIG_VBOXGUEST is not set
+        # CONFIG_VBOXSF_FS is not set
+        # CONFIG_DRM_VBOXVIDEO is not set
+        # CONFIG_DRM_BOCHS is not set
+        # CONFIG_DRM_CIRRUS_QEMU is not set
+        # CONFIG_DRM_VMWGFX is not set
+        # CONFIG_DRM_HYPERV is not set
+        # CONFIG_DRM_LEGACY is not set
+        " > /tmp/workdir/build/misc.diffconfig
+        "%,
+    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/misc.diffconfig",
+  ],
+  kconfigFiles = {
+    fedora = {
+      file = "kernel-x86_64-fedora.config",
 
-    sha256sum = "c6c4db5b937a8f37538d82c05c55502d0c7f2ac0189647603e65cbbd1d82c310"
-  },
-  fedora610 = {
-    file = "kernel-6.10-x86_64-fedora.config",
-    sha256sum = "9483b9ef26420d6cc045dcf403d55285a7960660d1498815ed3eb2f296e73f80",
-  },
-  base = {
-    file = "base.config",
-    sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
-  },
-  voidlinux = {
-    file = "void-linux-x86_64-dotconfig",
-    sha256sum = "df510058c1cafcb7c5adc118bf6087806fc018a0e0f227b12a7ba50ff8b4816c",
+      sha256sum = "c6c4db5b937a8f37538d82c05c55502d0c7f2ac0189647603e65cbbd1d82c310"
+    },
+    fedora610 = {
+      file = "kernel-6.10-x86_64-fedora.config",
+      sha256sum = "9483b9ef26420d6cc045dcf403d55285a7960660d1498815ed3eb2f296e73f80",
+    },
+    base = {
+      file = "base.config",
+      sha256sum = "f7bf3b7788114605b646ad05e1e0c8d337dc7aa325af7773e3e63de37c4ff2b3"
+    },
+    voidlinux = {
+      file = "void-linux-x86_64-dotconfig",
+      sha256sum = "df510058c1cafcb7c5adc118bf6087806fc018a0e0f227b12a7ba50ff8b4816c",
+    },
+    alpine = {
+      sha256sum = "8792ae332a0ff10bcef9a48b34cb4e653aa9f9699d434819f41ed8b4658e3f6c",
+      file = "alpine-stable.x86_64.config",
+    }
   }
-}
 in
 
 {
@@ -29,15 +213,21 @@ in
       "install -d -m0755 ${DEST}/lib/modules/6.10.0-standard"
     ],
   },
+  linuxFedora =
+    linux
+    & {
+      options.configFile = kconfigFiles.fedora610,
+    },
   linux | lib.MakePackage =
     # let baseConfig = kconfigFiles.fedora
-    let baseConfig = kconfigFiles.fedora610
+    # let baseConfig = kconfigFiles.fedora610
 
     # let baseConfig = kconfigFiles.base
     # let baseConfig = kconfigFiles.voidlinux
+    let baseConfig = kconfigFiles.alpine
     in
     {
-      name = "linux",
+      # name = "linux",
       # sourceInputs = linuxHeaders.sourceInputs,
       sourceInputs = [
         {
@@ -58,8 +248,11 @@ in
       separateBuildDir = true,
       buildEnv,
       makeArgs,
+      options = {
+        configFile | default = baseConfig,
+      },
       extraFiles = [
-        baseConfig
+        options.configFile,
       ],
 
       extraEnv = {
@@ -83,17 +276,25 @@ in
       ],
       makeInstallTargets = ["modules_install"],
 
-      #       CONFIG_LZ4_COMPRESS=y
+      # CONFIG_LZ4_COMPRESS=y
       # CONFIG_LZ4HC_COMPRESS=y
       # CONFIG_MODULE_COMPRESS_ZSTD=y
-      preBuildPhase = [
-        "cp /tmp/workdir/files/%{baseConfig.file} .config",
 
-        # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
-        # m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+      # CONFIG_HYPERVISOR_GUEST is not set
 
-        # https://github.com/umlaeute/v4l2loopback/discussions/604
-        m%"
+      preBuildPhase =
+        [
+          "cp /tmp/workdir/files/%{options.configFile.file} .config",
+
+          # https://lists.freedesktop.org/archives/amd-gfx/2024-May/109223.html
+          # m%"sed -i 's@__counted_by(ucNumEntries)@@g' ./drivers/gpu/drm/radeon/pptable.h"%,
+
+          # https://github.com/umlaeute/v4l2loopback/discussions/604 
+
+          # TODO: CONFIG_CMDLINE_OVERRIDE=y
+
+          # add a command line with 1000 characters that can be replaces using sed
+          m%"
         echo "
         CONFIG_V4L2_FWNODE=m
         CONFIG_V4L_MEM2MEM_DRIVERS=y
@@ -170,24 +371,35 @@ in
         CONFIG_FB_DEVICE=y
         CONFIG_INPUT_UINPUT=y
 
+        CONFIG_IKCONFIG_PROC=y
+        CONFIG_IKCONFIG=y
+
+        CONFIG_CMDLINE_BOOL=y
+        CONFIG_CMDLINE=\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"
+
         " > /tmp/workdir/build/v4l2loopback.diffconfig
         "%,
-        "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/build/v4l2loopback.diffconfig",
-        "make "
-        ++ (std.string.join " " makeArgs)
-        ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} "
-        ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS}"
-        ++ " olddefconfig",
+        ]
+        @ extra
+        @ [
+          "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/build/v4l2loopback.diffconfig",
+          "make "
+          ++ (std.string.join " " makeArgs)
+          ++ " HOSTLDFLAGS=%{ lib.functions.varToExportvar buildEnv.LDFLAGS} "
+          ++ " HOSTCFLAGS=%{ lib.functions.varToExportvar  buildEnv.CFLAGS}"
+          ++ " olddefconfig",
 
-        # "mkdir /tmp/workdir/build/bin",
-        # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
-        # "export PATH=/tmp/workdir/build/bin:${PATH}"
-      ],
+          # "mkdir /tmp/workdir/build/bin",
+          # "cp /usr/bin/bsdtar /tmp/workdir/build/bin/tar",
+          # "export PATH=/tmp/workdir/build/bin:${PATH}"
+        ],
       postInstallPhase = [
         # "KVER=\"$(ls /tmp/workdir/out/destdir/lib/modules/)\"",
         # "depmod -b /tmp/workdir/out/destdir  ${KVER}",
         "install -d -m0755 ${DEST}/boot",
         "install -m0755 arch/x86/boot/bzImage  ${DEST}/boot",
+        "install -m0755 arch/x86/boot/vmlinux.bin  ${DEST}/boot",
+        "install -m0755 arch/x86/boot/setup.bin  ${DEST}/boot",
       ],
       biDrvs = [
         drvs.perl,
