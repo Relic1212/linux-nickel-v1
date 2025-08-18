@@ -2,17 +2,17 @@
   lib,
   drvs,
   niri | lib.CargoPackage =
-    let _xkbcommon_rs = {
-      "0.1.0" | lib.Crate = {
-        name = "xkbcommon-rs",
-        version = "0.1.0",
-        sha256sum = "1d02316af6831aee03a1ecc7b887ec1e983f4cc43792b80faade552cd7e710c6",
-        sourceInput = {
-          dest | priority 1 = ""
-        }
-      },
-    }
-    in
+    # let _xkbcommon_rs = {
+    #   "0.1.0" | lib.Crate = {
+    #     name = "xkbcommon-rs",
+    #     version = "0.1.0",
+    #     sha256sum = "1d02316af6831aee03a1ecc7b887ec1e983f4cc43792b80faade552cd7e710c6",
+    #     sourceInput = {
+    #       dest | priority 1 = ""
+    #     }
+    #   },
+    # }
+    # in
 
     {
       buildEnv = {
@@ -26,7 +26,6 @@
           "-C link-arg=-lwayland-client",
           "-C link-arg=-Wl,--pop-state",
         ],
-        # RUSTFLAGS = ["-C target-feature=+crt-static -C link-self-contained=yes -C link-arg=-lc++ -C link-arg=-levdev -C link-arg=-lmtdev -C link-arg=-static -C link-arg=--static"],
       },
       extraCargoFlags = [
         "--no-default-features",
@@ -54,9 +53,9 @@
           dest = "vendor-winit",
         }
       ],
-      crates = {
+      # crates = {
         # xkbcommon_rs=_xkbcommon_rs,
-      },
+      # },
       llvmProvider = drvs.llvmFull,
       biDrvs = [
         drvs.expat,
