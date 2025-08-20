@@ -176,7 +176,7 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
             else:  # it's a symlink
                 # TODO: is there a risk that the parent directory does not exist?
                 subprocess.run(["cp", "--no-dereference",
-                               "--preserve", dir_source, dst], check=True)
+                               "-P", dir_source, dst], check=True)
 
         for sd in sysroot_files:
             link_source = bi_dest + sd
