@@ -1,0 +1,66 @@
+diff --git a/niri-visual-tests/src/smithay_view.rs b/niri-visual-tests/src/smithay_view.rs
+index 1820ca45..655092f3 100644
+--- a/niri-visual-tests/src/smithay_view.rs
++++ b/niri-visual-tests/src/smithay_view.rs
+@@ -217,8 +217,8 @@ mod imp {
+     }
+ 
+     unsafe fn create_renderer() -> anyhow::Result<RendererData> {
+-        smithay::backend::egl::ffi::make_sure_egl_is_loaded()
+-            .context("error loading EGL symbols in Smithay")?;
++        // smithay::backend::egl::ffi::make_sure_egl_is_loaded()
++        //    .context("error loading EGL symbols in Smithay")?;
+ 
+         let egl_display = egl::GetCurrentDisplay();
+         ensure!(egl_display != egl::NO_DISPLAY, "no current EGL display");
+diff --git a/vendor/smithay-client-toolkit/Cargo.lock b/vendor/smithay-client-toolkit/Cargo.lock
+index cb2909e9..638f412c 100644
+--- a/vendor/smithay-client-toolkit/Cargo.lock
++++ b/vendor/smithay-client-toolkit/Cargo.lock
+@@ -811,6 +811,8 @@ dependencies = [
+ [[package]]
+ name = "khronos-egl"
+ version = "6.0.0"
++
++features = ["static"]
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "6aae1df220ece3c0ada96b8153459b67eebe9ae9212258bb0134ae60416fdf76"
+ dependencies = [
+diff --git a/vendor/smithay/Cargo.toml b/vendor/smithay/Cargo.toml
+index 40f7c375..5a48196d 100644
+--- a/vendor/smithay/Cargo.toml
++++ b/vendor/smithay/Cargo.toml
+@@ -354,7 +354,7 @@ optional = true
+ version = "0.30.0"
+ features = [
+     "wayland",
+-    "wayland-dlopen",
++    # "wayland-dlopen",
+     "x11",
+     "rwh_06",
+ ]
+diff --git a/vendor/winit/Cargo.toml b/vendor/winit/Cargo.toml
+index 843e290a..87c92b1d 100644
+--- a/vendor/winit/Cargo.toml
++++ b/vendor/winit/Cargo.toml
+@@ -170,7 +170,7 @@ default = [
+     "rwh_06",
+     "x11",
+     "wayland",
+-    "wayland-dlopen",
++    # "wayland-dlopen",
+     "wayland-csd-adwaita",
+ ]
+ mint = ["dpi/mint"]
+@@ -322,9 +322,9 @@ version = "0.5.2"
+ version = "0.4.0"
+ features = [
+     "x11",
+-    "x11-dlopen",
++    # "x11-dlopen",
+     "wayland",
+-    "wayland-dlopen",
++    # "wayland-dlopen",
+ ]
+ default-features = false
+ 
