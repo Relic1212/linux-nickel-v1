@@ -12,7 +12,7 @@
       #   "-Dgallium-nine=false",
       #   "-Ddri3=disabled",
       "-Dopengl=true",
-      "-Dgallium-drivers=radeonsi,virgl,i915,crocus",
+      "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
       "-Dplatforms='wayland'",
       "-Dcpp_rtti=false",
       #   "-Dshared-glapi=enabled",
@@ -39,6 +39,7 @@
       "-Degl-native-platform=wayland",
       #   "-Dintel-clc=enabled",
       "-Dllvm=enabled",
+      "-Dunversion-libgallium=true",
     ],
 
     singleSource = {
@@ -51,9 +52,14 @@
     },
     patches = [
       {
-        sha256sum = "773d0d7f34ac40a3cdf6ef651cc6cdbcbeda185b6041f9a5814c89ac9d12aa1f",
+        sha256sum = "a6b7e687652f1776e8aad6f04d2b0f613c939745581f6bd3013710cb4640ea6f",
         file = "mesa2521.patch"
-      }
+      },
+
+      {
+        file = "mesa-no-virgl-cache.patch",
+        sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
+      },
     ],
     preConfigurePhase = [
       "sed -i 's@main()@print()@g' ${SRC}/bin/install_megadrivers.py",
