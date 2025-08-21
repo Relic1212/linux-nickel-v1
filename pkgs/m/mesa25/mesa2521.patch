@@ -378,32 +378,20 @@ index 78c56ded38a..c5f8d6db2ab 100644
    ['wgl.c'],
    vs_module_defs : wgl_def,
 diff --git a/src/gbm/backends/dri/meson.build b/src/gbm/backends/dri/meson.build
-index 5c33a3a907e..e1127afef49 100644
+index 5c33a3a907e..4875a4c06ed 100644
 --- a/src/gbm/backends/dri/meson.build
 +++ b/src/gbm/backends/dri/meson.build
-@@ -12,14 +12,17 @@ if with_platform_wayland
+@@ -12,7 +12,7 @@ if with_platform_wayland
    endif
  endif
  
 -shared_library(
-+# https://gitlab.freedesktop.org/mesa/mesa/-/commit/3d7bfcf98450d4d154a4d4ff3f0891d6de735bc7
-+incs_gbm = [include_directories('../../main')]
-+
-+dri_gbm = library(
++library(
    'dri_gbm',
    files('gbm_dri.c', 'gbm_driint.h'),
--  include_directories : [inc_gallium, incs_gbm_dri, inc_loader, inc_st_dri, inc_gallium_aux],
-+  include_directories : [inc_gallium, incs_gbm, incs_gbm_dri, inc_loader, inc_st_dri, inc_gallium_aux],
-   c_args : [flags_gbm_dri],
-   link_args : [ld_args_gc_sections],
-   link_with : [libloader, libgallium_dri],
--  dependencies : [deps_gbm_dri, dep_dl, dep_gbm, dep_libdrm, idep_mesautil, idep_xmlconfig],
-+  dependencies : [deps_gbm_dri, dep_dl, dep_libdrm, idep_mesautil, idep_xmlconfig],
-   gnu_symbol_visibility : 'hidden',
-   install : true,
-   install_dir: join_paths(get_option('libdir'), 'gbm'),
+   include_directories : [inc_gallium, incs_gbm_dri, inc_loader, inc_st_dri, inc_gallium_aux],
 diff --git a/src/gbm/main/backend.c b/src/gbm/main/backend.c
-index 321c7e10141..7ef0452bd02 100644
+index 321c7e10141..18e148fd252 100644
 --- a/src/gbm/main/backend.c
 +++ b/src/gbm/main/backend.c
 @@ -38,6 +38,7 @@
@@ -414,16 +402,7 @@ index 321c7e10141..7ef0452bd02 100644
  
  #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
  #define VER_MIN(a, b) ((a) < (b) ? (a) : (b))
-@@ -48,6 +49,8 @@ struct gbm_backend_desc {
-    void *lib;
- };
- 
-+
-+
- #define BACKEND_LIB_SUFFIX "_gbm"
- static const char *backend_search_path_vars[] = {
-    "GBM_BACKENDS_PATH",
-@@ -108,25 +111,29 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
+@@ -108,25 +109,29 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
  static struct gbm_device *
  load_backend_by_name(const char *name, int fd, bool warn_on_fail)
  {
@@ -465,7 +444,7 @@ index 321c7e10141..7ef0452bd02 100644
  
     if (!backend_desc)
 diff --git a/src/gbm/meson.build b/src/gbm/meson.build
-index 97e8d5fa044..a6971d96aff 100644
+index 97e8d5fa044..b3f984e1c4d 100644
 --- a/src/gbm/meson.build
 +++ b/src/gbm/meson.build
 @@ -9,6 +9,8 @@ files_gbm = files(
@@ -501,7 +480,7 @@ index 97e8d5fa044..a6971d96aff 100644
    files_gbm,
 -  include_directories : incs_gbm,
 -  c_args : [args_gbm],
-+  include_directories : [inc_gallium, incs_gbm, incs_gbm_dri, inc_loader, inc_st_dri, inc_gallium_aux, incs_libgbm_dri],
++  include_directories : [inc_gallium, incs_gbm, inc_loader, inc_st_dri, inc_gallium_aux, incs_libgbm_dri],
 +  c_args : [args_gbm, flags_libgbm_dri],
    link_args : [ld_args_gc_sections],
 -  link_with : [libloader],
@@ -659,33 +638,6 @@ index 8202e039961..806d8e5a3f8 100644
    'GLESv2' + get_option('gles-lib-suffix'),
    ['libgles2_public.c', es2_glapi_mapi_tmp_h],
    vs_module_defs : gles2_def,
-diff --git a/src/meson.build b/src/meson.build
-index 70bf4952db6..1213e2ebc63 100644
---- a/src/meson.build
-+++ b/src/meson.build
-@@ -137,6 +137,9 @@ endif
- if with_glx == 'dri'
-   subdir('glx')
- endif
-+if with_gbm and with_dri2
-+  subdir('gbm/backends/dri')
-+endif
- 
- if with_gbm
-   if get_option('libgbm-external')
-@@ -157,9 +160,9 @@ if with_gallium and with_gbm
-   endif
- endif
- 
--if with_gbm and with_dri2
--  subdir('gbm/backends/dri')
--endif
-+# if with_gbm and with_dri2
-+#   subdir('gbm/backends/dri')
-+# endif
- 
- # This must be after at least mesa, glx, and gallium, since libgl will be
- # defined in one of those subdirs depending on the glx provider.
 diff --git a/src/microsoft/clc/meson.build b/src/microsoft/clc/meson.build
 index 4a1e9e343be..39746610bbc 100644
 --- a/src/microsoft/clc/meson.build
