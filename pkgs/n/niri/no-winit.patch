@@ -1,0 +1,240 @@
+diff --git a/src/backend/mod.rs b/src/backend/mod.rs
+index 6fdd2ea8..07c1584f 100644
+--- a/src/backend/mod.rs
++++ b/src/backend/mod.rs
+@@ -14,16 +14,12 @@ use crate::utils::id::IdCounter;
+ pub mod tty;
+ pub use tty::Tty;
+ 
+-pub mod winit;
+-pub use winit::Winit;
+-
+ pub mod headless;
+ pub use headless::Headless;
+ 
+ #[allow(clippy::large_enum_variant)]
+ pub enum Backend {
+     Tty(Tty),
+-    Winit(Winit),
+     Headless(Headless),
+ }
+ 
+@@ -58,7 +54,6 @@ impl Backend {
+     pub fn init(&mut self, niri: &mut Niri) {
+         match self {
+             Backend::Tty(tty) => tty.init(niri),
+-            Backend::Winit(winit) => winit.init(niri),
+             Backend::Headless(headless) => headless.init(niri),
+         }
+     }
+@@ -66,7 +61,6 @@ impl Backend {
+     pub fn seat_name(&self) -> String {
+         match self {
+             Backend::Tty(tty) => tty.seat_name(),
+-            Backend::Winit(winit) => winit.seat_name(),
+             Backend::Headless(headless) => headless.seat_name(),
+         }
+     }
+@@ -77,7 +71,6 @@ impl Backend {
+     ) -> Option<T> {
+         match self {
+             Backend::Tty(tty) => tty.with_primary_renderer(f),
+-            Backend::Winit(winit) => winit.with_primary_renderer(f),
+             Backend::Headless(headless) => headless.with_primary_renderer(f),
+         }
+     }
+@@ -90,20 +83,19 @@ impl Backend {
+     ) -> RenderResult {
+         match self {
+             Backend::Tty(tty) => tty.render(niri, output, target_presentation_time),
+-            Backend::Winit(winit) => winit.render(niri, output),
+             Backend::Headless(headless) => headless.render(niri, output),
+         }
+     }
+ 
+     pub fn mod_key(&self, config: &Config) -> ModKey {
+         match self {
+-            Backend::Winit(_) => config.input.mod_key_nested.unwrap_or({
+-                if let Some(ModKey::Alt) = config.input.mod_key {
+-                    ModKey::Super
+-                } else {
+-                    ModKey::Alt
+-                }
+-            }),
++            // Backend::Winit(_) => config.input.mod_key_nested.unwrap_or({
++            //     if let Some(ModKey::Alt) = config.input.mod_key {
++            //         ModKey::Super
++            //     } else {
++            //         ModKey::Alt
++            //     }
++            // }),
+             Backend::Tty(_) | Backend::Headless(_) => config.input.mod_key.unwrap_or(ModKey::Super),
+         }
+     }
+@@ -111,7 +103,6 @@ impl Backend {
+     pub fn change_vt(&mut self, vt: i32) {
+         match self {
+             Backend::Tty(tty) => tty.change_vt(vt),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -119,7 +110,6 @@ impl Backend {
+     pub fn suspend(&mut self) {
+         match self {
+             Backend::Tty(tty) => tty.suspend(),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -127,7 +117,6 @@ impl Backend {
+     pub fn toggle_debug_tint(&mut self) {
+         match self {
+             Backend::Tty(tty) => tty.toggle_debug_tint(),
+-            Backend::Winit(winit) => winit.toggle_debug_tint(),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -135,7 +124,6 @@ impl Backend {
+     pub fn import_dmabuf(&mut self, dmabuf: &Dmabuf) -> bool {
+         match self {
+             Backend::Tty(tty) => tty.import_dmabuf(dmabuf),
+-            Backend::Winit(winit) => winit.import_dmabuf(dmabuf),
+             Backend::Headless(headless) => headless.import_dmabuf(dmabuf),
+         }
+     }
+@@ -143,7 +131,6 @@ impl Backend {
+     pub fn early_import(&mut self, surface: &WlSurface) {
+         match self {
+             Backend::Tty(tty) => tty.early_import(surface),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -151,7 +138,6 @@ impl Backend {
+     pub fn ipc_outputs(&self) -> Arc<Mutex<IpcOutputMap>> {
+         match self {
+             Backend::Tty(tty) => tty.ipc_outputs(),
+-            Backend::Winit(winit) => winit.ipc_outputs(),
+             Backend::Headless(headless) => headless.ipc_outputs(),
+         }
+     }
+@@ -163,7 +149,6 @@ impl Backend {
+     {
+         match self {
+             Backend::Tty(tty) => tty.primary_gbm_device(),
+-            Backend::Winit(_) => None,
+             Backend::Headless(_) => None,
+         }
+     }
+@@ -171,7 +156,6 @@ impl Backend {
+     pub fn set_monitors_active(&mut self, active: bool) {
+         match self {
+             Backend::Tty(tty) => tty.set_monitors_active(active),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -179,7 +163,6 @@ impl Backend {
+     pub fn set_output_on_demand_vrr(&mut self, niri: &mut Niri, output: &Output, enable_vrr: bool) {
+         match self {
+             Backend::Tty(tty) => tty.set_output_on_demand_vrr(niri, output, enable_vrr),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -187,7 +170,6 @@ impl Backend {
+     pub fn on_output_config_changed(&mut self, niri: &mut Niri) {
+         match self {
+             Backend::Tty(tty) => tty.on_output_config_changed(niri),
+-            Backend::Winit(_) => (),
+             Backend::Headless(_) => (),
+         }
+     }
+@@ -208,13 +190,11 @@ impl Backend {
+         }
+     }
+ 
+-    pub fn winit(&mut self) -> &mut Winit {
+-        if let Self::Winit(v) = self {
+-            v
+-        } else {
+-            panic!("backend is not Winit")
+-        }
+-    }
++    // pub fn winit(&mut self) -> &mut Winit {
++        
++    //         panic!("backend is not Winit")
++        
++    // }
+ 
+     pub fn headless(&mut self) -> &mut Headless {
+         if let Self::Headless(v) = self {
+diff --git a/src/input/backend_ext.rs b/src/input/backend_ext.rs
+index 99f4a904..97a075d9 100644
+--- a/src/input/backend_ext.rs
++++ b/src/input/backend_ext.rs
+@@ -1,6 +1,5 @@
+ use ::input as libinput;
+ use smithay::backend::input;
+-use smithay::backend::winit::WinitVirtualDevice;
+ use smithay::output::Output;
+ 
+ use crate::niri::State;
+@@ -30,19 +29,19 @@ impl NiriInputDevice for libinput::Device {
+     }
+ }
+ 
+-impl NiriInputDevice for WinitVirtualDevice {
+-    fn output(&self, _state: &State) -> Option<Output> {
+-        // FIXME: we should be returning the single output that the winit backend creates,
+-        // but for now, that will cause issues because the output is normally upside down,
+-        // so we apply Transform::Flipped180 to it and that would also cause
+-        // the cursor position to be flipped, which is not what we want.
+-        //
+-        // instead, we just return None and rely on the fact that it has only one output.
+-        // doing so causes the cursor to be placed in *global* output coordinates,
+-        // which are not flipped, and happen to be what we want.
+-        None
+-    }
+-}
++// impl NiriInputDevice for WinitVirtualDevice {
++//     fn output(&self, _state: &State) -> Option<Output> {
++//         // FIXME: we should be returning the single output that the winit backend creates,
++//         // but for now, that will cause issues because the output is normally upside down,
++//         // so we apply Transform::Flipped180 to it and that would also cause
++//         // the cursor position to be flipped, which is not what we want.
++//         //
++//         // instead, we just return None and rely on the fact that it has only one output.
++//         // doing so causes the cursor to be placed in *global* output coordinates,
++//         // which are not flipped, and happen to be what we want.
++//         None
++//     }
++// }
+ 
+ impl NiriInputDevice for VirtualPointer {
+     fn output(&self, _: &State) -> Option<Output> {
+diff --git a/src/niri.rs b/src/niri.rs
+index c1d1b958..dcd6a12c 100644
+--- a/src/niri.rs
++++ b/src/niri.rs
+@@ -112,7 +112,7 @@ use smithay::wayland::xdg_foreign::XdgForeignState;
+ 
+ use crate::animation::Clock;
+ use crate::backend::tty::SurfaceDmabufFeedback;
+-use crate::backend::{Backend, Headless, RenderResult, Tty, Winit};
++use crate::backend::{Backend, Headless, RenderResult, Tty};
+ use crate::cursor::{CursorManager, CursorTextureCache, RenderCursor, XCursor};
+ #[cfg(feature = "dbus")]
+ use crate::dbus::gnome_shell_introspect::{self, IntrospectToNiri, NiriToIntrospect};
+@@ -636,9 +636,7 @@ impl State {
+         let mut backend = if headless {
+             let headless = Headless::new();
+             Backend::Headless(headless)
+-        } else if has_display {
+-            let winit = Winit::new(config.clone(), event_loop.clone())?;
+-            Backend::Winit(winit)
++        
+         } else {
+             let tty = Tty::new(config.clone(), event_loop.clone())
+                 .context("error initializing the TTY backend")?;

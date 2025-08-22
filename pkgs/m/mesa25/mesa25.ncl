@@ -55,7 +55,6 @@
         sha256sum = "a6b7e687652f1776e8aad6f04d2b0f613c939745581f6bd3013710cb4640ea6f",
         file = "mesa2521.patch"
       },
-
       {
         file = "mesa-no-virgl-cache.patch",
         sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
@@ -91,4 +90,74 @@
       drvs.waylandProtocols,
     ],
   },
+}
+& {
+  lib,
+  drvs,
+  mesa2,
+  mesaExp =
+    mesa2
+    & {
+      extraMesonArgs | priority 1 = [
+        "-Dgles1=disabled",
+        "-Dxmlconfig=disabled",
+        "-Dshared-llvm=disabled",
+        "-Dgles2=enabled",
+        #   "-Dgallium-nine=false",
+        #   "-Ddri3=disabled",
+        "-Dopengl=true",
+        "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
+        "-Dplatforms='wayland'",
+        "-Dcpp_rtti=false",
+        #   "-Dshared-glapi=enabled",
+        "-Dgbm=enabled",
+        "-Dzstd=disabled",
+        "-Dzlib=enabled",
+        "-Dglvnd=disabled",
+        "-Dvulkan-drivers=",
+        "-Dshader-cache=disabled",
+        "-Dexpat=disabled",
+        "-Dvideo-codecs='all'",
+        "-Dtools=''",
+        "-Degl=enabled",
+        "-Dglx-read-only-text=true",
+        #   "-Dgallium-xa=disabled",
+        #   "-Dgallium-vdpau=disabled",
+        #   "-Dgallium-va=disabled",
+        #   "-Dgallium-opencl=disabled",
+        "-Dimagination-srv=false",
+        "-Dglx=disabled",
+        #   "-Dopencl-spirv=false",
+        #   "-Dosmesa=false",
+        "-Dvulkan-beta=false",
+        "-Degl-native-platform=wayland",
+        "-Dlegacy-wayland='bind-wayland-display'",
+        #   "-Dintel-clc=enabled",
+        "-Dllvm=enabled",
+        "-Dunversion-libgallium=true",
+      ],
+      postInstallPhase = [
+        m%"
+        cd ${DEST}/usr/lib 
+      "%,
+        m%"
+      for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
+        llvm-objcopy --globalize-symbol ${sym} libEGL.a
+      done
+      "%,
+
+        # "llvm-objcopy --globalize-symbol noopEGLImageTargetRenderbufferStorageOES libgallium_dri.a",
+        # "llvm-objcopy --redefine-sym=noopEGLImageTargetRenderbufferStorageOES=glEGLImageTargetRenderbufferStorageOES libgallium_dri.a",
+        # "llvm-objcopy --globalize-symbol noopEGLImageTargetTexture2DOES libgallium_dri.a",
+        # "llvm-objcopy --redefine-sym=noopEGLImageTargetTexture2DOES=glEGLImageTargetTexture2DOES libgallium_dri.a",
+        "llvm-objcopy --redefine-sym=_mesa_EGLImageTargetRenderbufferStorageOES=glEGLImageTargetRenderbufferStorageOES libgallium_dri.a",
+        "llvm-objcopy --redefine-sym=_mesa_EGLImageTargetTexture2DOES=glEGLImageTargetTexture2DOES libgallium_dri.a",
+
+        # m%"
+        # for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
+        #   llvm-objcopy --globalize-symbol ${sym} libEGL.a
+        # done
+        # "%,
+      ]
+    }
 }
