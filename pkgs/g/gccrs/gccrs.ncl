@@ -63,13 +63,24 @@
       uri = "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
       sha256sum = "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
     },
+    # extraConfigureFlags = [
+    #   "--enable-cxx",
+    # ],
+    biDrvs = [
+      drvs.m4,
+      # drvs.pkgconf,
+    ]
+  },
+  gmpWithCxx = gmp & {
     extraConfigureFlags = [
       "--enable-cxx",
     ],
-    biDrvs = [
+
+    biDrvs|priority 1 = [
       drvs.m4,
       drvs.pkgconf,
     ]
+
   }
 }
 & {
