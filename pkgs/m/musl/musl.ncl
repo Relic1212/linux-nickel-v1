@@ -98,6 +98,22 @@
       name = "musl-shared",
       extraConfigureFlags | priority 1 = ["--disable-static", "--enable-shared"],
     },
+  muslBoth =
+    musl
+    & {
+      extraConfigureFlags | priority 1 = ["--enable-static", "--enable-shared"],
+    },
+  muslBothWeakDl =
+    muslBoth
+    & {
+      postInstallPhase = [
+        "cd ${DEST}/usr/lib",
+        "objcopy -W dlopen libc.a",
+        "objcopy --redefine-sym=dlopen=dlopen_old_and_bad libc.a",
+        "objcopy -W dlsym libc.a",
+        "objcopy --redefine-sym=dlsym=dlsym_old_and_bad libc.a",
+      ]
+    },
   muslAarch64 =
     musl
     & {
