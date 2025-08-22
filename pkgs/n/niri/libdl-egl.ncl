@@ -11,7 +11,7 @@
     extraFiles = [
       {
 
-        sha256sum = "31140462f1e5db7b11ba9c7658f1123045aa59c76d512d4926329d1ecec8ec97",
+        sha256sum = "133074cafb3c338bcfbc17e5061e8e16acaef1fb72513ed4963096efaf6906c2",
         file = "libdl_egl.c",
       }
     ],

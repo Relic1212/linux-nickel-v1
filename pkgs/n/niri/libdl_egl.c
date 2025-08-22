@@ -1,4 +1,5 @@
 #include <EGL/egl.h>
+#define EGL_EGLEXT_PROTOTYPES
 #include <EGL/eglext.h>
 #include <stdio.h>
 #include <dlfcn.h>
@@ -318,6 +319,16 @@ void *dlsym_new(void *__restrict p, const char *__restrict s)
     }
 
     // -------------- END GEN -------------------------------
+    else if (strcmp(s, "eglCreatePlatformPixmapSurfaceEXT") == 0){
+        return eglCreatePlatformPixmapSurfaceEXT;
+    }
+    else if (strcmp(s, "eglCreatePlatformWindowSurfaceEXT") == 0){
+        return eglCreatePlatformWindowSurfaceEXT;
+    }else if (strcmp(s, "eglGetPlatformDisplayEXT") == 0){
+        return eglGetPlatformDisplayEXT;
+    }else if (strcmp(s, "eglSwapBuffersWithDamageKHR") == 0){
+        return eglSwapBuffersWithDamageKHR;
+    }
 
     fprintf(stderr, "ERROR, symbol \"%s\" could not be found, returning dlsym\n", s);
 
