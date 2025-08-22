@@ -39,6 +39,8 @@
       drvs.hwdata,
       drvs.linuxHeaders,
       # drvs.wlroots18,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
     ],
   }
 }
