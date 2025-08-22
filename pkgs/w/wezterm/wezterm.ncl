@@ -86,12 +86,17 @@
       "mv vendor-xcb-imdkit-rs vendor/xcb-imdkit-rs",
       "cp vendor/log-0.4.20/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
       "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/newer.patch)",
+      "(cd ${SRC}/vendor && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
     ],
 
     patches = [
       {
         sha256sum = "666d7a35fe843dfbf1491c67f4099ef7cdf74f6d7d617bb3988e35500880626d",
         file = "newer.patch"
+      },
+      {
+        sha256sum = "6814589c0020887fe2f771de6bead60919ca3bf8890c309f74f0ce2fabb54521",
+        file = "wezterm-no-dl.patch",
       }
     ],
 
@@ -103,20 +108,32 @@
     ],
     extraEnv = {
       CARGO_FEATURE_USE_SYSTEM_LIB = "1",
-      EXTRA_RUSTFLAGS = [
-        "-C link-arg=-lc++",
-        "-C link-arg=-lxkbcommon",
-        "-C link-arg=-lxcb",
-        "-C link-arg=-lXau",
-        "-C link-arg=-lxcb-xkb",
-        "-C link-arg=-lxcb",
-        "-C link-arg=-lXau",
-        "-C link-arg=-lxcb-shm",
-      ]
+      EXTRA_RUSTFLAGS =
+        [
+          "-C link-arg=-Wl,--push-state,--no-as-needed",
+          "-C link-arg=-lc++",
+          "-C link-arg=-lxkbcommon",
+          "-C link-arg=-lxcb",
+          "-C link-arg=-lXau",
+          "-C link-arg=-lxcb-xkb",
+          "-C link-arg=-lxcb",
+          "-C link-arg=-lXau",
+          "-C link-arg=-lxcb-shm",
+        ]
+        @ (
+          let s = "-lEGL -lpthread -lpthread -lz -lgbm -lGLESv2 -lgallium_dri -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -ldl -lpthread -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link -ldrm_amdgpu -lelf -lz -ldrm_intel -ldrm -lpciaccess -lz -ldrm -lwayland-client -lwayland-server -lm -pthread -lrt -lffi"
+          in
+          std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
+        )
+        @ [
+          "-C link-arg=-Wl,--pop-state",
+          # "-Awarnings",
+        ],
     },
 
     crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
 
+    llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.expat,
       drvs.fontconfig,
@@ -147,7 +164,7 @@
       drvs.libxshmfence,
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
-      drvs.mesa2,
+      drvs.mesaExp,
       drvs.ncurses,
       drvs.openssl,
       drvs.pango,
@@ -177,6 +194,7 @@
       drvs.libxkbcommonX11,
       drvs.libstdcppCompat,
       # drvs.git,
+      drvs.libdlEgl,
     ],
   }
 }
