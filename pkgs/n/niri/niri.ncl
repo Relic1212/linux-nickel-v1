@@ -178,14 +178,9 @@
         # },
         # dest = "vendor-winit",
       },
-      # {
-      #   src = libdlEgl.singleSource,
-      #   dest = "libdl-egl/"
-      # }
+   
     ],
-    # crates = {
-    # xkbcommon_rs=_xkbcommon_rs,
-    # },
+   
 
     patches = [
       {
@@ -213,13 +208,6 @@
         file = "no-winit.patch"
       },
     ],
-
-    # extraFiles = [
-    #   {
-    #     file = libdlEgl.singleSource.uri,
-    #     sha256sum = libdlEgl.singleSource.sha256sum,
-    #   }
-    # ],
 
     unpackPhase = [
       "(cd /tmp/workdir/src; tar -xf $(find /tmp/workdir/packed -name 'v*.tar.gz') --strip-components=1)",
@@ -311,21 +299,7 @@
         m%"sed -i 's@"backend_winit",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
         # m%"sed -i 's@"renderer_multi",@@g' ${SRC}/Cargo.toml"%,
         # m%"sed -i 's@"renderer_pixman",@@g' ${SRC}/Cargo.toml"%,
-      ]
-      @ (
-        std.array.map
-          (fun platform => m%"sed -i 's@"%{platform}",@@g' ${SRC}/vendor/smithay/build.rs"%)
-          [
-            # "GL_OES_EGL_image_external",
-            # "GL_EXT_texture_format_BGRA8888",
-
-            # "GL_OES_EGL_image",
-            #           "GL_OES_EGL_image_external",
-            #           "GL_EXT_texture_format_BGRA8888",
-            #           "GL_EXT_unpack_subimage",
-            #           "GL_OES_EGL_sync",
-          ]
-      ),
+      ],
 
     release = false,
 
