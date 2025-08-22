@@ -1,32 +1,162 @@
 {
   lib,
   drvs,
+  libdlEgl,
   niri | lib.CargoPackage = {
     buildEnv = {
-      EXTRA_LDFLAGS = ["-lc++"],
+      # EXTRA_LDFLAGS = ["-lc++",
+      # #  "-lEGL",
+      #   # "-lgallium_dri"
+      #   ],
+      # EXTRA_CFLAGS = EXTRA_LDFLAGS, # ["-lc++","-lEGL"],
+      LLVM_LDFLAGS | priority 1 = ["-fuse-ld='lld -lEGL -lgallium_dri'", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"],
+      # LD | priority 1 = "\"lld --verbose -lEGL -lgallium_dri\"",
+      CC = "cc",
     },
     extraEnv = {
       # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
-      EXTRA_RUSTFLAGS = [
-        "-C link-arg=-Wl,--push-state,--no-as-needed",
-        "-C link-arg=-lEGL",
-        "-C link-arg=-lwayland-client",
-        "-C link-arg=-Wl,--pop-state",
-        "-C link-arg=-lc++",
+      EXTRA_RUSTFLAGS =
+        [
+          # "-C link-arg=-L/usr/lib",
+          "-C link-arg=-Wl,--push-state,--no-as-needed",
+          # "-C link-arg=-lEGL",
+          # "-C link-arg=-lwayland-client",
+          # "-C link-arg=-Wl,--pop-state",
+          "-C link-arg=-lc++",
 
-        # pkg-config --libs --static libinput
-        "-C link-arg=-linput",
-        "-C link-arg=-lm",
-        "-C link-arg=-ludev",
-        "-C link-arg=-pthread",
-        "-C link-arg=-levdev",
-        "-C link-arg=-lrt",
-        "-C link-arg=-lmtdev",
-      ],
+          # pkg-config --libs --static libinput
+          "-C link-arg=-linput",
+          "-C link-arg=-lm",
+          "-C link-arg=-ludev",
+          "-C link-arg=-pthread",
+          "-C link-arg=-levdev",
+          "-C link-arg=-lrt",
+          "-C link-arg=-lmtdev",
+          # input
+          # "-C link-arg=-lEGL",
+          # "-C link-arg=-lgallium_dri",
+          # "-l EGL -l gallium_dri -l gbm -l gallium_dri -l LLVMWindowsDriver -l LLVMFrontendHLSL -l LLVMFrontendDriver -l LLVMX86TargetMCA -l LLVMX86Disassembler -l LLVMX86AsmParser -l LLVMX86CodeGen -l LLVMX86Desc -l LLVMX86Info -l LLVMMCJIT -l LLVMLTO -l LLVMExtensions -l LLVMLibDriver -l LLVMOption -l LLVMInterpreter -l LLVMExecutionEngine -l LLVMRuntimeDyld -l LLVMOrcTargetProcess -l LLVMOrcShared -l LLVMCoverage -l LLVMAMDGPUTargetMCA -l LLVMMCA -l LLVMAMDGPUDisassembler -l LLVMMCDisassembler -l LLVMAMDGPUAsmParser -l LLVMAMDGPUCodeGen -l LLVMPasses -l LLVMCoroutines -l LLVMCFGuard -l LLVMMIRParser -l LLVMIRPrinter -l LLVMipo -l LLVMInstrumentation -l LLVMVectorize -l LLVMSandboxIR -l LLVMLinker -l LLVMFrontendOpenMP -l LLVMFrontendAtomic -l LLVMFrontendOffloading -l LLVMHipStdPar -l LLVMGlobalISel -l LLVMSelectionDAG -l LLVMAsmPrinter -l LLVMCodeGen -l LLVMTarget -l LLVMScalarOpts -l LLVMInstCombine -l LLVMAggressiveInstCombine -l LLVMObjCARCOpts -l LLVMTransformUtils -l LLVMCGData -l LLVMBitWriter -l LLVMAMDGPUDesc -l LLVMAMDGPUUtils -l LLVMCodeGenTypes -l LLVMAnalysis -l LLVMProfileData -l LLVMSymbolize -l LLVMDebugInfoBTF -l LLVMDebugInfoPDB -l LLVMDebugInfoMSF -l LLVMDebugInfoCodeView -l LLVMDebugInfoDWARF -l LLVMObject -l LLVMTextAPI -l LLVMMCParser -l LLVMIRReader -l LLVMAsmParser -l LLVMBitReader -l LLVMCore -l LLVMRemarks -l LLVMBitstreamReader -l LLVMAMDGPUInfo -l LLVMMC -l LLVMBinaryFormat -l LLVMTargetParser -l LLVMSupport -l LLVMDemangle -l dl -l GLESv2 -l drm_radeon -l drm_amdgpu -l elf -l z -l drm_intel -l drm -l pciaccess -l wayland-server -l m -l rt -l ffi -l gbm -l gallium_dri -l LLVMWindowsDriver -l LLVMFrontendHLSL -l LLVMFrontendDriver -l LLVMX86TargetMCA -l LLVMX86Disassembler -l LLVMX86AsmParser -l LLVMX86CodeGen -l LLVMX86Desc -l LLVMX86Info -l LLVMMCJIT -l LLVMLTO -l LLVMExtensions -l LLVMLibDriver -l LLVMOption -l LLVMInterpreter -l LLVMExecutionEngine -l LLVMRuntimeDyld -l LLVMOrcTargetProcess -l LLVMOrcShared -l LLVMCoverage -l LLVMAMDGPUTargetMCA -l LLVMMCA -l LLVMAMDGPUDisassembler -l LLVMMCDisassembler -l LLVMAMDGPUAsmParser -l LLVMAMDGPUCodeGen -l LLVMPasses -l LLVMCoroutines -l LLVMCFGuard -l LLVMMIRParser -l LLVMIRPrinter -l LLVMipo -l LLVMInstrumentation -l LLVMVectorize -l LLVMSandboxIR -l LLVMLinker -l LLVMFrontendOpenMP -l LLVMFrontendAtomic -l LLVMFrontendOffloading -l LLVMHipStdPar -l LLVMGlobalISel -l LLVMSelectionDAG -l LLVMAsmPrinter -l LLVMCodeGen -l LLVMTarget -l LLVMScalarOpts -l LLVMInstCombine -l LLVMAggressiveInstCombine -l LLVMObjCARCOpts -l LLVMTransformUtils -l LLVMCGData -l LLVMBitWriter -l LLVMAMDGPUDesc -l LLVMAMDGPUUtils -l LLVMCodeGenTypes -l LLVMAnalysis -l LLVMProfileData -l LLVMSymbolize -l LLVMDebugInfoBTF -l LLVMDebugInfoPDB -l LLVMDebugInfoMSF -l LLVMDebugInfoCodeView -l LLVMDebugInfoDWARF -l LLVMObject -l LLVMTextAPI -l LLVMMCParser -l LLVMIRReader -l LLVMAsmParser -l LLVMBitReader -l LLVMCore -l LLVMRemarks -l LLVMBitstreamReader -l LLVMAMDGPUInfo -l LLVMMC -l LLVMBinaryFormat -l LLVMTargetParser -l LLVMSupport -l LLVMDemangle -l dl -l GLESv2 -l drm_radeon -l drm_amdgpu -l elf -l z -l drm_intel -l drm -l pciaccess -l wayland-server -l m -l rt -l ffi",
+
+          # might work
+          # "-C link-arg=-L/tmp/workdir/packed/%{libdlEgl.singleSource.sha256sum}/libdl-egl",
+          # "-C link-arg=-ldl_egl",
+
+          # generated for libegl
+          # "-C link-arg=-lEGL",
+          # "-C link-arg=-lpthread",
+          # "-C link-arg=-lgbm",
+          # "-C link-arg=-lgallium_dri",
+          # "-C link-arg=-lLLVMWindowsDriver",
+          # "-C link-arg=-lLLVMFrontendHLSL",
+          # "-C link-arg=-lLLVMFrontendDriver",
+          # "-C link-arg=-lLLVMX86TargetMCA",
+          # "-C link-arg=-lLLVMX86Disassembler",
+          # "-C link-arg=-lLLVMX86AsmParser",
+          # "-C link-arg=-lLLVMX86CodeGen",
+          # "-C link-arg=-lLLVMX86Desc",
+          # "-C link-arg=-lLLVMX86Info",
+          # "-C link-arg=-lLLVMMCJIT",
+          # "-C link-arg=-lLLVMLTO",
+          # "-C link-arg=-lLLVMExtensions",
+          # "-C link-arg=-lLLVMLibDriver",
+          # "-C link-arg=-lLLVMOption",
+          # "-C link-arg=-lLLVMInterpreter",
+          # "-C link-arg=-lLLVMExecutionEngine",
+          # "-C link-arg=-lLLVMRuntimeDyld",
+          # "-C link-arg=-lLLVMOrcTargetProcess",
+          # "-C link-arg=-lLLVMOrcShared",
+          # "-C link-arg=-lLLVMCoverage",
+          # "-C link-arg=-lLLVMAMDGPUTargetMCA",
+          # "-C link-arg=-lLLVMMCA",
+          # "-C link-arg=-lLLVMAMDGPUDisassembler",
+          # "-C link-arg=-lLLVMMCDisassembler",
+          # "-C link-arg=-lLLVMAMDGPUAsmParser",
+          # "-C link-arg=-lLLVMAMDGPUCodeGen",
+          # "-C link-arg=-lLLVMPasses",
+          # "-C link-arg=-lLLVMCoroutines",
+          # "-C link-arg=-lLLVMCFGuard",
+          # "-C link-arg=-lLLVMMIRParser",
+          # "-C link-arg=-lLLVMIRPrinter",
+          # "-C link-arg=-lLLVMipo",
+          # "-C link-arg=-lLLVMInstrumentation",
+          # "-C link-arg=-lLLVMVectorize",
+          # "-C link-arg=-lLLVMSandboxIR",
+          # "-C link-arg=-lLLVMLinker",
+          # "-C link-arg=-lLLVMFrontendOpenMP",
+          # "-C link-arg=-lLLVMFrontendAtomic",
+          # "-C link-arg=-lLLVMFrontendOffloading",
+          # "-C link-arg=-lLLVMHipStdPar",
+          # "-C link-arg=-lLLVMGlobalISel",
+          # "-C link-arg=-lLLVMSelectionDAG",
+          # "-C link-arg=-lLLVMAsmPrinter",
+          # "-C link-arg=-lLLVMCodeGen",
+          # "-C link-arg=-lLLVMTarget",
+          # "-C link-arg=-lLLVMScalarOpts",
+          # "-C link-arg=-lLLVMInstCombine",
+          # "-C link-arg=-lLLVMAggressiveInstCombine",
+          # "-C link-arg=-lLLVMObjCARCOpts",
+          # "-C link-arg=-lLLVMTransformUtils",
+          # "-C link-arg=-lLLVMCGData",
+          # "-C link-arg=-lLLVMBitWriter",
+          # "-C link-arg=-lLLVMAMDGPUDesc",
+          # "-C link-arg=-lLLVMAMDGPUUtils",
+          # "-C link-arg=-lLLVMCodeGenTypes",
+          # "-C link-arg=-lLLVMAnalysis",
+          # "-C link-arg=-lLLVMProfileData",
+          # "-C link-arg=-lLLVMSymbolize",
+          # "-C link-arg=-lLLVMDebugInfoBTF",
+          # "-C link-arg=-lLLVMDebugInfoPDB",
+          # "-C link-arg=-lLLVMDebugInfoMSF",
+          # "-C link-arg=-lLLVMDebugInfoCodeView",
+          # "-C link-arg=-lLLVMDebugInfoDWARF",
+          # "-C link-arg=-lLLVMObject",
+          # "-C link-arg=-lLLVMTextAPI",
+          # "-C link-arg=-lLLVMMCParser",
+          # "-C link-arg=-lLLVMIRReader",
+          # "-C link-arg=-lLLVMAsmParser",
+          # "-C link-arg=-lLLVMBitReader",
+          # "-C link-arg=-lLLVMCore",
+          # "-C link-arg=-lLLVMRemarks",
+          # "-C link-arg=-lLLVMBitstreamReader",
+          # "-C link-arg=-lLLVMAMDGPUInfo",
+          # "-C link-arg=-lLLVMMC",
+          # "-C link-arg=-lLLVMBinaryFormat",
+          # "-C link-arg=-lLLVMTargetParser",
+          # "-C link-arg=-lLLVMSupport",
+          # "-C link-arg=-lLLVMDemangle",
+          # "-C link-arg=-ldl",
+          # "-C link-arg=-lpthread",
+          # "-C link-arg=-ldrm_radeon",
+          # "-C link-arg=-ldrm_amdgpu",
+          # "-C link-arg=-lelf",
+          # "-C link-arg=-lz",
+          # "-C link-arg=-ldrm_intel",
+          # "-C link-arg=-lpciaccess",
+          # "-C link-arg=-lGLESv2",
+          # "-C link-arg=-lm",
+          # "-C link-arg=-lpthread",
+          # "-C link-arg=-lz",
+          # "-C link-arg=-ldrm",
+          # "-C link-arg=-lwayland-server",
+          # "-C link-arg=-lwayland-client",
+          # "-C link-arg=-lm",
+          # "-C link-arg=-pthread",
+          # "-C link-arg=-lrt",
+          # "-C link-arg=-lffi",
+          # -egl
+        ]
+        @ (
+          let s = "-lEGL -lpthread -lpthread -lz -lgbm -lGLESv2 -lgallium_dri -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -ldl -lpthread -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link -ldrm_amdgpu -lelf -lz -ldrm_intel -ldrm -lpciaccess -lz -ldrm -lwayland-client -lwayland-server -lm -pthread -lrt -lffi"
+          in
+          std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
+        )
+        @ [
+          "-C link-arg=-Wl,--pop-state",
+        ],
     },
     extraCargoFlags = [
       "--no-default-features",
-      # "--verbose",
+      "--verbose",
     ],
     nonCrateSourceInputs = [
       {
@@ -40,18 +170,186 @@
         src = {
           uri = "https://github.com/YaLTeR/niri/releases/download/v25.05.1/niri-25.05.1-vendored-dependencies.tar.xz",
           sha256sum = "4c2b2b3fc8340c02f3ba2581b50847f1d9e0fab986bebf53aaf045fa54b9a3c2"
-        }
+        },
+
+        # src = {
+        #   uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
+        #   sha256sum = "f53ca2163ab21fe746b4697c18438453b2563e3dc94358a259abd78c047af567",
+        # },
+        # dest = "vendor-winit",
       },
+      # {
+      #   src = libdlEgl.singleSource,
+      #   dest = "libdl-egl/"
+      # }
     ],
     # crates = {
     # xkbcommon_rs=_xkbcommon_rs,
     # },
+
+    patches = [
+      {
+        sha256sum = "22aa848609c9ce793c080fe5b0ecaac790b7bf2bbc92c4d51796c6493de5bce6",
+        file = "niri.patch",
+      },
+      {
+        sha256sum = "11634f1609a70cd9168c0ae918f7becfb0f45c462ce4af78287d56c864708f58",
+        file = "no-dl.patch",
+      },
+      {
+        file = "static-gl.patch",
+        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
+      },
+      {
+        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
+        file = "ffi.patch"
+      },
+      # {
+      #   sha256sum = "02baadaf00bcdeaed1eba634b6bc7248a2f944a849e1e64f8c8872247aee5cd8",
+      #   file = "niri-main-link.patch",
+      # },
+      {
+        sha256sum = "a18cbc37f29f7789f7c2cb95d7abf8dab5381c044944181a97b4ae1e0daeba7b",
+        file = "no-winit.patch"
+      },
+    ],
+
+    # extraFiles = [
+    #   {
+    #     file = libdlEgl.singleSource.uri,
+    #     sha256sum = libdlEgl.singleSource.sha256sum,
+    #   }
+    # ],
+
+    unpackPhase = [
+      "(cd /tmp/workdir/src; tar -xf $(find /tmp/workdir/packed -name 'v*.tar.gz') --strip-components=1)",
+      "mkdir /tmp/workdir/src/vendor -p",
+      "(cd /tmp/workdir/src/vendor; tar -xf $(find /tmp/workdir/packed -name 'niri-*-vendored-dependencies.tar.xz') --strip-components=1)",
+      # "(cd /tmp/workdir/src/vendor-winit; tar -xf $(find /tmp/workdir/packed -name '58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz') --strip-components=1)",
+    ],
+
+    configurePhase =
+      [
+
+        # checksum removal from Alpine
+        #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+        #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+        m%"
+            echo "
+            [source.crates-io]
+            replace-with = \"vendored-sources\"
+            
+            [source.\"git+https://github.com/Smithay/smithay.git\"]
+            git = \"https://github.com/Smithay/smithay.git\"
+            replace-with = \"vendored-sources\"
+
+            [source.\"git+https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"]
+            git = \"https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"
+            replace-with = \"vendored-sources\"
+
+
+            [source.vendored-sources]
+            directory = \"vendor\"
+
+            " > ${SRC}/.cargo/config.toml
+            "%,
+        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
+        # sct
+        # m%"
+        # sed -i \
+        #   's@"xkbcommon",@@g' \
+        #   ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
+        # "%, # echo "
+        # [target.'cfg(all(unix))'.dependencies.xkbcommon]
+        # version = \"0.8.0\"
+
+        # " >> ${SRC}/vendor/winit/Cargo.toml
+        # "%,
+
+        # winit checksum
+        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json"%,
+        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json"%,
+        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/libloading/.cargo-checksum.json"%,
+        # "rm -rf vendor/x11-dl",
+        m%"
+      echo '
+      fn main() {
+        println!("cargo:rustc-link-lib=static=EGL");
+        println!("cargo:rustc-link-lib=static=gallium_dri"); 
+        println!("cargo:rustc-link-lib=static=wayland-server"); 
+        println!("cargo:rustc-link-lib=static=wayland-client");
+        println!("cargo:rustc-link-search=native=/usr/lib");
+
+      }
+      ' > ${SRC}/build.rs
+      "%,
+        m%"
+      echo '
+      #[link(name="EGL",kind="static")]
+      #[link(name="gallium_dri",kind="static")]
+      #[link(name="GLESv2",kind="static")]
+      #[link(name="gbm",kind="static")]
+      extern {}
+      ' >> ${SRC}/src/main.rs
+      "%,
+        m%"
+      echo '
+      #[link(name="EGL",kind="static")]
+      #[link(name="gallium_dri",kind="static")]
+      #[link(name="GLESv2",kind="static")]
+      #[link(name="gbm",kind="static")]
+      extern {}
+      ' >> ${SRC}/src/niri.rs
+      "%,
+
+        # m%"sed -i 's@"renderer_gl",@@g' ${SRC}/Cargo.toml"%,
+        m%"sed -i 's@"backend_winit",@@g' ${SRC}/Cargo.toml"%,
+        m%"sed -i 's@"winit",@@g' ${SRC}/Cargo.toml"%,
+        "rm -rf ${SRC}/src/backend/winit.rs",
+        "rm -rf ${SRC}/vendor/winit*",
+        # m%"sed -i 's@"renderer_gl",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
+        m%"sed -i 's@"backend_winit",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
+        # m%"sed -i 's@"renderer_multi",@@g' ${SRC}/Cargo.toml"%,
+        # m%"sed -i 's@"renderer_pixman",@@g' ${SRC}/Cargo.toml"%,
+      ]
+      @ (
+        std.array.map
+          (fun platform => m%"sed -i 's@"%{platform}",@@g' ${SRC}/vendor/smithay/build.rs"%)
+          [
+            # "GL_OES_EGL_image_external",
+            # "GL_EXT_texture_format_BGRA8888",
+
+            # "GL_OES_EGL_image",
+            #           "GL_OES_EGL_image_external",
+            #           "GL_EXT_texture_format_BGRA8888",
+            #           "GL_EXT_unpack_subimage",
+            #           "GL_OES_EGL_sync",
+          ]
+      ),
+
+    release = false,
+
+    utilsProviders,
+    baseBuildinputPackages =
+      [
+        drvs.rust,
+        # drvs.muslBothWeakDl,
+        drvs.muslBoth,
+        drvs.pkgconf,
+        llvmProvider,
+        # drvs.clangCc,
+        # drvs.clangCcSymlink,
+        (drvs.niriCc & { priority = 1 }),
+      ]
+      @ utilsProviders,
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.expat,
       drvs.jsonC,
       drvs.pcre2,
-      drvs.mesa2,
+      # drvs.mesa2,
+      # drvs.mesa2NoHidden,
+      drvs.mesaExp,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libelf,
@@ -77,67 +375,15 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
       drvs.cairoGobjectEmpty,
+      drvs.libdlEgl,
     ],
-
-    patches = [
-      {
-        sha256sum = "22aa848609c9ce793c080fe5b0ecaac790b7bf2bbc92c4d51796c6493de5bce6",
-        file = "niri.patch",
-      }
-    ],
-
-    unpackPhase = [
-      "(cd /tmp/workdir/src; tar -xf $(find /tmp/workdir/packed -name 'v*.tar.gz') --strip-components=1)",
-      "mkdir /tmp/workdir/src/vendor -p",
-      "(cd /tmp/workdir/src/vendor; tar -xf $(find /tmp/workdir/packed -name 'niri-*-vendored-dependencies.tar.xz') --strip-components=1)",
-    ],
-
-    configurePhase = [
-
-      # checksum removal from Alpine
-      #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
-      #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
-      m%"
-            echo "
-            [source.crates-io]
-            replace-with = \"vendored-sources\"
-            
-            [source.\"git+https://github.com/Smithay/smithay.git\"]
-            git = \"https://github.com/Smithay/smithay.git\"
-            replace-with = \"vendored-sources\"
-
-            [source.\"git+https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"]
-            git = \"https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"
-            replace-with = \"vendored-sources\"
-
-
-            [source.vendored-sources]
-            directory = \"vendor\"
-
-            " > ${SRC}/.cargo/config.toml
-            "%,
-      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
-      # sct
-      # m%"
-      # sed -i \
-      #   's@"xkbcommon",@@g' \
-      #   ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
-      # "%, # echo "
-      # [target.'cfg(all(unix))'.dependencies.xkbcommon]
-      # version = \"0.8.0\"
-
-      # " >> ${SRC}/vendor/winit/Cargo.toml
-      # "%,
-
-      # winit checksum
-      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json"%,
-      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json"%,
-      # "rm -rf vendor/x11-dl",
-    ],
-
-    release = false,
   },
+}
+& {
+  lib,
   cairoGobjectEmpty | lib.Package = {
     installPhase = [
       "install -d -m0755 ${DEST}/usr/lib/pkgconfig",
@@ -146,4 +392,52 @@
     ]
   }
 }
-# & (import "libdl-egl.ncl")
+& {
+  lib,
+  drvs,
+  clangCcSymlink | lib.Package = {
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/bin",
+      "cd ${DEST}/usr/bin",
+      "ln -s clang cc",
+    ]
+  }
+}
+& {
+
+  lib,
+  niriCc | lib.Package = {
+    installPhase = [
+      m%"
+            install -d -m0755 ${DEST}/usr/bin
+
+            cd ${DEST}/usr/bin
+
+            printf "#!/bin/sh
+            export LDFLAGS=\"\${LDFLAGS} -lEGL -lgallium_dri\"
+            export LD=\"\${LD} -lEGL -lgallium_dri\"
+
+            exec /usr/bin/clang --verbose -lEGL -lgallium_dri \"\${@}\"
+            " > cc
+
+            printf "#!/bin/sh
+            export LDFLAGS=\"\${LDFLAGS} -lEGL -lgallium_dri\"
+            export LD=\"\${LD} -lEGL -lgallium_dri\"
+
+            exec /usr/bin/clang++ \"\${@}\"
+            " > "c++"
+            "%,
+      # m%"
+      # printf "#!/bin/sh
+      # exec /usr/bin/lld -static --static \"\${@}\"
+      # " > static-lld
+      # "%,
+      m%"
+            for f in $(ls); do
+                chmod +x $f
+            done
+            "%,
+    ]
+  }
+}
+& (import "libdl-egl.ncl")
