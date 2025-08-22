@@ -301,6 +301,19 @@
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
     ],
 
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/bin",
+      "install -d -m0755 ${DEST}/usr/share/wayland-sessions",
+      "install -d -m0755 ${DEST}/usr/share/xdg-desktop-portal",
+      "install -d -m0755 ${DEST}/usr/lib/dinit.d",
+      "install -m0755 ${SRC}/target/x86_64-unknown-linux-musl/release/niri ${DEST}/usr/bin",
+      "install -m0755 ${SRC}/resources/niri-session ${DEST}/usr/bin",
+      "install -m0755 ${SRC}/resources/niri.desktop ${DEST}/usr/share/wayland-sessions",
+      "install -m0755 ${SRC}/resources/niri-portals.conf ${DEST}/usr/share/xdg-desktop-portal",
+      "install -m0755 ${SRC}/resources/dinit/niri ${DEST}/usr/lib/dinit.d",
+      "install -m0755 ${SRC}/resources/dinit/niri-shutdown ${DEST}/usr/lib/dinit.d",
+    ],
+
     # release = false,
 
     utilsProviders,
