@@ -11,8 +11,8 @@
     extraFiles = [
       {
 
-      sha256sum = "31140462f1e5db7b11ba9c7658f1123045aa59c76d512d4926329d1ecec8ec97",
-       file = "libdl_egl.c",
+        sha256sum = "31140462f1e5db7b11ba9c7658f1123045aa59c76d512d4926329d1ecec8ec97",
+        file = "libdl_egl.c",
       }
     ],
     buildPhase = [
@@ -25,7 +25,7 @@
       "install -m0755 libdl_egl.a ${DEST}/usr/lib",
     ],
     enableCcache = false,
-    biDrvs=[
+    biDrvs = [
       drvs.llvm,
       drvs.mesa2,
       drvs.musl,
