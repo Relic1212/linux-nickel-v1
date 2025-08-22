@@ -1,12 +1,9 @@
 let lib = (import "lib.ncl").lib
 in
-let 
-
-drvData = {
+let drvData = {
   drvHash | String,
-  dest | String|default = ""
+  dest | String | default = ""
 }
-
 in
 
 let DrvSchema = {
@@ -55,12 +52,17 @@ let drvUtils = {
     let d | DrvSchema = {
       # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
 
-      buildInputDrvs = (std.array.map (fun x => let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in 
-      if data.dest == "" 
-      then data.drvHash 
-      else data
-      
-      ) (std.array.sort (buildInputCmp) p.buildInputsValidated)),
+      buildInputDrvs = (
+        std.array.map
+          (fun x =>
+            let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in
+            if data.dest == "" then
+              data.drvHash
+            else
+              data
+          )
+          (std.array.sort (buildInputCmp) p.buildInputsValidated)
+      ),
 
       sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
       patchDrvs = p.patches,
