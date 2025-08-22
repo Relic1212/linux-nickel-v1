@@ -81,3 +81,27 @@
     }
   }
 }
+& {
+  lib,
+  drvs,
+  libxml2,
+  libxml2Cmake | lib.CmakePackage = {
+    singleSource = libxml2.singleSource,
+
+    llvmProvider = drvs.llvmFull,
+    generator = "Ninja",
+    # separateBuildDir = false,
+    biDrvs = [
+      drvs.git,
+      drvs.zstd,
+      drvs.zlibNgPic,
+      drvs.xz,
+      drvs.pythonFull,
+    ],
+    # cmakeExtraArgsRecord = {
+    # "-DLIBXML2_WITH_PYTHON" = false,
+    #   "-DBUILD_STATIC_LIBS" = true,
+    #   "-DLIBXML2_PYTHON_INSTALL_DIR" = "/usr/lib/python3.12/",
+    # }
+  }
+}
