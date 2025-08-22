@@ -1,0 +1,90 @@
+diff --git a/vendor/libloading-0.8.8/src/os/unix/mod.rs b/vendor/libloading-0.8.8/src/os/unix/mod.rs
+index a575d9ab..85b2737d 100644
+--- a/vendor/libloading-0.8.8/src/os/unix/mod.rs
++++ b/vendor/libloading-0.8.8/src/os/unix/mod.rs
+@@ -185,26 +185,36 @@ impl Library {
+             None => None,
+             Some(ref f) => Some(cstr_cow_from_bytes(f.as_ref().as_bytes())?),
+         };
+-        with_dlerror(
+-            move || {
+-                let result = dlopen(
++        // with_dlerror(
++        //     move || {
++        //         let result = dlopen_new(
++        //             match filename {
++        //                 None => ptr::null(),
++        //                 Some(ref f) => f.as_ptr(),
++        //             },
++        //             flags,
++        //         );
++        //         // ensure filename lives until dlopen completes
++        //         drop(filename);
++        //         if result.is_null() {
++        //             None
++        //         } else {
++        //             Some(Library { handle: result })
++        //         }
++        //     },
++        //     |desc| crate::Error::DlOpen { desc: desc.into() },
++        // )
++        // .map_err(|e| e.unwrap_or(crate::Error::DlOpenUnknown))
++        Ok(Library { handle: 
++
++             dlopen_new(
+                     match filename {
+                         None => ptr::null(),
+                         Some(ref f) => f.as_ptr(),
+                     },
+                     flags,
+-                );
+-                // ensure filename lives until dlopen completes
+-                drop(filename);
+-                if result.is_null() {
+-                    None
+-                } else {
+-                    Some(Library { handle: result })
+-                }
+-            },
+-            |desc| crate::Error::DlOpen { desc: desc.into() },
+-        )
+-        .map_err(|e| e.unwrap_or(crate::Error::DlOpenUnknown))
++                )
++        })
+     }
+ 
+     unsafe fn get_impl<T, F>(&self, symbol: &[u8], on_null: F) -> Result<Symbol<T>, crate::Error>
+@@ -222,7 +232,7 @@ impl Library {
+         let result = with_dlerror(
+             || {
+                 dlerror();
+-                let symbol = dlsym(self.handle, symbol.as_ptr());
++                let symbol = dlsym_new(self.handle, symbol.as_ptr());
+                 if symbol.is_null() {
+                     None
+                 } else {
+@@ -468,13 +478,22 @@ impl<T> fmt::Debug for Symbol<T> {
+ #[cfg_attr(any(target_os = "linux", target_os = "android"), link(name = "dl"))]
+ #[cfg_attr(any(target_os = "freebsd", target_os = "dragonfly"), link(name = "c"))]
+ extern "C" {
+-    fn dlopen(filename: *const raw::c_char, flags: raw::c_int) -> *mut raw::c_void;
++    // fn dlopen(filename: *const raw::c_char, flags: raw::c_int) -> *mut raw::c_void;
+     fn dlclose(handle: *mut raw::c_void) -> raw::c_int;
+-    fn dlsym(handle: *mut raw::c_void, symbol: *const raw::c_char) -> *mut raw::c_void;
++    // fn dlsym(handle: *mut raw::c_void, symbol: *const raw::c_char) -> *mut raw::c_void;
+     fn dlerror() -> *mut raw::c_char;
+     fn dladdr(addr: *mut raw::c_void, info: *mut DlInfo) -> raw::c_int;
+ }
+ 
++#[cfg_attr(any(target_os = "linux", target_os = "android"), link(name = "dl_egl"))]
++extern "C" {
++    fn dlopen_new(filename: *const raw::c_char, flags: raw::c_int) -> *mut raw::c_void;
++    fn dlsym_new(handle: *mut raw::c_void, symbol: *const raw::c_char) -> *mut raw::c_void;
++    // fn dlerror_new() -> *mut raw::c_char;
++
++}
++
++
+ #[repr(C)]
+ struct DlInfo {
+     dli_fname: *const raw::c_char,

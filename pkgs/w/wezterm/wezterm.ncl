@@ -3,18 +3,31 @@
   drvs,
   wezterm | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/wezterm/wezterm/archive/refs/tags/20240203-110809-5046fc22.tar.gz",
-      sha256sum = "3a02a68016ef48cdb2127308be20acafe94a568411e95b0e64dc590cf877b401"
+      # uri = "https://github.com/wezterm/wezterm/archive/refs/tags/20240203-110809-5046fc22.tar.gz",
+      # sha256sum = "3a02a68016ef48cdb2127308be20acafe94a568411e95b0e64dc590cf877b401",
+
+      uri = "https://github.com/wezterm/wezterm/archive/6a493f88fab06a792308e0c704790390fd3c6232.tar.gz",
+      sha256sum = "5edb9988a93fdea46e9e305e4fbbe886ed808cf200d006c4931969fe8cabd200"
     },
 
     nonCrateSourceInputs = [
       { src = singleSource },
       {
         src = {
-          uri = "https://github.com/wezterm/xcb-imdkit-rs/archive/215ce4b08ac9c4822e541efd4f4ffb1062806051.tar.gz",
-          sha256sum = "ccc3c08069eea1764eb72bf7e21e3e80bd9c0a528bae6eb41f7a4d68332ef63d"
+          # uri = "https://github.com/wezterm/xcb-imdkit-rs/archive/215ce4b08ac9c4822e541efd4f4ffb1062806051.tar.gz",
+          # sha256sum = "ccc3c08069eea1764eb72bf7e21e3e80bd9c0a528bae6eb41f7a4d68332ef63d",
+
+          uri = "https://github.com/wezterm/xcb-imdkit-rs/archive/212330f7c6c37794d78061a773e8f4f9e4785bbb.tar.gz",
+          sha256sum = "0391488f3be39af28afa2a43f334b062bd4ab6d06e217ddf26d8d447d2ce5e85",
         },
         dest = "vendor-xcb-imdkit-rs"
+      },
+      {
+        src = {
+          uri = "https://github.com/wez/finl_unicode/archive/a1892f26245529f2ef3877a9ebd610c96cec07a6.tar.gz",
+          sha256sum = "181c938f6150fa392deebe3f8134a30f07e9b4ab13cf21ce620e4dad90dde311",
+        },
+        dest = "vendor-finl_unicode"
       },
 
       # https://github.com/gentoo/gentoo/blob/master/x11-terms/wezterm/wezterm-20240203.110809-r2.ebuild
@@ -64,29 +77,42 @@
     ],
 
     configurePhase = [
-      "rm ${SRC}/.cargo/config",
+      # "rm ${SRC}/.cargo/config",
       m%"
-            echo "
+            echo '
             [source.crates-io]
-            replace-with = \"vendored-sources\"
+            replace-with = "vendored-sources"
             
 
 
-            [source.\"git+https://github.com/wez/xcb-imdkit-rs.git?rev=215ce4b08ac9c4822e541efd4f4ffb1062806051#215ce4b0\"]
-            rev = \"215ce4b08ac9c4822e541efd4f4ffb1062806051\"
-            git = \"https://github.com/wez/xcb-imdkit-rs.git\"
-            replace-with = \"vendored-sources\"
+            [source."git+https://github.com/wez/xcb-imdkit-rs.git?rev=215ce4b08ac9c4822e541efd4f4ffb1062806051#215ce4b0"]
+            rev = "215ce4b08ac9c4822e541efd4f4ffb1062806051"
+            git = "https://github.com/wez/xcb-imdkit-rs.git"
+            replace-with = "vendored-sources"
 
+            [source."git+https://github.com/wezterm/xcb-imdkit-rs.git?rev=212330f7c6c37794d78061a773e8f4f9e4785bbb#212330f7"]
+            rev = "212330f7c6c37794d78061a773e8f4f9e4785bbb"
+            git = "https://github.com/wezterm/xcb-imdkit-rs.git"
+            replace-with = "vendored-sources"
+
+            [source."git+https://github.com/wez/finl_unicode.git?branch=no_std#a1892f26245529f2ef3877a9ebd610c96cec07a6"]
+            branch="no_std"
+            git = "https://github.com/wez/finl_unicode.git"
+            replace-with = "vendored-sources"
 
             [source.vendored-sources]
-            directory = \"vendor\"
+            directory = "vendor"
 
-            " > ${SRC}/.cargo/config.toml
+            ' > ${SRC}/.cargo/config.toml
             "%,
       "mv vendor-xcb-imdkit-rs vendor/xcb-imdkit-rs",
-      "cp vendor/log-0.4.20/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
-      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/newer.patch)",
-      "(cd ${SRC}/vendor && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
+      "mv vendor-finl_unicode vendor/finl_unicode",
+      "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
+      "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/finl_unicode/.cargo-checksum.json",
+      # "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/newer.patch)",
+      # "(cd ${SRC}/vendor && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
+      # "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
+      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-git-no-dl.patch)",
     ],
 
     patches = [
@@ -97,6 +123,14 @@
       {
         sha256sum = "6814589c0020887fe2f771de6bead60919ca3bf8890c309f74f0ce2fabb54521",
         file = "wezterm-no-dl.patch",
+      },
+      {
+        sha256sum = "11634f1609a70cd9168c0ae918f7becfb0f45c462ce4af78287d56c864708f58",
+        file = "no-dl.patch",
+      },
+      {
+        sha256sum = "3e80b352ca40067beb2596d8d41d1e6202870a1b108e49d3fd63f69a5e1a12ec",
+        file = "wezterm-git-no-dl.patch"
       }
     ],
 
@@ -131,7 +165,8 @@
         ],
     },
 
-    crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
+    # crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
+    crates = (lib.functions.filterCrates (import "wezterm-crates.json")),
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [
