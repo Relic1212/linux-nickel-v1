@@ -14,7 +14,9 @@ in
           # sha256sum = "3666f01fc52d8a0b0da83e107d74f208f001717824be0b80007f529453aa1e19",
 
           uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/llvm-project-20.1.1.src.tar.xz",
-          sha256sum = "4d5ebbd40ce1e984a650818a4bb5ae86fc70644dec2e6d54e78b4176db3332e0"
+          sha256sum = "4d5ebbd40ce1e984a650818a4bb5ae86fc70644dec2e6d54e78b4176db3332e0",
+          # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/llvm-project-20.1.8.src.tar.xz",
+          # sha256sum = "6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d",
         },
       }
     ],
