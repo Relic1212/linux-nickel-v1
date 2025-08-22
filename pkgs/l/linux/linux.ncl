@@ -1,6 +1,7 @@
 let
-  extra = [
-    m%"
+  getExtra = fun compress =>
+    ([
+      m%"
         echo "
         # CONFIG_PM_DEBUG is not set
         # CONFIG_PM_SLEEP_DEBUG is not set
@@ -113,8 +114,8 @@ let
         # CONFIG_PRIME_NUMBERS_KUNIT_TEST is not set
         " > /tmp/workdir/build/no-test-no-debug.diffconfig
         "%,
-    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/no-test-no-debug.diffconfig",
-    m%"
+      "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/no-test-no-debug.diffconfig",
+      m%"
         echo "
         # CONFIG_JFS_FS is not set
         # CONFIG_XFS_FS is not set
@@ -130,17 +131,17 @@ let
         # CONFIG_CEPH_FS is not set
         " > /tmp/workdir/build/fewer-fs.diffconfig
         "%,
-    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/fewer-fs.diffconfig",
-    m%"
+      "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/fewer-fs.diffconfig",
+      m%"
         echo "
         # CONFIG_KERNEL_BZIP2 is not set
         # CONFIG_KERNEL_GZIP is not set
         # CONFIG_KERNEL_LZ4 is not set
         # CONFIG_KERNEL_LZMA is not set
         # CONFIG_KERNEL_LZO is not set
-        # CONFIG_KERNEL_UNCOMPRESSED is not set
+        %{if compress then "# CONFIG_KERNEL_UNCOMPRESSED is not set" else "CONFIG_HAVE_KERNEL_UNCOMPRESSED=y\nCONFIG_KERNEL_UNCOMPRESSED=y" }
         # CONFIG_KERNEL_XZ is not set
-        CONFIG_KERNEL_ZSTD=y
+        %{if compress then "CONFIG_KERNEL_ZSTD=y" else "# CONFIG_KERNEL_ZSTD is not set\n# CONFIG_KERNEL_BZIP2 is not set" }
         CONFIG_MODULE_COMPRESS=y
         # CONFIG_MODULE_COMPRESS_GZIP is not set
         # CONFIG_MODULE_COMPRESS_NONE is not set
@@ -148,8 +149,8 @@ let
         CONFIG_MODULE_COMPRESS_ZSTD=y
         " > /tmp/workdir/build/compression.diffconfig
         "%,
-    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/compression.diffconfig",
-    m%"
+      "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/compression.diffconfig",
+      m%"
         echo "
         # CONFIG_INFINIBAND is not set
         # CONFIG_XEN is not set
@@ -176,8 +177,9 @@ let
         # CONFIG_DRM_LEGACY is not set
         " > /tmp/workdir/build/misc.diffconfig
         "%,
-    "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/misc.diffconfig",
-  ],
+      "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/misc.diffconfig",
+    ]
+    ),
   kconfigFiles = {
     fedora = {
       file = "kernel-x86_64-fedora.config",
@@ -218,6 +220,13 @@ in
     & {
       options.configFile = kconfigFiles.fedora610,
     },
+  linuxFedoraUncompressed =
+    linux
+    & {
+      options.configFile = kconfigFiles.fedora610,
+
+      options.compress = false
+    },
   linux | lib.MakePackage =
     # let baseConfig = kconfigFiles.fedora
     # let baseConfig = kconfigFiles.fedora610
@@ -243,6 +252,7 @@ in
       options = {
         #  version = linuxHeaders.options.version ,
         version = "6.15.9",
+        compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
       separateBuildDir = true,
@@ -380,7 +390,7 @@ in
         " > /tmp/workdir/build/v4l2loopback.diffconfig
         "%,
         ]
-        @ extra
+        @ (getExtra options.compress)
         @ [
           "./scripts/kconfig/merge_config.sh -m -r -y .config /tmp/workdir/build/v4l2loopback.diffconfig",
           "make "
