@@ -156,7 +156,8 @@
     },
     extraCargoFlags = [
       "--no-default-features",
-      "--verbose",
+      # "--verbose",
+      "--features dbus,dinit,pipewire",
     ],
     nonCrateSourceInputs = [
       {
@@ -178,9 +179,7 @@
         # },
         # dest = "vendor-winit",
       },
-   
     ],
-   
 
     patches = [
       {
@@ -199,10 +198,6 @@
         sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
         file = "ffi.patch"
       },
-      # {
-      #   sha256sum = "02baadaf00bcdeaed1eba634b6bc7248a2f944a849e1e64f8c8872247aee5cd8",
-      #   file = "niri-main-link.patch",
-      # },
       {
         sha256sum = "a18cbc37f29f7789f7c2cb95d7abf8dab5381c044944181a97b4ae1e0daeba7b",
         file = "no-winit.patch"
@@ -216,13 +211,12 @@
       # "(cd /tmp/workdir/src/vendor-winit; tar -xf $(find /tmp/workdir/packed -name '58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz') --strip-components=1)",
     ],
 
-    configurePhase =
-      [
+    configurePhase = [
 
-        # checksum removal from Alpine
-        #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
-        #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
-        m%"
+      # checksum removal from Alpine
+      #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      m%"
             echo "
             [source.crates-io]
             replace-with = \"vendored-sources\"
@@ -241,25 +235,30 @@
 
             " > ${SRC}/.cargo/config.toml
             "%,
-        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
-        # sct
-        # m%"
-        # sed -i \
-        #   's@"xkbcommon",@@g' \
-        #   ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
-        # "%, # echo "
-        # [target.'cfg(all(unix))'.dependencies.xkbcommon]
-        # version = \"0.8.0\"
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
+      # sct
+      # m%"
+      # sed -i \
+      #   's@"xkbcommon",@@g' \
+      #   ${SRC}/vendor/smithay-client-toolkit/Cargo.toml
+      # "%, # echo "
+      # [target.'cfg(all(unix))'.dependencies.xkbcommon]
+      # version = \"0.8.0\"
 
-        # " >> ${SRC}/vendor/winit/Cargo.toml
-        # "%,
+      # " >> ${SRC}/vendor/winit/Cargo.toml
+      # "%,
 
-        # winit checksum
-        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json"%,
-        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json"%,
-        m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/libloading/.cargo-checksum.json"%,
-        # "rm -rf vendor/x11-dl",
-        m%"
+      # winit checksum
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/winit/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay-client-toolkit/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/libloading/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/libspa-sys/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/pipewire-sys/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/clang-sys/.cargo-checksum.json"%,
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/bindgen/.cargo-checksum.json"%,
+
+      # "rm -rf vendor/x11-dl",
+      m%"
       echo '
       fn main() {
         println!("cargo:rustc-link-lib=static=EGL");
@@ -271,7 +270,7 @@
       }
       ' > ${SRC}/build.rs
       "%,
-        m%"
+      m%"
       echo '
       #[link(name="EGL",kind="static")]
       #[link(name="gallium_dri",kind="static")]
@@ -280,7 +279,7 @@
       extern {}
       ' >> ${SRC}/src/main.rs
       "%,
-        m%"
+      m%"
       echo '
       #[link(name="EGL",kind="static")]
       #[link(name="gallium_dri",kind="static")]
@@ -289,17 +288,18 @@
       extern {}
       ' >> ${SRC}/src/niri.rs
       "%,
-
-        # m%"sed -i 's@"renderer_gl",@@g' ${SRC}/Cargo.toml"%,
-        m%"sed -i 's@"backend_winit",@@g' ${SRC}/Cargo.toml"%,
-        m%"sed -i 's@"winit",@@g' ${SRC}/Cargo.toml"%,
-        "rm -rf ${SRC}/src/backend/winit.rs",
-        "rm -rf ${SRC}/vendor/winit*",
-        # m%"sed -i 's@"renderer_gl",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
-        m%"sed -i 's@"backend_winit",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
-        # m%"sed -i 's@"renderer_multi",@@g' ${SRC}/Cargo.toml"%,
-        # m%"sed -i 's@"renderer_pixman",@@g' ${SRC}/Cargo.toml"%,
-      ],
+      m%"sed -i 's@"backend_winit",@@g' ${SRC}/Cargo.toml"%,
+      m%"sed -i 's@"winit",@@g' ${SRC}/Cargo.toml"%,
+      "rm -rf ${SRC}/src/backend/winit.rs",
+      "rm -rf ${SRC}/vendor/winit*",
+      m%"sed -i 's@"backend_winit",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
+      # m%"sed -i 's@"renderer_multi",@@g' ${SRC}/Cargo.toml"%,
+      # m%"sed -i 's@"renderer_pixman",@@g' ${SRC}/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
+    ],
 
     release = false,
 
@@ -311,48 +311,116 @@
         drvs.muslBoth,
         drvs.pkgconf,
         llvmProvider,
-        # drvs.clangCc,
+        drvs.clangCc,
         # drvs.clangCcSymlink,
-        (drvs.niriCc & { priority = 1 }),
+        # (drvs.niriCc & { priority = 1 }),
       ]
       @ utilsProviders,
     llvmProvider = drvs.llvmFull,
+    # biDrvs = [
+    #   drvs.expat,
+    #   drvs.jsonC,
+    #   drvs.pcre2,
+    #   # drvs.mesa2,
+    #   # drvs.mesa2NoHidden,
+    #   drvs.mesaExp,
+    #   drvs.wayland,
+    #   drvs.waylandProtocols,
+    #   drvs.libelf,
+    #   drvs.libpciaccess,
+    #   drvs.libdrm,
+    #   drvs.libxkbcommon,
+    #   drvs.pixman,
+    #   drvs.eudev,
+    #   # drvs.libudevZero,
+    #   drvs.seatd,
+    #   drvs.libdisplayinfo,
+    #   drvs.libinput,
+    #   drvs.libffi,
+    #   drvs.libevdev,
+    #   drvs.mtdev,
+    #   drvs.pango,
+    #   drvs.cairo,
+    #   drvs.libpng,
+    #   drvs.freetype,
+    #   drvs.fontconfig,
+    #   drvs.zlibNg,
+    #   drvs.harfbuzz,
+    #   drvs.glib,
+    #   drvs.hwdata,
+    #   drvs.linuxHeaders,
+    #   drvs.spirvTools,
+    #   drvs.spirvLlvmTranslator,
+    #   drvs.cairoGobjectEmpty,
+    #   drvs.libdlEgl,
+    # ],
     biDrvs = [
+      drvs.alsaLibs,
+      drvs.atSpi2Core,
+      drvs.bluez,
+      drvs.cairo,
+      drvs.cairoGobjectEmpty,
+      drvs.dbus,
+      drvs.eudev,
       drvs.expat,
+      drvs.fdkAac,
+      drvs.ffmpeg,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.fribidi,
+      drvs.gdkPixbufFull,
+      drvs.glib,
+      drvs.gperf,
+      drvs.gtk3,
+      drvs.harfbuzz,
+      drvs.hwdata,
+      drvs.jansson,
       drvs.jsonC,
-      drvs.pcre2,
-      # drvs.mesa2,
-      # drvs.mesa2NoHidden,
+      drvs.kmod,
+      drvs.ldacbt,
+      drvs.libcamera,
+      drvs.libdisplayinfo,
+      drvs.libdlEgl,
+      drvs.libdrm,
+      drvs.libelf,
+      drvs.libepoxy,
+      drvs.libevdev,
+      drvs.libffi,
+      drvs.libfreeaptx,
+      drvs.libinput,
+      drvs.libjpegTurbo,
+      drvs.libopus,
+      drvs.libpciaccess,
+      drvs.libpng,
+      drvs.libsndfile,
+      drvs.libusb,
+      drvs.libxkbcommon,
+      drvs.libyaml,
+      drvs.linuxHeaders,
+      drvs.llvmConfigStatic,
+      drvs.lua,
+      drvs.m4,
       drvs.mesaExp,
+      drvs.mtdev,
+      drvs.ncurses,
+      drvs.openssl,
+      drvs.pango,
+      drvs.pcre2,
+      drvs.pixman,
+      drvs.readline,
+      drvs.sbc,
+      drvs.seatd,
+      drvs.spirvLlvmTranslator,
+      drvs.spirvTools,
+      drvs.utilLinux,
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libelf,
-      drvs.libpciaccess,
-      drvs.libdrm,
-      drvs.libxkbcommon,
-      drvs.pixman,
-      # drvs.eudev,
-      drvs.libudevZero,
-      drvs.seatd,
-      drvs.libdisplayinfo,
-      drvs.libinput,
-      drvs.libffi,
-      drvs.libevdev,
-      drvs.mtdev,
-      drvs.pango,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.freetype,
-      drvs.fontconfig,
+      drvs.xz,
       drvs.zlibNg,
-      drvs.harfbuzz,
-      drvs.glib,
-      drvs.hwdata,
-      drvs.linuxHeaders,
-      drvs.spirvTools,
-      drvs.spirvLlvmTranslator,
-      drvs.cairoGobjectEmpty,
-      drvs.libdlEgl,
+      drvs.zstd,
+      drvs.pipewire,
+      drvs.dinit,
+      drvs.libstdcppCompat,
     ],
   },
 }
