@@ -71,17 +71,18 @@
       # drvs.pkgconf,
     ]
   },
-  gmpWithCxx = gmp & {
-    extraConfigureFlags = [
-      "--enable-cxx",
-    ],
+  gmpWithCxx =
+    gmp
+    & {
+      extraConfigureFlags = [
+        "--enable-cxx",
+      ],
 
-    biDrvs|priority 1 = [
-      drvs.m4,
-      drvs.pkgconf,
-    ]
-
-  }
+      biDrvs | priority 1 = [
+        drvs.m4,
+        drvs.pkgconf,
+      ]
+    }
 }
 & {
   drvs,
