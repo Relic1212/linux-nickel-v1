@@ -83,13 +83,6 @@
             [source.crates-io]
             replace-with = "vendored-sources"
             
-
-
-            [source."git+https://github.com/wez/xcb-imdkit-rs.git?rev=215ce4b08ac9c4822e541efd4f4ffb1062806051#215ce4b0"]
-            rev = "215ce4b08ac9c4822e541efd4f4ffb1062806051"
-            git = "https://github.com/wez/xcb-imdkit-rs.git"
-            replace-with = "vendored-sources"
-
             [source."git+https://github.com/wezterm/xcb-imdkit-rs.git?rev=212330f7c6c37794d78061a773e8f4f9e4785bbb#212330f7"]
             rev = "212330f7c6c37794d78061a773e8f4f9e4785bbb"
             git = "https://github.com/wezterm/xcb-imdkit-rs.git"
@@ -109,25 +102,10 @@
       "mv vendor-finl_unicode vendor/finl_unicode",
       "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
       "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/finl_unicode/.cargo-checksum.json",
-      # "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/newer.patch)",
-      # "(cd ${SRC}/vendor && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
-      # "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-no-dl.patch)",
       "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-git-no-dl.patch)",
     ],
 
     patches = [
-      {
-        sha256sum = "666d7a35fe843dfbf1491c67f4099ef7cdf74f6d7d617bb3988e35500880626d",
-        file = "newer.patch"
-      },
-      {
-        sha256sum = "6814589c0020887fe2f771de6bead60919ca3bf8890c309f74f0ce2fabb54521",
-        file = "wezterm-no-dl.patch",
-      },
-      {
-        sha256sum = "11634f1609a70cd9168c0ae918f7becfb0f45c462ce4af78287d56c864708f58",
-        file = "no-dl.patch",
-      },
       {
         sha256sum = "3e80b352ca40067beb2596d8d41d1e6202870a1b108e49d3fd63f69a5e1a12ec",
         file = "wezterm-git-no-dl.patch"
@@ -138,7 +116,7 @@
 
     extraCargoFlags = [
       "--no-default-features",
-      "--features wayland",
+      "--features wayland,vendored-fonts",
     ],
     extraEnv = {
       CARGO_FEATURE_USE_SYSTEM_LIB = "1",
@@ -164,6 +142,13 @@
           # "-Awarnings",
         ],
     },
+
+    postInstallPhase = [
+      "install -d -m0755 ${DEST}/usr/share/applications",
+      "install -d -m0755 ${DEST}/usr/share/fish/completions",
+      "install -m0755 ${SRC}/assets/wezterm.desktop ${DEST}/usr/share/applications",
+      "install -m0755 ${SRC}/assets/shell-completion/fish ${DEST}/usr/share/fish/completions/wezterm.fish",
+    ],
 
     # crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
     crates = (lib.functions.filterCrates (import "wezterm-crates.json")),
