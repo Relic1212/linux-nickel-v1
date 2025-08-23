@@ -13,7 +13,18 @@
       "-Dnautilus_extension=false",
       "-Dsearch_provider=false",
     ],
+
+    preConfigurePhase = [
+      m%"
+      sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/subprojects/vte/src/widget.cc
+      "%,
+      m%"
+      sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/src/terminal.cc
+      "%,
+      m%"sed -i 's@g_module_open@g_module_open_gross_hack@g' ${SRC}/src/server.cc"%,
+    ],
     llvmProvider = drvs.llvmFull,
+    pythonProvider = drvs.pythonDynamic,
     biDrvs = [
       drvs.fastFloat,
 
@@ -64,7 +75,7 @@
       drvs.libtool,
       drvs.libvorbis,
       drvs.libxkbcommon,
-      drvs.libxml2,
+      drvs.libxml2DynamicCmake,
       drvs.libxmlb,
       drvs.libyaml,
       drvs.linuxHeaders,
@@ -95,6 +106,8 @@
       drvs.pango,
       drvs.vte,
       drvs.libhandy,
+      drvs.libxslt,
+      drvs.itstool,
     ],
   }
 }
@@ -103,9 +116,13 @@
   drvs,
   libhandy | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/libhandy/-/archive/1.0.3/libhandy-1.0.3.tar.gz",
-      sha256sum = "80c7f015b8ed0888f0f6a5cb15015d120cdf0dfcacf9dddb06d4e93bd8ffef1f"
+      # uri = "https://gitlab.gnome.org/GNOME/libhandy/-/archive/1.0.3/libhandy-1.0.3.tar.gz",
+      # sha256sum = "80c7f015b8ed0888f0f6a5cb15015d120cdf0dfcacf9dddb06d4e93bd8ffef1f",
+
+      uri = "https://gitlab.gnome.org/GNOME/libhandy/-/archive/1.8.3/libhandy-1.8.3.tar.gz",
+      sha256sum = "7e7670f5d0a6d0adc24b888da44dab938a6f52472b8944d6dd4e31b6d3569a5f"
     },
+
     llvmProvider = drvs.llvmFull,
 
     extraMesonArgs = [
@@ -114,6 +131,22 @@
       "-Dtests=false",
       "-Dexamples=false",
       "-Dglade_catalog=disabled",
+    ],
+
+    preConfigurePhase = [
+      m%"
+      for f in $(find ${SRC} -name meson.build); do
+        sed -i 's@shared_library@library@g' ${f}
+      done
+      "%,
+    ],
+
+    patches = [
+      {
+        sha256sum = "8d84486dc04a8fcd592d718587cf1bb01ba786fb17cd4e0a590100c5464d981e",
+
+        file = "libhandy.patch",
+      }
     ],
 
     biDrvs = [
@@ -152,7 +185,33 @@
       drvs.llvmConfigStatic,
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
+      # drvs.gtk3Libhandy,
       drvs.gtk3,
     ],
   }
+}
+& {
+  lib,
+  drvs,
+  gtk3,
+  gtk3Libhandy =
+    gtk3
+    & {
+      postInstallPhase =
+        let symbols = [
+          "gtk_progress_tracker_init_copy",
+          "gtk_progress_tracker_start",
+          "gtk_progress_tracker_finish",
+          "gtk_progress_tracker_advance_frame",
+          "gtk_progress_tracker_skip_frame",
+          "gtk_progress_tracker_get_state",
+          "gtk_progress_tracker_get_iteration",
+          "gtk_progress_tracker_get_iteration_cycle",
+          "gtk_progress_tracker_get_progress",
+          "gtk_progress_tracker_get_ease_out_cubic",
+        ]
+        in
+
+        std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libgtk-3.a") symbols,
+    }
 }

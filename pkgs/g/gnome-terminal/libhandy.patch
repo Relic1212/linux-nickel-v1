@@ -1,0 +1,86 @@
+diff --git a/src/meson.build b/src/meson.build
+index dba81ba..6f0b6b8 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -69,7 +69,7 @@ hdy_private_enums = gnome.mkenums_simple('hdy-enums-private',
+                   '#endif\n' +
+                   '\n' +
+                   '#include "hdy-enums.h"\n',
+-  install_header: false,
++  install_header: true,
+ )
+ 
+ libhandy_public_sources += [hdy_public_enums[0]]
+@@ -235,17 +235,17 @@ config_h.set_quoted('GETTEXT_PACKAGE', 'libhandy')
+ config_h.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
+ config_h.set_quoted('PREFIX', get_option('prefix'))
+ 
+-# Symbol visibility
+-if target_system == 'windows'
+-  config_h.set('DLL_EXPORT', true)
+-  config_h.set('_HDY_EXTERN', '__declspec(dllexport) extern')
+-  if cc.get_id() != 'msvc'
+-    libhandy_c_args += ['-fvisibility=hidden']
+-  endif
+-else
+-  config_h.set('_HDY_EXTERN', '__attribute__((visibility("default"))) extern')
+-  libhandy_c_args += ['-fvisibility=hidden']
+-endif
++# # Symbol visibility
++# if target_system == 'windows'
++#   config_h.set('DLL_EXPORT', true)
++#   config_h.set('_HDY_EXTERN', '__declspec(dllexport) extern')
++#   if cc.get_id() != 'msvc'
++#     libhandy_c_args += ['-fvisibility=hidden']
++#   endif
++# else
++#   config_h.set('_HDY_EXTERN', '__attribute__((visibility("default"))) extern')
++#   libhandy_c_args += ['-fvisibility=hidden']
++# endif
+ 
+ configure_file(
+          output: 'config.h',
+@@ -253,14 +253,14 @@ configure_file(
+ )
+ 
+ libhandy_link_args = []
+-libhandy_symbols_file = 'libhandy.syms'
++# libhandy_symbols_file = 'libhandy.syms'
+ 
+-# Check linker flags
+-ld_version_script_arg = '-Wl,--version-script,@0@/@1@'.format(meson.source_root(),
+-                                                              libhandy_symbols_file)
+-if cc.links('int main() { return 0; }', args : ld_version_script_arg, name : 'ld_supports_version_script')
+-  libhandy_link_args += [ld_version_script_arg]
+-endif
++# # Check linker flags
++# ld_version_script_arg = '-Wl,--version-script,@0@/@1@'.format(meson.source_root(),
++#                                                               libhandy_symbols_file)
++# if cc.links('int main() { return 0; }', args : ld_version_script_arg, name : 'ld_supports_version_script')
++#   libhandy_link_args += [ld_version_script_arg]
++# endif
+ 
+ # set default libdir on win32 for libhandy target to keep MinGW compatibility
+ if target_system == 'windows'
+@@ -273,7 +273,7 @@ libhandy = library(
+   'handy-' + apiversion,
+   libhandy_sources,
+ 
+-            soversion: soversion,
++            # soversion: soversion,
+                c_args: libhandy_c_args,
+          dependencies: libhandy_deps,
+   include_directories: [ root_inc, src_inc ],
+@@ -283,9 +283,9 @@ libhandy = library(
+ )
+ 
+ libhandy_dep = declare_dependency(
+-              sources: libhandy_generated_headers,
+-         dependencies: libhandy_public_deps,
+-            link_with: libhandy,
++              sources: libhandy_sources,
++         dependencies: libhandy_deps,
++            link_whole: libhandy,
+   include_directories: include_directories('.'),
+ )
+ 
