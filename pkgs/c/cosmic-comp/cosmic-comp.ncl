@@ -2,202 +2,52 @@
   lib,
   drvs,
   cosmicComp | lib.CargoPackage = {
-    singleSource = {
-      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-      sha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d"
+
+    unpackPhase = [
+      "cd /tmp/workdir/src",
+      "tar xvf /cosmic-comp-sources.tar",
+    ],
+    preConfigurePhase = [
+      "export CARGO_HOME=${SRC}/.cargo",
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
+    ],
+
+    extraEnv = {
+      # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
+      EXTRA_RUSTFLAGS =
+        [
+          "-C link-arg=-Wl,--push-state,--no-as-needed",
+          "-C link-arg=-lc++",
+
+          # pkg-config --libs --static libinput
+          "-C link-arg=-linput",
+          "-C link-arg=-lm",
+          "-C link-arg=-ludev",
+          "-C link-arg=-pthread",
+          "-C link-arg=-levdev",
+          "-C link-arg=-lrt",
+          "-C link-arg=-lmtdev",
+          # input
+        ]
+        @ (
+          let s = "-lEGL -lpthread -lpthread -lz -lgbm -lGLESv2 -lgallium_dri -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -ldl -lpthread -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link -ldrm_amdgpu -lelf -lz -ldrm_intel -ldrm -lpciaccess -lz -ldrm -lwayland-client -lwayland-server -lm -pthread -lrt -lffi"
+          in
+          std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
+        )
+        @ [
+          "-C link-arg=-Wl,--pop-state",
+        ],
     },
 
-    nonCrateSourceInputs = [{ src = singleSource }] @ (import "source.ncl"),
-
-    crates = (lib.functions.filterCrates (import "cosmic-comp-crates.json")),
-
-    configurePhase = [
-      "mv ${SRC}/vendor-taffy ${SRC}/vendor/taffy",
-      "mv ${SRC}/vendor-id-tree ${SRC}/vendor/id-tree",
-      "mv ${SRC}/vendor-smithay-egui ${SRC}/vendor/smithay-egui",
-      "mv ${SRC}/vendor-rust-atomicwrites ${SRC}/vendor/rust-atomicwrites",
-      "mv ${SRC}/vendor-cosmic-protocols ${SRC}/vendor/cosmic-protocols",
-      "mv ${SRC}/vendor-cosmic-settings-daemon ${SRC}/vendor/cosmic-settings-daemon",
-      "mv ${SRC}/vendor-cosmic-text ${SRC}/vendor/cosmic-text",
-      "mv ${SRC}/vendor-freedesktop-icons ${SRC}/vendor/freedesktop-icons",
-      "mv ${SRC}/vendor-glyphon ${SRC}/vendor/glyphon",
-      "mv ${SRC}/vendor-libcosmic ${SRC}/vendor/libcosmic",
-      "mv ${SRC}/vendor-smithay-clipboard ${SRC}/vendor/smithay-clipboard",
-      "mv ${SRC}/vendor-softbuffer ${SRC}/vendor/softbuffer",
-      "mv ${SRC}/vendor-window_clipboard ${SRC}/vendor/window_clipboard",
-      "mv ${SRC}/vendor-smithay ${SRC}/vendor/smithay",
-
-# https://github.com/Drakulix/id-tree.git?branch=feature%2Fcopy_clone#632a57d6
-        # m%"
-        # echo '
-        # [source.crates-io]
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/DioxusLabs/taffy?rev=7781c70#7781c70241f7f572130c13106f2a869a9cf80885"]
-        # git = "https://github.com/DioxusLabs/taffy"
-        # rev = "7781c70"
-        # replace-with = "vendored-sources"
-
-        # [source."https://github.com/Drakulix/id-tree.git?branch=feature%2Fcopy_clone#632a57d6"]
-        # git = "https://github.com/Drakulix/id-tree.git"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/Smithay/smithay-egui.git?rev=e720136#e7201366b88e4fb20d0c6618a6cac9acc6299e07"]
-        # git = "https://github.com/Smithay/smithay-egui.git"
-        # rev = "e720136"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/jackpot51/rust-atomicwrites#043ab4859d53ffd3d55334685303d8df39c9f768"]
-        # git = "https://github.com/jackpot51/rust-atomicwrites"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os//cosmic-protocols?branch=main#bc4af918"]
-        # git = "https://github.com/pop-os//cosmic-protocols"
-        # replace-with = "vendored-sources"
-
-        # [source."https://github.com/pop-os//cosmic-protocols?branch=main#bc4af918"]
-        # git = "https://github.com/pop-os//cosmic-protocols"
-        # branch = "main"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/cosmic-settings-daemon#e2aa1056900d6f8c9c7555c0401aa7c99281eb06"]
-        # git = "https://github.com/pop-os/cosmic-settings-daemon"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/cosmic-text.git#9125dd48b771e9aa7833d106a9850e935f71eaa6"]
-        # git = "https://github.com/pop-os/cosmic-text.git"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/freedesktop-icons#bfc22d531596b57646dc47bcd70b2eb6f3152cd4"]
-        # git = "https://github.com/pop-os/freedesktop-icons" 
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/glyphon.git?tag=iced-0.14-dev#6ef9d12a20cfd0f7bdf38136a26ded9f7459ec8b"]
-        # git = "https://github.com/pop-os/glyphon.git"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/libcosmic/#8a0e74b189f53dae9b8001c6fa5cf1820b3ececb"]
-        # git = "https://github.com/pop-os/libcosmic/"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/smithay-clipboard?tag=pop-dnd-5#5a3007def49eb678d1144850c9ee04b80707c56a"]
-        # git = "https://github.com/pop-os/smithay-clipboard"
-        # tag = "pop-dnd-5"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/softbuffer?tag=cosmic-4.0#6e75b1ad7e98397d37cb187886d05969bc480995"]
-        # git = "https://github.com/pop-os/softbuffer"
-        # replace-with = "vendored-sources"
-
-        # [source."git+https://github.com/pop-os/window_clipboard.git?tag=pop-0.13-2#6b9faab87bea9cebec6ae036906fd67fed254f5f"]
-        # git = "https://github.com/hecrj/window_clipboard"
-        # replace-with = "vendored-sources"
-        
-        # [source."git+https://github.com/smithay/smithay//?rev=ce61c9b#ce61c9b3293b13adf03863848426f0d7c4907c3e"]
-        # git = "https://github.com/smithay/smithay//"
-        # rev = "ce61c9b" 
-        # replace-with = "vendored-sources"
-
-        # [source.vendored-sources]
-        # directory = "vendor"
-        # ' > ${SRC}/.cargo/config.toml
-        # "%,
-
-        m%"
-        echo '
-        [source.crates-io]
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/DioxusLabs/taffy?rev=7781c70"]
-git = "https://github.com/DioxusLabs/taffy"
-rev = "7781c70"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/Drakulix/id-tree.git?branch=feature/copy_clone"]
-git = "https://github.com/Drakulix/id-tree.git"
-branch = "feature/copy_clone"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/Smithay/smithay-egui.git?rev=e720136"]
-git = "https://github.com/Smithay/smithay-egui.git"
-rev = "e720136"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/jackpot51/rust-atomicwrites"]
-git = "https://github.com/jackpot51/rust-atomicwrites"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os//cosmic-protocols?branch=main"]
-git = "https://github.com/pop-os//cosmic-protocols"
-branch = "main"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/cosmic-settings-daemon"]
-git = "https://github.com/pop-os/cosmic-settings-daemon"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/cosmic-text.git"]
-git = "https://github.com/pop-os/cosmic-text.git"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/freedesktop-icons"]
-git = "https://github.com/pop-os/freedesktop-icons"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/glyphon.git?tag=iced-0.14-dev"]
-git = "https://github.com/pop-os/glyphon.git"
-tag = "iced-0.14-dev"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/libcosmic/"]
-git = "https://github.com/pop-os/libcosmic/"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/smithay-clipboard?tag=pop-dnd-5"]
-git = "https://github.com/pop-os/smithay-clipboard"
-tag = "pop-dnd-5"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/softbuffer?tag=cosmic-4.0"]
-git = "https://github.com/pop-os/softbuffer"
-tag = "cosmic-4.0"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/window_clipboard.git?tag=pop-0.13-2"]
-git = "https://github.com/pop-os/window_clipboard.git"
-tag = "pop-0.13-2"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/smithay/smithay//?rev=ce61c9b"]
-git = "https://github.com/smithay/smithay//"
-rev = "ce61c9b"
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"
-' > ${SRC}/.cargo/config.toml
-        "%,
-
-
-
-        "cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/taffy",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/id-tree",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/smithay-egui",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/rust-atomicwrites",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/cosmic-protocols",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/cosmic-settings-daemon",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/cosmic-text",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/freedesktop-icons",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/glyphon",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/libcosmic",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/smithay-clipboard",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/softbuffer",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/window_clipboard",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/smithay",
-
-"cp -r ${SRC}/vendor/cosmic-protocols/client-toolkit ${SRC}/vendor/cosmic-client-toolkit",
-"cp ${SRC}/vendor/objc2-0.5.2/.cargo-checksum.json ${SRC}/vendor/cosmic-client-toolkit",
-
+    patches = [
+      {
+        file = "static-gl.patch",
+        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
+      },
+      {
+        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
+        file = "ffi.patch"
+      },
     ],
 
     release = false,
@@ -215,6 +65,7 @@ directory = "vendor"
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
+      drvs.cosmicCompSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,
@@ -302,27 +153,23 @@ directory = "vendor"
     ]
   }
 }
-
-&
-
-{
+& {
   lib,
   drvs,
   cosmicCompSources | lib.DeterministicFetcher = {
-      singleSource = {
+    singleSource = {
       uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
       sha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d"
     },
-    extraEnv={
-      HOME="/tmp/home"
-  },
+    extraEnv = {
+      HOME = "/tmp/home"
+    },
     separateBuildDir = false,
-    buildPhase=[
+    buildPhase = [
       "mkdir -p $HOME",
       "mkdir -p .cargo",
       "cargo vendor --locked >> .cargo/config.toml",
       # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
-
       m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
       "tar cf - . > ../build/%{outputFile}",
     ],
@@ -333,7 +180,6 @@ directory = "vendor"
     outputSha256sum = "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
 
     outputFile = "cosmic-comp-sources.tar",
-
 
     biDrvs = [
       drvs.emptyResolvConf,
