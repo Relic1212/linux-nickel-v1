@@ -1,0 +1,24 @@
+diff --git a/Makefile.am b/Makefile.am
+index fa94f81..96eaeff 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -9,7 +9,6 @@ SUBDIRS = \
+ 	src \
+ 	tools \
+ 	doc \
+-	tests \
+ 	extras
+ 
+ dist_doc_DATA = \
+diff --git a/Makefile.in b/Makefile.in
+index a71b129..108e0aa 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -453,7 +453,6 @@ SUBDIRS = \
+ 	src \
+ 	tools \
+ 	doc \
+-	tests \
+ 	extras
+ 
+ dist_doc_DATA = \
