@@ -17,32 +17,34 @@
     singleSource = {
       uri = "https://github.com/alacritty/alacritty/archive/refs/tags/v0.15.1.tar.gz",
       sha256sum = "b814e30c6271ae23158c66e0e2377c3600bb24041fa382a36e81be564eeb2e36",
-      #uri = "https://github.com/alacritty/alacritty/archive/9eb68039dcb3edf9c87d253532a3ddd6c3cb8c4e.tar.gz",
-      #sha256sum = "3aabf3d88a7ad13b45542588e069e9a7f5f23dfd5d692bc2df394712ca4e7cac"
+      # uri = "https://github.com/alacritty/alacritty/archive/9eb68039dcb3edf9c87d253532a3ddd6c3cb8c4e.tar.gz",
+      # sha256sum = "3aabf3d88a7ad13b45542588e069e9a7f5f23dfd5d692bc2df394712ca4e7cac"
     },
 
     nonCrateSourceInputs = [
       { src = singleSource },
-      # {
-      # src = {
-      #uri ="https://github.com/mahkoh/winit/archive/851b2218b8b68961443f11bad6a9f24bcc68f013.tar.gz",
-      #sha256sum = "0eb6a1e96c0cc5f1cfff2a80de2fb574bb1532a795949d3a853e20af663b561a",
+      {
+        src = {
+          #uri ="https://github.com/mahkoh/winit/archive/851b2218b8b68961443f11bad6a9f24bcc68f013.tar.gz",
+          #sha256sum = "0eb6a1e96c0cc5f1cfff2a80de2fb574bb1532a795949d3a853e20af663b561a",
 
-      #uri = "https://github.com/zuckschwerdt/winit/archive/513604e0cb15da96e6d3c76b4afc5148b1a8f873.tar.gz",
-      #sha256sum = "869c86f75619730c56a22bfa9c73e579b648bebb8033120a49797fa4e611d239",
+          #uri = "https://github.com/zuckschwerdt/winit/archive/513604e0cb15da96e6d3c76b4afc5148b1a8f873.tar.gz",
+          #sha256sum = "869c86f75619730c56a22bfa9c73e579b648bebb8033120a49797fa4e611d239",
 
-      #     uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
-      #     sha256sum = "f53ca2163ab21fe746b4697c18438453b2563e3dc94358a259abd78c047af567",
-      # },
-      # dest ="vendor-winit",
-      # }
+          uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
+          sha256sum = "f53ca2163ab21fe746b4697c18438453b2563e3dc94358a259abd78c047af567",
+        },
+        dest = "vendor-winit",
+      }
     ],
-    crates = (lib.functions.filterCrates (import "alacritty-crates.json"))
-    # & { kbvm = _kbvm_crate} &
-    # (lib.functions.filterCrates (import "kbvm-crates.json")) 
-    # & (lib.functions.filterCrates (import "winit-kbvm-crates.json"))
-    # & (lib.functions.filterCrates (import "winit-dpi-crates.json"))
-    ,
+    crates =
+      {}
+      & (lib.functions.filterCrates (import "alacritty-crates.json"))
+      # & (lib.functions.filterCrates (import "alacritty-newer-crates.json"))
+      & { kbvm = _kbvm_crate }
+      & (lib.functions.filterCrates (import "kbvm-crates.json"))
+      & (lib.functions.filterCrates (import "winit-kbvm-crates.json"))
+      & (lib.functions.filterCrates (import "winit-dpi-crates.json")),
 
     biDrvs = [
       drvs.fontconfig,
@@ -107,13 +109,10 @@
     configurePhase = [
 
       #  "(cd ${SRC}/vendor/winit-0.30.9 && patch -p1 < /tmp/workdir/patches/851b2218b8b68961443f11bad6a9f24bcc68f013.patch)",
-      #"(cd ${SRC}/vendor/winit-0.30.9 && patch -p1 < /tmp/workdir/patches/0001-https-github.com-rust-windowing-winit-pull-4086.patch)",
-
-      #"rm -rf ${SRC}/vendor/winit-*",
-      #"mv ${SRC}/vendor-winit ${SRC}/vendor/winit-0.30.9",
+      "rm -rf ${SRC}/vendor/winit-*",
+      "mv ${SRC}/vendor-winit ${SRC}/vendor/winit-0.30.9",
       "(cd ${SRC}/vendor/winit-0.30.9 && patch -p1 < /tmp/workdir/patches/513604e0cb15da96e6d3c76b4afc5148b1a8f873.patch)",
-
-      #m%"echo '{"package":"'"a809eacf18c8eca8b6635091543f02a5a06ddf3dad846398795460e6e0ae3cc0"'","files":{}}' >  ${SRC}/vendor/winit-0.30.9/.cargo-checksum.json"%,
+      m%"echo '{"package":"'"a809eacf18c8eca8b6635091543f02a5a06ddf3dad846398795460e6e0ae3cc0"'","files":{}}' >  ${SRC}/vendor/winit-0.30.9/.cargo-checksum.json"%,
 
       #"rm -rf ${SRC}/vendor/dpi-0.1.1",
       #"cp -r ${SRC}/vendor/winit-0.30.9/dpi ${SRC}/vendor/dpi-0.1.1",
@@ -141,12 +140,11 @@
             's@"xkbcommon-dl/x11",@@g' \
             ${SRC}/vendor/winit-*/Cargo.toml
         "%,
-
-      # m%"
-      # sed -i \
-      #     's@0.30.8@0.30.9@g' \
-      #     ${SRC}/vendor/winit-*/Cargo.toml
-      # "%,
+      m%"
+      sed -i \
+          's@0.30.8@0.30.9@g' \
+          ${SRC}/vendor/winit-*/Cargo.toml
+      "%,
       m%"
         sed -i \
             's@"std"@"std","serde"@g' \
@@ -179,6 +177,8 @@
             's@"dlopen",@@g' \
             ${SRC}/vendor/glutin-*/Cargo.toml
         "%,
+      "sed -i 's@GlobalGenerator@StaticGenerator@g' ${SRC}/alacritty/build.rs",
+      # "sed -i 's@gl_generator::StructGenerator@gl_generator::StaticStructGenerator@g' ${SRC}/vendor/glutin_egl_sys-0.7.1/build.rs",
     ],
     release = false,
 
