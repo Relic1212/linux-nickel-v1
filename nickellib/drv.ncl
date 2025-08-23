@@ -15,6 +15,9 @@ let DrvSchema = {
   buildInChroot | Bool,
   enableCcache | Bool,
   symlinkBuldInputs | Bool,
+  deterministicFetcher | optional,
+  outputFile | optional,
+  outputSha256sum | optional,
 }
 in
 let drvUtils = {
@@ -49,29 +52,40 @@ let drvUtils = {
   ),
 
   pkgToDrv = (fun p =>
-    let d | DrvSchema = {
-      # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
+    let d | DrvSchema =
+      {
+        # buildInputDrvs = sortStringArray (std.array.map (fun x => x.drvHash) p.buildInputs),
 
-      buildInputDrvs = (
-        std.array.map
-          (fun x =>
-            let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in
-            if data.dest == "" then
-              data.drvHash
-            else
-              data
-          )
-          (std.array.sort (buildInputCmp) p.buildInputsValidated)
-      ),
+        buildInputDrvs = (
+          std.array.map
+            (fun x =>
+              let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in
+              if data.dest == "" then
+                data.drvHash
+              else
+                data
+            )
+            (std.array.sort (buildInputCmp) p.buildInputsValidated)
+        ),
 
-      sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
-      patchDrvs = p.patches,
-      extraFileDrvs = p.extraFiles,
-      scriptContent = p.scriptContent,
-      buildInChroot = p.buildInChroot,
-      enableCcache = p.enableCcache,
-      symlinkBuldInputs = p.symlinkBuldInputs,
-    }
+        sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
+        patchDrvs = p.patches,
+        extraFileDrvs = p.extraFiles,
+        scriptContent = p.scriptContent,
+        buildInChroot = p.buildInChroot,
+        enableCcache = p.enableCcache,
+        symlinkBuldInputs = p.symlinkBuldInputs,
+      }
+      & (
+        if p.deterministicFetcher then
+          {
+            deterministicFetcher = p.deterministicFetcher,
+            outputFile = p.outputFile,
+            outputSha256sum = p.outputSha256sum
+          }
+        else
+          {}
+      )
     in d
   ),
   pkgToJson = (fun p => let drv = pkgToDrv p in drvToJson drv),

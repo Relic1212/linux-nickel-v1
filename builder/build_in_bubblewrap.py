@@ -99,24 +99,22 @@ def link_workdir(h, name):
     )
 
 
-# def prepare_sysroot_copy(drv, workdir) -> list:
-#     bwrap_bi_drv_args = []
-
-#     for bi_drv in drv["buildInputDrvs"]:
-#         if type(bi_drv) is str:
-#             bi_dest = dirpaths.get_basedir() + "/" + bi_drv + "-workdir/out/destdir"
-#             bi_sysroot_dest = workdir + "/sysroot/"
-#         else:
-#             bi_dest = dirpaths.get_basedir() + "/" + bi_drv["drvHash"] + "-workdir/out/destdir"
-#             bi_sysroot_dest = workdir + "/sysroot/" + bi_drv["dest"]
-
-
-
-#         print(f"copying from {bi_dest}/ to {bi_sysroot_dest}")
-#         util_functions.copy_root(
-#             src=bi_dest + "/", dest=bi_sysroot_dest)
-#     return bwrap_bi_drv_args
-
+def check_deterministic_output(output_path: str, filename: str, sha256sum: str):
+    outputs = os.listdir(output_path)
+    if len(outputs)>1:
+        raise Exception(f"ERROR {output_path} ({filename}) has more than 1 file")
+    elif len(outputs) != 1:
+        raise Exception(f"no outputs (not {filename}) in " + output_path)
+    output_filepath = f"{output_path}/{filename}"
+    if not os.path.isfile(output_filepath):
+        raise Exception(f"{output_filepath} is not a file")
+    
+    computed = hashes.compute_file_or_dir_sha256sum(output_filepath)
+    print("verifying", output_filepath)
+    if computed != sha256sum:
+        print(f"ERROR: {computed}!={sha256sum}")
+        raise Exception(f"Wrong sha256sum for {output_filepath}")
+    
 
 def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) -> None:
 
@@ -136,6 +134,15 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
 
     sandboxed = drv["buildInChroot"]
     uses_ccache = drv["enableCcache"]
+
+
+    #TODO: this should always be set
+    if "deterministicFetcher" in drv.keys():
+        deterministic_fetcher = True
+        output_file = drv["outputFile"]
+        output_sha256sum =drv["outputSha256sum"]
+    else:
+        deterministic_fetcher=False
     # sysroot_drv_hash = drv["sysrootDrvHash"] # the goal
     sysroot_drv_hash = pkghash2sysroothash[h]
 
@@ -320,7 +327,7 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
         with open(f"{workdir}/error.log", "a", encoding="utf-8") as f_error:
             # bubblewrap.run_in_bwrap_chroot(sysroot=sysroot, extra_bwrap_args=args, env=senv, stderr=errorfile,stdout=logfile)
             bwrap_wrap = bubblewrap.get_bwrap_wrap(
-                sysroot=sysroot, sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args
+                sysroot=sysroot, sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args, network=deterministic_fetcher
             )
             chroot_string = ("#!/bin/sh\n" + ''.join([s+" " for s in bwrap_wrap])[
                              : -1-len("/tmp/workdir/build.sh")] + "sh\n")
@@ -356,6 +363,12 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
             print("env =", senv)
             print(f"Failed to build {name}")
             raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
+    if deterministic_fetcher:
+        check_deterministic_output(
+         workdir + "/out/destdir",
+         output_file,
+         output_sha256sum   
+        )
     subprocess.run(["touch", status_file], check=True)
     t2 = timeit.default_timer()
     buildtime = datetime.timedelta(seconds=t2-t1)

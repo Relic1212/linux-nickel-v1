@@ -89,6 +89,7 @@ in
           let _bic = buildInChroot in
           let _ec = enableCcache in
           let _sbi = symlinkBuldInputs in
+          let df = deterministicFetcher, of = outputFile, oss = outputSha256sum in
           drvUtils.pkgToHash {
             name = _name,
             buildInputsValidated = _bs,
@@ -99,8 +100,14 @@ in
             buildInChroot = _bic,
             enableCcache = _ec,
             symlinkBuldInputs = _sbi,
+            deterministicFetcher = df,
+            outputFile = of,
+            outputSha256sum = oss
           },
         options | default = {},
+        deterministicFetcher | Bool | default = false,
+        outputFile | String | default = "",
+        outputSha256sum | String | default = "",
 
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
@@ -489,3 +496,4 @@ in
     }
 }
 & (import "packagetypes/MesonPackage.ncl")
+& (import "packagetypes/DeterministicFetcher.ncl")
