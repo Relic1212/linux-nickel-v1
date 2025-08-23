@@ -2,16 +2,11 @@
   lib,
   drvs,
   libdlEgl | lib.Package = {
-    # singleSource = {
-    #   uri = "%{path_to}/libdl_egl.a",
-    #   sha256sum = "f5a0c94bca5de6b4a4141cf1950e614c26855b6397a70bebc81acac1f1fb5af2",
-
-    # },
 
     extraFiles = [
       {
 
-        sha256sum = "133074cafb3c338bcfbc17e5061e8e16acaef1fb72513ed4963096efaf6906c2",
+        sha256sum = "9798c2226e0da713789b3260dc9bcc75699a8a02ed407ba3986da908bb12cb6b",
         file = "libdl_egl.c",
       }
     ],
