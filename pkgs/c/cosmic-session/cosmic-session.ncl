@@ -1,11 +1,25 @@
 {
   lib,
   drvs,
-  cosmicComp | lib.CargoPackage = {
+  _CargoFetcher,
+  cosmicSessionSources | lib.DeterministicFetcher =
+    _CargoFetcher
+    & {
+      singleSource = {
+        uri = "https://github.com/pop-os/cosmic-session/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
+        sha256sum = "7a4953520fc313dbf8b1292a88cf29153c32b953ffce2c33247355c20113b838"
+      },
+      outputSha256sum = "97d29b368657b5d2bd4a3634d9914780a55721e8e5ce95e227b6432d9ccd8337"
+    },
+}
+& {
+  lib,
+  drvs,
+  cosmicSession | lib.CargoPackage = {
 
     unpackPhase = [
       "cd /tmp/workdir/src",
-      "tar xvf /cosmic-comp-sources.tar",
+      "tar xvf /sources.tar",
     ],
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
@@ -38,28 +52,19 @@
           "-C link-arg=-Wl,--pop-state",
         ],
     },
-
-    patches = [
-      {
-        file = "static-gl.patch",
-        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
-      },
-      {
-        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
-        file = "ffi.patch"
-      },
+    extraCargoFlags = [
+      "--no-default-features",
     ],
 
-    # release = false,
+    postInstallPhase = [
+      # from justfile
+      "install -Dm0755 data/start-cosmic ${DEST}/usr/bin/start-cosmic",
+      m%"sed -i "s|DCONF_PROFILE=cosmic|DCONF_PROFILE=/usr/share/dconf/profile/cosmic|" ${DEST}/usr/bin/start-cosmic"%,
+      "install -Dm0644 data/cosmic.desktop ${DEST}/share/wayland-sessions/cosmic.desktop",
+      "install -Dm0644 data/cosmic-mimeapps.list ${DEST}/usr/share/applications/cosmic-mimeapps.list",
+      "install -Dm644 data/dconf/profile/cosmic ${DEST}/usr/share/dconf/profile/cosmic",
 
-    cargoFlags,
-    target,
-
-    buildPhase = [
-      "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
-    ],
-    installPhase = [
-      "make TARGET=%{target}/release DESTDIR=$DEST install",
+      # there's also a systemd file that we don't install
     ],
 
     utilsProviders,
@@ -76,7 +81,7 @@
 
     biDrvs = [
       drvs.gnumake,
-      drvs.cosmicCompSources,
+      drvs.cosmicSessionSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,
@@ -145,97 +150,4 @@
       drvs.libstdcppCompat,
     ],
   },
-
-  testFetcher | lib.DeterministicFetcher = {
-    buildPhase = [
-      "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-      "cp epoch-1.0.0-alpha.7.tar.gz ${DEST}/out.tar.gz",
-    ],
-    outputFile = "out.tar.gz",
-    outputSha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d",
-    biDrvs = [
-      drvs.emptyResolvConf
-    ]
-  },
-  emptyResolvConf | lib.Package = {
-    installPhase = [
-      "install -d -m0755 ${DEST}/etc",
-      "touch ${DEST}/etc/resolv.conf",
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
-  cosmicCompSources | lib.DeterministicFetcher = {
-    singleSource = {
-      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-      sha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d"
-    },
-    extraEnv = {
-      HOME = "/tmp/home"
-    },
-    separateBuildDir = false,
-    buildPhase = [
-      "mkdir -p $HOME",
-      "mkdir -p .cargo",
-      "cargo vendor --locked >> .cargo/config.toml",
-      # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
-      m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
-      "tar cf - . > ../build/%{outputFile}",
-    ],
-    installPhase = [
-      "cp ../build/%{outputFile} ${DEST}",
-    ],
-    # outputSha256sum = "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
-    outputSha256sum = "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
-
-    outputFile = "cosmic-comp-sources.tar",
-
-    biDrvs = [
-      drvs.emptyResolvConf,
-      drvs.muslShared,
-      drvs.rust,
-      drvs.gitFull,
-      drvs.caCertificates,
-      # drsv.findutils & {priority = 1},
-      # drsv.gnutar & {priority = 1},
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
-  _CargoFetcher | lib.DeterministicFetcher = {
-
-    extraEnv = {
-      HOME = "/tmp/home"
-    },
-    separateBuildDir = false,
-    buildPhase = [
-      "mkdir -p $HOME",
-      "mkdir -p .cargo",
-      "cargo vendor --locked >> .cargo/config.toml",
-      # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
-      m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
-      "tar cf - . > ../build/%{outputFile}",
-    ],
-    installPhase = [
-      "cp ../build/%{outputFile} ${DEST}",
-    ],
-    # outputSha256sum = "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
-    # outputSha256sum = "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
-
-    outputFile = "sources.tar",
-
-    biDrvs = [
-      drvs.emptyResolvConf,
-      drvs.muslShared,
-      drvs.rust,
-      drvs.gitFull,
-      drvs.caCertificates,
-      # drsv.findutils & {priority = 1},
-      # drsv.gnutar & {priority = 1},
-    ]
-  }
 }
