@@ -1,0 +1,82 @@
+diff --git a/src/glx/dri3_glx.c b/src/glx/dri3_glx.c
+index 109bc3dc922..15152a19c80 100644
+--- a/src/glx/dri3_glx.c
++++ b/src/glx/dri3_glx.c
+@@ -436,9 +436,9 @@ dri3_get_swap_interval(__GLXDRIdrawable *pdraw)
+ }
+ 
+ static const struct glx_context_vtable dri3_context_vtable = {
+-   .destroy             = dri_destroy_context,
+-   .bind                = dri_bind_context,
+-   .unbind              = dri_unbind_context,
++   .destroy             = dri_destroy_context__glx,
++   .bind                = dri_bind_context__glx,
++   .unbind              = dri_unbind_context__glx,
+    .wait_gl             = dri3_wait_gl,
+    .wait_x              = dri3_wait_x,
+ };
+diff --git a/src/glx/dri_common.c b/src/glx/dri_common.c
+index 904ba60df2d..076f34f5130 100644
+--- a/src/glx/dri_common.c
++++ b/src/glx/dri_common.c
+@@ -738,7 +738,7 @@ out:
+ }
+ 
+ Bool
+-dri_bind_context(struct glx_context *context, GLXDrawable draw, GLXDrawable read)
++dri_bind_context__glx(struct glx_context *context, GLXDrawable draw, GLXDrawable read)
+ {
+    __GLXDRIdrawable *pdraw, *pread;
+    struct dri_drawable *dri_draw = NULL, *dri_read = NULL;
+@@ -773,13 +773,13 @@ dri_bind_context(struct glx_context *context, GLXDrawable draw, GLXDrawable read
+ }
+ 
+ void
+-dri_unbind_context(struct glx_context *context)
++dri_unbind_context__glx(struct glx_context *context)
+ {
+    driUnbindContext(context->driContext);
+ }
+ 
+ void
+-dri_destroy_context(struct glx_context *context)
++dri_destroy_context__glx(struct glx_context *context)
+ {
+    driReleaseDrawables(context);
+  
+diff --git a/src/glx/dri_common.h b/src/glx/dri_common.h
+index e2645547e8e..dc1216b7b18 100644
+--- a/src/glx/dri_common.h
++++ b/src/glx/dri_common.h
+@@ -89,11 +89,11 @@ dri_common_create_context(struct glx_screen *base,
+                           int renderType);
+ 
+ Bool
+-dri_bind_context(struct glx_context *context, GLXDrawable draw, GLXDrawable read);
++dri_bind_context__glx(struct glx_context *context, GLXDrawable draw, GLXDrawable read);
+ void
+-dri_unbind_context(struct glx_context *context);
++dri_unbind_context__glx(struct glx_context *context);
+ void
+-dri_destroy_context(struct glx_context *context);
++dri_destroy_context__glx(struct glx_context *context);
+ struct glx_context *
+ dri_create_context_attribs(struct glx_screen *base,
+                            struct glx_config *config_base,
+diff --git a/src/glx/drisw_glx.c b/src/glx/drisw_glx.c
+index 5f9b674c1c8..f57ecd5727a 100644
+--- a/src/glx/drisw_glx.c
++++ b/src/glx/drisw_glx.c
+@@ -459,9 +459,9 @@ kopper_get_buffer_age(__GLXDRIdrawable *pdraw)
+ }
+ 
+ static const struct glx_context_vtable drisw_context_vtable = {
+-   .destroy             = dri_destroy_context,
+-   .bind                = dri_bind_context,
+-   .unbind              = dri_unbind_context,
++   .destroy             = dri_destroy_context__glx,
++   .bind                = dri_bind_context__glx,
++   .unbind              = dri_unbind_context__glx,
+    .wait_gl             = drisw_wait_gl,
+    .wait_x              = drisw_wait_x,
+ };

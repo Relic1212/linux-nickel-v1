@@ -215,7 +215,7 @@
       ]
     },
 
-  mesaGlx | lib.MesonPackage =
+  mesaGlx2426 | lib.MesonPackage =
     _mesa2426
     & {
 
