@@ -112,32 +112,3 @@
     ]
   }
 }
-& {
-  lib,
-  drvs,
-  polkit | lib.MesonPackage = {
-    singleSource = {
-      uri = "https://www.freedesktop.org/software/polkit/releases/polkit-121.tar.gz",
-      sha256sum = "9dc7ae341a797c994a5a36da21963f0c5c8e3e5a1780ccc2a5f52e7be01affaa"
-    },
-    biDrvs = [
-      drvs.inih,
-      drvs.scdoc,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libpciaccess,
-      drvs.libxkbcommon,
-      drvs.libdrm,
-      drvs.mtdev,
-      drvs.libevdev,
-      drvs.eudev,
-      drvs.libinput,
-      drvs.glib,
-      drvs.gudev,
-      drvs.pcre2,
-      drvs.zlibNg,
-      drvs.dbus,
-    ]
-  }
-}
