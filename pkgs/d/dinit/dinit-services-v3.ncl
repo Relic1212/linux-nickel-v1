@@ -45,12 +45,13 @@ in
 let _services =
   let useUdev = true in
   let enableBluetooth = true in
+  let useElogind = true in
 
   (
     {
       boot | Service = {
         type = "internal",
-        "depends-ms" = ["tty1", "tty2", "seatd"],
+        "depends-ms" = ["tty1", "tty2"] @ (if useElogind then ["elogind"] else ["seatd"]),
 
         "waits-for" =
           [
@@ -191,11 +192,13 @@ let _services =
         restart = false,
         options = "runs-on-console",
         "depends-on" = ["filesystems"],
-        "waits-for" = [
-          # "udevd",
-          "syslogd",
-          "loadkeys",
-        ],
+        "waits-for" =
+          [
+            # "udevd",
+            "syslogd",
+            "loadkeys",
+          ]
+          @ (if useElogind then ["elogind"] else []),
       },
       "make-shared-root" = {
         type = "scripted",
@@ -309,9 +312,11 @@ let _services =
       upowerd = {
         type = "process",
         command = "/usr/libexec/upowerd",
-        "depends-on" = [
-          "varrw",
-        ],
+        "depends-on" =
+          [
+            "varrw",
+          ]
+          @ (if useElogind then ["elogind"] else []),
         logfile = [
           "/var/log/upowerd.log"
         ]
@@ -403,6 +408,29 @@ let _services =
               "udevd",
               "varrw",
               "dbusd",
+              "filesystems",
+            ]
+          }
+        }
+      else
+        {}
+    )
+    & (
+      if useElogind then
+        {
+          elogind = {
+            type = "process",
+            command = "/usr/libexec/elogind",
+            logfile = "/var/log/elogind.log",
+            smooth-recovery = "yes",
+
+            "depends-on" = [
+              "dbusd",
+              "udevd",
+              "varrw",
+            ],
+            "waits-for" = [
+              "udev-settle",
             ]
           }
         }

@@ -8,12 +8,13 @@
 
       #"cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
       "mkdir /tmp/workdir/out/destdir/rootfs",
-      m%"
-        for d in $(ls /tmp/workdir/sysroot);do
-          echo "copying ${d}"
-          cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
-        done
-        "%,
+      # m%"
+      #   for d in $(ls /tmp/workdir/sysroot);do
+      #     echo "copying ${d}"
+      #     cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
+      #   done
+      #   "%,
+      m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"%,
       "echo 'removing useless stuff'",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
@@ -86,6 +87,10 @@
         # "install -d -m0755 /root",
         "useradd -M -s %{shell} -G wheel,seat,video,audio,input user",
         "useradd -M -s %{shell} -G wheel,seat,video,audio,input user1",
+        "groupadd -r -g 102 polkitd",
+        "useradd -r -u 102 -g 102 -G polkitd -M -s /usr/bin/nologin -d /var/empty polkitd",
+        "chown --verbose -R root:polkitd /usr/share/polkit-1/rules.d",
+        "chmod 0750 /usr/share/polkit-1/rules.d",
 
         # useradd -u 461 -g 11 -d /var/run/sndiod sndiod
         # "ln -s /usr/lib /lib",
@@ -229,6 +234,11 @@
         m%"
           if [ -e /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3 ]; then
             chmod u+s /tmp/workdir/out/destdir/rootfs/usr/bin/fusermount3
+          fi
+          "%,
+        m%"
+          if [ -e /tmp/workdir/out/destdir/rootfs/usr/lib/polkit-1/polkit-agent-helper-1 ]; then
+            chmod u+s /tmp/workdir/out/destdir/rootfs/usr/lib/polkit-1/polkit-agent-helper-1
           fi
           "%,
         m%"

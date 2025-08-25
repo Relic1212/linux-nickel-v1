@@ -1,4 +1,5 @@
 (import "rootfs.ncl")
+& (import "image2.ncl")
 & {
   lib,
   drvs,
@@ -82,7 +83,7 @@
           drvs.fish,
           drvs.mawk,
           drvs.ncurses,
-          drvs.basefiles,
+          (drvs.basefiles & { priority = 1 }),
           drvs.dinit,
           drvs.dinitServicesV3,
           drvs.dinitUtils,
@@ -91,7 +92,9 @@
           drvs.utilLinux,
           drvs.pciutils,
           drvs.xz,
-          drvs.linux,
+          # drvs.linux,
+          drvs.linuxFedora,
+
           # drvs.v4l2loopback,
 
           # drvs.linuxFirmwareSmaller,
@@ -117,7 +120,12 @@
 
           # enc
           drvs.e2fsprogs,
-          drvs.fscryptUnlockHome,
+          # drvs.fscryptUnlockHome,
+          drvs.fscryptUnlockHomeElogind,
+          # drvs.elogind,
+          drvs.polkit,
+          drvs.elogindWithPolkit,
+          # drvs-basu,
           drvs.openssl,
           drvs.fscrypt,
 
@@ -143,7 +151,7 @@
           if options.hasX11 then
             [
               drvs.sway,
-              drvs.scroll,
+              # drvs.scroll,
               # drvs.swayfx,
               # drvs.mwc,
               #drvs.xwayland,
@@ -152,6 +160,7 @@
               drvs.hyprpaper,
               drvs.hyprpicker,
               drvs.hyprlandContrib,
+              drvs.niri,
 
               # ### QT
               # drvs.qtdeclarative,
@@ -176,13 +185,13 @@
           (
             if options.full then
               [
-                drvs.kwallet,
-                drvs.qca,
+                # drvs.kwallet,
+                # drvs.qca,
                 #drvs.cagebreak,
                 drvs.rwaybar,
                 drvs.brightnessctl,
                 drvs.mako,
-                drvs.basu,
+                # drvs.basu,
                 drvs.libnotify,
                 drvs.strace,
                 #drvs.dwl,
@@ -191,7 +200,7 @@
                 #drvs.uutilsProcpsSymlinks,
                 drvs.procps,
                 drvs.wob,
-                drvs.wmenu,
+                # drvs.wmenu,
                 drvs.dmenuWayland,
                 drvs.sov,
                 drvs.swayidle,
@@ -202,10 +211,12 @@
                 drvs.slurp,
                 drvs.grim,
                 drvs.grimshot,
-                drvs.wfRecorder,
+                # drvs.wfRecorder,
                 drvs.j4MenuDesktop,
                 drvs.lavalauncher,
-                drvs.rofiWayland,
+                # drvs.rofiWayland,
+                drvs.rofi,
+                drvs.fuzzel,
                 drvs.waybar,
                 # drvs.eww,
                 drvs.thunar,
@@ -242,10 +253,10 @@
                 drvs.mountOthers,
                 drvs.sbctl,
                 drvs.pythonFull,
-                drvs.autotiling,
-                drvs.i3ipcPython,
+                # drvs.autotiling,
+                # drvs.i3ipcPython,
                 drvs.tzdata,
-                drvs.sndiod,
+                # drvs.sndiod,
                 drvs.desktopFileUtils,
                 drvs.squeekboard,
                 drvs.lisgd,
@@ -259,6 +270,8 @@
                 # drvs.ptyxis,
                 # drvs.libadwaita,
                 # drvs.vte,
+                # drvs.gnomeTerminal,
+                # drvs.libhandy,
                 drvs.cliphist,
                 drvs.inotifyTools,
                 drvs.btop,
@@ -269,6 +282,7 @@
                 drvs.cava,
                 drvs.adwGtk3,
                 drvs.swappy,
+                drvs.wezterm,
 
                 # ttyescape
                 drvs.buffybox,
@@ -309,6 +323,28 @@
     }
   ),
 
+  _cosmicPackages = [
+    drvs.bash,
+    drvs.cosmicApplets,
+    drvs.cosmicApplibrary,
+    drvs.cosmicBg,
+    drvs.cosmicComp,
+    drvs.cosmicIcons,
+    drvs.cosmicLauncher,
+    drvs.cosmicNotifications,
+    drvs.cosmicOsd,
+    drvs.cosmicPanel,
+    drvs.cosmicPopLauncher,
+    drvs.cosmicSession,
+    drvs.cosmicSettings,
+    drvs.cosmicSettingsDaemon,
+    drvs.cosmicWorkspacesEpoch,
+  ],
+
+  cosmicPackages | lib.Package = {
+    biDrvs = _cosmicPackages
+  },
+
   # TODO: uneccesary paths
   # /usr/share/hypr/wall0.png
   # /usr/share/hypr/wall1.png
@@ -334,9 +370,15 @@
           drvs.llvm, # objdump
           drvs.pythonFull,
           drvs.utilLinux,
+          drvs.rsync,
         ]
         @ (
-          std.array.map (fun x => (x & { dest = "rootfs/" })) baseBaseRootfs.biDrvs
+          std.array.map
+            (fun x => (x & { dest = "rootfs/" }))
+            (
+              baseBaseRootfs.biDrvs
+              # @ _cosmicPackages
+            )
         ),
     },
 

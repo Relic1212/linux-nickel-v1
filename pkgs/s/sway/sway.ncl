@@ -46,6 +46,8 @@
       "-Dman-pages=enabled",
     ],
 
+    # baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
+
     preConfigurePhase = [
       m%"
             fix_symbol(){
@@ -82,7 +84,6 @@
       drvs.pixman,
       drvs.eudev,
       # drvs.libudevZero,
-      drvs.seatd,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -102,9 +103,12 @@
       # For optional features
       drvs.gdkPixbufFull,
       drvs.libjpegTurbo,
-      drvs.basu,
+      # drvs.basu,
       drvs.lcms,
       drvs.scdoc,
+    ],
+    propagatedBuildInputs = [
+      drvs.seatd,
     ]
   }
 }
