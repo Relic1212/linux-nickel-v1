@@ -1,7 +1,6 @@
 {
   lib,
   fscryptUnlockHome | lib.Package = {
-    name = "fscrypt-unlock-home",
     extraFiles = [
       {
         file = "crypto-login.sh",
@@ -11,6 +10,21 @@
     installPhase = [
       "install -d -m0755 ${DEST}/usr/bin",
       "install -m0755 /tmp/workdir/files/crypto-login.sh ${DEST}/usr/bin/crypto-login",
+    ]
+  }
+}
+& {
+  lib,
+  fscryptUnlockHomeElogind | lib.Package = {
+    extraFiles = [
+      {
+        file = "crypto-login-elogind.sh",
+        sha256sum = "96e3428dfee5ff5fb3b853a52148f63cc9063eb85f181b5324234e0631fb525d",
+      }
+    ],
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/bin",
+      "install -m0755 /tmp/workdir/files/crypto-login-elogind.sh ${DEST}/usr/bin/crypto-login",
     ]
   }
 }
