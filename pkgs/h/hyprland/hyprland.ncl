@@ -64,7 +64,9 @@
           drvs.libxkbcommon,
           drvs.pixman,
           drvs.eudev,
-          drvs.seatd,
+          # drvs.seatd,
+          # drvs.elogind,
+          # drvs.libcap,
           drvs.libdisplayinfo,
           drvs.libinput,
           drvs.libffi,
@@ -108,6 +110,8 @@
           drvs.git,
           drvs.libzip,
           drvs.spirvTools,
+          drvs.glaze,
+          drvs.cmake,
         ]
         @ (
           if options.glx then
@@ -122,10 +126,16 @@
             ]
         ),
 
+      propagatedBuildInputs = [
+        drvs.seatd,
+      ],
+
       extraMesonArgs = [
         "-Dxwayland=disabled",
         "-Dtracy_enable=false",
-        "-Dhyprpm=disabled",
+        # "-Dhyprpm=disabled",
+        "-Dhyprpm=enabled",
+
         # "-Dlegacy_renderer=enabled",
       ],
 
@@ -163,7 +173,7 @@
       #    "%,
       #],
       buildEnv = {
-        EXTRA_LDFLAGS = ["-lseat", "-ltomlplusplus", "-lzip", "-ldisplay-info"],
+        EXTRA_LDFLAGS = ["$(pkg-config --libs --static libseat)", "-ltomlplusplus", "-lzip", "-ldisplay-info"],
         # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
         #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
         #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],

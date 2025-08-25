@@ -33,7 +33,9 @@
           drvs.libxkbcommon,
           drvs.pixman,
           drvs.eudev,
-          drvs.seatd,
+          # drvs.seatd,
+          # drvs.elogind,
+          # drvs.libcap,
           drvs.libdisplayinfo,
           drvs.libinput,
           drvs.libffi,
@@ -87,6 +89,10 @@
               drvs.mesa2
             ]
         ),
+
+      propagatedBuildInputs = [
+        drvs.seatd,
+      ],
       preConfigurePhase = [
         m%"
           sed -i \
