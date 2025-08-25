@@ -146,8 +146,11 @@
     postInstallPhase = [
       "install -d -m0755 ${DEST}/usr/share/applications",
       "install -d -m0755 ${DEST}/usr/share/fish/completions",
-      "install -m0755 ${SRC}/assets/wezterm.desktop ${DEST}/usr/share/applications",
       "install -m0755 ${SRC}/assets/shell-completion/fish ${DEST}/usr/share/fish/completions/wezterm.fish",
+
+      # copied from the nix derivation
+      "install -m0755 ${SRC}/assets/wezterm.desktop ${DEST}/usr/share/applications/org.wezfurlong.wezterm.desktop",
+      "install -Dm0755 ${SRC}/assets/icon/terminal.png ${DEST}/usr/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png",
     ],
 
     # crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
