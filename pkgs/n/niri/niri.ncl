@@ -249,7 +249,7 @@
       drvs.libepoxy,
       drvs.libevdev,
       drvs.libffi,
-      drvs.libfreeaptx,
+      # drvs.libfreeaptx,
       drvs.libinput,
       drvs.libjpegTurbo,
       drvs.libopus,
@@ -272,7 +272,7 @@
       drvs.pixman,
       drvs.readline,
       drvs.sbc,
-      drvs.seatd,
+      # drvs.seatd,
       drvs.spirvLlvmTranslator,
       drvs.spirvTools,
       drvs.utilLinux,
@@ -285,6 +285,9 @@
       drvs.dinit,
       drvs.libstdcppCompat,
     ],
+    propagatedBuildInputs = [
+      drvs.seatd,
+    ]
   },
 }
 & {
