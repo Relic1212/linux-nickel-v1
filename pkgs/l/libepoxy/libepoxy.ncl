@@ -32,7 +32,7 @@
       drvs.pixman,
       drvs.eudev,
       # drvs.libudevZero,
-      drvs.seatd,
+      # drvs.seatd,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
