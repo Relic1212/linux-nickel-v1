@@ -166,7 +166,7 @@
       drvs.hwdata,
       drvs.libdrm,
       drvs.libelf,
-      drvs.libepoxy,
+      # drvs.libepoxy,
       drvs.libffi,
       drvs.libfontenc,
       drvs.libjpegTurbo,
