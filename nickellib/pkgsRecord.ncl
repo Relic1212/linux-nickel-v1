@@ -29,9 +29,9 @@ let filter_pkgs = (fun x =>
             name != "lib"
           )
           (
-          # std.record.remove
-          #   "pkgs"
-          (x)
+            std.record.filter
+              (fun name _ => name != "pkgs")
+              (x)
           )
       )
   )
@@ -62,7 +62,7 @@ let ro = {
           )
           & {
             lib,
-            # pkgs = __pkgs_unfiletered,
+            pkgs = __pkgs_unfiletered,
             drvs =
               std.record.map
                 (fun k v =>

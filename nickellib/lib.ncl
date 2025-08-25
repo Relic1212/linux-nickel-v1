@@ -11,6 +11,7 @@ in
   # pkgs, #| default = import "pkgsRecord.ncl",
   # hashByName,
   drvs,
+  pkgs,
 
   lib =
     (import "buildEnv.ncl")
@@ -132,8 +133,31 @@ in
           | force
           = buildInputs,
 
+
+        # with changing configurations, propageted could cause a lot of issues.
+        allowDubplicateBuldInputs | Bool| default = false,
+
         buildInputs | not_exported | default =
-          baseBuildinputPackages @ biDrvs,
+        let maybeDups = 
+          baseBuildinputPackages
+          @ biDrvs
+          @ propagatedBuildInputs
+          @ indirectDeps 
+
+          in 
+          if (!allowDubplicateBuldInputs) then 
+          maybeDups 
+          else
+           std.array.dedup maybeDups
+
+          ,
+        propagatedBuildInputs | default = [],
+        indirectDeps | default =
+          let depKeyNames = std.array.map (fun v => v.keyName) (propagatedBuildInputs) in
+          let depPkgs = std.array.map (fun k => pkgs."%{k}") depKeyNames in
+          let ll = std.array.map (fun pkg => pkg.propagatedBuildInputs @ pkg.indirectDeps) depPkgs in
+          let l = std.array.flatten ll in
+          std.array.dedup l,
         hasValidBuildInputs | not_exported = (
           functions.isValidShasumArray (
             std.array.map
