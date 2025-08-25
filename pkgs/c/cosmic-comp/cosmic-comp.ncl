@@ -48,6 +48,10 @@
         sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
         file = "ffi.patch"
       },
+      # {
+      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+      #   file = "cosmic-osd-xkb.patch",
+      # }
     ],
 
     # release = false,
@@ -131,7 +135,6 @@
       drvs.pixman,
       drvs.readline,
       drvs.sbc,
-      drvs.seatd,
       drvs.spirvLlvmTranslator,
       drvs.spirvTools,
       drvs.utilLinux,
@@ -143,7 +146,15 @@
       drvs.pipewire,
       drvs.dinit,
       drvs.libstdcppCompat,
+      drvs.seatd,
+      drvs.elogind,
+      drvs.libcap,
     ],
+
+    # propagatedBuildInputs = [
+    #         drvs.seatd,
+
+    # ],
   },
 
   testFetcher | lib.DeterministicFetcher = {

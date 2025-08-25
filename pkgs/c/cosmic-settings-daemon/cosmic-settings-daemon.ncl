@@ -68,6 +68,10 @@
       {
         sha256sum = "011bd7e71b9a48713e167562789f3091f530d759a08c72a5a1ec659b32ec5f87",
         file = "no-pulse.patch"
+      },
+      {
+        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+        file = "cosmic-osd-xkb.patch",
       }
     ],
 

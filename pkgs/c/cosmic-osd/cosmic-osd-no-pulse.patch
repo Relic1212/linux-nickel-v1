@@ -1,0 +1,102 @@
+diff --git a/src/components/app.rs b/src/components/app.rs
+index 1e2daa6..4d1a53f 100644
+--- a/src/components/app.rs
++++ b/src/components/app.rs
+@@ -29,7 +29,7 @@ use cosmic::{
+     Element,
+ };
+ use cosmic_settings_subscriptions::{
+-    airplane_mode, pulse, settings_daemon,
++    airplane_mode, settings_daemon,
+     upower::kbdbacklight::{kbd_backlight_subscription, KeyboardBacklightUpdate},
+ };
+ use logind_zbus::manager::ManagerProxy;
+@@ -145,7 +145,6 @@ pub enum Msg {
+     PolkitAgent(polkit_agent::Event),
+     PolkitDialog((SurfaceId, polkit_dialog::Msg)),
+     SettingsDaemon(settings_daemon::Event),
+-    Pulse(pulse::Event),
+     OsdIndicator(osd_indicator::Msg),
+     AirplaneMode(bool),
+     KeyboardBacklight(KeyboardBacklightUpdate),
+@@ -412,72 +411,6 @@ impl cosmic::Application for App {
+                     Task::none()
+                 }
+             }
+-            Msg::Pulse(evt) => {
+-                match evt {
+-                    pulse::Event::SinkMute(mute) => {
+-                        if self.sink_mute.is_none() {
+-                            self.sink_mute = Some(mute);
+-                        } else if self.sink_mute != Some(mute) {
+-                            self.sink_mute = Some(mute);
+-                            if let Some(sink_volume) = self.sink_volume {
+-                                return self.create_indicator(osd_indicator::Params::SinkVolume(
+-                                    sink_volume,
+-                                    mute,
+-                                ));
+-                            }
+-                        }
+-                    }
+-                    pulse::Event::SinkVolume(volume) => {
+-                        let now = Instant::now();
+-                        if now.duration_since(self.sink_last_playback) > Duration::from_millis(125)
+-                        {
+-                            self.sink_last_playback = now;
+-                            pipewire::play_audio_volume_change();
+-                        }
+-
+-                        if self.sink_volume.is_none() {
+-                            self.sink_volume = Some(volume);
+-                        } else if self.sink_volume != Some(volume) {
+-                            self.sink_volume = Some(volume);
+-                            if let Some(mute) = self.sink_mute {
+-                                return self.create_indicator(osd_indicator::Params::SinkVolume(
+-                                    volume, mute,
+-                                ));
+-                            }
+-                        }
+-                    }
+-                    pulse::Event::SourceMute(mute) => {
+-                        if self.source_mute.is_none() {
+-                            self.source_mute = Some(mute);
+-                        } else if self.source_mute != Some(mute) {
+-                            self.source_mute = Some(mute);
+-                            if let Some(source_volume) = self.source_volume {
+-                                return self.create_indicator(osd_indicator::Params::SourceVolume(
+-                                    source_volume,
+-                                    mute,
+-                                ));
+-                            }
+-                        }
+-                    }
+-                    pulse::Event::SourceVolume(volume) => {
+-                        if self.source_volume.is_none() {
+-                            self.source_volume = Some(volume);
+-                        } else if self.source_volume != Some(volume) {
+-                            self.source_volume = Some(volume);
+-                            if let Some(mute) = self.source_mute {
+-                                return self.create_indicator(osd_indicator::Params::SourceVolume(
+-                                    volume, mute,
+-                                ));
+-                            }
+-                        }
+-                    }
+-                    pulse::Event::CardInfo(_) => {}
+-                    pulse::Event::DefaultSink(_) => {}
+-                    pulse::Event::DefaultSource(_) => {}
+-                    pulse::Event::Balance(_) | pulse::Event::Channels(_) => {}
+-                }
+-                Task::none()
+-            }
+             Msg::AirplaneMode(state) => {
+                 if self.airplane_mode.is_none() {
+                     self.airplane_mode = Some(state);
+@@ -561,7 +494,6 @@ impl cosmic::Application for App {
+             subscriptions.push(settings_daemon::subscription(connection).map(Msg::SettingsDaemon));
+         }
+ 
+-        subscriptions.push(pulse::subscription().map(Msg::Pulse));
+ 
+         subscriptions.push(airplane_mode::subscription().map(Msg::AirplaneMode));
+ 

@@ -2,28 +2,41 @@
   lib,
   drvs,
   _CargoFetcher,
-  cosmicSessionSources | lib.DeterministicFetcher =
+  cosmicWorkspacesEpochSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-session/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "7a4953520fc313dbf8b1292a88cf29153c32b953ffce2c33247355c20113b838"
+        uri = "https://github.com/pop-os/cosmic-workspaces-epoch/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
+        sha256sum = "072a78befd3134bc5e9e51a74cc48979ad72a8b5b004dc0f7bd14027b9919aa8"
       },
-      outputSha256sum = "97d29b368657b5d2bd4a3634d9914780a55721e8e5ce95e227b6432d9ccd8337"
+      outputSha256sum = "7764781d37716ee884da5f2bc2d3b96506118f04d6541a76379cdd75b88bb819"
     },
 }
 & {
   lib,
   drvs,
-  cosmicSession | lib.CargoPackage = {
+  cosmicWorkspacesEpoch | lib.CargoPackage = {
 
     unpackPhase = [
       "cd /tmp/workdir/src",
-      "tar xvf /sources.tar",
+      "tar xf /sources.tar",
     ],
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
+      # m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+    ],
+    patches = [
+      {
+        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+        file = "cosmic-osd-xkb.patch",
+      }
     ],
 
     extraEnv = {
@@ -53,41 +66,20 @@
         ],
     },
 
-    patches = [
-      {
-        sha256sum = "25735725ed85b22c509d7adeab0cba7d6fefa0cfd84426bbae5dcb199023ed43",
-        file = "fix-auto.patch"
-      }
-    ],
-    extraCargoFlags = [
-      "--no-default-features",
-      "--features autostart",
-    ],
-    target,
     release = false,
-    installPhase =
-      (
-        if (!release) then
-          [
-            "sed -i 's@release/cosmic-session@debug/cosmic-session@g' ${SRC}/Justfile"
-          ]
-        else
-          []
-      )
-      @ [
-        "export CARGO_TARGET_DIR=\"target/%{target}\"",
-        "just rootdir=$DEST install",
-      ],
-    # postInstallPhase = [
-    #   # from justfile
-    #   "install -Dm0755 data/start-cosmic ${DEST}/usr/bin/start-cosmic",
-    #   m%"sed -i "s|DCONF_PROFILE=cosmic|DCONF_PROFILE=/usr/share/dconf/profile/cosmic|" ${DEST}/usr/bin/start-cosmic"%,
-    #   "install -Dm0644 data/cosmic.desktop ${DEST}/share/wayland-sessions/cosmic.desktop",
-    #   "install -Dm0644 data/cosmic-mimeapps.list ${DEST}/usr/share/applications/cosmic-mimeapps.list",
-    #   "install -Dm644 data/dconf/profile/cosmic ${DEST}/usr/share/dconf/profile/cosmic",
 
-    #   # there's also a systemd file that we don't install
-    # ],
+    cargoFlags,
+    target,
+    release,
+
+    buildPhase = [
+      "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+    ],
+    installPhase =
+      let d = if release then "release" else "debug" in
+      [
+        "make TARGET=%{target}/%{d} DESTDIR=$DEST install",
+      ],
 
     utilsProviders,
     baseBuildinputPackages =
@@ -102,8 +94,8 @@
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
-      drvs.just,
-      drvs.cosmicSessionSources,
+      drvs.gnumake,
+      drvs.cosmicWorkspacesEpochSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,

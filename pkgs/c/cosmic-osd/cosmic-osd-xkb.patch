@@ -1,0 +1,428 @@
+diff --git a/vendor/winit/src/platform_impl/linux/common/xkb/compose.rs b/vendor/winit/src/platform_impl/linux/common/xkb/compose.rs
+index 3b5ddca1..a81743d2 100644
+--- a/vendor/winit/src/platform_impl/linux/common/xkb/compose.rs
++++ b/vendor/winit/src/platform_impl/linux/common/xkb/compose.rs
+@@ -10,9 +10,17 @@ use smol_str::SmolStr;
+ use xkbcommon_dl::{
+     xkb_compose_compile_flags, xkb_compose_feed_result, xkb_compose_state, xkb_compose_state_flags,
+     xkb_compose_status, xkb_compose_table, xkb_keysym_t,
++    xkb_compose_table_new_from_locale,
++    xkb_compose_state_new,
++    xkb_compose_table_unref,
++    xkb_compose_state_get_utf8,
++    xkb_compose_state_feed,
++    xkb_compose_state_reset,
++    xkb_compose_state_get_status,
++    xkb_compose_state_unref,
+ };
+ 
+-use super::{XkbContext, XKBCH};
++use super::{XkbContext, xkb};
+ 
+ #[derive(Debug)]
+ pub struct XkbComposeTable {
+@@ -31,7 +39,7 @@ impl XkbComposeTable {
+         let locale = CString::new(locale.into_vec()).unwrap();
+ 
+         let table = unsafe {
+-            (XKBCH.xkb_compose_table_new_from_locale)(
++            (xkb_compose_table_new_from_locale)(
+                 context.as_ptr(),
+                 locale.as_ptr(),
+                 xkb_compose_compile_flags::XKB_COMPOSE_COMPILE_NO_FLAGS,
+@@ -45,7 +53,7 @@ impl XkbComposeTable {
+     /// Create new state with the given compose table.
+     pub fn new_state(&self) -> Option<XkbComposeState> {
+         let state = unsafe {
+-            (XKBCH.xkb_compose_state_new)(
++            (xkb_compose_state_new)(
+                 self.table.as_ptr(),
+                 xkb_compose_state_flags::XKB_COMPOSE_STATE_NO_FLAGS,
+             )
+@@ -67,7 +75,7 @@ impl Deref for XkbComposeTable {
+ impl Drop for XkbComposeTable {
+     fn drop(&mut self) {
+         unsafe {
+-            (XKBCH.xkb_compose_table_unref)(self.table.as_ptr());
++            (xkb_compose_table_unref)(self.table.as_ptr());
+         }
+     }
+ }
+@@ -80,13 +88,13 @@ pub struct XkbComposeState {
+ impl XkbComposeState {
+     pub fn get_string(&mut self, scratch_buffer: &mut Vec<u8>) -> Option<SmolStr> {
+         super::make_string_with(scratch_buffer, |ptr, len| unsafe {
+-            (XKBCH.xkb_compose_state_get_utf8)(self.state.as_ptr(), ptr, len)
++            (xkb_compose_state_get_utf8)(self.state.as_ptr(), ptr, len)
+         })
+     }
+ 
+     #[inline]
+     pub fn feed(&mut self, keysym: xkb_keysym_t) -> ComposeStatus {
+-        let feed_result = unsafe { (XKBCH.xkb_compose_state_feed)(self.state.as_ptr(), keysym) };
++        let feed_result = unsafe { (xkb_compose_state_feed)(self.state.as_ptr(), keysym) };
+         match feed_result {
+             xkb_compose_feed_result::XKB_COMPOSE_FEED_IGNORED => ComposeStatus::Ignored,
+             xkb_compose_feed_result::XKB_COMPOSE_FEED_ACCEPTED => {
+@@ -98,20 +106,20 @@ impl XkbComposeState {
+     #[inline]
+     pub fn reset(&mut self) {
+         unsafe {
+-            (XKBCH.xkb_compose_state_reset)(self.state.as_ptr());
++            (xkb_compose_state_reset)(self.state.as_ptr());
+         }
+     }
+ 
+     #[inline]
+     pub fn status(&mut self) -> xkb_compose_status {
+-        unsafe { (XKBCH.xkb_compose_state_get_status)(self.state.as_ptr()) }
++        unsafe { (xkb_compose_state_get_status)(self.state.as_ptr()) }
+     }
+ }
+ 
+ impl Drop for XkbComposeState {
+     fn drop(&mut self) {
+         unsafe {
+-            (XKBCH.xkb_compose_state_unref)(self.state.as_ptr());
++            (xkb_compose_state_unref)(self.state.as_ptr());
+         };
+     }
+ }
+diff --git a/vendor/winit/src/platform_impl/linux/common/xkb/keymap.rs b/vendor/winit/src/platform_impl/linux/common/xkb/keymap.rs
+index 32a94282..1790f582 100644
+--- a/vendor/winit/src/platform_impl/linux/common/xkb/keymap.rs
++++ b/vendor/winit/src/platform_impl/linux/common/xkb/keymap.rs
+@@ -17,7 +17,7 @@ use {memmap2::MmapOptions, std::os::unix::io::OwnedFd};
+ use crate::keyboard::{Key, KeyCode, KeyLocation, NamedKey, NativeKey, NativeKeyCode, PhysicalKey};
+ #[cfg(x11_platform)]
+ use crate::platform_impl::common::xkb::XKBXH;
+-use crate::platform_impl::common::xkb::{XkbContext, XKBH};
++use crate::platform_impl::common::xkb::{XkbContext};
+ 
+ /// Map the raw X11-style keycode to the `KeyCode` enum.
+ ///
+@@ -920,7 +920,7 @@ impl XkbKeymap {
+         let map = unsafe { MmapOptions::new().len(size).map_copy_read_only(&fd).ok()? };
+ 
+         let keymap = unsafe {
+-            let keymap = (XKBH.xkb_keymap_new_from_string)(
++            let keymap = (xkb::xkb_keymap_new_from_string)(
+                 (*context).as_ptr(),
+                 map.as_ptr() as *const _,
+                 xkb::xkb_keymap_format::XKB_KEYMAP_FORMAT_TEXT_V1,
+@@ -977,7 +977,7 @@ impl XkbKeymap {
+     ) -> xkb_keysym_t {
+         unsafe {
+             let mut keysyms = ptr::null();
+-            let count = (XKBH.xkb_keymap_key_get_syms_by_level)(
++            let count = (xkb::xkb_keymap_key_get_syms_by_level)(
+                 self.keymap.as_ptr(),
+                 keycode,
+                 layout,
+@@ -996,14 +996,14 @@ impl XkbKeymap {
+ 
+     /// Check whether the given key repeats.
+     pub fn key_repeats(&mut self, keycode: xkb_keycode_t) -> bool {
+-        unsafe { (XKBH.xkb_keymap_key_repeats)(self.keymap.as_ptr(), keycode) == 1 }
++        unsafe { (xkb::xkb_keymap_key_repeats)(self.keymap.as_ptr(), keycode) == 1 }
+     }
+ }
+ 
+ impl Drop for XkbKeymap {
+     fn drop(&mut self) {
+         unsafe {
+-            (XKBH.xkb_keymap_unref)(self.keymap.as_ptr());
++            (xkb::xkb_keymap_unref)(self.keymap.as_ptr());
+         };
+     }
+ }
+@@ -1033,7 +1033,7 @@ pub struct ModsIndices {
+ fn mod_index_for_name(keymap: NonNull<xkb_keymap>, name: &[u8]) -> Option<xkb_mod_index_t> {
+     unsafe {
+         let mod_index =
+-            (XKBH.xkb_keymap_mod_get_index)(keymap.as_ptr(), name.as_ptr() as *const c_char);
++            (xkb::xkb_keymap_mod_get_index)(keymap.as_ptr(), name.as_ptr() as *const c_char);
+         if mod_index == XKB_MOD_INVALID {
+             None
+         } else {
+diff --git a/vendor/winit/src/platform_impl/linux/common/xkb/mod.rs b/vendor/winit/src/platform_impl/linux/common/xkb/mod.rs
+index d516883f..c60cf467 100644
+--- a/vendor/winit/src/platform_impl/linux/common/xkb/mod.rs
++++ b/vendor/winit/src/platform_impl/linux/common/xkb/mod.rs
+@@ -8,8 +8,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
+ use smol_str::SmolStr;
+ use tracing::warn;
+ use xkbcommon_dl::{
+-    self as xkb, xkb_compose_status, xkb_context, xkb_context_flags, xkbcommon_compose_handle,
+-    xkbcommon_handle, XkbCommon, XkbCommonCompose,
++    self as xkb, xkb_compose_status, xkb_context, xkb_context_flags, 
+ };
+ #[cfg(x11_platform)]
+ use {x11_dl::xlib_xcb::xcb_connection_t, xkbcommon_dl::x11::xkbcommon_x11_handle};
+@@ -33,8 +32,8 @@ pub use state::XkbState;
+ // TODO: Wire this up without using a static `AtomicBool`.
+ static RESET_DEAD_KEYS: AtomicBool = AtomicBool::new(false);
+ 
+-static XKBH: Lazy<&'static XkbCommon> = Lazy::new(xkbcommon_handle);
+-static XKBCH: Lazy<&'static XkbCommonCompose> = Lazy::new(xkbcommon_compose_handle);
++// static XKBH: Lazy<&'static XkbCommon> = Lazy::new(xkbcommon_handle);
++// static XKBCH: Lazy<&'static XkbCommonCompose> = Lazy::new(xkbcommon_compose_handle);
+ #[cfg(feature = "x11")]
+ static XKBXH: Lazy<&'static xkb::x11::XkbCommonX11> = Lazy::new(xkbcommon_x11_handle);
+ 
+@@ -65,10 +64,7 @@ pub struct Context {
+ 
+ impl Context {
+     pub fn new() -> Result<Self, Error> {
+-        if xkb::xkbcommon_option().is_none() {
+-            return Err(Error::XKBNotFound);
+-        }
+-
++        
+         let context = XkbContext::new()?;
+         let mut compose_table = XkbComposeTable::new(&context);
+         let mut compose_state1 = compose_table.as_ref().and_then(|table| table.new_state());
+@@ -208,7 +204,7 @@ impl<'a> KeyContext<'a> {
+         self.scratch_buffer.reserve(8);
+         loop {
+             let bytes_written = unsafe {
+-                (XKBH.xkb_keysym_to_utf8)(
++                (xkb::xkb_keysym_to_utf8)(
+                     keysym,
+                     self.scratch_buffer.as_mut_ptr().cast(),
+                     self.scratch_buffer.capacity(),
+@@ -350,7 +346,7 @@ pub struct XkbContext {
+ 
+ impl XkbContext {
+     pub fn new() -> Result<Self, Error> {
+-        let context = unsafe { (XKBH.xkb_context_new)(xkb_context_flags::XKB_CONTEXT_NO_FLAGS) };
++        let context = unsafe { (xkb::xkb_context_new)(xkb_context_flags::XKB_CONTEXT_NO_FLAGS) };
+ 
+         let context = match NonNull::new(context) {
+             Some(context) => context,
+@@ -364,7 +360,7 @@ impl XkbContext {
+ impl Drop for XkbContext {
+     fn drop(&mut self) {
+         unsafe {
+-            (XKBH.xkb_context_unref)(self.context.as_ptr());
++            (xkb::xkb_context_unref)(self.context.as_ptr());
+         }
+     }
+ }
+diff --git a/vendor/winit/src/platform_impl/linux/common/xkb/state.rs b/vendor/winit/src/platform_impl/linux/common/xkb/state.rs
+index 27c055aa..21e441b2 100644
+--- a/vendor/winit/src/platform_impl/linux/common/xkb/state.rs
++++ b/vendor/winit/src/platform_impl/linux/common/xkb/state.rs
+@@ -13,7 +13,7 @@ use xkbcommon_dl::{
+ use crate::platform_impl::common::xkb::keymap::XkbKeymap;
+ #[cfg(x11_platform)]
+ use crate::platform_impl::common::xkb::XKBXH;
+-use crate::platform_impl::common::xkb::{make_string_with, XKBH};
++use crate::platform_impl::common::xkb::{make_string_with};
+ 
+ #[derive(Debug)]
+ pub struct XkbState {
+@@ -24,7 +24,7 @@ pub struct XkbState {
+ impl XkbState {
+     #[cfg(wayland_platform)]
+     pub fn new_wayland(keymap: &XkbKeymap) -> Option<Self> {
+-        let state = NonNull::new(unsafe { (XKBH.xkb_state_new)(keymap.as_ptr()) })?;
++        let state = NonNull::new(unsafe { (xkb::xkb_state_new)(keymap.as_ptr()) })?;
+         Some(Self::new_inner(state))
+     }
+ 
+@@ -45,17 +45,17 @@ impl XkbState {
+     }
+ 
+     pub fn get_one_sym_raw(&mut self, keycode: xkb_keycode_t) -> xkb_keysym_t {
+-        unsafe { (XKBH.xkb_state_key_get_one_sym)(self.state.as_ptr(), keycode) }
++        unsafe { (xkb::xkb_state_key_get_one_sym)(self.state.as_ptr(), keycode) }
+     }
+ 
+     pub fn layout(&mut self, key: xkb_keycode_t) -> xkb_layout_index_t {
+-        unsafe { (XKBH.xkb_state_key_get_layout)(self.state.as_ptr(), key) }
++        unsafe { (xkb::xkb_state_key_get_layout)(self.state.as_ptr(), key) }
+     }
+ 
+     #[cfg(x11_platform)]
+     pub fn depressed_modifiers(&mut self) -> xkb::xkb_mod_mask_t {
+         unsafe {
+-            (XKBH.xkb_state_serialize_mods)(
++            (xkb::xkb_state_serialize_mods)(
+                 self.state.as_ptr(),
+                 xkb_state_component::XKB_STATE_MODS_DEPRESSED,
+             )
+@@ -65,7 +65,7 @@ impl XkbState {
+     #[cfg(x11_platform)]
+     pub fn latched_modifiers(&mut self) -> xkb::xkb_mod_mask_t {
+         unsafe {
+-            (XKBH.xkb_state_serialize_mods)(
++            (xkb::xkb_state_serialize_mods)(
+                 self.state.as_ptr(),
+                 xkb_state_component::XKB_STATE_MODS_LATCHED,
+             )
+@@ -75,7 +75,7 @@ impl XkbState {
+     #[cfg(x11_platform)]
+     pub fn locked_modifiers(&mut self) -> xkb::xkb_mod_mask_t {
+         unsafe {
+-            (XKBH.xkb_state_serialize_mods)(
++            (xkb::xkb_state_serialize_mods)(
+                 self.state.as_ptr(),
+                 xkb_state_component::XKB_STATE_MODS_LOCKED,
+             )
+@@ -88,7 +88,7 @@ impl XkbState {
+         scratch_buffer: &mut Vec<u8>,
+     ) -> Option<SmolStr> {
+         make_string_with(scratch_buffer, |ptr, len| unsafe {
+-            (XKBH.xkb_state_key_get_utf8)(self.state.as_ptr(), keycode, ptr, len)
++            (xkb::xkb_state_key_get_utf8)(self.state.as_ptr(), keycode, ptr, len)
+         })
+     }
+ 
+@@ -106,7 +106,7 @@ impl XkbState {
+         locked_group: u32,
+     ) {
+         let mask = unsafe {
+-            (XKBH.xkb_state_update_mask)(
++            (xkb::xkb_state_update_mask)(
+                 self.state.as_ptr(),
+                 mods_depressed,
+                 mods_latched,
+@@ -133,10 +133,10 @@ impl XkbState {
+         self.modifiers.num_lock = self.mod_name_is_active(xkb::XKB_MOD_NAME_NUM);
+     }
+ 
+-    /// Check if the modifier is active within xkb.
++    /// Check if the modifier is active within xkb::
+     fn mod_name_is_active(&mut self, name: &[u8]) -> bool {
+         unsafe {
+-            (XKBH.xkb_state_mod_name_is_active)(
++            (xkb::xkb_state_mod_name_is_active)(
+                 self.state.as_ptr(),
+                 name.as_ptr() as *const c_char,
+                 xkb_state_component::XKB_STATE_MODS_EFFECTIVE,
+@@ -148,7 +148,7 @@ impl XkbState {
+ impl Drop for XkbState {
+     fn drop(&mut self) {
+         unsafe {
+-            (XKBH.xkb_state_unref)(self.state.as_ptr());
++            (xkb::xkb_state_unref)(self.state.as_ptr());
+         }
+     }
+ }
+diff --git a/vendor/xkbcommon-dl/src/lib.rs b/vendor/xkbcommon-dl/src/lib.rs
+index 12fd13b5..f60e9fb0 100644
+--- a/vendor/xkbcommon-dl/src/lib.rs
++++ b/vendor/xkbcommon-dl/src/lib.rs
+@@ -11,7 +11,7 @@ pub use xkeysym::key as keysyms;
+ use std::os::raw::{c_char, c_int, c_uint, c_void};
+ 
+ use bitflags::bitflags;
+-use dlib::dlopen_external_library;
++use dlib::external_library;
+ use log::info;
+ use once_cell::sync::OnceCell;
+ 
+@@ -185,7 +185,7 @@ bitflags!(
+     }
+ );
+ 
+-dlopen_external_library!(XkbCommon,
++external_library!(XkbCommon, "xkbcommon",
+ functions:
+     fn xkb_keysym_get_name(xkb_keysym_t, *mut c_char, usize) -> c_int,
+     fn xkb_keysym_from_name(*const c_char, xkb_keysym_flags) -> xkb_keysym_t,
+@@ -281,7 +281,7 @@ functions:
+ );
+ 
+ // Compose and dead-keys support module
+-dlopen_external_library!(XkbCommonCompose,
++external_library!(XkbCommonCompose, "xkbcommon",
+ functions:
+     fn xkb_compose_table_new_from_locale(
+         *mut xkb_context,
+@@ -301,39 +301,39 @@ functions:
+     fn xkb_compose_state_get_one_sym(*mut xkb_compose_state) -> xkb_keysym_t,
+ );
+ 
+-pub fn xkbcommon_handle() -> &'static XkbCommon {
+-    xkbcommon_option().expect("Library libxkbcommon.so could not be loaded.")
+-}
+-
+-pub fn xkbcommon_option() -> Option<&'static XkbCommon> {
+-    static XKBCOMMON_OPTION: OnceCell<Option<XkbCommon>> = OnceCell::new();
+-    XKBCOMMON_OPTION
+-        .get_or_init(|| {
+-            open_with_sonames(
+-                &["libxkbcommon.so.0", "libxkbcommon.so"],
+-                None,
+-                |name| unsafe { XkbCommon::open(name) },
+-            )
+-        })
+-        .as_ref()
+-}
+-
+-pub fn xkbcommon_compose_handle() -> &'static XkbCommonCompose {
+-    xkbcommon_compose_option().expect("Could not load compose module from libxkbcommon.so.")
+-}
+-
+-pub fn xkbcommon_compose_option() -> Option<&'static XkbCommonCompose> {
+-    static XKBCOMMON_COMPOSE_OPTION: OnceCell<Option<XkbCommonCompose>> = OnceCell::new();
+-    XKBCOMMON_COMPOSE_OPTION
+-        .get_or_init(|| {
+-            open_with_sonames(
+-                &["libxkbcommon.so.0", "libxkbcommon.so"],
+-                Some("compose"),
+-                |name| unsafe { XkbCommonCompose::open(name) },
+-            )
+-        })
+-        .as_ref()
+-}
++// pub fn xkbcommon_handle() -> &'static XkbCommon {
++//     xkbcommon_option().expect("Library libxkbcommon.so could not be loaded.")
++// }
++
++// pub fn xkbcommon_option() -> Option<&'static XkbCommon> {
++//     static XKBCOMMON_OPTION: OnceCell<Option<XkbCommon>> = OnceCell::new();
++//     XKBCOMMON_OPTION
++//         .get_or_init(|| {
++//             open_with_sonames(
++//                 &["libxkbcommon.so.0", "libxkbcommon.so"],
++//                 None,
++//                 |name| unsafe { XkbCommon::open(name) },
++//             )
++//         })
++//         .as_ref()
++// }
++
++// pub fn xkbcommon_compose_handle() -> &'static XkbCommonCompose {
++//     xkbcommon_compose_option().expect("Could not load compose module from libxkbcommon.so.")
++// }
++
++// pub fn xkbcommon_compose_option() -> Option<&'static XkbCommonCompose> {
++//     static XKBCOMMON_COMPOSE_OPTION: OnceCell<Option<XkbCommonCompose>> = OnceCell::new();
++//     XKBCOMMON_COMPOSE_OPTION
++//         .get_or_init(|| {
++//             open_with_sonames(
++//                 &["libxkbcommon.so.0", "libxkbcommon.so"],
++//                 Some("compose"),
++//                 |name| unsafe { XkbCommonCompose::open(name) },
++//             )
++//         })
++//         .as_ref()
++// }
+ 
+ fn open_with_sonames<T, F>(names: &[&str], module: Option<&str>, open: F) -> Option<T>
+ where
+diff --git a/vendor/xkbcommon-dl/src/x11.rs b/vendor/xkbcommon-dl/src/x11.rs
+index 45346d4d..99eff34b 100644
+--- a/vendor/xkbcommon-dl/src/x11.rs
++++ b/vendor/xkbcommon-dl/src/x11.rs
+@@ -5,6 +5,7 @@ use once_cell::sync::OnceCell;
+ pub type xcb_connection_t = c_void;
+ 
+ use super::*;
++use dlib::dlopen_external_library;
+ 
+ pub const XKB_X11_MIN_MAJOR_XKB_VERSION: u16 = 1;
+ pub const XKB_X11_MIN_MINOR_XKB_VERSION: u16 = 0;
