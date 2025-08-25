@@ -26,7 +26,7 @@
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
     ],
 
-    release = false,
+    release,
 
     extraCargoFlags = [
       "-p pop-launcher-bin"
@@ -40,6 +40,11 @@
       [
         "just debug=1 target-dir=\"target/%{target}/%{d}\" rootdir=$DEST install",
       ],
+
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
+    ],
+
     utilsProviders,
     baseBuildinputPackages =
       [

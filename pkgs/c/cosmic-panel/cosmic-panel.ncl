@@ -25,6 +25,7 @@
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
     ],
 
     patches = [
@@ -41,6 +42,10 @@
     installPhase = [
       "export CARGO_TARGET_DIR=\"target/%{target}\"",
       "just rootdir=$DEST install",
+    ],
+
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
     ],
 
     utilsProviders,

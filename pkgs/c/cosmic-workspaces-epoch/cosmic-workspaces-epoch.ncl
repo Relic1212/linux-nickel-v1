@@ -30,6 +30,7 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
     ],
     patches = [
@@ -66,7 +67,7 @@
         ],
     },
 
-    release = false,
+    # release = false,
 
     cargoFlags,
     target,
@@ -80,6 +81,10 @@
       [
         "make TARGET=%{target}/%{d} DESTDIR=$DEST install",
       ],
+
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
+    ],
 
     utilsProviders,
     baseBuildinputPackages =

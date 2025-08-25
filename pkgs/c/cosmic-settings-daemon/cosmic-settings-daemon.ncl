@@ -26,6 +26,7 @@
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"pulse",@@g' ${SRC}/Cargo.toml"%,
       m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
     ],
 
     extraEnv = {
@@ -62,6 +63,10 @@
     ],
     installPhase = [
       "make TARGET=\"%{target}/release\" DESTDIR=$DEST install",
+    ],
+
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
     ],
 
     patches = [

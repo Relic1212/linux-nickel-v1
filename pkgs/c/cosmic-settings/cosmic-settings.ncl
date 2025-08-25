@@ -33,6 +33,7 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
     ],
@@ -63,7 +64,7 @@
     #   "just args=\" --target %{target}\" build-vendored "
     # ],
 
-    release = false,
+    release,
 
     installPhase =
       let d = if release then "release" else "debug" in
@@ -71,6 +72,10 @@
         # "export CARGO_TARGET_DIR=\"target/%{target}\"",
         "just --set bin-src \"target/%{target}/%{d}/cosmic-settings\" rootdir=$DEST install",
       ],
+
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
+    ],
 
     patches = [
       #   {
@@ -162,7 +167,7 @@
       drvs.xz,
       drvs.zlibNg,
       drvs.zstd,
-      drvs.pipewire2,
+      drvs.pipewire, # needed
       drvs.dinit,
       drvs.libstdcppCompat,
     ],

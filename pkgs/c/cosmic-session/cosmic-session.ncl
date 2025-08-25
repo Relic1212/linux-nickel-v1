@@ -64,7 +64,7 @@
       "--features autostart",
     ],
     target,
-    release = false,
+    release,
     installPhase =
       (
         if (!release) then
@@ -78,16 +78,10 @@
         "export CARGO_TARGET_DIR=\"target/%{target}\"",
         "just rootdir=$DEST install",
       ],
-    # postInstallPhase = [
-    #   # from justfile
-    #   "install -Dm0755 data/start-cosmic ${DEST}/usr/bin/start-cosmic",
-    #   m%"sed -i "s|DCONF_PROFILE=cosmic|DCONF_PROFILE=/usr/share/dconf/profile/cosmic|" ${DEST}/usr/bin/start-cosmic"%,
-    #   "install -Dm0644 data/cosmic.desktop ${DEST}/share/wayland-sessions/cosmic.desktop",
-    #   "install -Dm0644 data/cosmic-mimeapps.list ${DEST}/usr/share/applications/cosmic-mimeapps.list",
-    #   "install -Dm644 data/dconf/profile/cosmic ${DEST}/usr/share/dconf/profile/cosmic",
 
-    #   # there's also a systemd file that we don't install
-    # ],
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl > features_manifest.txt",
+    ],
 
     utilsProviders,
     baseBuildinputPackages =
