@@ -30,6 +30,10 @@
       }
     ],
 
+    options = {
+      patchfile | default = "pipewire.patch"
+    },
+
     patches = [
       {
         file = "pipewire.patch",
@@ -41,7 +45,7 @@
       }
     ],
     patchPhase = [
-      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/pipewire.patch)",
+      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/%{options.patchfile})",
       "(cd ${SRC}/subprojects/wireplumber && patch -p1 < /tmp/workdir/patches/wireplumber.patch)",
     ],
     # https://github.com/kiss-community/community/blob/0715e574d128e1df6137f3959bacc9c66fffcb18/community/pipewire/build
@@ -148,9 +152,118 @@
       drvs.libyaml,
     ],
   },
-  pipewire =
+  pipewireWithAaptx =
     _pipewire
     & {
       # mesonArgs | force = lib.functions.replaceArrayElem "--buildtype=release" "--buildtype=debug" _pipewire.mesonArgs
+    }
+}
+& {
+  lib,
+  drvs,
+  _pipewire,
+  pipewire =
+    _pipewire
+    & {
+      options.patchfile = "pipewire2.patch",
+      patches | priority 1 = [
+        {
+          sha256sum = "ce0029689cb22c5a5c8dc98cab227764ca98934736c4f8b100043efdf4d4faae",
+          file = "pipewire2.patch"
+        },
+        {
+          file = "wireplumber.patch",
+          sha256sum = "3fcbce7548a529d55bd3df7fa8b8e94cb2706ada1bc8298d3c934fa5c4e7e7d3"
+        }
+      ],
+
+      extraMesonArgs | priority 1 = [
+        "-Dsession-managers=wireplumber",
+        # "-Dsession-managers=[]",
+        "-Dvideotestsrc=disabled",
+        "-Dvideoconvert=enabled",
+        # "-Dv4l2=disabled",
+        "-Dsupport=enabled",
+        "-Dspa-plugins=enabled",
+        "-Dtests=disabled",
+        # "-Davb=disabled",
+        # "-Draop=disabled",
+        "-Dsndfile=enabled",
+        "-Dudev=enabled",
+        "-Dwireplumber:system-lua=true",
+        "-Dwireplumber:tests=false",
+        "-Dbluez5=enabled",
+        "-Dbluez5-backend-hsp-native=enabled",
+        "-Dbluez5-backend-hfp-native=enabled",
+        "-Dbluez5-backend-ofono=enabled",
+        "-Dbluez5-backend-hsphfpd=enabled",
+        "-Dbluez5-codec-aptx=disabled",
+        # "-Dbluez5-codec-ldac=enabled",
+        "-Dbluez5-codec-aac=enabled",
+
+        # TODO: lc3plus and lc3
+        "-Dlibcamera=enabled",
+        "-Dgsettings=disabled",
+      ],
+      biDrvs | priority 1 = [
+        drvs.dbus,
+        drvs.alsaLibs,
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.zlibNg,
+        drvs.gperf,
+        drvs.pixman,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.libxkbcommon,
+        drvs.expat,
+        drvs.linuxHeaders,
+        drvs.ncurses,
+        drvs.readline,
+        drvs.pcre2,
+        drvs.pango,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.harfbuzz,
+        drvs.glibDynamic,
+        drvs.muslShared,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs.gtk3,
+        drvs.eudev,
+        drvs.kmod,
+        drvs.xz,
+        drvs.openssl,
+        drvs.zstd,
+        drvs.utilLinux,
+        drvs.libevdev,
+        (drvs.findutils & { priority = 1 }),
+        drvs.libsndfile,
+        drvs.libopus,
+        drvs.lua,
+        drvs.bluez,
+        drvs.sbc,
+        drvs.libusb,
+        drvs.ffmpeg,
+        drvs.jansson,
+        drvs.fdkAac,
+        drvs.ldacbt,
+        drvs.libcamera,
+        drvs.libyaml,
+      ]
     }
 }
