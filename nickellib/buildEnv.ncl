@@ -61,6 +61,8 @@
   BuildEnv = {
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
+    _debug | Bool | default = false,
+    _optFlag | String = if (!_debug) then "-O2" else "-g",
     _stage | Number | optional,
     _isCross = TARGET != HOST,
     TARGET | nullOrString | default = null,
@@ -160,9 +162,9 @@
     BASE_CXXFLAGS | nullOrArray | default = null,
     BASE_LDFLAGS | nullOrArray | default = null,
 
-    LLVM_CFLAGS | nullOrArray | default = if _isLlvm then ["-O2", "-pipe"] else null,
+    LLVM_CFLAGS | nullOrArray | default = if _isLlvm then [_optFlag, "-pipe"] else null,
     LLVM_CPPFLAGS | nullOrArray | default = null,
-    LLVM_CXXFLAGS | nullOrArray | default = if _isLlvm then ["-O2", "-pipe"] else null,
+    LLVM_CXXFLAGS | nullOrArray | default = if _isLlvm then [_optFlag, "-pipe"] else null,
     LLVM_LDFLAGS | nullOrArray | default = if _isLlvm then ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"] else null,
 
     STAGE_CFLAGS | nullOrArray | default = null,

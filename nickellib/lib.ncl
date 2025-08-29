@@ -112,6 +112,7 @@ in
 
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
+        debug | Bool | default = false,
         buildInputsValidated
           | not_exported
           | std.contract.from_validator (fun arr =>
@@ -133,24 +134,20 @@ in
           | force
           = buildInputs,
 
-
         # with changing configurations, propageted could cause a lot of issues.
-        allowDubplicateBuldInputs | Bool| default = false,
+        allowDubplicateBuldInputs | Bool | default = false,
 
         buildInputs | not_exported | default =
-        let maybeDups = 
-          baseBuildinputPackages
-          @ biDrvs
-          @ propagatedBuildInputs
-          @ indirectDeps 
-
-          in 
-          if (!allowDubplicateBuldInputs) then 
-          maybeDups 
+          let maybeDups =
+            baseBuildinputPackages
+            @ biDrvs
+            @ propagatedBuildInputs
+            @ indirectDeps
+          in
+          if (!allowDubplicateBuldInputs) then
+            maybeDups
           else
-           std.array.dedup maybeDups
-
-          ,
+            std.array.dedup maybeDups,
         propagatedBuildInputs | default = [],
         indirectDeps | default =
           let depKeyNames = std.array.map (fun v => v.keyName) (propagatedBuildInputs) in
@@ -178,6 +175,7 @@ in
           _stage = stage,
           _isLlvm | force = isLlvm,
           _isStatic = isStatic,
+          _debug | force = debug,
         },
         symlinkBuldInputs | Bool | default = false, # stage==-1,
         extraEnv | { _ : StringOrArray } | default = (
