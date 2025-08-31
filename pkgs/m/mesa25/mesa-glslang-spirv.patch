@@ -1,0 +1,61 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index fd2d963..12e8a51 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -338,16 +338,16 @@ endfunction()
+ 
+ # Always build ${SPIRV_TOOLS}-shared. This is expected distro packages, and
+ # unlike the other SPIRV_TOOLS target, defaults to hidden symbol visibility.
+-add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
+-if (SPIRV_TOOLS_USE_MIMALLOC)
+-  target_link_libraries(${SPIRV_TOOLS}-shared PRIVATE mimalloc-static)
+-endif()
+-spirv_tools_default_target_options(${SPIRV_TOOLS}-shared)
+-set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
+-target_compile_definitions(${SPIRV_TOOLS}-shared
+-  PRIVATE SPIRV_TOOLS_IMPLEMENTATION
+-  PUBLIC SPIRV_TOOLS_SHAREDLIB
+-)
++# add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
++# if (SPIRV_TOOLS_USE_MIMALLOC)
++#   target_link_libraries(${SPIRV_TOOLS}-shared PRIVATE mimalloc-static)
++# endif()
++# spirv_tools_default_target_options(${SPIRV_TOOLS}-shared)
++# set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
++# target_compile_definitions(${SPIRV_TOOLS}-shared
++#   PRIVATE SPIRV_TOOLS_IMPLEMENTATION
++#   PUBLIC SPIRV_TOOLS_SHAREDLIB
++# )
+ 
+ if(SPIRV_TOOLS_BUILD_STATIC)
+   add_library(${SPIRV_TOOLS}-static STATIC ${SPIRV_SOURCES})
+@@ -363,7 +363,7 @@ if(SPIRV_TOOLS_BUILD_STATIC)
+     add_library(${SPIRV_TOOLS} ALIAS ${SPIRV_TOOLS}-static)
+   endif()
+ 
+-  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static ${SPIRV_TOOLS}-shared)
++  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static)
+ else()
+   add_library(${SPIRV_TOOLS} ${SPIRV_TOOLS_LIBRARY_TYPE} ${SPIRV_SOURCES})
+   if (SPIRV_TOOLS_USE_MIMALLOC)
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index acd5116..9507634 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -175,11 +175,11 @@ add_spvtools_unittest(
+   SRCS c_interface_test.cpp
+   LIBS ${SPIRV_TOOLS_FULL_VISIBILITY})
+ 
+-add_spvtools_unittest(
+-  TARGET c_interface_shared
+-  SRCS c_interface_test.cpp
+-  LIBS ${SPIRV_TOOLS}-shared
+-  ENVIRONMENT PATH=$<TARGET_FILE_DIR:${SPIRV_TOOLS}-shared>)
++# add_spvtools_unittest(
++#   TARGET c_interface_shared
++#   SRCS c_interface_test.cpp
++#   LIBS ${SPIRV_TOOLS}-shared
++#   ENVIRONMENT PATH=$<TARGET_FILE_DIR:${SPIRV_TOOLS}-shared>)
+ 
+ add_spvtools_unittest(
+   TARGET cpp_interface

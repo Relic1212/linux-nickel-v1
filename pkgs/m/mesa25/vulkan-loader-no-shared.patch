@@ -1,0 +1,68 @@
+diff --git a/loader/CMakeLists.txt b/loader/CMakeLists.txt
+index 1b51c83..6af7f59 100644
+--- a/loader/CMakeLists.txt
++++ b/loader/CMakeLists.txt
+@@ -415,7 +415,7 @@ else()
+         message(WARNING "The APPLE_STATIC_LOADER option has been set. Note that this will only work on MacOS and is not supported "
+                 "or tested as part of the loader. Use it at your own risk.")
+     else()
+-        add_library(vulkan SHARED)
++        add_library(vulkan STATIC)
+     endif()
+ 
+     target_sources(vulkan PRIVATE ${NORMAL_LOADER_SRCS})
+@@ -524,16 +524,22 @@ if (APPLE_STATIC_LOADER)
+ endif()
+ 
+ # Generate CMake Configuration File (IE: VulkanLoaderConfig.cmake)
++
++# set_target_properties(loader_specific_options PROPERTIES EXPORT_NAME "loader_specific_options")
++# install(EXPORT loader_specific_options DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/loader_specific_options NAMESPACE Vulkan::)
++
++# install(TARGETS loader_specific_options)
++
+ install(TARGETS vulkan EXPORT VulkanLoaderConfig)
+ set_target_properties(vulkan PROPERTIES EXPORT_NAME "Loader")
+-install(EXPORT VulkanLoaderConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VulkanLoader NAMESPACE Vulkan::)
++# install(EXPORT VulkanLoaderConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VulkanLoader NAMESPACE Vulkan::)
+ 
+-# Generate CMake Version File (IE: VulkanLoaderConfigVersion.cmake)
+-include(CMakePackageConfigHelpers)
++# # Generate CMake Version File (IE: VulkanLoaderConfigVersion.cmake)
++# include(CMakePackageConfigHelpers)
+ 
+-set(version_config "${CMAKE_CURRENT_BINARY_DIR}/generated/VulkanLoaderConfigVersion.cmake")
+-write_basic_package_version_file("${version_config}" COMPATIBILITY SameMajorVersion)
+-install(FILES "${version_config}" DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VulkanLoader)
++# set(version_config "${CMAKE_CURRENT_BINARY_DIR}/generated/VulkanLoaderConfigVersion.cmake")
++# write_basic_package_version_file("${version_config}" COMPATIBILITY SameMajorVersion)
++# install(FILES "${version_config}" DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VulkanLoader)
+ 
+ # Generate PkgConfig File (IE: vulkan.pc)
+ # NOTE: Hopefully in the future CMake can generate .pc files natively.
+diff --git a/tests/framework/CMakeLists.txt b/tests/framework/CMakeLists.txt
+index 0dcf46e..4c9383b 100644
+--- a/tests/framework/CMakeLists.txt
++++ b/tests/framework/CMakeLists.txt
+@@ -54,7 +54,7 @@ function(AddSharedLibrary LIBRARY_NAME)
+     cmake_parse_arguments(PARSED_ARGS "" "${singleValueArgs}"
+                           "${multiValueArgs}" ${ARGN} )
+ 
+-    add_library(${LIBRARY_NAME} SHARED ${PARSED_ARGS_SOURCES})
++    add_library(${LIBRARY_NAME} STATIC ${PARSED_ARGS_SOURCES})
+     target_link_libraries(${LIBRARY_NAME} PUBLIC testing_framework_util)
+     target_compile_definitions(${LIBRARY_NAME} PRIVATE ${PARSED_ARGS_DEFINITIONS} VK_NO_PROTOTYPES)
+     # Windows requires export definitions for these libraries
+diff --git a/tests/framework/shim/CMakeLists.txt b/tests/framework/shim/CMakeLists.txt
+index a7cf454..aa700ff 100644
+--- a/tests/framework/shim/CMakeLists.txt
++++ b/tests/framework/shim/CMakeLists.txt
+@@ -29,7 +29,7 @@ if (WIN32)
+ 
+ elseif(UNIX)
+     if(APPLE)
+-        add_library(shim-library SHARED unix_shim.cpp)
++        add_library(shim-library STATIC unix_shim.cpp)
+         target_link_libraries(shim-library PRIVATE "-framework CoreFoundation")
+     else()
+         add_library(shim-library STATIC unix_shim.cpp)

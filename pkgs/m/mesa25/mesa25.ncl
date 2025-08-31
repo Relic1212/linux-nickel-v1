@@ -162,3 +162,4 @@
     }
 }
 & (import "mesa25glx.ncl")
+& (import "mesa25full.ncl")
