@@ -164,6 +164,7 @@ in
         ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
         llvmProvider | not_exported | default = drvs.llvm,
+        muslProvider | not_exported | default = if (!debug) then drvs.musl else drvs.muslDebug,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
@@ -177,6 +178,8 @@ in
           _isStatic = isStatic,
           _debug | force = debug,
         },
+        buildEnv._debug | priority -1000 = debug,
+        buildEnv._isStatic | priority -1000 = isStatic,
         symlinkBuldInputs | Bool | default = false, # stage==-1,
         extraEnv | { _ : StringOrArray } | default = (
           if buildInChroot then

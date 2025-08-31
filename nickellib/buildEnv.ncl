@@ -62,6 +62,7 @@
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
     _debug | Bool | default = false,
+    # _debug ,
     _optFlag | String = if (!_debug) then "-O2" else "-g",
     _stage | Number | optional,
     _isCross = TARGET != HOST,

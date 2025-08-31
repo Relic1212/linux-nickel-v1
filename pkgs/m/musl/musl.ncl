@@ -7,6 +7,7 @@
     isLlvm = (stage != 0),
     baseName = "musl",
     isStatic = false,
+    # buildEnv._isStatic |priority 1 = true,
 
     sourceInputs = [
       {
@@ -37,6 +38,7 @@
       isLlvm | force = false,
       buildEnv = {
         _isLlvm | force = false,
+        _isStatic = true,
       },
 
       buildInputs = [
@@ -113,6 +115,12 @@
         "objcopy -W dlsym libc.a",
         "objcopy --redefine-sym=dlsym=dlsym_old_and_bad libc.a",
       ]
+    },
+  muslDebug =
+    _muslBase
+    & {
+      debug = true,
+      extraConfigureFlags | priority 1 = ["--enable-static", "--enable-shared", "--enable-debug"],
     },
   muslAarch64 =
     musl
