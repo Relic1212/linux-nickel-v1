@@ -14,6 +14,7 @@
         "ln -s busybox awk",
         "ln -s busybox diff",
         "ln -s busybox find",
+        "ln -s busybox patch",
       ],
     }
   ),
@@ -177,3 +178,4 @@
     ]
   }
 }
+& (import "systemd258.ncl")
