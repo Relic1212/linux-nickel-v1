@@ -26,13 +26,26 @@
     makeTargets = [
       "libnewt.a",
     ],
-    installPhase = [
-      "install -d -m0755 ${DEST}/usr/lib",
-      "install -m0755 libnewt.a ${DEST}/usr/lib",
-      "install -d -m0755 ${DEST}/usr/include",
-      "install -d -m0755 ${DEST}/usr/lib/pkgconfig",
-      "install -m0755 libnewt.pc ${DEST}/usr/lib/pkgconfig",
-      "install -m 644 newt.h ${DEST}/usr/include",
-    ]
+    installPhase =
+      [
+        "install -d -m0755 ${DEST}/usr/lib",
+        "install -m0755 libnewt.a ${DEST}/usr/lib",
+        "install -d -m0755 ${DEST}/usr/include",
+        "install -d -m0755 ${DEST}/usr/lib/pkgconfig",
+        "install -m0755 libnewt.pc ${DEST}/usr/lib/pkgconfig",
+        "install -m 644 newt.h ${DEST}/usr/include",
+      ]
+      @ (
+        let symbols = [
+          "newtComponentGetPosition",
+          "newtComponentGetSize",
+          "newtEntryGetCursorPosition",
+          "newtEntrySetCursorPosition",
+        ]
+        in
+        std.array.map
+          (fun s => "llvm-objcopy --redefine-sym %{s}=newt_private__%{s} ${DEST}/usr/lib/libnewt.a")
+          symbols
+      )
   }
 }
