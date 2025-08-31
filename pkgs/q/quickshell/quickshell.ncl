@@ -13,7 +13,7 @@
     },
 
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
+    # symlinkBuldInputs = true,
 
     biDrvs = [
       drvs.pixman,
@@ -98,7 +98,7 @@
       drvs.libusb,
       drvs.ffmpeg,
       drvs.jansson,
-      drvs.libfreeaptx,
+      # drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
       drvs.libcamera,
@@ -148,7 +148,7 @@
     # ],
     patches = [
       {
-        sha256sum = "824be543637bae3ccfde47547ff1e32a103a84b3b4a7fe2abc21c7569aebd399",
+        sha256sum = "d973b39e5dbb76067839362df5a7159857279017f3d061d8bc3f357fec3bfdf3",
         file = "fix-quickshell2.patch"
       }
     ]

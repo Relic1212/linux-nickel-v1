@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 52db00a..f1eeae9 100644
+index 52db00a..4abffbe 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1,5 +1,27 @@
+@@ -1,5 +1,28 @@
  qt_add_executable(quickshell main.cpp)
  
 +target_link_libraries(quickshell PRIVATE
@@ -16,6 +16,7 @@ index 52db00a..f1eeae9 100644
 +	Qt6::Widgets
 +	Qt6::qtquickdialogsplugin
 +	Qt6::qmlfolderlistmodelplugin
++	Qt6::qtqmlcoreplugin
 +)
 +qt_import_plugins(quickshell INCLUDE 
 +    Qt6::QWaylandIntegrationPlugin
@@ -30,14 +31,14 @@ index 52db00a..f1eeae9 100644
  install(TARGETS quickshell RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  
  add_subdirectory(build)
-@@ -33,3 +55,5 @@ add_subdirectory(services)
+@@ -33,3 +56,5 @@ add_subdirectory(services)
  if (BLUETOOTH)
  	add_subdirectory(bluetooth)
  endif()
 +
 +
 diff --git a/src/main.cpp b/src/main.cpp
-index e0ce937..36d3bd7 100644
+index e0ce937..cad2852 100644
 --- a/src/main.cpp
 +++ b/src/main.cpp
 @@ -1,3 +1,73 @@
@@ -66,7 +67,6 @@ index e0ce937..36d3bd7 100644
 +Q_IMPORT_PLUGIN(QQmlNativeDebugServiceFactory)
 +Q_IMPORT_PLUGIN(QQmlDebuggerServiceFactory)
 +Q_IMPORT_PLUGIN(QDebugMessageServiceFactory)
-+// Q_IMPORT_PLUGIN(QtQmlCorePlugin)
 +Q_IMPORT_PLUGIN(QtQmlWorkerScriptPlugin)
 +// Q_IMPORT_PLUGIN(QmlSettingsPlugin)
 +// Q_IMPORT_PLUGIN(QtLabsAnimationPlugin)
@@ -81,7 +81,6 @@ index e0ce937..36d3bd7 100644
 +// Q_IMPORT_PLUGIN(QtQuickDialogs2QuickImplPlugin)
 +Q_IMPORT_PLUGIN(QtQuickControls2BasicStyleImplPlugin)
 +Q_IMPORT_PLUGIN(QtQuickControls2BasicStylePlugin)
-+// Q_IMPORT_PLUGIN(QtQmlXmlListModelPlugin)
 +Q_IMPORT_PLUGIN(QtQuick2Plugin)
 +Q_IMPORT_PLUGIN(QtQuickEffectsPlugin)
 +Q_IMPORT_PLUGIN(QtQuickControls2MaterialStylePlugin)
@@ -110,6 +109,8 @@ index e0ce937..36d3bd7 100644
 +Q_IMPORT_QML_PLUGIN(QtQmlPlugin)
 +Q_IMPORT_QML_PLUGIN(QtQmlModelsPlugin)
 +Q_IMPORT_QML_PLUGIN(QtQmlLabsModelsPlugin)
++Q_IMPORT_QML_PLUGIN(QtQmlCorePlugin)
++// Q_IMPORT_PLUGIN(QtQmlXmlListModelPlugin)
 +
 +
  
