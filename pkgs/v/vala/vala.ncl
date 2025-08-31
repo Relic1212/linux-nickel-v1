@@ -23,20 +23,60 @@
       drvs.graphviz,
     ]
   },
-  valaShared =
-    vala
-    & {
-      isStatic = false,
-      buildEnv = {
-        _isStatic = false
-      },
-      llvmProvider = drvs.llvmFull,
-      separateBuildDir = false,
-      extraConfigureFlags = [
-        # "--enable-static",
-        "--enable-shared",
+  valaShared | lib.AutotoolsPackage = {
+    singleSource = vala.singleSource,
+    isLlvm,
+    biDrvs =
+      [
+        drvs.pcre2,
+        drvs.libffi,
+        drvs.zlibNg,
+        drvs.glibDynamic,
+        drvs.pkgconf,
+        drvs.bison,
+        drvs.flex,
+        drvs.m4,
+        drvs.libtool,
+        drvs.pythonDynamic,
+        drvs.muslShared,
+        drvs.gobjectDynamic,
+        drvs.graphvizPic,
       ]
-    }
+      @ (
+        if isLlvm then
+          []
+        else
+          [
+            drvs.gcc,
+            drvs.binutils,
+          ]
+      ),
+
+    isStatic = false,
+    buildEnv = {
+      _isStatic = false,
+      # _isLlvm = false,
+      EXTRA_LDFLAGS = [
+        "-lpcre2-posix",
+        "-lpcre2-8 -lffi"
+      ],
+      # EXTRA_CFLAGS = EXTRA_LDFLAGS,
+    },
+    extraEnv = {
+      LIBS = buildEnv.EXTRA_LDFLAGS
+    },
+    # llvmProvider = drvs.llvmFullPic,
+    # separateBuildDir = false,
+    # enableParallel = false,
+    extraConfigureFlags = [
+      "--enable-static",
+      "--enable-shared",
+    ],
+    extraMakeArgs = [
+      "LDFLAGS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
+      "LIBS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
+    ]
+  }
 }
 & {
   lib,
@@ -58,5 +98,13 @@
       drvs.flex,
       drvs.pythonFull,
     ]
-  }
+  },
+  graphvizPic =
+    graphviz
+    & {
+      buildEnv.EXTRA_CFLAGS = ["-fPIC"],
+      extraConfigureFlags = [
+        "--enable-pic"
+      ]
+    }
 }
