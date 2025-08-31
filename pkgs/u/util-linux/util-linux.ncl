@@ -41,19 +41,38 @@
       sha256sum = "c014b5861695b603d0be2ad1e6f10d5838b9d7859e1dd72d01504556817d8a87"
     },
 
-    preConfigurePhase = [
-      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
-      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
+    preConfigurePhase =
+      [
+        m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
+        m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
 
-      # https://github.com/util-linux/util-linux/pull/3538/files
-      m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
+        # https://github.com/util-linux/util-linux/pull/3538/files
+        m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
 
-      # m%"sed -i 's@both_libraries@both_libraries@g' ${SRC}/libsmartcols/meson.build"%,
+        # m%"sed -i 's@both_libraries@both_libraries@g' ${SRC}/libsmartcols/meson.build"%,
 
-      # "lib_smartcols.get_static_lib()"
-      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@both_libraries@library@g' ${f};done"%,
-      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@.get_static_lib()@@g' ${f};done"%,
-    ],
+        # "lib_smartcols.get_static_lib()"
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@both_libraries@library@g' ${f};done"%,
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@.get_static_lib()@@g' ${f};done"%,
+      ]
+      @ (
+        let
+          pr = ["text-utils/column.c", "disk-utils/partx.c", "lib/strutils.c", "include/strutils.h"],
+          ps = [
+            "disk-utils/cfdisk.c",
+            "disk-utils/fdisk.c",
+            "libfdisk/src/script.c",
+            "include/strutils.h",
+            "libfdisk/src/gpt.c",
+            "sys-utils/lscpu-topology.c",
+            "lib/strutils.c",
+          ]
+        in
+        (
+          (std.array.map (fun f => "sed -i 's|parse_range|util_linux__parse_range|g' ${SRC}/%{f}") pr)
+          @ (std.array.map (fun f => "sed -i 's|parse_size(|util_linux__parse_size(|g' ${SRC}/%{f}") ps)
+        )
+      ),
 
     extraMesonArgs = [
       "-Dprogram-tests=false",
