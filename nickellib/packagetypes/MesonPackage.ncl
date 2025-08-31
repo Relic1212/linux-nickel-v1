@@ -11,12 +11,14 @@
         isStatic,
         enableCcache,
         isLlvm,
+        debug,
         stage,
         utilsProviders | not_exported,
         llvmProvider | not_exported,
+        muslProvider | not_exported,
 
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
-        baseMesonArgs | Array String | default = constants.mesonArgs @ (if isStatic then constants.mesonArgsStatic else []),
+        baseMesonArgs | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then constants.mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
         configurePhase | priority -1000 =
           if (!useMuon) then
@@ -51,7 +53,7 @@
                     [
                       drvs.muon,
                       drvs.pkgconf,
-                      drvs.musl,
+                      muslProvider,
                     ]
                   else
                     [
@@ -59,7 +61,7 @@
                       drvs.samurai,
                       pythonProvider,
                       drvs.pkgconf,
-                      drvs.musl,
+                      muslProvider,
                     ]
                 )
                 @ (if isLlvm then [llvmProvider] else [])
