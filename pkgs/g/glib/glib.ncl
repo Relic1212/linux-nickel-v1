@@ -19,6 +19,12 @@
       m%"sed -i 's@-Wl,--whole-archive@@g' ${DEST}/usr/lib/pkgconfig/gmodule-export-2.0.pc"%,
     ]
   },
+  glibDebug =
+    glib
+    & {
+      debug = true,
+      extraMesonArgs | priority 1 = ["-Dbsymbolic_functions=false", "-Dglib_assert=true", "-Dnls=disabled", "-Dglib_debug=enabled", "-Dtests=false"],
+    }
 }
 & {
   lib,
