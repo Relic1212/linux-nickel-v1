@@ -1,0 +1,514 @@
+diff --git a/meson.build b/meson.build
+index 7a3a7f6cbe..c7481b7b9d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1218,7 +1218,6 @@ libkmod = dependency('libkmod',
+                      version : '>= 15',
+                      required : get_option('kmod'))
+ conf.set10('HAVE_KMOD', libkmod.found())
+-libkmod_cflags = libkmod.partial_dependency(includes: true, compile_args: true)
+ 
+ libxenctrl = dependency('xencontrol',
+                         version : '>= 4.9',
+diff --git a/src/core/kmod-setup.c b/src/core/kmod-setup.c
+index 12ce5a86e4..90b537c552 100644
+--- a/src/core/kmod-setup.c
++++ b/src/core/kmod-setup.c
+@@ -8,13 +8,29 @@
+ #include "fileio.h"
+ #include "kmod-setup.h"
+ #include "log.h"
+-#include "module-util.h"
++
+ #include "recurse-dir.h"
+ #include "string-util.h"
+ #include "strv.h"
+ #include "virt.h"
+ 
+ #if HAVE_KMOD
++#include "module-util.h"
++
++static void systemd_kmod_log(
++                void *data,
++                int priority,
++                const char *file, int line,
++                const char *fn,
++                const char *format,
++                va_list args) {
++
++        /* library logging is enabled at debug only */
++        DISABLE_WARNING_FORMAT_NONLITERAL;
++        log_internalv(LOG_DEBUG, 0, file, line, fn, format, args);
++        REENABLE_WARNING;
++}
++
+ static int match_modalias_recurse_dir_cb(
+                 RecurseDirEvent event,
+                 const char *path,
+@@ -150,12 +166,11 @@ int kmod_setup(void) {
+ #endif
+         };
+ 
+-        int r;
+ 
+         if (have_effective_cap(CAP_SYS_MODULE) <= 0)
+                 return 0;
+ 
+-        _cleanup_(sym_kmod_unrefp) struct kmod_ctx *ctx = NULL;
++        _cleanup_(kmod_unrefp) struct kmod_ctx *ctx = NULL;
+         FOREACH_ELEMENT(kmod, kmod_table) {
+                 if (kmod->path && access(kmod->path, F_OK) >= 0)
+                         continue;
+@@ -169,9 +184,12 @@ int kmod_setup(void) {
+                                   "this by loading the module...", kmod->module);
+ 
+                 if (!ctx) {
+-                        r = module_setup_context(&ctx);
+-                        if (r < 0)
+-                                return log_error_errno(r, "Failed to initialize kmod context: %m");
++                        ctx = kmod_new(NULL, NULL);
++                        if (!ctx)
++                                return log_oom();
++
++                        kmod_set_log_fn(ctx, systemd_kmod_log, NULL);
++                        kmod_load_resources(ctx);
+                 }
+ 
+                 (void) module_load_and_warn(ctx, kmod->module, kmod->warn_if_unavailable);
+diff --git a/src/core/meson.build b/src/core/meson.build
+index 8bb0054c14..70d49d5eb9 100644
+--- a/src/core/meson.build
++++ b/src/core/meson.build
+@@ -200,7 +200,7 @@ executables += [
+                 ],
+                 'dependencies' : [
+                         libapparmor_cflags,
+-                        libkmod_cflags,
++                        libkmod,
+                         libseccomp,
+                         libselinux,
+                 ],
+diff --git a/src/modules-load/meson.build b/src/modules-load/meson.build
+index 23707c172b..4b857506c3 100644
+--- a/src/modules-load/meson.build
++++ b/src/modules-load/meson.build
+@@ -8,7 +8,7 @@ executables += [
+         libexec_template + {
+                 'name' : 'systemd-modules-load',
+                 'sources' : files('modules-load.c'),
+-                'dependencies' : libkmod_cflags,
++                'dependencies' : libkmod,
+         },
+ ]
+ 
+diff --git a/src/modules-load/modules-load.c b/src/modules-load/modules-load.c
+index ea1b717bb3..83a3109302 100644
+--- a/src/modules-load/modules-load.c
++++ b/src/modules-load/modules-load.c
+@@ -23,6 +23,15 @@ static const char conf_file_dirs[] = CONF_PATHS_NULSTR("modules-load.d");
+ 
+ STATIC_DESTRUCTOR_REGISTER(arg_proc_cmdline_modules, strv_freep);
+ 
++static void systemd_kmod_log(void *data, int priority, const char *file, int line,
++                             const char *fn, const char *format, va_list args) {
++
++        DISABLE_WARNING_FORMAT_NONLITERAL;
++        log_internalv(priority, 0, file, line, fn, format, args);
++        REENABLE_WARNING;
++}
++
++
+ static int parse_proc_cmdline_item(const char *key, const char *value, void *data) {
+         int r;
+ 
+@@ -135,7 +144,7 @@ static int parse_argv(int argc, char *argv[]) {
+ }
+ 
+ static int run(int argc, char *argv[]) {
+-        _cleanup_(sym_kmod_unrefp) struct kmod_ctx *ctx = NULL;
++        _cleanup_(kmod_unrefp) struct kmod_ctx *ctx = NULL;
+         int r, k;
+ 
+         r = parse_argv(argc, argv);
+@@ -150,10 +159,13 @@ static int run(int argc, char *argv[]) {
+         if (r < 0)
+                 log_warning_errno(r, "Failed to parse kernel command line, ignoring: %m");
+ 
+-        r = module_setup_context(&ctx);
+-        if (r < 0)
+-                return log_error_errno(r, "Failed to initialize libkmod context: %m");
++        ctx = kmod_new(NULL, NULL);
++        if (!ctx)
++                return log_oom();
+ 
++        kmod_load_resources(ctx);
++        kmod_set_log_fn(ctx, systemd_kmod_log, NULL);
++        
+         r = 0;
+ 
+         if (argc > optind) {
+diff --git a/src/shared/meson.build b/src/shared/meson.build
+index d433087459..0846aa6cb0 100644
+--- a/src/shared/meson.build
++++ b/src/shared/meson.build
+@@ -253,6 +253,12 @@ if conf.get('HAVE_LIBBPF') == 1
+         shared_sources += files('bpf-link.c')
+ endif
+ 
++
++if conf.get('HAVE_KMOD') == 1
++        shared_sources += files('module-util.c')
++endif
++
++
+ if conf.get('HAVE_PAM') == 1
+         shared_sources += files('pam-util.c')
+ endif
+@@ -320,7 +326,7 @@ libshared_deps = [threads,
+                   libdl,
+                   libgcrypt,
+                   libiptc_cflags,
+-                  libkmod_cflags,
++                  libkmod,
+                   liblz4_cflags,
+                   libmount,
+                   libopenssl,
+diff --git a/src/shared/module-util.c b/src/shared/module-util.c
+index dcdc122ffb..5e5b9268c9 100644
+--- a/src/shared/module-util.c
++++ b/src/shared/module-util.c
+@@ -7,48 +7,6 @@
+ #include "proc-cmdline.h"
+ #include "strv.h"
+ 
+-#if HAVE_KMOD
+-
+-static void *libkmod_dl = NULL;
+-
+-DLSYM_PROTOTYPE(kmod_list_next) = NULL;
+-DLSYM_PROTOTYPE(kmod_load_resources) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_initstate) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_module) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_name) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_new_from_lookup) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_probe_insert_module) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_unref) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_unref_list) = NULL;
+-DLSYM_PROTOTYPE(kmod_new) = NULL;
+-DLSYM_PROTOTYPE(kmod_set_log_fn) = NULL;
+-DLSYM_PROTOTYPE(kmod_unref) = NULL;
+-DLSYM_PROTOTYPE(kmod_validate_resources) = NULL;
+-
+-int dlopen_libkmod(void) {
+-        ELF_NOTE_DLOPEN("kmod",
+-                        "Support for loading kernel modules",
+-                        ELF_NOTE_DLOPEN_PRIORITY_RECOMMENDED,
+-                        "libkmod.so.2");
+-
+-        return dlopen_many_sym_or_warn(
+-                        &libkmod_dl,
+-                        "libkmod.so.2",
+-                        LOG_DEBUG,
+-                        DLSYM_ARG(kmod_list_next),
+-                        DLSYM_ARG(kmod_load_resources),
+-                        DLSYM_ARG(kmod_module_get_initstate),
+-                        DLSYM_ARG(kmod_module_get_module),
+-                        DLSYM_ARG(kmod_module_get_name),
+-                        DLSYM_ARG(kmod_module_new_from_lookup),
+-                        DLSYM_ARG(kmod_module_probe_insert_module),
+-                        DLSYM_ARG(kmod_module_unref),
+-                        DLSYM_ARG(kmod_module_unref_list),
+-                        DLSYM_ARG(kmod_new),
+-                        DLSYM_ARG(kmod_set_log_fn),
+-                        DLSYM_ARG(kmod_unref),
+-                        DLSYM_ARG(kmod_validate_resources));
+-}
+ 
+ static int parse_proc_cmdline_item(const char *key, const char *value, void *data) {
+         char ***denylist = ASSERT_PTR(data);
+@@ -68,21 +26,21 @@ static int parse_proc_cmdline_item(const char *key, const char *value, void *dat
+ }
+ 
+ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose) {
+-        _cleanup_(sym_kmod_module_unref_listp) struct kmod_list *modlist = NULL;
++        const int probe_flags = KMOD_PROBE_APPLY_BLACKLIST;
++        struct kmod_list *itr;
++        _cleanup_(kmod_module_unref_listp) struct kmod_list *modlist = NULL;
++
+         _cleanup_strv_free_ char **denylist = NULL;
+         bool denylist_parsed = false;
+-        struct kmod_list *itr;
+-        int r;
+ 
+-        assert(ctx);
+-        assert(module);
++        int r;
+ 
+         /* verbose==true means we should log at non-debug level if we
+          * fail to find or load the module. */
+ 
+         log_debug("Loading module: %s", module);
+ 
+-        r = sym_kmod_module_new_from_lookup(ctx, module, &modlist);
++        r = kmod_module_new_from_lookup(ctx, module, &modlist);
+         if (r < 0)
+                 return log_full_errno(verbose ? LOG_ERR : LOG_DEBUG, r,
+                                       "Failed to look up module alias '%s': %m", module);
+@@ -92,25 +50,25 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                       SYNTHETIC_ERRNO(ENOENT),
+                                       "Failed to find module '%s'", module);
+ 
+-        sym_kmod_list_foreach(itr, modlist) {
+-                _cleanup_(sym_kmod_module_unrefp) struct kmod_module *mod = NULL;
++        kmod_list_foreach(itr, modlist) {
++                _cleanup_(kmod_module_unrefp) struct kmod_module *mod = NULL;
+                 int state, err;
+ 
+-                mod = sym_kmod_module_get_module(itr);
+-                state = sym_kmod_module_get_initstate(mod);
++                mod = kmod_module_get_module(itr);
++                state = kmod_module_get_initstate(mod);
+ 
+                 switch (state) {
+                 case KMOD_MODULE_BUILTIN:
+                         log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                 "Module '%s' is built in", sym_kmod_module_get_name(mod));
++                                 "Module '%s' is built in", kmod_module_get_name(mod));
+                         break;
+ 
+                 case KMOD_MODULE_LIVE:
+-                        log_debug("Module '%s' is already loaded", sym_kmod_module_get_name(mod));
++                        log_debug("Module '%s' is already loaded", kmod_module_get_name(mod));
+                         break;
+ 
+                 default:
+-                        err = sym_kmod_module_probe_insert_module(
++                        err = kmod_module_probe_insert_module(
+                                         mod,
+                                         KMOD_PROBE_APPLY_BLACKLIST,
+                                         /* extra_options= */ NULL,
+@@ -119,10 +77,10 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                         /* print_action= */ NULL);
+                         if (err == 0)
+                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                         "Inserted module '%s'", sym_kmod_module_get_name(mod));
++                                         "Inserted module '%s'", kmod_module_get_name(mod));
+                         else if (err == KMOD_PROBE_APPLY_BLACKLIST)
+                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                         "Module '%s' is deny-listed (by kmod)", sym_kmod_module_get_name(mod));
++                                         "Module '%s' is deny-listed (by kmod)", kmod_module_get_name(mod));
+                         else {
+                                 assert(err < 0);
+ 
+@@ -136,9 +94,9 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+ 
+                                                 denylist_parsed = true;
+                                         }
+-                                        if (strv_contains(denylist, sym_kmod_module_get_name(mod))) {
++                                        if (strv_contains(denylist, kmod_module_get_name(mod))) {
+                                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                                         "Module '%s' is deny-listed (by kernel)", sym_kmod_module_get_name(mod));
++                                                         "Module '%s' is deny-listed (by kernel)", kmod_module_get_name(mod));
+                                                 continue;
+                                         }
+                                 }
+@@ -149,7 +107,7 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                                                 LOG_ERR,
+                                                err,
+                                                "Failed to insert module '%s': %m",
+-                                               sym_kmod_module_get_name(mod));
++                                               kmod_module_get_name(mod));
+                                 if (!IN_SET(err, -ENODEV, -ENOENT))
+                                         r = err;
+                         }
+@@ -159,37 +117,3 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+         return r;
+ }
+ 
+-_printf_(6,0) static void systemd_kmod_log(
+-                void *data,
+-                int priority,
+-                const char *file,
+-                int line,
+-                const char *fn,
+-                const char *format,
+-                va_list args) {
+-
+-        log_internalv(priority, 0, file, line, fn, format, args);
+-}
+-
+-int module_setup_context(struct kmod_ctx **ret) {
+-        _cleanup_(sym_kmod_unrefp) struct kmod_ctx *ctx = NULL;
+-        int r;
+-
+-        assert(ret);
+-
+-        r = dlopen_libkmod();
+-        if (r < 0)
+-                return r;
+-
+-        ctx = sym_kmod_new(NULL, NULL);
+-        if (!ctx)
+-                return -ENOMEM;
+-
+-        (void) sym_kmod_load_resources(ctx);
+-        sym_kmod_set_log_fn(ctx, systemd_kmod_log, NULL);
+-
+-        *ret = TAKE_PTR(ctx);
+-        return 0;
+-}
+-
+-#endif
+diff --git a/src/shared/module-util.h b/src/shared/module-util.h
+index e98e0049b6..ded7036f42 100644
+--- a/src/shared/module-util.h
++++ b/src/shared/module-util.h
+@@ -3,54 +3,14 @@
+ 
+ #include "forward.h"
+ 
+-#if HAVE_KMOD
+ 
+ #include <libkmod.h> /* IWYU pragma: export */
+ 
+-#include "dlfcn-util.h"
+-
+-extern DLSYM_PROTOTYPE(kmod_list_next);
+-extern DLSYM_PROTOTYPE(kmod_load_resources);
+-extern DLSYM_PROTOTYPE(kmod_module_get_initstate);
+-extern DLSYM_PROTOTYPE(kmod_module_get_module);
+-extern DLSYM_PROTOTYPE(kmod_module_get_name);
+-extern DLSYM_PROTOTYPE(kmod_module_new_from_lookup);
+-extern DLSYM_PROTOTYPE(kmod_module_probe_insert_module);
+-extern DLSYM_PROTOTYPE(kmod_module_unref);
+-extern DLSYM_PROTOTYPE(kmod_module_unref_list);
+-extern DLSYM_PROTOTYPE(kmod_new);
+-extern DLSYM_PROTOTYPE(kmod_set_log_fn);
+-extern DLSYM_PROTOTYPE(kmod_unref);
+-extern DLSYM_PROTOTYPE(kmod_validate_resources);
+-
+-int dlopen_libkmod(void);
+-
+-DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_ctx*, sym_kmod_unref);
+-DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_module*, sym_kmod_module_unref);
+-DEFINE_TRIVIAL_CLEANUP_FUNC_FULL(struct kmod_list*, sym_kmod_module_unref_list, NULL);
+-
+-#define sym_kmod_list_foreach(list_entry, first_entry) \
+-        for (list_entry = first_entry; \
+-                list_entry != NULL; \
+-                list_entry = sym_kmod_list_next(first_entry, list_entry))
+ 
+-int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose);
+-int module_setup_context(struct kmod_ctx **ret);
+-
+-#else
+-
+-struct kmod_ctx;
+ 
+-static inline int dlopen_libkmod(void) {
+-        return -EOPNOTSUPP;
+-}
++DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_ctx*, kmod_unref);
++DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_module*, kmod_module_unref);
++DEFINE_TRIVIAL_CLEANUP_FUNC_FULL(struct kmod_list*, kmod_module_unref_list, NULL);
+ 
+-static inline int module_setup_context(struct kmod_ctx **ret) {
+-        return -EOPNOTSUPP;
+-}
+ 
+-static inline int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose) {
+-        return -EOPNOTSUPP;
+-}
+-
+-#endif
++int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose);
+diff --git a/src/test/meson.build b/src/test/meson.build
+index 745080733d..b78f74df86 100644
+--- a/src/test/meson.build
++++ b/src/test/meson.build
+@@ -289,7 +289,7 @@ executables += [
+                 'sources' : files('test-dlopen-so.c'),
+                 'dependencies' : [
+                         libp11kit_cflags,
+-                        libkmod_cflags,
++                        libkmod,
+                 ],
+         },
+         test_template + {
+@@ -362,7 +362,7 @@ executables += [
+         },
+         test_template + {
+                 'sources' : files('test-netlink-manual.c'),
+-                'dependencies' : libkmod_cflags,
++                'dependencies' : libkmod,
+                 'conditions' : ['HAVE_KMOD'],
+                 'type' : 'manual',
+         },
+diff --git a/src/udev/udev-builtin-kmod.c b/src/udev/udev-builtin-kmod.c
+index 4fe37971ee..062971ea0f 100644
+--- a/src/udev/udev-builtin-kmod.c
++++ b/src/udev/udev-builtin-kmod.c
+@@ -13,6 +13,10 @@
+ 
+ static struct kmod_ctx *ctx = NULL;
+ 
++_printf_(6,0) static void udev_kmod_log(void *data, int priority, const char *file, int line, const char *fn, const char *format, va_list args) {
++        log_internalv(priority, 0, file, line, fn, format, args);
++}
++
+ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+         sd_device *dev = ASSERT_PTR(ASSERT_PTR(event)->dev);
+         int r;
+@@ -38,7 +42,7 @@ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+ 
+                 r = sd_device_get_property_value(dev, "MODALIAS", &modalias);
+                 if (r < 0)
+-                        return log_device_warning_errno(dev, r, "Failed to read property \"MODALIAS\": %m");
++                        return log_device_warning_errno(dev, r, "Failed to read property \"MODALIAS\".");
+ 
+                 (void) module_load_and_warn(ctx, modalias, /* verbose = */ false);
+         }
+@@ -48,25 +52,27 @@ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+ 
+ /* called at udev startup and reload */
+ static int builtin_kmod_init(void) {
+-        int r;
+ 
+         if (ctx)
+                 return 0;
++        
++        ctx = kmod_new(NULL, NULL);
++        if (!ctx)
++                return -ENOMEM;
+ 
+-        r = module_setup_context(&ctx);
+-        if (r < 0)
+-                return log_error_errno(r, "Failed to initialize libkmod context: %m");
+ 
+         log_debug("Loaded kernel module index.");
++
++        kmod_set_log_fn(ctx, udev_kmod_log, NULL);
++        kmod_load_resources(ctx);
++
+         return 0;
+ }
+ 
+ /* called on udev shutdown and reload request */
+ static void builtin_kmod_exit(void) {
+-        if (!ctx)
+-                return;
+ 
+-        ctx = sym_kmod_unref(ctx);
++        ctx = kmod_unref(ctx);
+         log_debug("Unloaded kernel module index.");
+ }
+ 
+@@ -75,7 +81,7 @@ static bool builtin_kmod_should_reload(void) {
+         if (!ctx)
+                 return false;
+ 
+-        if (sym_kmod_validate_resources(ctx) != KMOD_RESOURCES_OK) {
++        if (kmod_validate_resources(ctx) != KMOD_RESOURCES_OK) {
+                 log_debug("Kernel module index needs reloading.");
+                 return true;
+         }

@@ -17,11 +17,26 @@
         }
       }
     ],
+
+    patches = [
+      {
+        sha256sum = "d52024f1c44c97e197dd51b864d115fd636a47a63d32a92b888368b9049612a3",
+        file = "systemd-link-kmod-2.patch"
+      }
+    ],
+    patchPhase = [],
     preConfigurePhase = [
       "(cd ${SRC} && patch -p1 < 37788.patch)",
+      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/systemd-link-kmod-2.patch)",
       m%"sed -i "s|libshared = shared_library(|libshared = shared_library( 'shared' +|g" ${SRC}/src/shared/meson.build"%,
       m%"sed -i "s|libcore = shared_library(|libcore = shared_library( 'shared' +|g" ${SRC}/src/core/meson.build"%,
+      m%"sed -i "s|libudev = shared_library(|libudev = shared_library( 'shared' + |g" ${SRC}/meson.build"%,
+
+      # m%"sed -i "s|runtest_env = custom_target(|libudev = install_libudev_static\nruntest_env = custom_target(|g" ${SRC}/meson.build"%,
       "for f in $(find ${SRC} -name meson.build); do sed -i 's|shared_library|library|g' ${f};done",
+      m%"sed -i 's|"/run/systemd/system/"|"/run/"|g' ${SRC}/src/libsystemd/sd-daemon/sd-daemon.c"%,
+      m%"sed -i 's|manager_varlink_init(m, TAKE_FD(varlink_fd))|0|g' ${SRC}/src/login/logind.c"%,
+      m%"sed -i 's|leader.fd < 0|0==1|g' ${SRC}/src/login/logind-dbus.c"%,
     ],
     extraMesonArgs =
       [
@@ -33,7 +48,9 @@
         "-Dmode=release",
         "-Dstandalone-binaries=true",
         # "-Dstatic-libsystemd=true",
-        # "-Dstatic-libudev=true",
+        "-Dstatic-libudev=no-pic",
+        "-Dkmod-path=/usr/bin/kmod",
+        "-Dkmod=enabled",
       ]
       @ (
         std.array.map
@@ -49,6 +66,12 @@
             "portabled"
           ]
       ),
+
+    postInstallPhase = [
+      "(cd ${DEST}/usr/bin && ln -s ../lib/systemd/systemd-udevd udevd)",
+      "install -d -m0755 ${DEST}/usr/libexec",
+      "(cd ${DEST}/usr/libexec && ln -s ../lib/systemd/systemd-logind elogind)",
+    ],
 
     biDrvs = [
       drvs.acl,
