@@ -137,7 +137,7 @@
       drvs.xorgMacros,
       drvs.xorgproto,
       drvs.xtrans,
-      drvs.xwayland,
+      # drvs.xwayland,
       drvs.zlibNg,
       drvs.isoCodes,
       drvs.libxext,
