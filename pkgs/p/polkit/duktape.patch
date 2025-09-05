@@ -1,0 +1,51 @@
+diff --git a/Makefile.sharedlibrary b/Makefile.sharedlibrary
+index bf5c0cb..76473f7 100644
+--- a/Makefile.sharedlibrary
++++ b/Makefile.sharedlibrary
+@@ -38,12 +38,12 @@ else
+ endif
+ ifeq ($(DETECTED_OS),Darwin)
+     LD_SONAME_ARG=-install_name
+-    SO_SONAME_SUFFIX=$(SONAME_VERSION).so
+-    SO_REALNAME_SUFFIX=$(REAL_VERSION).so
++    SO_SONAME_SUFFIX=$(SONAME_VERSION).a
++    SO_REALNAME_SUFFIX=$(REAL_VERSION).a
+ else
+     LD_SONAME_ARG=-soname
+-    SO_SONAME_SUFFIX=so.$(SONAME_VERSION)
+-    SO_REALNAME_SUFFIX=so.$(REAL_VERSION)
++    SO_SONAME_SUFFIX=a.$(SONAME_VERSION)
++    SO_REALNAME_SUFFIX=a.$(REAL_VERSION)
+ endif
+ 
+ # Change to actual path for actual distribution packaging.
+@@ -70,11 +70,11 @@ all: libduktape.$(SO_REALNAME_SUFFIX) libduktaped.$(SO_REALNAME_SUFFIX) duktape.
+ # to $INSTALL_PREFIX/include on installation.
+ 
+ libduktape.$(SO_REALNAME_SUFFIX):
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -shared -fPIC -Wall -Wextra -Os -Wl,$(LD_SONAME_ARG),libduktape.$(SO_SONAME_SUFFIX) \
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)   \
+ 		-o $@ $(DUKTAPE_SRCDIR)/duktape.c
+ 
+ libduktaped.$(SO_REALNAME_SUFFIX):
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -shared -fPIC -g -Wall -Wextra -Os -Wl,$(LD_SONAME_ARG),libduktaped.$(SO_SONAME_SUFFIX) \
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)  -fPIC -g -Wall -Wextra -Os -Wl,$(LD_SONAME_ARG),libduktaped.$(SO_SONAME_SUFFIX) \
+ 		-o $@ $(DUKTAPE_SRCDIR)/duktape.c
+ 
+ duktape.pc:
+@@ -89,11 +89,11 @@ duktape.pc:
+ install: libduktape.$(SO_REALNAME_SUFFIX) libduktaped.$(SO_REALNAME_SUFFIX) duktape.pc
+ 	mkdir -p $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/pkgconfig
+ 	cp $+ $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/
+-	rm -f $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.so $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.$(SO_SONAME_SUFFIX)
+-	ln -s libduktape.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.so
++	rm -f $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.a $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.$(SO_SONAME_SUFFIX)
++	ln -s libduktape.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.a
+ 	ln -s libduktape.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktape.$(SO_SONAME_SUFFIX)
+-	rm -f $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.so $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.$(SO_SONAME_SUFFIX)
+-	ln -s libduktaped.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.so
++	rm -f $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.a $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.$(SO_SONAME_SUFFIX)
++	ln -s libduktaped.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.a
+ 	ln -s libduktaped.$(SO_REALNAME_SUFFIX) $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/libduktaped.$(SO_SONAME_SUFFIX)
+ 	mv $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/duktape.pc $(DESTDIR)$(INSTALL_PREFIX)$(LIBDIR)/pkgconfig/
+ 	mkdir -p $(DESTDIR)$(INSTALL_PREFIX)/include/
