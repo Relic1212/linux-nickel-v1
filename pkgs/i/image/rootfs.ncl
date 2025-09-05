@@ -6,15 +6,15 @@
     installPhase = [
       "echo 'copying the rootfs'",
 
-      #"cp -r /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
+      # "cp -a /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
       "mkdir /tmp/workdir/out/destdir/rootfs",
-      # m%"
-      #   for d in $(ls /tmp/workdir/sysroot);do
-      #     echo "copying ${d}"
-      #     cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
-      #   done
-      #   "%,
-      m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"%,
+      m%"
+        for d in $(ls /tmp/workdir/sysroot);do
+          echo "copying ${d}"
+          cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
+        done
+        "%,
+      # m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"%,
       "echo 'removing useless stuff'",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
@@ -23,7 +23,7 @@
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
+      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
       "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
@@ -173,7 +173,7 @@
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
-        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
+        # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",

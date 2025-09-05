@@ -60,6 +60,7 @@
     drvs.dinitServicesV3,
     drvs.dinitUtils,
     drvs.shadow,
+    # drvs.openpam,
     drvs.libcap,
     drvs.utilLinux,
     drvs.pciutils,
@@ -70,7 +71,6 @@
     # drvs.v4l2loopback,
 
     # drvs.linuxFirmwareSmaller,
-    drvs.eudev,
     # drvs.mdevd,
     # drvs.mdevdConf,
     drvs.dbus,
@@ -94,7 +94,9 @@
     drvs.e2fsprogs,
     # drvs.fscryptUnlockHome,
     drvs.fscryptUnlockHomeElogind,
-    drvs.elogind,
+    # drvs.elogind,
+    # drvs.eudev,
+    drvs.systemd258,
     (drvs.dinitEnv & { priority = 1 }),
     # drvs-basu,
     drvs.openssl,
@@ -136,6 +138,13 @@
     drvs.upower,
     drvs.acpid,
     drvs.laptopModeTools,
+    drvs.powertop,
+    drvs.tlp,
+    drvs.perl,
+    drvs.hdparm,
+    drvs.powerProfilesDaemon,
+    drvs.iw,
+    drvs.ethtool,
     #drvs.tuned,
     drvs.opendoas,
     drvs.rsync,
@@ -167,6 +176,7 @@
     # drvs.conmon,
     # drvs.crun,
     # drvs.netavark,
+    drvs.networkmanager,
   ],
 
   # TODO: uneccesary paths
@@ -182,7 +192,6 @@
     _rootfs2
     & {
       enableCcache = false,
-      name = "base-image",
       biDrvs =
         [
           # drvs.baseBaseRootfs,
