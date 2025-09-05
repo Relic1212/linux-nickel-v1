@@ -50,17 +50,27 @@
     ],
     nonCrateSourceInputs = [
       {
+        # src = {
+        #   uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.05.1.tar.gz",
+        #   sha256sum = "2df192fa85adbb0eabcfddbd8aa812c3d3329a582a7e62212ea9fcddafa79b00",
+        # }
+
         src = {
-          uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.05.1.tar.gz",
-          sha256sum = "2df192fa85adbb0eabcfddbd8aa812c3d3329a582a7e62212ea9fcddafa79b00",
+          uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.08.tar.gz",
+          sha256sum = "69f8227d621ee6389bcd5368a250c189e672d02528472dc5ef0e3eccf80cf0b8"
         }
       },
       {
         dest = "vendor",
+        # src = {
+        #   uri = "https://github.com/YaLTeR/niri/releases/download/v25.05.1/niri-25.05.1-vendored-dependencies.tar.xz",
+        #   sha256sum = "4c2b2b3fc8340c02f3ba2581b50847f1d9e0fab986bebf53aaf045fa54b9a3c2"
+        # },
+
         src = {
-          uri = "https://github.com/YaLTeR/niri/releases/download/v25.05.1/niri-25.05.1-vendored-dependencies.tar.xz",
-          sha256sum = "4c2b2b3fc8340c02f3ba2581b50847f1d9e0fab986bebf53aaf045fa54b9a3c2"
-        },
+          uri = "https://github.com/YaLTeR/niri/releases/download/v25.08/niri-25.08-vendored-dependencies.tar.xz",
+          sha256sum = "5a0a36b1a52985a60d5d6864c2ef7df2b0f5f9fea2a775662e7777cf536277bd"
+        }
 
         # src = {
         #   uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
@@ -87,10 +97,14 @@
         sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
         file = "ffi.patch"
       },
+      # {
+      #   sha256sum = "a18cbc37f29f7789f7c2cb95d7abf8dab5381c044944181a97b4ae1e0daeba7b",
+      #   file = "no-winit.patch"
+      # },
       {
-        sha256sum = "a18cbc37f29f7789f7c2cb95d7abf8dab5381c044944181a97b4ae1e0daeba7b",
-        file = "no-winit.patch"
-      },
+        sha256sum = "aaec4a14b9de5225bd802f7191be9194b791b36a09ffd7dcb15451a3fe1c579d",
+        file = "niri-25.08-no-winit.patch"
+      }
     ],
 
     unpackPhase = [
