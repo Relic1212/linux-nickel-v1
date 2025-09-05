@@ -20,6 +20,9 @@
         "-lffi",
         "-l:libpython3.12.a",
       ]
-    }
+    },
+    preConfigurePhase = [
+      "for f in $(find ${SRC} -type f) ; do sed -i 's|-shared|-static|g' ${f};done",
+    ]
   }
 }
