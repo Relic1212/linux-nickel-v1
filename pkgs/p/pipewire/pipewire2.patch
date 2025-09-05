@@ -2872,10 +2872,10 @@ index 10aa432fe..35d21d1b9 100644
  	if (properties == NULL)
  		properties = pw_properties_new(NULL, NULL);
 diff --git a/src/pipewire/meson.build b/src/pipewire/meson.build
-index b19631a92..bb12f6f5a 100644
+index b19631a92..fa2488798 100644
 --- a/src/pipewire/meson.build
 +++ b/src/pipewire/meson.build
-@@ -100,13 +100,263 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
+@@ -100,13 +100,268 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
    ]
  endif
  
@@ -3113,12 +3113,18 @@ index b19631a92..bb12f6f5a 100644
 +bluez_codec_aac_dep = declare_dependency(link_with: bluez_codec_aac)
 +if aptx_dep.found()
 +  bluez_codec_aptx_dep = declare_dependency(link_with: bluez_codec_aptx)
-+  deps += [ bluez_codec_aptx_dep]
-+  libpipewire_c_args += [ '-DHAVE_FREEAPTX']
++  deps += [ bluez_codec_aptx_dep ]
++  libpipewire_c_args += [ '-DHAVE_FREEAPTX' ]
 +endif
 +bluez_codec_ldac_dep = declare_dependency(link_with: bluez_codec_ldac)
 +
-+libcameralib_dep = declare_dependency(link_with: libcameralib)
++libcameralib_deps=[]
++if libcamera_dep.found()
++  libcameralib_dep = declare_dependency(link_with: libcameralib)
++  libcameralib_deps += [libcameralib_dep]
++  deps += [ bluez_codec_aptx_dep ]
++  libpipewire_c_args += [ '-DHAVE_LIBCAMERA' ]
++endif
 +
 +libpipewire = library(pipewire_name, pipewire_sources,
    version : libversion,
@@ -3135,18 +3141,17 @@ index b19631a92..bb12f6f5a 100644
 +    bluez_codec_opus_dep,
 +    bluez_codec_aac_dep, 
 +    bluez_codec_ldac_dep,
-+    libcameralib_dep,
 +    libcamera_dep,
-+  ] + deps,
++  ] + deps + libcameralib_deps,
 +  link_with : [ spa_alsa ],
  )
  
  pipewire_dep = declare_dependency(link_with : libpipewire,
 diff --git a/src/pipewire/pipewire.c b/src/pipewire/pipewire.c
-index 4451fa525..c68fecf9c 100644
+index 4451fa525..37ae6c8a1 100644
 --- a/src/pipewire/pipewire.c
 +++ b/src/pipewire/pipewire.c
-@@ -29,6 +29,32 @@
+@@ -29,6 +29,34 @@
  #include "private.h"
  #include "i18n.h"
  
@@ -3171,15 +3176,17 @@ index 4451fa525..c68fecf9c 100644
 +#include <spa/plugins/bluez5/a2dp-codec-ldac.h>
 +#ifdef HAVE_FREEAPTX
 +#include <spa/plugins/bluez5/a2dp-codec-aptx.h>
-+#endif
-+#include <spa/plugins/libcamera/libcamera.c>
++#endif // HAVE_FREEAPTX
 +
++#ifdef HAVE_LIBCAMERA
++#include <spa/plugins/libcamera/libcamera.c>
++#endif // HAVE_LIBCAMERA
 +
 +
  #define MAX_SUPPORT	32
  
  #define SUPPORTLIB	"support/libspa-support"
-@@ -99,6 +125,7 @@ open_plugin(struct registry *registry,
+@@ -99,6 +127,7 @@ open_plugin(struct registry *registry,
  	struct plugin *plugin;
  	char filename[PATH_MAX];
  	void *hnd;
@@ -3187,7 +3194,7 @@ index 4451fa525..c68fecf9c 100644
  	spa_handle_factory_enum_func_t enum_func;
  	int res;
  
-@@ -109,11 +136,129 @@ open_plugin(struct registry *registry,
+@@ -109,11 +138,130 @@ open_plugin(struct registry *registry,
  		plugin->ref++;
  		return plugin;
  	}
@@ -3301,14 +3308,15 @@ index 4451fa525..c68fecf9c 100644
 +		enum_func = &v4l2_libspa_v4l2__spa_handle_factory_enum;
 +	}
 +
++#ifdef HAVE_LIBCAMERA
 +	else if (strcmp(lib, "libcamera/libspa-libcamera") == 0)
 +	{
 +		pw_log_debug("libcamera lib %s requested\n", lib);
 +		enum_func = &v4l2_libspa_libcamera__spa_handle_factory_enum;
 +	}
-+
++#endif HAVE_LIBCAMERA
 +		
-+		else 
++	else 
 +
 +	{
 +		if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
@@ -3319,7 +3327,7 @@ index 4451fa525..c68fecf9c 100644
          }
          if ((enum_func = dlsym(hnd, SPA_HANDLE_FACTORY_ENUM_FUNC_NAME)) == NULL) {
  		res = -ENOSYS;
-@@ -121,6 +266,8 @@ open_plugin(struct registry *registry,
+@@ -121,6 +269,8 @@ open_plugin(struct registry *registry,
  		goto error_dlclose;
          }
  

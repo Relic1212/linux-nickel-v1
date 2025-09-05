@@ -1,8 +1,8 @@
 diff --git a/lib/wp/meson.build b/lib/wp/meson.build
-index 9aacc624..54f00a85 100644
+index 9aacc624..79a12588 100644
 --- a/lib/wp/meson.build
 +++ b/lib/wp/meson.build
-@@ -124,18 +124,137 @@ wpbuildbasedirs = configure_file (
+@@ -124,18 +124,147 @@ wpbuildbasedirs = configure_file (
    configuration : wpbuildbasedirs_data,
  )
  
@@ -118,20 +118,31 @@ index 9aacc624..54f00a85 100644
 +  dependencies : [gobject_dep, gio_dep, pipewire_dep, wplua_dep_i, libintl_dep],
 +)
 +
++logind_c_args=[]
++logind_deps = []
++if libsystemd_dep.found() or libelogind_dep.found()
++  logind_c_args += [ '-DHAVE_LOGIND']
++  wp_lib_sources += [ 
++   '../../modules/module-logind.c', 
 +
++  ]
++  logind_deps += [libsystemd_dep, libelogind_dep]
++
++endif
 +
  wp_lib = library('wireplumber-' + wireplumber_api_version,
    wp_lib_sources, wp_lib_priv_sources, wpenums_c, wpenums_h, wpversion, wpbuildbasedirs,
    c_args : [
      '-DBUILDING_WP',
-   ],
+-  ],
++  ] + logind_c_args,
    install: true,
 -  include_directories: wp_lib_include_dir,
 -  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep],
 +  include_directories: [ wp_lib_include_dir , include_directories('../../modules'), 
 +  # include_directories('../../modules/module-lua-scripting'), 
 +  reserve_device_includes],
-+  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep],
++  dependencies : [gobject_dep, gmodule_dep, gio_dep, pipewire_dep, libintl_dep, giounix_dep , libintl_dep, mathlib,lua_dep] + logind_deps,
    soversion: wireplumber_so_version,
    version: wireplumber_libversion,
 +  # link_with: wplua_lib_i,
@@ -143,10 +154,10 @@ index 9aacc624..54f00a85 100644
    link_with: wp_lib,
    sources: wp_gen_sources,
 diff --git a/lib/wp/private/internal-comp-loader.c b/lib/wp/private/internal-comp-loader.c
-index b6435335..71a33642 100644
+index b6435335..98136068 100644
 --- a/lib/wp/private/internal-comp-loader.c
 +++ b/lib/wp/private/internal-comp-loader.c
-@@ -12,6 +12,20 @@
+@@ -12,6 +12,24 @@
  
  #include <pipewire/impl.h>
  
@@ -164,10 +175,14 @@ index b6435335..71a33642 100644
 +#include "module-si-node.h"
 +#include "module-dbus-connection.h"
 +
++#ifdef HAVE_LOGIND
++#include "module-logind.h"
++#endif
++
  WP_DEFINE_LOCAL_LOG_TOPIC ("wp-internal-comp-loader")
  
  /*** ComponentData ***/
-@@ -789,6 +803,26 @@ static const struct {
+@@ -789,6 +807,29 @@ static const struct {
    { "settings-instance", load_settings_instance },
  };
  
@@ -189,12 +204,15 @@ index b6435335..71a33642 100644
 +  {"libwireplumber-module-si-node", libwireplumber_module_si_node__wireplumber__module_init},
 +  { "libwireplumber-module-si-standard-link", libwireplumber_module_si_standard_link__wireplumber__module_init},
 +  { "libwireplumber-module-standard-event-source", libwireplumber_module_standard_event_source__wireplumber__module_init},
++#ifdef HAVE_LOGIND
++  {"libwireplumber-module-logind", libwireplumber_module_logind__wireplumber__module_init}
++#endif
 +};
 +
  /*** WpInternalCompLoader ***/
  
  struct _WpInternalCompLoader
-@@ -838,6 +872,96 @@ load_module (WpCore * core, const gchar * module_name, WpSpaJson * args,
+@@ -838,6 +879,96 @@ load_module (WpCore * core, const gchar * module_name, WpSpaJson * args,
          "Failed to open %s: %s", module_path, g_module_error ());
      return NULL;
    }
@@ -291,7 +309,7 @@ index b6435335..71a33642 100644
  
    if (!g_module_symbol (gmodule, WP_MODULE_INIT_SYMBOL, &module_init)) {
      g_set_error (error, WP_DOMAIN_LIBRARY, WP_LIBRARY_ERROR_OPERATION_FAILED,
-@@ -975,13 +1099,40 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
+@@ -975,13 +1106,40 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
        g_autoptr (GError) error = NULL;
        g_autoptr (GObject) o = NULL;
  
@@ -338,7 +356,7 @@ index b6435335..71a33642 100644
        if (!pw_context_load_module (wp_core_get_pw_context (core), component,
                args ? wp_spa_json_get_data (args) : NULL, NULL)) {
          g_task_return_new_error (task, WP_DOMAIN_LIBRARY,
-@@ -995,7 +1146,7 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
+@@ -995,7 +1153,7 @@ wp_internal_comp_loader_load (WpComponentLoader * self, WpCore * core,
      else if (g_str_equal (type, "virtual")) {
        g_task_return_pointer (task, NULL, NULL);
      }
@@ -611,6 +629,33 @@ index 00000000..c2b71798
 +
 +GObject *
 +libwireplumber_module_log_settings__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error);
++
++#endif
+diff --git a/modules/module-logind.c b/modules/module-logind.c
+index 1660ea73..2189487f 100644
+--- a/modules/module-logind.c
++++ b/modules/module-logind.c
+@@ -149,7 +149,7 @@ wp_logind_class_init (WpLogindClass * klass)
+ }
+ 
+ WP_PLUGIN_EXPORT GObject *
+-wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
++libwireplumber_module_logind__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error)
+ {
+   return G_OBJECT (g_object_new (wp_logind_get_type (),
+       "name", NAME,
+diff --git a/modules/module-logind.h b/modules/module-logind.h
+new file mode 100644
+index 00000000..20c1f2fd
+--- /dev/null
++++ b/modules/module-logind.h
+@@ -0,0 +1,8 @@
++
++#ifndef LIBWIREPLUMBER_MODULE_LOGIND_INCLUDED
++#define LIBWIREPLUMBER_MODULE_LOGIND_INCLUDED
++
++GObject *
++libwireplumber_module_logind__wireplumber__module_init (WpCore * core, WpSpaJson * args, GError ** error);
 +
 +#endif
 diff --git a/modules/module-lua-scripting.h b/modules/module-lua-scripting.h
