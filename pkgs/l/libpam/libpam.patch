@@ -1,0 +1,236 @@
+diff --git a/libpam/meson.build b/libpam/meson.build
+index 3e8a531..667a72e 100644
+--- a/libpam/meson.build
++++ b/libpam/meson.build
+@@ -43,7 +43,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
+ libpam_link_deps = [libpam_map]
+ libpam_link_args = ['-Wl,--version-script=' + libpam_map_path]
+ 
+-libpam = shared_library(
++libpam = library(
+   'pam',
+   sources: libpam_src,
+   include_directories: [libpam_inc],
+diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
+index 81f49b4..fec25d5 100644
+--- a/libpam/pam_dynamic.c
++++ b/libpam/pam_dynamic.c
+@@ -33,24 +33,127 @@
+ 
+ #include "pam_private.h"
+ #include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int __attribute__((weak)) pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int __attribute__((weak)) pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int __attribute__((weak)) pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int __attribute__((weak)) pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int __attribute__((weak)) pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int __attribute__((weak)) pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++int pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	return 0;
++}
++int pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	return 0;
++}
++
++int pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	return 0;
++}
++int pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	return 0;
++}
++
++int pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	return 0;
++}
++int pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	return 0;
++}
++
++
+ 
+ void *_pam_dlopen(const char *mod_path)
+ {
+-	return dlopen(mod_path, RTLD_NOW);
++	fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
++	return (void*) mod_path;
++	// return dlopen(mod_path, RTLD_NOW);
+ }
+ 
+ servicefn _pam_dlsym(void *handle, const char *symbol)
+ {
+-	return (servicefn) dlsym(handle, symbol);
++	char* shandle = (char*)handle;
++	fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
++	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return (servicefn)pam_unix__pam_sm_chauthtok;
++		}
++	}
++
++	
++	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s\n",symbol );
++	
++	return (servicefn)dlsym(handle, symbol);
+ }
+ 
+ void _pam_dlclose(void *handle)
+ {
++	fprintf(stderr, "(_pam_dlclose) trying dlclose\n");
++
+ 	dlclose(handle);
+ }
+ 
+ const char *
+-_pam_dlerror (void)
++_pam_dlerror(void)
+ {
+-        return dlerror ();
++	fprintf(stderr, "(_pam_dlerror) trying dlerror\n");
++
++	return dlerror();
+ }
+diff --git a/libpam_misc/meson.build b/libpam_misc/meson.build
+index e0bb30f..13094e4 100644
+--- a/libpam_misc/meson.build
++++ b/libpam_misc/meson.build
+@@ -14,7 +14,7 @@ libpam_misc_map_path = meson.current_source_dir() / libpam_misc_map
+ libpam_misc_link_deps = [libpam_misc_map]
+ libpam_misc_link_args = ['-Wl,--version-script=' + libpam_misc_map_path]
+ 
+-libpam_misc = shared_library(
++libpam_misc = library(
+   'pam_misc',
+   sources: libpam_misc_src,
+   include_directories: [libpam_misc_inc, libpamc_inc],
+diff --git a/libpamc/meson.build b/libpamc/meson.build
+index f5da067..81606db 100644
+--- a/libpamc/meson.build
++++ b/libpamc/meson.build
+@@ -15,7 +15,7 @@ libpamc_map_path = meson.current_source_dir() / libpamc_map
+ libpamc_link_deps = [libpamc_map]
+ libpamc_link_args = ['-Wl,--version-script=' + libpamc_map_path]
+ 
+-libpamc = shared_library(
++libpamc = library(
+   'pamc',
+   sources: libpamc_src,
+   include_directories: [libpam_inc, libpamc_inc],
+diff --git a/modules/meson.build b/modules/meson.build
+index 20cebdb..ec905bf 100644
+--- a/modules/meson.build
++++ b/modules/meson.build
+@@ -2,7 +2,7 @@ pam_module_map = 'modules.map'
+ pam_module_map_path = meson.current_source_dir() / pam_module_map
+ 
+ pam_module_link_deps = ['..' / pam_module_map]
+-pam_module_link_args = ['-Wl,--version-script=' + pam_module_map_path]
++pam_module_link_args = [] # ['-Wl,--version-script=' + pam_module_map_path]
+ 
+ subdir('pam_access')
+ subdir('pam_canonicalize_user')
+diff --git a/modules/module-meson.build b/modules/module-meson.build
+index dce38b9..67b8035 100644
+--- a/modules/module-meson.build
++++ b/modules/module-meson.build
+@@ -467,9 +467,9 @@ tst_module_retval_src = tst_module_retval_name + '.c'
+ 
+ if fs.exists(tst_module_retval_src)
+   tst_module_retval_link_args = ''
+-  if module == 'pam_canonicalize_user'
+-    tst_module_retval_link_args = '-Wl,--export-dynamic'
+-  endif
++  # if module == 'pam_canonicalize_user'
++  #   tst_module_retval_link_args = '-Wl,--export-dynamic'
++  # endif
+ 
+   tst_module_retval_deps = [libpam_internal_dep, libpam_dep]
+   if module == 'pam_rootok'
+diff --git a/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c b/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
+index 1c8af39..6315e05 100644
+--- a/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
++++ b/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
+@@ -31,16 +31,16 @@ static struct pam_conv again_conv = { .conv = again_conv_func };
+ 
+ #ifdef HAVE_GETPWNAM_R
+ 
+-int
+-getpwnam_r(const char *name, struct passwd *pwd, char *buf, size_t buflen, struct passwd **result)
+-{
+-	if (strcmp(name, "root") == 0 ||
+-	    strcmp(name, "ROOT") == 0)
+-		return getpwuid_r(0, pwd, buf, buflen, result);
+-
+-	*result = NULL;
+-	return 0;
+-}
++// int
++// getpwnam_r(const char *name, struct passwd *pwd, char *buf, size_t buflen, struct passwd **result)
++// {
++// 	if (strcmp(name, "root") == 0 ||
++// 	    strcmp(name, "ROOT") == 0)
++// 		return getpwuid_r(0, pwd, buf, buflen, result);
++
++// 	*result = NULL;
++// 	return 0;
++// }
+ 
+ #else /* !HAVE_GETPWNAM_R */
+ 

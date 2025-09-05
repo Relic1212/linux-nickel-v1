@@ -1,0 +1,100 @@
+diff --git a/libpam/meson.build b/libpam/meson.build
+index 3e8a531..667a72e 100644
+--- a/libpam/meson.build
++++ b/libpam/meson.build
+@@ -43,7 +43,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
+ libpam_link_deps = [libpam_map]
+ libpam_link_args = ['-Wl,--version-script=' + libpam_map_path]
+ 
+-libpam = shared_library(
++libpam = library(
+   'pam',
+   sources: libpam_src,
+   include_directories: [libpam_inc],
+diff --git a/libpam_misc/meson.build b/libpam_misc/meson.build
+index e0bb30f..13094e4 100644
+--- a/libpam_misc/meson.build
++++ b/libpam_misc/meson.build
+@@ -14,7 +14,7 @@ libpam_misc_map_path = meson.current_source_dir() / libpam_misc_map
+ libpam_misc_link_deps = [libpam_misc_map]
+ libpam_misc_link_args = ['-Wl,--version-script=' + libpam_misc_map_path]
+ 
+-libpam_misc = shared_library(
++libpam_misc = library(
+   'pam_misc',
+   sources: libpam_misc_src,
+   include_directories: [libpam_misc_inc, libpamc_inc],
+diff --git a/libpamc/meson.build b/libpamc/meson.build
+index f5da067..81606db 100644
+--- a/libpamc/meson.build
++++ b/libpamc/meson.build
+@@ -15,7 +15,7 @@ libpamc_map_path = meson.current_source_dir() / libpamc_map
+ libpamc_link_deps = [libpamc_map]
+ libpamc_link_args = ['-Wl,--version-script=' + libpamc_map_path]
+ 
+-libpamc = shared_library(
++libpamc = library(
+   'pamc',
+   sources: libpamc_src,
+   include_directories: [libpam_inc, libpamc_inc],
+diff --git a/modules/meson.build b/modules/meson.build
+index 20cebdb..ec905bf 100644
+--- a/modules/meson.build
++++ b/modules/meson.build
+@@ -2,7 +2,7 @@ pam_module_map = 'modules.map'
+ pam_module_map_path = meson.current_source_dir() / pam_module_map
+ 
+ pam_module_link_deps = ['..' / pam_module_map]
+-pam_module_link_args = ['-Wl,--version-script=' + pam_module_map_path]
++pam_module_link_args = [] # ['-Wl,--version-script=' + pam_module_map_path]
+ 
+ subdir('pam_access')
+ subdir('pam_canonicalize_user')
+diff --git a/modules/module-meson.build b/modules/module-meson.build
+index dce38b9..67b8035 100644
+--- a/modules/module-meson.build
++++ b/modules/module-meson.build
+@@ -467,9 +467,9 @@ tst_module_retval_src = tst_module_retval_name + '.c'
+ 
+ if fs.exists(tst_module_retval_src)
+   tst_module_retval_link_args = ''
+-  if module == 'pam_canonicalize_user'
+-    tst_module_retval_link_args = '-Wl,--export-dynamic'
+-  endif
++  # if module == 'pam_canonicalize_user'
++  #   tst_module_retval_link_args = '-Wl,--export-dynamic'
++  # endif
+ 
+   tst_module_retval_deps = [libpam_internal_dep, libpam_dep]
+   if module == 'pam_rootok'
+diff --git a/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c b/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
+index 1c8af39..6315e05 100644
+--- a/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
++++ b/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c
+@@ -31,16 +31,16 @@ static struct pam_conv again_conv = { .conv = again_conv_func };
+ 
+ #ifdef HAVE_GETPWNAM_R
+ 
+-int
+-getpwnam_r(const char *name, struct passwd *pwd, char *buf, size_t buflen, struct passwd **result)
+-{
+-	if (strcmp(name, "root") == 0 ||
+-	    strcmp(name, "ROOT") == 0)
+-		return getpwuid_r(0, pwd, buf, buflen, result);
+-
+-	*result = NULL;
+-	return 0;
+-}
++// int
++// getpwnam_r(const char *name, struct passwd *pwd, char *buf, size_t buflen, struct passwd **result)
++// {
++// 	if (strcmp(name, "root") == 0 ||
++// 	    strcmp(name, "ROOT") == 0)
++// 		return getpwuid_r(0, pwd, buf, buflen, result);
++
++// 	*result = NULL;
++// 	return 0;
++// }
+ 
+ #else /* !HAVE_GETPWNAM_R */
+ 
