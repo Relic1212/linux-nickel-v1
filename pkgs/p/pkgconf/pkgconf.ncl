@@ -13,3 +13,23 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  pkgconf251 =
+    let _p | lib.MesonPackage = {
+      singleSource = {
+        uri = "https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-2.5.1.tar.gz",
+        sha256sum = "79721badcad1987dead9c3609eb4877ab9b58821c06bdacb824f2c8897c11f2a"
+      },
+      postInstallPhase = [
+        "cd ${DEST}/usr/bin",
+        "ln -s pkgconf pkg-config",
+      ]
+    }
+    in
+    _p
+    & {
+      baseBuildinputPackages = std.array.filter (fun p => p.name != "pkgconf") _p.baseBuildinputPackages
+    }
+}
