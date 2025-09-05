@@ -100,7 +100,7 @@
         drvs.libfontenc,
         drvs.libxcvt,
         drvs.libxshmfence,
-        drvs.xwayland,
+        # drvs.xwayland,
         drvs.libxkbfile,
         drvs.openssl,
         drvs.xcbUtilWm,
