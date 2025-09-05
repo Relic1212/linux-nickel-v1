@@ -239,6 +239,7 @@ let imported =
   & (import "../pkgs/l/libelf/libelf.ncl")
   & (import "../pkgs/l/libarchive/libarchive.ncl")
   & (import "../pkgs/l/libpam/libpam.ncl")
+  & (import "../pkgs/l/libpam/libpam131.ncl")
   & (import "../pkgs/l/libpam/openpam.ncl")
   & (import "../pkgs/l/libadwaita/libadwaita.ncl")
   & (import "../pkgs/l/libtiff/libtiff.ncl")
