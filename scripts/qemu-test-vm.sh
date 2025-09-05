@@ -6,6 +6,11 @@ command -v nixGLIntel > /dev/null && qemu_run="nixGLIntel  qemu-system-x86_64"
 P="./build/tmp/base-image/out"
 
 VMLINUZ="${P}/destdir/rootfs/boot/bzImage"
+# VMLINUZ="/tmp/vmlinux.bin.patched"
+# VMLINUZ="/tmp/boot/bzImage"
+
+# VMLINUZ="/tmp/bzImage"
+
 
 
 DISPLAY_ARGS="-display gtk,gl=on,show-cursor=off,grab-on-hover=on 	-device virtio-vga-gl"
@@ -18,7 +23,7 @@ USB_ARGS=" -device qemu-xhci -usb -device usb-host,hostbus=1,hostport=1.4.1.4 -u
 
 CMDLINE="$( cat ${P}/image/image.img.cmdline.txt )"
 
-CMDLINE="${CMDLINE} console=ttyS0"
+CMDLINE="${CMDLINE} console=ttyS0 ro rootwait dm-mod.waitfor=/dev/sda"
 
 
 
