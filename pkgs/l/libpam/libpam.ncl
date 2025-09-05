@@ -18,6 +18,7 @@
   drvs,
   libpam2016 | lib.AutomakePackage = {
     # https://github.com/linux-pam/linux-pam/commit/a684595c0bbd88df71285f43fb27630e3829121e
+    # https://lists.fedorahosted.org/archives/list/pam-developers@lists.fedorahosted.org/thread/G7W4HWW26FRDKZAWTBXLR5TEJFVM3ILK/#F42J536A76E7EJ4KR7RWPWKE5TW53XR6
     singleSource = {
       # uri = "https://github.com/linux-pam/linux-pam/archive/8bb171506fc2579669fd86bd29885f256e26ccb0.tar.gz",
       # sha256sum = "b656d44dbc738a6c4792355a321c9f2ce5dbfcc2c1547808a36db778faadffc1"
@@ -30,10 +31,11 @@
       "echo 'hello' > ChangeLog"
     ],
     extraConfigureFlags = [
-      "--disable-regenerate-docu",
-      "--disable-docu",
+      # "--disable-regenerate-docu",
+      # "--disable-docu",
       "--enable-static-modules",
-      "--disable-econf",
+      # "--disable-econf",
+      "--disable-pie",
     ],
     biDrvs = [
       drvs.gettext,
@@ -82,12 +84,19 @@
     # buildEnv.EXTRA_CPPFLAGS=[
     #   m%"-D_PATH_LASTLOG=\"\\\"/usr/adm/lastlog\\\"\""%,
     # ],
+    buildEnv.EXTRA_CFLAGS = ["--verbose"],
+    buildEnv.EXTRA_LDFLAGS = ["-Wl,--verbose"],
+    enableParallel = false,
     extraConfigureFlags = [
-      "--disable-regenerate-docu",
-      "--disable-docu",
+      # "--disable-regenerate-docu",
+      # "--disable-docu",
       "--enable-static-modules",
-      "--disable-econf",
+      # "--disable-econf",
+      "--disable-pie",
       "--includedir=/usr/include/security",
+    ],
+    extraMakeArgs = [
+      "VERBOSE=1"
     ],
     biDrvs = [
       drvs.gettext,

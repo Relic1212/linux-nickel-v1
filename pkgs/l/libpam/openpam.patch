@@ -1,0 +1,51 @@
+diff --git a/include/security/openpam.h b/include/security/openpam.h
+index a25695e..7fc21f7 100644
+--- a/include/security/openpam.h
++++ b/include/security/openpam.h
+@@ -360,8 +360,8 @@ struct pam_module {
+ #  error "Don't know how to build static modules on non-GNU compilers"
+ # endif
+ /* gcc, static linking */
+-# include <sys/cdefs.h>
+-# include <linker_set.h>
++// # include <sys/cdefs.h>
++// # include <linker_set.h>
+ # define PAM_EXTERN static
+ # define PAM_MODULE_ENTRY(name)						\
+ 	static char _pam_name[] = name PAM_SOEXT;			\
+@@ -376,7 +376,11 @@ struct pam_module {
+ 			[PAM_SM_CHAUTHTOK] = _PAM_SM_CHAUTHTOK		\
+ 		},							\
+ 	};								\
+-	DATA_SET(_openpam_static_modules, _pam_module)
++	__asm__(".weak " "__start_set__openpam_static_modules"); \
++	__asm__(".weak " "__stop_set__openpam_static_modules"); \
++	static void const * const __attribute__((no_sanitize("address"))) __set__openpam_static_modules_sym__pam_module __attribute__((__section__("set_" "_openpam_static_modules"))) __attribute__((used)) = &(_pam_module)
++
++
+ #else
+ /* normal case */
+ # define PAM_EXTERN
+diff --git a/lib/libpam/openpam_static.c b/lib/libpam/openpam_static.c
+index f939da4..cc4523d 100644
+--- a/lib/libpam/openpam_static.c
++++ b/lib/libpam/openpam_static.c
+@@ -45,7 +45,8 @@
+ 
+ #ifdef OPENPAM_STATIC_MODULES
+ 
+-SET_DECLARE(openpam_static_modules, pam_module_t);
++extern pam_module_t __attribute__((__weak__)) *__start_set_openpam_static_modules;
++extern pam_module_t __attribute__((__weak__)) *__stop_set_openpam_static_modules;
+ 
+ /*
+  * OpenPAM internal
+@@ -58,7 +59,7 @@ openpam_static(const char *path)
+ {
+ 	pam_module_t **module;
+ 
+-	SET_FOREACH(module, openpam_static_modules) {
++	for (module = (&__start_set_openpam_static_modules); module < (&__stop_set_openpam_static_modules); module++) {
+ 		if (strcmp((*module)->path, path) == 0)
+ 			return (*module);
+ 	}
