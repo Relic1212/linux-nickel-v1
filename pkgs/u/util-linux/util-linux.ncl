@@ -91,5 +91,13 @@
       (drvs.coreutils & { priority = 1 }),
       drvs.ncurses,
     ]
-  }
+  },
+
+  utilLinuxLogin =
+    utilLinux241
+    & {
+      debug = true,
+      biDrvs | priority 1 = utilLinux241.biDrvs @ [drvs.libpam131],
+      extraMesonArgs | priority 1 = utilLinux241.extraMesonArgs @ ["-Dbuild-login=enabled"],
+    }
 }
