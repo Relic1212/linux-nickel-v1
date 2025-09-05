@@ -7,7 +7,7 @@ import hashlib
 import sys
 from builder import build_in_bubblewrap
 
-KNOWN_SLOW = ["base-image"]
+KNOWN_SLOW = ["base-image", "base-image-small"]
 class GraphNode:
     def __init__(self, name, packages):
         self.name = name
