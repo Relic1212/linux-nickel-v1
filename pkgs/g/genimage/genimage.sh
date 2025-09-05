@@ -193,6 +193,7 @@ create_boot_part() {
 	the_date="$(date +%Y-%m-%d_%I-%M)"
 	# cp "${outdir}/${rootname}-vmlinuz-${uki_part}.efi" "${efi_dir}/${rootname}-vmlinuz-${uki_part}-${the_date}.efi" 
 	cp "${outdir}/${rootname}-vmlinuz-${uki_part}.efi" "${efi_dir}/linux.efi" 
+	# cp "${outdir}/${rootname}-vmlinuz-${uki_part}.efi" "${efi_dir}/linux-${uki-part}-${the_date}.efi" 
 
 	cp "${outdir}/${rootname}.${uki_part}.img.options_refind.txt" "${efi_dir}/refind_linux.conf"
 
@@ -247,7 +248,9 @@ echo "${CMDLINE}" >  "$outdir/${rootname}.img.cmdline.txt"
 
 dev_refind="PARTUUID=${rootpartuuid}"
 dev_refind_a="PARTUUID=${partauuid}"
-dev_refind_b="PARTUUID=${partbuuid}"
+
+partbuuidb="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+dev_refind_b="PARTUUID=${partbuuidb}"
 
 
 TABLE_METAL="verity,,,ro,0 \
@@ -263,10 +266,10 @@ ${ROOT_HASH} ${SALT} \
 9 ignore_zero_blocks use_fec_from_device ${dev_refind_a} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
 
 TABLE_METAL_B="verity,,,ro,0 \
-	${BLOCKS} verity 1 ${dev_refind_b} ${dev_refind_b}  4096 4096 \
-	${DATA_BLOCKS} $((DATA_BLOCKS+1)) sha256 \
-	${ROOT_HASH} ${SALT} \
-	9 ignore_zero_blocks use_fec_from_device ${dev_refind_b} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
+${BLOCKS} verity 1 ${dev_refind_b} ${dev_refind_b} 4096 4096 \
+${DATA_BLOCKS} $((DATA_BLOCKS+1)) sha256 \
+${ROOT_HASH} ${SALT} \
+9 ignore_zero_blocks use_fec_from_device ${dev_refind_b} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
 
 
 # EXTRA_CMDLINE="lsm=lockdown,capability,yama,selinux,bpf,landlock,ima,evm"
@@ -295,8 +298,9 @@ echo "${CMDLINE_UKI_B}" > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 if [ -f "${efistub}" ]; then
 	create_boot_part a
+	create_boot_part b
+
 fi
-# create_boot_part b
 
 
 
