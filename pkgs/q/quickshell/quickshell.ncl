@@ -106,8 +106,11 @@
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
-      drvs.pipewire,
       drvs.alsaLibs,
+    ],
+    allowDubplicateBuldInputs = true,
+    propagatedBuildInputs = [
+      drvs.pipewire,
     ],
 
     buildEnv = {
