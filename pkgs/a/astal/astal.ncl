@@ -48,7 +48,7 @@
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
       drvs.gtk4,
-      drvs.vala,
+      drvs.valaShared,
       drvs.pythonSetuptools,
       drvs.libtiff,
       drvs.graphene,
@@ -57,7 +57,7 @@
     ],
 
     preConfigurePhase = [
-      "export SRC=/tmp/workdir/src/lib/astal/gtk4",
+      "export SRC=/tmp/workdir/src/lib/astal/io",
     ]
   }
 }
