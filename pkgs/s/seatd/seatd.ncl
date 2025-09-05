@@ -17,7 +17,7 @@
       # drvs.elogind,
     ],
     propagatedBuildInputs = [
-      drvs.elogind,
+      drvs.elogindWithPolkit,
     ],
     # preConfigurePhase = [
     #   m%"

@@ -3,8 +3,8 @@
   drvs,
   upower | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.6/upower-v1.90.6.tar.gz",
-      sha256sum = "7e367c2619ca0f26d5bfc085b46bad9657b2774cc3eaffbf310b607df6e21377"
+      uri = "https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.10/upower-v1.90.10.tar.gz",
+      sha256sum = "7fcd51bece2526dbee5170feb3ffd1adab5b0cd023575f1fd119d969b73f4b90"
     },
     biDrvs = [
       drvs.pcre2,
@@ -15,14 +15,21 @@
       drvs.gudev,
       drvs.eudev,
       drvs.linuxHeaders,
+      drvs.docbookXslNons,
+      drvs.polkit,
+      drvs.elogindWithPolkit,
+      drvs.libcap,
+      drvs.gettext,
     ],
     extraMesonArgs = [
       "-Dsystemdsystemunitdir=no",
-      "-Dman=false",
+      "-Dman=true",
       "-Dgtk-doc=false",
+      "-Dpolkit=enabled",
     ],
     preConfigurePhase = [
       m%"sed -i 's@shared_library@library@g' ${SRC}/libupower-glib/meson.build"%,
+      m%"sed -i "s@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g" ${SRC}/doc/man/meson.build"%,
     ]
   }
 }

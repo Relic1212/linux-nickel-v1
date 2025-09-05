@@ -124,6 +124,9 @@
         # drvs.cmake,
         # drvs.cava,
         drvs.date,
+        drvs.elogind,
+        drvs.polkit,
+        drvs.libcap,
       ],
 
     extraMesonArgs = [

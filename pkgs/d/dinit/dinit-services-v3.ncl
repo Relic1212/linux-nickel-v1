@@ -63,6 +63,7 @@ let _services =
             "earlyoom",
             #"dropbear",
             "upowerd",
+            "power-profiles-daemon",
             # "v4l2loopback",
             "netdev",
             "netdev-lo",
@@ -172,8 +173,11 @@ let _services =
         "depends-on" = [
           "dbusd",
           "cfg80211",
-          " hostname"
+          " hostname",
+          "udevd"
         ],
+        "waits-for" = ["udev-settle"],
+
         logfile = "/var/log/iwd-daemon.log",
         "smooth-recovery" = "yes",
       },
@@ -321,6 +325,16 @@ let _services =
           "/var/log/upowerd.log"
         ]
       },
+
+      "power-profiles-daemon" = {
+        type = "process",
+        command = "/usr/libexec/power-profiles-daemon -v",
+        "depends-on" = [
+          "upowerd",
+          "dbusd"
+        ],
+        logfile = "/var/log/power-profiles-daemon.log"
+      },
       v4l2loopback = {
         type = "scripted",
         command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
@@ -409,7 +423,8 @@ let _services =
               "varrw",
               "dbusd",
               "filesystems",
-            ]
+            ],
+            "waits-for" = ["udev-settle"],
           }
         }
       else
