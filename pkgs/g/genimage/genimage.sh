@@ -257,10 +257,11 @@ TABLE_METAL="verity,,,ro,0 \
 	9 ignore_zero_blocks use_fec_from_device${dev_refind} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
 
 TABLE_METAL_A="verity,,,ro,0 \
-	${BLOCKS} verity 1 ${dev_refind_a} ${dev_refind_a}  4096 4096 \
-	${DATA_BLOCKS} $((DATA_BLOCKS+1)) sha256 \
-	${ROOT_HASH} ${SALT} \
-	9 ignore_zero_blocks use_fec_from_device ${dev_refind_a} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
+${BLOCKS} verity 1 ${dev_refind_a} ${dev_refind_a} 4096 4096 \
+${DATA_BLOCKS} $((DATA_BLOCKS+1)) sha256 \
+${ROOT_HASH} ${SALT} \
+9 ignore_zero_blocks use_fec_from_device ${dev_refind_a} fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
+
 TABLE_METAL_B="verity,,,ro,0 \
 	${BLOCKS} verity 1 ${dev_refind_b} ${dev_refind_b}  4096 4096 \
 	${DATA_BLOCKS} $((DATA_BLOCKS+1)) sha256 \
@@ -269,9 +270,11 @@ TABLE_METAL_B="verity,,,ro,0 \
 
 
 # EXTRA_CMDLINE="lsm=lockdown,capability,yama,selinux,bpf,landlock,ima,evm"
-EXTRA_CMDLINE="debug sysctl.kernel.sysrq=1 raid=noautodetect ro rootwait lsm=lockdown,capability"
+EXTRA_CMDLINE="debug console=tty1 sysctl.kernel.sysrq=1 raid=noautodetect ro rootwait lsm=lockdown,capability"
+# EXTRA_CMDLINE="debug sysctl.kernel.sysrq=1 rootwait lsm=lockdown,capability"
 
-OPTIONS_REFIND="\"boot ${part}\"  \"rootslot=${part}  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+
+OPTIONS_REFIND="\"boot ${part}\"  \"${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
 echo "${OPTIONS_REFIND}"  >  "$outdir/${rootname}.img.options_refind.txt"
 
 
