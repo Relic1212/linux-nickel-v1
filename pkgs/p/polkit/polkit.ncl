@@ -17,42 +17,54 @@
         }
       }
     ],
+
+    options = {
+      elogind | Bool | default = true
+    },
     extraMesonArgs = [
       "-Dintrospection=false",
       "-Dauthfw=shadow",
-      "-Dsession_tracking=elogind",
+      "-Dsession_tracking=%{ if options.elogind then  "elogind" else "no" }",
     ],
     preConfigurePhase = [
       "(cd ${SRC} && patch -p1 < 55ee1b70456eca8281dda9612c485c619122f202.patch)",
       "sed -i 's@shared_library@library@g' ${SRC}/src/polkitagent/meson.build",
       "sed -i 's@shared_library@library@g' ${SRC}/src/polkit/meson.build",
     ],
-    biDrvs = [
-      drvs.inih,
-      drvs.scdoc,
-      drvs.linuxHeaders,
-      drvs.expat,
-      drvs.libffi,
-      drvs.libpciaccess,
-      drvs.libxkbcommon,
-      drvs.libdrm,
-      drvs.mtdev,
-      drvs.libevdev,
-      drvs.eudev,
-      drvs.libinput,
-      drvs.glib,
-      drvs.gudev,
-      drvs.pcre2,
-      drvs.zlibNg,
-      drvs.dbus,
-      drvs.duktape,
-      drvs.elogind,
-      drvs.attr,
-      drvs.acl,
-      drvs.libcap,
-      drvs.gettext,
-      drvs.perl,
-    ]
+    biDrvs =
+      [
+        drvs.inih,
+        drvs.scdoc,
+        drvs.linuxHeaders,
+        drvs.expat,
+        drvs.libffi,
+        drvs.libpciaccess,
+        drvs.libxkbcommon,
+        drvs.libdrm,
+        drvs.mtdev,
+        drvs.libevdev,
+        drvs.eudev,
+        drvs.libinput,
+        drvs.glib,
+        drvs.gudev,
+        drvs.pcre2,
+        drvs.zlibNg,
+        drvs.dbus,
+        drvs.duktape,
+        drvs.attr,
+        drvs.acl,
+        drvs.libcap,
+        drvs.gettext,
+        drvs.perl,
+      ]
+      @ (
+        if options.elogind then
+          [
+            drvs.elogind,
+          ]
+        else
+          []
+      )
   }
 }
 & {
