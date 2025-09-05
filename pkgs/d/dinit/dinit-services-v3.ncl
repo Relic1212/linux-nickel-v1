@@ -201,6 +201,7 @@ let _services =
             # "udevd",
             "syslogd",
             "loadkeys",
+            "create-x11-socket",
           ]
           @ (if useElogind then ["elogind"] else []),
       },
@@ -361,6 +362,14 @@ let _services =
         "depends-on" = [
           "early-filesystems",
         ],
+      },
+      "create-x11-socket" = {
+        type = "scripted",
+        command = "/etc/dinit.d/scripts/create-x11-socket.sh",
+
+        "depends-on" = [
+          "early-filesystems",
+        ],
       }
     }
     & (
@@ -495,7 +504,12 @@ let scripts = {
 /usr/bin/zramctl /dev/zram0 --size "32GiB"
 /usr/bin/mkswap -U clear /dev/zram0
 /usr/bin/swapon --discard --priority 100 /dev/zram0
-  "%
+  "%,
+  "create-x11-socket.sh" = m%"
+#!/bin/sh -e
+mkdir -p /tmp/.X11-unix
+chmod 1777 /tmp/.X11-unix
+"%
 }
 in
 
