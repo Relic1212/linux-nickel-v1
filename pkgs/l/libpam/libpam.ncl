@@ -24,7 +24,7 @@
     },
     patches = [
       {
-        sha256sum = "00d178863587895e52c1a0839ebe0ba9b7b9798c422afe0a36c23c9a770f5ff9",
+        sha256sum = "40a7c82ef046e98f46208102e783b7112f8b26f464c80e2f044480b76c049e6c",
         file = "libpam.patch",
       }
     ],
@@ -35,15 +35,29 @@
 
     postInstallPhase = [
       "cd ${DEST}/usr/lib/security",
-      "llvm-objcopy --redefine-sym pam_sm_authenticate=pam_unix__pam_sm_authenticate pam_unix.so",
-      "llvm-objcopy --redefine-sym pam_sm_setcred=pam_unix__pam_sm_setcred pam_unix.so",
-      "llvm-objcopy --redefine-sym pam_sm_acct_mgmt=pam_unix__pam_sm_acct_mgmt pam_unix.so",
-      "llvm-objcopy --redefine-sym pam_sm_open_session=pam_unix__pam_sm_open_session pam_unix.so",
-      "llvm-objcopy --redefine-sym pam_sm_close_session=pam_unix__pam_sm_close_session pam_unix.so",
-      "llvm-objcopy --redefine-sym pam_sm_chauthtok=pam_unix__pam_sm_chauthtok pam_unix.so",
-      "cp pam_unix.so ../libpam_unix.a",
-      "cd ../pkgconfig",
-      "sed -i 's|-lpam|-lpam -lpam_unix|g' pam.pc",
+      "llvm-objcopy --redefine-sym pam_sm_authenticate=pam_unix__pam_sm_authenticate pam_unix.a",
+      "llvm-objcopy --redefine-sym pam_sm_setcred=pam_unix__pam_sm_setcred pam_unix.a",
+      "llvm-objcopy --redefine-sym pam_sm_acct_mgmt=pam_unix__pam_sm_acct_mgmt pam_unix.a",
+      "llvm-objcopy --redefine-sym pam_sm_open_session=pam_unix__pam_sm_open_session pam_unix.a",
+      "llvm-objcopy --redefine-sym pam_sm_close_session=pam_unix__pam_sm_close_session pam_unix.a",
+      "llvm-objcopy --redefine-sym pam_sm_chauthtok=pam_unix__pam_sm_chauthtok pam_unix.a",
+      "llvm-objcopy -W _pam_line_buffer_clear pam_unix.a",
+      "llvm-objcopy -W _pam_line_buffer_init pam_unix.a",
+      "llvm-objcopy -W _pam_line_assemble pam_unix.a",
+      # "cp pam_unix.so ../libpam_unix.a",
+      # "cd ../pkgconfig",
+      "mkdir -p /tmp/workdir/build/libpam-stage-2/pam_unix",
+      "mkdir -p /tmp/workdir/build/libpam-stage-2/libpam",
+      "cd /tmp/workdir/build/libpam-stage-2",
+      "${CC} -r -o libpam.o -Wl,--whole-archive  ${DEST}/usr/lib/security/pam_unix.a ${DEST}/usr/lib/libpam.a",
+      "${AR} rcs libpam.a libpam.o",
+      # "llvm-ar x ${DEST}/usr/lib/security/pam_unix.a && mv *.o pam_unix",
+      # "llvm-ar x ${DEST}/usr/lib/libpam.a && mv *.o libpam",
+      # "llvm-ar rcs libpam.a pam_unix/*.o libpam/*.o",
+      "mv ${DEST}/usr/lib/libpam.a ${DEST}/usr/lib/libpam_orig.a" ,
+      "install -m0755 libpam.a ${DEST}/usr/lib"
+
+      # "sed -i 's|-lpam|-lpam -lpam_unix|g' pam.pc",
     ],
 
     biDrvs = [

@@ -12,10 +12,10 @@ index 3e8a531..667a72e 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..fec25d5 100644
+index 81f49b4..b27ef97 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
-@@ -33,24 +33,127 @@
+@@ -33,24 +33,147 @@
  
  #include "pam_private.h"
  #include <dlfcn.h>
@@ -50,34 +50,43 @@ index 81f49b4..fec25d5 100644
 +int pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
 +}
 +int pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
 +}
 +
 +int pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
 +}
 +int pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
 +}
 +
 +int pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
 +}
 +int pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
-+	return 0;
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
 +}
 +
 +
@@ -88,14 +97,9 @@ index 81f49b4..fec25d5 100644
 +	fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
 +	return (void*) mod_path;
 +	// return dlopen(mod_path, RTLD_NOW);
- }
- 
- servicefn _pam_dlsym(void *handle, const char *symbol)
- {
--	return (servicefn) dlsym(handle, symbol);
-+	char* shandle = (char*)handle;
-+	fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
-+	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
++}
++
++servicefn _pam_unix_dlsym(const char* symbol){
 +		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
@@ -122,6 +126,22 @@ index 81f49b4..fec25d5 100644
 +			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return (servicefn)pam_unix__pam_sm_chauthtok;
++		}
++		return NULL;
+ }
+ 
+ servicefn _pam_dlsym(void *handle, const char *symbol)
+ {
+-	return (servicefn) dlsym(handle, symbol);
++	char* shandle = (char*)handle;
++	servicefn f;
++	fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
++	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return f;
 +		}
 +	}
 +
@@ -187,9 +207,18 @@ index 20cebdb..ec905bf 100644
  subdir('pam_access')
  subdir('pam_canonicalize_user')
 diff --git a/modules/module-meson.build b/modules/module-meson.build
-index dce38b9..67b8035 100644
+index dce38b9..51eb40a 100644
 --- a/modules/module-meson.build
 +++ b/modules/module-meson.build
+@@ -128,7 +128,7 @@ if module == 'pam_xauth'
+   pam_module_deps += [libselinux]
+ endif
+ 
+-pam_module = shared_module(
++pam_module = library(
+   module,
+   name_prefix: '',
+   sources: pam_module_src,
 @@ -467,9 +467,9 @@ tst_module_retval_src = tst_module_retval_name + '.c'
  
  if fs.exists(tst_module_retval_src)
