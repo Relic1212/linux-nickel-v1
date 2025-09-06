@@ -69,8 +69,7 @@
       },
       patches = [
         {
-          # sha256sum = "24706915df5acb451d6311acb6de63eee99519538d86362ab3ae6933e5825ef9",
-          sha256sum = "cac2a37c19041ad8f3de0514a61b92647b90532c582e04ef8e654cc1c495e52b",
+          sha256sum = "94da593bbac7b3974af7970262c0fa4a8312c2dc40668ebe612734418438cf8b",
           file = "libpam.patch",
         }
       ],
@@ -122,19 +121,19 @@
         "-DHAVE_MODULE_PAM_XAUTH"
       ],
       buildEnv.EXTRA_CPPFLAGS = buildEnv.EXTRA_CFLAGS,
-      preConfigurePhase = (
-        std.array.flatten (
-          std.array.map
-            (fun m =>
-              let mod_suffix = (std.string.replace "pam_" "" m) in
-              [
-                "cp ${SRC}/libpam/pam_dynamic_PLACEHOLDER.h ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h",
-                "sed -i 's|PLACEHOLDER|%{m}|g' ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h"
-              ]
-            )
-            pam_modules
-        )
-      ),
+      # preConfigurePhase = (
+      #   std.array.flatten (
+      #     std.array.map
+      #       (fun m =>
+      #         let mod_suffix = (std.string.replace "pam_" "" m) in
+      #         [
+      #           "cp ${SRC}/libpam/pam_dynamic_PLACEHOLDER.h ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h",
+      #           "sed -i 's|PLACEHOLDER|%{m}|g' ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h"
+      #         ]
+      #       )
+      #       pam_modules
+      #   )
+      # ),
       postInstallPhase =
         [
           "cd ${DEST}/usr/lib/security",
@@ -154,6 +153,11 @@
                   "llvm-objcopy -W _pam_line_buffer_init %{s}.a",
                   "llvm-objcopy -W _pam_line_assemble %{s}.a",
 
+                  "mkdir -p /tmp/workdir/build/libpam-stage-2/%{s}",
+                  "(cd /tmp/workdir/build/libpam-stage-2/%{s} && llvm-ar x ${DEST}/usr/lib/security/%{s}.a)",
+
+
+
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_authenticate ../libpam.a",
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_setcred ../libpam.a",
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_acct_mgmt ../libpam.a",
@@ -169,11 +173,14 @@
 
           # "cp pam_unix.so ../libpam_unix.a",
           # "cd ../pkgconfig",
-          # "mkdir -p /tmp/workdir/build/libpam-stage-2/pam_unix",
-          "mkdir -p /tmp/workdir/build/libpam-stage-2",
+          "mkdir -p /tmp/workdir/build/libpam-stage-2/libpam",
+          "(cd /tmp/workdir/build/libpam-stage-2/libpam && llvm-ar x ${DEST}/usr/lib/libpam.a && rm pam_dynamic_defs.c.o)",
+          # "mkdir -p /tmp/workdir/build/libpam-stage-2",
           "cd /tmp/workdir/build/libpam-stage-2",
-          "${CC} -r -o libpam.o  %{std.string.join " -Wl,--whole-archive " (std.array.map (fun m=> "${DEST}/usr/lib/security/%{m}.a") pam_modules)} ${DEST}/usr/lib/libpam.a",
-          "${AR} rcs libpam.a libpam.o",
+          # "llvm-ar dv ${DEST}/usr/lib/libpam.a pam_dynamic_defs.c.o",
+          # "${CC} -r -o libpam.o  %{std.string.join " -Wl,--whole-archive " (std.array.map (fun m=> "${DEST}/usr/lib/security/%{m}.a") pam_modules)} ${DEST}/usr/lib/libpam.a",
+          # "${AR} rcs libpam.a libpam.o",
+          "${AR} rcs libpam.a */*.o",
           "llvm-ranlib libpam.a",
           # "llvm-ar x ${DEST}/usr/lib/security/pam_unix.a && mv *.o pam_unix",
           # "llvm-ar x ${DEST}/usr/lib/libpam.a && mv *.o libpam",

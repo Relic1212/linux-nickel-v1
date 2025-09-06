@@ -20,10 +20,10 @@ index 3e8a531..0e8f443 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..ea50629 100644
+index 81f49b4..227973c 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
-@@ -33,24 +33,674 @@
+@@ -33,24 +33,684 @@
  
  #include "pam_private.h"
  #include <dlfcn.h>
@@ -170,453 +170,464 @@ index 81f49b4..ea50629 100644
 +	// 	}
 +	// }
 +
++// #ifdef HAVE_MODULE_PAM_ACCESS
 +
-+	#ifdef HAVE_MODULE_PAM_ACCESS
-+
-+	if (strcmp("/usr/lib/security/access.so", (shandle) )==0){
++	if (strcmp("/usr/lib/security/pam_access.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using access\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_access_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_ACCESS
-+#ifdef HAVE_MODULE_PAM_CANONICALIZE_USER
 +
-+	if (strcmp("/usr/lib/security/canonicalize_user.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_ACCESS
++// #ifdef HAVE_MODULE_PAM_CANONICALIZE_USER
++
++	if (strcmp("/usr/lib/security/pam_canonicalize_user.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using canonicalize_user\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_canonicalize_user_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_CANONICALIZE_USER
-+#ifdef HAVE_MODULE_PAM_DEBUG
 +
-+	if (strcmp("/usr/lib/security/debug.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_CANONICALIZE_USER
++// #ifdef HAVE_MODULE_PAM_DEBUG
++
++	if (strcmp("/usr/lib/security/pam_debug.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using debug\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_debug_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_DEBUG
-+#ifdef HAVE_MODULE_PAM_DENY
 +
-+	if (strcmp("/usr/lib/security/deny.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_DEBUG
++// #ifdef HAVE_MODULE_PAM_DENY
++
++	if (strcmp("/usr/lib/security/pam_deny.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using deny\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_deny_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_DENY
-+#ifdef HAVE_MODULE_PAM_ECHO
 +
-+	if (strcmp("/usr/lib/security/echo.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_DENY
++// #ifdef HAVE_MODULE_PAM_ECHO
++
++	if (strcmp("/usr/lib/security/pam_echo.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using echo\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_echo_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_ECHO
-+#ifdef HAVE_MODULE_PAM_ENV
 +
-+	if (strcmp("/usr/lib/security/env.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_ECHO
++// #ifdef HAVE_MODULE_PAM_ENV
++
++	if (strcmp("/usr/lib/security/pam_env.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using env\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_env_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_ENV
-+#ifdef HAVE_MODULE_PAM_EXEC
 +
-+	if (strcmp("/usr/lib/security/exec.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_ENV
++// #ifdef HAVE_MODULE_PAM_EXEC
++
++	if (strcmp("/usr/lib/security/pam_exec.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using exec\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_exec_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_EXEC
-+#ifdef HAVE_MODULE_PAM_FAILDELAY
 +
-+	if (strcmp("/usr/lib/security/faildelay.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_EXEC
++// #ifdef HAVE_MODULE_PAM_FAILDELAY
++
++	if (strcmp("/usr/lib/security/pam_faildelay.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using faildelay\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_faildelay_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_FAILDELAY
-+#ifdef HAVE_MODULE_PAM_FAILLOCK
 +
-+	if (strcmp("/usr/lib/security/faillock.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_FAILDELAY
++// #ifdef HAVE_MODULE_PAM_FAILLOCK
++
++	if (strcmp("/usr/lib/security/pam_faillock.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using faillock\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_faillock_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_FAILLOCK
-+#ifdef HAVE_MODULE_PAM_FILTER
 +
-+	if (strcmp("/usr/lib/security/filter.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_FAILLOCK
++// #ifdef HAVE_MODULE_PAM_FILTER
++
++	if (strcmp("/usr/lib/security/pam_filter.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using filter\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_filter_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
 +
-+#endif // HAVE_MODULE_PAM_FILTER
-+#ifdef HAVE_MODULE_PAM_FTP
++  
++// #endif // HAVE_MODULE_PAM_FILTER
++// #ifdef HAVE_MODULE_PAM_FILTER
 +
-+	if (strcmp("/usr/lib/security/ftp.so", (shandle) )==0){
++	if (strcmp("/usr/lib/security/pam_filter.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using filter\n" );
++
++		f = _pam_filter_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++
++  
++// #endif // HAVE_MODULE_PAM_FILTER
++// #ifdef HAVE_MODULE_PAM_FTP
++
++	if (strcmp("/usr/lib/security/pam_ftp.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using ftp\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_ftp_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_FTP
-+#ifdef HAVE_MODULE_PAM_GROUP
 +
-+	if (strcmp("/usr/lib/security/group.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_FTP
++// #ifdef HAVE_MODULE_PAM_GROUP
++
++	if (strcmp("/usr/lib/security/pam_group.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using group\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_group_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_GROUP
-+#ifdef HAVE_MODULE_PAM_ISSUE
 +
-+	if (strcmp("/usr/lib/security/issue.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_GROUP
++// #ifdef HAVE_MODULE_PAM_ISSUE
++
++	if (strcmp("/usr/lib/security/pam_issue.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using issue\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_issue_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_ISSUE
-+#ifdef HAVE_MODULE_PAM_KEYINIT
 +
-+	if (strcmp("/usr/lib/security/keyinit.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_ISSUE
++// #ifdef HAVE_MODULE_PAM_KEYINIT
++
++	if (strcmp("/usr/lib/security/pam_keyinit.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using keyinit\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_keyinit_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_KEYINIT
-+#ifdef HAVE_MODULE_PAM_LIMITS
 +
-+	if (strcmp("/usr/lib/security/limits.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_KEYINIT
++// #ifdef HAVE_MODULE_PAM_LIMITS
++
++	if (strcmp("/usr/lib/security/pam_limits.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using limits\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_limits_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_LIMITS
-+#ifdef HAVE_MODULE_PAM_LISTFILE
 +
-+	if (strcmp("/usr/lib/security/listfile.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_LIMITS
++// #ifdef HAVE_MODULE_PAM_LISTFILE
++
++	if (strcmp("/usr/lib/security/pam_listfile.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using listfile\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_listfile_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_LISTFILE
-+#ifdef HAVE_MODULE_PAM_LOCALUSER
 +
-+	if (strcmp("/usr/lib/security/localuser.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_LISTFILE
++// #ifdef HAVE_MODULE_PAM_LOCALUSER
++
++	if (strcmp("/usr/lib/security/pam_localuser.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using localuser\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_localuser_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_LOCALUSER
-+#ifdef HAVE_MODULE_PAM_LOGINUID
 +
-+	if (strcmp("/usr/lib/security/loginuid.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_LOCALUSER
++// #ifdef HAVE_MODULE_PAM_LOGINUID
++
++	if (strcmp("/usr/lib/security/pam_loginuid.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using loginuid\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_loginuid_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_LOGINUID
-+#ifdef HAVE_MODULE_PAM_MAIL
 +
-+	if (strcmp("/usr/lib/security/mail.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_LOGINUID
++// #ifdef HAVE_MODULE_PAM_MAIL
++
++	if (strcmp("/usr/lib/security/pam_mail.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using mail\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_mail_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_MAIL
-+#ifdef HAVE_MODULE_PAM_MKHOMEDIR
 +
-+	if (strcmp("/usr/lib/security/mkhomedir.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_MAIL
++// #ifdef HAVE_MODULE_PAM_MKHOMEDIR
++
++	if (strcmp("/usr/lib/security/pam_mkhomedir.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using mkhomedir\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_mkhomedir_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_MKHOMEDIR
-+#ifdef HAVE_MODULE_PAM_MOTD
 +
-+	if (strcmp("/usr/lib/security/motd.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_MKHOMEDIR
++// #ifdef HAVE_MODULE_PAM_MOTD
++
++	if (strcmp("/usr/lib/security/pam_motd.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using motd\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_motd_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_MOTD
-+#ifdef HAVE_MODULE_PAM_NAMESPACE
 +
-+	if (strcmp("/usr/lib/security/namespace.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_MOTD
++// #ifdef HAVE_MODULE_PAM_NAMESPACE
++
++	if (strcmp("/usr/lib/security/pam_namespace.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using namespace\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_namespace_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_NAMESPACE
-+#ifdef HAVE_MODULE_PAM_NOLOGIN
 +
-+	if (strcmp("/usr/lib/security/nologin.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_NAMESPACE
++// #ifdef HAVE_MODULE_PAM_NOLOGIN
++
++	if (strcmp("/usr/lib/security/pam_nologin.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using nologin\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_nologin_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_NOLOGIN
-+#ifdef HAVE_MODULE_PAM_PERMIT
 +
-+	if (strcmp("/usr/lib/security/permit.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_NOLOGIN
++// #ifdef HAVE_MODULE_PAM_PERMIT
++
++	if (strcmp("/usr/lib/security/pam_permit.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using permit\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_permit_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_PERMIT
-+#ifdef HAVE_MODULE_PAM_PWHISTORY
 +
-+	if (strcmp("/usr/lib/security/pwhistory.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_PERMIT
++// #ifdef HAVE_MODULE_PAM_PWHISTORY
++
++	if (strcmp("/usr/lib/security/pam_pwhistory.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using pwhistory\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_pwhistory_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_PWHISTORY
-+#ifdef HAVE_MODULE_PAM_ROOTOK
 +
-+	if (strcmp("/usr/lib/security/rootok.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_PWHISTORY
++// #ifdef HAVE_MODULE_PAM_ROOTOK
++
++	if (strcmp("/usr/lib/security/pam_rootok.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using rootok\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_rootok_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_ROOTOK
-+#ifdef HAVE_MODULE_PAM_SECURETTY
 +
-+	if (strcmp("/usr/lib/security/securetty.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_ROOTOK
++// #ifdef HAVE_MODULE_PAM_SECURETTY
++
++	if (strcmp("/usr/lib/security/pam_securetty.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using securetty\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_securetty_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_SECURETTY
-+#ifdef HAVE_MODULE_PAM_SETQUOTA
 +
-+	if (strcmp("/usr/lib/security/setquota.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_SECURETTY
++// #ifdef HAVE_MODULE_PAM_SETQUOTA
++
++	if (strcmp("/usr/lib/security/pam_setquota.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using setquota\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_setquota_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_SETQUOTA
-+#ifdef HAVE_MODULE_PAM_SHELLS
 +
-+	if (strcmp("/usr/lib/security/shells.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_SETQUOTA
++// #ifdef HAVE_MODULE_PAM_SHELLS
++
++	if (strcmp("/usr/lib/security/pam_shells.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using shells\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_shells_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_SHELLS
-+#ifdef HAVE_MODULE_PAM_STRESS
 +
-+	if (strcmp("/usr/lib/security/stress.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_SHELLS
++// #ifdef HAVE_MODULE_PAM_STRESS
++
++	if (strcmp("/usr/lib/security/pam_stress.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using stress\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_stress_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_STRESS
-+#ifdef HAVE_MODULE_PAM_SUCCEED_IF
 +
-+	if (strcmp("/usr/lib/security/succeed_if.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_STRESS
++// #ifdef HAVE_MODULE_PAM_SUCCEED_IF
++
++	if (strcmp("/usr/lib/security/pam_succeed_if.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using succeed_if\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_succeed_if_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_SUCCEED_IF
-+#ifdef HAVE_MODULE_PAM_TIME
 +
-+	if (strcmp("/usr/lib/security/time.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_SUCCEED_IF
++// #ifdef HAVE_MODULE_PAM_TIME
++
++	if (strcmp("/usr/lib/security/pam_time.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using time\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_time_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_TIME
-+#ifdef HAVE_MODULE_PAM_TIMESTAMP
 +
-+	if (strcmp("/usr/lib/security/timestamp.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_TIME
++// #ifdef HAVE_MODULE_PAM_TIMESTAMP
++
++	if (strcmp("/usr/lib/security/pam_timestamp.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using timestamp\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_timestamp_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_TIMESTAMP
-+#ifdef HAVE_MODULE_PAM_UMASK
 +
-+	if (strcmp("/usr/lib/security/umask.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_TIMESTAMP
++// #ifdef HAVE_MODULE_PAM_UMASK
++
++	if (strcmp("/usr/lib/security/pam_umask.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using umask\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_umask_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_UMASK
-+#ifdef HAVE_MODULE_PAM_UNIX
 +
-+	if (strcmp("/usr/lib/security/unix.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_UMASK
++// #ifdef HAVE_MODULE_PAM_UNIX
++
++	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using unix\n" );
 +
 +		f = _pam_unix_dlsym(symbol);
@@ -624,62 +635,61 @@ index 81f49b4..ea50629 100644
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_UNIX
-+#ifdef HAVE_MODULE_PAM_USERTYPE
 +
-+	if (strcmp("/usr/lib/security/usertype.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_UNIX
++// #ifdef HAVE_MODULE_PAM_USERTYPE
++
++	if (strcmp("/usr/lib/security/pam_usertype.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using usertype\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_usertype_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_USERTYPE
-+#ifdef HAVE_MODULE_PAM_WARN
 +
-+	if (strcmp("/usr/lib/security/warn.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_USERTYPE
++// #ifdef HAVE_MODULE_PAM_WARN
++
++	if (strcmp("/usr/lib/security/pam_warn.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using warn\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_warn_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_WARN
-+#ifdef HAVE_MODULE_PAM_WHEEL
 +
-+	if (strcmp("/usr/lib/security/wheel.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_WARN
++// #ifdef HAVE_MODULE_PAM_WHEEL
++
++	if (strcmp("/usr/lib/security/pam_wheel.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using wheel\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_wheel_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_WHEEL
-+#ifdef HAVE_MODULE_PAM_XAUTH
 +
-+	if (strcmp("/usr/lib/security/xauth.so", (shandle) )==0){
++  
++// #endif // HAVE_MODULE_PAM_WHEEL
++// #ifdef HAVE_MODULE_PAM_XAUTH
++
++	if (strcmp("/usr/lib/security/pam_xauth.so", (shandle) )==0){
 +		fprintf(stderr, "(_pam_dlsym) using xauth\n" );
 +
-+		f = _pam_unix_dlsym(symbol);
++		f = _pam_xauth_dlsym(symbol);
 +		if (f){
 +			return (servicefn)f;
 +		}
 +	}
-+  
-+  
-+#endif // HAVE_MODULE_PAM_XAUTH
 +
++  
++// #endif // HAVE_MODULE_PAM_XAUTH
 +	
 +	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s (%s)\n",symbol,shandle );
 +	
@@ -704,10 +714,10 @@ index 81f49b4..ea50629 100644
  }
 diff --git a/libpam/pam_dynamic_PLACEHOLDER.h b/libpam/pam_dynamic_PLACEHOLDER.h
 new file mode 100644
-index 0000000..ba14439
+index 0000000..40c0058
 --- /dev/null
 +++ b/libpam/pam_dynamic_PLACEHOLDER.h
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,98 @@
 +/*
 + * Redistribution and use in source and binary forms, with or without
 + * modification, are permitted provided that the following conditions
@@ -751,69 +761,25 @@ index 0000000..ba14439
 +
 +
 +
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_authenticate(pam_handle_t *pamh, int flags,
 +														int argc, const char **argv);
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_setcred(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_setcred(pam_handle_t *pamh, int flags,
 +												   int argc, const char **argv);
 +
 +/* Account Management API's */
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
 +													 int argc, const char **argv);
 +
 +/* Session Management API's */
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_open_session(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +														int argc, const char **argv);
 +
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_close_session(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_close_session(pam_handle_t *pamh, int flags,
 +														 int argc, const char **argv);
 +
 +/* Password Management API's */
-+int __attribute__((weak)) PLACEHOLDER__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++int PLACEHOLDER__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
 +													 int argc, const char **argv);
-+
-+
-+
-+// int PLACEHOLDER__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+// 								  int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+// 	return 1;
-+// }
-+// int PLACEHOLDER__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+// 							 int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+// 	return 1;
-+// }
-+
-+// int PLACEHOLDER__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+// 								  int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+// 	return 1;
-+// }
-+// int PLACEHOLDER__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+// 							 int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+// 	return 1;
-+// }
-+
-+// int PLACEHOLDER__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+// 								  int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+// 	return 1;
-+// }
-+// int PLACEHOLDER__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+// 							 int argc, const char **argv)
-+// {
-+// 	fprintf(stderr,"WARNING: weak pam symbol\n");
-+// 	return 1;
-+// }
 +
 +
 +
@@ -850,12 +816,296 @@ index 0000000..ba14439
 +
 +
 +#endif // PAM_MODULE_PLACEHOLDER_H_INCLUDED
+diff --git a/libpam/pam_dynamic_access.h b/libpam/pam_dynamic_access.h
+new file mode 100644
+index 0000000..da844c3
+--- /dev/null
++++ b/libpam/pam_dynamic_access.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_access_H_INCLUDED
++#define PAM_MODULE_pam_access_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_access__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_access__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_access__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_access__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_access__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_access__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_access_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_access\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_access__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_access_H_INCLUDED
+diff --git a/libpam/pam_dynamic_canonicalize_user.h b/libpam/pam_dynamic_canonicalize_user.h
+new file mode 100644
+index 0000000..301e0d3
+--- /dev/null
++++ b/libpam/pam_dynamic_canonicalize_user.h
+@@ -0,0 +1,70 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_canonicalize_user_H_INCLUDED
++#define PAM_MODULE_pam_canonicalize_user_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_canonicalize_user__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_canonicalize_user__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++
++
++
++
++void* _pam_canonicalize_user_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_canonicalize_user\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_canonicalize_user__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_canonicalize_user__pam_sm_setcred;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_canonicalize_user_H_INCLUDED
+diff --git a/libpam/pam_dynamic_debug.h b/libpam/pam_dynamic_debug.h
+new file mode 100644
+index 0000000..d3ef0ac
+--- /dev/null
++++ b/libpam/pam_dynamic_debug.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_debug_H_INCLUDED
++#define PAM_MODULE_pam_debug_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_debug__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_debug__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_debug__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_debug__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_debug__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_debug__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_debug_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_debug\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_debug__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_debug_H_INCLUDED
 diff --git a/libpam/pam_dynamic_defs.c b/libpam/pam_dynamic_defs.c
 new file mode 100644
-index 0000000..74ecb4a
+index 0000000..016c153
 --- /dev/null
 +++ b/libpam/pam_dynamic_defs.c
-@@ -0,0 +1,1872 @@
+@@ -0,0 +1,1336 @@
 +/*
 + * Redistribution and use in source and binary forms, with or without
 + * modification, are permitted provided that the following conditions
@@ -960,19 +1210,6 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_canonicalize_user__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_canonicalize_user__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
 +int __attribute__((weak)) pam_canonicalize_user__pam_sm_close_session(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
@@ -1242,35 +1479,7 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_faildelay__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_faildelay__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_faildelay__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_faildelay__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
@@ -1296,12 +1505,7 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_faillock__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
++
 +
 +int __attribute__((weak)) pam_faillock__pam_sm_close_session(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
@@ -1383,33 +1587,6 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_ftp__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_ftp__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_ftp__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_ftp__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
 +  
 +
@@ -1430,35 +1607,6 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_group__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_group__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_group__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_group__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
@@ -1477,35 +1625,8 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_issue__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_issue__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_issue__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_issue__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
@@ -1524,13 +1645,7 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_keyinit__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +int __attribute__((weak)) pam_keyinit__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1545,39 +1660,12 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_keyinit__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_limits__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_limits__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_limits__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_limits__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1590,12 +1678,6 @@ index 0000000..74ecb4a
 +{
 +	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_limits__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +	return 1;
 +}
 +
@@ -1698,19 +1780,7 @@ index 0000000..74ecb4a
 +
 +
 +
-+int __attribute__((weak)) pam_loginuid__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_loginuid__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
 +int __attribute__((weak)) pam_loginuid__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
@@ -1733,12 +1803,6 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_loginuid__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
 +  
 +
@@ -1759,13 +1823,7 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_mail__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +int __attribute__((weak)) pam_mail__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1780,39 +1838,15 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_mail__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_mkhomedir__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_mkhomedir__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_mkhomedir__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
++
++
 +int __attribute__((weak)) pam_mkhomedir__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1827,39 +1861,11 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_mkhomedir__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_motd__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_motd__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_motd__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_motd__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1874,39 +1880,12 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_motd__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_namespace__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_namespace__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_namespace__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_namespace__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -1919,12 +1898,6 @@ index 0000000..74ecb4a
 +{
 +	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_namespace__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +	return 1;
 +}
 +
@@ -1954,28 +1927,7 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_nologin__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_nologin__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_nologin__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
@@ -2026,42 +1978,6 @@ index 0000000..74ecb4a
 +
 +
 +
-+
-+int __attribute__((weak)) pam_pwhistory__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_pwhistory__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_pwhistory__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_pwhistory__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_pwhistory__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_pwhistory__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2095,20 +2011,7 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_rootok__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_rootok__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_rootok__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2142,53 +2045,15 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_securetty__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_securetty__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_securetty__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
 +  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_setquota__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_setquota__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_setquota__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_setquota__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2203,14 +2068,7 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_setquota__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+  
 +
 +
 +
@@ -2234,26 +2092,6 @@ index 0000000..74ecb4a
 +{
 +	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_shells__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_shells__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_shells__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +	return 1;
 +}
 +
@@ -2356,19 +2194,6 @@ index 0000000..74ecb4a
 +
 +
 +
-+int __attribute__((weak)) pam_time__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_time__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +
 +int __attribute__((weak)) pam_time__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
 +								  int argc, const char **argv)
@@ -2377,28 +2202,7 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_time__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_time__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_time__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
@@ -2417,13 +2221,7 @@ index 0000000..74ecb4a
 +	return 1;
 +}
 +
-+int __attribute__((weak)) pam_timestamp__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +int __attribute__((weak)) pam_timestamp__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2438,39 +2236,12 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_timestamp__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_umask__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_umask__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
 +
-+int __attribute__((weak)) pam_umask__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_umask__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2483,12 +2254,6 @@ index 0000000..74ecb4a
 +{
 +	fprintf(stderr,"WARNING: weak pam symbol\n");
 +
-+	return 1;
-+}
-+int __attribute__((weak)) pam_umask__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
 +	return 1;
 +}
 +
@@ -2659,53 +2424,10 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_wheel__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_wheel__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int __attribute__((weak)) pam_wheel__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+  
 +
 +
 +
 +
-+int __attribute__((weak)) pam_xauth__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int __attribute__((weak)) pam_xauth__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+
-+int __attribute__((weak)) pam_xauth__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
 +int __attribute__((weak)) pam_xauth__pam_sm_open_session(pam_handle_t *pamh, int flags,
 +							 int argc, const char **argv)
 +{
@@ -2720,15 +2442,3157 @@ index 0000000..74ecb4a
 +
 +	return 1;
 +}
-+int __attribute__((weak)) pam_xauth__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
+diff --git a/libpam/pam_dynamic_deny.h b/libpam/pam_dynamic_deny.h
+new file mode 100644
+index 0000000..9e4226b
+--- /dev/null
++++ b/libpam/pam_dynamic_deny.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_deny_H_INCLUDED
++#define PAM_MODULE_pam_deny_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_deny__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_deny__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_deny__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_deny__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_deny__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_deny__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_deny_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_deny\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_deny__pam_sm_chauthtok;
++		}
++		return NULL;
 +}
 +
-+  
-\ No newline at end of file
++
++#endif // PAM_MODULE_pam_deny_H_INCLUDED
+diff --git a/libpam/pam_dynamic_echo.h b/libpam/pam_dynamic_echo.h
+new file mode 100644
+index 0000000..d15d79c
+--- /dev/null
++++ b/libpam/pam_dynamic_echo.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_echo_H_INCLUDED
++#define PAM_MODULE_pam_echo_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_echo__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_echo__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_echo__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_echo__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_echo__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_echo__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_echo_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_echo\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_echo__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_echo_H_INCLUDED
+diff --git a/libpam/pam_dynamic_env.h b/libpam/pam_dynamic_env.h
+new file mode 100644
+index 0000000..f32f53c
+--- /dev/null
++++ b/libpam/pam_dynamic_env.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_env_H_INCLUDED
++#define PAM_MODULE_pam_env_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_env__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_env__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_env__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_env__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_env__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_env__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_env_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_env\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_env__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_env_H_INCLUDED
+diff --git a/libpam/pam_dynamic_exec.h b/libpam/pam_dynamic_exec.h
+new file mode 100644
+index 0000000..b2bc88d
+--- /dev/null
++++ b/libpam/pam_dynamic_exec.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_exec_H_INCLUDED
++#define PAM_MODULE_pam_exec_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_exec__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_exec__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_exec__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_exec__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_exec__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_exec__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_exec_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_exec\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_exec__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_exec_H_INCLUDED
+diff --git a/libpam/pam_dynamic_faildelay.h b/libpam/pam_dynamic_faildelay.h
+new file mode 100644
+index 0000000..ea5ff04
+--- /dev/null
++++ b/libpam/pam_dynamic_faildelay.h
+@@ -0,0 +1,68 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_faildelay_H_INCLUDED
++#define PAM_MODULE_pam_faildelay_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_faildelay__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_faildelay__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++
++
++void* _pam_faildelay_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_faildelay\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_faildelay__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_faildelay__pam_sm_setcred;
++		} 
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_faildelay_H_INCLUDED
+diff --git a/libpam/pam_dynamic_faillock.h b/libpam/pam_dynamic_faillock.h
+new file mode 100644
+index 0000000..e825e49
+--- /dev/null
++++ b/libpam/pam_dynamic_faillock.h
+@@ -0,0 +1,74 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_faillock_H_INCLUDED
++#define PAM_MODULE_pam_faillock_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_faillock__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_faillock__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_faillock__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++void* _pam_faillock_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_faillock\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_faillock__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_faillock__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_faillock__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_faillock_H_INCLUDED
+diff --git a/libpam/pam_dynamic_filter.h b/libpam/pam_dynamic_filter.h
+new file mode 100644
+index 0000000..f893c40
+--- /dev/null
++++ b/libpam/pam_dynamic_filter.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_filter_H_INCLUDED
++#define PAM_MODULE_pam_filter_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_filter__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_filter__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_filter__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_filter__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_filter__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_filter__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_filter_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_filter\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_filter__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_filter_H_INCLUDED
+diff --git a/libpam/pam_dynamic_ftp.h b/libpam/pam_dynamic_ftp.h
+new file mode 100644
+index 0000000..ec3439b
+--- /dev/null
++++ b/libpam/pam_dynamic_ftp.h
+@@ -0,0 +1,67 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_ftp_H_INCLUDED
++#define PAM_MODULE_pam_ftp_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_ftp__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_ftp__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++
++void* _pam_ftp_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_ftp\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_ftp__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_ftp__pam_sm_setcred;
++		} 
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_ftp_H_INCLUDED
+diff --git a/libpam/pam_dynamic_group.h b/libpam/pam_dynamic_group.h
+new file mode 100644
+index 0000000..6a2acad
+--- /dev/null
++++ b/libpam/pam_dynamic_group.h
+@@ -0,0 +1,67 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_group_H_INCLUDED
++#define PAM_MODULE_pam_group_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_group__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_group__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++
++void* _pam_group_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_group\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_group__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_group__pam_sm_setcred;
++		} 
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_group_H_INCLUDED
+diff --git a/libpam/pam_dynamic_issue.h b/libpam/pam_dynamic_issue.h
+new file mode 100644
+index 0000000..db5f06e
+--- /dev/null
++++ b/libpam/pam_dynamic_issue.h
+@@ -0,0 +1,67 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_issue_H_INCLUDED
++#define PAM_MODULE_pam_issue_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_issue__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_issue__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++
++void* _pam_issue_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_issue\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_issue__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_issue__pam_sm_setcred;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_issue_H_INCLUDED
+diff --git a/libpam/pam_dynamic_keyinit.h b/libpam/pam_dynamic_keyinit.h
+new file mode 100644
+index 0000000..1dee926
+--- /dev/null
++++ b/libpam/pam_dynamic_keyinit.h
+@@ -0,0 +1,82 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_keyinit_H_INCLUDED
++#define PAM_MODULE_pam_keyinit_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_keyinit__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_keyinit__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Session Management API's */
++int pam_keyinit__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_keyinit__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_keyinit_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_keyinit\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_keyinit__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_keyinit__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_keyinit__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_keyinit__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_keyinit_H_INCLUDED
+diff --git a/libpam/pam_dynamic_limits.h b/libpam/pam_dynamic_limits.h
+new file mode 100644
+index 0000000..23f3450
+--- /dev/null
++++ b/libpam/pam_dynamic_limits.h
+@@ -0,0 +1,70 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_limits_H_INCLUDED
++#define PAM_MODULE_pam_limits_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Session Management API's */
++int pam_limits__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_limits__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_limits_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_limits\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_limits__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_limits__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_limits_H_INCLUDED
+diff --git a/libpam/pam_dynamic_listfile.h b/libpam/pam_dynamic_listfile.h
+new file mode 100644
+index 0000000..c1400b5
+--- /dev/null
++++ b/libpam/pam_dynamic_listfile.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_listfile_H_INCLUDED
++#define PAM_MODULE_pam_listfile_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_listfile__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_listfile__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_listfile__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_listfile__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_listfile__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_listfile__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_listfile_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_listfile\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_listfile__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_listfile_H_INCLUDED
+diff --git a/libpam/pam_dynamic_localuser.h b/libpam/pam_dynamic_localuser.h
+new file mode 100644
+index 0000000..7e2df3f
+--- /dev/null
++++ b/libpam/pam_dynamic_localuser.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_localuser_H_INCLUDED
++#define PAM_MODULE_pam_localuser_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_localuser__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_localuser__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_localuser__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_localuser__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_localuser__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_localuser__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_localuser_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_localuser\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_localuser__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_localuser_H_INCLUDED
+diff --git a/libpam/pam_dynamic_loginuid.h b/libpam/pam_dynamic_loginuid.h
+new file mode 100644
+index 0000000..3a06517
+--- /dev/null
++++ b/libpam/pam_dynamic_loginuid.h
+@@ -0,0 +1,78 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_loginuid_H_INCLUDED
++#define PAM_MODULE_pam_loginuid_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Account Management API's */
++int pam_loginuid__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_loginuid__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_loginuid__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_loginuid_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_loginuid\n" );
++
++		if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_loginuid__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_loginuid__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_loginuid__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_loginuid_H_INCLUDED
+diff --git a/libpam/pam_dynamic_mail.h b/libpam/pam_dynamic_mail.h
+new file mode 100644
+index 0000000..b105af1
+--- /dev/null
++++ b/libpam/pam_dynamic_mail.h
+@@ -0,0 +1,83 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_mail_H_INCLUDED
++#define PAM_MODULE_pam_mail_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_mail__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_mail__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++/* Session Management API's */
++int pam_mail__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_mail__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_mail_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_mail\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mail__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mail__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mail__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mail__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_mail_H_INCLUDED
+diff --git a/libpam/pam_dynamic_mkhomedir.h b/libpam/pam_dynamic_mkhomedir.h
+new file mode 100644
+index 0000000..74b2627
+--- /dev/null
++++ b/libpam/pam_dynamic_mkhomedir.h
+@@ -0,0 +1,70 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_mkhomedir_H_INCLUDED
++#define PAM_MODULE_pam_mkhomedir_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Session Management API's */
++int pam_mkhomedir__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_mkhomedir__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_mkhomedir_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_mkhomedir\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mkhomedir__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_mkhomedir__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_mkhomedir_H_INCLUDED
+diff --git a/libpam/pam_dynamic_motd.h b/libpam/pam_dynamic_motd.h
+new file mode 100644
+index 0000000..38f857c
+--- /dev/null
++++ b/libpam/pam_dynamic_motd.h
+@@ -0,0 +1,69 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_motd_H_INCLUDED
++#define PAM_MODULE_pam_motd_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++/* Session Management API's */
++int pam_motd__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_motd__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_motd_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_motd\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_motd__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_motd__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_motd_H_INCLUDED
+diff --git a/libpam/pam_dynamic_namespace.h b/libpam/pam_dynamic_namespace.h
+new file mode 100644
+index 0000000..d353e5e
+--- /dev/null
++++ b/libpam/pam_dynamic_namespace.h
+@@ -0,0 +1,67 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_namespace_H_INCLUDED
++#define PAM_MODULE_pam_namespace_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++/* Session Management API's */
++int pam_namespace__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_namespace__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++void* _pam_namespace_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_namespace\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_namespace__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_namespace__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_namespace_H_INCLUDED
+diff --git a/libpam/pam_dynamic_nologin.h b/libpam/pam_dynamic_nologin.h
+new file mode 100644
+index 0000000..514bb51
+--- /dev/null
++++ b/libpam/pam_dynamic_nologin.h
+@@ -0,0 +1,74 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_nologin_H_INCLUDED
++#define PAM_MODULE_pam_nologin_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_nologin__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_nologin__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_nologin__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++void* _pam_nologin_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_nologin\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_nologin__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_nologin__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_nologin__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_nologin_H_INCLUDED
+diff --git a/libpam/pam_dynamic_permit.h b/libpam/pam_dynamic_permit.h
+new file mode 100644
+index 0000000..a9550f8
+--- /dev/null
++++ b/libpam/pam_dynamic_permit.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_permit_H_INCLUDED
++#define PAM_MODULE_pam_permit_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_permit__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_permit__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_permit__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_permit__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_permit__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_permit__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_permit_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_permit\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_permit__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_permit_H_INCLUDED
+diff --git a/libpam/pam_dynamic_pwhistory.h b/libpam/pam_dynamic_pwhistory.h
+new file mode 100644
+index 0000000..8de5286
+--- /dev/null
++++ b/libpam/pam_dynamic_pwhistory.h
+@@ -0,0 +1,63 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_pwhistory_H_INCLUDED
++#define PAM_MODULE_pam_pwhistory_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Password Management API's */
++int pam_pwhistory__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_pwhistory_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_pwhistory\n" );
++
++		if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_pwhistory__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_pwhistory_H_INCLUDED
+diff --git a/libpam/pam_dynamic_rootok.h b/libpam/pam_dynamic_rootok.h
+new file mode 100644
+index 0000000..15e038d
+--- /dev/null
++++ b/libpam/pam_dynamic_rootok.h
+@@ -0,0 +1,88 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_rootok_H_INCLUDED
++#define PAM_MODULE_pam_rootok_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_rootok__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_rootok__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_rootok__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++int pam_rootok__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_rootok__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_rootok_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_rootok\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_rootok__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_rootok__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_rootok__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_rootok__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_rootok_H_INCLUDED
+diff --git a/libpam/pam_dynamic_securetty.h b/libpam/pam_dynamic_securetty.h
+new file mode 100644
+index 0000000..49ce014
+--- /dev/null
++++ b/libpam/pam_dynamic_securetty.h
+@@ -0,0 +1,74 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_securetty_H_INCLUDED
++#define PAM_MODULE_pam_securetty_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_securetty__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_securetty__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_securetty__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++void* _pam_securetty_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_securetty\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_securetty__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_securetty__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_securetty__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_securetty_H_INCLUDED
+diff --git a/libpam/pam_dynamic_setquota.h b/libpam/pam_dynamic_setquota.h
+new file mode 100644
+index 0000000..50e9f5f
+--- /dev/null
++++ b/libpam/pam_dynamic_setquota.h
+@@ -0,0 +1,69 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_setquota_H_INCLUDED
++#define PAM_MODULE_pam_setquota_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Session Management API's */
++int pam_setquota__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_setquota__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++void* _pam_setquota_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_setquota\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_setquota__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_setquota__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_setquota_H_INCLUDED
+diff --git a/libpam/pam_dynamic_shells.h b/libpam/pam_dynamic_shells.h
+new file mode 100644
+index 0000000..a672fd2
+--- /dev/null
++++ b/libpam/pam_dynamic_shells.h
+@@ -0,0 +1,74 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_shells_H_INCLUDED
++#define PAM_MODULE_pam_shells_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_shells__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_shells__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_shells__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++void* _pam_shells_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_shells\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_shells__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_shells__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_shells__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_shells_H_INCLUDED
+diff --git a/libpam/pam_dynamic_stress.h b/libpam/pam_dynamic_stress.h
+new file mode 100644
+index 0000000..de4a8c4
+--- /dev/null
++++ b/libpam/pam_dynamic_stress.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_stress_H_INCLUDED
++#define PAM_MODULE_pam_stress_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_stress__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_stress__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_stress__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_stress__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_stress__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_stress__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_stress_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_stress\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_stress__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_stress_H_INCLUDED
+diff --git a/libpam/pam_dynamic_succeed_if.h b/libpam/pam_dynamic_succeed_if.h
+new file mode 100644
+index 0000000..01ebe20
+--- /dev/null
++++ b/libpam/pam_dynamic_succeed_if.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_succeed_if_H_INCLUDED
++#define PAM_MODULE_pam_succeed_if_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_succeed_if__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_succeed_if__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_succeed_if__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_succeed_if__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_succeed_if__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_succeed_if__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_succeed_if_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_succeed_if\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_succeed_if__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_succeed_if_H_INCLUDED
+diff --git a/libpam/pam_dynamic_time.h b/libpam/pam_dynamic_time.h
+new file mode 100644
+index 0000000..2c96c44
+--- /dev/null
++++ b/libpam/pam_dynamic_time.h
+@@ -0,0 +1,62 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_time_H_INCLUDED
++#define PAM_MODULE_pam_time_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++/* Account Management API's */
++int pam_time__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_time_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_time\n" );
++
++		if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_time__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_time_H_INCLUDED
+diff --git a/libpam/pam_dynamic_timestamp.h b/libpam/pam_dynamic_timestamp.h
+new file mode 100644
+index 0000000..f9d7baa
+--- /dev/null
++++ b/libpam/pam_dynamic_timestamp.h
+@@ -0,0 +1,82 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_timestamp_H_INCLUDED
++#define PAM_MODULE_pam_timestamp_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_timestamp__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_timestamp__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++
++/* Session Management API's */
++int pam_timestamp__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_timestamp__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++void* _pam_timestamp_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_timestamp\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_timestamp__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_timestamp__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_timestamp__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_timestamp__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_timestamp_H_INCLUDED
+diff --git a/libpam/pam_dynamic_umask.h b/libpam/pam_dynamic_umask.h
+new file mode 100644
+index 0000000..38409f8
+--- /dev/null
++++ b/libpam/pam_dynamic_umask.h
+@@ -0,0 +1,69 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_umask_H_INCLUDED
++#define PAM_MODULE_pam_umask_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++/* Session Management API's */
++int pam_umask__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_umask__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++
++void* _pam_umask_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_umask\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_umask__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_umask__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_umask_H_INCLUDED
+diff --git a/libpam/pam_dynamic_unix.h b/libpam/pam_dynamic_unix.h
+new file mode 100644
+index 0000000..45e3332
+--- /dev/null
++++ b/libpam/pam_dynamic_unix.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_unix_H_INCLUDED
++#define PAM_MODULE_pam_unix_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_unix_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_unix__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_unix_H_INCLUDED
+diff --git a/libpam/pam_dynamic_usertype.h b/libpam/pam_dynamic_usertype.h
+new file mode 100644
+index 0000000..c43e34d
+--- /dev/null
++++ b/libpam/pam_dynamic_usertype.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_usertype_H_INCLUDED
++#define PAM_MODULE_pam_usertype_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_usertype__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_usertype__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_usertype__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_usertype__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_usertype__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_usertype__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_usertype_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_usertype\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_usertype__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_usertype_H_INCLUDED
+diff --git a/libpam/pam_dynamic_warn.h b/libpam/pam_dynamic_warn.h
+new file mode 100644
+index 0000000..230e081
+--- /dev/null
++++ b/libpam/pam_dynamic_warn.h
+@@ -0,0 +1,98 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_warn_H_INCLUDED
++#define PAM_MODULE_pam_warn_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_warn__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_warn__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_warn__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int pam_warn__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_warn__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int pam_warn__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_warn_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_warn\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_warn__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_warn_H_INCLUDED
+diff --git a/libpam/pam_dynamic_wheel.h b/libpam/pam_dynamic_wheel.h
+new file mode 100644
+index 0000000..36f0d96
+--- /dev/null
++++ b/libpam/pam_dynamic_wheel.h
+@@ -0,0 +1,75 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_wheel_H_INCLUDED
++#define PAM_MODULE_pam_wheel_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int pam_wheel__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int pam_wheel__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int pam_wheel__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++void* _pam_wheel_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_wheel\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_wheel__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_wheel__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_wheel__pam_sm_acct_mgmt;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_wheel_H_INCLUDED
+diff --git a/libpam/pam_dynamic_xauth.h b/libpam/pam_dynamic_xauth.h
+new file mode 100644
+index 0000000..a17311d
+--- /dev/null
++++ b/libpam/pam_dynamic_xauth.h
+@@ -0,0 +1,69 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_pam_xauth_H_INCLUDED
++#define PAM_MODULE_pam_xauth_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++/* Session Management API's */
++int pam_xauth__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int pam_xauth__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++
++void* _pam_xauth_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using pam_xauth\n" );
++
++		if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_xauth__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return pam_xauth__pam_sm_close_session;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_pam_xauth_H_INCLUDED
 diff --git a/libpam_misc/meson.build b/libpam_misc/meson.build
 index e0bb30f..13094e4 100644
 --- a/libpam_misc/meson.build
