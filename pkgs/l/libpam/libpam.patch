@@ -1,8 +1,16 @@
 diff --git a/libpam/meson.build b/libpam/meson.build
-index 3e8a531..667a72e 100644
+index 3e8a531..0e8f443 100644
 --- a/libpam/meson.build
 +++ b/libpam/meson.build
-@@ -43,7 +43,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
+@@ -8,6 +8,7 @@ libpam_src = [
+   'pam_delay.c',
+   'pam_dispatch.c',
+   'pam_dynamic.c',
++  'pam_dynamic_defs.c',
+   'pam_end.c',
+   'pam_env.c',
+   'pam_get_authtok.c',
+@@ -43,7 +44,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
  libpam_link_deps = [libpam_map]
  libpam_link_args = ['-Wl,--version-script=' + libpam_map_path]
  
@@ -12,84 +20,132 @@ index 3e8a531..667a72e 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..b27ef97 100644
+index 81f49b4..ea50629 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
-@@ -33,24 +33,147 @@
+@@ -33,24 +33,674 @@
  
  #include "pam_private.h"
  #include <dlfcn.h>
 +#include <stdio.h>
 +#include <string.h>
-+
-+
-+
-+
-+int __attribute__((weak)) pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+														int argc, const char **argv);
-+int __attribute__((weak)) pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+												   int argc, const char **argv);
-+
-+/* Account Management API's */
-+int __attribute__((weak)) pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+													 int argc, const char **argv);
-+
-+/* Session Management API's */
-+int __attribute__((weak)) pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+														int argc, const char **argv);
-+
-+int __attribute__((weak)) pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+														 int argc, const char **argv);
-+
-+/* Password Management API's */
-+int __attribute__((weak)) pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+													 int argc, const char **argv);
-+
-+
-+
-+int pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+int pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+
-+int pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+int pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
-+								  int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+
-+	return 1;
-+}
-+int pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
-+							 int argc, const char **argv)
-+{
-+	fprintf(stderr,"WARNING: weak pam symbol\n");
-+	return 1;
-+}
-+
-+
++#ifdef HAVE_MODULE_PAM_ACCESS
++#include "pam_dynamic_access.h"
++#endif // HAVE_MODULE_PAM_ACCESS
++#ifdef HAVE_MODULE_PAM_CANONICALIZE_USER
++#include "pam_dynamic_canonicalize_user.h"
++#endif // HAVE_MODULE_PAM_CANONICALIZE_USER
++#ifdef HAVE_MODULE_PAM_DEBUG
++#include "pam_dynamic_debug.h"
++#endif // HAVE_MODULE_PAM_DEBUG
++#ifdef HAVE_MODULE_PAM_DENY
++#include "pam_dynamic_deny.h"
++#endif // HAVE_MODULE_PAM_DENY
++#ifdef HAVE_MODULE_PAM_ECHO
++#include "pam_dynamic_echo.h"
++#endif // HAVE_MODULE_PAM_ECHO
++#ifdef HAVE_MODULE_PAM_ENV
++#include "pam_dynamic_env.h"
++#endif // HAVE_MODULE_PAM_ENV
++#ifdef HAVE_MODULE_PAM_EXEC
++#include "pam_dynamic_exec.h"
++#endif // HAVE_MODULE_PAM_EXEC
++#ifdef HAVE_MODULE_PAM_FAILDELAY
++#include "pam_dynamic_faildelay.h"
++#endif // HAVE_MODULE_PAM_FAILDELAY
++#ifdef HAVE_MODULE_PAM_FAILLOCK
++#include "pam_dynamic_faillock.h"
++#endif // HAVE_MODULE_PAM_FAILLOCK
++#ifdef HAVE_MODULE_PAM_FILTER
++#include "pam_dynamic_filter.h"
++#endif // HAVE_MODULE_PAM_FILTER
++#ifdef HAVE_MODULE_PAM_FTP
++#include "pam_dynamic_ftp.h"
++#endif // HAVE_MODULE_PAM_FTP
++#ifdef HAVE_MODULE_PAM_GROUP
++#include "pam_dynamic_group.h"
++#endif // HAVE_MODULE_PAM_GROUP
++#ifdef HAVE_MODULE_PAM_ISSUE
++#include "pam_dynamic_issue.h"
++#endif // HAVE_MODULE_PAM_ISSUE
++#ifdef HAVE_MODULE_PAM_KEYINIT
++#include "pam_dynamic_keyinit.h"
++#endif // HAVE_MODULE_PAM_KEYINIT
++#ifdef HAVE_MODULE_PAM_LIMITS
++#include "pam_dynamic_limits.h"
++#endif // HAVE_MODULE_PAM_LIMITS
++#ifdef HAVE_MODULE_PAM_LISTFILE
++#include "pam_dynamic_listfile.h"
++#endif // HAVE_MODULE_PAM_LISTFILE
++#ifdef HAVE_MODULE_PAM_LOCALUSER
++#include "pam_dynamic_localuser.h"
++#endif // HAVE_MODULE_PAM_LOCALUSER
++#ifdef HAVE_MODULE_PAM_LOGINUID
++#include "pam_dynamic_loginuid.h"
++#endif // HAVE_MODULE_PAM_LOGINUID
++#ifdef HAVE_MODULE_PAM_MAIL
++#include "pam_dynamic_mail.h"
++#endif // HAVE_MODULE_PAM_MAIL
++#ifdef HAVE_MODULE_PAM_MKHOMEDIR
++#include "pam_dynamic_mkhomedir.h"
++#endif // HAVE_MODULE_PAM_MKHOMEDIR
++#ifdef HAVE_MODULE_PAM_MOTD
++#include "pam_dynamic_motd.h"
++#endif // HAVE_MODULE_PAM_MOTD
++#ifdef HAVE_MODULE_PAM_NAMESPACE
++#include "pam_dynamic_namespace.h"
++#endif // HAVE_MODULE_PAM_NAMESPACE
++#ifdef HAVE_MODULE_PAM_NOLOGIN
++#include "pam_dynamic_nologin.h"
++#endif // HAVE_MODULE_PAM_NOLOGIN
++#ifdef HAVE_MODULE_PAM_PERMIT
++#include "pam_dynamic_permit.h"
++#endif // HAVE_MODULE_PAM_PERMIT
++#ifdef HAVE_MODULE_PAM_PWHISTORY
++#include "pam_dynamic_pwhistory.h"
++#endif // HAVE_MODULE_PAM_PWHISTORY
++#ifdef HAVE_MODULE_PAM_ROOTOK
++#include "pam_dynamic_rootok.h"
++#endif // HAVE_MODULE_PAM_ROOTOK
++#ifdef HAVE_MODULE_PAM_SECURETTY
++#include "pam_dynamic_securetty.h"
++#endif // HAVE_MODULE_PAM_SECURETTY
++#ifdef HAVE_MODULE_PAM_SETQUOTA
++#include "pam_dynamic_setquota.h"
++#endif // HAVE_MODULE_PAM_SETQUOTA
++#ifdef HAVE_MODULE_PAM_SHELLS
++#include "pam_dynamic_shells.h"
++#endif // HAVE_MODULE_PAM_SHELLS
++#ifdef HAVE_MODULE_PAM_STRESS
++#include "pam_dynamic_stress.h"
++#endif // HAVE_MODULE_PAM_STRESS
++#ifdef HAVE_MODULE_PAM_SUCCEED_IF
++#include "pam_dynamic_succeed_if.h"
++#endif // HAVE_MODULE_PAM_SUCCEED_IF
++#ifdef HAVE_MODULE_PAM_TIME
++#include "pam_dynamic_time.h"
++#endif // HAVE_MODULE_PAM_TIME
++#ifdef HAVE_MODULE_PAM_TIMESTAMP
++#include "pam_dynamic_timestamp.h"
++#endif // HAVE_MODULE_PAM_TIMESTAMP
++#ifdef HAVE_MODULE_PAM_UMASK
++#include "pam_dynamic_umask.h"
++#endif // HAVE_MODULE_PAM_UMASK
++#ifdef HAVE_MODULE_PAM_UNIX
++#include "pam_dynamic_unix.h"
++#endif // HAVE_MODULE_PAM_UNIX
++#ifdef HAVE_MODULE_PAM_USERTYPE
++#include "pam_dynamic_usertype.h"
++#endif // HAVE_MODULE_PAM_USERTYPE
++#ifdef HAVE_MODULE_PAM_WARN
++#include "pam_dynamic_warn.h"
++#endif // HAVE_MODULE_PAM_WARN
++#ifdef HAVE_MODULE_PAM_WHEEL
++#include "pam_dynamic_wheel.h"
++#endif // HAVE_MODULE_PAM_WHEEL
++#ifdef HAVE_MODULE_PAM_XAUTH
++#include "pam_dynamic_xauth.h"
++#endif // HAVE_MODULE_PAM_XAUTH
  
  void *_pam_dlopen(const char *mod_path)
  {
@@ -97,63 +153,542 @@ index 81f49b4..b27ef97 100644
 +	fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
 +	return (void*) mod_path;
 +	// return dlopen(mod_path, RTLD_NOW);
-+}
-+
-+servicefn _pam_unix_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
-+
-+		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_authenticate;
-+		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_setcred;
-+		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_acct_mgmt;
-+		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_open_session;
-+		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_close_session;
-+		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
-+
-+			return (servicefn)pam_unix__pam_sm_chauthtok;
-+		}
-+		return NULL;
  }
  
  servicefn _pam_dlsym(void *handle, const char *symbol)
  {
 -	return (servicefn) dlsym(handle, symbol);
 +	char* shandle = (char*)handle;
-+	servicefn f;
-+	fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
-+	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++	void* f;
++	// fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
++	// if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
++	// 	fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++
++	// 	f = _pam_unix_dlsym(symbol);
++	// 	if (f){
++	// 		return (servicefn)f;
++	// 	}
++	// }
++
++
++	#ifdef HAVE_MODULE_PAM_ACCESS
++
++	if (strcmp("/usr/lib/security/access.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using access\n" );
 +
 +		f = _pam_unix_dlsym(symbol);
 +		if (f){
-+			return f;
++			return (servicefn)f;
 +		}
 +	}
++  
++  
++#endif // HAVE_MODULE_PAM_ACCESS
++#ifdef HAVE_MODULE_PAM_CANONICALIZE_USER
++
++	if (strcmp("/usr/lib/security/canonicalize_user.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using canonicalize_user\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_CANONICALIZE_USER
++#ifdef HAVE_MODULE_PAM_DEBUG
++
++	if (strcmp("/usr/lib/security/debug.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using debug\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_DEBUG
++#ifdef HAVE_MODULE_PAM_DENY
++
++	if (strcmp("/usr/lib/security/deny.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using deny\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_DENY
++#ifdef HAVE_MODULE_PAM_ECHO
++
++	if (strcmp("/usr/lib/security/echo.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using echo\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_ECHO
++#ifdef HAVE_MODULE_PAM_ENV
++
++	if (strcmp("/usr/lib/security/env.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using env\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_ENV
++#ifdef HAVE_MODULE_PAM_EXEC
++
++	if (strcmp("/usr/lib/security/exec.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using exec\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_EXEC
++#ifdef HAVE_MODULE_PAM_FAILDELAY
++
++	if (strcmp("/usr/lib/security/faildelay.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using faildelay\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_FAILDELAY
++#ifdef HAVE_MODULE_PAM_FAILLOCK
++
++	if (strcmp("/usr/lib/security/faillock.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using faillock\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_FAILLOCK
++#ifdef HAVE_MODULE_PAM_FILTER
++
++	if (strcmp("/usr/lib/security/filter.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using filter\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++
++#endif // HAVE_MODULE_PAM_FILTER
++#ifdef HAVE_MODULE_PAM_FTP
++
++	if (strcmp("/usr/lib/security/ftp.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using ftp\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_FTP
++#ifdef HAVE_MODULE_PAM_GROUP
++
++	if (strcmp("/usr/lib/security/group.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using group\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_GROUP
++#ifdef HAVE_MODULE_PAM_ISSUE
++
++	if (strcmp("/usr/lib/security/issue.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using issue\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_ISSUE
++#ifdef HAVE_MODULE_PAM_KEYINIT
++
++	if (strcmp("/usr/lib/security/keyinit.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using keyinit\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_KEYINIT
++#ifdef HAVE_MODULE_PAM_LIMITS
++
++	if (strcmp("/usr/lib/security/limits.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using limits\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_LIMITS
++#ifdef HAVE_MODULE_PAM_LISTFILE
++
++	if (strcmp("/usr/lib/security/listfile.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using listfile\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_LISTFILE
++#ifdef HAVE_MODULE_PAM_LOCALUSER
++
++	if (strcmp("/usr/lib/security/localuser.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using localuser\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_LOCALUSER
++#ifdef HAVE_MODULE_PAM_LOGINUID
++
++	if (strcmp("/usr/lib/security/loginuid.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using loginuid\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_LOGINUID
++#ifdef HAVE_MODULE_PAM_MAIL
++
++	if (strcmp("/usr/lib/security/mail.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using mail\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_MAIL
++#ifdef HAVE_MODULE_PAM_MKHOMEDIR
++
++	if (strcmp("/usr/lib/security/mkhomedir.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using mkhomedir\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_MKHOMEDIR
++#ifdef HAVE_MODULE_PAM_MOTD
++
++	if (strcmp("/usr/lib/security/motd.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using motd\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_MOTD
++#ifdef HAVE_MODULE_PAM_NAMESPACE
++
++	if (strcmp("/usr/lib/security/namespace.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using namespace\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_NAMESPACE
++#ifdef HAVE_MODULE_PAM_NOLOGIN
++
++	if (strcmp("/usr/lib/security/nologin.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using nologin\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_NOLOGIN
++#ifdef HAVE_MODULE_PAM_PERMIT
++
++	if (strcmp("/usr/lib/security/permit.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using permit\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_PERMIT
++#ifdef HAVE_MODULE_PAM_PWHISTORY
++
++	if (strcmp("/usr/lib/security/pwhistory.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using pwhistory\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_PWHISTORY
++#ifdef HAVE_MODULE_PAM_ROOTOK
++
++	if (strcmp("/usr/lib/security/rootok.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using rootok\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_ROOTOK
++#ifdef HAVE_MODULE_PAM_SECURETTY
++
++	if (strcmp("/usr/lib/security/securetty.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using securetty\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_SECURETTY
++#ifdef HAVE_MODULE_PAM_SETQUOTA
++
++	if (strcmp("/usr/lib/security/setquota.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using setquota\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_SETQUOTA
++#ifdef HAVE_MODULE_PAM_SHELLS
++
++	if (strcmp("/usr/lib/security/shells.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using shells\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_SHELLS
++#ifdef HAVE_MODULE_PAM_STRESS
++
++	if (strcmp("/usr/lib/security/stress.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using stress\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_STRESS
++#ifdef HAVE_MODULE_PAM_SUCCEED_IF
++
++	if (strcmp("/usr/lib/security/succeed_if.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using succeed_if\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_SUCCEED_IF
++#ifdef HAVE_MODULE_PAM_TIME
++
++	if (strcmp("/usr/lib/security/time.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using time\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_TIME
++#ifdef HAVE_MODULE_PAM_TIMESTAMP
++
++	if (strcmp("/usr/lib/security/timestamp.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using timestamp\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_TIMESTAMP
++#ifdef HAVE_MODULE_PAM_UMASK
++
++	if (strcmp("/usr/lib/security/umask.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using umask\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_UMASK
++#ifdef HAVE_MODULE_PAM_UNIX
++
++	if (strcmp("/usr/lib/security/unix.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using unix\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_UNIX
++#ifdef HAVE_MODULE_PAM_USERTYPE
++
++	if (strcmp("/usr/lib/security/usertype.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using usertype\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_USERTYPE
++#ifdef HAVE_MODULE_PAM_WARN
++
++	if (strcmp("/usr/lib/security/warn.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using warn\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_WARN
++#ifdef HAVE_MODULE_PAM_WHEEL
++
++	if (strcmp("/usr/lib/security/wheel.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using wheel\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_WHEEL
++#ifdef HAVE_MODULE_PAM_XAUTH
++
++	if (strcmp("/usr/lib/security/xauth.so", (shandle) )==0){
++		fprintf(stderr, "(_pam_dlsym) using xauth\n" );
++
++		f = _pam_unix_dlsym(symbol);
++		if (f){
++			return (servicefn)f;
++		}
++	}
++  
++  
++#endif // HAVE_MODULE_PAM_XAUTH
 +
 +	
-+	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s\n",symbol );
++	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s (%s)\n",symbol,shandle );
 +	
 +	return (servicefn)dlsym(handle, symbol);
  }
  
  void _pam_dlclose(void *handle)
  {
-+	fprintf(stderr, "(_pam_dlclose) trying dlclose\n");
++	// fprintf(stderr, "(_pam_dlclose) trying dlclose\n");
 +
  	dlclose(handle);
  }
@@ -163,10 +698,2037 @@ index 81f49b4..b27ef97 100644
 +_pam_dlerror(void)
  {
 -        return dlerror ();
-+	fprintf(stderr, "(_pam_dlerror) trying dlerror\n");
++	// fprintf(stderr, "(_pam_dlerror) trying dlerror\n");
 +
 +	return dlerror();
  }
+diff --git a/libpam/pam_dynamic_PLACEHOLDER.h b/libpam/pam_dynamic_PLACEHOLDER.h
+new file mode 100644
+index 0000000..ba14439
+--- /dev/null
++++ b/libpam/pam_dynamic_PLACEHOLDER.h
+@@ -0,0 +1,142 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef PAM_MODULE_PLACEHOLDER_H_INCLUDED
++#define PAM_MODULE_PLACEHOLDER_H_INCLUDED
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++int __attribute__((weak)) PLACEHOLDER__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++int __attribute__((weak)) PLACEHOLDER__pam_sm_setcred(pam_handle_t *pamh, int flags,
++												   int argc, const char **argv);
++
++/* Account Management API's */
++int __attribute__((weak)) PLACEHOLDER__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++/* Session Management API's */
++int __attribute__((weak)) PLACEHOLDER__pam_sm_open_session(pam_handle_t *pamh, int flags,
++														int argc, const char **argv);
++
++int __attribute__((weak)) PLACEHOLDER__pam_sm_close_session(pam_handle_t *pamh, int flags,
++														 int argc, const char **argv);
++
++/* Password Management API's */
++int __attribute__((weak)) PLACEHOLDER__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++													 int argc, const char **argv);
++
++
++
++// int PLACEHOLDER__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++// 								  int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++// 	return 1;
++// }
++// int PLACEHOLDER__pam_sm_setcred(pam_handle_t *pamh, int flags,
++// 							 int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++// 	return 1;
++// }
++
++// int PLACEHOLDER__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++// 								  int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++// 	return 1;
++// }
++// int PLACEHOLDER__pam_sm_open_session(pam_handle_t *pamh, int flags,
++// 							 int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++// 	return 1;
++// }
++
++// int PLACEHOLDER__pam_sm_close_session(pam_handle_t *pamh, int flags,
++// 								  int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++// 	return 1;
++// }
++// int PLACEHOLDER__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++// 							 int argc, const char **argv)
++// {
++// 	fprintf(stderr,"WARNING: weak pam symbol\n");
++// 	return 1;
++// }
++
++
++
++void* _PLACEHOLDER_dlsym(const char* symbol){
++		fprintf(stderr, "(_pam_dlsym) using PLACEHOLDER\n" );
++
++		if (strcmp(symbol,"pam_sm_authenticate")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_authenticate;
++		} else if (strcmp(symbol,"pam_sm_setcred")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_setcred;
++		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_acct_mgmt;
++		}else if (strcmp(symbol,"pam_sm_open_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_open_session;
++		}else if (strcmp(symbol,"pam_sm_close_session")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_close_session;
++		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
++			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++
++			return PLACEHOLDER__pam_sm_chauthtok;
++		}
++		return NULL;
++}
++
++
++#endif // PAM_MODULE_PLACEHOLDER_H_INCLUDED
+diff --git a/libpam/pam_dynamic_defs.c b/libpam/pam_dynamic_defs.c
+new file mode 100644
+index 0000000..74ecb4a
+--- /dev/null
++++ b/libpam/pam_dynamic_defs.c
+@@ -0,0 +1,1872 @@
++/*
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, and the entire permission notice in its entirety,
++ *    including the disclaimer of warranties.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The name of the author may not be used to endorse or promote
++ *    products derived from this software without specific prior
++ *    written permission.
++ *
++ * ALTERNATIVELY, this product may be distributed under the terms of
++ * the GNU Public License, in which case the provisions of the GPL are
++ * required INSTEAD OF the above restrictions.  (This clause is
++ * necessary due to a potential bad interaction between the GPL and
++ * the restrictions contained in a BSD-style copyright.)
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include "pam_private.h"
++#include <dlfcn.h>
++#include <stdio.h>
++#include <string.h>
++
++
++
++
++
++
++int __attribute__((weak)) pam_access__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_access__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_access__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_access__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_access__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_access__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_canonicalize_user__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_debug__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_debug__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_debug__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_debug__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_debug__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_debug__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_deny__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_deny__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_deny__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_deny__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_deny__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_deny__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_echo__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_echo__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_echo__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_echo__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_echo__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_echo__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_env__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_env__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_env__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_env__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_env__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_env__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_exec__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_exec__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_exec__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_exec__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_exec__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_exec__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_faildelay__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_faildelay__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_faildelay__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_faildelay__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_faildelay__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_faildelay__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_faillock__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_faillock__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_faillock__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_faillock__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_faillock__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_faillock__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_filter__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_filter__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_filter__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_filter__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_filter__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_filter__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_ftp__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_ftp__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_ftp__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_ftp__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_ftp__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_ftp__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_group__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_group__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_group__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_group__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_group__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_group__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_issue__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_issue__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_issue__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_issue__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_issue__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_issue__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_keyinit__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_keyinit__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_keyinit__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_keyinit__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_keyinit__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_keyinit__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_limits__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_limits__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_limits__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_limits__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_limits__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_limits__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_listfile__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_listfile__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_listfile__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_listfile__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_listfile__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_listfile__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_localuser__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_localuser__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_localuser__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_localuser__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_localuser__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_localuser__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_loginuid__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_loginuid__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_loginuid__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_loginuid__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_loginuid__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_loginuid__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_mail__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_mail__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_mail__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_mail__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_mail__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_mail__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_mkhomedir__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_mkhomedir__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_mkhomedir__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_mkhomedir__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_mkhomedir__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_mkhomedir__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_motd__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_motd__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_motd__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_motd__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_motd__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_motd__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_namespace__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_namespace__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_namespace__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_namespace__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_namespace__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_namespace__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_nologin__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_nologin__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_nologin__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_nologin__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_nologin__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_nologin__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_permit__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_permit__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_permit__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_permit__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_permit__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_permit__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_pwhistory__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_pwhistory__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_pwhistory__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_pwhistory__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_pwhistory__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_pwhistory__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_rootok__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_rootok__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_rootok__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_rootok__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_rootok__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_rootok__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_securetty__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_securetty__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_securetty__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_securetty__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_securetty__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_securetty__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_setquota__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_setquota__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_setquota__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_setquota__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_setquota__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_setquota__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_shells__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_shells__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_shells__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_shells__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_shells__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_shells__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_stress__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_stress__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_stress__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_stress__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_stress__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_stress__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_succeed_if__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_succeed_if__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_succeed_if__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_succeed_if__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_succeed_if__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_succeed_if__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_time__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_time__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_time__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_time__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_time__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_time__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_timestamp__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_timestamp__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_timestamp__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_timestamp__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_timestamp__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_timestamp__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_umask__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_umask__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_umask__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_umask__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_umask__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_umask__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_unix__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_unix__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_unix__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_unix__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_unix__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_unix__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_usertype__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_usertype__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_usertype__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_usertype__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_usertype__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_usertype__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_warn__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_warn__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_warn__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_warn__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_warn__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_warn__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_wheel__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_wheel__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_wheel__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_wheel__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_wheel__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_wheel__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
++
++
++
++
++int __attribute__((weak)) pam_xauth__pam_sm_authenticate(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++int __attribute__((weak)) pam_xauth__pam_sm_setcred(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++
++int __attribute__((weak)) pam_xauth__pam_sm_acct_mgmt(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_xauth__pam_sm_open_session(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++int __attribute__((weak)) pam_xauth__pam_sm_close_session(pam_handle_t *pamh, int flags,
++								  int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++
++	return 1;
++}
++int __attribute__((weak)) pam_xauth__pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++							 int argc, const char **argv)
++{
++	fprintf(stderr,"WARNING: weak pam symbol\n");
++	return 1;
++}
++
++  
+\ No newline at end of file
 diff --git a/libpam_misc/meson.build b/libpam_misc/meson.build
 index e0bb30f..13094e4 100644
 --- a/libpam_misc/meson.build

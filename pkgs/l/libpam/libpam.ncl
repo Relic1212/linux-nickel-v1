@@ -16,52 +16,176 @@
 & {
   lib,
   drvs,
-  libpam | lib.MesonPackage = {
-    debug = true,
-    singleSource = {
-      uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.7.1/Linux-PAM-1.7.1.tar.xz",
-      sha256sum = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0",
-    },
-    patches = [
-      {
-        sha256sum = "40a7c82ef046e98f46208102e783b7112f8b26f464c80e2f044480b76c049e6c",
-        file = "libpam.patch",
-      }
-    ],
-    extraMesonArgs = [
-      "-Dexamples=false"
-    ],
-    baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgsDebug) @ lib.constants.mesonArgsStatic,
+  libpam | lib.MesonPackage =
+    let pam_modules =
+      #  [ "pam_unix", "pam_rootok"]
+      [
+        "pam_access",
+        "pam_canonicalize_user",
+        "pam_debug",
+        "pam_deny",
+        "pam_echo",
+        "pam_env",
+        "pam_exec",
+        "pam_faildelay",
+        "pam_faillock",
+        "pam_filter",
+        "pam_ftp",
+        "pam_group",
+        "pam_issue",
+        "pam_keyinit",
+        "pam_limits",
+        "pam_listfile",
+        "pam_localuser",
+        "pam_loginuid",
+        "pam_mail",
+        "pam_mkhomedir",
+        "pam_motd",
+        "pam_namespace",
+        "pam_nologin",
+        "pam_permit",
+        "pam_pwhistory",
+        "pam_rootok",
+        "pam_securetty",
+        "pam_setquota",
+        "pam_shells",
+        "pam_stress",
+        "pam_succeed_if",
+        "pam_time",
+        "pam_timestamp",
+        "pam_umask",
+        "pam_unix",
+        "pam_usertype",
+        "pam_warn",
+        "pam_wheel",
+        "pam_xauth"
+      ]
+    in
+    {
+      debug = true,
+      singleSource = {
+        uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.7.1/Linux-PAM-1.7.1.tar.xz",
+        sha256sum = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0",
+      },
+      patches = [
+        {
+          # sha256sum = "24706915df5acb451d6311acb6de63eee99519538d86362ab3ae6933e5825ef9",
+          sha256sum = "cac2a37c19041ad8f3de0514a61b92647b90532c582e04ef8e654cc1c495e52b",
+          file = "libpam.patch",
+        }
+      ],
+      extraMesonArgs = [
+        "-Dexamples=false"
+      ],
+      baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgsDebug) @ lib.constants.mesonArgsStatic,
 
-    postInstallPhase = [
-      "cd ${DEST}/usr/lib/security",
-      "llvm-objcopy --redefine-sym pam_sm_authenticate=pam_unix__pam_sm_authenticate pam_unix.a",
-      "llvm-objcopy --redefine-sym pam_sm_setcred=pam_unix__pam_sm_setcred pam_unix.a",
-      "llvm-objcopy --redefine-sym pam_sm_acct_mgmt=pam_unix__pam_sm_acct_mgmt pam_unix.a",
-      "llvm-objcopy --redefine-sym pam_sm_open_session=pam_unix__pam_sm_open_session pam_unix.a",
-      "llvm-objcopy --redefine-sym pam_sm_close_session=pam_unix__pam_sm_close_session pam_unix.a",
-      "llvm-objcopy --redefine-sym pam_sm_chauthtok=pam_unix__pam_sm_chauthtok pam_unix.a",
-      "llvm-objcopy -W _pam_line_buffer_clear pam_unix.a",
-      "llvm-objcopy -W _pam_line_buffer_init pam_unix.a",
-      "llvm-objcopy -W _pam_line_assemble pam_unix.a",
-      # "cp pam_unix.so ../libpam_unix.a",
-      # "cd ../pkgconfig",
-      "mkdir -p /tmp/workdir/build/libpam-stage-2/pam_unix",
-      "mkdir -p /tmp/workdir/build/libpam-stage-2/libpam",
-      "cd /tmp/workdir/build/libpam-stage-2",
-      "${CC} -r -o libpam.o -Wl,--whole-archive  ${DEST}/usr/lib/security/pam_unix.a ${DEST}/usr/lib/libpam.a",
-      "${AR} rcs libpam.a libpam.o",
-      # "llvm-ar x ${DEST}/usr/lib/security/pam_unix.a && mv *.o pam_unix",
-      # "llvm-ar x ${DEST}/usr/lib/libpam.a && mv *.o libpam",
-      # "llvm-ar rcs libpam.a pam_unix/*.o libpam/*.o",
-      "mv ${DEST}/usr/lib/libpam.a ${DEST}/usr/lib/libpam_orig.a" ,
-      "install -m0755 libpam.a ${DEST}/usr/lib"
+      buildEnv.EXTRA_CFLAGS = [
+        "-DHAVE_MODULE_PAM_ACCESS",
+        "-DHAVE_MODULE_PAM_CANONICALIZE_USER",
+        "-DHAVE_MODULE_PAM_DEBUG",
+        "-DHAVE_MODULE_PAM_DENY",
+        "-DHAVE_MODULE_PAM_ECHO",
+        "-DHAVE_MODULE_PAM_ENV",
+        "-DHAVE_MODULE_PAM_EXEC",
+        "-DHAVE_MODULE_PAM_FAILDELAY",
+        "-DHAVE_MODULE_PAM_FAILLOCK",
+        "-DHAVE_MODULE_PAM_FILTER",
+        "-DHAVE_MODULE_PAM_FILTER",
+        "-DHAVE_MODULE_PAM_FTP",
+        "-DHAVE_MODULE_PAM_GROUP",
+        "-DHAVE_MODULE_PAM_ISSUE",
+        "-DHAVE_MODULE_PAM_KEYINIT",
+        "-DHAVE_MODULE_PAM_LIMITS",
+        "-DHAVE_MODULE_PAM_LISTFILE",
+        "-DHAVE_MODULE_PAM_LOCALUSER",
+        "-DHAVE_MODULE_PAM_LOGINUID",
+        "-DHAVE_MODULE_PAM_MAIL",
+        "-DHAVE_MODULE_PAM_MKHOMEDIR",
+        "-DHAVE_MODULE_PAM_MOTD",
+        "-DHAVE_MODULE_PAM_NAMESPACE",
+        "-DHAVE_MODULE_PAM_NOLOGIN",
+        "-DHAVE_MODULE_PAM_PERMIT",
+        "-DHAVE_MODULE_PAM_PWHISTORY",
+        "-DHAVE_MODULE_PAM_ROOTOK",
+        "-DHAVE_MODULE_PAM_SECURETTY",
+        "-DHAVE_MODULE_PAM_SETQUOTA",
+        "-DHAVE_MODULE_PAM_SHELLS",
+        "-DHAVE_MODULE_PAM_STRESS",
+        "-DHAVE_MODULE_PAM_SUCCEED_IF",
+        "-DHAVE_MODULE_PAM_TIME",
+        "-DHAVE_MODULE_PAM_TIMESTAMP",
+        "-DHAVE_MODULE_PAM_UMASK",
+        "-DHAVE_MODULE_PAM_UNIX",
+        "-DHAVE_MODULE_PAM_USERTYPE",
+        "-DHAVE_MODULE_PAM_WARN",
+        "-DHAVE_MODULE_PAM_WHEEL",
+        "-DHAVE_MODULE_PAM_XAUTH"
+      ],
+      buildEnv.EXTRA_CPPFLAGS = buildEnv.EXTRA_CFLAGS,
+      preConfigurePhase = (
+        std.array.flatten (
+          std.array.map
+            (fun m =>
+              let mod_suffix = (std.string.replace "pam_" "" m) in
+              [
+                "cp ${SRC}/libpam/pam_dynamic_PLACEHOLDER.h ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h",
+                "sed -i 's|PLACEHOLDER|%{m}|g' ${SRC}/libpam/pam_dynamic_%{mod_suffix }.h"
+              ]
+            )
+            pam_modules
+        )
+      ),
+      postInstallPhase =
+        [
+          "cd ${DEST}/usr/lib/security",
+        ]
+        @ (
+          std.array.flatten (
+            std.array.map
+              (fun s =>
+                [
+                  "llvm-objcopy --redefine-sym pam_sm_authenticate=%{s}__pam_sm_authenticate %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_setcred=%{s}__pam_sm_setcred %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_acct_mgmt=%{s}__pam_sm_acct_mgmt %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_open_session=%{s}__pam_sm_open_session %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_close_session=%{s}__pam_sm_close_session %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_chauthtok=%{s}__pam_sm_chauthtok %{s}.a",
+                  "llvm-objcopy -W _pam_line_buffer_clear %{s}.a",
+                  "llvm-objcopy -W _pam_line_buffer_init %{s}.a",
+                  "llvm-objcopy -W _pam_line_assemble %{s}.a",
 
-      # "sed -i 's|-lpam|-lpam -lpam_unix|g' pam.pc",
-    ],
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_authenticate ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_setcred ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_acct_mgmt ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_open_session ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_close_session ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_chauthtok ../libpam.a",
+                ]
+              )
+              pam_modules
+          )
+        )
+        @ [
 
-    biDrvs = [
-      drvs.linuxHeaders,
-    ],
-  }
+          # "cp pam_unix.so ../libpam_unix.a",
+          # "cd ../pkgconfig",
+          # "mkdir -p /tmp/workdir/build/libpam-stage-2/pam_unix",
+          "mkdir -p /tmp/workdir/build/libpam-stage-2",
+          "cd /tmp/workdir/build/libpam-stage-2",
+          "${CC} -r -o libpam.o  %{std.string.join " -Wl,--whole-archive " (std.array.map (fun m=> "${DEST}/usr/lib/security/%{m}.a") pam_modules)} ${DEST}/usr/lib/libpam.a",
+          "${AR} rcs libpam.a libpam.o",
+          "llvm-ranlib libpam.a",
+          # "llvm-ar x ${DEST}/usr/lib/security/pam_unix.a && mv *.o pam_unix",
+          # "llvm-ar x ${DEST}/usr/lib/libpam.a && mv *.o libpam",
+          # "llvm-ar rcs libpam.a pam_unix/*.o libpam/*.o",
+          "mv ${DEST}/usr/lib/libpam.a ${DEST}/usr/lib/libpam_orig.a",
+          "install -m0755 libpam.a ${DEST}/usr/lib"
+
+          # "sed -i 's|-lpam|-lpam -lpam_unix|g' pam.pc",
+        ],
+
+      biDrvs = [
+        drvs.linuxHeaders,
+      ],
+    }
 }
