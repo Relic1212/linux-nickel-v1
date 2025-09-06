@@ -152,11 +152,8 @@
                   "llvm-objcopy -W _pam_line_buffer_clear %{s}.a",
                   "llvm-objcopy -W _pam_line_buffer_init %{s}.a",
                   "llvm-objcopy -W _pam_line_assemble %{s}.a",
-
                   "mkdir -p /tmp/workdir/build/libpam-stage-2/%{s}",
                   "(cd /tmp/workdir/build/libpam-stage-2/%{s} && llvm-ar x ${DEST}/usr/lib/security/%{s}.a)",
-
-
 
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_authenticate ../libpam.a",
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_setcred ../libpam.a",
