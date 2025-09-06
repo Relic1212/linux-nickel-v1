@@ -30,7 +30,7 @@
       biDrvs | priority 1 =
         shadow.biDrvs
         @ [
-          drvs.openpam,
+          drvs.libpam,
         ],
       extraConfigureFlags | priority 1 = [
         "--with-fcaps",
@@ -38,8 +38,8 @@
       ],
       extraMakeArgs = ["VERBOSE=1"],
       debug = true,
-      buildEnv.EXTRA_CFLAGS = ["-DOPENPAM_STATIC_MODULES"],
-      buildEnv.EXTRA_CPPFLAGS = buildEnv.EXTRA_CFLAGS,
+      # buildEnv.EXTRA_CFLAGS = ["-DOPENPAM_STATIC_MODULES"],
+      # buildEnv.EXTRA_CPPFLAGS = buildEnv.EXTRA_CFLAGS,
       postInstallPhase = [
         # m%"
         # echo "
@@ -48,14 +48,56 @@
         # session         include         system-auth
         # " > ${DEST}/etc/pam.d/login
         # "%,
+        #   m%"
+        # echo "
+        # -auth            sufficient        pam_unix.so debug
+        # -account         sufficient        pam_unix.so debug
+        # -password        sufficient        pam_unix.so debug
+        # -session         sufficient        pam_unix.so debug
+        # " > ${DEST}/etc/pam.d/login
+        # "%,
+        m%"
+echo "
+auth            required        pam_securetty.so debug
+auth            include         system-auth
+account         required        pam_nologin.so debug
+account         include         system-auth
+password        include         system-auth
+session         include         system-auth
+session         required        pam_loginuid.so debug
+" > ${DEST}/etc/pam.d/login
+"%,
+        m%"
+echo "
+auth            sufficient      pam_rootok.so
+# Uncomment the following line to implicitly trust users in the "wheel" group.
+#auth           sufficient      pam_wheel.so trust use_uid
+# Uncomment the following line to require a user to be in the "wheel" group.
+auth            required        pam_wheel.so use_uid
+auth            include         system-auth
+account         include         system-auth
+password        include         system-auth
+session         include         system-auth
+session         optional        pam_xauth.so
+" > ${DEST}/etc/pam.d/su
+"%,
         m%"
       echo "
-      -auth            sufficient        pam_permit.so debug
-      -account         sufficient        pam_permit.so debug
-      -password        sufficient        pam_permit.so debug
-      -session         sufficient        pam_permit.so debug
-      " > ${DEST}/etc/pam.d/login
+      auth            required        pam_unix.so debug
+      account         required        pam_unix.so debug
+      password        required        pam_unix.so debug
+      session         required        pam_unix.so debug
+      " > ${DEST}/etc/pam.d/system-auth
       "%,
       ]
-    }
+    },
+
+  shadowPamTest | lib.Package = {
+    biDrvs = [
+      drvs.basefiles,
+      drvs.libpam,
+      drvs.shadowPam,
+      drvs.strace,
+    ]
+  }
 }
