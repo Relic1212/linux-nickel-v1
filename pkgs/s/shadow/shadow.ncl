@@ -30,17 +30,17 @@
       biDrvs | priority 1 =
         shadow.biDrvs
         @ [
-          drvs.libpam,
-          # (drvs.libpamSuper & { priority = 1 }),
+          # drvs.libpam,
+          drvs.libpamFinal,
           (drvs.libarchive & { priority = 1 }), # busybox cpio not good enough
-          drvs.elogind255,
+          # drvs.elogind255,
         ],
       extraConfigureFlags | priority 1 = [
         "--with-fcaps",
         "--with-libpam",
       ],
       buildEnv.EXTRA_LDFLAGS = [
-        "-lpam_elogind",
+        # "-lpam_elogind",
         "-lpam_misc",
         "-lcap",
       ],

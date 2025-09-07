@@ -72,8 +72,12 @@
           file = "libpam.patch",
         }
       ],
+      options = {
+        isFinal | Bool | default = false,
+      },
       extraMesonArgs = [
-        "-Dexamples=false"
+        "-Dexamples=false",
+        "-Delogind=disabled",
       ],
       baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgs) @ lib.constants.mesonArgsStatic,
 
@@ -171,6 +175,22 @@
           # "cd ../pkgconfig",
           "mkdir -p /tmp/workdir/build/libpam-stage-2/libpam",
           "(cd /tmp/workdir/build/libpam-stage-2/libpam && llvm-ar x ${DEST}/usr/lib/libpam.a && rm pam_dynamic_defs.c.o)",
+        ]
+        @ (
+          if options.isFinal then
+            [
+              "rm /tmp/workdir/build/libpam-stage-2/libpam/pam_dynamic_elogind.c.o",
+              "mkdir /tmp/workdir/build/libpam-stage-2/pam_elogind",
+              "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && llvm-ar x /usr/lib/libpam_elogind.a)",
+              "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && mv '.._fundamental_bootspec-fundamental.c.o' pam_elogind_fundamental_bootspec-fundamental.c.o)",
+              "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && mv '.._fundamental_sha256.c.o' pam_elogind_fundamental_sha256.c.o)",
+              "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && mv '.._fundamental_string-util-fundamental.c.o' pam_elogind_fundamental_string-util-fundamental.c.o)",
+              "sed -i 's|-lpam|-lpam_misc -lcap -lpam|g' ${DEST}/usr/lib/pkgconfig/pam.pc",
+            ]
+          else
+            []
+        )
+        @ [
           # "mkdir -p /tmp/workdir/build/libpam-stage-2",
           "cd /tmp/workdir/build/libpam-stage-2",
           # "llvm-ar dv ${DEST}/usr/lib/libpam.a pam_dynamic_defs.c.o",
@@ -187,9 +207,12 @@
           # "sed -i 's|-lpam|-lpam -lpam_unix|g' pam.pc",
         ],
 
-      biDrvs = [
-        drvs.linuxHeaders,
-      ],
+      biDrvs =
+        [
+          drvs.linuxHeaders,
+        ]
+        @ (if options.isFinal then [drvs.elogind255] else []),
     },
 
+  libpamFinal = libpam & { options.isFinal = true }
 }
