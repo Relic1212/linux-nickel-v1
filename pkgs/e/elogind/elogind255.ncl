@@ -43,15 +43,13 @@
       " -Ddebug-extra=elogind",
       # "-Dlog-trace=true",
       "-Dpam=enabled",
-       "-Dcgroup-controller=elogind",
-        "-Ddefault-hierarchy=unified",
-        "-Dudevrulesdir=/usr/lib/udev/rules.d",
+      "-Dcgroup-controller=elogind",
+      "-Ddefault-hierarchy=unified",
+      "-Dudevrulesdir=/usr/lib/udev/rules.d",
       "-Dpolkit=true",
-
     ],
-   
+
     patches = [
-   
       {
         sha256sum = "5fbe04ddbb938039248fe72c8384e15b7045c80c1090d47b03c39fbdf1f3c521",
         file = "elogind-pam.patch"
