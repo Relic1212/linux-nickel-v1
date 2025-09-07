@@ -31,10 +31,18 @@
         shadow.biDrvs
         @ [
           drvs.libpam,
+          (drvs.libpamSuper & { priority = 1 }),
+          (drvs.libarchive & { priority = 1 }), # busybox cpio not good enough
+          drvs.elogind255,
         ],
       extraConfigureFlags | priority 1 = [
         "--with-fcaps",
         "--with-libpam",
+      ],
+      buildEnv.EXTRA_LDFLAGS = [
+        "-lpam_elogind",
+        "-lpam_misc",
+        "-lcap",
       ],
       extraMakeArgs = ["VERBOSE=1"],
       debug = true,
@@ -64,7 +72,8 @@ account         required        pam_nologin.so debug
 account         include         system-auth
 password        include         system-auth
 session         include         system-auth
-session         required        pam_loginuid.so debug
+session         required        pam_loginuid.so
+-session        optional        pam_elogind.so debug
 " > ${DEST}/etc/pam.d/login
 "%,
         m%"

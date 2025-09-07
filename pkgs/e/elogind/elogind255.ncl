@@ -42,15 +42,15 @@
       # "-Dmode=release",
       " -Ddebug-extra=elogind",
       "-Dlog-trace=true",
+      "-Dpam=enabled",
     ],
-    baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
-
-    buildEnv = {
-      EXTRA_CPPFLAGS = [
-        "-DHAVE_FIVO_EVENT_SOURCE=0"
-      ],
-      EXTRA_CFLAGS = EXTRA_CPPFLAGS,
-    },
+    debug = true,
+    # buildEnv = {
+    #   EXTRA_CPPFLAGS = [
+    #     "-DHAVE_FIVO_EVENT_SOURCE=0"
+    #   ],
+    #   EXTRA_CFLAGS = EXTRA_CPPFLAGS,
+    # },
     patches = [
       #   {
       #     sha256sum = "0eff09d96ee032493808317caca32414e60c8b7c54a32d4d9e9b1cfa7d92adc2",
@@ -63,7 +63,11 @@
       #  { sha256sum = "38a5d100edbf7c42b93b1b8b6c360b68e7c917d036ec8ab5de6cfa0da7c48eae" , file =  "0008-syms.patch"},
 
       # 
-      { sha256sum = "95bafc974cfb30011b785c6c43d5794abc047d8d32f9ff17ace95ecb62381666", file = "0010-no-event.patch" }
+      # { sha256sum = "95bafc974cfb30011b785c6c43d5794abc047d8d32f9ff17ace95ecb62381666", file = "0010-no-event.patch" },
+      {
+        sha256sum = "d023f9d280274604dd57f6aeb484d9d5f8391cd6591a50ac208513deb98cfda0",
+        file = "elogind-pam.patch"
+      }
     ],
     preConfigurePhase =
       let getPatchCmd = fun patch => "(cd ${SRC} && patch -p1 < %{patch})" in
@@ -100,6 +104,10 @@
       "%
       ],
 
+    postInstallPhase = [
+      "cp ${DEST}/usr/lib/security/pam_elogind.a ${DEST}/usr/lib/libpam_elogind.a",
+    ],
+
     biDrvs = [
       drvs.attr,
       drvs.acl,
@@ -122,6 +130,7 @@
       drvs.pythonMarkupsafe,
       drvs.pythonFlitCore,
       drvs.docbookXslNons,
+      drvs.libpam,
     ],
   },
 }

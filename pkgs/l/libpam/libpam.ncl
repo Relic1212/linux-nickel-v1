@@ -69,7 +69,7 @@
       },
       patches = [
         {
-          sha256sum = "94da593bbac7b3974af7970262c0fa4a8312c2dc40668ebe612734418438cf8b",
+          sha256sum = "f35aae8dd9d3f9f187057d29e18259375de59d7ff0764147f7e2409ab86b99d6",
           file = "libpam.patch",
         }
       ],
@@ -191,5 +191,29 @@
       biDrvs = [
         drvs.linuxHeaders,
       ],
-    }
+    },
+  libpamSuper | lib.Package = {
+
+    buildPhase = [
+      # "mkdir libpam",
+      # "(cd libpam && llvm-ar x /usr/lib/libpam.a)",
+      # "mkdir pam_elogind",
+      # "(cd pam_elogind && llvm-ar x /usr/lib/security/pam_elogind.a)",
+      # # "rm libpam/pam_dynamic_elogind.c.o",
+      # "${AR} rcs libpam.a libpam/*.o",
+      # "llvm-ranlib libpam.a",
+      "cp /usr/lib/libpam.a .",
+      "${AR} dv libpam.a pam_dynamic_elogind.c.o",
+    ],
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/lib",
+      "install -m0755 libpam.a ${DEST}/usr/lib",
+    ],
+    enableCcache = false,
+    biDrvs = [
+      drvs.elogind255,
+      drvs.libpam,
+      drvs.llvm,
+    ]
+  }
 }

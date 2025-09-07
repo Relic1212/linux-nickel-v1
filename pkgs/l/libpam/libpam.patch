@@ -1,16 +1,17 @@
 diff --git a/libpam/meson.build b/libpam/meson.build
-index 3e8a531..0e8f443 100644
+index 3e8a531..b6fe99f 100644
 --- a/libpam/meson.build
 +++ b/libpam/meson.build
-@@ -8,6 +8,7 @@ libpam_src = [
+@@ -8,6 +8,8 @@ libpam_src = [
    'pam_delay.c',
    'pam_dispatch.c',
    'pam_dynamic.c',
 +  'pam_dynamic_defs.c',
++  'pam_dynamic_elogind.c',
    'pam_end.c',
    'pam_env.c',
    'pam_get_authtok.c',
-@@ -43,7 +44,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
+@@ -43,7 +45,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
  libpam_link_deps = [libpam_map]
  libpam_link_args = ['-Wl,--version-script=' + libpam_map_path]
  
@@ -20,10 +21,10 @@ index 3e8a531..0e8f443 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..227973c 100644
+index 81f49b4..de8309d 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
-@@ -33,24 +33,684 @@
+@@ -33,24 +33,975 @@
  
  #include "pam_private.h"
  #include <dlfcn.h>
@@ -146,13 +147,299 @@ index 81f49b4..227973c 100644
 +#ifdef HAVE_MODULE_PAM_XAUTH
 +#include "pam_dynamic_xauth.h"
 +#endif // HAVE_MODULE_PAM_XAUTH
++
++#include "pam_dynamic_elogind.h"
  
  void *_pam_dlopen(const char *mod_path)
  {
--	return dlopen(mod_path, RTLD_NOW);
 +	fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
-+	return (void*) mod_path;
-+	// return dlopen(mod_path, RTLD_NOW);
++	// return (void*) mod_path;
++
++	if (strcmp("/usr/lib/security/pam_access.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_canonicalize_user.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_debug.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_deny.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_echo.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_env.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_exec.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_faildelay.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_faillock.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_filter.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_filter.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_ftp.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_group.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_issue.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_keyinit.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_limits.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_listfile.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_localuser.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_loginuid.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_mail.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_mkhomedir.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_motd.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_namespace.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_nologin.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_permit.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_pwhistory.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_rootok.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_securetty.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_setquota.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_shells.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_stress.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_succeed_if.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_time.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_timestamp.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_umask.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_unix.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_usertype.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_warn.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_wheel.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++  
++
++	if (strcmp("/usr/lib/security/pam_xauth.so", mod_path)==0){
++		
++          return (void*)mod_path;
++	}
++
++	if (strcmp("/usr/lib/security/pam_elogind.so", mod_path)==0){
++		
++          return _pam_elogind_dlopen(mod_path);
++	}
++
++	fprintf(stderr, "WARNING, using libc dlopen for %s\n",mod_path);
+ 	return dlopen(mod_path, RTLD_NOW);
  }
  
  servicefn _pam_dlsym(void *handle, const char *symbol)
@@ -688,6 +975,10 @@ index 81f49b4..227973c 100644
 +		}
 +	}
 +
++	if (strcmp("/usr/lib/security/pam_elogind.so", shandle)==0){
++		
++          return (servicefn)_pam_elogind_dlsym(handle,symbol);
++	}
 +  
 +// #endif // HAVE_MODULE_PAM_XAUTH
 +	
@@ -2650,6 +2941,39 @@ index 0000000..d15d79c
 +
 +
 +#endif // PAM_MODULE_pam_echo_H_INCLUDED
+diff --git a/libpam/pam_dynamic_elogind.c b/libpam/pam_dynamic_elogind.c
+new file mode 100644
+index 0000000..4fcd1f1
+--- /dev/null
++++ b/libpam/pam_dynamic_elogind.c
+@@ -0,0 +1,15 @@
++#include <dlfcn.h>
++#include <string.h>
++#include <stdio.h>
++
++
++
++void* __attribute__((weak)) _pam_elogind_dlopen(const char *mod_path)
++{
++	return NULL;
++}
++
++void* __attribute__((weak)) _pam_elogind_dlsym(void *handle, const char *symbol)
++{
++	return NULL;
++}
+\ No newline at end of file
+diff --git a/libpam/pam_dynamic_elogind.h b/libpam/pam_dynamic_elogind.h
+new file mode 100644
+index 0000000..f34655b
+--- /dev/null
++++ b/libpam/pam_dynamic_elogind.h
+@@ -0,0 +1,4 @@
++
++void* _pam_elogind_dlopen(const char *mod_path);
++
++void* _pam_elogind_dlsym(void *handle, const char *symbol);
+\ No newline at end of file
 diff --git a/libpam/pam_dynamic_env.h b/libpam/pam_dynamic_env.h
 new file mode 100644
 index 0000000..f32f53c
