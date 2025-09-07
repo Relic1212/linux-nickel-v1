@@ -18,23 +18,27 @@ in
 let imported = imported_unnanmed
 in
 let filter_pkgs = (fun x =>
-  (
-    std.record.filter
-      (fun name _ =>
-        name != "drvs"
-      )
-      (
-        std.record.filter
-          (fun name _ =>
-            name != "lib"
-          )
-          (
-            std.record.filter
-              (fun name _ => name != "pkgs")
-              (x)
-          )
-      )
-  )
+  std.record.filter
+    (fun name _ =>
+      name != "distro"
+    )
+    (
+      std.record.filter
+        (fun name _ =>
+          name != "drvs"
+        )
+        (
+          std.record.filter
+            (fun name _ =>
+              name != "lib"
+            )
+            (
+              std.record.filter
+                (fun name _ => name != "pkgs")
+                (x)
+            )
+        )
+    )
 )
 in
 
@@ -73,7 +77,8 @@ let ro = {
                     drvHash = v.drvHash,
                   }
                 )
-                (__pkgs_unfiletered)
+                (__pkgs_unfiletered),
+            distro = (import "../distro/default.ncl")
           }
         )
       )

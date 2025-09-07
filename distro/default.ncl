@@ -1,0 +1,4 @@
+{
+  elogind = true,
+  pam = true,
+}
