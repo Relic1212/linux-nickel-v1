@@ -124,7 +124,7 @@
         # drvs.cmake,
         # drvs.cava,
         drvs.date,
-        drvs.elogind,
+        drvs.elogindWithPolkit,
         drvs.polkit,
         drvs.libcap,
       ],
