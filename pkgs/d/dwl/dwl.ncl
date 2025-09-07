@@ -128,7 +128,9 @@
     },
 
     extraMesonArgs = [
-      "-Dbackends=drm,libinput"
+      "-Dbackends=drm,libinput",
+      "-Drenderers=gles2",
+      "-Dsession=enabled",
     ],
 
     llvmProvider = drvs.llvmFull,
@@ -144,9 +146,8 @@
       drvs.libdrm,
       drvs.libxkbcommon,
       drvs.pixman,
-      # drvs.eudev,
-      drvs.libudevZero,
-      drvs.seatd,
+      drvs.eudev,
+      # drvs.libudevZero,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -162,6 +163,11 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+    ],
+    propagatedBuildInputs = [
+      drvs.seatd,
     ],
 
     buildEnv = {

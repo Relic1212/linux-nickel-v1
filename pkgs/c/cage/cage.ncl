@@ -26,9 +26,8 @@
       drvs.libdrm,
       drvs.libxkbcommon,
       drvs.pixman,
-      # drvs.eudev,
-      drvs.libudevZero,
-      drvs.seatd,
+      drvs.eudev,
+      # drvs.libudevZero,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -45,6 +44,15 @@
       drvs.hwdata,
       drvs.linuxHeaders,
       drvs.wlroots18,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      drvs.scdoc,
+    ],
+    propagatedBuildInputs = [
+      drvs.seatd,
+    ],
+    extraMesonArgs = [
+      "-Dman-pages=enabled"
     ],
 
     buildEnv = {
@@ -78,7 +86,6 @@
       drvs.pixman,
       # drvs.eudev,
       drvs.libudevZero,
-      drvs.seatd,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -95,6 +102,11 @@
       drvs.hwdata,
       drvs.linuxHeaders,
       drvs.wlroots18,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+    ],
+    propagatedBuildInputs = [
+      drvs.seatd,
     ],
 
     buildEnv = {
