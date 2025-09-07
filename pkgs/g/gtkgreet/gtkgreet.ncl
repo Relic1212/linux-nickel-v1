@@ -62,5 +62,35 @@
     preConfigurePhase = [
       m%"sed -i 's@werror=true@werror=false@g' ${SRC}/meson.build"%
     ],
+  },
+
+  gtkgreetSwayConf | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/etc/greetd",
+      m%"echo 'exec "gtkgreet -l; swaymsg exit"' > ${DEST}/etc/greetd/sway-conf"%,
+      m%"echo "input type:keyboard xkb_layout se" >> ${DEST}/etc/greetd/sway-conf"%,
+      m%"echo sway > ${DEST}/etc/greetd/environments"%,
+      m%"echo niri >> ${DEST}/etc/greetd/environments"%,
+      m%"
+      echo '
+      [terminal]
+      # The VT to run the greeter on. Can be "next", "current" or a number
+      # designating the VT.
+      vt = 1
+
+      # The default session, also known as the greeter.
+      [default_session]
+
+      # `agreety` is the bundled agetty/login-lookalike. You can replace `/bin/sh`
+      # with whatever you want started, such as `sway`.
+      command = "/usr/bin/sway -c /etc/greetd/sway-conf"
+
+      # The user to run the command as. The privileges this user must have depends
+      # on the greeter. A graphical greeter may for example require the user to be
+      # in the `video` group.
+      user = "greeter"
+      ' > ${DEST}/etc/greetd/config.toml
+      "%
+    ]
   }
 }
