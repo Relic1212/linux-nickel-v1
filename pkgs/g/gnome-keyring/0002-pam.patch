@@ -1,0 +1,137 @@
+diff --git a/pam/gkr-pam-module.c b/pam/gkr-pam-module.c
+index cfbbd1d..b2d78f6 100644
+--- a/pam/gkr-pam-module.c
++++ b/pam/gkr-pam-module.c
+@@ -93,6 +93,23 @@ enum {
+ #endif
+ #endif
+ 
++
++
++PAM_EXTERN int pam_gnome_keyring_pam_sm_authenticate (pam_handle_t *ph, int unused, int argc, const char **argv);
++
++PAM_EXTERN int pam_gnome_keyring_pam_sm_open_session (pam_handle_t *ph, int flags, int argc, const char **argv);
++
++PAM_EXTERN int pam_gnome_keyring_pam_sm_setcred (pam_handle_t * ph, int flags, int argc, const char **argv);
++
++PAM_EXTERN int pam_gnome_keyring_pam_sm_close_session (pam_handle_t *ph, int flags, int argc, const char **argv);
++
++PAM_EXTERN int pam_gnome_keyring_pam_sm_chauthtok (pam_handle_t *ph, int flags, int argc, const char **argv);
++
++
++void* _pam_gnome_keyring_dlopen(const char *mod_path);
++
++
++void* _pam_gnome_keyring_dlsym(void *handle, const char *symbol);
+ /* -----------------------------------------------------------------------------
+  * HELPERS 
+  */
+@@ -848,7 +865,7 @@ stash_password_for_session (pam_handle_t *ph,
+ }
+ 
+ PAM_EXTERN int
+-pam_sm_authenticate (pam_handle_t *ph, int unused, int argc, const char **argv)
++pam_gnome_keyring_pam_sm_authenticate (pam_handle_t *ph, int unused, int argc, const char **argv)
+ {
+ 	struct passwd *pwd;
+ 	const char *user, *password;
+@@ -901,7 +918,7 @@ pam_sm_authenticate (pam_handle_t *ph, int unused, int argc, const char **argv)
+ }
+ 
+ PAM_EXTERN int
+-pam_sm_open_session (pam_handle_t *ph, int flags, int argc, const char **argv)
++pam_gnome_keyring_pam_sm_open_session (pam_handle_t *ph, int flags, int argc, const char **argv)
+ {
+ 	const char *user = NULL, *password = NULL;
+ 	struct passwd *pwd;
+@@ -956,7 +973,7 @@ pam_sm_open_session (pam_handle_t *ph, int flags, int argc, const char **argv)
+ }
+ 
+ PAM_EXTERN int
+-pam_sm_setcred (pam_handle_t * ph, int flags, int argc, const char **argv)
++pam_gnome_keyring_pam_sm_setcred (pam_handle_t * ph, int flags, int argc, const char **argv)
+ {
+ 	return PAM_SUCCESS;	
+ }
+@@ -1059,14 +1076,14 @@ pam_chauthtok_update (pam_handle_t *ph, struct passwd *pwd, uint args)
+ }
+ 
+ PAM_EXTERN int
+-pam_sm_close_session (pam_handle_t *ph, int flags, int argc, const char **argv)
++pam_gnome_keyring_pam_sm_close_session (pam_handle_t *ph, int flags, int argc, const char **argv)
+ {
+ 	/* Nothing to do, but we have to have this function exported */
+ 	return PAM_SUCCESS;
+ }
+ 
+ PAM_EXTERN int
+-pam_sm_chauthtok (pam_handle_t *ph, int flags, int argc, const char **argv)
++pam_gnome_keyring_pam_sm_chauthtok (pam_handle_t *ph, int flags, int argc, const char **argv)
+ {
+ 	const char *user;
+ 	struct passwd *pwd;
+@@ -1099,3 +1116,50 @@ pam_sm_chauthtok (pam_handle_t *ph, int flags, int argc, const char **argv)
+ 	else 
+ 		return PAM_IGNORE;
+ }
++
++
++void* _pam_gnome_keyring_dlopen(const char *mod_path)
++{
++    // fprintf(stderr, "(pam_gnome_keyring.a) _pam_gnome_keyring_dlopen called with mod_path \"%s\"\n",mod_path);
++
++	return (void*)mod_path;
++}
++
++void* _pam_gnome_keyring_dlsym(void *handle, const char *symbol)
++{       
++        // fprintf(stderr, "(pam_gnome_keyring.a) _pam_gnome_keyring_dlsym called with symbol \"%s\"\n", symbol);
++
++		if (strcmp(symbol, "pam_sm_authenticate" )==0){
++                // fprintf(stderr, "(pam_gnome_keyring.a) returning pam_gnome_keyring_pam_sm_authenticate\n");
++
++                return pam_gnome_keyring_pam_sm_authenticate;
++        } 
++
++        if (strcmp(symbol, "pam_sm_open_session" )==0){
++                // fprintf(stderr, "(pam_gnome_keyring.a) returning pam_gnome_keyring_pam_sm_open_session\n");
++
++                return pam_gnome_keyring_pam_sm_open_session;
++        } 
++
++        if (strcmp(symbol, "pam_sm_setcred" )==0){
++                // fprintf(stderr, "(pam_gnome_keyring.a) returning pam_gnome_keyring_pam_sm_setcred\n");
++
++                return pam_gnome_keyring_pam_sm_setcred;
++        }
++
++		if (strcmp(symbol, "pam_sm_close_session" )==0){
++                // fprintf(stderr, "(pam_gnome_keyring.a) returning pam_gnome_keyring_pam_sm_close_session\n");
++
++                return pam_gnome_keyring_pam_sm_close_session;
++        }
++
++		if (strcmp(symbol, "pam_sm_chauthtok" )==0){
++                // fprintf(stderr, "(pam_gnome_keyring.a) returning pam_gnome_keyring_pam_sm_chauthtok\n");
++
++                return pam_gnome_keyring_pam_sm_chauthtok;
++        }
++
++        fprintf(stderr, "(pam_gnome_keyring.a)WARNING: returning NULL for symbol %s\n", symbol);
++
++	return NULL;
++}
+\ No newline at end of file
+diff --git a/pam/meson.build b/pam/meson.build
+index 767f405..604344c 100644
+--- a/pam/meson.build
++++ b/pam/meson.build
+@@ -2,7 +2,7 @@
+ pam_gkr_symbolmap = meson.current_source_dir() / 'pam-gkr.map'
+ pam_gkr_linkflags = cc.get_supported_link_arguments(
+   '-Wl,--no-undefined',
+-  '-Wl,--version-script,@0@'.format(pam_gkr_symbolmap),
++  # '-Wl,--version-script,@0@'.format(pam_gkr_symbolmap),
+ )
+ 
+ libpam_gkr_sources = files(

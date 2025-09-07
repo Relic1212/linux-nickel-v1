@@ -6,12 +6,13 @@ in
 {
   lib,
   drvs,
+  distro,
   gnomeKeyring | lib.MesonPackage = {
     singleSource = src,
 
     extraMesonArgs = [
       "-Dsystemd=disabled",
-      "-Dpam=false",
+      "-Dpam=%{std.to_string distro.pam}",
       "-Ddebug-mode=false",
       "-Dmanpage=false",
     ],
@@ -21,7 +22,8 @@ in
       for f in $(find ${SRC} -type f); do
         sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${f}
       done
-      "%
+      "%,
+      "sed -i 's|shared_library|library|g' ${SRC}/pam/meson.build",
     ],
 
     # https://github.com/alpinelinux/aports/blob/a63e52c3637744fd4c066463c98b821946360721/community/gnome-keyring/libgkm-source-gkm-marshal.patch#L7
@@ -29,60 +31,73 @@ in
       {
         file = "0001-gnome-keyring.patch",
         sha256sum = "f6f6ebbcac6f3349c366e3cd5ff83f61210c82ad0b944eadd15fd6f03e377146"
+      },
+      {
+        sha256sum = "f1931d05410c2fdbb23bec07113b429711b8fa1442f271b328d2629193924520",
+        file = "0002-pam.patch"
       }
     ],
 
-    biDrvs = [
-      drvs.gpgme,
-      drvs.libassuan,
-      drvs.libgpgError,
-      drvs.libgcrypt,
-      drvs.openssl,
-      drvs.glib,
-      drvs.libxslt,
-      drvs.gnupg2,
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.zlibNg,
-      drvs.gperf,
-      drvs.pixman,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.libffi,
-      drvs.libxkbcommon,
-      drvs.expat,
-      drvs.linuxHeaders,
-      drvs.ncurses,
-      drvs.readline,
-      drvs.pcre2,
-      drvs.pango_1_56,
-      drvs.cairo,
-      drvs.libpng,
-      drvs.hwdata,
-      drvs.gobjectDynamic,
-      drvs.cairoGobject,
-      drvs.fribidi,
-      drvs.gdkPixbufFull,
-      drvs.libjpegTurbo,
-      drvs.libepoxy,
-      drvs.atSpi2Core,
-      drvs.mesa2,
-      drvs.libelf,
-      drvs.libdrm,
-      drvs.libpciaccess,
-      drvs.llvmConfigStatic,
-      drvs.spirvTools,
-      drvs.spirvLlvmTranslator,
-      drvs.libtiff,
-      drvs.graphene,
-      drvs.harfbuzzFull,
-      drvs.gtk4,
-      drvs.p11Kit,
-      drvs.libsecret,
-      drvs.gcr,
-      drvs.gettext,
-      drvs.docbookXslNons,
-    ],
+    biDrvs =
+      [
+        drvs.gpgme,
+        drvs.libassuan,
+        drvs.libgpgError,
+        drvs.libgcrypt,
+        drvs.openssl,
+        drvs.glib,
+        drvs.libxslt,
+        drvs.gnupg2,
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.zlibNg,
+        drvs.gperf,
+        drvs.pixman,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.libffi,
+        drvs.libxkbcommon,
+        drvs.expat,
+        drvs.linuxHeaders,
+        drvs.ncurses,
+        drvs.readline,
+        drvs.pcre2,
+        drvs.pango_1_56,
+        drvs.cairo,
+        drvs.libpng,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.mesa2,
+        drvs.libelf,
+        drvs.libdrm,
+        drvs.libpciaccess,
+        drvs.llvmConfigStatic,
+        drvs.spirvTools,
+        drvs.spirvLlvmTranslator,
+        drvs.libtiff,
+        drvs.graphene,
+        drvs.harfbuzzFull,
+        drvs.gtk4,
+        drvs.p11Kit,
+        drvs.libsecret,
+        drvs.gcr,
+        drvs.gettext,
+        drvs.docbookXslNons,
+      ]
+      @ (
+        if distro.pam then
+          [
+            drvs.libpam,
+          ]
+        else
+          []
+      ),
   }
 }
 & {
