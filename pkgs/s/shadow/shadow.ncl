@@ -68,12 +68,14 @@
         echo "
         auth            required        pam_securetty.so debug
         auth            include         system-auth
+        -auth           optional        pam_gnome_keyring.so
         account         required        pam_nologin.so debug
         account         include         system-auth
         password        include         system-auth
         session         include         system-auth
         session         required        pam_loginuid.so
         -session        optional        pam_elogind.so debug
+        -session        optional        pam_gnome_keyring.so auto_start
         " > ${DEST}/etc/pam.d/login
         "%,
 
