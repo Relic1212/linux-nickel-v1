@@ -21,7 +21,7 @@ index 3e8a531..b6fe99f 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..de8309d 100644
+index 81f49b4..3ac1acb 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
 @@ -33,24 +33,975 @@
@@ -152,7 +152,7 @@ index 81f49b4..de8309d 100644
  
  void *_pam_dlopen(const char *mod_path)
  {
-+	fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
++	// fprintf(stderr, "(_pam_dlopen) trying dlopen %s\n", mod_path);
 +	// return (void*) mod_path;
 +
 +	if (strcmp("/usr/lib/security/pam_access.so", mod_path)==0){
@@ -447,9 +447,9 @@ index 81f49b4..de8309d 100644
 -	return (servicefn) dlsym(handle, symbol);
 +	char* shandle = (char*)handle;
 +	void* f;
-+	// fprintf(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
++	// // FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) trying dlsym %s\n", symbol);
 +	// if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
-+	// 	fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++	// 	// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_unix\n" );
 +
 +	// 	f = _pam_unix_dlsym(symbol);
 +	// 	if (f){
@@ -460,7 +460,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_ACCESS
 +
 +	if (strcmp("/usr/lib/security/pam_access.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using access\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using access\n" );
 +
 +		f = _pam_access_dlsym(symbol);
 +		if (f){
@@ -473,7 +473,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_CANONICALIZE_USER
 +
 +	if (strcmp("/usr/lib/security/pam_canonicalize_user.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using canonicalize_user\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using canonicalize_user\n" );
 +
 +		f = _pam_canonicalize_user_dlsym(symbol);
 +		if (f){
@@ -486,7 +486,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_DEBUG
 +
 +	if (strcmp("/usr/lib/security/pam_debug.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using debug\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using debug\n" );
 +
 +		f = _pam_debug_dlsym(symbol);
 +		if (f){
@@ -499,7 +499,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_DENY
 +
 +	if (strcmp("/usr/lib/security/pam_deny.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using deny\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using deny\n" );
 +
 +		f = _pam_deny_dlsym(symbol);
 +		if (f){
@@ -512,7 +512,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_ECHO
 +
 +	if (strcmp("/usr/lib/security/pam_echo.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using echo\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using echo\n" );
 +
 +		f = _pam_echo_dlsym(symbol);
 +		if (f){
@@ -525,7 +525,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_ENV
 +
 +	if (strcmp("/usr/lib/security/pam_env.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using env\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using env\n" );
 +
 +		f = _pam_env_dlsym(symbol);
 +		if (f){
@@ -538,7 +538,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_EXEC
 +
 +	if (strcmp("/usr/lib/security/pam_exec.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using exec\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using exec\n" );
 +
 +		f = _pam_exec_dlsym(symbol);
 +		if (f){
@@ -551,7 +551,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_FAILDELAY
 +
 +	if (strcmp("/usr/lib/security/pam_faildelay.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using faildelay\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using faildelay\n" );
 +
 +		f = _pam_faildelay_dlsym(symbol);
 +		if (f){
@@ -564,7 +564,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_FAILLOCK
 +
 +	if (strcmp("/usr/lib/security/pam_faillock.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using faillock\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using faillock\n" );
 +
 +		f = _pam_faillock_dlsym(symbol);
 +		if (f){
@@ -577,7 +577,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_FILTER
 +
 +	if (strcmp("/usr/lib/security/pam_filter.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using filter\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using filter\n" );
 +
 +		f = _pam_filter_dlsym(symbol);
 +		if (f){
@@ -590,7 +590,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_FILTER
 +
 +	if (strcmp("/usr/lib/security/pam_filter.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using filter\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using filter\n" );
 +
 +		f = _pam_filter_dlsym(symbol);
 +		if (f){
@@ -603,7 +603,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_FTP
 +
 +	if (strcmp("/usr/lib/security/pam_ftp.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using ftp\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using ftp\n" );
 +
 +		f = _pam_ftp_dlsym(symbol);
 +		if (f){
@@ -616,7 +616,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_GROUP
 +
 +	if (strcmp("/usr/lib/security/pam_group.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using group\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using group\n" );
 +
 +		f = _pam_group_dlsym(symbol);
 +		if (f){
@@ -629,7 +629,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_ISSUE
 +
 +	if (strcmp("/usr/lib/security/pam_issue.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using issue\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using issue\n" );
 +
 +		f = _pam_issue_dlsym(symbol);
 +		if (f){
@@ -642,7 +642,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_KEYINIT
 +
 +	if (strcmp("/usr/lib/security/pam_keyinit.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using keyinit\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using keyinit\n" );
 +
 +		f = _pam_keyinit_dlsym(symbol);
 +		if (f){
@@ -655,7 +655,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_LIMITS
 +
 +	if (strcmp("/usr/lib/security/pam_limits.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using limits\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using limits\n" );
 +
 +		f = _pam_limits_dlsym(symbol);
 +		if (f){
@@ -668,7 +668,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_LISTFILE
 +
 +	if (strcmp("/usr/lib/security/pam_listfile.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using listfile\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using listfile\n" );
 +
 +		f = _pam_listfile_dlsym(symbol);
 +		if (f){
@@ -681,7 +681,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_LOCALUSER
 +
 +	if (strcmp("/usr/lib/security/pam_localuser.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using localuser\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using localuser\n" );
 +
 +		f = _pam_localuser_dlsym(symbol);
 +		if (f){
@@ -694,7 +694,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_LOGINUID
 +
 +	if (strcmp("/usr/lib/security/pam_loginuid.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using loginuid\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using loginuid\n" );
 +
 +		f = _pam_loginuid_dlsym(symbol);
 +		if (f){
@@ -707,7 +707,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_MAIL
 +
 +	if (strcmp("/usr/lib/security/pam_mail.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using mail\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using mail\n" );
 +
 +		f = _pam_mail_dlsym(symbol);
 +		if (f){
@@ -720,7 +720,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_MKHOMEDIR
 +
 +	if (strcmp("/usr/lib/security/pam_mkhomedir.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using mkhomedir\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using mkhomedir\n" );
 +
 +		f = _pam_mkhomedir_dlsym(symbol);
 +		if (f){
@@ -733,7 +733,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_MOTD
 +
 +	if (strcmp("/usr/lib/security/pam_motd.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using motd\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using motd\n" );
 +
 +		f = _pam_motd_dlsym(symbol);
 +		if (f){
@@ -746,7 +746,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_NAMESPACE
 +
 +	if (strcmp("/usr/lib/security/pam_namespace.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using namespace\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using namespace\n" );
 +
 +		f = _pam_namespace_dlsym(symbol);
 +		if (f){
@@ -759,7 +759,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_NOLOGIN
 +
 +	if (strcmp("/usr/lib/security/pam_nologin.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using nologin\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using nologin\n" );
 +
 +		f = _pam_nologin_dlsym(symbol);
 +		if (f){
@@ -772,7 +772,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_PERMIT
 +
 +	if (strcmp("/usr/lib/security/pam_permit.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using permit\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using permit\n" );
 +
 +		f = _pam_permit_dlsym(symbol);
 +		if (f){
@@ -785,7 +785,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_PWHISTORY
 +
 +	if (strcmp("/usr/lib/security/pam_pwhistory.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using pwhistory\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pwhistory\n" );
 +
 +		f = _pam_pwhistory_dlsym(symbol);
 +		if (f){
@@ -798,7 +798,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_ROOTOK
 +
 +	if (strcmp("/usr/lib/security/pam_rootok.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using rootok\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using rootok\n" );
 +
 +		f = _pam_rootok_dlsym(symbol);
 +		if (f){
@@ -811,7 +811,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_SECURETTY
 +
 +	if (strcmp("/usr/lib/security/pam_securetty.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using securetty\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using securetty\n" );
 +
 +		f = _pam_securetty_dlsym(symbol);
 +		if (f){
@@ -824,7 +824,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_SETQUOTA
 +
 +	if (strcmp("/usr/lib/security/pam_setquota.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using setquota\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using setquota\n" );
 +
 +		f = _pam_setquota_dlsym(symbol);
 +		if (f){
@@ -837,7 +837,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_SHELLS
 +
 +	if (strcmp("/usr/lib/security/pam_shells.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using shells\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using shells\n" );
 +
 +		f = _pam_shells_dlsym(symbol);
 +		if (f){
@@ -850,7 +850,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_STRESS
 +
 +	if (strcmp("/usr/lib/security/pam_stress.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using stress\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using stress\n" );
 +
 +		f = _pam_stress_dlsym(symbol);
 +		if (f){
@@ -863,7 +863,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_SUCCEED_IF
 +
 +	if (strcmp("/usr/lib/security/pam_succeed_if.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using succeed_if\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using succeed_if\n" );
 +
 +		f = _pam_succeed_if_dlsym(symbol);
 +		if (f){
@@ -876,7 +876,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_TIME
 +
 +	if (strcmp("/usr/lib/security/pam_time.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using time\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using time\n" );
 +
 +		f = _pam_time_dlsym(symbol);
 +		if (f){
@@ -889,7 +889,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_TIMESTAMP
 +
 +	if (strcmp("/usr/lib/security/pam_timestamp.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using timestamp\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using timestamp\n" );
 +
 +		f = _pam_timestamp_dlsym(symbol);
 +		if (f){
@@ -902,7 +902,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_UMASK
 +
 +	if (strcmp("/usr/lib/security/pam_umask.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using umask\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using umask\n" );
 +
 +		f = _pam_umask_dlsym(symbol);
 +		if (f){
@@ -915,7 +915,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_UNIX
 +
 +	if (strcmp("/usr/lib/security/pam_unix.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using unix\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using unix\n" );
 +
 +		f = _pam_unix_dlsym(symbol);
 +		if (f){
@@ -928,7 +928,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_USERTYPE
 +
 +	if (strcmp("/usr/lib/security/pam_usertype.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using usertype\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using usertype\n" );
 +
 +		f = _pam_usertype_dlsym(symbol);
 +		if (f){
@@ -941,7 +941,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_WARN
 +
 +	if (strcmp("/usr/lib/security/pam_warn.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using warn\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using warn\n" );
 +
 +		f = _pam_warn_dlsym(symbol);
 +		if (f){
@@ -954,7 +954,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_WHEEL
 +
 +	if (strcmp("/usr/lib/security/pam_wheel.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using wheel\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using wheel\n" );
 +
 +		f = _pam_wheel_dlsym(symbol);
 +		if (f){
@@ -967,7 +967,7 @@ index 81f49b4..de8309d 100644
 +// #ifdef HAVE_MODULE_PAM_XAUTH
 +
 +	if (strcmp("/usr/lib/security/pam_xauth.so", (shandle) )==0){
-+		fprintf(stderr, "(_pam_dlsym) using xauth\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using xauth\n" );
 +
 +		f = _pam_xauth_dlsym(symbol);
 +		if (f){
@@ -1005,7 +1005,7 @@ index 81f49b4..de8309d 100644
  }
 diff --git a/libpam/pam_dynamic_PLACEHOLDER.h b/libpam/pam_dynamic_PLACEHOLDER.h
 new file mode 100644
-index 0000000..40c0058
+index 0000000..f947fbe
 --- /dev/null
 +++ b/libpam/pam_dynamic_PLACEHOLDER.h
 @@ -0,0 +1,98 @@
@@ -1075,30 +1075,30 @@ index 0000000..40c0058
 +
 +
 +void* _PLACEHOLDER_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using PLACEHOLDER\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using PLACEHOLDER\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return PLACEHOLDER__pam_sm_chauthtok;
 +		}
@@ -1109,7 +1109,7 @@ index 0000000..40c0058
 +#endif // PAM_MODULE_PLACEHOLDER_H_INCLUDED
 diff --git a/libpam/pam_dynamic_access.h b/libpam/pam_dynamic_access.h
 new file mode 100644
-index 0000000..da844c3
+index 0000000..b783be5
 --- /dev/null
 +++ b/libpam/pam_dynamic_access.h
 @@ -0,0 +1,98 @@
@@ -1179,30 +1179,30 @@ index 0000000..da844c3
 +
 +
 +void* _pam_access_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_access\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_access\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_access__pam_sm_chauthtok;
 +		}
@@ -1213,7 +1213,7 @@ index 0000000..da844c3
 +#endif // PAM_MODULE_pam_access_H_INCLUDED
 diff --git a/libpam/pam_dynamic_canonicalize_user.h b/libpam/pam_dynamic_canonicalize_user.h
 new file mode 100644
-index 0000000..301e0d3
+index 0000000..1cd73a6
 --- /dev/null
 +++ b/libpam/pam_dynamic_canonicalize_user.h
 @@ -0,0 +1,70 @@
@@ -1271,14 +1271,14 @@ index 0000000..301e0d3
 +
 +
 +void* _pam_canonicalize_user_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_canonicalize_user\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_canonicalize_user\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_canonicalize_user__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_canonicalize_user__pam_sm_setcred;
 +		}
@@ -1289,7 +1289,7 @@ index 0000000..301e0d3
 +#endif // PAM_MODULE_pam_canonicalize_user_H_INCLUDED
 diff --git a/libpam/pam_dynamic_debug.h b/libpam/pam_dynamic_debug.h
 new file mode 100644
-index 0000000..d3ef0ac
+index 0000000..16aa767
 --- /dev/null
 +++ b/libpam/pam_dynamic_debug.h
 @@ -0,0 +1,98 @@
@@ -1359,30 +1359,30 @@ index 0000000..d3ef0ac
 +
 +
 +void* _pam_debug_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_debug\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_debug\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_debug__pam_sm_chauthtok;
 +		}
@@ -2735,7 +2735,7 @@ index 0000000..016c153
 +}
 diff --git a/libpam/pam_dynamic_deny.h b/libpam/pam_dynamic_deny.h
 new file mode 100644
-index 0000000..9e4226b
+index 0000000..9e40e50
 --- /dev/null
 +++ b/libpam/pam_dynamic_deny.h
 @@ -0,0 +1,98 @@
@@ -2805,30 +2805,30 @@ index 0000000..9e4226b
 +
 +
 +void* _pam_deny_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_deny\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_deny\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_deny__pam_sm_chauthtok;
 +		}
@@ -2839,7 +2839,7 @@ index 0000000..9e4226b
 +#endif // PAM_MODULE_pam_deny_H_INCLUDED
 diff --git a/libpam/pam_dynamic_echo.h b/libpam/pam_dynamic_echo.h
 new file mode 100644
-index 0000000..d15d79c
+index 0000000..f225d57
 --- /dev/null
 +++ b/libpam/pam_dynamic_echo.h
 @@ -0,0 +1,98 @@
@@ -2909,30 +2909,30 @@ index 0000000..d15d79c
 +
 +
 +void* _pam_echo_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_echo\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_echo\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_echo__pam_sm_chauthtok;
 +		}
@@ -2976,7 +2976,7 @@ index 0000000..f34655b
 \ No newline at end of file
 diff --git a/libpam/pam_dynamic_env.h b/libpam/pam_dynamic_env.h
 new file mode 100644
-index 0000000..f32f53c
+index 0000000..4f8e87d
 --- /dev/null
 +++ b/libpam/pam_dynamic_env.h
 @@ -0,0 +1,98 @@
@@ -3046,30 +3046,30 @@ index 0000000..f32f53c
 +
 +
 +void* _pam_env_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_env\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_env\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_env__pam_sm_chauthtok;
 +		}
@@ -3080,7 +3080,7 @@ index 0000000..f32f53c
 +#endif // PAM_MODULE_pam_env_H_INCLUDED
 diff --git a/libpam/pam_dynamic_exec.h b/libpam/pam_dynamic_exec.h
 new file mode 100644
-index 0000000..b2bc88d
+index 0000000..0509c08
 --- /dev/null
 +++ b/libpam/pam_dynamic_exec.h
 @@ -0,0 +1,98 @@
@@ -3150,30 +3150,30 @@ index 0000000..b2bc88d
 +
 +
 +void* _pam_exec_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_exec\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_exec\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_exec__pam_sm_chauthtok;
 +		}
@@ -3184,7 +3184,7 @@ index 0000000..b2bc88d
 +#endif // PAM_MODULE_pam_exec_H_INCLUDED
 diff --git a/libpam/pam_dynamic_faildelay.h b/libpam/pam_dynamic_faildelay.h
 new file mode 100644
-index 0000000..ea5ff04
+index 0000000..aae4e1e
 --- /dev/null
 +++ b/libpam/pam_dynamic_faildelay.h
 @@ -0,0 +1,68 @@
@@ -3240,14 +3240,14 @@ index 0000000..ea5ff04
 +
 +
 +void* _pam_faildelay_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_faildelay\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_faildelay\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_faildelay__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_faildelay__pam_sm_setcred;
 +		} 
@@ -3258,7 +3258,7 @@ index 0000000..ea5ff04
 +#endif // PAM_MODULE_pam_faildelay_H_INCLUDED
 diff --git a/libpam/pam_dynamic_faillock.h b/libpam/pam_dynamic_faillock.h
 new file mode 100644
-index 0000000..e825e49
+index 0000000..df98dc9
 --- /dev/null
 +++ b/libpam/pam_dynamic_faillock.h
 @@ -0,0 +1,74 @@
@@ -3316,18 +3316,18 @@ index 0000000..e825e49
 +
 +
 +void* _pam_faillock_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_faillock\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_faillock\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_faillock__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_faillock__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_faillock__pam_sm_acct_mgmt;
 +		}
@@ -3338,7 +3338,7 @@ index 0000000..e825e49
 +#endif // PAM_MODULE_pam_faillock_H_INCLUDED
 diff --git a/libpam/pam_dynamic_filter.h b/libpam/pam_dynamic_filter.h
 new file mode 100644
-index 0000000..f893c40
+index 0000000..9dde4c4
 --- /dev/null
 +++ b/libpam/pam_dynamic_filter.h
 @@ -0,0 +1,98 @@
@@ -3408,30 +3408,30 @@ index 0000000..f893c40
 +
 +
 +void* _pam_filter_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_filter\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_filter\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_filter__pam_sm_chauthtok;
 +		}
@@ -3442,7 +3442,7 @@ index 0000000..f893c40
 +#endif // PAM_MODULE_pam_filter_H_INCLUDED
 diff --git a/libpam/pam_dynamic_ftp.h b/libpam/pam_dynamic_ftp.h
 new file mode 100644
-index 0000000..ec3439b
+index 0000000..24366dc
 --- /dev/null
 +++ b/libpam/pam_dynamic_ftp.h
 @@ -0,0 +1,67 @@
@@ -3497,14 +3497,14 @@ index 0000000..ec3439b
 +
 +
 +void* _pam_ftp_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_ftp\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_ftp\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_ftp__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_ftp__pam_sm_setcred;
 +		} 
@@ -3515,7 +3515,7 @@ index 0000000..ec3439b
 +#endif // PAM_MODULE_pam_ftp_H_INCLUDED
 diff --git a/libpam/pam_dynamic_group.h b/libpam/pam_dynamic_group.h
 new file mode 100644
-index 0000000..6a2acad
+index 0000000..f5ff7ff
 --- /dev/null
 +++ b/libpam/pam_dynamic_group.h
 @@ -0,0 +1,67 @@
@@ -3570,14 +3570,14 @@ index 0000000..6a2acad
 +
 +
 +void* _pam_group_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_group\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_group\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_group__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_group__pam_sm_setcred;
 +		} 
@@ -3588,7 +3588,7 @@ index 0000000..6a2acad
 +#endif // PAM_MODULE_pam_group_H_INCLUDED
 diff --git a/libpam/pam_dynamic_issue.h b/libpam/pam_dynamic_issue.h
 new file mode 100644
-index 0000000..db5f06e
+index 0000000..2c3af52
 --- /dev/null
 +++ b/libpam/pam_dynamic_issue.h
 @@ -0,0 +1,67 @@
@@ -3643,14 +3643,14 @@ index 0000000..db5f06e
 +
 +
 +void* _pam_issue_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_issue\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_issue\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_issue__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_issue__pam_sm_setcred;
 +		}
@@ -3661,7 +3661,7 @@ index 0000000..db5f06e
 +#endif // PAM_MODULE_pam_issue_H_INCLUDED
 diff --git a/libpam/pam_dynamic_keyinit.h b/libpam/pam_dynamic_keyinit.h
 new file mode 100644
-index 0000000..1dee926
+index 0000000..0fe0b7d
 --- /dev/null
 +++ b/libpam/pam_dynamic_keyinit.h
 @@ -0,0 +1,82 @@
@@ -3723,22 +3723,22 @@ index 0000000..1dee926
 +
 +
 +void* _pam_keyinit_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_keyinit\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_keyinit\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_keyinit__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_keyinit__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_keyinit__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_keyinit__pam_sm_close_session;
 +		}
@@ -3749,7 +3749,7 @@ index 0000000..1dee926
 +#endif // PAM_MODULE_pam_keyinit_H_INCLUDED
 diff --git a/libpam/pam_dynamic_limits.h b/libpam/pam_dynamic_limits.h
 new file mode 100644
-index 0000000..23f3450
+index 0000000..8942e88
 --- /dev/null
 +++ b/libpam/pam_dynamic_limits.h
 @@ -0,0 +1,70 @@
@@ -3807,14 +3807,14 @@ index 0000000..23f3450
 +
 +
 +void* _pam_limits_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_limits\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_limits\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_limits__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_limits__pam_sm_close_session;
 +		}
@@ -3825,7 +3825,7 @@ index 0000000..23f3450
 +#endif // PAM_MODULE_pam_limits_H_INCLUDED
 diff --git a/libpam/pam_dynamic_listfile.h b/libpam/pam_dynamic_listfile.h
 new file mode 100644
-index 0000000..c1400b5
+index 0000000..28e8a6d
 --- /dev/null
 +++ b/libpam/pam_dynamic_listfile.h
 @@ -0,0 +1,98 @@
@@ -3895,30 +3895,30 @@ index 0000000..c1400b5
 +
 +
 +void* _pam_listfile_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_listfile\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_listfile\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_listfile__pam_sm_chauthtok;
 +		}
@@ -3929,7 +3929,7 @@ index 0000000..c1400b5
 +#endif // PAM_MODULE_pam_listfile_H_INCLUDED
 diff --git a/libpam/pam_dynamic_localuser.h b/libpam/pam_dynamic_localuser.h
 new file mode 100644
-index 0000000..7e2df3f
+index 0000000..392ca65
 --- /dev/null
 +++ b/libpam/pam_dynamic_localuser.h
 @@ -0,0 +1,98 @@
@@ -3999,30 +3999,30 @@ index 0000000..7e2df3f
 +
 +
 +void* _pam_localuser_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_localuser\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_localuser\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_localuser__pam_sm_chauthtok;
 +		}
@@ -4033,7 +4033,7 @@ index 0000000..7e2df3f
 +#endif // PAM_MODULE_pam_localuser_H_INCLUDED
 diff --git a/libpam/pam_dynamic_loginuid.h b/libpam/pam_dynamic_loginuid.h
 new file mode 100644
-index 0000000..3a06517
+index 0000000..c506b3e
 --- /dev/null
 +++ b/libpam/pam_dynamic_loginuid.h
 @@ -0,0 +1,78 @@
@@ -4095,18 +4095,18 @@ index 0000000..3a06517
 +
 +
 +void* _pam_loginuid_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_loginuid\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_loginuid\n" );
 +
 +		if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_loginuid__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_loginuid__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_loginuid__pam_sm_close_session;
 +		}
@@ -4117,7 +4117,7 @@ index 0000000..3a06517
 +#endif // PAM_MODULE_pam_loginuid_H_INCLUDED
 diff --git a/libpam/pam_dynamic_mail.h b/libpam/pam_dynamic_mail.h
 new file mode 100644
-index 0000000..b105af1
+index 0000000..ac1f0b3
 --- /dev/null
 +++ b/libpam/pam_dynamic_mail.h
 @@ -0,0 +1,83 @@
@@ -4180,22 +4180,22 @@ index 0000000..b105af1
 +
 +
 +void* _pam_mail_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_mail\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_mail\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mail__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mail__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mail__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mail__pam_sm_close_session;
 +		}
@@ -4206,7 +4206,7 @@ index 0000000..b105af1
 +#endif // PAM_MODULE_pam_mail_H_INCLUDED
 diff --git a/libpam/pam_dynamic_mkhomedir.h b/libpam/pam_dynamic_mkhomedir.h
 new file mode 100644
-index 0000000..74b2627
+index 0000000..b8985dc
 --- /dev/null
 +++ b/libpam/pam_dynamic_mkhomedir.h
 @@ -0,0 +1,70 @@
@@ -4264,14 +4264,14 @@ index 0000000..74b2627
 +
 +
 +void* _pam_mkhomedir_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_mkhomedir\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_mkhomedir\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mkhomedir__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_mkhomedir__pam_sm_close_session;
 +		}
@@ -4282,7 +4282,7 @@ index 0000000..74b2627
 +#endif // PAM_MODULE_pam_mkhomedir_H_INCLUDED
 diff --git a/libpam/pam_dynamic_motd.h b/libpam/pam_dynamic_motd.h
 new file mode 100644
-index 0000000..38f857c
+index 0000000..21942bc
 --- /dev/null
 +++ b/libpam/pam_dynamic_motd.h
 @@ -0,0 +1,69 @@
@@ -4339,14 +4339,14 @@ index 0000000..38f857c
 +
 +
 +void* _pam_motd_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_motd\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_motd\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_motd__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_motd__pam_sm_close_session;
 +		}
@@ -4357,7 +4357,7 @@ index 0000000..38f857c
 +#endif // PAM_MODULE_pam_motd_H_INCLUDED
 diff --git a/libpam/pam_dynamic_namespace.h b/libpam/pam_dynamic_namespace.h
 new file mode 100644
-index 0000000..d353e5e
+index 0000000..f69f0cb
 --- /dev/null
 +++ b/libpam/pam_dynamic_namespace.h
 @@ -0,0 +1,67 @@
@@ -4412,14 +4412,14 @@ index 0000000..d353e5e
 +
 +
 +void* _pam_namespace_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_namespace\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_namespace\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_namespace__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_namespace__pam_sm_close_session;
 +		}
@@ -4430,7 +4430,7 @@ index 0000000..d353e5e
 +#endif // PAM_MODULE_pam_namespace_H_INCLUDED
 diff --git a/libpam/pam_dynamic_nologin.h b/libpam/pam_dynamic_nologin.h
 new file mode 100644
-index 0000000..514bb51
+index 0000000..3194e25
 --- /dev/null
 +++ b/libpam/pam_dynamic_nologin.h
 @@ -0,0 +1,74 @@
@@ -4488,18 +4488,18 @@ index 0000000..514bb51
 +
 +
 +void* _pam_nologin_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_nologin\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_nologin\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_nologin__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_nologin__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_nologin__pam_sm_acct_mgmt;
 +		}
@@ -4510,7 +4510,7 @@ index 0000000..514bb51
 +#endif // PAM_MODULE_pam_nologin_H_INCLUDED
 diff --git a/libpam/pam_dynamic_permit.h b/libpam/pam_dynamic_permit.h
 new file mode 100644
-index 0000000..a9550f8
+index 0000000..fb9ba4d
 --- /dev/null
 +++ b/libpam/pam_dynamic_permit.h
 @@ -0,0 +1,98 @@
@@ -4580,30 +4580,30 @@ index 0000000..a9550f8
 +
 +
 +void* _pam_permit_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_permit\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_permit\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_permit__pam_sm_chauthtok;
 +		}
@@ -4614,7 +4614,7 @@ index 0000000..a9550f8
 +#endif // PAM_MODULE_pam_permit_H_INCLUDED
 diff --git a/libpam/pam_dynamic_pwhistory.h b/libpam/pam_dynamic_pwhistory.h
 new file mode 100644
-index 0000000..8de5286
+index 0000000..bf811a8
 --- /dev/null
 +++ b/libpam/pam_dynamic_pwhistory.h
 @@ -0,0 +1,63 @@
@@ -4669,10 +4669,10 @@ index 0000000..8de5286
 +
 +
 +void* _pam_pwhistory_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_pwhistory\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_pwhistory\n" );
 +
 +		if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_pwhistory__pam_sm_chauthtok;
 +		}
@@ -4683,7 +4683,7 @@ index 0000000..8de5286
 +#endif // PAM_MODULE_pam_pwhistory_H_INCLUDED
 diff --git a/libpam/pam_dynamic_rootok.h b/libpam/pam_dynamic_rootok.h
 new file mode 100644
-index 0000000..15e038d
+index 0000000..3547c79
 --- /dev/null
 +++ b/libpam/pam_dynamic_rootok.h
 @@ -0,0 +1,88 @@
@@ -4751,22 +4751,22 @@ index 0000000..15e038d
 +
 +
 +void* _pam_rootok_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_rootok\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_rootok\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_rootok__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_rootok__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_rootok__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_rootok__pam_sm_chauthtok;
 +		}
@@ -4777,7 +4777,7 @@ index 0000000..15e038d
 +#endif // PAM_MODULE_pam_rootok_H_INCLUDED
 diff --git a/libpam/pam_dynamic_securetty.h b/libpam/pam_dynamic_securetty.h
 new file mode 100644
-index 0000000..49ce014
+index 0000000..ace0e8b
 --- /dev/null
 +++ b/libpam/pam_dynamic_securetty.h
 @@ -0,0 +1,74 @@
@@ -4835,18 +4835,18 @@ index 0000000..49ce014
 +
 +
 +void* _pam_securetty_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_securetty\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_securetty\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_securetty__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_securetty__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_securetty__pam_sm_acct_mgmt;
 +		}
@@ -4857,7 +4857,7 @@ index 0000000..49ce014
 +#endif // PAM_MODULE_pam_securetty_H_INCLUDED
 diff --git a/libpam/pam_dynamic_setquota.h b/libpam/pam_dynamic_setquota.h
 new file mode 100644
-index 0000000..50e9f5f
+index 0000000..14dbcce
 --- /dev/null
 +++ b/libpam/pam_dynamic_setquota.h
 @@ -0,0 +1,69 @@
@@ -4914,14 +4914,14 @@ index 0000000..50e9f5f
 +
 +
 +void* _pam_setquota_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_setquota\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_setquota\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_setquota__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_setquota__pam_sm_close_session;
 +		}
@@ -4932,7 +4932,7 @@ index 0000000..50e9f5f
 +#endif // PAM_MODULE_pam_setquota_H_INCLUDED
 diff --git a/libpam/pam_dynamic_shells.h b/libpam/pam_dynamic_shells.h
 new file mode 100644
-index 0000000..a672fd2
+index 0000000..09de3f8
 --- /dev/null
 +++ b/libpam/pam_dynamic_shells.h
 @@ -0,0 +1,74 @@
@@ -4990,18 +4990,18 @@ index 0000000..a672fd2
 +
 +
 +void* _pam_shells_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_shells\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_shells\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_shells__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_shells__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_shells__pam_sm_acct_mgmt;
 +		}
@@ -5012,7 +5012,7 @@ index 0000000..a672fd2
 +#endif // PAM_MODULE_pam_shells_H_INCLUDED
 diff --git a/libpam/pam_dynamic_stress.h b/libpam/pam_dynamic_stress.h
 new file mode 100644
-index 0000000..de4a8c4
+index 0000000..820c06f
 --- /dev/null
 +++ b/libpam/pam_dynamic_stress.h
 @@ -0,0 +1,98 @@
@@ -5082,30 +5082,30 @@ index 0000000..de4a8c4
 +
 +
 +void* _pam_stress_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_stress\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_stress\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_stress__pam_sm_chauthtok;
 +		}
@@ -5116,7 +5116,7 @@ index 0000000..de4a8c4
 +#endif // PAM_MODULE_pam_stress_H_INCLUDED
 diff --git a/libpam/pam_dynamic_succeed_if.h b/libpam/pam_dynamic_succeed_if.h
 new file mode 100644
-index 0000000..01ebe20
+index 0000000..6012da2
 --- /dev/null
 +++ b/libpam/pam_dynamic_succeed_if.h
 @@ -0,0 +1,98 @@
@@ -5186,30 +5186,30 @@ index 0000000..01ebe20
 +
 +
 +void* _pam_succeed_if_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_succeed_if\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_succeed_if\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_succeed_if__pam_sm_chauthtok;
 +		}
@@ -5220,7 +5220,7 @@ index 0000000..01ebe20
 +#endif // PAM_MODULE_pam_succeed_if_H_INCLUDED
 diff --git a/libpam/pam_dynamic_time.h b/libpam/pam_dynamic_time.h
 new file mode 100644
-index 0000000..2c96c44
+index 0000000..0f9b195
 --- /dev/null
 +++ b/libpam/pam_dynamic_time.h
 @@ -0,0 +1,62 @@
@@ -5274,10 +5274,10 @@ index 0000000..2c96c44
 +
 +
 +void* _pam_time_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_time\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_time\n" );
 +
 +		if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_time__pam_sm_acct_mgmt;
 +		}
@@ -5288,7 +5288,7 @@ index 0000000..2c96c44
 +#endif // PAM_MODULE_pam_time_H_INCLUDED
 diff --git a/libpam/pam_dynamic_timestamp.h b/libpam/pam_dynamic_timestamp.h
 new file mode 100644
-index 0000000..f9d7baa
+index 0000000..1a28598
 --- /dev/null
 +++ b/libpam/pam_dynamic_timestamp.h
 @@ -0,0 +1,82 @@
@@ -5350,22 +5350,22 @@ index 0000000..f9d7baa
 +
 +
 +void* _pam_timestamp_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_timestamp\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_timestamp\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_timestamp__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_timestamp__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_timestamp__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_timestamp__pam_sm_close_session;
 +		}
@@ -5376,7 +5376,7 @@ index 0000000..f9d7baa
 +#endif // PAM_MODULE_pam_timestamp_H_INCLUDED
 diff --git a/libpam/pam_dynamic_umask.h b/libpam/pam_dynamic_umask.h
 new file mode 100644
-index 0000000..38409f8
+index 0000000..00585d6
 --- /dev/null
 +++ b/libpam/pam_dynamic_umask.h
 @@ -0,0 +1,69 @@
@@ -5433,14 +5433,14 @@ index 0000000..38409f8
 +
 +
 +void* _pam_umask_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_umask\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_umask\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_umask__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_umask__pam_sm_close_session;
 +		}
@@ -5451,7 +5451,7 @@ index 0000000..38409f8
 +#endif // PAM_MODULE_pam_umask_H_INCLUDED
 diff --git a/libpam/pam_dynamic_unix.h b/libpam/pam_dynamic_unix.h
 new file mode 100644
-index 0000000..45e3332
+index 0000000..1992b7a
 --- /dev/null
 +++ b/libpam/pam_dynamic_unix.h
 @@ -0,0 +1,98 @@
@@ -5521,30 +5521,30 @@ index 0000000..45e3332
 +
 +
 +void* _pam_unix_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_unix\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_unix\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_unix__pam_sm_chauthtok;
 +		}
@@ -5555,7 +5555,7 @@ index 0000000..45e3332
 +#endif // PAM_MODULE_pam_unix_H_INCLUDED
 diff --git a/libpam/pam_dynamic_usertype.h b/libpam/pam_dynamic_usertype.h
 new file mode 100644
-index 0000000..c43e34d
+index 0000000..3db0613
 --- /dev/null
 +++ b/libpam/pam_dynamic_usertype.h
 @@ -0,0 +1,98 @@
@@ -5625,30 +5625,30 @@ index 0000000..c43e34d
 +
 +
 +void* _pam_usertype_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_usertype\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_usertype\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_usertype__pam_sm_chauthtok;
 +		}
@@ -5659,7 +5659,7 @@ index 0000000..c43e34d
 +#endif // PAM_MODULE_pam_usertype_H_INCLUDED
 diff --git a/libpam/pam_dynamic_warn.h b/libpam/pam_dynamic_warn.h
 new file mode 100644
-index 0000000..230e081
+index 0000000..c6b281c
 --- /dev/null
 +++ b/libpam/pam_dynamic_warn.h
 @@ -0,0 +1,98 @@
@@ -5729,30 +5729,30 @@ index 0000000..230e081
 +
 +
 +void* _pam_warn_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_warn\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_warn\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_acct_mgmt;
 +		}else if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_close_session;
 +		}else if (strcmp(symbol,"pam_sm_chauthtok")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_warn__pam_sm_chauthtok;
 +		}
@@ -5763,7 +5763,7 @@ index 0000000..230e081
 +#endif // PAM_MODULE_pam_warn_H_INCLUDED
 diff --git a/libpam/pam_dynamic_wheel.h b/libpam/pam_dynamic_wheel.h
 new file mode 100644
-index 0000000..36f0d96
+index 0000000..a21b836
 --- /dev/null
 +++ b/libpam/pam_dynamic_wheel.h
 @@ -0,0 +1,75 @@
@@ -5822,18 +5822,18 @@ index 0000000..36f0d96
 +
 +
 +void* _pam_wheel_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_wheel\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_wheel\n" );
 +
 +		if (strcmp(symbol,"pam_sm_authenticate")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_wheel__pam_sm_authenticate;
 +		} else if (strcmp(symbol,"pam_sm_setcred")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_wheel__pam_sm_setcred;
 +		} else if (strcmp(symbol,"pam_sm_acct_mgmt")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_wheel__pam_sm_acct_mgmt;
 +		}
@@ -5844,7 +5844,7 @@ index 0000000..36f0d96
 +#endif // PAM_MODULE_pam_wheel_H_INCLUDED
 diff --git a/libpam/pam_dynamic_xauth.h b/libpam/pam_dynamic_xauth.h
 new file mode 100644
-index 0000000..a17311d
+index 0000000..ab90d1c
 --- /dev/null
 +++ b/libpam/pam_dynamic_xauth.h
 @@ -0,0 +1,69 @@
@@ -5901,14 +5901,14 @@ index 0000000..a17311d
 +
 +
 +void* _pam_xauth_dlsym(const char* symbol){
-+		fprintf(stderr, "(_pam_dlsym) using pam_xauth\n" );
++		// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) using pam_xauth\n" );
 +
 +		if (strcmp(symbol,"pam_sm_open_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_xauth__pam_sm_open_session;
 +		}else if (strcmp(symbol,"pam_sm_close_session")==0){
-+			fprintf(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
++			// FPRINTF_PLACEHOLDER(stderr, "(_pam_dlsym) returning symbol %s\n",symbol );
 +
 +			return pam_xauth__pam_sm_close_session;
 +		}

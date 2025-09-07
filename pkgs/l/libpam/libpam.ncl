@@ -62,21 +62,20 @@
       ]
     in
     {
-      debug = true,
       singleSource = {
         uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.7.1/Linux-PAM-1.7.1.tar.xz",
         sha256sum = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0",
       },
       patches = [
         {
-          sha256sum = "f35aae8dd9d3f9f187057d29e18259375de59d7ff0764147f7e2409ab86b99d6",
+          sha256sum = "f8c3265a6cdbc82db68f7b167659a7f007e99ba228995e7e7c0baade0f300fdf",
           file = "libpam.patch",
         }
       ],
       extraMesonArgs = [
         "-Dexamples=false"
       ],
-      baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgsDebug) @ lib.constants.mesonArgsStatic,
+      baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgs) @ lib.constants.mesonArgsStatic,
 
       buildEnv.EXTRA_CFLAGS = [
         "-DHAVE_MODULE_PAM_ACCESS",
@@ -192,28 +191,5 @@
         drvs.linuxHeaders,
       ],
     },
-  libpamSuper | lib.Package = {
 
-    buildPhase = [
-      # "mkdir libpam",
-      # "(cd libpam && llvm-ar x /usr/lib/libpam.a)",
-      # "mkdir pam_elogind",
-      # "(cd pam_elogind && llvm-ar x /usr/lib/security/pam_elogind.a)",
-      # # "rm libpam/pam_dynamic_elogind.c.o",
-      # "${AR} rcs libpam.a libpam/*.o",
-      # "llvm-ranlib libpam.a",
-      "cp /usr/lib/libpam.a .",
-      "${AR} dv libpam.a pam_dynamic_elogind.c.o",
-    ],
-    installPhase = [
-      "install -dm0755 ${DEST}/usr/lib",
-      "install -m0755 libpam.a ${DEST}/usr/lib",
-    ],
-    enableCcache = false,
-    biDrvs = [
-      drvs.elogind255,
-      drvs.libpam,
-      drvs.llvm,
-    ]
-  }
 }
