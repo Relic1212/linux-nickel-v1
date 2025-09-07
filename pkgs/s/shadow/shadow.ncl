@@ -31,7 +31,7 @@
         shadow.biDrvs
         @ [
           drvs.libpam,
-          (drvs.libpamSuper & { priority = 1 }),
+          # (drvs.libpamSuper & { priority = 1 }),
           (drvs.libarchive & { priority = 1 }), # busybox cpio not good enough
           drvs.elogind255,
         ],
@@ -65,39 +65,41 @@
         # " > ${DEST}/etc/pam.d/login
         # "%,
         m%"
-echo "
-auth            required        pam_securetty.so debug
-auth            include         system-auth
-account         required        pam_nologin.so debug
-account         include         system-auth
-password        include         system-auth
-session         include         system-auth
-session         required        pam_loginuid.so
--session        optional        pam_elogind.so debug
-" > ${DEST}/etc/pam.d/login
-"%,
+        echo "
+        auth            required        pam_securetty.so debug
+        auth            include         system-auth
+        account         required        pam_nologin.so debug
+        account         include         system-auth
+        password        include         system-auth
+        session         include         system-auth
+        session         required        pam_loginuid.so
+        -session        optional        pam_elogind.so debug
+        " > ${DEST}/etc/pam.d/login
+        "%,
+
+        # m%"echo "-session        optional        pam_elogind.so debug" >> ${DEST}/etc/pam.d/login"%, 
         m%"
-echo "
-auth            sufficient      pam_rootok.so
-# Uncomment the following line to implicitly trust users in the "wheel" group.
-#auth           sufficient      pam_wheel.so trust use_uid
-# Uncomment the following line to require a user to be in the "wheel" group.
-auth            required        pam_wheel.so use_uid
-auth            include         system-auth
-account         include         system-auth
-password        include         system-auth
-session         include         system-auth
-session         optional        pam_xauth.so
-" > ${DEST}/etc/pam.d/su
-"%,
+        echo "
+        auth            sufficient      pam_rootok.so
+        # Uncomment the following line to implicitly trust users in the "wheel" group.
+        #auth           sufficient      pam_wheel.so trust use_uid
+        # Uncomment the following line to require a user to be in the "wheel" group.
+        auth            required        pam_wheel.so use_uid
+        auth            include         system-auth
+        account         include         system-auth
+        password        include         system-auth
+        session         include         system-auth
+        session         optional        pam_xauth.so
+        " > ${DEST}/etc/pam.d/su
+        "%,
         m%"
-      echo "
-      auth            required        pam_unix.so debug
-      account         required        pam_unix.so debug
-      password        required        pam_unix.so debug
-      session         required        pam_unix.so debug
-      " > ${DEST}/etc/pam.d/system-auth
-      "%,
+        echo "
+        auth            required        pam_unix.so debug
+        account         required        pam_unix.so debug
+        password        required        pam_unix.so debug
+        session         required        pam_unix.so debug
+        " > ${DEST}/etc/pam.d/system-auth
+        "%,
       ]
     },
 
