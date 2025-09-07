@@ -158,6 +158,15 @@ let _services =
         "waits-for" = ["udev-settle"],
       },
 
+      greetd = {
+        # https://aur.archlinux.org/cgit/aur.git/tree/greetd?h=greetd-artix-dinit
+        type = "process",
+        command = "/usr/bin/greetd",
+        "depends-on" = ["loginready"],
+        "smooth-recovery" = "true",
+        logfile = "/var/log/greetd.log"
+      },
+
       hostname = {
         type = "scripted",
         # command = m%"/usr/bin/hostname \$(cat /etc/hostname)"%,
