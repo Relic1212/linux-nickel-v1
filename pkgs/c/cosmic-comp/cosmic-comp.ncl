@@ -148,7 +148,7 @@
       drvs.dinit,
       drvs.libstdcppCompat,
       drvs.seatd,
-      drvs.elogind,
+      drvs.elogindWithPolkit,
       drvs.libcap,
     ],
 
