@@ -1,6 +1,7 @@
 {
   lib,
   drvs,
+  distro,
   polkit | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/polkit-org/polkit/archive/refs/tags/126.tar.gz",
@@ -19,17 +20,22 @@
     ],
 
     options = {
-      elogind | Bool | default = true
+      elogind | Bool | default = true,
+      # pam | Bool |default = false ,
+      pam | Bool | default = distro.pam,
     },
+    buildEnv.EXTRA_LDFLAGS = if options.pam then ["-lcap", "-lpam_misc"] else [],
     extraMesonArgs = [
       "-Dintrospection=false",
-      "-Dauthfw=shadow",
+      "-Dauthfw=%{if options.pam then "pam" else "shadow"}",
       "-Dsession_tracking=%{ if options.elogind then  "elogind" else "no" }",
+      "-Dman=true",
     ],
     preConfigurePhase = [
       "(cd ${SRC} && patch -p1 < 55ee1b70456eca8281dda9612c485c619122f202.patch)",
       "sed -i 's@shared_library@library@g' ${SRC}/src/polkitagent/meson.build",
       "sed -i 's@shared_library@library@g' ${SRC}/src/polkit/meson.build",
+      m%"sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${SRC}/docs/man/meson.build"%,
     ],
     biDrvs =
       [
@@ -56,11 +62,22 @@
         drvs.libcap,
         drvs.gettext,
         drvs.perl,
+        drvs.libxslt,
+        drvs.docbookXslNons,
+        drvs.docbookXml,
       ]
       @ (
         if options.elogind then
           [
-            drvs.elogind,
+            drvs.elogindWithPolkit,
+          ]
+        else
+          []
+      )
+      @ (
+        if options.pam then
+          [
+            drvs.libpamFinal,
           ]
         else
           []
