@@ -68,7 +68,7 @@
       },
       patches = [
         {
-          sha256sum = "f8c3265a6cdbc82db68f7b167659a7f007e99ba228995e7e7c0baade0f300fdf",
+          sha256sum = "d6812b8ab638dac08c534a0794a8d02d1e76789b34db9530be126f3f4b90c95b",
           file = "libpam.patch",
         }
       ],
@@ -186,6 +186,9 @@
               "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && mv '.._fundamental_sha256.c.o' pam_elogind_fundamental_sha256.c.o)",
               "(cd /tmp/workdir/build/libpam-stage-2/pam_elogind && mv '.._fundamental_string-util-fundamental.c.o' pam_elogind_fundamental_string-util-fundamental.c.o)",
               "sed -i 's|-lpam|-lpam_misc -lcap -lpam|g' ${DEST}/usr/lib/pkgconfig/pam.pc",
+              "rm /tmp/workdir/build/libpam-stage-2/libpam/pam_dynamic_gnome_keyring.c.o",
+              "mkdir /tmp/workdir/build/libpam-stage-2/pam_gnome_keyring",
+              "(cd /tmp/workdir/build/libpam-stage-2/pam_gnome_keyring && llvm-ar x /usr/lib/security/pam_gnome_keyring.a)",
             ]
           else
             []
@@ -211,7 +214,15 @@
         [
           drvs.linuxHeaders,
         ]
-        @ (if options.isFinal then [drvs.elogind255] else []),
+        @ (
+          if options.isFinal then
+            [
+              drvs.elogind255,
+              drvs.gnomeKeyring,
+            ]
+          else
+            []
+        ),
     },
 
   libpamFinal = libpam & { options.isFinal = true }

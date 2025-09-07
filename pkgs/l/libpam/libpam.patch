@@ -1,17 +1,18 @@
 diff --git a/libpam/meson.build b/libpam/meson.build
-index 3e8a531..b6fe99f 100644
+index 3e8a531..3d35391 100644
 --- a/libpam/meson.build
 +++ b/libpam/meson.build
-@@ -8,6 +8,8 @@ libpam_src = [
+@@ -8,6 +8,9 @@ libpam_src = [
    'pam_delay.c',
    'pam_dispatch.c',
    'pam_dynamic.c',
 +  'pam_dynamic_defs.c',
 +  'pam_dynamic_elogind.c',
++  'pam_dynamic_gnome_keyring.c',
    'pam_end.c',
    'pam_env.c',
    'pam_get_authtok.c',
-@@ -43,7 +45,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
+@@ -43,7 +46,7 @@ libpam_map_path = meson.current_source_dir() / libpam_map
  libpam_link_deps = [libpam_map]
  libpam_link_args = ['-Wl,--version-script=' + libpam_map_path]
  
@@ -21,10 +22,10 @@ index 3e8a531..b6fe99f 100644
    sources: libpam_src,
    include_directories: [libpam_inc],
 diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
-index 81f49b4..3ac1acb 100644
+index 81f49b4..41e3434 100644
 --- a/libpam/pam_dynamic.c
 +++ b/libpam/pam_dynamic.c
-@@ -33,24 +33,975 @@
+@@ -33,24 +33,986 @@
  
  #include "pam_private.h"
  #include <dlfcn.h>
@@ -149,6 +150,7 @@ index 81f49b4..3ac1acb 100644
 +#endif // HAVE_MODULE_PAM_XAUTH
 +
 +#include "pam_dynamic_elogind.h"
++#include "pam_dynamic_gnome_keyring.h"
  
  void *_pam_dlopen(const char *mod_path)
  {
@@ -436,6 +438,11 @@ index 81f49b4..3ac1acb 100644
 +	if (strcmp("/usr/lib/security/pam_elogind.so", mod_path)==0){
 +		
 +          return _pam_elogind_dlopen(mod_path);
++	}
++
++	if (strcmp("/usr/lib/security/pam_gnome_keyring.so", mod_path)==0){
++		
++          return _pam_gnome_keyring_dlopen(mod_path);
 +	}
 +
 +	fprintf(stderr, "WARNING, using libc dlopen for %s\n",mod_path);
@@ -974,13 +981,18 @@ index 81f49b4..3ac1acb 100644
 +			return (servicefn)f;
 +		}
 +	}
++// #endif // HAVE_MODULE_PAM_XAUTH
 +
 +	if (strcmp("/usr/lib/security/pam_elogind.so", shandle)==0){
 +		
 +          return (servicefn)_pam_elogind_dlsym(handle,symbol);
 +	}
++
++	if (strcmp("/usr/lib/security/pam_gnome_keyring.so", shandle)==0){
++		
++          return (servicefn)_pam_gnome_keyring_dlsym(handle,symbol);
++	}
 +  
-+// #endif // HAVE_MODULE_PAM_XAUTH
 +	
 +	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s (%s)\n",symbol,shandle );
 +	
@@ -3513,6 +3525,39 @@ index 0000000..24366dc
 +
 +
 +#endif // PAM_MODULE_pam_ftp_H_INCLUDED
+diff --git a/libpam/pam_dynamic_gnome_keyring.c b/libpam/pam_dynamic_gnome_keyring.c
+new file mode 100644
+index 0000000..2b392be
+--- /dev/null
++++ b/libpam/pam_dynamic_gnome_keyring.c
+@@ -0,0 +1,15 @@
++#include <dlfcn.h>
++#include <string.h>
++#include <stdio.h>
++
++
++
++void* __attribute__((weak)) _pam_gnome_keyring_dlopen(const char *mod_path)
++{
++	return NULL;
++}
++
++void* __attribute__((weak)) _pam_gnome_keyring_dlsym(void *handle, const char *symbol)
++{
++	return NULL;
++}
+\ No newline at end of file
+diff --git a/libpam/pam_dynamic_gnome_keyring.h b/libpam/pam_dynamic_gnome_keyring.h
+new file mode 100644
+index 0000000..78e21e6
+--- /dev/null
++++ b/libpam/pam_dynamic_gnome_keyring.h
+@@ -0,0 +1,4 @@
++
++void* _pam_gnome_keyring_dlopen(const char *mod_path);
++
++void* _pam_gnome_keyring_dlsym(void *handle, const char *symbol);
+\ No newline at end of file
 diff --git a/libpam/pam_dynamic_group.h b/libpam/pam_dynamic_group.h
 new file mode 100644
 index 0000000..f5ff7ff
