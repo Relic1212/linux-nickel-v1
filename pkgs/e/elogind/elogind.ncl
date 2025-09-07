@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  elogind | lib.MesonPackage = {
+  elogind252 | lib.MesonPackage = {
     singleSource = {
       # uri = "https://github.com/elogind/elogind/archive/refs/tags/v255.17.tar.gz",
       # sha256sum = "a9725ae3f73f8d910de84c108bc11bfd4c782bef6a4190b2ec70c5d2f22344db",
@@ -242,7 +242,7 @@
   },
 
   elogindWithPolkit =
-    elogind
+    elogind252
     & {
       extraMesonArgs | priority 1 = [
         "-Dpolkit=true",
