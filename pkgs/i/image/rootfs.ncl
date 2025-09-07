@@ -91,6 +91,8 @@
         "useradd -r -u 102 -g 102 -G polkitd -M -s /usr/bin/nologin -d /var/empty polkitd",
         "chown --verbose -R root:polkitd /usr/share/polkit-1/rules.d",
         "chmod 0750 /usr/share/polkit-1/rules.d",
+        "if [ -e /usr/bin/greetd ]; then useradd -M -d /var/lib/greeter -G video greeter ;mkdir -p /var/lib/greeter; chown -R greeter:greeter /var/lib/greeter; sed -i 's|vt = 1|vt = 3|g' /etc/greetd/config.toml; fi",
+        # "if [ -e /usr/bin/greetd ]; sed -i 's|bin\/sh||g' /etc/greetd/config.toml; fi",
 
         # useradd -u 461 -g 11 -d /var/run/sndiod sndiod
         # "ln -s /usr/lib /lib",
