@@ -37,7 +37,7 @@
   {
     src = {
       uri = "https://github.com/pop-os/cosmic-settings-daemon/archive/e2aa1056900d6f8c9c7555c0401aa7c99281eb06.tar.gz",
-       sha256sum = "0240cbdf5ed6ba1f61c397162ffb3ed01473781961810b4f6ead530e05ea148a"
+      sha256sum = "0240cbdf5ed6ba1f61c397162ffb3ed01473781961810b4f6ead530e05ea148a"
     },
     dest = "vendor-cosmic-settings-daemon"
   },
