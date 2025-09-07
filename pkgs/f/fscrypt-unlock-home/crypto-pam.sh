@@ -1,0 +1,166 @@
+#!/bin/sh
+
+
+USER_NAME=$PAM_USER
+
+USER_IS_UNLOCK_USER=0
+[ "$USER_NAME" = "user" ] && USER_IS_UNLOCK_USER=1
+[ "$USER_NAME" = "user0" ] && USER_IS_UNLOCK_USER=1
+[ "$USER_NAME" = "user1" ] && USER_IS_UNLOCK_USER=1
+[ "$USER_NAME" = "user2" ] && USER_IS_UNLOCK_USER=1
+
+
+export PATH="/usr/bin:/bin"
+
+# check if the user is valid
+if [ $USER_IS_UNLOCK_USER -eq 0 ]; then
+    if [ "${USER_NAME}" = "root" ]; then 
+        exit 0
+    fi
+    printf "%s" "${USER_NAME} does not exist"
+    sleep 2
+    exit 1
+fi
+
+# check if the vault exists and is already unlocked, login with busybox if so
+if [ -d  "/home/.shadow/${USER_NAME}"  ]; then
+    is_locked="1"
+
+    SUMMANDS="$(fscrypt status "/home/.shadow/${USER_NAME}")"
+    while read -r status; do 
+        case "${status}" in 
+            *Unlocked*Yes* )
+            is_locked="0"
+            ;;
+            * )
+            true
+            ;;
+        esac
+    done <<SUMMANDS_HEREDOC_INPUT
+$SUMMANDS
+SUMMANDS_HEREDOC_INPUT
+
+    echo "done reading and is_unlocked=${is_locked}"
+    if [ "$is_locked" = "0" ]; then
+        exit 0
+    fi
+fi
+# if it was not unlokced, read the password and unlock it
+
+PLAIN_PASSWORD="$(cat -)"
+
+printf "%s" "${PLAIN_PASSWORD}"|fscrypt unlock "/home/.shadow/${USER_NAME}" --quiet
+unlock_status=$?
+# mount stuff
+
+
+#####################################################################################
+do_bind(){
+    # Will fail if not unencrypted
+
+    # make sure home exists (to be bind-mounted at /home/$USER_NAME)
+    if [ ! -d  "/home/.shadow/${USER_NAME}/home"  ]; then 
+        mkdir -p "/home/.shadow/${USER_NAME}/home"
+        chown -R "${USER_NAME}":"${USER_NAME}" "/home/.shadow/${USER_NAME}/home" 
+    fi 
+
+    # Make sure the mountpoint exists
+    if [ ! -d "/home/${USER_NAME}" ]; then
+        mkdir -p "/home/${USER_NAME}"
+        #TODO: chown this?
+    fi 
+
+    findmnt "/home/${USER_NAME}" > /dev/null ||  mount --bind "/home/.shadow/${USER_NAME}/home" "/home/${USER_NAME}"
+
+    #chown -R $USER_NAME:$USER_NAME /home/$USER_NAME #(moved up)
+
+    # Generate a session-specific password hash
+    PASS=$(openssl passwd "${PLAIN_PASSWORD}")
+    while true ; do
+
+        case "${PASS}" in 
+            *\/*)
+            true 
+            ;;
+            *)
+            break
+            ;;
+        esac
+
+        PASS=$(openssl passwd "${PLAIN_PASSWORD}")
+        
+    done
+
+    # Delete previous password hash if it exists
+    ( findmnt /etc/shadow > /dev/null && umount /etc/shadow ) || true
+    rm -rf /run/shadow
+
+    # Store the session password hash
+    sed -e  "s/^\($USER_NAME:\)[^:]*\(:.*\)$/\1$PASS\2/" /etc/shadow > /run/shadow
+    
+    mount --bind /run/shadow /etc/shadow
+    
+    if [ ! -d  "/home/.shadow/$USER_NAME/nix" ]; then 
+        mkdir  "/home/.shadow/$USER_NAME/nix" 
+        chown -R "$USER_NAME":"$USER_NAME"  "/home/.shadow/$USER_NAME/nix" 
+    fi
+    mount --bind "/home/.shadow/$USER_NAME/nix" /nix 
+}
+###############################################################################################
+
+
+if [  -d "/home/.shadow/$USER/" ]; then
+    do_bind
+
+
+else
+    # printf "User not in database, please enter your password again to create a new user:\n"
+    # printf "Password:"
+    # stty -- -echo
+    # read -r PASSWORD_CHECK
+    # stty echo
+    # if [ ! "${PLAIN_PASSWORD}" = "${PASSWORD_CHECK}" ]; then 
+    #     printf "Passwords don't match!\n"
+    #     sleep 2
+    #     exit 1
+    # fi
+################### BEGIN CREATE ######################################
+
+    mkdir -p "/home/.shadow/$USER_NAME"
+
+    tune2fs -O encrypt /dev/disk/by-uuid/dd95fdd6-681c-4ebe-98eb-25822368a556
+
+    fscrypt setup --force --quiet /home
+
+    echo "${PLAIN_PASSWORD}" | fscrypt encrypt "/home/.shadow/${USER_NAME}" \
+        --source=custom_passphrase \
+        --user="${USER_NAME}" \
+        --name="${USER_NAME}" \
+        --quiet 
+
+    # Create the home directory in the  "secret dirocrory". This will be bind-mounted to ~/
+    mkdir -p "/home/.shadow/${USER_NAME}/home"    
+    chown -R "$USER_NAME":"$USER_NAME" "/home/.shadow/$USER_NAME/home"
+
+    if [ -d "/home/$USER_NAME/" ]; then
+        for f in $( ls -a "/home/${USER_NAME}/" ); do
+            mv "/home/${USER_NAME}/${f}" "/home/.shadow/${USER_NAME}/home"  
+        done
+    fi
+################### END CREATE ######################################
+
+    do_bind
+
+    unlock_status=0
+    printf "a home directory has been created for you\n"
+
+fi
+
+if [ $unlock_status -eq 0 ]; then
+    exit 0
+else 
+    printf "wrong vault password"
+    sleep 2
+    exit 1
+fi
+
