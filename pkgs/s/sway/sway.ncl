@@ -1,6 +1,7 @@
 {
   lib,
   drvs,
+  distro,
   sway | lib.MesonPackage = {
     name = "sway",
 
@@ -34,7 +35,8 @@
         dest = "wlroots"
       }
     ],
-    buildEnv.EXTRA_LDFLAGS = ["-lc++"],
+    buildEnv.EXTRA_LDFLAGS = ["-lc++"], # @ (if distro.pam then ["-lcap"] else []),
+
     # baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
 
     extraMesonArgs = [

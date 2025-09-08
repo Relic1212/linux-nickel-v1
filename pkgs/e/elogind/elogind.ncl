@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  elogind252 | lib.MesonPackage = {
+  _elogind252 | lib.MesonPackage = {
     singleSource = {
       # uri = "https://github.com/elogind/elogind/archive/refs/tags/v255.17.tar.gz",
       # sha256sum = "a9725ae3f73f8d910de84c108bc11bfd4c782bef6a4190b2ec70c5d2f22344db",
@@ -110,6 +110,7 @@
     postInstallPhase =
       [
         m%"sed -i 's@-lelogind@-lelogind -lcap@g' ${DEST}/usr/lib/pkgconfig/libelogind.pc"%,
+        m%"sed -i 's@255@255\nRequires.private: libcap@g' ${DEST}/usr/lib/pkgconfig/libelogind.pc"%,
       ]
       @ (
         let symsbols = [
@@ -241,8 +242,8 @@
     ]
   },
 
-  elogindWithPolkit =
-    elogind252
+  _elogindWithPolkit =
+    _elogind252
     & {
       extraMesonArgs | priority 1 = [
         "-Dpolkit=true",
@@ -262,4 +263,11 @@
         "-Ddefault-hierarchy=unified",
       ],
     }
+}
+& {
+  distro,
+  _elogindWithPolkit,
+  _elogind255,
+
+  elogindWithPolkit = if distro.pam then _elogind255 else _elogindWithPolkit,
 }

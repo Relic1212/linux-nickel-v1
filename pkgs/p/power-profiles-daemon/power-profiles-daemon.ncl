@@ -1,6 +1,7 @@
 {
   lib,
   drvs,
+  distro,
   powerProfilesDaemon | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/archive/0.30/power-profiles-daemon-0.30.tar.gz",
@@ -20,6 +21,8 @@
       drvs.elogindWithPolkit,
       drvs.libcap,
     ],
+    buildEnv.EXTRA_LDFLAGS = if distro.pam then ["-lcap"] else [],
+
     extraMesonArgs = [
       "-Dsystemdsystemunitdir=\"\"",
       "-Dtests=false",

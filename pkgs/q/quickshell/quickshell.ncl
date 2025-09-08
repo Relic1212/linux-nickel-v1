@@ -1,6 +1,7 @@
 {
   lib,
   drvs,
+  distro,
   quickshell | lib.QtPackage = {
     generator = "Ninja",
 
@@ -101,12 +102,13 @@
       # drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-      drvs.libcamera,
+      # drvs.libcamera,
       drvs.libyaml,
       drvs.libsndfile,
       drvs.libopus,
       drvs.lua,
       drvs.alsaLibs,
+      drvs.jemalloc,
     ],
     allowDubplicateBuldInputs = true,
     propagatedBuildInputs = [
@@ -126,11 +128,11 @@
 
       "-DCRASH_REPORTER" = false,
       "-DX11" = false,
-      "-DSERVICE_PAM" = false,
+      "-DSERVICE_PAM" = distro.pam,
       "-DSERVICE_MPRIS" = true,
       "-DSERVICE_PIPEWIRE" = true,
       "-DBLUETOOTH" = true,
-      "-DUSE_JEMALLOC" = false,
+      "-DUSE_JEMALLOC" = true,
       "-DNO_PCH" = true,
     },
 

@@ -217,7 +217,7 @@
         @ (
           if options.isFinal then
             [
-              drvs.elogind255,
+              drvs.elogindWithPolkit,
               drvs.gnomeKeyring,
             ]
           else

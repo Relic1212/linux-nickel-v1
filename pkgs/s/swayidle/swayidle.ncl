@@ -1,11 +1,16 @@
 {
   lib,
   drvs,
+  distro,
   swayidle | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/swaywm/swayidle/archive/f13cefacc788f4977ffcd3be012c29e81a4cdda9.zip",
       sha256sum = "cfab57985f61502d0e40e8eb5587616b06e31cba9fa174157a678a9afa143760",
     },
+    extraMesonArgs = if distro.elogind then [
+      "-Dlogind=enabled",
+      "-Dlogind-provider=elogind",
+    ] else [],
     biDrvs = [
       drvs.zlibNg,
       drvs.wayland,
@@ -15,11 +20,14 @@
       drvs.expat,
       drvs.scdoc
     ],
+    propagatedBuildInputs = (if distro.elogind then [drvs.elogindWithPolkit] else [])
+
   }
 }
 & {
   lib,
   drvs,
+  distro,
   swaylock | lib.MesonPackage = {
     singleSource = {
       uri = "https://github.com/swaywm/swaylock/releases/download/v1.8.0/swaylock-1.8.0.tar.gz",
@@ -39,5 +47,6 @@
       drvs.cairo,
       drvs.scdoc
     ],
+    propagatedBuildInputs = (if distro.elogind then [drvs.elogindWithPolkit] else [])
   }
 }

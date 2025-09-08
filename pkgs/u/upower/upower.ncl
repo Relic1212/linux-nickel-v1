@@ -1,6 +1,7 @@
 {
   lib,
   drvs,
+  distro,
   upower | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.10/upower-v1.90.10.tar.gz",
@@ -21,6 +22,7 @@
       drvs.libcap,
       drvs.gettext,
     ],
+    buildEnv.EXTRA_LDFLAGS = if distro.pam then ["-lcap"] else [],
     extraMesonArgs = [
       "-Dsystemdsystemunitdir=no",
       "-Dman=true",
