@@ -15,6 +15,7 @@
 & {
   lib,
   drvs,
+  distro,
   cosmicSettings | lib.CargoPackage = {
 
     unpackPhase = [
@@ -30,6 +31,7 @@
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
+      m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
@@ -49,13 +51,14 @@
           "-C link-arg=-L/usr/lib/clang/20/lib/linux",
           "-C link-arg=-lclang_rt.builtins-x86_64",
         ]
+        @ (if distro.pam then ["-C link-arg=-lcap"] else [])
         @ (
           std.array.map
             (fun a => "-C link-arg=%{a}")
             (
               std.string.split
                 " "
-                "-lpipewire-0.3 -ldl -lm -L/usr/lib/spa-0.2/libcamera -lspa-libcamera -L/usr/lib/spa-0.2/bluez5 -lspa-codec-bluez5-ldac -lspa-codec-bluez5-aac -lspa-codec-bluez5-opus -lspa-codec-bluez5-faststream -lspa-codec-bluez5-sbc -lspa-bluez5 -L/usr/lib/spa-0.2/v4l2 -lspa-v4l2 -L/usr/lib/spa-0.2/audiomixer -lspa-audiomixer -L/usr/lib/spa-0.2/aec -lspa-aec-null -L/usr/lib/spa-0.2/audioconvert -lspa-audioconvert -L/usr/lib/spa-0.2/support -lspa-support -L/usr/lib/spa-0.2/alsa -lspa-alsa -lasound -lpthread -lrt -ludev -ldbus-1 -lsbc -lbluetooth -lgio-2.0 -lgobject-2.0 -lffi -lgmodule-2.0 -lglib-2.0 -lpcre2-8 -lz -lusb-1.0 -lopus -lm -lfdk-aac -lldacBT_enc -lm -lldacBT_abr -lldacBT_enc -lcamera -lcamera-base -pthread -lcrypto -ldl -pthread -ludev -lyaml -lssl -ldl -pthread -lcrypto -ldl -pthread"
+                "-lpipewire-0.3 -ldl -lm -L/usr/lib/spa-0.2/bluez5 -lspa-codec-bluez5-ldac -lspa-codec-bluez5-aac -lspa-codec-bluez5-opus -lspa-codec-bluez5-faststream -lspa-codec-bluez5-sbc -lspa-bluez5 -L/usr/lib/spa-0.2/v4l2 -lspa-v4l2 -L/usr/lib/spa-0.2/audiomixer -lspa-audiomixer -L/usr/lib/spa-0.2/aec -lspa-aec-null -L/usr/lib/spa-0.2/audioconvert -lspa-audioconvert -L/usr/lib/spa-0.2/support -lspa-support -L/usr/lib/spa-0.2/alsa -lspa-alsa -lasound -lpthread -lrt -ludev -ldbus-1 -lsbc -lbluetooth -lgio-2.0 -lgobject-2.0 -lffi -lgmodule-2.0 -lglib-2.0 -lpcre2-8 -lz -lusb-1.0 -lopus -lm -lfdk-aac -lldacBT_enc -lm -lldacBT_abr -lldacBT_enc -lcamera -lcamera-base -pthread -lcrypto -ldl -pthread -ludev -lyaml -lssl -ldl -pthread -lcrypto -ldl -pthread"
             )
         )
     },
@@ -168,6 +171,8 @@
       drvs.zlibNg,
       drvs.zstd,
       drvs.pipewire, # needed
+      drvs.elogindWithPolkit,
+      drvs.libcap,
       drvs.dinit,
       drvs.libstdcppCompat,
     ],

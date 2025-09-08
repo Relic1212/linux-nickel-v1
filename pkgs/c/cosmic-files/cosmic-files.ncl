@@ -2,20 +2,20 @@
   lib,
   drvs,
   _CargoFetcher,
-  cosmicLauncherSources | lib.DeterministicFetcher =
+  cosmicFilesSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-launcher/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "dd5743c95807497b6cae2ac1a83345b1639e6141d41cf9c768ce720317c79604"
+        uri = "https://github.com/pop-os/cosmic-files/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
+        sha256sum = "7651949001e13cfc93c51ccb806812600e8afe9dba0bad65248bf1eabf7c1e21"
       },
-      outputSha256sum = "54b56f6fab70618bac30baf0a37bdb943914a74ff87df9973fe43caa2c786a30"
+      outputSha256sum = "85ad78cf0fdc54f92431c17b78f80008f6c7a09d737d1cd5cd66dc3269efd78a"
     },
 }
 & {
   lib,
   drvs,
-  cosmicLauncher | lib.CargoPackage = {
+  cosmicFiles | lib.CargoPackage = {
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -24,8 +24,13 @@
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
-      # m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
+      # m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
@@ -33,25 +38,29 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
     ],
+
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [],
+      # cosmic-epoch alpha
+      VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
+      VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
+    },
+
     patches = [
       {
         sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
         file = "cosmic-osd-xkb.patch",
       }
     ],
-    release,
-
-    cargoFlags,
     target,
+    buildPhase = [
+      "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
+      "echo 'Done building'",
+    ],
 
-    installPhase =
-      let d = if release then "release" else "debug" in
-      [
-        "just --set bin-src \"target/%{target}/%{d}/cosmic-launcher\" rootdir=$DEST install",
-      ],
-
-    postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+    installPhase = [
+      "export CARGO_TARGET_DIR=\"target/%{target}\"",
+      "just rootdir=$DEST install",
     ],
 
     utilsProviders,
@@ -67,8 +76,9 @@
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
+      (drvs.findutils & { priority = 1 }),
       drvs.just,
-      drvs.cosmicLauncherSources,
+      drvs.cosmicFilesSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,

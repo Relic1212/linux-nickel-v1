@@ -19,7 +19,7 @@
 
     unpackPhase = [
       "cd /tmp/workdir/src",
-      "tar xvf /sources.tar",
+      "tar xf /sources.tar",
     ],
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
@@ -51,6 +51,8 @@
         @ [
           "-C link-arg=-Wl,--pop-state",
         ],
+
+      XDP_COSMIC = "'/usr/libexec/xdg-desktop-portal-cosmic'",
     },
 
     patches = [
@@ -81,6 +83,7 @@
 
     postInstallPhase = [
       "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      m%"sed -i 's|/bin/bash|/usr/bin/bash|g' ${DEST}/usr/bin/start-cosmic"%,
     ],
 
     utilsProviders,
