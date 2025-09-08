@@ -102,7 +102,7 @@
     drvs.fscryptUnlockHome,
     drvs.fscryptUnlockHomeAgreety,
     # drvs.fscryptUnlockHomeElogind,
-    drvs.elogind255,
+    drvs._elogind255,
     drvs.eudev,
     # drvs.systemd258,
     (drvs.dinitEnv & { priority = 1 }),
