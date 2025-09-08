@@ -1,6 +1,7 @@
 let imported =
   {}
   & (import "../pkgs/g/gsound/gsound.ncl")
+  & (import "../pkgs/g/geoclue/geoclue.ncl")
   & (import "../pkgs/g/gpgme/gpgme.ncl")
   & (import "../pkgs/g/graphene/graphene.ncl")
   & (import "../pkgs/g/googlefonts/googlefonts.ncl")
@@ -69,6 +70,11 @@ let imported =
   & (import "../pkgs/c/cosmic-bg/cosmic-bg.ncl")
   & (import "../pkgs/c/cosmic-launcher/cosmic-launcher.ncl")
   & (import "../pkgs/c/cosmic-pop-launcher/cosmic-pop-launcher.ncl")
+  & (import "../pkgs/c/cosmic-greeter/cosmic-greeter.ncl")
+  & (import "../pkgs/c/cosmic-randr/cosmic-randr.ncl")
+  & (import "../pkgs/c/cosmic-files/cosmic-files.ncl")
+  & (import "../pkgs/c/cosmic-idle/cosmic-idle.ncl")
+  & (import "../pkgs/c/cosmic-xdg-desktop-portal/cosmic-xdg-desktop-portal.ncl")
   & (import "../pkgs/j/just/just.ncl")
   & (import "../pkgs/c/cairomm/cairomm.ncl")
   & (import "../pkgs/c/cryptsetup/cryptsetup.ncl")
@@ -88,6 +94,7 @@ let imported =
   & (import "../pkgs/k/kickoff/kickoff.ncl")
   & (import "../pkgs/k/kitty/kitty.ncl")
   & (import "../pkgs/k/keyd/keyd.ncl")
+  & (import "../pkgs/l/libsoup/libsoup.ncl")
   & (import "../pkgs/y/yajl/yajl.ncl")
   & (import "../pkgs/y/yad/yad.ncl")
   & (import "../pkgs/y/yaml-cpp/yaml-cpp.ncl")
