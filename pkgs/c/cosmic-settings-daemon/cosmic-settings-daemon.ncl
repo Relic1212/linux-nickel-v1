@@ -24,12 +24,13 @@
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
-      m%"sed -i 's@"pulse",@@g' ${SRC}/Cargo.toml"%,
-      m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
+      # m%"sed -i 's@"pulse",@@g' ${SRC}/Cargo.toml"%,
+      # m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
     ],
 
     extraEnv = {
@@ -38,6 +39,10 @@
         [
           "-C link-arg=-Wl,--push-state,--no-as-needed",
           "-C link-arg=-lc++",
+          "-C link-arg=-lpulse",
+          "-C link-arg=-L/usr/lib/pulseaudio",
+          "-C link-arg=-lpulsecommon-17.0",
+          "-C link-arg=-ldbus-1",
 
           # pkg-config --libs --static libinput
           "-C link-arg=-linput",
@@ -73,10 +78,10 @@
     ],
 
     patches = [
-      {
-        sha256sum = "011bd7e71b9a48713e167562789f3091f530d759a08c72a5a1ec659b32ec5f87",
-        file = "no-pulse.patch"
-      },
+      # {
+      #   sha256sum = "011bd7e71b9a48713e167562789f3091f530d759a08c72a5a1ec659b32ec5f87",
+      #   file = "no-pulse.patch"
+      # },
       {
         sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
         file = "cosmic-osd-xkb.patch",
@@ -164,6 +169,7 @@
       drvs.pipewire,
       drvs.dinit,
       drvs.libstdcppCompat,
+      drvs.pulseaudio17,
     ],
   },
 }
