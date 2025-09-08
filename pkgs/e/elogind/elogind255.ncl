@@ -92,7 +92,6 @@
 
     postInstallPhase =
       [
-
         m%"sed -i 's@255@255\nRequires.private: libcap@g' ${DEST}/usr/lib/pkgconfig/libelogind.pc"%,
         "cp ${DEST}/usr/lib/security/pam_elogind.a ${DEST}/usr/lib/libpam_elogind.a",
       ]
