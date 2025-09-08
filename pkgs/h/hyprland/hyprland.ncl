@@ -171,7 +171,7 @@
       #    "%,
       #],
       buildEnv = {
-        EXTRA_LDFLAGS = ["$(pkg-config --libs --static libseat)", "-ltomlplusplus", "-lzip", "-ldisplay-info"]  @ (if distro.pam then ["-lcap"] else []),
+        EXTRA_LDFLAGS = ["$(pkg-config --libs --static libseat)", "-ltomlplusplus", "-lzip", "-ldisplay-info"] @ (if distro.pam then ["-lcap"] else []),
         # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
         #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
         #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],

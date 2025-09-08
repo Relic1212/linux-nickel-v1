@@ -151,7 +151,7 @@
           }
         else
           {
-            EXTRA_LDFLAGS=(if distro.pam then ["-lcap"] else []),
+            EXTRA_LDFLAGS = (if distro.pam then ["-lcap"] else []),
             #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
             #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
             #EXTRA_CPPFLAGS=["-DXDG_POSITIONER_INTERFACE","-DXDG_SURFACE_INTERFACE","-DHYPRWAYLAND_SCANNER_NO_INTERFACES"],
