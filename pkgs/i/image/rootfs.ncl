@@ -197,6 +197,8 @@
         "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so",
         "rm -rf  tmp/workdir/out/destdir/rootfs/usr/gtk-query-im*",
         "rm -rf  tmp/workdir/out/destdir/rootfs/usr/bin/gtk-builder-tool",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/gnome-keyring/devel",
+        "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/bash",
 
         # bash files 
         "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
