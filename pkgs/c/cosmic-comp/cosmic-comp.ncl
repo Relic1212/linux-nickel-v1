@@ -60,6 +60,11 @@
 
     # release = false,
 
+    # default = systemd
+    extraCargoFlags = [
+      "--no-default-features"
+    ],
+
     cargoFlags,
     target,
 
@@ -68,6 +73,9 @@
     ],
     installPhase = [
       "make TARGET=%{target}/release DESTDIR=$DEST install",
+    ],
+    postInstallPhase = [
+      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
     ],
 
     utilsProviders,
