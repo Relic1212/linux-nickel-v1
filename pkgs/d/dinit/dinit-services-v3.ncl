@@ -562,6 +562,7 @@ in
         "install -d -m0755 dinit",
         "cd dinit",
         "printf \"PATH=/usr/bin:/bin\n\" > environment",
+        "printf \"lang=en_US.UTF8\n\" >> environment",
         "cd .."
       ],
 
