@@ -162,9 +162,15 @@ let _services =
         # https://aur.archlinux.org/cgit/aur.git/tree/greetd?h=greetd-artix-dinit
         type = "process",
         command = "/usr/bin/greetd",
-        "depends-on" = ["loginready"],
+        "depends-on" = ["loginready", "greetd-apply-perms"],
         "smooth-recovery" = "true",
         logfile = "/var/log/greetd.log"
+      },
+
+      "greetd-apply-perms" = {
+        type = "scripted",
+        command = "chown -R greeter:greeter /var/lib/greeter",
+        "depends-on" = ["varrw"],
       },
 
       hostname = {
