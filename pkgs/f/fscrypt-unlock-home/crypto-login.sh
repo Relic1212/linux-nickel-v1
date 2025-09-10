@@ -170,9 +170,12 @@ fi
 if [ $unlock_status -eq 0 ]; then
     "${LOGIN}" -f "${USER_NAME}"
     
-    echo "status is $?"
-    sleep 5
-    
+    status=$?
+    echo "status is $status"
+    if [ ! $status -eq 0 ]; then
+        sleep 5
+        exit $status
+    fi
     exit 0
 else 
     printf "wrong vault password"

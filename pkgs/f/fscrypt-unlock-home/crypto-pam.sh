@@ -14,23 +14,18 @@ export PATH="/usr/bin:/bin"
 
 # check if the user is valid
 if [ $USER_IS_UNLOCK_USER -eq 0 ]; then
-    if [ "${USER_NAME}" = "root" ]; then 
-        exit 0
-    fi
-    printf "%s" "${USER_NAME} does not exist"
-    sleep 2
-    exit 1
+    exit 0
 fi
 
 # check if the vault exists and is already unlocked, login with busybox if so
 if [ -d  "/home/.shadow/${USER_NAME}"  ]; then
-    is_locked="1"
+    is_locked=1
 
     SUMMANDS="$(fscrypt status "/home/.shadow/${USER_NAME}")"
     while read -r status; do 
         case "${status}" in 
             *Unlocked*Yes* )
-            is_locked="0"
+            is_locked=0
             ;;
             * )
             true
@@ -41,7 +36,7 @@ $SUMMANDS
 SUMMANDS_HEREDOC_INPUT
 
     echo "done reading and is_unlocked=${is_locked}"
-    if [ "$is_locked" = "0" ]; then
+    if [ $is_locked -eq 0 ]; then
         exit 0
     fi
 fi
@@ -49,8 +44,6 @@ fi
 
 PLAIN_PASSWORD="$(cat -)"
 
-printf "%s" "${PLAIN_PASSWORD}"|fscrypt unlock "/home/.shadow/${USER_NAME}" --quiet
-unlock_status=$?
 # mount stuff
 
 
@@ -109,7 +102,14 @@ do_bind(){
 ###############################################################################################
 
 
-if [  -d "/home/.shadow/$USER/" ]; then
+if [  -d "/home/.shadow/${USER_NAME}/" ]; then
+
+    printf "%s" "${PLAIN_PASSWORD}"|fscrypt unlock "/home/.shadow/${USER_NAME}" --quiet
+    unlock_status=$?
+    if [ ! $unlock_status -eq 0 ]; then
+        printf "unlocking failed\n"
+        exit $unlock_status
+    fi
     do_bind
 
 

@@ -4,7 +4,7 @@
     extraFiles = [
       {
         file = "crypto-login.sh",
-        sha256sum = "48006edbc0857d6d3fd76ed454f24a9592963248fad546789c838b06143658ad",
+        sha256sum = "10227a595c9d9c66226240977c8739aebac4aec3710f2e101ca1c4588e358b64",
       }
     ],
     installPhase = [
@@ -53,7 +53,7 @@
 
         file = "crypto-pam.sh",
 
-        sha256sum = "3b068f2c0ae3c9546249d0fcaf2aa8e3edcbea09430cbaa30c2959d1e1c87f08",
+        sha256sum = "7ad6342fe63a1127f0173a76035bd2cdfdf092c6e9c9d829badc5adac93b3bfd",
       }
     ],
     installPhase = [
@@ -66,13 +66,12 @@
         auth            required        pam_securetty.so debug
         auth            include         system-auth
         -auth           optional        pam_gnome_keyring.so
-        account         required        pam_nologin.so debug
+        account         required        pam_nologin.so
         account         include         system-auth
         password        include         system-auth
         session         include         system-auth
         session         required        pam_loginuid.so
-        -session        optional        pam_elogind.so debug
-        -session        optional        pam_gnome_keyring.so auto_start
+        session        required        pam_elogind.so debug
         " > ${DEST}/etc/pam.d/greetd
         "%,
     ]
