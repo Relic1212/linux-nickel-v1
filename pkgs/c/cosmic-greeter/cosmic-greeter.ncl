@@ -174,4 +174,67 @@
       drvs.libcap,
     ],
   },
+
+  cosmicGreeterConfig | lib.Package = {
+
+    installPhase = [
+      "install -dm0755 ${DEST}/etc/greetd",
+
+      # https://wiki.gentoo.org/wiki/COSMIC
+      m%"
+      echo '
+      [terminal]
+      vt = "3"
+
+      [general]
+      service = "cosmic-greeter"
+
+      [default_session]
+      command = "/usr/bin/dbus-run-session -- env lang=en_US.UTF8 /usr/bin/cosmic-comp /usr/bin/cosmic-greeter  2>&1 | /usr/bin/logger -t cosmic-greeter"
+      user = "cosmic-greeter"
+      ' > ${DEST}/etc/greetd/cosmic-greeter.toml
+      "%,
+      "install -dm0755 ${DEST}/etc/dinit.d",
+      m%"
+      echo '
+      command = /usr/bin/greetd -c /etc/greetd/cosmic-greeter.toml
+      depends-on = loginready
+      waits-for = cosmic-greeter-daemon
+      depends-on = cosmic-greeter-apply-perms
+      logfile = /var/log/cosmic-greeter.log
+      smooth-recovery = true
+      type = process
+      ' > ${DEST}/etc/dinit.d/cosmic-greeter
+      "%,
+      m%"
+      echo '
+      command = /usr/bin/chown -R cosmic-greeter:cosmic-greeter /var/lib/cosmic-greeter
+      depends-on = varrw
+      type = scripted
+      ' > ${DEST}/etc/dinit.d/cosmic-greeter-apply-perms
+      "%,
+      m%"
+      echo '
+      command = /usr/bin/cosmic-greeter-daemon
+      depends-on = loginready
+      logfile = /var/log/cosmic-greeter-daemon.log
+      smooth-recovery = true
+      type = process
+      ' > ${DEST}/etc/dinit.d/cosmic-greeter-daemon
+      "%,
+      "install -dm0755 ${DEST}/etc/pam.d",
+      m%"
+        echo "
+        auth            optional pam_exec.so expose_authtok  debug  log=/var/log/unlock.log     /usr/libexec/crypto-pam
+        auth            required        pam_securetty.so debug
+        auth            include         system-auth
+        account         required        pam_nologin.so
+        account         include         system-auth
+        password        include         system-auth
+        session         include         system-auth
+        session        required        pam_elogind.so debug
+        " > ${DEST}/etc/pam.d/cosmic-greeter
+        "%,
+    ]
+  }
 }
