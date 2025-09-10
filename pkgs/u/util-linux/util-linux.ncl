@@ -37,14 +37,27 @@
   drvs,
   utilLinux241 | lib.MesonPackage = {
     singleSource = {
-      uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.tar.gz",
-      sha256sum = "c014b5861695b603d0be2ad1e6f10d5838b9d7859e1dd72d01504556817d8a87"
-    },
+      # uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.1.tar.gz",
+      # sha256sum = "c756213ed3f17b74c1525fc0ed839d6d09f1731ee443e2415c42071afed58ff9",
 
+      uri = "https://github.com/util-linux/util-linux/archive/063d65949c6b1dbe25ccc7948debbd019f88a111.tar.gz",
+      sha256sum = "f84cf67013bf53ecedaa2804aad151b9eca9d6fb25daeb1b198c0cb5474ab895",
+    },
+    # sourceInputs = [
+    #   {src=singleSource},
+    #   {
+    #     src = {
+    #       uri = "https://github.com/util-linux/util-linux/commit/f39ffccf2b9b8dcaaf2069346cc50735c2f0f95d.patch",
+    #       sha256sum = "8c58d4b94efb47a2d5373184f441aaad3c104cc371f7029138d92c4e5530237b"
+    #     }
+    #   }
+    # ],
     preConfigurePhase =
       [
         m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
         m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
+
+        # "(cd ${SRC} && patch -p1 < f39ffccf2b9b8dcaaf2069346cc50735c2f0f95d.patch)",
 
         # https://github.com/util-linux/util-linux/pull/3538/files
         m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
