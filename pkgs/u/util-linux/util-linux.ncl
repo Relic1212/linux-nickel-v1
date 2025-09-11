@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  utilLinux | lib.AutotoolsPackage =
+  _utilLinux240 | lib.AutotoolsPackage =
     let conf =
       lib.AutotoolsPackage.configureFlags
       @ [
@@ -35,7 +35,7 @@
 & {
   lib,
   drvs,
-  utilLinux241 | lib.MesonPackage = {
+  _utilLinux241 | lib.MesonPackage = {
     singleSource = {
       # uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.1.tar.gz",
       # sha256sum = "c756213ed3f17b74c1525fc0ed839d6d09f1731ee443e2415c42071afed58ff9",
@@ -52,40 +52,40 @@
     #     }
     #   }
     # ],
-    preConfigurePhase =
-      [
-        m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
-        m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
+    preConfigurePhase = [
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_syscalls"%,
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tools/all_errnos"%,
 
-        # "(cd ${SRC} && patch -p1 < f39ffccf2b9b8dcaaf2069346cc50735c2f0f95d.patch)",
+      # "(cd ${SRC} && patch -p1 < f39ffccf2b9b8dcaaf2069346cc50735c2f0f95d.patch)",
 
-        # https://github.com/util-linux/util-linux/pull/3538/files
-        m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
+      # https://github.com/util-linux/util-linux/pull/3538/files
+      m%"sed -i 's@#include <linux\/mount.h>@#include <linux\/mount.h>\n#include <linux\/unistd.h>@g' ${SRC}/include/mount-api-utils.h"%,
 
-        # m%"sed -i 's@both_libraries@both_libraries@g' ${SRC}/libsmartcols/meson.build"%,
+      # m%"sed -i 's@both_libraries@both_libraries@g' ${SRC}/libsmartcols/meson.build"%,
 
-        # "lib_smartcols.get_static_lib()"
-        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@both_libraries@library@g' ${f};done"%,
-        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@.get_static_lib()@@g' ${f};done"%,
-      ]
-      @ (
-        let
-          pr = ["text-utils/column.c", "disk-utils/partx.c", "lib/strutils.c", "include/strutils.h"],
-          ps = [
-            "disk-utils/cfdisk.c",
-            "disk-utils/fdisk.c",
-            "libfdisk/src/script.c",
-            "include/strutils.h",
-            "libfdisk/src/gpt.c",
-            "sys-utils/lscpu-topology.c",
-            "lib/strutils.c",
-          ]
-        in
-        (
-          (std.array.map (fun f => "sed -i 's|parse_range|util_linux__parse_range|g' ${SRC}/%{f}") pr)
-          @ (std.array.map (fun f => "sed -i 's|parse_size(|util_linux__parse_size(|g' ${SRC}/%{f}") ps)
-        )
-      ),
+      # "lib_smartcols.get_static_lib()"
+      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@both_libraries@library@g' ${f};done"%,
+      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@.get_static_lib()@@g' ${f};done"%,
+    ]
+    # @ (
+    #   let
+    #     pr = ["text-utils/column.c", "disk-utils/partx.c", "lib/strutils.c", "include/strutils.h"],
+    #     ps = [
+    #       "disk-utils/cfdisk.c",
+    #       "disk-utils/fdisk.c",
+    #       "libfdisk/src/script.c",
+    #       "include/strutils.h",
+    #       "libfdisk/src/gpt.c",
+    #       "sys-utils/lscpu-topology.c",
+    #       "lib/strutils.c",
+    #     ]
+    #   in
+    #   (
+    #     (std.array.map (fun f => "sed -i 's|parse_range|util_linux__parse_range|g' ${SRC}/%{f}") pr)
+    #     @ (std.array.map (fun f => "sed -i 's|parse_size(|util_linux__parse_size(|g' ${SRC}/%{f}") ps)
+    #   )
+    # )
+    ,
 
     extraMesonArgs = [
       "-Dprogram-tests=false",
@@ -107,10 +107,20 @@
   },
 
   utilLinuxLogin =
-    utilLinux241
+    _utilLinux241
     & {
       debug = true,
-      biDrvs | priority 1 = utilLinux241.biDrvs @ [drvs.libpam131],
-      extraMesonArgs | priority 1 = utilLinux241.extraMesonArgs @ ["-Dbuild-login=enabled"],
+      biDrvs | priority 1 = _utilLinux241.biDrvs @ [drvs.libpam131],
+      extraMesonArgs | priority 1 = _utilLinux241.extraMesonArgs @ ["-Dbuild-login=enabled"],
     }
+}
+& {
+  _utilLinux240,
+  _utilLinux241,
+
+  # utilLinux241 = _utilLinux241,
+  # utilLinux = _utilLinux240,
+
+  utilLinux = _utilLinux241,
+  utilLinux240 = _utilLinux240,
 }
