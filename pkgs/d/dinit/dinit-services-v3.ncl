@@ -277,6 +277,15 @@ let _services =
         options = "runs-on-console"
       },
 
+      rtkit = {
+        type = "process",
+        command = "/usr/libexec/rtkit-daemon",
+        "depends-on" = [
+          "dbusd"
+        ],
+        logfile = "/var/log/rtkit-daemon.log",
+      },
+
       seatd = {
         type = "process",
         command = "/usr/bin/seatd -g seat",
