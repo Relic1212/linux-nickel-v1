@@ -53,31 +53,69 @@
         _isStatic | force = false
       },
       biDrvs | priority 1 = [
-        drvs.pythonSetuptools,
-        drvs.pcre2,
-        drvs.libffi,
-        drvs.zlibNgPic,
-        drvs.glibDynamic,
-        drvs.flex,
-        drvs.bison,
-        drvs.m4,
-        drvs.libtool,
-        drvs.cairo,
-        drvs.pixman,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.libpng,
-        drvs.expat,
-        drvs.muslShared,
         drvs.binutils,
+        drvs.bison,
+        drvs.cairo,
+        drvs.expat,
+        drvs.flex,
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.glibDynamic,
         drvs.lddObjdump,
+        drvs.libffi,
+        drvs.libpng,
+        drvs.libtool,
+        drvs.m4,
+        drvs.muslShared,
+        drvs.pcre2,
+        drvs.pixman,
+        drvs.pythonSetuptools,
+        drvs.zlibNgPic,
       ],
       extraMesonArgs = [
         "--prefer-static",
         "-Ddefault_library=static",
         "-Dbuild_introspection_data=false",
       ]
-      # biDrvs |priority 1 = gobject.biDrvs @ [drvs.muslShared],
+    },
+
+  gobjectDynamicData =
+    gobjectDynamic
+    & {
+      # llvmProvider = drvs.llvmFullPic,
+      biDrvs | priority 2 = [
+        drvs.binutils,
+        drvs.bison,
+        drvs.cairo,
+        drvs.expat,
+        drvs.flex,
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.glibDynamic2,
+        # drvs.lddObjdump,
+        drvs.ldd,
+        drvs.libffi,
+        drvs.libpng,
+        drvs.libtool,
+        drvs.m4,
+        drvs.muslShared,
+        drvs.pcre2,
+        drvs.pixman,
+        drvs.pythonSetuptools,
+        drvs.zlibNgPic,
+      ],
+
+      buildEnv.EXTRA_LDFLAGS = ["-lffi"],
+      extraMesonArgs | priority 1 = [
+
+        # "--prefer-static",
+        "-Ddefault_library=both",
+        "-Dbuild_introspection_data=true",
+      ],
+      postInstallPhase = [
+        "install -m0755 gir/GObject-2.0.gir ${DEST}/usr/share/gir-1.0",
+        "install -m0755 gir/GLib-2.0.gir ${DEST}/usr/share/gir-1.0",
+      ]
     },
 
   glib,
@@ -98,6 +136,7 @@
         drvs.muslShared
       ],
     },
+
   glibDynamic2 =
     glib
     & {
@@ -106,7 +145,7 @@
       buildEnv = {
         _isStatic | force = false
       },
-      extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=static"],
+      extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=both"],
       biDrvs | priority 1 = [
         drvs.pcre2,
         drvs.libffi,
@@ -140,7 +179,7 @@
         #  (drvs.glib & { priority = -2 }),
         drvs.pythonSetuptools,
         drvs.ldd,
-        drvs.glibDynamic,
+        # drvs.glibDynamic,
         drvs.flex,
         drvs.bison,
         drvs.m4,
