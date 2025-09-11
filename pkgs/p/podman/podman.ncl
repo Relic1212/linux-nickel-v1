@@ -5,15 +5,10 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/containers/podman/archive/refs/tags/v5.3.0.tar.gz",
-          sha256sum = "e160ecb00f87d78d611f3b3d54c5ab833657f365442dce2631c92b435b2d3bfb"
+          uri = "https://github.com/containers/podman/archive/refs/tags/v5.5.1.tar.gz",
+          sha256sum = "00d02f85ad27a46e77456fef1be81865a43147544ed2487e6c4c8decd0e3748f"
         }
       },
-      # {
-      #   src = {
-      #         },
-      #   dest = "go-mod",
-      # }
     ],
     biDrvs = [
       drvs.go_1_23,
