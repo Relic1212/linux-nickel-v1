@@ -16,15 +16,22 @@
           }
         }
       ],
-      biDrvs = [
-        # drvs.clangCc,
-      ],
 
       separateBuildDir = false,
       crates = _crates,
+
+      options = {
+        progs = std.string-split " " "arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes"
+      },
+      releaseFlags = [
+        "--profile release-fast",
+      ],
       extraCargoFlags = [
         #"--features=feat_os_unix_musl",
         "--features \"arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes\"",
+        # "--no-default-features",
+
+        # "-p uu_wc",
       ],
 
       # crates.uuhelp_parser."0.0.27".sha256sum = "1",
@@ -54,10 +61,21 @@
         "export CARGO_HOME=${SRC}/.cargo",
       ],
       target,
+
+      #       buildPhase = [
+      # "make PREFIX=/usr PROFILE=release CARGOFLAGS=\"--offline --target x86_64-unknown-linux-musl\" SKIP_UTILS=\"stdbuf\" SELINUX_ENABLED= V=1 UTILS=\"arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes\" MULTICALL=y"
+      #       ],
       installPhase = [
         "install -d -m0755 ${DEST}/usr/bin",
-        "install -m0755 target/%{target}/release/coreutils ${DEST}/usr/bin",
+        "install -m0755 target/%{target}/release-fast/coreutils ${DEST}/usr/bin",
       ]
+
+      #   std.array.map (fun m => "%{m} DESTDIR=${DEST} install") buildPhase
+      ,
+
+      #   biDrvs = [
+      #     drvs.gnumake,
+      #   ]
     },
 
   uutilsSymlinks | lib.Package = {
