@@ -16,6 +16,13 @@
   lib,
   drvs,
   cosmicTerm | lib.CargoPackage = {
+    # sourceInputs = [
+    #   {src = {
+    #     uri = "https://patch-diff.githubusercontent.com/raw/pop-os/cosmic-term/pull/257.patch",
+    #     sha256sum = "16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485"
+    #   },
+    #   }
+    # ],
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -31,8 +38,24 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-    ],
-    extraEnv = {
+    ]
+    #     @
+    #     ( std .array.map 
+    #       (fun s => 
+    #       "(cd ${SRC} && patch -p1 %{s} < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch)")
+
+    #     [
+    #       "i18n/en/cosmic_term.ftl",
+    # "src/config.rs",
+    # "src/main.rs",
+    # "src/terminal.rs",
+    # # "Cargo.lock",
+    # # "Cargo.toml",
+    # # "i18n/en/cosmic_term.ftl",
+    # # "src/config.rs",
+    # # "src/main.rs",
+    #     ])
+    ,extraEnv = {
 
       # cosmic-epoch alpha
       VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
