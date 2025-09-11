@@ -124,7 +124,7 @@
       drvs.gperf,
       drvs.pythonElftools,
       drvs.muslGetent,
-      drvs.utilLinux241,
+      drvs.utilLinux,
       drvs.libarchive,
       drvs.busyboxMiscUtils,
       #   drvs.diffutils,
