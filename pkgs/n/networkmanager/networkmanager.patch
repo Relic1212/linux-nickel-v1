@@ -1,0 +1,131 @@
+diff --git a/meson.build b/meson.build
+index 0e3852a926..74a9a37910 100644
+--- a/meson.build
++++ b/meson.build
+@@ -255,9 +255,9 @@ linker_script_binary   = join_paths(source_root, 'linker-script-binary.ver')
+ linker_script_devices  = join_paths(source_root, 'linker-script-devices.ver')
+ linker_script_settings = join_paths(source_root, 'linker-script-settings.ver')
+ 
+-ldflags_linker_script_binary   = [ '-Wl,--version-script,@0@'.format(linker_script_binary) ]
+-ldflags_linker_script_devices  = [ '-Wl,--version-script,@0@'.format(linker_script_devices) ]
+-ldflags_linker_script_settings = [ '-Wl,--version-script,@0@'.format(linker_script_settings) ]
++ldflags_linker_script_binary   = [ ]
++ldflags_linker_script_devices  = [  ]
++ldflags_linker_script_settings = [  ]
+ 
+ uuid_dep = dependency('uuid')
+ libelogind_dep = dependency('libelogind', version: '>= 219', required: false)
+diff --git a/src/c-stdaux/meson.build b/src/c-stdaux/meson.build
+index 6af822be6f..afded54026 100644
+--- a/src/c-stdaux/meson.build
++++ b/src/c-stdaux/meson.build
+@@ -90,12 +90,12 @@ add_project_arguments(cflags, language: 'c')
+ # Version Scripts
+ #
+ 
+-use_version_scripts = get_option('version-scripts')
+-if use_version_scripts == 'auto'
+-        use_version_scripts = meson.get_compiler('c').has_link_argument(
+-                '-Wl,--version-script=' + (meson.current_source_dir() / 'src/libcstdaux.sym')
+-        ) ? 'yes' : 'no'
+-endif
++# use_version_scripts = get_option('version-scripts')
++# if use_version_scripts == 'auto'
++#         use_version_scripts = meson.get_compiler('c').has_link_argument(
++#                 '-Wl,--version-script=' + (meson.current_source_dir() / 'src/libcstdaux.sym')
++#         ) ? 'yes' : 'no'
++# endif
+ 
+ #
+ # Subdir Delegation
+diff --git a/src/core/meson.build b/src/core/meson.build
+index 6cf891ee7e..ff5f0e3f08 100644
+--- a/src/core/meson.build
++++ b/src/core/meson.build
+@@ -274,19 +274,19 @@ NetworkManager_all_sym = executable(
+   ],
+ )
+ 
+-ver_script = custom_target(
+-  'NetworkManager.ver',
+-  output: 'NetworkManager.ver',
+-  depends: [
+-    NetworkManager_all_sym,
+-    core_plugins,
+-  ],
+-  command: [
+-    join_paths(source_root, 'tools', 'create-exports-NetworkManager.sh'),
+-    '--called-from-build',
+-    source_root,
+-  ],
+-)
++# ver_script = custom_target(
++#   'NetworkManager.ver',
++#   output: 'NetworkManager.ver',
++#   depends: [
++#     NetworkManager_all_sym,
++#     core_plugins,
++#   ],
++#   command: [
++#     join_paths(source_root, 'tools', 'create-exports-NetworkManager.sh'),
++#     '--called-from-build',
++#     source_root,
++#   ],
++# )
+ 
+ NetworkManager = executable(
+   'NetworkManager',
+@@ -313,11 +313,11 @@ NetworkManager = executable(
+     libc_rbtree,
+     libc_siphash,
+   ],
+-  link_args: [
+-    '-rdynamic',
+-    '-Wl,--version-script,@0@'.format(ver_script.full_path()),
+-  ],
+-  link_depends: ver_script,
++  # link_args: [
++  #   '-rdynamic',
++  #   '-Wl,--version-script,@0@'.format(ver_script.full_path()),
++  # ],
++  # link_depends: ver_script,
+   install: true,
+   install_dir: nm_sbindir,
+ )
+diff --git a/src/libnm-client-impl/meson.build b/src/libnm-client-impl/meson.build
+index b49366292f..b97c76bb9e 100644
+--- a/src/libnm-client-impl/meson.build
++++ b/src/libnm-client-impl/meson.build
+@@ -73,7 +73,7 @@ libnm_client_impl = static_library(
+   ],
+ )
+ 
+-linker_script = join_paths(meson.current_source_dir(), 'libnm.ver')
++# linker_script = join_paths(meson.current_source_dir(), 'libnm.ver')
+ 
+ libnm = shared_library(
+   'nm',
+@@ -98,8 +98,8 @@ libnm = shared_library(
+     libnmdbus,
+     libc_siphash,
+   ],
+-  link_args: '-Wl,--version-script,@0@'.format(linker_script),
+-  link_depends: linker_script,
++  # link_args: '-Wl,--version-script,@0@'.format(linker_script),
++  # link_depends: linker_script,
+   install: true,
+ )
+ 
+diff --git a/src/libnm-core-impl/meson.build b/src/libnm-core-impl/meson.build
+index 610e22792e..006e536e84 100644
+--- a/src/libnm-core-impl/meson.build
++++ b/src/libnm-core-impl/meson.build
+@@ -114,7 +114,7 @@ gen_metadata_nm_settings_libnm_core = executable(
+     libnm_std_aux,
+     libc_siphash,
+   ],
+-  link_args: ldflags_linker_script_binary,
++  # link_args: ldflags_linker_script_binary,
+   link_depends: linker_script_binary,
+ )
+ 

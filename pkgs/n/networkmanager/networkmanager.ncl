@@ -6,6 +6,12 @@
       uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.0/NetworkManager-1.54.0.tar.gz",
       sha256sum = "c5356e5a86b351dc79d23c8685d02b91917d1f107628c97d370c6441a8322a93"
     },
+    patches = [
+      {
+        sha256sum = "987b0a3c0f089de18d4349970391130a9e68fd59dd4adced12d4b67ff42b83a2",
+        file = "networkmanager.patch"
+      }
+    ],
     muslProvider = drvs.muslDebug,
     biDrvs = [
       drvs.iwd,
@@ -19,7 +25,7 @@
       drvs.utilLinux,
       drvs.eudevNm,
       drvs.libndp,
-      drvs.glibDebug,
+      drvs.glibNoDl,
       drvs.pcre2,
       drvs.libffi,
       drvs.zlibNg,
@@ -61,6 +67,7 @@
     preConfigurePhase = [
       m%"sed -i "s|subdir('nm-initrd-generator')||g" ${SRC}/src/meson.build"%,
       m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_library@library@g' ${f};done"%,
+      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_module@library@g' ${f};done"%,
       m%"for f in $(find ${SRC}/tools -name '*.sh' -type f); do sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${f};done"%,
     ]
   }
