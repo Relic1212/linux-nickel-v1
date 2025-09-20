@@ -7,6 +7,7 @@
       uri = "https://github.com/anholt/libepoxy/archive/refs/tags/1.5.10.tar.gz",
       sha256sum = "a7ced37f4102b745ac86d6a70a9da399cc139ff168ba6b8002b4d8d43c900c15"
     },
+
     buildEnv = {
       EXTRA_LDFLAGS = ["-lc++"],
     },
@@ -50,7 +51,26 @@
       drvs.linuxHeaders,
     ],
   },
-
+}
+& {
+  lib,
+  drvs,
+  libepoxy,
+  libepoxyPatched =
+    libepoxy
+    & {
+      patches = [
+        {
+          sha256sum = "65a5a418bbddf8f2a72fc1a9ca5361f251d9494f0d35ad2c72f2eb4bd7ed9eb5",
+          file = "libepoxy.patch"
+        }
+      ]
+    }
+}
+& {
+  libepoxy,
+  lib,
+  drvs,
   libepoxyNoEgl | lib.MesonPackage = {
     singleSource = libepoxy.singleSource,
     buildEnv = {
