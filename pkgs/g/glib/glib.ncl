@@ -23,7 +23,7 @@
     glib
     & {
       debug = true,
-      extraMesonArgs | priority 1 = ["-Dbsymbolic_functions=false", "-Dglib_assert=true", "-Dnls=disabled", "-Dglib_debug=enabled", "-Dtests=false"],
+      extraMesonArgs | priority 1 = ["-Dbsymbolic_functions=false", "-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=enabled", "-Dtests=false"],
     }
 }
 & {
@@ -39,5 +39,22 @@
         m%"sed -i 's@-Wl,--whole-archive@@g' ${DEST}/usr/lib/pkgconfig/gmodule-export-2.0.pc"%,
         m%"sed -i 's@-Wl,--export-dynamic@@g' ${DEST}/usr/lib/pkgconfig/gmodule-export-2.0.pc"%,
       ]
+    }
+}
+& {
+  lib,
+  drvs,
+  glib,
+  glibDebug,
+  glibNoDl =
+    let _g =
+      glibDebug
+    in
+    _g
+    & {
+      preConfigurePhase = [
+        m%"sed -i 's|have_dlopen_dlsym = true|have_dlopen_dlsym = false|g' ${SRC}/meson.build"%
+      ],
+      extraMesonArgs | priority 2 = _g.extraMesonArgs @ ["-Dforce_posix_threads=true"]
     }
 }
