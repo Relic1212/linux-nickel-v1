@@ -31,8 +31,9 @@
     #     "-lrpmatch",
     #   ]
     # },
-    # postInstallPhase = [
-    #   "rm -r ${DEST}/usr/man1",
-    # ]
+    postInstallPhase = [
+      #   "rm -r ${DEST}/usr/man1",
+      # "rm -r ${DEST}/usr/bin/cp",
+    ]
   }
 }
