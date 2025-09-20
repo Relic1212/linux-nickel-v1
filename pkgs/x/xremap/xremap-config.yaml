@@ -1,0 +1,6 @@
+modmap:
+  - name: Global
+    remap:
+        KEY_LEFTMETA:
+            press: { press: KEY_LEFTMETA } 
+            release:  [ {press: KEY_D}, {release: KEY_LEFTMETA} , {release: KEY_D} ]
