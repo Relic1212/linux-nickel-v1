@@ -1,0 +1,122 @@
+diff --git a/Makefile b/Makefile
+index 962228c..635455e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+ BINS = sysboard
+ LIBS = libsysboard.so
+-PKGS = gtkmm-4.0 gtk4-layer-shell-0
++PKGS = gtk4-layer-shell-0 gtkmm-4.0
+ SRCS = $(wildcard src/*.cpp)
+ 
+ PREFIX ?= /usr/local
+@@ -9,11 +9,11 @@ LIBDIR ?= $(PREFIX)/lib
+ DATADIR ?= $(PREFIX)/share
+ BUILDDIR = build
+ 
+-CXXFLAGS += -Os -s -Wall -flto=auto -fno-exceptions -fPIC
+-LDFLAGS += -Wl,-O1,--no-as-needed,-z,now,-z,pack-relative-relocs
++CXXFLAGS += -Os -s -Wall -flto=auto
++LDFLAGS += -Wl,-O1,--no-as-needed,-z,now,-z,pack-relative-relocs -lgtk4-layer-shell
+ 
+-CXXFLAGS += $(shell pkg-config --cflags $(PKGS))
+-LDFLAGS += $(shell pkg-config --libs $(PKGS))
++CXXFLAGS += $(shell pkg-config --static --cflags $(PKGS))
++LDFLAGS += $(shell pkg-config --static --libs $(PKGS))
+ 
+ OBJS = $(patsubst src/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
+ 
+@@ -32,21 +32,20 @@ endef
+ 
+ all: $(BINS) $(LIBS)
+ 
+-install: all
++install: $(BINS)
+ 	@echo "Installing..."
+ 	@install -D -t $(DESTDIR)$(BINDIR) $(BUILDDIR)/$(BINS)
+-	@install -D -t $(DESTDIR)$(LIBDIR) $(BUILDDIR)/$(LIBS)
+ 	@install -D -t $(DESTDIR)$(DATADIR)/sys64/board config.conf style.css
+ 
+ clean:
+ 	@echo "Cleaning up"
+ 	@rm -rf $(BUILDDIR) $(BINS) $(LIBS) $(PROTO_HDRS) $(PROTO_SRCS) src/git_info.hpp
+ 
+-$(BINS): src/git_info.hpp $(BUILDDIR)/main.o $(BUILDDIR)/config_parser.o
++$(BINS): $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o src/git_info.hpp
+ 	$(call progress, Linking $@)
+ 	@$(CXX) -o $(BUILDDIR)/$@ \
+-	$(BUILDDIR)/main.o \
+-	$(BUILDDIR)/config_parser.o \
++	$(OBJS) \
++	$(PROTO_OBJS) \
+ 	$(CXXFLAGS) \
+ 	$(LDFLAGS) -lwayland-client
+ 
+@@ -58,7 +57,7 @@ $(LIBS): $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o
+ 	$(BUILDDIR)/os-compatibility.o \
+ 	$(CXXFLAGS) \
+ 	$(LDFLAGS) \
+-	-shared
++	
+ 
+ $(BUILDDIR)/%.o: src/%.cpp
+ 	@mkdir -p $(dir $@)
+diff --git a/src/main.cpp b/src/main.cpp
+index b6bc5ba..27a5882 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -1,4 +1,5 @@
+ #include "main.hpp"
++#include "window.hpp"
+ #include "config_parser.hpp"
+ #include "git_info.hpp"
+ 
+@@ -7,24 +8,24 @@
+ #include <dlfcn.h>
+ 
+ void handle_signal(int signum) {
+-	sysboard_handle_signal_ptr(window, signum);
++	sysboard_signal(window, signum);
+ }
+ 
+ void load_libsysboard() {
+-	void* handle = dlopen("libsysboard.so", RTLD_LAZY);
+-	if (!handle) {
+-		std::fprintf(stderr, "Cannot open library: %s\n", dlerror());
+-		exit(1);
+-	}
+-
+-	sysboard_create_ptr = (sysboard_create_func)dlsym(handle, "sysboard_create");
+-	sysboard_handle_signal_ptr = (sysboard_handle_signal_func)dlsym(handle, "sysboard_signal");
+-
+-	if (!sysboard_create_ptr || !sysboard_handle_signal_ptr) {
+-		std::fprintf(stderr, "Cannot load symbols: %s\n", dlerror());
+-		dlclose(handle);
+-		exit(1);
+-	}
++	// void* handle = dlopen("libsysboard.so", RTLD_LAZY);
++	// if (!handle) {
++	// 	std::fprintf(stderr, "Cannot open library: %s\n", dlerror());
++	// 	exit(1);
++	// }
++
++	// sysboard_create_ptr = (sysboard_create_func)dlsym(handle, "sysboard_create");
++	// sysboard_handle_signal_ptr = (sysboard_handle_signal_func)dlsym(handle, "sysboard_signal");
++
++	// if (!sysboard_create_ptr || !sysboard_handle_signal_ptr) {
++	// 	std::fprintf(stderr, "Cannot load symbols: %s\n", dlerror());
++	// 	// dlclose(handle);
++	// 	exit(1);
++	// }
+ }
+ 
+ int main(int argc, char *argv[]) {
+@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
+ 	app->hold();
+ 
+ 	load_libsysboard();
+-	window = sysboard_create_ptr(config);
++	window = sysboard_create(config);
+ 	(void)window; // This is to avoid the unused variable warning
+ 
+ 	// Catch signals
