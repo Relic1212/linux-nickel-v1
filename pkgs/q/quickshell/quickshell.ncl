@@ -140,7 +140,7 @@
 
     #   m%"
     #   echo "
-    #   qt_import_plugins(quickshell INCLUDE 
+    #   qt_import_plugins(quickshell INCLUDE
     #     Qt6::QWaylandIntegrationPlugin
     #     Qt6::QWaylandXdgShellIntegrationPlugin
     #     Qt6::QWaylandBradientDecorationPlugin
@@ -158,4 +158,17 @@
       }
     ]
   }
+}
+& {
+  lib,
+  drvs,
+  quickshell,
+  quickshellGit =
+    quickshell
+    & {
+      singleSource | priority 1 = {
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/e9a574d919a89602d2868621576b2ccae54a5cb0.tar.gz",
+        sha256sum = "637efbe5f117953c689caed88ae23dde9bc9bc480dc4063b3770903114b8c3ed"
+      }
+    }
 }
