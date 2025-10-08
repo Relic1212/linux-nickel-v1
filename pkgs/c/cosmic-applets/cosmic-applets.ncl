@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicAppletsSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-applets/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "6627209f8e85502486a8ee2f19cff83d014a270c384f885299d0e1113e55a51a"
+        uri = "https://github.com/pop-os/cosmic-applets/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"6627209f8e85502486a8ee2f19cff83d014a270c384f885299d0e1113e55a51a"
       },
-      outputSha256sum = "3a58b8e709a9e19e42de654379701a135dd04fcc338d71cb3a1d16470090a9bf"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "3a58b8e709a9e19e42de654379701a135dd04fcc338d71cb3a1d16470090a9bf"
     },
 }
 & {
@@ -25,11 +26,10 @@
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
-
-      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
-      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
-      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
-      # m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
       # m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
@@ -146,6 +146,8 @@
       drvs.pipewire,
       drvs.dinit,
       drvs.libstdcppCompat,
+      drvs.elogindWithPolkit,
+      drvs.libcap,
     ],
   },
 }
