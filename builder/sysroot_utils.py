@@ -175,7 +175,8 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
                 os.makedirs(dst)
             else:  # it's a symlink
                 # TODO: is there a risk that the parent directory does not exist?
-                subprocess.run(["cp", "--no-dereference",
+                subprocess.run(["cp",
+                                #  "--no-dereference", gnu alias for -P
                                "-P", dir_source, dst], check=True)
 
         for sd in sysroot_files:
@@ -186,7 +187,21 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
                 subprocess.run(["rm", "-rf", link_target], check=True)
 
             # print(f"linking {link_source} to {link_target}")
-            subprocess.run(["ln", link_source, link_target], check=True)
+
+            # different implementations. Don't know what to do
+            if not (os.path.islink(link_source)):
+                try:
+                    subprocess.run(["ln", "-P", link_source, link_target], check=True)
+                except subprocess.CalledProcessError:
+                    print("Warning: your ln does not support -P")
+                    subprocess.run(["ln", "-n", link_source, link_target], check=True)
+                except subprocess.CalledProcessError:
+                    print("Warning: your ln supports neither -P nor -n")
+                    subprocess.run(["ln", link_source, link_target], check=True)
+            else:
+                # no point in creating hard links to symlinks
+                subprocess.run(["cp", "-a", link_source, link_target], check=True)
+
 
     ropaths = ["packed", "files", "patches", "build.sh"]
     rwpaths = ["src", "build", "out"]
