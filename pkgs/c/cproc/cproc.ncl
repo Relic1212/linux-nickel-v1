@@ -22,7 +22,7 @@
       preConfigurePhase = [
         m%"
 cat >config.h <<EOF
-static const char target[]               = "i686-myos-elf";
+static const char target[]               = "x86_64-barebones-elf";
 static const char *const startfiles[]    = {"-l", ":crt1.o", "-l", ":crti.o"};
 static const char *const endfiles[]      = {"-l", "c", "-l", ":crtn.o"};
 static const char *const preprocesscmd[] = {
@@ -44,7 +44,7 @@ static const char *const preprocesscmd[] = {
         "-D", "__extension__=",
 };
 static const char *const codegencmd[]    = {"qbe"};
-static const char *const assemblecmd[]   = {"i686-myos-elf-as"};
+static const char *const assemblecmd[]   = {"x86_64-unknown-barebones-as"};
 static const char *const linkcmd[]       = {"ld",  "--dynamic-linker", "/lib/ld-libk.so"};
 
 EOF
@@ -66,7 +66,76 @@ EOF
         CC = ["cproc"],
         STATIC_CFLAGS | priority 1 = ["-static"],
         STATIC_LDFLAGS | priority 1 = ["-static"],
+      },
+      makeArgs = [
+        "-j$(nproc)",
+        "PREFIX=",
+      ],
+
+      makeInstallArgs = [
+        "DESTDIR=${DEST}",
+        "PREFIX=",
+      ],
+      postInstallPhase = [
+        "(cd ${DEST}/bin && ln -s cproc x86_64-unknown-barebones-cc)",
+      ],
+    },
+  baltosDev | lib.Package = {
+    biDrvs = [
+      drvs.cprocBaltos,
+      drvs.binutilsBaltos,
+    ]
+  },
+  binutils,
+  _binutilsForTarget | lib.AutotoolsPackage = {
+    options = {
+      target | default = ""
+    },
+    patches = [
+      {
+        sha256sum = "f32ccabac35937fc11d5e8fa4f1d83992aa34ad2e599ea641ae11c3ac15ff18a",
+        file = "binutils-barebones.patch"
       }
+    ],
+    singleSource = binutils.singleSource,
+    extraMakeArgs = [
+      "MAKEINFO=true"
+    ],
+    extraMakeInstallArgs = extraMakeArgs,
+    preConfigurePhase = [
+      "(cd ${SRC} && autoreconf -fiv)",
+      "(cd ${SRC}/ld && automake)",
+    ],
+    configureFlags = [
+      "--prefix=",
+      "--target=%{options.target}",
+      "--with-sysroot",
+      "--enable-static",
+      "--disable-shared",
+      "--disable-gdb",
+      "--disable-gprofng",
+      "--disable-multilib",
+      "--disable-nls",
+      "--disable-werror",
+      "--enable-host-shared=no",
+      "--disable-host-shared",
+      "--with-static-standard-libraries",
+    ],
+
+    biDrvs = [
+      drvs.perl,
+      drvs.automake,
+      drvs.autoconf269,
+      drvs.m4,
+      drvs.libtool,
+      drvs.pkgconf,
+    ]
+  },
+
+  binutilsBaltos =
+    _binutilsForTarget
+    & {
+      options.target = "x86_64-unknown-barebones"
     }
 }
 & {

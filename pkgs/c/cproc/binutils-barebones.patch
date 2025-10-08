@@ -1,0 +1,103 @@
+diff --git a/bfd/config.bfd b/bfd/config.bfd
+index 6553aac1..744ef38b 100644
+--- a/bfd/config.bfd
++++ b/bfd/config.bfd
+@@ -631,6 +631,18 @@ case "${targ}" in
+     targ_defvec=i386_aout_bsd_vec
+     targ_underscore=yes
+     ;;
++  i[3-7]86-*-barebones*)
++    targ_defvec=i386_elf32_vec
++    targ_selvecs=
++    targ64_selvecs=x86_64_elf64_vec
++    ;;
++#ifdef BFD64
++	x86_64-*-barebones*)
++	 targ_defvec=x86_64_elf64_vec
++	 targ_selvecs=i386_elf32_vec
++	 want64=true
++	 ;;
++#endif
+   i[3-7]86-*-dragonfly*)
+     targ_defvec=i386_elf32_vec
+     targ_selvecs=iamcu_elf32_vec
+diff --git a/config.sub b/config.sub
+index 2c6a07ab..b5a94f28 100755
+--- a/config.sub
++++ b/config.sub
+@@ -1768,7 +1768,7 @@ case $os in
+ 	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
+ 	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | wasi* \
+ 	     | nsk* | powerunix* | genode* | zvmoe* | qnx* | emx* | zephyr* \
+-	     | fiwix* | mlibc* | cos* | mbr* | ironclad* )
++	     | fiwix* | mlibc* | cos* | mbr* | ironclad* | barebones* )
+ 		;;
+ 	# This one is extra strict with allowed versions
+ 	sco3.2v2 | sco3.2v[4-9]* | sco5v6*)
+diff --git a/gas/configure.tgt b/gas/configure.tgt
+index d58f2187..42d6f1e9 100644
+--- a/gas/configure.tgt
++++ b/gas/configure.tgt
+@@ -233,6 +233,7 @@ case ${generic_target} in
+   i386-*-haiku*)			fmt=elf em=haiku ;;
+   i386-*-genode*)			fmt=elf ;;
+   i386-*-bsd*)				fmt=aout em=386bsd ;;
++  i386-*-barebones*)    fmt=elf ;;
+   i386-*-netbsd*-gnu* | \
+   i386-*-knetbsd*-gnu | \
+   i386-*-netbsd* | \
+diff --git a/ld/Makefile.am b/ld/Makefile.am
+index 6a9833e5..d3c492d3 100644
+--- a/ld/Makefile.am
++++ b/ld/Makefile.am
+@@ -278,6 +278,7 @@ ALL_EMULATION_SOURCES = \
+ 	eelf32z80.c \
+ 	eelf_i386.c \
+ 	eelf_i386_be.c \
++	eelf_i386_barebones.c \
+ 	eelf_i386_fbsd.c \
+ 	eelf_i386_haiku.c \
+ 	eelf_i386_ldso.c \
+@@ -461,6 +462,7 @@ ALL_64_EMULATION_SOURCES = \
+ 	eelf64tilegx_be.c \
+ 	eelf_mipsel_haiku.c \
+ 	eelf_x86_64.c \
++	eelf_x86_64_barebones.c \
+ 	eelf_x86_64_cloudabi.c \
+ 	eelf_x86_64_fbsd.c \
+ 	eelf_x86_64_haiku.c \
+diff --git a/ld/configure.tgt b/ld/configure.tgt
+index f937f78b..5cce7109 100644
+--- a/ld/configure.tgt
++++ b/ld/configure.tgt
+@@ -376,6 +376,15 @@ i[3-7]86-*-bsd386)	targ_emul=i386bsd
+ i[3-7]86-*-bsdi*)	targ_emul=i386bsd
+ 			targ_extra_ofiles=
+ 			;;
++i[3-7]86-*-barebones*)
++			targ_emul=elf_i386_barebones
++			targ_extra_emuls=elf_i386
++			targ64_extra_emuls="elf_x86_64_barebones elf_x86_64"
++			;;
++x86_64-*-barebones*)
++			targ_emul=elf_x86_64_barebones
++			targ_extra_emuls="elf_i386_barebones elf_x86_64 elf_i386"
++			;;
+ i[3-7]86-*-linux-*)	targ_emul=elf_i386
+ 			targ_extra_emuls="elf_iamcu"
+ 			targ64_extra_emuls="elf_x86_64 elf32_x86_64"
+diff --git a/ld/emulparams/elf_i386_barebones.sh b/ld/emulparams/elf_i386_barebones.sh
+new file mode 100644
+index 00000000..06482257
+--- /dev/null
++++ b/ld/emulparams/elf_i386_barebones.sh
+@@ -0,0 +1,2 @@
++source_sh ${srcdir}/emulparams/elf_i386.sh
++TEXT_START_ADDR=0x08000000
+diff --git a/ld/emulparams/elf_x86_64_barebones.sh b/ld/emulparams/elf_x86_64_barebones.sh
+new file mode 100644
+index 00000000..59e7df71
+--- /dev/null
++++ b/ld/emulparams/elf_x86_64_barebones.sh
+@@ -0,0 +1 @@
++source_sh ${srcdir}/emulparams/elf_x86_64.sh

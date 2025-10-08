@@ -15,8 +15,11 @@
       },
       patches = [
         {
-          sha256sum = "a3ac7ebb77f0142b4cf02af04323f42d5428c3fea9275de301f6ff06cc40b224",
-          file = "baltos-3.patch",
+          # sha256sum = "a3ac7ebb77f0142b4cf02af04323f42d5428c3fea9275de301f6ff06cc40b224",
+          # file = "baltos-3.patch",
+
+          sha256sum = "12cba9bf078c077fc798e31f05eaec9a70dd85b1d1f192a5f6c1b264ddb957f5",
+          file = "baltos-1.patch",
         }
       ]
     }
