@@ -7,6 +7,10 @@
       sha256sum = "d14929f910d060932e717e9382425d47c2e7144235a53713d55a94f7de535a4b"
     },
 
+    extraMakeInstallArgs = [
+      "sbindir=/usr/bin"
+    ],
+
     biDrvs = [
       drvs.linuxHeaders,
       drvs.pkgconf,
