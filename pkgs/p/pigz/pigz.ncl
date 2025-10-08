@@ -8,16 +8,22 @@
     },
     biDrvs = [
       drvs.zlibNg,
+      drvs.groff,
     ],
     extraMakeArgs = [
       "CC=\"${CC}\"",
       "LDFLAGS=\"${LDFLAGS}\""
     ],
+    makeTargets = ["all"],
     installPhase = [
       "install -d -m0755 ${DEST}/usr/bin",
+      "install -d -m0755 ${DEST}/usr/share/man/man1",
+      "install -m0755 pigz.1 ${DEST}/usr/share/man/man1",
       "install -m0755 pigz ${DEST}/usr/bin",
       "install -m0755 pigz ${DEST}/usr/bin",
       "install -m0755 unpigz ${DEST}/usr/bin",
+    ],
+    postInstallPhase = [
       "cd ${DEST}/usr/bin",
       "ln -s pigz gzip",
       "ln -s unpigz gunzip",
