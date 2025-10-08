@@ -17,6 +17,7 @@
       drvs.llvm,
       drvs.ccacheBin,
       drvs.linuxHeaders,
+      drvs.perl,
     ],
 
     separateBuildDir = false,

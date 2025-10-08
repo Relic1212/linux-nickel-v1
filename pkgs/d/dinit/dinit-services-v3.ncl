@@ -51,7 +51,13 @@ let _services =
     {
       boot | Service = {
         type = "internal",
-        "depends-ms" = ["tty1", "tty2"] @ (if useElogind then ["elogind"] else ["seatd"]),
+        "depends-ms" =
+          [
+            # "tty1", 
+            "tuigreet",
+            "tty2"
+          ]
+          @ (if useElogind then ["elogind"] else ["seatd"]),
 
         "waits-for" =
           [
@@ -67,6 +73,7 @@ let _services =
             # "v4l2loopback",
             "netdev",
             "netdev-lo",
+            "rtkit",
           ]
           @ (
             if enableBluetooth then
@@ -512,7 +519,8 @@ let scripts = {
 
   "rcboot.sh" = m%"
             #!/bin/sh -e
-            /usr/bin/install -m755 -g messagebus -o messagebus -d /run/dbus
+            /usr/bin/mkdir -p -m755 /run/dbus
+            /usr/bin/chown -R messagebus:messagebus /run/dbus
             "%,
   "varrw.sh" = m%"
             #!/bin/sh -e

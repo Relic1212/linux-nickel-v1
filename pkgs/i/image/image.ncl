@@ -31,6 +31,29 @@
         hasX11 = true,
         haveContainers = (true),
         isVm = (false),
+        utilsBsd = [
+          drvs.bsdutils,
+          (drvs.sbase & { priority = -1 }),
+        ],
+        utilsUu = [
+          drvs.uutils,
+          drvs.uutilsSymlinks,
+          drvs.uutilsFindutils,
+        ],
+        utilsBb = [
+          drvs.busyboxFinal,
+        ],
+        utilsSbase = [
+          (drvs.gnugrep & { priority = 1 }),
+          (
+            drvs.uutilsFindutils & { priority = 1 }
+          ),
+          drvs.sbase,
+          (drvs.ubase & { priority = -1 }), # df
+          drvs.emptyStty,
+        ],
+
+        utils = utilsSbase,
       },
       name = "base-base-rootfs",
       biDrvs =
@@ -42,6 +65,7 @@
               drvs.linuxFirmware,
             ]
         )
+        @ (options.utils)
         @ [
           # base
           # drvs.busyboxFinal,
@@ -51,14 +75,14 @@
           ## end bsdutils
 
           ## begin uutils
-          drvs.uutils,
-          drvs.uutilsSymlinks,
-          drvs.uutilsFindutils,
-          drvs.gnused,
-          drvs.gnugrep,
-          (drvs.sbase & { priority = -1 }),
+          # drvs.uutils,
+          # drvs.uutilsSymlinks,
+          # drvs.uutilsFindutils,
+          # drvs.gnused,
+          # drvs.gnugrep,
+          # (drvs.sbase & { priority = -1 }),
           # (drvs.utilLinux & { priority = -1 }),
-          drvs.libarchive,
+          (drvs.libarchive & { priority = 1 }),
           drvs.wget,
           drvs.bzip2,
           ## end uutils
@@ -69,6 +93,9 @@
           #(drvs.ubase & { priority = -1 }),
           ## end sbase
           # drvs.vis,
+          (drvs.usbutils & { priority = 1 }),
+          drvs.hwdata,
+          drvs.lshw,
           drvs.gitFull,
           drvs.vim,
           drvs.bc,
@@ -87,7 +114,15 @@
           drvs.dinit,
           drvs.dinitServicesV3,
           drvs.dinitUtils,
-          drvs.shadow,
+          drvs.shadowPam,
+          drvs.libpam,
+          drvs.fscryptUnlockHome,
+          drvs.cryptoPam,
+          drvs.greetd,
+          drvs.gtkgreet,
+          (drvs.gtkgreetSwayConf & { priority = 1 }),
+          drvs.tuigreet,
+          drvs.tuigreetConfig,
           drvs.libcap,
           drvs.utilLinux,
           drvs.pciutils,
@@ -121,7 +156,7 @@
           # enc
           drvs.e2fsprogs,
           # drvs.fscryptUnlockHome,
-          drvs.fscryptUnlockHomeElogind,
+          # drvs.fscryptUnlockHomeElogind,
           # drvs.elogind,
           drvs.polkit,
           drvs.elogindWithPolkit,
@@ -172,8 +207,12 @@
               # # drvs.hyprlandQtutils,
               # drvs.qt5compat,
               drvs.quickshell,
+              drvs.danklinuxDgop,
+              drvs.danklinuxDms,
               drvs.ddcutil,
               drvs.lmSensorsSensors,
+              drvs.androidTools,
+              drvs.androidUdevRules,
 
               ## -QT
             ]
@@ -222,6 +261,7 @@
                 # drvs.eww,
                 drvs.thunar,
                 drvs.gammastep,
+                drvs.wlsunset,
                 drvs.gebaarLibinput,
                 drvs.upower,
                 drvs.acpid,
@@ -248,8 +288,10 @@
                 drvs.xdgDesktopPortal,
                 drvs.xdgDesktopPortalWlr,
                 drvs.xdgDesktopPortalGtk,
+                drvs.xdgDesktopPortalGnome,
                 drvs.pulseaudioBin,
                 drvs.playerctl,
+                drvs.rtkit,
                 # bt
                 drvs.bluez,
                 #drvs.blueAlsa,
@@ -257,6 +299,7 @@
                 # drvs.pulseaudio14,
                 # flatpak
                 drvs.xdgUtils,
+                drvs.xdgUserDirs,
                 drvs.xdgDbusProxy,
                 drvs.mountOthers,
                 drvs.sbctl,
@@ -267,6 +310,7 @@
                 # drvs.sndiod,
                 drvs.desktopFileUtils,
                 drvs.squeekboard,
+                # drvs.sysboard,
                 drvs.lisgd,
                 drvs.glib,
                 drvs.gsettingsDesktopSchemas,
@@ -283,13 +327,15 @@
                 drvs.cliphist,
                 drvs.inotifyTools,
                 drvs.btop,
+                drvs.htop,
                 drvs.starship,
                 drvs.papyrusIconTheme,
+                drvs.geoclue,
                 drvs.socat,
                 drvs.pv,
                 drvs.cava,
                 drvs.adwGtk3,
-                drvs.swappy,
+                # drvs.swappy,
                 drvs.wezterm,
 
                 # ttyescape
@@ -302,10 +348,10 @@
                 # drvs.stWayland,
 
                 ### nwg
-                drvs.nwgDrawer,
-                drvs.nwgLook,
-                ### -nwg
-                drvs.yad,
+                # drvs.nwgDrawer,
+                # drvs.nwgLook,
+                # ### -nwg
+                # drvs.yad,
               ]
             else
               []
@@ -347,6 +393,17 @@
     drvs.cosmicSettings,
     drvs.cosmicSettingsDaemon,
     drvs.cosmicWorkspacesEpoch,
+    drvs.cosmicGreeter,
+    drvs.cosmicGreeterConfig,
+    drvs.cosmicXdgDesktopPortal,
+    drvs.cosmicRandr,
+    drvs.cosmicIdle,
+    drvs.cosmicFiles,
+    drvs.cosmicScreenshot,
+    drvs.cosmicWallpapers,
+    drvs.cosmicTerm,
+    drvs.cosmicEdit,
+    drvs.cosmicStore,
   ],
 
   cosmicPackages | lib.Package = {
@@ -385,7 +442,7 @@
             (fun x => (x & { dest = "rootfs/" }))
             (
               baseBaseRootfs.biDrvs
-              # @ _cosmicPackages
+              @ _cosmicPackages
             )
         ),
     },

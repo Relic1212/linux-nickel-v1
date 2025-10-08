@@ -65,13 +65,14 @@
         auth            optional pam_exec.so expose_authtok  debug  log=/var/log/unlock.log     /usr/libexec/crypto-pam
         auth            required        pam_securetty.so debug
         auth            include         system-auth
-        -auth           optional        pam_gnome_keyring.so
         account         required        pam_nologin.so
         account         include         system-auth
         password        include         system-auth
         session         include         system-auth
         session         required        pam_loginuid.so
         session        required        pam_elogind.so debug
+        -auth           optional        pam_gnome_keyring.so        
+        -session           optional        pam_gnome_keyring.so auto_start
         " > ${DEST}/etc/pam.d/greetd
         "%,
     ]
