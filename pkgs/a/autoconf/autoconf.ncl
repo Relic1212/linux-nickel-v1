@@ -12,5 +12,15 @@
       drvs.perl,
       drvs.m4
     ]
-  }
+  },
+  autoconf269| lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz",
+      sha256sum = "954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969",
+    },
+    biDrvs = [
+      drvs.perl,
+      drvs.m4
+    ]
+  },
 }
