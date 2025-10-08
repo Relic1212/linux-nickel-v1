@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicNotificationsSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-notifications/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "4a49d0d10a057967fe3f678bbd29ded33b484da34db77fea240d1dd10c089113"
+        uri = "https://github.com/pop-os/cosmic-notifications/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"4a49d0d10a057967fe3f678bbd29ded33b484da34db77fea240d1dd10c089113"
       },
-      outputSha256sum = "5741513d405536d82da32bc65372533853707b8d8d35b58fb99f9be5f99fac52"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "5741513d405536d82da32bc65372533853707b8d8d35b58fb99f9be5f99fac52"
     },
 }
 & {

@@ -3,27 +3,20 @@
   drvs,
   _CargoFetcher,
   _cosmicSrcSha256sums,
-  cosmicTermSources | lib.DeterministicFetcher =
+  cosmicInitialSetupSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
-        sha256sum = _cosmicSrcSha256sums."%{uri}", #"9bff7b2b9dd5e0200d955c0a4ef966e3c2f19aa8dc574dbfcda7ed9aae313ece"
+        uri = "https://github.com/pop-os/cosmic-initial-setup/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"7651949001e13cfc93c51ccb806812600e8afe9dba0bad65248bf1eabf7c1e21"
       },
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "cba881ee68370c682f4082d33cfdfa73dbcfd9d9fbdffa6f38377d8a3984f502"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "85ad78cf0fdc54f92431c17b78f80008f6c7a09d737d1cd5cd66dc3269efd78a"
     },
 }
 & {
   lib,
   drvs,
-  cosmicTerm | lib.CargoPackage = {
-    # sourceInputs = [
-    #   {src = {
-    #     uri = "https://patch-diff.githubusercontent.com/raw/pop-os/cosmic-term/pull/257.patch",
-    #     sha256sum = "16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485"
-    #   },
-    #   }
-    # ],
+  cosmicInitialSetup | lib.CargoPackage = {
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -33,31 +26,22 @@
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
+      # m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
+      # m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-    ]
-    #     @
-    #     ( std .array.map 
-    #       (fun s => 
-    #       "(cd ${SRC} && patch -p1 %{s} < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch)")
+    ],
 
-    #     [
-    #       "i18n/en/cosmic_term.ftl",
-    # "src/config.rs",
-    # "src/main.rs",
-    # "src/terminal.rs",
-    # # "Cargo.lock",
-    # # "Cargo.toml",
-    # # "i18n/en/cosmic_term.ftl",
-    # # "src/config.rs",
-    # # "src/main.rs",
-    #     ])
-    ,extraEnv = {
-
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [],
       # cosmic-epoch alpha
       VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
@@ -70,17 +54,14 @@
       }
     ],
     target,
-    # buildPhase = [
-    #   "just args=\" --target %{target}\" build-vendored "
-    # ],
+    buildPhase = [
+      "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
+      "echo 'Done building'",
+    ],
 
     installPhase = [
       "export CARGO_TARGET_DIR=\"target/%{target}\"",
       "just rootdir=$DEST install",
-    ],
-
-    postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
     ],
 
     utilsProviders,
@@ -96,9 +77,9 @@
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
-      (drvs.findutils & { priority = 1 }), # xargs -d
+      (drvs.findutils & { priority = 1 }),
       drvs.just,
-      drvs.cosmicTermSources,
+      drvs.cosmicInitialSetupSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,

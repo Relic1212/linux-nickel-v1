@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicIdleSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-idle/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "713953ab0176164dff644da2c0e42a17f0e84e7984d7600a02ab81c8c24362ef"
+        uri = "https://github.com/pop-os/cosmic-idle/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"713953ab0176164dff644da2c0e42a17f0e84e7984d7600a02ab81c8c24362ef"
       },
-      outputSha256sum = "57613d4960bc73fd18690fecda6501390e47a259957cf842d12452a70bcc5b52"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "57613d4960bc73fd18690fecda6501390e47a259957cf842d12452a70bcc5b52"
     },
 }
 & {

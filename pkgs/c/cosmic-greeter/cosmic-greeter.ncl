@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicGreeterSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-greeter/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "dfb1ce08f0fb4c1047f1a3e011e8428bfe45b150dbaf848e1f29abee183a2c4d"
+        uri = "https://github.com/pop-os/cosmic-greeter/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"dfb1ce08f0fb4c1047f1a3e011e8428bfe45b150dbaf848e1f29abee183a2c4d"
       },
-      outputSha256sum = "696309af4c34285b91f19906360f40310ef0f2ceceefbb15d0847c1f79a5c1df"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "696309af4c34285b91f19906360f40310ef0f2ceceefbb15d0847c1f79a5c1df"
     },
 }
 & {
@@ -71,10 +72,12 @@
 
     extraCargoFlags = [
       "--verbose",
+      "--no-default-features",
+      "--features logind,upower"
     ],
     buildPhase = [
       # "just build-release %{std.string.join " " cargoFlags }",     
-      "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
+      "just build-release --offline --target x86_64-unknown-linux-musl --verbose --no-default-features --features logind,upower",
       "echo 'Done building'",
     ],
 

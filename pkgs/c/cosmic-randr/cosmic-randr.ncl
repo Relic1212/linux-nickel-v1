@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicRandrSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-randr/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "9512653d3f844c77c7f93894cf8614123272dfcaed853f56309a95d0aded7c03"
+        uri = "https://github.com/pop-os/cosmic-randr/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"9512653d3f844c77c7f93894cf8614123272dfcaed853f56309a95d0aded7c03"
       },
-      outputSha256sum = "81b1e418d3a4ca233429c21e83a53a9df88e72a1b840f39a9fb4d6ed34d61b9a"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "81b1e418d3a4ca233429c21e83a53a9df88e72a1b840f39a9fb4d6ed34d61b9a"
     },
 }
 & {

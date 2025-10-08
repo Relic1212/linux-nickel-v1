@@ -2,14 +2,15 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicSettingsDaemonSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-settings-daemon/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-        sha256sum = "12d23357eb3db8d726571b354239bfd64224fd6464ce1f59488ecad41a504942"
+        uri = "https://github.com/pop-os/cosmic-settings-daemon/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        sha256sum = _cosmicSrcSha256sums."%{uri}", #"12d23357eb3db8d726571b354239bfd64224fd6464ce1f59488ecad41a504942"
       },
-      outputSha256sum = "a8f8d82b769cd78cebc059564967f33354a731f9ea4a57d02e2b004d6ab172bb"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "a8f8d82b769cd78cebc059564967f33354a731f9ea4a57d02e2b004d6ab172bb"
     },
 }
 & {
@@ -82,10 +83,10 @@
       #   sha256sum = "011bd7e71b9a48713e167562789f3091f530d759a08c72a5a1ec659b32ec5f87",
       #   file = "no-pulse.patch"
       # },
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
+      # {
+      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+      #   file = "cosmic-osd-xkb.patch",
+      # }
     ],
 
     utilsProviders,

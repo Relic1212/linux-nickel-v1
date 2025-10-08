@@ -1,18 +1,16 @@
 diff --git a/src/main.rs b/src/main.rs
-index c6f0dcb..198369e 100644
+index a6716af..2ce42cc 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -421,8 +421,7 @@ async fn start(
+@@ -451,7 +451,6 @@ async fn start(
  	}
  
  	#[cfg(feature = "autostart")]
 -	if !*is_systemd_used() {
--		info!("looking for autostart folders");
-+ 		info!("looking for autostart folders");
+ 		info!("looking for autostart folders");
  		let mut directories_to_scan = Vec::new();
  
- 		// we start by taking user specific directories, so that we can deduplicate and ensure
-@@ -524,7 +523,7 @@ async fn start(
+@@ -554,7 +553,7 @@ async fn start(
  			}
  		}
  		info!("started {} programs", dedupe.len());

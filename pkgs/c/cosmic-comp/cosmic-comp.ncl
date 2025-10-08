@@ -13,6 +13,8 @@
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
     ],
 
     extraEnv = {
@@ -171,11 +173,11 @@
 
   testFetcher | lib.DeterministicFetcher = {
     buildPhase = [
-      "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-      "cp epoch-1.0.0-alpha.7.tar.gz ${DEST}/out.tar.gz",
+      "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+      "cp epoch-1.0.0-beta.1.tar.gz ${DEST}/out.tar.gz",
     ],
     outputFile = "out.tar.gz",
-    outputSha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d",
+    outputSha256sum = (import "src.sha256sum" as 'Text), # "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d",
     biDrvs = [
       drvs.emptyResolvConf
     ]
@@ -190,10 +192,11 @@
 & {
   lib,
   drvs,
+  _cosmicSrcSha256sums,
   cosmicCompSources | lib.DeterministicFetcher = {
     singleSource = {
-      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-alpha.7.tar.gz",
-      sha256sum = "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d"
+      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+      sha256sum = _cosmicSrcSha256sums."%{uri}",
     },
     extraEnv = {
       HOME = "/tmp/home"
@@ -210,8 +213,8 @@
     installPhase = [
       "cp ../build/%{outputFile} ${DEST}",
     ],
-    # outputSha256sum = "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
-    outputSha256sum = "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
+    # outputSha256sum = (import "src.sha256sum" as 'Text), # "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
+    outputSha256sum = (import "src.sha256sum" as 'Text), # "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
 
     outputFile = "cosmic-comp-sources.tar",
 
@@ -246,8 +249,8 @@
     installPhase = [
       "cp ../build/%{outputFile} ${DEST}",
     ],
-    # outputSha256sum = "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
-    # outputSha256sum = "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
+    # outputSha256sum = (import "src.sha256sum" as 'Text), # "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
+    # outputSha256sum = (import "src.sha256sum" as 'Text), # "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
 
     outputFile = "sources.tar",
 
@@ -262,3 +265,6 @@
     ]
   }
 }
+& (
+  import "../cosmic-common/cosmic-src.ncl"
+)

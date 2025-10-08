@@ -2,6 +2,7 @@
   lib,
   drvs,
   _CargoFetcher,
+  _cosmicSrcSha256sums,
   cosmicPopLauncherSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
@@ -9,7 +10,7 @@
         uri = "https://github.com/pop-os/launcher/archive/refs/tags/1.2.4.tar.gz",
         sha256sum = "a84bed75c618a01a1a552f36be323d2d851e37d1845db56125a9c8aa4fed64bb"
       },
-      outputSha256sum = "a5ad2f87e7d9d5326291fb5d4db15db56797320766664ec3569ea0c94549f99c"
+      outputSha256sum = (import "src.sha256sum" as 'Text), # "a5ad2f87e7d9d5326291fb5d4db15db56797320766664ec3569ea0c94549f99c"
     },
 }
 & {
