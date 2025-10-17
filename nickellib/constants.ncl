@@ -120,7 +120,7 @@
     "-DCMAKE_INSTALL_LIBDIR:PATH" = "lib",
     "-DCMAKE_INSTALL_INCLUDEDIR:PATH" = "include",
     "-DCMAKE_INSTALL_DATAROOTDIR:PATH" = "share",
-    "-DCMAKE_BUILD_TYPE" = "Release",
+    # "-DCMAKE_BUILD_TYPE" = "Release",
     "-DCMAKE_INSTALL_PREFIX" = "/usr"
   },
 

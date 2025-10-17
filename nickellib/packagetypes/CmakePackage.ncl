@@ -56,13 +56,17 @@
         llvmProvider,
 
         enableParallel,
+        debug,
         cmakeArgs | Array String | default =
           cmakeArgsPrepend
           @ (
           # std.array.sort (std.string.compare)
           (
             cmakeArgsTransform (
-              constants.cmakeArgsByField
+              {
+                "-DCMAKE_BUILD_TYPE" = if debug then "Debug" else "Release",
+              }
+              & constants.cmakeArgsByField
               & (if isStatic then constants.cmakeArgsStaticByField else {})
               & cmakeArgsRecord
               & cmakeExtraArgsRecord
