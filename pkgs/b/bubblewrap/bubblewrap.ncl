@@ -25,7 +25,7 @@
     ],
     biDrvs = [
       drvs.libcap,
-      drvs.zsh,
+      # drvs.zsh,
       drvs.linuxHeaders,
       drvs.libxslt,
       drvs.docbookXslNons,
