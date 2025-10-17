@@ -44,3 +44,20 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  ncurses,
+  ncurses2 | lib.AutotoolsPackage = {
+    singleSource = ncurses.singleSource,
+
+    extraConfigureFlags = [
+      "--without-shared",
+      "--enable-pc-files",
+    ],
+
+    biDrvs = [
+      drvs.pkgconf
+    ]
+  }
+}
