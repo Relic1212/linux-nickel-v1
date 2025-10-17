@@ -1,0 +1,700 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f31cc8e413..de0d9fbf7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,6 +98,9 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+     GuiAddons
+     I18n
+     IdleTime
++    Archive
++    KIO
++    Notifications
+     Package
+     Service
+     Svg
+@@ -183,13 +186,14 @@ set_package_properties(EGL PROPERTIES
+     PURPOSE "Required to build KWin with EGL support"
+ )
+ 
+-find_package(epoxy 1.3)
+-set_package_properties(epoxy PROPERTIES
+-    DESCRIPTION "libepoxy"
+-    URL "https://github.com/anholt/libepoxy"
+-    TYPE REQUIRED
+-    PURPOSE "OpenGL dispatch library"
+-)
++# find_package(epoxy 1.3)
++# set_package_properties(epoxy PROPERTIES
++#     DESCRIPTION "libepoxy"
++#     URL "https://github.com/anholt/libepoxy"
++#     TYPE REQUIRED
++#     PURPOSE "OpenGL dispatch library"
++# )
++
+ 
+ find_package(Wayland 1.23)
+ set_package_properties(Wayland PROPERTIES
+@@ -373,6 +377,8 @@ if(KWIN_BUILD_GLOBALSHORTCUTS)
+     find_package(KGlobalAccelD REQUIRED)
+ endif()
+ 
++pkg_check_modules(egl REQUIRED IMPORTED_TARGET egl)
++
+ pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info>=0.2.0)
+ add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
+ 
+diff --git a/KWinConfig.cmake.in b/KWinConfig.cmake.in
+index 42619a94de..43f7fae038 100644
+--- a/KWinConfig.cmake.in
++++ b/KWinConfig.cmake.in
+@@ -10,7 +10,7 @@ find_dependency(KF6Config "@KF6_MIN_VERSION@")
+ find_dependency(KF6CoreAddons "@KF6_MIN_VERSION@")
+ find_dependency(KF6WindowSystem "@KF6_MIN_VERSION@")
+ find_dependency(Wayland REQUIRED Server)
+-find_dependency(epoxy)
++# find_dependency(epoxy)
+ find_dependency(Libdrm)
+ 
+ @PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
+diff --git a/autotests/CMakeLists.txt b/autotests/CMakeLists.txt
+index 6e93d4f70a..7a243d4eaa 100644
+--- a/autotests/CMakeLists.txt
++++ b/autotests/CMakeLists.txt
+@@ -170,7 +170,7 @@ set(testOpenGLContextAttributeBuilder_SRCS
+ )
+ 
+ add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
+-target_link_libraries(testOpenGLContextAttributeBuilder epoxy::epoxy Qt::Test)
++target_link_libraries(testOpenGLContextAttributeBuilder EGL::EGL Qt::Test)
+ add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAttributeBuilder)
+ ecm_mark_as_test(testOpenGLContextAttributeBuilder)
+ 
+diff --git a/autotests/opengl_context_attribute_builder_test.cpp b/autotests/opengl_context_attribute_builder_test.cpp
+index 872b6274d1..919216eaf2 100644
+--- a/autotests/opengl_context_attribute_builder_test.cpp
++++ b/autotests/opengl_context_attribute_builder_test.cpp
+@@ -9,7 +9,12 @@
+ #include "opengl/abstract_opengl_context_attribute_builder.h"
+ #include "opengl/egl_context_attribute_builder.h"
+ #include <QTest>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include "config-kwin.h"
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2a8fab7565..10eafba4e5 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -16,7 +16,7 @@ if (KWIN_BUILD_KCMS)
+     add_subdirectory(kcms)
+ endif()
+ 
+-add_library(kwin SHARED)
++add_library(kwin STATIC)
+ target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
+ set_target_properties(kwin PROPERTIES
+    VERSION ${PROJECT_VERSION}
+@@ -226,7 +226,7 @@ target_link_libraries(kwin
+         KF6::ConfigCore
+         KF6::CoreAddons
+         KF6::WindowSystem
+-        epoxy::epoxy
++        EGL::EGL
+         Libdrm::Libdrm
+ 
+     PRIVATE
+@@ -251,7 +251,10 @@ target_link_libraries(kwin
+         UDev::UDev
+         XKB::XKB
+         EGL::EGL
+-        epoxy::epoxy
++        # EGL
++        # GLESv2::GLESv2
++        PkgConfig::egl
++        # epoxy::epoxy
+ 
+         Threads::Threads
+         lcms2::lcms2
+@@ -365,7 +368,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
+ 
+ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
+ 
+-install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
++install(TARGETS kwin WaylandProtocols_xml EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+ 
+ ecm_qt_declare_logging_category(kwin
+     HEADER outputconfiglogging.h
+@@ -406,6 +409,10 @@ target_link_libraries(kwin_wayland
+     KWinQpaPlugin
+     KF6WindowSystemKWinPlugin
+     KF6IdleTimeKWinPlugin
++    EGL
++    PkgConfig::egl
++    "/usr/lib/libgallium_dri.a"
++    "/usr/lib/libEGL.a"
+ )
+ 
+ if (TARGET KF6GlobalAccelKWinPlugin)
+diff --git a/src/backends/drm/drm_egl_layer.h b/src/backends/drm/drm_egl_layer.h
+index 31788d8e86..ff4fc8f62a 100644
+--- a/src/backends/drm/drm_egl_layer.h
++++ b/src/backends/drm/drm_egl_layer.h
+@@ -14,7 +14,12 @@
+ #include <QMap>
+ #include <QPointer>
+ #include <QRegion>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <optional>
+ 
+ namespace KWin
+diff --git a/src/backends/drm/drm_gpu.h b/src/backends/drm/drm_gpu.h
+index d490b171c4..b03b71c377 100644
+--- a/src/backends/drm/drm_gpu.h
++++ b/src/backends/drm/drm_gpu.h
+@@ -21,7 +21,12 @@
+ #include <qobject.h>
+ 
+ #include <chrono>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <sys/types.h>
+ 
+ namespace KWin
+diff --git a/src/backends/drm/drm_virtual_egl_layer.h b/src/backends/drm/drm_virtual_egl_layer.h
+index 75dee9a518..b0b58aa001 100644
+--- a/src/backends/drm/drm_virtual_egl_layer.h
++++ b/src/backends/drm/drm_virtual_egl_layer.h
+@@ -14,7 +14,12 @@
+ #include <QMap>
+ #include <QPointer>
+ #include <QRegion>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <optional>
+ 
+ namespace KWin
+diff --git a/src/core/outputbackend.h b/src/core/outputbackend.h
+index eea46899c1..2f3ab3c3cf 100644
+--- a/src/core/outputbackend.h
++++ b/src/core/outputbackend.h
+@@ -10,7 +10,12 @@
+ #pragma once
+ 
+ #include "effect/globals.h"
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <kwin_export.h>
+ 
+ #include <QObject>
+diff --git a/src/helpers/CMakeLists.txt b/src/helpers/CMakeLists.txt
+index 29f992ff86..bbf6a67d49 100644
+--- a/src/helpers/CMakeLists.txt
++++ b/src/helpers/CMakeLists.txt
+@@ -1,2 +1,2 @@
+-add_subdirectory(killer)
++# add_subdirectory(killer)
+ add_subdirectory(wayland_wrapper)
+diff --git a/src/kcms/common/CMakeLists.txt b/src/kcms/common/CMakeLists.txt
+index a252660b57..43e7ec8894 100644
+--- a/src/kcms/common/CMakeLists.txt
++++ b/src/kcms/common/CMakeLists.txt
+@@ -9,7 +9,7 @@ qt_add_dbus_interface(kcmkwincommon_SRC
+     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
+ )
+ 
+-add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
++add_library(kcmkwincommon STATIC ${kcmkwincommon_SRC})
+ 
+ target_link_libraries(kcmkwincommon
+     Qt::Core
+@@ -31,7 +31,7 @@ install(TARGETS kcmkwincommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELI
+ 
+ set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp)
+ qt_add_dbus_interface(kcm_kwin4_genericscripted_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
+-add_library(kcm_kwin4_genericscripted MODULE ${kcm_kwin4_genericscripted_SRCS})
++add_library(kcm_kwin4_genericscripted STATIC ${kcm_kwin4_genericscripted_SRCS})
+ target_link_libraries(kcm_kwin4_genericscripted
+     KF6::KCMUtils #KCModule
+     KF6::I18n
+diff --git a/src/opengl/egl_context_attribute_builder.cpp b/src/opengl/egl_context_attribute_builder.cpp
+index d4c561d27d..02e945734a 100644
+--- a/src/opengl/egl_context_attribute_builder.cpp
++++ b/src/opengl/egl_context_attribute_builder.cpp
+@@ -7,7 +7,12 @@
+     SPDX-License-Identifier: GPL-2.0-or-later
+ */
+ #include "egl_context_attribute_builder.h"
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/eglbackend.h b/src/opengl/eglbackend.h
+index d4f7d957d1..602095649c 100644
+--- a/src/opengl/eglbackend.h
++++ b/src/opengl/eglbackend.h
+@@ -17,7 +17,12 @@
+ #include <QRegion>
+ #include <memory>
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/eglcontext.h b/src/opengl/eglcontext.h
+index aac216189e..83187bfb76 100644
+--- a/src/opengl/eglcontext.h
++++ b/src/opengl/eglcontext.h
+@@ -14,7 +14,12 @@
+ #include <QByteArray>
+ #include <QList>
+ #include <QStack>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/egldisplay.h b/src/opengl/egldisplay.h
+index 67ec0706bd..abb9fabcaa 100644
+--- a/src/opengl/egldisplay.h
++++ b/src/opengl/egldisplay.h
+@@ -14,7 +14,12 @@
+ #include <QHash>
+ #include <QList>
+ #include <QSize>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <sys/types.h>
+ 
+ namespace KWin
+diff --git a/src/opengl/eglimagetexture.cpp b/src/opengl/eglimagetexture.cpp
+index 1701337325..4a5c6c1e65 100644
+--- a/src/opengl/eglimagetexture.cpp
++++ b/src/opengl/eglimagetexture.cpp
+@@ -12,7 +12,12 @@
+ #include "opengl/gltexture_p.h"
+ 
+ #include <QDebug>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/eglnativefence.h b/src/opengl/eglnativefence.h
+index 4a14c5f988..13c29e3a50 100644
+--- a/src/opengl/eglnativefence.h
++++ b/src/opengl/eglnativefence.h
+@@ -6,7 +6,12 @@
+ 
+ #pragma once
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include "kwin_export.h"
+ #include "utils/filedescriptor.h"
+diff --git a/src/opengl/eglswapchain.h b/src/opengl/eglswapchain.h
+index 43d6faf5f8..334a66f129 100644
+--- a/src/opengl/eglswapchain.h
++++ b/src/opengl/eglswapchain.h
+@@ -15,7 +15,12 @@
+ #include <QSize>
+ 
+ #include <cstdint>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <memory>
+ 
+ namespace KWin
+diff --git a/src/opengl/eglutils_p.h b/src/opengl/eglutils_p.h
+index 6144119bb5..366fb09fca 100644
+--- a/src/opengl/eglutils_p.h
++++ b/src/opengl/eglutils_p.h
+@@ -10,7 +10,12 @@
+ 
+ #include <QOpenGLContext>
+ #include <QString>
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ static inline QString getEglErrorString(EGLint errorCode)
+ {
+diff --git a/src/opengl/glframebuffer.h b/src/opengl/glframebuffer.h
+index f55bc33b4a..1b6609342e 100644
+--- a/src/opengl/glframebuffer.h
++++ b/src/opengl/glframebuffer.h
+@@ -13,7 +13,11 @@
+ 
+ #include <QRect>
+ #include <QStack>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/gllut.h b/src/opengl/gllut.h
+index baea1c766e..d8d084de61 100644
+--- a/src/opengl/gllut.h
++++ b/src/opengl/gllut.h
+@@ -12,7 +12,11 @@
+ 
+ #include <QVector3D>
+ #include <QVector>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <functional>
+ #include <memory>
+ 
+diff --git a/src/opengl/gllut3D.h b/src/opengl/gllut3D.h
+index 569c1040c9..5793dd0262 100644
+--- a/src/opengl/gllut3D.h
++++ b/src/opengl/gllut3D.h
+@@ -12,7 +12,11 @@
+ 
+ #include <QVector3D>
+ #include <QVector>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <functional>
+ #include <memory>
+ 
+diff --git a/src/opengl/glplatform.cpp b/src/opengl/glplatform.cpp
+index 37043cc311..b5733694bc 100644
+--- a/src/opengl/glplatform.cpp
++++ b/src/opengl/glplatform.cpp
+@@ -8,7 +8,11 @@
+ */
+ 
+ #include "opengl/glplatform.h"
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include <QDebug>
+ #include <QOpenGLContext>
+diff --git a/src/opengl/glrendertimequery.h b/src/opengl/glrendertimequery.h
+index 97dde1a92f..42e86f1c7d 100644
+--- a/src/opengl/glrendertimequery.h
++++ b/src/opengl/glrendertimequery.h
+@@ -9,7 +9,11 @@
+ #pragma once
+ 
+ #include <chrono>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include "core/renderbackend.h"
+ #include "kwin_export.h"
+diff --git a/src/opengl/glshader.h b/src/opengl/glshader.h
+index 12c93a9c0e..4bf213f7c7 100644
+--- a/src/opengl/glshader.h
++++ b/src/opengl/glshader.h
+@@ -17,7 +17,11 @@
+ #include <QString>
+ #include <QVector2D>
+ #include <QVector3D>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/gltexture.h b/src/opengl/gltexture.h
+index dc86e163f1..7be1a65113 100644
+--- a/src/opengl/gltexture.h
++++ b/src/opengl/gltexture.h
+@@ -17,7 +17,11 @@
+ #include <QRegion>
+ #include <QSize>
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ class QImage;
+ class QPixmap;
+diff --git a/src/opengl/gltexture_p.h b/src/opengl/gltexture_p.h
+index 7fc329599e..2eab8d35d9 100644
+--- a/src/opengl/gltexture_p.h
++++ b/src/opengl/gltexture_p.h
+@@ -17,7 +17,11 @@
+ #include <QMatrix4x4>
+ #include <QSharedData>
+ #include <QSize>
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/opengl/glvertexbuffer.h b/src/opengl/glvertexbuffer.h
+index 204fb0738d..7c3fe3c179 100644
+--- a/src/opengl/glvertexbuffer.h
++++ b/src/opengl/glvertexbuffer.h
+@@ -15,7 +15,11 @@
+ #include <QRegion>
+ #include <QVector2D>
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <optional>
+ #include <ranges>
+ #include <span>
+diff --git a/src/opengl/glvertexbuffer_p.h b/src/opengl/glvertexbuffer_p.h
+index dd3641ca83..d10aede413 100644
+--- a/src/opengl/glvertexbuffer_p.h
++++ b/src/opengl/glvertexbuffer_p.h
+@@ -11,7 +11,11 @@
+ #pragma once
+ #include "kwin_export.h"
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <vector>
+ 
+ namespace KWin
+diff --git a/src/plugins/colorpicker/colorpicker.cpp b/src/plugins/colorpicker/colorpicker.cpp
+index bc94b2a642..e9dacb1d3b 100644
+--- a/src/plugins/colorpicker/colorpicker.cpp
++++ b/src/plugins/colorpicker/colorpicker.cpp
+@@ -15,7 +15,11 @@
+ #include <QDBusConnection>
+ #include <QDBusMetaType>
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ Q_DECLARE_METATYPE(QColor)
+ 
+diff --git a/src/plugins/qpa/eglhelpers.h b/src/plugins/qpa/eglhelpers.h
+index 086de1ad50..3a88d22dee 100644
+--- a/src/plugins/qpa/eglhelpers.h
++++ b/src/plugins/qpa/eglhelpers.h
+@@ -9,7 +9,12 @@
+ 
+ #pragma once
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include <QSurfaceFormat>
+ 
+diff --git a/src/plugins/qpa/eglplatformcontext.h b/src/plugins/qpa/eglplatformcontext.h
+index a3ac1701b7..fd3482c584 100644
+--- a/src/plugins/qpa/eglplatformcontext.h
++++ b/src/plugins/qpa/eglplatformcontext.h
+@@ -10,7 +10,12 @@
+ 
+ #pragma once
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include <qpa/qplatformopenglcontext.h>
+ 
+diff --git a/src/plugins/qpa/integration.h b/src/plugins/qpa/integration.h
+index 9e9c09ecff..4c7459d03a 100644
+--- a/src/plugins/qpa/integration.h
++++ b/src/plugins/qpa/integration.h
+@@ -9,7 +9,12 @@
+ */
+ #pragma once
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include <QObject>
+ #if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+diff --git a/src/plugins/qpa/offscreensurface.h b/src/plugins/qpa/offscreensurface.h
+index 9e27fc9dbe..c4806bd30f 100644
+--- a/src/plugins/qpa/offscreensurface.h
++++ b/src/plugins/qpa/offscreensurface.h
+@@ -9,7 +9,12 @@
+ 
+ #pragma once
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ #include <qpa/qplatformoffscreensurface.h>
+ 
+diff --git a/src/scene/surfaceitem.cpp b/src/scene/surfaceitem.cpp
+index 8c64ede29e..0f179edea6 100644
+--- a/src/scene/surfaceitem.cpp
++++ b/src/scene/surfaceitem.cpp
+@@ -17,7 +17,12 @@
+ 
+ #include <QPainter>
+ 
+-#include <epoxy/egl.h>
++#define EGL_EGLEXT_PROTOTYPES
++#define GL_GLEXT_PROTOTYPES
++#include <EGL/egl.h>
++#include <EGL/eglext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <utils/drm_format_helper.h>
+ 
+ using namespace std::chrono_literals;
+diff --git a/src/scripting/windowthumbnailitem.h b/src/scripting/windowthumbnailitem.h
+index 59cb4c9ad6..d7b01cceea 100644
+--- a/src/scripting/windowthumbnailitem.h
++++ b/src/scripting/windowthumbnailitem.h
+@@ -10,7 +10,11 @@
+ #include <QQuickItem>
+ #include <QUuid>
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ 
+ namespace KWin
+ {
+diff --git a/src/utils/drm_format_helper.h b/src/utils/drm_format_helper.h
+index 7a106b0d68..fe675589f7 100644
+--- a/src/utils/drm_format_helper.h
++++ b/src/utils/drm_format_helper.h
+@@ -13,7 +13,11 @@
+ #include <QList>
+ #include <QString>
+ 
+-#include <epoxy/gl.h>
++#define GL_GLEXT_PROTOTYPES
++#include <GL/gl.h>
++#include <GL/glext.h>
++#include <GLES2/gl2.h>
++#include <GLES2/gl2ext.h>
+ #include <libdrm/drm_fourcc.h>
+ #include <optional>
+ #include <stdint.h>

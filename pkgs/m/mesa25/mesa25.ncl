@@ -161,5 +161,29 @@
       ]
     }
 }
+& {
+  lib,
+  drvs,
+  mesaExp,
+  mesaExpKwin =
+    mesaExp
+    & {
+      postInstallPhase | priority 1 =
+        mesaExp.postInstallPhase
+        @ (
+          std.array.map
+            (fun s =>
+              "llvm-objcopy --redefine-sym=_mesa_%{s}=gl%{s} libgallium_dri.a"
+            )
+            [
+              "QueryCounter",
+              "GetQueryObjecti64v",
+              "BufferStorage",
+              "BindFragDataLocation",
+              "GetTexImage",
+            ]
+        )
+    }
+}
 & (import "mesa25glx.ncl")
 & (import "mesa25full.ncl")

@@ -1,0 +1,23 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 826126d..45460e3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -11,6 +11,8 @@ ecm_qt_declare_logging_category(kcmutils_logging_STATIC
+     DESCRIPTION "KCMUtils"
+     EXPORT KCMUTILS
+ )
++# install(EXPORT kcmutils_logging_STATIC DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6KCMUtils" FILE KF6kcmutils_logging.cmake NAMESPACE KF6::)
++install(TARGETS kcmutils_logging_STATIC EXPORT kcmutils_logging_STATIC DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6KCMUtils")
+ 
+ 
+ add_subdirectory(core)
+diff --git a/src/quick/CMakeLists.txt b/src/quick/CMakeLists.txt
+index b21306e..3afdf55 100644
+--- a/src/quick/CMakeLists.txt
++++ b/src/quick/CMakeLists.txt
+@@ -57,4 +57,5 @@ install(FILES
+   DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/KCMUtilsQuick COMPONENT Devel
+ )
+ 
++install(TARGETS kcmutils_logging_STATIC EXPORT KF6KCMUtilsTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+ install(TARGETS KF6KCMUtilsQuick EXPORT KF6KCMUtilsTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})

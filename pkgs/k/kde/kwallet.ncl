@@ -4,8 +4,8 @@
   kwallet | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.16.0/kwallet-v6.16.0.tar.gz",
-      sha256sum = "0f4463a6c08181fabf81d5009de8bbed1b208ec768589cdba70aa61fef35dd68"
+      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.19.0/kwallet-v6.19.0.tar.gz",
+      sha256sum = "436a650d014e164d7a2511f36246f9277d444f9648b6b1182f3fed2e1a5162ca"
     },
     llvmProvider = drvs.llvmFull,
     symlinkBuldInputs = true,
@@ -58,7 +58,7 @@
       drvs.kmod,
       drvs.knotifications,
       drvs.kservice,
-      drvs.ksolid,
+      drvs.solid,
       drvs.kwidgetsaddons,
       drvs.kwindowsystem,
       drvs.libassuan,
@@ -125,7 +125,7 @@
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
       "-DWITH_X11" = false,
 
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat gpgme libcanberra vorbisfile)\"",
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat gpgme libcanberra vorbisfile)\"",
     },
   }
 }
@@ -135,13 +135,9 @@
   ecm | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.16.0/extra-cmake-modules-v6.16.0.tar.gz",
-      sha256sum = "70d43a8b012b39f982749be53092a0013a31a27f86abf92986c6d2da49383a01"
-
-      # uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.10.0/extra-cmake-modules-v6.10.0.tar.gz",
-      # sha256sum = "6025709712e075f06c3b9eebfffc50ce31605712d8947c748d9b2241e915f595"
+      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.19.0/extra-cmake-modules-v6.19.0.tar.gz",
+      sha256sum = "90784adc538cfba1dd2131530ad947cee0c5600c13223e546c1eeaf23c53135a"
     },
-    symlinkBuldInputs = true,
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
@@ -203,7 +199,7 @@
     },
     cmakeExtraArgsRecord = {
       "-DBUILD_WITH_QT6" = true,
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
   }
 }
