@@ -1,27 +1,62 @@
 {
   lib,
   drvs,
+  unifont,
   grub2 | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://ftp.gnu.org/gnu/grub/grub-2.12.tar.xz",
       sha256sum = "f3c97391f7c4eaa677a78e090c7e97e6dc47b16f655f04683ebd37bef7fe0faa"
     },
+    sourceInputs = [
+      {
+        src = singleSource
+      },
+      {
+        src = unifont.singleSource
+      }
+    ],
     biDrvs = [
       drvs.m4,
       drvs.flex,
       drvs.bison,
       drvs.pythonFull,
       drvs.linuxHeaders,
+      drvs.zlibNg,
+      drvs.freetype,
+      drvs.pkgconf,
       (drvs.gawk & { priority = 1 })
     ],
     extraEnv = {
       "BUILD_CC" = ["clang", "-static", "--static"]
     },
 
-    preConfigurePhase = [
-      # https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=76418694270557b6feb75381912a39569ee28d45
-      m%"echo "depends bli part_gpt" > ${SRC}/grub-core/extra_deps.lst"%
-    ]
+    preConfigurePhase =
+      [
+        # https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=76418694270557b6feb75381912a39569ee28d45
+        m%"echo "depends bli part_gpt" > ${SRC}/grub-core/extra_deps.lst"%,
+        "(cd ${SRC} && gunzip unifont-17.0.01.pcf.gz)",
+      ]
+      @ (
+        std.array.map
+          (fun v => "export TARGET_%{v}=\"${%{v}}\"")
+          [
+            "CC",
+            "CXX",
+            "LD",
+            "CFLAGS",
+            "CPPFLAGS",
+            "LDFLAGS",
+            "CXXFLAGS",
+          ]
+      ),
+    extraConfigureFlags = [
+      "--with-platform=efi",
+      "--target=x86_64",
+      "--disable-cross-guesses",
+      "--disable-werror",
+      "--enable-grub-mkfont",
+      "--with-unifont=\"${SRC}/unifont-17.0.01.pcf\"",
+    ],
   }
 }
 & {
@@ -70,6 +105,19 @@
       drvs.libburn,
       drvs.libisofs,
       drvs.linuxHeaders,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  unifont | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://mirror.ibcp.fr/pub/gnu/unifont/unifont-17.0.01/unifont-17.0.01.pcf.gz",
+      sha256sum = "8240c381398a21f4eef993d16f0976d6a627e61054f0add275d195408f24efa9"
+    },
+    preConfigurePhase = [
+      "(cd )"
     ]
   }
 }
