@@ -6,8 +6,8 @@
     generator = "Ninja",
 
     singleSource = {
-      uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.2.0.tar.gz",
-      sha256sum = "bd000d6ab5fbf050d3c6157af63f1ee7b35755a350ff8064b9b55b8a7f1682df",
+      uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.2.1.tar.gz",
+      sha256sum = "337bab5d4badb92e51d01ac1cfbeaeb784478bad82f3c8297fd7be42a6995af2",
 
       #uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.1.0.tar.gz",
       #sha256sum = "4f37cc5301443de4456550c4b16a517d5478a65ec1c8a37bd006db3832a1ab42",
