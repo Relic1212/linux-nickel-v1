@@ -134,7 +134,7 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
 
     sandboxed = drv["buildInChroot"]
     uses_ccache = drv["enableCcache"]
-
+    uses_sccache = True
 
     #TODO: this should always be set
     if "deterministicFetcher" in drv.keys():
@@ -302,8 +302,12 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
         senv["HOME"] = "/"
         if uses_ccache:
             senv["CCACHE_DIR"] = "/tmp/ccache"
+    
+        if uses_sccache:
+            args += ["--bind",
+                     f"{dirpaths.get_basedir()}/sccache", "/tmp/sccache"]
 
-    else:
+    else: # not sandboxed
         senv = os.environ.copy()
         senv["TMPDIR"] = "/tmp"
         sysroot = "/"
@@ -364,6 +368,11 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
             print(f"Failed to build {name}")
             raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
     if deterministic_fetcher:
+        # computed = hashes.compute_file_or_dir_sha256sum(workdir + "/out/destdir/" + output_file)
+        # with open(f"pkgs/c/{name.replace("-sources","")}/src.sha256sum","w") as f:
+        #     f.write(computed)
+
+
         check_deterministic_output(
          workdir + "/out/destdir",
          output_file,
