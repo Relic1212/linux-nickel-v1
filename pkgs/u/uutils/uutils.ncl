@@ -2,7 +2,7 @@
   lib,
   drvs,
   uutils | lib.CargoPackage =
-    let j = import "./uutils/uutils-packages.json"
+    let j = import "./uutils-packages.json"
     in
     let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
     in
@@ -11,8 +11,8 @@
       nonCrateSourceInputs = [
         {
           src = {
-            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.2.0.tar.gz",
-            sha256sum = "185be1670bb5091f48d29524c6f81326f12aef5e599fcdb122967a95d017f32a"
+            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.3.0.tar.gz",
+            sha256sum = "422b4bab88d6a4da9eabcc947b4e8e0c7fbd123c88700f8750da45910bfb03b6"
           }
         }
       ],
