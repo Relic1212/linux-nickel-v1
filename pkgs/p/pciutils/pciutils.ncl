@@ -14,6 +14,10 @@
       "PREFIX=/usr",
       "SBINDIR=/usr/bin",
     ],
+    makeInstallTargets = [
+      "install",
+      "install-lib",
+    ],
     biDrvs = [
       drvs.linuxHeaders,
     ]
