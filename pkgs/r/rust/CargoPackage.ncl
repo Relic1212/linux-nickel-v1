@@ -58,6 +58,7 @@
           RUSTFLAGS | default = STATIC_RUSTFLAGS @ EXTRA_RUSTFLAGS,
         },
 
+        sccacheProvider | default = drvs.sccache,
         baseBuildinputPackages | priority -1000 =
           [
             drvs.rust,
@@ -66,14 +67,17 @@
             llvmProvider,
             drvs.clangCc,
           ]
-          @ utilsProviders,
+          @ utilsProviders
+          @ (if enableSccache then [sccacheProvider] else []),
 
         enableCcache | priority -1000 = false,
+        enableSccache | default = false,
         separateBuildDir | priority -1000 = false,
         extraCargoFlags | Array String | default = [],
         release | Bool | default = true,
-        preConfigurePhase | priority -1000 = [
-          m%"
+        preConfigurePhase | priority -1000 =
+          [
+            m%"
             for d in $(ls  ${SRC}/vendor); do
               if [ -e ${SRC}/vendor/${d}/download ]; then
                 mv  ${SRC}/vendor/${d}/download  ${SRC}/vendor/${d}/download.tar.gz
@@ -82,8 +86,8 @@
               fi
             done
             "%,
-          "mkdir -p ${SRC}/.cargo",
-          m%"
+            "mkdir -p ${SRC}/.cargo",
+            m%"
             echo "
 
             [source.crates-io]
@@ -94,8 +98,28 @@
 
             " >> ${SRC}/.cargo/config.toml
             "%,
-          "export CARGO_HOME=${SRC}/.cargo",
-        ],
+            "export CARGO_HOME=${SRC}/.cargo",
+          ]
+          @ (
+            if enableSccache then
+              [
+                "export SCCACHE_DIR=/tmp/sccache",
+                "export SCCACHE_CONF=/tmp/sccache/config",
+                "export RUSTC_WRAPPER=/usr/bin/sccache",
+                # "export SCCACHE_ERROR_LOG=${SRC}/sccache_log.txt",
+                #  "export SCCACHE_LOG=debug",
+                #  "export SCCACHE_START_SERVER=1",
+                #  "export SCCACHE_NO_DAEMON=1",
+                #  "mkdir -p /tmp/home/.config/sccache/",
+                #  "touch /tmp/home/.config/sccache/config",
+                #  "export HOME=/tmp/home",
+
+                "sccache --stop-server || echo 'sccache server not running'",
+                "echo sccache setup done",
+              ]
+            else
+              []
+          ),
         releaseFlags | default =
           if release then
             [
