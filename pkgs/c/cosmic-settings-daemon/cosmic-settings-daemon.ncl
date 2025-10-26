@@ -98,9 +98,11 @@
         llvmProvider,
         drvs.clangCc,
       ]
+      @ (if enableSccache then [drvs.sccache] else [])
       @ utilsProviders,
     llvmProvider = drvs.llvmFull,
 
+    enableSccache = true,
     biDrvs = [
       drvs.gnumake,
       drvs.cosmicSettingsDaemonSources,

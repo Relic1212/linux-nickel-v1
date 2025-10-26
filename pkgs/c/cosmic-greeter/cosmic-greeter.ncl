@@ -101,9 +101,11 @@
         llvmProvider,
         drvs.clangCc,
       ]
+      @ (if enableSccache then [drvs.sccache] else [])
       @ utilsProviders,
     llvmProvider = drvs.llvmFull,
 
+    enableSccache = false,
     biDrvs = [
       drvs.git,
       drvs.just,
