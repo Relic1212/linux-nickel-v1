@@ -22,9 +22,10 @@
           "-DINSTALL_HEADERDIR" = "/usr/include/qt6",
           "-DINSTALL_BINDIR" = "/usr/lib/qt6/bin",
           "-DINSTALL_LIBEXECDIR" = "/usr/lib/qt6/libexec",
+
+          "-DQT_USE_CCACHE" = true,
         },
 
-        symlinkBuldInputs = true,
         generator = "Ninja",
 
         buildEnv = {
