@@ -59,9 +59,10 @@
   libepoxyPatched =
     libepoxy
     & {
+      # debug = true,
       patches = [
         {
-          sha256sum = "65a5a418bbddf8f2a72fc1a9ca5361f251d9494f0d35ad2c72f2eb4bd7ed9eb5",
+          sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
           file = "libepoxy.patch"
         }
       ]
