@@ -3,8 +3,11 @@
   drvs,
   _waylandProtocols | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.37/wayland-protocols-1.37.tar.gz",
-      sha256sum = "c3b215084eb4cf318415533554c2c2714e58ed75847d7c3a8e50923215ffbbf3",
+      # uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.37/wayland-protocols-1.37.tar.gz",
+      # sha256sum = "c3b215084eb4cf318415533554c2c2714e58ed75847d7c3a8e50923215ffbbf3",
+
+      uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.45/wayland-protocols-1.45.tar.gz",
+      sha256sum = "460dad72a6c84b2a7d80745bee43d96ba117f4e3dfc4d7c45f83f66469ea27df"
     },
     biDrvs = [
       drvs.wayland,
@@ -51,6 +54,6 @@
       },
     },
 
-  waylandProtocols = _waylandProtocols143,
-  waylandProtocols145 = _waylandProtocols145,
+  waylandProtocols = _waylandProtocols,
+  # waylandProtocols145 = _waylandProtocols145,
 }

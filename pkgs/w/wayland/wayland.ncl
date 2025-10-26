@@ -3,8 +3,11 @@
   drvs,
   wayland | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.23.1/wayland-1.23.1.tar.gz",
-      sha256sum = "158ec49af498f2558c7fbf7e8b070d010d4e270cc6076003a18a6c813f87e244",
+      # uri = "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.23.1/wayland-1.23.1.tar.gz",
+      # sha256sum = "158ec49af498f2558c7fbf7e8b070d010d4e270cc6076003a18a6c813f87e244",
+
+      uri = "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.24.0/wayland-1.24.0.tar.gz",
+      sha256sum = "7800858844751fc7113d7df3678dc6b58b26a056176a65c49a059763045bffd5"
     },
     biDrvs = [
       drvs.linuxHeaders,
