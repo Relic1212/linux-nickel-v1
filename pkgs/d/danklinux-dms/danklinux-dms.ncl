@@ -1,6 +1,9 @@
 let s = {
-  uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.1.14.tar.gz",
-  sha256sum = "5c01673ea1007cf8e22423f63517c4816bd9f176054c7fadf998f0b67d6fc7a9"
+  # uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.2.2.tar.gz",
+  # sha256sum = "ce8f339b8dbe3774bfa397d5e0007f14776b0c0efd09b8d1d845157f75c33dbf",
+
+  uri = "https://github.com/AvengeMedia/danklinux/archive/3c468ff5332748aa84852a05bdabcf703d956f7c.tar.gz",
+  sha256sum = "6ec725aaa93f5b8442fdeef8a139617aa408a648eafc89db3337f6277c915919",
 }
 in
 
@@ -26,7 +29,8 @@ in
       "install -m0755 ../build/%{outputFile} ${DEST}/%{outputFile}"
     ],
     outputFile = "source.tar",
-    outputSha256sum = "0c6009af3b5a7a628f918dd3f237823c43693e73efd6af8cf149330605316941",
+    # outputSha256sum = "81acc3aae11a61be8c19b4bed9d8f478798bd74e5615929598f7328d02ceef22",
+    outputSha256sum = "5b4ab3c3d3ad18e5480a15b02e0491f7ee8df6df3364afb97c33473019f2afed",
 
     biDrvs = [
       drvs.go_1_24,
