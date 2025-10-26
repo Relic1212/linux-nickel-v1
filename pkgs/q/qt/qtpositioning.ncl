@@ -1,0 +1,61 @@
+{
+  lib,
+  drvs,
+  qtpositioning | lib.QtPackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtpositioning-everywhere-src-6.9.1.tar.xz",
+      sha256sum = "7062734b4989248ca3f0e3e4aebb9aa2e7ed2d6bf19e779e520c6ef69706ff26"
+    },
+    llvmProvider = drvs.llvmFull,
+
+    biDrvs = [
+      drvs.mesa2,
+      # drvs.pkgconf,
+      drvs.libelf,
+      drvs.libdrm,
+      drvs.zlibNg,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.libffi,
+      drvs.bison,
+      drvs.flex,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.linuxHeaders,
+      drvs.m4,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
+      drvs.dbusForQt,
+      drvs.qtbase,
+      drvs.qtdeclarative,
+      drvs.qtshadertools,
+      drvs.qtsvg,
+
+      ###
+      drvs.expat,
+      drvs.jsonC,
+      drvs.pcre2,
+      drvs.libxkbcommon,
+      drvs.openssl,
+
+      #drvs.gnumake,
+      drvs.kmod,
+      drvs.zstd,
+      drvs.xz,
+      drvs.eudev,
+      drvs.libinput,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.harfbuzzFull,
+      drvs.cairo,
+      drvs.pixman,
+      drvs.libpng,
+      drvs.glib,
+    ],
+  }
+}
