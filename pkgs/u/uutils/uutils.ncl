@@ -2,7 +2,7 @@
   lib,
   drvs,
   uutils | lib.CargoPackage =
-    let j = import "./uutils-packages.json"
+    let j = import "./uutils-crates.json"
     in
     let _crates = std.record.map (fun c v => std.record.filter (fun ver val => val.sha256sum != "NULL") v) ((lib.functions.importCrates) j)
     in
@@ -27,8 +27,8 @@
         "--profile release-fast",
       ],
       extraCargoFlags = [
-        #"--features=feat_os_unix_musl",
-        "--features \"arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes\"",
+        "--features \"feat_os_unix_musl feat_acl\"",
+        # "--features \"arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes\"",
         # "--no-default-features",
 
         # "-p uu_wc",
@@ -68,14 +68,17 @@
       installPhase = [
         "install -d -m0755 ${DEST}/usr/bin",
         "install -m0755 target/%{target}/release-fast/coreutils ${DEST}/usr/bin",
-      ]
+      ],
 
       #   std.array.map (fun m => "%{m} DESTDIR=${DEST} install") buildPhase
-      ,
 
       #   biDrvs = [
       #     drvs.gnumake,
       #   ]
+      biDrvs = [
+        drvs.acl,
+        drvs.attr,
+      ],
     },
 
   uutilsSymlinks | lib.Package = {
@@ -199,6 +202,6 @@
         "install -d -m0755 ${DEST}/usr/bin",
         "cd ${DEST}/usr/bin",
       ]
-      @ (std.array.map (fun x => "ln -s /usr/bin/coreutils %{x}") links)
+      @ (std.array.map (fun x => "ln -s /usr/bin/coreutils %{x}") links),
   }
 }
