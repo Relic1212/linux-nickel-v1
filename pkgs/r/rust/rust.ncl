@@ -191,5 +191,4 @@
   }
 }
 & (import "CargoPackage.ncl")
-& (import "uutils.ncl")
 & (import "nickel-lang.ncl")
