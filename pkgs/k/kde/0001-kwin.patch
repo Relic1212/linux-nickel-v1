@@ -1,18 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f31cc8e413..de0d9fbf7f 100644
+index 2e9e8177af..bb3872ff3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -98,6 +98,9 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+@@ -102,6 +102,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
      GuiAddons
      I18n
      IdleTime
 +    Archive
++    Holidays
 +    KIO
 +    Notifications
      Package
      Service
      Svg
-@@ -183,13 +186,14 @@ set_package_properties(EGL PROPERTIES
+@@ -193,13 +197,14 @@ set_package_properties(EGL PROPERTIES
      PURPOSE "Required to build KWin with EGL support"
  )
  
@@ -32,9 +33,9 @@ index f31cc8e413..de0d9fbf7f 100644
 +# )
 +
  
- find_package(Wayland 1.23)
+ find_package(Wayland 1.24)
  set_package_properties(Wayland PROPERTIES
-@@ -373,6 +377,8 @@ if(KWIN_BUILD_GLOBALSHORTCUTS)
+@@ -378,6 +383,8 @@ if(KWIN_BUILD_GLOBALSHORTCUTS)
      find_package(KGlobalAccelD REQUIRED)
  endif()
  
@@ -44,10 +45,10 @@ index f31cc8e413..de0d9fbf7f 100644
  add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
  
 diff --git a/KWinConfig.cmake.in b/KWinConfig.cmake.in
-index 42619a94de..43f7fae038 100644
+index 84c878a581..5cbc51522a 100644
 --- a/KWinConfig.cmake.in
 +++ b/KWinConfig.cmake.in
-@@ -10,7 +10,7 @@ find_dependency(KF6Config "@KF6_MIN_VERSION@")
+@@ -13,7 +13,7 @@ find_dependency(KF6Config "@KF6_MIN_VERSION@")
  find_dependency(KF6CoreAddons "@KF6_MIN_VERSION@")
  find_dependency(KF6WindowSystem "@KF6_MIN_VERSION@")
  find_dependency(Wayland REQUIRED Server)
@@ -56,39 +57,8 @@ index 42619a94de..43f7fae038 100644
  find_dependency(Libdrm)
  
  @PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
-diff --git a/autotests/CMakeLists.txt b/autotests/CMakeLists.txt
-index 6e93d4f70a..7a243d4eaa 100644
---- a/autotests/CMakeLists.txt
-+++ b/autotests/CMakeLists.txt
-@@ -170,7 +170,7 @@ set(testOpenGLContextAttributeBuilder_SRCS
- )
- 
- add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
--target_link_libraries(testOpenGLContextAttributeBuilder epoxy::epoxy Qt::Test)
-+target_link_libraries(testOpenGLContextAttributeBuilder EGL::EGL Qt::Test)
- add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAttributeBuilder)
- ecm_mark_as_test(testOpenGLContextAttributeBuilder)
- 
-diff --git a/autotests/opengl_context_attribute_builder_test.cpp b/autotests/opengl_context_attribute_builder_test.cpp
-index 872b6274d1..919216eaf2 100644
---- a/autotests/opengl_context_attribute_builder_test.cpp
-+++ b/autotests/opengl_context_attribute_builder_test.cpp
-@@ -9,7 +9,12 @@
- #include "opengl/abstract_opengl_context_attribute_builder.h"
- #include "opengl/egl_context_attribute_builder.h"
- #include <QTest>
--#include <epoxy/egl.h>
-+#define EGL_EGLEXT_PROTOTYPES
-+#define GL_GLEXT_PROTOTYPES
-+#include <EGL/egl.h>
-+#include <EGL/eglext.h>
-+#include <GLES2/gl2.h>
-+#include <GLES2/gl2ext.h>
- 
- #include "config-kwin.h"
- 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2a8fab7565..10eafba4e5 100644
+index 376a47328e..124d244f33 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -16,7 +16,7 @@ if (KWIN_BUILD_KCMS)
@@ -100,7 +70,7 @@ index 2a8fab7565..10eafba4e5 100644
  target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
  set_target_properties(kwin PROPERTIES
     VERSION ${PROJECT_VERSION}
-@@ -226,7 +226,7 @@ target_link_libraries(kwin
+@@ -227,7 +227,7 @@ target_link_libraries(kwin
          KF6::ConfigCore
          KF6::CoreAddons
          KF6::WindowSystem
@@ -109,7 +79,7 @@ index 2a8fab7565..10eafba4e5 100644
          Libdrm::Libdrm
  
      PRIVATE
-@@ -251,7 +251,10 @@ target_link_libraries(kwin
+@@ -252,7 +252,10 @@ target_link_libraries(kwin
          UDev::UDev
          XKB::XKB
          EGL::EGL
@@ -121,7 +91,7 @@ index 2a8fab7565..10eafba4e5 100644
  
          Threads::Threads
          lcms2::lcms2
-@@ -365,7 +368,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
+@@ -363,7 +366,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
  
  generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
  
@@ -130,7 +100,7 @@ index 2a8fab7565..10eafba4e5 100644
  
  ecm_qt_declare_logging_category(kwin
      HEADER outputconfiglogging.h
-@@ -406,6 +409,10 @@ target_link_libraries(kwin_wayland
+@@ -404,6 +407,10 @@ target_link_libraries(kwin_wayland
      KWinQpaPlugin
      KF6WindowSystemKWinPlugin
      KF6IdleTimeKWinPlugin
@@ -142,7 +112,7 @@ index 2a8fab7565..10eafba4e5 100644
  
  if (TARGET KF6GlobalAccelKWinPlugin)
 diff --git a/src/backends/drm/drm_egl_layer.h b/src/backends/drm/drm_egl_layer.h
-index 31788d8e86..ff4fc8f62a 100644
+index f238e90c15..c7eb694f48 100644
 --- a/src/backends/drm/drm_egl_layer.h
 +++ b/src/backends/drm/drm_egl_layer.h
 @@ -14,7 +14,12 @@
@@ -160,11 +130,11 @@ index 31788d8e86..ff4fc8f62a 100644
  
  namespace KWin
 diff --git a/src/backends/drm/drm_gpu.h b/src/backends/drm/drm_gpu.h
-index d490b171c4..b03b71c377 100644
+index c52b098d5e..fea5c2a764 100644
 --- a/src/backends/drm/drm_gpu.h
 +++ b/src/backends/drm/drm_gpu.h
 @@ -21,7 +21,12 @@
- #include <qobject.h>
+ #include <QTimer>
  
  #include <chrono>
 -#include <epoxy/egl.h>
@@ -178,7 +148,7 @@ index d490b171c4..b03b71c377 100644
  
  namespace KWin
 diff --git a/src/backends/drm/drm_virtual_egl_layer.h b/src/backends/drm/drm_virtual_egl_layer.h
-index 75dee9a518..b0b58aa001 100644
+index fe3473216b..efdbca6f34 100644
 --- a/src/backends/drm/drm_virtual_egl_layer.h
 +++ b/src/backends/drm/drm_virtual_egl_layer.h
 @@ -14,7 +14,12 @@
@@ -214,13 +184,14 @@ index eea46899c1..2f3ab3c3cf 100644
  
  #include <QObject>
 diff --git a/src/helpers/CMakeLists.txt b/src/helpers/CMakeLists.txt
-index 29f992ff86..bbf6a67d49 100644
+index 3a570186af..e858df3f9a 100644
 --- a/src/helpers/CMakeLists.txt
 +++ b/src/helpers/CMakeLists.txt
-@@ -1,2 +1,2 @@
+@@ -1,3 +1,3 @@
 -add_subdirectory(killer)
 +# add_subdirectory(killer)
  add_subdirectory(wayland_wrapper)
+ add_subdirectory(kwindowprop)
 diff --git a/src/kcms/common/CMakeLists.txt b/src/kcms/common/CMakeLists.txt
 index a252660b57..43e7ec8894 100644
 --- a/src/kcms/common/CMakeLists.txt
@@ -262,7 +233,7 @@ index d4c561d27d..02e945734a 100644
  namespace KWin
  {
 diff --git a/src/opengl/eglbackend.h b/src/opengl/eglbackend.h
-index d4f7d957d1..602095649c 100644
+index f26a008dc4..6c68b172a9 100644
 --- a/src/opengl/eglbackend.h
 +++ b/src/opengl/eglbackend.h
 @@ -17,7 +17,12 @@
@@ -473,7 +444,7 @@ index 97dde1a92f..42e86f1c7d 100644
  #include "core/renderbackend.h"
  #include "kwin_export.h"
 diff --git a/src/opengl/glshader.h b/src/opengl/glshader.h
-index 12c93a9c0e..4bf213f7c7 100644
+index 0fc357abf8..380b9a8b22 100644
 --- a/src/opengl/glshader.h
 +++ b/src/opengl/glshader.h
 @@ -17,7 +17,11 @@
@@ -558,7 +529,7 @@ index dd3641ca83..d10aede413 100644
  
  namespace KWin
 diff --git a/src/plugins/colorpicker/colorpicker.cpp b/src/plugins/colorpicker/colorpicker.cpp
-index bc94b2a642..e9dacb1d3b 100644
+index db41b6bd7b..1fd523a4b3 100644
 --- a/src/plugins/colorpicker/colorpicker.cpp
 +++ b/src/plugins/colorpicker/colorpicker.cpp
 @@ -15,7 +15,11 @@
@@ -593,7 +564,7 @@ index 086de1ad50..3a88d22dee 100644
  #include <QSurfaceFormat>
  
 diff --git a/src/plugins/qpa/eglplatformcontext.h b/src/plugins/qpa/eglplatformcontext.h
-index a3ac1701b7..fd3482c584 100644
+index 8ac4eba6df..eab96d63df 100644
 --- a/src/plugins/qpa/eglplatformcontext.h
 +++ b/src/plugins/qpa/eglplatformcontext.h
 @@ -10,7 +10,12 @@
@@ -647,7 +618,7 @@ index 9e27fc9dbe..c4806bd30f 100644
  #include <qpa/qplatformoffscreensurface.h>
  
 diff --git a/src/scene/surfaceitem.cpp b/src/scene/surfaceitem.cpp
-index 8c64ede29e..0f179edea6 100644
+index 8ba6e6226e..21a605ac88 100644
 --- a/src/scene/surfaceitem.cpp
 +++ b/src/scene/surfaceitem.cpp
 @@ -17,7 +17,12 @@
@@ -665,7 +636,7 @@ index 8c64ede29e..0f179edea6 100644
  
  using namespace std::chrono_literals;
 diff --git a/src/scripting/windowthumbnailitem.h b/src/scripting/windowthumbnailitem.h
-index 59cb4c9ad6..d7b01cceea 100644
+index 9cc6479f9a..2c11f74896 100644
 --- a/src/scripting/windowthumbnailitem.h
 +++ b/src/scripting/windowthumbnailitem.h
 @@ -10,7 +10,11 @@

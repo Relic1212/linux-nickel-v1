@@ -1,11 +1,13 @@
 {
   lib,
   drvs,
+  _plasma_sources,
   kwin | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://download.kde.org/stable/plasma/6.4.5/kwin-6.4.5.tar.xz",
-      sha256sum = "decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7"
+      uri = "https://download.kde.org/stable/plasma/6.5.0/kwin-6.5.0.tar.xz",
+      # sha256sum = "decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7"
+      sha256sum = _plasma_sources."%{uri}",
     },
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -125,7 +127,7 @@
       drvs.utilLinuxWeak,
       drvs.vala,
       drvs.wayland,
-      drvs.waylandProtocols145,
+      drvs.waylandProtocols,
       drvs.xcbProto,
       drvs.xcbRenderutil,
       drvs.xorgMacros,
@@ -139,6 +141,9 @@
       drvs.knewstuff,
       drvs.kdeclarative,
       drvs.kglobalacceld,
+      drvs.knighttime,
+      drvs.qtpositioning,
+      drvs.kholidays,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
@@ -240,7 +245,7 @@
     patches = [
       # https://github.com/celestiamobile/celestia-web/blob/b278e8111a6090bdb023235a086203664d8cb336/patches/gles.patch#L124
       {
-        sha256sum = "c9b1ff7139d639df2dee585ff8dd49c01e79b4ab56ccc8813062932c869f0904",
+        sha256sum = "60b8802949a6c9cc4e612d65aa3bf253bd07a2b1385ad02a53069704549ad775",
         file = "0001-kwin.patch",
       }
     ]

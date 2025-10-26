@@ -37,4 +37,5 @@
   "https://download.kde.org/stable/frameworks/6.19/knewstuff-6.19.0.tar.xz" = "7090fb82f04fa634ba98ad150c88123c80c117d5aed8559633d831e1c8591aff",
   "https://download.kde.org/stable/frameworks/6.19/kdeclarative-6.19.0.tar.xz" = "0c71a9a08f447b20fa06be836d059b2cd4791e972e279d99464e2dd0dbff7a90",
   "https://download.kde.org/stable/frameworks/6.19/attica-6.19.0.tar.xz" = "30813efb577f75b87eec4f02300a906e5f39a8dd2c7e7488958a7ffeaaaee1a8",
+  "https://download.kde.org/stable/frameworks/6.19/kholidays-6.19.0.tar.xz" = "7876116dc022fe722294305cd58dde53fd21bcd664188ad26aceed63e55ddc86",
 }

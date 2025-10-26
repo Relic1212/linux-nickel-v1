@@ -10,11 +10,13 @@
     & {
 
       name,
-      singleSource | priority -999 = {
-        # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
-        uri = "https://download.kde.org/stable/plasma/6.4.5/%{name}-6.4.5.tar.xz",
-        sha256sum = _plasma_sources."%{uri}",
-      },
+      singleSource | priority -999 =
+        let version = "6.5.0" in
+        {
+          uri = "https://download.kde.org/stable/plasma/%{version}/%{name}-%{version}.tar.xz",
+          # uri = "https://download.kde.org/stable/plasma/6.4.5/%{name}-6.4.5.tar.xz",
+          sha256sum = _plasma_sources."%{uri}",
+        },
 
       biDrvs | priority -1 =
         _kf.biDrvs
@@ -107,6 +109,17 @@
           drvs.libvorbis,
           drvs.libogg,
           drvs.libtool,
+        ]
+    },
+
+  knighttime =
+    _plasma
+    & {
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.qtpositioning,
+          drvs.kholidays,
         ]
     },
 

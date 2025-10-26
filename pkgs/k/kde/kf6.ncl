@@ -1119,6 +1119,8 @@
           drvs.vala,
         ]
     },
+
+  kholidays = _kf & {},
   breezeIcons =
     _kf
     & {

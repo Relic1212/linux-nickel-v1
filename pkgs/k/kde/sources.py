@@ -1,0 +1,44 @@
+import hashlib
+import requests
+def fetch(url):
+
+    headers = {
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'en,sv;q=0.9,en-US;q=0.8',
+        'priority': 'u=0, i',
+        'referer': 'https://download.kde.org/',
+        'sec-ch-ua': '"Not=A?Brand";v="24", "Chromium";v="140"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Linux"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'cross-site',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+    }
+
+    response = requests.get(url, headers=headers,timeout=10)
+
+    return response
+
+
+
+with open("plasma_urls.txt") as f:
+    urls = [l.strip() for l in f.readlines()]
+
+for url in urls:
+    try:
+        print(f"# fetching url: {url}")
+        r = fetch(url)
+        c = r.content
+        h = hashlib.sha256(c).hexdigest()
+        print( "#", r.status_code)
+        s = (
+            f"\"{url}\" = \"" + h + "\","
+        )
+        print(s)
+        with open("_plasma_sources.ncl","a") as f:
+            f.write(s)
+    except:
+        pass
