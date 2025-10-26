@@ -167,7 +167,7 @@ let
         # CONFIG_XEN_SCSI_FRONTEND is not set
         # CONFIG_HYPERV is not set
         # CONFIG_XEN_VIRTIO is not set
-        # CONFIG_VBOXGUEST is not set
+        # CONFIG_VBOXGUEST is not setxorr
         # CONFIG_VBOXSF_FS is not set
         # CONFIG_DRM_VBOXVIDEO is not set
         # CONFIG_DRM_BOCHS is not set
@@ -175,6 +175,7 @@ let
         # CONFIG_DRM_VMWGFX is not set
         # CONFIG_DRM_HYPERV is not set
         # CONFIG_DRM_LEGACY is not set
+        CONFIG_NTSYNC=y
         " > /tmp/workdir/build/misc.diffconfig
         "%,
       "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/misc.diffconfig",
@@ -237,21 +238,22 @@ in
     in
     {
       # name = "linux",
-      # sourceInputs = linuxHeaders.sourceInputs,
-      sourceInputs = [
-        {
-          src = {
-            # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz",
-            # sha256sum = "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
+      singleSource = {
+        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz",
+        # sha256sum = "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
 
-            uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz",
-            sha256sum = "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d"
-          }
-        }
-      ],
+        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz",
+        # sha256sum = "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d"
+
+        uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.3.tar.xz",
+        sha256sum = "3ecc8619d8a5b5f675224d2f52c71d1fc09bc3f9c019d8bd82d0581e03689499"
+      },
+      # sourceInputs = linuxHeaders.sourceInputs,
+
       options = {
         #  version = linuxHeaders.options.version ,
-        version = "6.15.9",
+        # version = "6.17.3",
+        version = std.array.at 0 (std.string.split ".tar" (std.array.at 1 (std.string.split "-" singleSource.uri))),
         compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
