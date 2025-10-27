@@ -48,12 +48,14 @@
         buildEnv,
         target = (if buildEnv.TARGET == null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
         extraEnv = {
-          STATIC_RUSTFLAGS | default = [
-            "-C target-feature=+crt-static",
-            "-C link-self-contained=yes",
-            "-C link-arg=-static",
-            "-C link-arg=--static"
-          ] @ (if buildEnv._isMold then ["-C link-arg=-fuse-ld=mold" ] else []),
+          STATIC_RUSTFLAGS | default =
+            [
+              "-C target-feature=+crt-static",
+              "-C link-self-contained=yes",
+              "-C link-arg=-static",
+              "-C link-arg=--static"
+            ]
+            @ (if buildEnv._isMold then ["-C link-arg=-fuse-ld=mold"] else []),
           EXTRA_RUSTFLAGS | default = [],
           RUSTFLAGS | default = STATIC_RUSTFLAGS @ EXTRA_RUSTFLAGS,
         },
@@ -65,7 +67,8 @@
             drvs.muslShared,
             drvs.pkgconf,
             drvs.clangCc,
-          ] @ llvmProviders
+          ]
+          @ llvmProviders
           @ utilsProviders
           @ (if enableSccache then [sccacheProvider] else []),
 
