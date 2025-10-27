@@ -53,7 +53,7 @@
         isLlvm,
         enableCcache,
         utilsProviders,
-        llvmProvider,
+        llvmProviders,
 
         enableParallel,
         debug,
@@ -92,7 +92,7 @@
                   drvs.pkgconf,
                   drvs.musl,
                 ]
-                @ (if isLlvm then [llvmProvider] else [])
+                @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
                 @ (if (generator == "Ninja") then [drvs.samurai] else [])
               )

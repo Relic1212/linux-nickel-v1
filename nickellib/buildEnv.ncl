@@ -61,6 +61,8 @@
   BuildEnv = {
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
+    _isMold | Bool | default = false,
+    _ld =  if _isMold then "mold" else "lld",
     _debug | Bool | default = false,
     # _debug ,
     _optFlag | String = if (!_debug) then "-O2" else "-g",
@@ -80,7 +82,7 @@
     READELF | nullOrString | default = if _isLlvm then "llvm-readelf" else null,
     OBJDUMP | nullOrString | default = if _isLlvm then "llvm-objdump" else null,
     OBJCOPY | nullOrString | default = if _isLlvm then "llvm-objcopy" else null,
-    LD | NullOrStringOrArray | default = if _isCross then ["lld", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then "lld" else null,
+    LD | NullOrStringOrArray | default = if _isCross then ["lld", "--target=%{TARGET}", "--sysroot=/%{TARGET}"] else if _isLlvm then _ld else null,
 
     CFLAGS | nullOrArray | default =
       functions.flattenNullOrArray [
@@ -166,7 +168,7 @@
     LLVM_CFLAGS | nullOrArray | default = if _isLlvm then [_optFlag, "-pipe"] else null,
     LLVM_CPPFLAGS | nullOrArray | default = null,
     LLVM_CXXFLAGS | nullOrArray | default = if _isLlvm then [_optFlag, "-pipe"] else null,
-    LLVM_LDFLAGS | nullOrArray | default = if _isLlvm then ["-fuse-ld=lld", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"] else null,
+    LLVM_LDFLAGS | nullOrArray | default = if _isLlvm then ["-fuse-ld=%{_ld}", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"] else null,
 
     STAGE_CFLAGS | nullOrArray | default = null,
     STAGE_CPPFLAGS | nullOrArray | default = null,

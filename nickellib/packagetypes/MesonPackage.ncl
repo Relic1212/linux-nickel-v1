@@ -14,7 +14,8 @@
         debug,
         stage,
         utilsProviders | not_exported,
-        llvmProvider | not_exported,
+        
+        llvmProviders | not_exported,
         muslProvider | not_exported,
 
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
@@ -64,7 +65,7 @@
                       muslProvider,
                     ]
                 )
-                @ (if isLlvm then [llvmProvider] else [])
+                @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
               )
             else

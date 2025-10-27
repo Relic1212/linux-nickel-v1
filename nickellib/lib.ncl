@@ -164,6 +164,7 @@ in
         ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
         llvmProvider | not_exported | default = drvs.llvm,
+        llvmProviders | not_exported | default = [llvmProvider] @ ( if buildEnv._isMold then [ drvs.mold ] else []),
         muslProvider | not_exported | default = if (!debug) then drvs.musl else drvs.muslDebug,
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
