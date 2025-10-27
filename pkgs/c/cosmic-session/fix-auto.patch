@@ -1,21 +1,21 @@
 diff --git a/src/main.rs b/src/main.rs
-index a6716af..2ce42cc 100644
+index c2e32fb..38746ae 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -451,7 +451,6 @@ async fn start(
- 	}
+@@ -427,7 +427,6 @@ async fn start(
+ 	.await;
  
  	#[cfg(feature = "autostart")]
 -	if !*is_systemd_used() {
  		info!("looking for autostart folders");
  		let mut directories_to_scan = Vec::new();
  
-@@ -554,7 +553,7 @@ async fn start(
+@@ -530,7 +529,7 @@ async fn start(
  			}
  		}
  		info!("started {} programs", dedupe.len());
 -	}
-+	
++
  
  	let mut signals = Signals::new(vec![libc::SIGTERM, libc::SIGINT]).unwrap();
  	let mut status = Status::Exited;

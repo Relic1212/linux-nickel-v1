@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-initial-setup/archive/refs/tags/epoch-1.0.0-beta.1.tar.gz",
+        uri = "https://github.com/pop-os/cosmic-initial-setup/archive/refs/tags/epoch-1.0.0-beta.3.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"7651949001e13cfc93c51ccb806812600e8afe9dba0bad65248bf1eabf7c1e21"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "85ad78cf0fdc54f92431c17b78f80008f6c7a09d737d1cd5cd66dc3269efd78a"
@@ -54,10 +54,10 @@
       }
     ],
     target,
-    buildPhase = [
-      "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
-      "echo 'Done building'",
-    ],
+    # buildPhase = [
+    #   "just build-vendored --offline --target x86_64-unknown-linux-musl --verbose",
+    #   "echo 'Done building'",
+    # ],
 
     installPhase = [
       "export CARGO_TARGET_DIR=\"target/%{target}\"",
