@@ -62,7 +62,7 @@
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
     _isMold | Bool | default = false,
-    _ld =  if _isMold then "mold" else "lld",
+    _ld = if _isMold then "mold" else "lld",
     _debug | Bool | default = false,
     # _debug ,
     _optFlag | String = if (!_debug) then "-O2" else "-g",
