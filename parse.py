@@ -112,9 +112,11 @@ def build_all(drvs):
     for k in drvs["hashByName"].keys():
         pn_hash = drvs["hashByName"][k]
         try:
-            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"])
+            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"])
             s.append(k)
-        finally:
+        except KeyboardInterrupt as e:
+            raise e
+        except:
             failed.append(k)
 
     print("The following packages succeded")
