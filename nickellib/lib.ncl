@@ -113,6 +113,7 @@ in
         isStatic | Bool | default = true,
         isLlvm | Bool | default = true,
         debug | Bool | default = false,
+        useMimalloc | default = false,
         buildInputsValidated
           | not_exported
           | std.contract.from_validator (fun arr =>
@@ -164,8 +165,9 @@ in
         ),
         utilsProviders | not_exported | Array Dyn | default = if (stage == -1) then ([drvs.busybox]) else [],
         llvmProvider | not_exported | default = drvs.llvm,
-        llvmProviders | not_exported | default = [llvmProvider] @ ( if buildEnv._isMold then [ drvs.mold ] else []),
+        llvmProviders | not_exported | default = [llvmProvider] @ (if buildEnv._isMold then [drvs.mold] else []),
         muslProvider | not_exported | default = if (!debug) then drvs.musl else drvs.muslDebug,
+        muslProviders | default = if (!useMimalloc) then [muslProvider] else [drvs.muslProvider, drvs.mimalloc],
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
