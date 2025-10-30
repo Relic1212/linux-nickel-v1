@@ -167,8 +167,11 @@
     quickshell
     & {
       singleSource | priority 1 = {
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/e9a574d919a89602d2868621576b2ccae54a5cb0.tar.gz",
-        sha256sum = "637efbe5f117953c689caed88ae23dde9bc9bc480dc4063b3770903114b8c3ed"
+        # uri = "https://github.com/quickshell-mirror/quickshell/archive/e9a574d919a89602d2868621576b2ccae54a5cb0.tar.gz",
+        # sha256sum = "637efbe5f117953c689caed88ae23dde9bc9bc480dc4063b3770903114b8c3ed",
+
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/3e2ce40b18af943f9ba370ed73565e9f487663ef.tar.gz",
+        sha256sum = "cfcea1449650f4502a20a4a1a2ab973eebdc04203121f9c5674179b531824bee",
       }
     }
 }
