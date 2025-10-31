@@ -101,20 +101,21 @@ def link_workdir(h, name):
 
 def check_deterministic_output(output_path: str, filename: str, sha256sum: str):
     outputs = os.listdir(output_path)
-    if len(outputs)>1:
-        raise Exception(f"ERROR {output_path} ({filename}) has more than 1 file")
+    if len(outputs) > 1:
+        raise Exception(
+            f"ERROR {output_path} ({filename}) has more than 1 file")
     elif len(outputs) != 1:
         raise Exception(f"no outputs (not {filename}) in " + output_path)
     output_filepath = f"{output_path}/{filename}"
     if not os.path.isfile(output_filepath):
         raise Exception(f"{output_filepath} is not a file")
-    
+
     computed = hashes.compute_file_or_dir_sha256sum(output_filepath)
     print("verifying", output_filepath)
     if computed != sha256sum:
         print(f"ERROR: {computed}!={sha256sum}")
         raise Exception(f"Wrong sha256sum for {output_filepath}")
-    
+
 
 def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) -> None:
 
@@ -136,13 +137,13 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     uses_ccache = drv["enableCcache"]
     uses_sccache = True
 
-    #TODO: this should always be set
+    # TODO: this should always be set
     if "deterministicFetcher" in drv.keys():
         deterministic_fetcher = True
         output_file = drv["outputFile"]
-        output_sha256sum =drv["outputSha256sum"]
+        output_sha256sum = drv["outputSha256sum"]
     else:
-        deterministic_fetcher=False
+        deterministic_fetcher = False
     # sysroot_drv_hash = drv["sysrootDrvHash"] # the goal
     sysroot_drv_hash = pkghash2sysroothash[h]
 
@@ -162,12 +163,13 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
 
     print(f"building {name}")
 
-    os.makedirs(workdir + "/build")
+    os.makedirs(workdir)
+    # os.makedirs(workdir + "/build")
     with open(workdir + "/drv.json", "w", encoding="utf-8") as f:
         json.dump(drv, f)
     os.makedirs(workdir + "/sysroot", exist_ok=True)
     os.makedirs(workdir + "/out/destdir", exist_ok=True)
-    os.makedirs(workdir + "/src")
+    # os.makedirs(workdir + "/src")
     with open(workdir + f"/pn-{name}", "w", encoding="utf-8") as f:
         pass
 
@@ -251,10 +253,32 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     for ropath in ropaths:
         args += ["--ro-bind", f"{workdir}/{ropath}", f"/tmp/workdir/{ropath}"]
 
-    rwpaths = ["src", "build", "out"]
+    rwpaths_tmp = ["src", "build"]
 
-    for rwpath in rwpaths:
+    tmp_workdir = f"/tmp/build-{h}"
+
+    tmpfs_build = True
+    delete_tmpfs_build_on_success = True
+    tmpfs_dirs_to_delete = []
+    for rwpath in rwpaths_tmp:
+        if tmpfs_build:
+            rwpath_dir = f"{tmp_workdir}/{rwpath}"
+            subprocess.run(["rm", "-rf", rwpath_dir])
+            os.makedirs(rwpath_dir)
+            tmpfs_dirs_to_delete.append(rwpath_dir)
+            subprocess.run(["ln", "-s", rwpath_dir, rwpath],
+                        cwd=workdir, check=True)
+            args += ["--bind", rwpath_dir, f"/tmp/workdir/{rwpath}"]
+        else:
+            os.makedirs(f"{workdir}/{rwpath}")
+            args += ["--bind", f"{workdir}/{rwpath}", f"/tmp/workdir/{rwpath}"]
+
+    rwpaths_persist = ["out"]
+
+    for rwpath in rwpaths_persist:
         args += ["--bind", f"{workdir}/{rwpath}", f"/tmp/workdir/{rwpath}"]
+
+    rwpaths = rwpaths_tmp + rwpaths_tmp
 
     sandboxed = drv["buildInChroot"]
     uses_ccache = drv["enableCcache"]
@@ -302,12 +326,12 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
         senv["HOME"] = "/"
         if uses_ccache:
             senv["CCACHE_DIR"] = "/tmp/ccache"
-    
+
         if uses_sccache:
             args += ["--bind",
                      f"{dirpaths.get_basedir()}/sccache", "/tmp/sccache"]
 
-    else: # not sandboxed
+    else:  # not sandboxed
         senv = os.environ.copy()
         senv["TMPDIR"] = "/tmp"
         sysroot = "/"
@@ -372,11 +396,10 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
         # with open(f"pkgs/c/{name.replace("-sources","")}/src.sha256sum","w") as f:
         #     f.write(computed)
 
-
         check_deterministic_output(
-         workdir + "/out/destdir",
-         output_file,
-         output_sha256sum   
+            workdir + "/out/destdir",
+            output_file,
+            output_sha256sum
         )
     subprocess.run(["touch", status_file], check=True)
     t2 = timeit.default_timer()
@@ -385,3 +408,13 @@ def build(h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict) ->
     with open(dirpaths.get_basedir() + "/tmp/buildtimes.txt", "a", encoding="utf-8") as f:
         f.write(f"{name}\t-\t{buildtime}\n")
     print(f"finished building {name}")
+
+    if tmpfs_build and delete_tmpfs_build_on_success:
+        for d in tmpfs_dirs_to_delete:
+            print(f"removing {d}")
+            try:
+                subprocess.run(["rm", "-rf", d],check=True)
+            except subprocess.CalledProcessError:
+                # go, permission and tihngs
+                print(f"warning: failed to delete {d}")
+
