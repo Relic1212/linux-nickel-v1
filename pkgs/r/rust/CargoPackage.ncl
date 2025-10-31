@@ -61,9 +61,10 @@
         },
 
         sccacheProvider | default = drvs.sccache,
+        rustProvider | default = drvs.rust,
         baseBuildinputPackages | priority -1000 =
           [
-            drvs.rust,
+            rustProvider,
             drvs.muslShared,
             drvs.pkgconf,
             drvs.clangCc,
@@ -105,7 +106,9 @@
         sccacheSetupPhase = (
           if enableSccache then
             [
-              "export SCCACHE_DIR=/tmp/sccache",
+              # "export SCCACHE_DIR=/tmp/sccache", set in conf instead
+              # "export SCCACHE_MAX_SIZE=100G", set in conf instead
+
               "export SCCACHE_CONF=/tmp/sccache/config",
               "export RUSTC_WRAPPER=/usr/bin/sccache",
               # "export SCCACHE_ERROR_LOG=${SRC}/sccache_log.txt",
