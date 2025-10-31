@@ -83,7 +83,7 @@ in
         ###
         drvs.jsonC,
         drvs.pcre2,
-        drvs.libxkbcommon,
+        # drvs.libxkbcommon,
         drvs.dbusForQt,
         drvs.eudev,
         drvs.kmod,
@@ -102,6 +102,34 @@ in
         drvs.glib,
         ### -font
       ]
+      @ (
+        if options.x11 then
+          [
+            drvs.libevdev,
+            drvs.libx11,
+            drvs.libxau,
+            drvs.libxcb,
+            drvs.libxcursor,
+            drvs.libxfixes,
+            drvs.libxkbcommonX11,
+            drvs.libxrender,
+            drvs.xcbProto,
+            drvs.xcbRenderutil,
+            drvs.xcbUtil,
+            drvs.xcbUtilCursor,
+            drvs.xcbUtilErrors,
+            drvs.xcbUtilImage,
+            drvs.xcbUtilKeysyms,
+            drvs.xcbUtilWm,
+            drvs.xorgMacros,
+            drvs.xorgproto,
+            drvs.xtrans,
+          ]
+        else
+          [
+            drvs.libxkbcommon,
+          ]
+      )
       @ [
         # drvs.cmake,
         # drvs.samurai,
@@ -111,7 +139,22 @@ in
     preConfigurePhase = [
       m%"sed -i 's@\/bin\/pwd@\/usr\/bin\/pwd@g' ${SRC}/configure"%,
     ],
-    cmakeExtraArgsRecord = qtbaseCmakeExtraArgsRecorf,
+    options = {
+      x11 | default = false,
+    },
+    cmakeExtraArgsRecord =
+      qtbaseCmakeExtraArgsRecorf
+      & (
+        if options.x11 then
+          {
+            "-DFEATURE_xcb" = true,
+            "-DFEATURE_xkbcommon_x11" = true,
+            "-DFEATURE_system_xcb_input" = true,
+            "-DCMAKE_ENABLE_FIND_PACKAGE_X11" = true,
+          }
+        else
+          {}
+      ),
 
     #buildPhase = [
     #  "ninja"
@@ -128,7 +171,22 @@ in
     #     "$(pkg-config --libs --static gbm glesv2 dri egl)",
     #   ],
     # },
-  }
+  },
+  qtbaseX11 =
+    qtbase
+    & {
+      options.x11 = true,
+      buildEnv = {
+        EXTRA_LDFLAGS = [
+          "$(pkg-config --static --libs libudev)",
+          "$(pkg-config --static --libs libevdev)",
+          "$(pkg-config --static --libs xcb)",
+          "$(pkg-config --static --libs xcb-shm)",
+          "$(pkg-config --static --libs x11-xcb)",
+          "$(pkg-config --static --libs xau)",
+        ]
+      }
+    }
 }
 & {
   lib,
