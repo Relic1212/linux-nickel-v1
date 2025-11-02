@@ -23,7 +23,8 @@
       "sed -i 's@ SHARED@@g' ${SRC}/CMakeLists.txt"
     ],
     cmakeExtraArgsRecord = {
-      "-DLDAC_SOFT_FLOAT" = "OFF"
+      "-DLDAC_SOFT_FLOAT" = "OFF",
+      "-DCMAKE_POLICY_VERSION_MINIMUM" = "3.5",
     }
   }
 }

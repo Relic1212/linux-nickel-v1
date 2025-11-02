@@ -14,6 +14,9 @@
       # LD | priority 1 = "\"lld --verbose -lEGL -lgallium_dri\"",
       CC = "cc",
     },
+    options = {
+      glx | default = false,
+    },
     extraEnv = {
       # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
       EXTRA_RUSTFLAGS =
@@ -43,10 +46,20 @@
           in
           std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
         )
+        @ (
+          if (options.glx) then
+            [
+              "$(pkg-config --libs --static xcb)",
+              "$(pkg-config --libs --static xcb-shm x11 x11-xcb)",
+            ]
+          else
+            []
+        )
         @ [
           "-C link-arg=-Wl,--pop-state",
         ],
     },
+    enableSccache = true,
     extraCargoFlags = [
       "--no-default-features",
       # "--verbose",
@@ -232,77 +245,110 @@
         llvmProvider,
         drvs.clangCc,
       ]
+      @ (if enableSccache then [drvs.sccache] else [])
       @ utilsProviders,
     llvmProvider = drvs.llvmFull,
 
-    biDrvs = [
-      drvs.alsaLibs,
-      drvs.atSpi2Core,
-      drvs.bluez,
-      drvs.cairo,
-      drvs.cairoGobjectEmpty,
-      drvs.dbus,
-      drvs.eudev,
-      drvs.expat,
-      drvs.fdkAac,
-      drvs.ffmpeg,
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.fribidi,
-      drvs.gdkPixbufFull,
-      drvs.glib,
-      drvs.gperf,
-      drvs.gtk3,
-      drvs.harfbuzz,
-      drvs.hwdata,
-      drvs.jansson,
-      drvs.jsonC,
-      drvs.kmod,
-      drvs.ldacbt,
-      drvs.libcamera,
-      drvs.libdisplayinfo,
-      drvs.libdlEgl,
-      drvs.libdrm,
-      drvs.libelf,
-      drvs.libepoxy,
-      drvs.libevdev,
-      drvs.libffi,
-      # drvs.libfreeaptx,
-      drvs.libinput,
-      drvs.libjpegTurbo,
-      drvs.libopus,
-      drvs.libpciaccess,
-      drvs.libpng,
-      drvs.libsndfile,
-      drvs.libusb,
-      drvs.libxkbcommon,
-      drvs.libyaml,
-      drvs.linuxHeaders,
-      drvs.llvmConfigStatic,
-      drvs.lua,
-      drvs.m4,
-      drvs.mesaExp,
-      drvs.mtdev,
-      drvs.ncurses,
-      drvs.openssl,
-      drvs.pango,
-      drvs.pcre2,
-      drvs.pixman,
-      drvs.readline,
-      drvs.sbc,
-      # drvs.seatd,
-      drvs.spirvLlvmTranslator,
-      drvs.spirvTools,
-      drvs.utilLinux,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.xz,
-      drvs.zlibNg,
-      drvs.zstd,
-      drvs.pipewire,
-      drvs.dinit,
-      drvs.libstdcppCompat,
-    ],
+    biDrvs =
+      [
+        drvs.alsaLibs,
+        drvs.atSpi2Core,
+        drvs.bluez,
+        drvs.cairo,
+        drvs.cairoGobjectEmpty,
+        drvs.dbus,
+        drvs.eudev,
+        drvs.expat,
+        drvs.fdkAac,
+        drvs.ffmpeg,
+        drvs.fontconfig,
+        drvs.freetype,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.glib,
+        drvs.gperf,
+        drvs.gtk3,
+        drvs.harfbuzz,
+        drvs.hwdata,
+        drvs.jansson,
+        drvs.jsonC,
+        drvs.kmod,
+        drvs.ldacbt,
+        drvs.libcamera,
+        drvs.libdisplayinfo,
+        drvs.libdlEgl,
+        drvs.libdrm,
+        drvs.libelf,
+        drvs.libepoxy,
+        drvs.libevdev,
+        drvs.libffi,
+        # drvs.libfreeaptx,
+        drvs.libinput,
+        drvs.libjpegTurbo,
+        drvs.libopus,
+        drvs.libpciaccess,
+        drvs.libpng,
+        drvs.libsndfile,
+        drvs.libusb,
+        drvs.libxkbcommon,
+        drvs.libyaml,
+        drvs.linuxHeaders,
+        drvs.llvmConfigStatic,
+        drvs.lua,
+        drvs.m4,
+        drvs.mtdev,
+        drvs.ncurses,
+        drvs.openssl,
+        drvs.pango,
+        drvs.pcre2,
+        drvs.pixman,
+        drvs.readline,
+        drvs.sbc,
+        # drvs.seatd,
+        drvs.spirvLlvmTranslator,
+        drvs.spirvTools,
+        drvs.utilLinux,
+        drvs.wayland,
+        drvs.waylandProtocols,
+        drvs.xz,
+        drvs.zlibNg,
+        drvs.zstd,
+        drvs.pipewire,
+        drvs.dinit,
+        drvs.libstdcppCompat,
+      ]
+      @ (
+        if options.glx then
+          [
+            drvs.libxcursor,
+            drvs.xorgMacros,
+            drvs.xorgproto,
+            drvs.xtrans,
+            drvs.libxcb,
+            drvs.xcbProto,
+            drvs.libxau,
+            drvs.libx11,
+            drvs.libxrender,
+            drvs.libxfixes,
+            drvs.xcbRenderutil,
+            drvs.libxfont2,
+            drvs.libfontenc,
+            drvs.libxcvt,
+            drvs.libxshmfence,
+            # drvs.xwayland,
+            drvs.libxkbfile,
+            drvs.xcbUtilWm,
+            drvs.xcbUtilErrors,
+            drvs.libxext,
+            drvs.libxf86vm,
+            drvs.libxrandr,
+            drvs.mesaGlx,
+          ]
+        else
+          [
+            drvs.mesaExp,
+          ]
+      ),
     propagatedBuildInputs = [
       drvs.seatd,
     ]
@@ -315,54 +361,6 @@
       "install -d -m0755 ${DEST}/usr/lib/pkgconfig",
       "cd ${DEST}/usr/lib/pkgconfig",
       "ln -s cairo.pc cairo-gobject.pc",
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
-  clangCcSymlink | lib.Package = {
-    installPhase = [
-      "install -d -m0755 ${DEST}/usr/bin",
-      "cd ${DEST}/usr/bin",
-      "ln -s clang cc",
-    ]
-  }
-}
-& {
-
-  lib,
-  niriCc | lib.Package = {
-    installPhase = [
-      m%"
-            install -d -m0755 ${DEST}/usr/bin
-
-            cd ${DEST}/usr/bin
-
-            printf "#!/bin/sh
-            export LDFLAGS=\"\${LDFLAGS} -lEGL -lgallium_dri\"
-            export LD=\"\${LD} -lEGL -lgallium_dri\"
-
-            exec /usr/bin/clang --verbose -lEGL -lgallium_dri \"\${@}\"
-            " > cc
-
-            printf "#!/bin/sh
-            export LDFLAGS=\"\${LDFLAGS} -lEGL -lgallium_dri\"
-            export LD=\"\${LD} -lEGL -lgallium_dri\"
-
-            exec /usr/bin/clang++ \"\${@}\"
-            " > "c++"
-            "%,
-      # m%"
-      # printf "#!/bin/sh
-      # exec /usr/bin/lld -static --static \"\${@}\"
-      # " > static-lld
-      # "%,
-      m%"
-            for f in $(ls); do
-                chmod +x $f
-            done
-            "%,
     ]
   }
 }

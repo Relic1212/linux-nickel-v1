@@ -15,7 +15,7 @@ in
       extraFiles = [
         {
           file = "busybox-minimal.config",
-          sha256sum = "cbb326d9da00d4d4b5584f7996bb3b291d11793d4d0d708b43d727f34d7ae427" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
+          sha256sum = "a3248eac1cb490d1324df3c79151f66ca75fe2fa2c66c2fbfd249a17d739e389" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
         }
       ],
       # buildInputs = [
@@ -118,7 +118,7 @@ in
       extraFiles = [
         {
           file = "busybox-minimal.config",
-          sha256sum = "cbb326d9da00d4d4b5584f7996bb3b291d11793d4d0d708b43d727f34d7ae427" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
+          sha256sum = "a3248eac1cb490d1324df3c79151f66ca75fe2fa2c66c2fbfd249a17d739e389" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
         }
       ],
       # buildInputs = [

@@ -89,7 +89,7 @@ in
       extraFiles = [
         {
           file = "busybox.config",
-          sha256sum = "f457f5f43dabb9bbda657e542c76553ced78ecfbd739ca216ac594a622779e96" #let s=import 'Raw "./files_minimal/busybox.config" in lib.functions.computeSha256 s
+          sha256sum = "aad2b84e7aa6b3b00db072ca8d52bf4cc7074da6884f8c4d78a3b21782f7b0c5" #let s=import 'Raw "./files_minimal/busybox.config" in lib.functions.computeSha256 s
         }
       ],
       buildDir,

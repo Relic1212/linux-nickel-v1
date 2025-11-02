@@ -22,6 +22,7 @@
       drvs.readline,
       drvs.pcre2,
       drvs.pango,
+      drvs.fribidi,
       drvs.cairo,
       drvs.libpng,
       drvs.harfbuzz,

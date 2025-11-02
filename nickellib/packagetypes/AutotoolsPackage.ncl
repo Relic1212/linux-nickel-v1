@@ -56,6 +56,7 @@
             "(cd ${SRC}; autoreconf -fiv)",
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
           ],
+        pkgconfProvider,
         perlProvider | not_exported | default = drvs.perl,
         baseBuildinputPackages | priority -999 =
           AutotoolsPackage.baseBuildinputPackages
@@ -67,7 +68,7 @@
                 drvs.autoconf,
                 drvs.m4,
                 drvs.libtool,
-                drvs.pkgconf,
+                pkgconfProvider,
               ]
             else
               []

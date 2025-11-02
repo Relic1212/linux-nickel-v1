@@ -7,6 +7,12 @@
   _rootfs,
   _rootfs2,
   busybox,
+  busyboxMimalloc =
+    busybox
+    & {
+      useMimalloc = true,
+      biDrvs | priority 1 = busybox.biDrvs @ [drvs.mimalloc],
+    },
   busyboxFinal = busybox & { postInstallPhase = ["rm ${DEST}/usr/bin/modprobe"] },
   dashSh | lib.Package = {
     installPhase = [
@@ -107,7 +113,8 @@
           drvs.curl,
           drvs.metalog,
           #drvs.zsh,
-          drvs.fish,
+          # drvs.fish,
+          drvs.fish4Cmake,
           drvs.mawk,
           drvs.ncurses,
           (drvs.basefiles & { priority = 1 }),
@@ -191,12 +198,19 @@
               # drvs.mwc,
               drvs.xwayland,
               drvs.xkbcomp,
-              drvs.hyprland,
+              drvs.hyprlandX11,
               drvs.hyprpaper,
               drvs.hyprpicker,
               drvs.hyprlandContrib,
               drvs.niri,
               drvs.xwaylandSatellite,
+              drvs.niriNsticky,
+              drvs.niriSessionManager,
+              drvs.nirinit,
+              drvs.nirius,
+              drvs.swaytreesave,
+              drvs.stasis,
+              drvs.system76Scheduler,
 
               # ### QT
               # drvs.qtdeclarative,
@@ -206,13 +220,17 @@
               # # drvs.hyprlandQtSupport,
               # # drvs.hyprlandQtutils,
               # drvs.qt5compat,
-              drvs.quickshell,
+              drvs.quickshellGit,
               drvs.danklinuxDgop,
               drvs.danklinuxDms,
               drvs.ddcutil,
               drvs.lmSensorsSensors,
               drvs.androidTools,
               drvs.androidUdevRules,
+              drvs.kanshi,
+              drvs.iwmenu,
+              drvs.iwgtk,
+              drvs.impala,
 
               ## -QT
             ]
@@ -303,7 +321,8 @@
                 drvs.xdgDbusProxy,
                 drvs.mountOthers,
                 drvs.sbctl,
-                drvs.pythonFull,
+                # drvs.pythonFull,
+                drvs.pythonInteractive,
                 # drvs.autotiling,
                 # drvs.i3ipcPython,
                 drvs.tzdata,
@@ -320,7 +339,7 @@
                 drvs.gcr,
                 drvs.gtk3,
                 # drvs.ptyxis,
-                # drvs.libadwaita,
+                # drvs.libadwaitaShared_181,
                 # drvs.vte,
                 # drvs.gnomeTerminal,
                 # drvs.libhandy,
@@ -337,7 +356,7 @@
                 drvs.adwGtk3,
                 # drvs.swappy,
                 drvs.wezterm,
-
+                drvs.micro,
                 # ttyescape
                 drvs.buffybox,
                 drvs.hkdm,
@@ -404,6 +423,9 @@
     drvs.cosmicTerm,
     drvs.cosmicEdit,
     drvs.cosmicStore,
+    drvs.cosmicInitialSetup,
+    drvs.cosmicExtAlternativeStartup,
+    drvs.cosmicExtExtraSessions,
   ],
 
   cosmicPackages | lib.Package = {
@@ -443,6 +465,7 @@
             (
               baseBaseRootfs.biDrvs
               @ _cosmicPackages
+              # @ [drvs.kwin]
             )
         ),
     },

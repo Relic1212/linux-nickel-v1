@@ -2,10 +2,9 @@
   lib,
   drvs,
   glib | lib.MesonPackage = {
-    name = "glib",
     singleSource = {
-      uri = "https://download.gnome.org/sources/glib/2.82/glib-2.82.1.tar.xz",
-      sha256sum = "478634440bf52ee4ec4428d558787398c0be6b043c521beb308334b3db4489a6",
+      uri = "https://download.gnome.org/sources/glib/2.86/glib-2.86.1.tar.xz",
+      sha256sum = "119d1708ca022556d6d2989ee90ad1b82bd9c0d1667e066944a6d0020e2d5e57",
     },
     biDrvs = [
       drvs.pcre2,
@@ -33,6 +32,14 @@
   glibNoExportDynamic =
     glib
     & {
+      extraMesonArgs | priority 1 = [
+        "-Dbsymbolic_functions=false",
+        "-Dglib_assert=true",
+        "-Dnls=disabled",
+        "-Dglib_debug=disabled",
+        "-Dtests=false"
+      ],
+
       postInstallPhase | priority 1 = [
         m%"sed -i 's@-Wl,--whole-archive@-lgmodule-2.0@g' ${DEST}/usr/lib/pkgconfig/gmodule-2.0.pc"%,
         m%"sed -i 's@-Wl,--export-dynamic@@g' ${DEST}/usr/lib/pkgconfig/gmodule-2.0.pc"%,

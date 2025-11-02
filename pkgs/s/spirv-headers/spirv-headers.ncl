@@ -17,8 +17,8 @@
     generator = "Ninja",
 
     singleSource = {
-      uri | priority 1 = "https://github.com/KhronosGroup/SPIRV-Headers/archive/3f17b2af6784bfa2c5aa5dbb8e0e74a607dd8b3b.zip",
-      sha256sum | priority 1 = "366a4a46f0e36293852119ad1cf5b91d72c2920eeb6aee3a3d8f2596e0a70167",
+      uri = "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/vulkan-sdk-1.4.328.1.tar.gz",
+      sha256sum = "602364ab7bf404a7f352df7da5c645f1c4558a9c92616f8ee33422b04d5e35b7"
     }
   }
 }

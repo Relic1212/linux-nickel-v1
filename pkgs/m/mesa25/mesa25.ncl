@@ -38,8 +38,12 @@
       "-Dvulkan-beta=false",
       "-Degl-native-platform=wayland",
       #   "-Dintel-clc=enabled",
-      "-Dllvm=enabled",
+      # "-Dllvm=enabled",
       "-Dunversion-libgallium=true",
+
+      # "-Dllvm=disabled",
+      # "-Damd-use-llvm=false",
+      # "-Dmesa-clc=disabled",
     ],
 
     singleSource = {
@@ -85,7 +89,10 @@
       drvs.pyyaml,
       drvs.llvmConfigStatic,
       drvs.spirvTools,
+      drvs.spirvHeaders2,
       drvs.spirvLlvmTranslator,
+      # drvs.spirvTools_glslang,
+      # drvs.glslang,
       drvs.wayland,
       drvs.waylandProtocols,
     ],

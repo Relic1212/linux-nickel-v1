@@ -147,6 +147,7 @@
       drvs.ncurses,
     ],
     buildEnv,
+    # debug = true,
     extraMakeArgs = [
       "ENABLE_SHARED=0",
       "CC=\"clang -static --static\"",

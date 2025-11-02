@@ -82,6 +82,8 @@
 
         generator | nullOrString | default = null,
 
+        pkgconfProvider,
+
         baseBuildinputPackages | priority -1000 =
           utilsProviders
           @ (
@@ -89,7 +91,8 @@
               (
                 [
                   drvs.cmake,
-                  drvs.pkgconf,
+                  # drvs.pkgconf,
+                  pkgconfProvider,
                   drvs.musl,
                 ]
                 @ (if isLlvm then llvmProviders else [])

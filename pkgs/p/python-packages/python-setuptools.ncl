@@ -14,7 +14,7 @@
 
     buildInputs = [
       drvs.busybox,
-      drvs.pythonFull
+      drvs.pythonFull,
     ]
   }
 }

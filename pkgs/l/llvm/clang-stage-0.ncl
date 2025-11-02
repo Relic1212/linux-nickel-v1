@@ -117,6 +117,7 @@
       installPhase = [
         "make DESTDIR=${DEST} install-cxx install-cxxabi install-unwind install-compiler-rt install-compiler-rt-headers"
       ],
+      pkgconfProvider | priority -1 = drvs.pkgconf,
     },
 
   ################################################################################################
@@ -270,5 +271,6 @@
       installPhase = [
         "make DESTDIR=${DEST} install-clang install-lld"
       ],
+      pkgconfProvider | priority -1 = drvs.pkgconf,
     }
 }

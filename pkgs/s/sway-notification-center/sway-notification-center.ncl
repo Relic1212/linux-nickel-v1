@@ -54,7 +54,7 @@
       drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
-      drvs.pango_1_56,
+      drvs.pango,
       drvs.pcre2,
       drvs.pixman,
       drvs.pythonSetuptools,
@@ -113,7 +113,7 @@
       drvs.readline,
       drvs.pcre2,
       # drvs.pango, #??
-      drvs.pango_1_56,
+      drvs.pango,
       drvs.cairo,
       drvs.libpng,
       drvs.harfbuzzFull,

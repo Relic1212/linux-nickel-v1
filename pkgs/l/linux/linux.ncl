@@ -245,8 +245,10 @@ in
         # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz",
         # sha256sum = "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d"
 
-        uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.3.tar.xz",
-        sha256sum = "3ecc8619d8a5b5f675224d2f52c71d1fc09bc3f9c019d8bd82d0581e03689499"
+        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.3.tar.xz",
+        # sha256sum = "3ecc8619d8a5b5f675224d2f52c71d1fc09bc3f9c019d8bd82d0581e03689499",
+        uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.6.tar.xz",
+        sha256sum = "8ecfbc6b693448abb46144a8d04d1e1631639c7661c1088425a2e5406f13c69c",
       },
       # sourceInputs = linuxHeaders.sourceInputs,
 
@@ -269,7 +271,7 @@ in
 
       extraEnv = {
         KBUILD_BUILD_TIMESTAMP = "''",
-        HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.LDFLAGS @ ["-lz"] )}",
+        HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.LDFLAGS @ ["-lz","-leu"] )}",
         HOSTCFLAGS = "%{ lib.functions.varToExportvar  buildEnv.CFLAGS}",
       },
       extraMakeArgs = [

@@ -65,7 +65,6 @@
       @ (
         if options.gtk4 then
           [
-            drvs.pango_1_56,
             drvs.libtiff,
             drvs.graphene,
             drvs.harfbuzzFull,

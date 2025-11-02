@@ -49,7 +49,7 @@
           "-C link-arg=-L/usr/lib/pulseaudio",
           "-C link-arg=-lpulsecommon-17.0",
           "-C link-arg=-lc++",
-          "-C link-arg=-L/usr/lib/clang/20/lib/linux",
+          "-C link-arg=-L/usr/lib/clang/21/lib/linux",
           "-C link-arg=-lclang_rt.builtins-x86_64",
         ]
         @ (if distro.pam then ["-C link-arg=-lcap"] else [])

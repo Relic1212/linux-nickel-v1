@@ -50,6 +50,7 @@
       "-DLIBCXX_DIR" = "/usr/lib/cmake/llvm",
       "-DENABLE_LIBCXX" = false,
       "-DCPPTOML_BUILD_EXAMPLES" = false,
+      "-DCMAKE_POLICY_VERSION_MINIMUM" = "3.5",
     }
   }
 }

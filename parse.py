@@ -8,6 +8,7 @@ import sys
 from builder import build_in_bubblewrap
 
 KNOWN_SLOW = ["base-image", "base-image-small"]
+
 class GraphNode:
     def __init__(self, name, packages):
         self.name = name
@@ -213,6 +214,8 @@ def test():
     else:
         pn_key = ""
 
+    if pn == "all":
+        pn = "base-image"
     drvs = get_drvs(pn_key)
     # with open("test/0813.json") as f : drvs = json.load(f)
     if pn == "all":
@@ -231,9 +234,10 @@ def test():
     nbh = reverse_dict(hbn)
 
     pkghash2sysroothash = drvs["pkghash2sysroothash"]
-
+    keep_going = True
+    # keep_going = False
     build_in_bubblewrap.build(
-        pn_hash, drvs["drvByHash"], pkg_names=nbh, pkghash2sysroothash=pkghash2sysroothash)
+        pn_hash, drvs["drvByHash"], pkg_names=nbh, pkghash2sysroothash=pkghash2sysroothash, keep_going=keep_going)
 
 
 if __name__ == "__main__":

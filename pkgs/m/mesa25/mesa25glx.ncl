@@ -2,11 +2,12 @@
   lib,
   drvs,
   mesa2,
+  mesaExp,
   mesaGlx =
-    mesa2
+    mesaExp
     & {
 
-      extraMesonArgs | priority 1 = [
+      extraMesonArgs | priority 2 = [
         "-Dgles1=disabled",
         "-Dxmlconfig=disabled",
         "-Dshared-llvm=disabled",
@@ -39,6 +40,8 @@
         #   "-Dosmesa=false",
         "-Dvulkan-beta=false",
         "-Degl-native-platform=wayland",
+        "-Dlegacy-wayland='bind-wayland-display'",
+
         #   "-Dintel-clc=enabled",
         "-Dllvm=enabled",
         "-Dunversion-libgallium=true",

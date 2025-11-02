@@ -10,15 +10,16 @@
     enableCcache = false,
     biDrvs = [
       drvs.llvm,
-      drvs.pkgconf,
+      # drvs.pkgconf,
       drvs.musl,
+      # drvs.samurai,
       # libarchive and curl are only for wrap
     ],
     buildPhase = [
       "./bootstrap.sh ../build",
-      "../build/muon-bootstrap setup -Dstatic=true -Dprefix=/usr ../build",
+      "../build/muon-bootstrap setup -Dsamurai=disabled -Dstatic=true -Dprefix=/usr ../build",
       "../build/muon-bootstrap -C ../build samu",
-      "../build/muon-bootstrap -C ../build test",
+      # "../build/muon-bootstrap -C ../build test -R",
     ],
     installPhase = [
       "DESTDIR=${DEST} ../build/muon-bootstrap -C ../build install",

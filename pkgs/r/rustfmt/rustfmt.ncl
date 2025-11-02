@@ -28,17 +28,16 @@
         "head -n11 .cargo/config.toml > .cargo/config.toml.new",
         "mv .cargo/config.toml.new .cargo/config.toml",
         # m%"echo "[source.crates-io]\nreplace-with = \"vendored-sources\"\n" >> .cargo/config.toml"%,
-
         "export LIBGIT2_NO_VENDOR=1",
         "export OPENSSL_NO_VENDOR=1",
       ]
       @ (
         let configureFlags = (
           let
-          lto = "off",
-          # lto = "thin",
-          tgt = "x86_64-unknown-linux-musl"
-          # lto = "on"
+            lto = "off",
+            # lto = "thin",
+            tgt = "x86_64-unknown-linux-musl"
+            # lto = "on"
           in
 
           [
@@ -57,6 +56,7 @@
             "--set=\"rust.codegen-tests=false\"",
             "--set=\"rust.musl-root=/usr\"",
             "--set=\"rust.rpath=false\"",
+            # "--set=\"rust.llvm-config=/usr/bin/llvm-config\"",
             # "--set=\"llvm-libunwind=in-tree\"",
             "--set=\"rust.lto=%{lto}\"",
             "--set=\"rust.lld=false\"",
@@ -64,6 +64,7 @@
             "--host=%{tgt}",
             "--build=%{tgt}",
             "--set=\"target.%{tgt}.llvm-config=/usr/bin/llvm-config\"",
+            "--set=\"target.%{tgt}.optimized-compiler-builtins=false\"",
             "--set=\"target.%{tgt}.llvm-libunwind=system\"",
             "--set=\"target.%{tgt}.musl-root=/usr\"",
             "--set=\"target.%{tgt}.crt-static=false\"",

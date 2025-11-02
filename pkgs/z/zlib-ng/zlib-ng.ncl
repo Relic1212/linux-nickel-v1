@@ -1,4 +1,5 @@
 {
+  drvs,
   lib,
 
   zlibNg | lib.CmakePackage = {
@@ -17,7 +18,9 @@
         "-DZLIB_ENABLE_TESTS:BOOL=OFF",
         "-DZLIB_COMPAT:BOOL=ON",
         "-Wno-dev"
-      ]
+      ],
+
+    pkgconfProvider | priority -1 = drvs.pkgconf,
   },
   zlibNgPic =
     zlibNg

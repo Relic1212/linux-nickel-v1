@@ -3,8 +3,8 @@
   drvs,
   _gobject | lib.MesonPackage = {
     singleSource = {
-      uri = "https://download.gnome.org/sources/gobject-introspection/1.82/gobject-introspection-1.82.0.tar.xz",
-      sha256sum = "0f5a4c1908424bf26bc41e9361168c363685080fbdb87a196c891c8401ca2f09",
+      uri = "https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz",
+      sha256sum = "920d1a3fcedeadc32acff95c2e203b319039dd4b4a08dd1a2dfd283d19c0b9ae",
     },
     pythonProvider = drvs.pythonDynamic,
     biDrvs = [

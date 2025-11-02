@@ -23,19 +23,20 @@ in
     buildPhase = [
       "go mod vendor -v",
       m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
-      "tar cf - . > ../build/%{outputFile}",
+      "tar --sort=name -cf - . > ../build/%{outputFile}",
     ],
     installPhase = [
       "install -m0755 ../build/%{outputFile} ${DEST}/%{outputFile}"
     ],
     outputFile = "source.tar",
     # outputSha256sum = "81acc3aae11a61be8c19b4bed9d8f478798bd74e5615929598f7328d02ceef22",
-    outputSha256sum = "5b4ab3c3d3ad18e5480a15b02e0491f7ee8df6df3364afb97c33473019f2afed",
+    outputSha256sum = "295aa1a69c07a42227c660b9906ea20f2a95db03a615664bcc518015ef8d6116",
 
     biDrvs = [
       drvs.go_1_24,
       drvs.emptyResolvConf,
       drvs.caCertificates,
+      (drvs.gnutar & { priority = 1 }),
     ]
   },
   danklinuxDms | lib.Package = {

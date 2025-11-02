@@ -50,10 +50,10 @@
       "export GOARCH=amd64",
     ],
     installPhase = [
-        "install -dm0755 ${DEST}/usr/bin",
-        "install -m0755 micro ${DEST}/usr/bin",
+      "install -dm0755 ${DEST}/usr/bin",
+      "install -m0755 micro ${DEST}/usr/bin",
     ],
- 
+
     biDrvs = [
       drvs.go_1_9,
       drvs.findutils,

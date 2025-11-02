@@ -47,6 +47,7 @@
       uri = "https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/archive/xorgproto-2024.1/xorgproto-xorgproto-2024.1.tar.gz",
       sha256sum = "c92466091663b68d93997eab4f329d0be511cb448a61b61fe74a738f2698b77c"
     },
+    pkgconfProvider = drvs.pkgconfMeson,
     biDrvs = [
       drvs.xorgMacros,
     ]

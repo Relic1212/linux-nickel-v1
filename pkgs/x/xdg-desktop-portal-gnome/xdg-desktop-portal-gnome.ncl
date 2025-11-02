@@ -132,7 +132,7 @@
       drvs.ncurses,
       drvs.openssl,
       drvs.ostree,
-      drvs.pango_1_56,
+      drvs.pango,
       drvs.pcre2,
       drvs.pipewire,
       drvs.pixman,

@@ -43,10 +43,10 @@
     ],
 
     enableParallel = false,
-
+    pkgconfProvider,
     biDrvs = [
       drvs.linuxHeaders,
-      drvs.pkgconf251,
+      pkgconfProvider,
     ],
   }
 }

@@ -14,7 +14,13 @@
       for f in $(find ${SRC} -type f); do
         sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${f}
       done
-      "%
+      "%,
+      m%"
+      for f in $(find ${SRC}/doc -type f -name '*.xml' ); do
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+      done
+      "%,
     ],
     biDrvs = [
       drvs.bash,
@@ -22,6 +28,7 @@
       drvs.docbookXml,
       drvs.libxml2,
       drvs.docbookXslNons,
+      drvs.flex,
     ]
   }
 }

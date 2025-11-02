@@ -26,7 +26,7 @@
       drvs.readline,
       drvs.pcre2,
       # drvs.pango, #??
-      drvs.pango_1_56,
+      drvs.pango,
       drvs.cairo,
       drvs.libpng,
       drvs.harfbuzzFull,

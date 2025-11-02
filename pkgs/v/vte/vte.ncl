@@ -3,11 +3,14 @@
   drvs,
   vte | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/vte/-/archive/0.80.3/vte-0.80.3.tar.gz",
-      sha256sum = "8567106c7664251e950cfd81db29034b2e4e2e8c1abf6a0cc4ea56394cf21074",
+      # uri = "https://gitlab.gnome.org/GNOME/vte/-/archive/0.80.3/vte-0.80.3.tar.gz",
+      # sha256sum = "8567106c7664251e950cfd81db29034b2e4e2e8c1abf6a0cc4ea56394cf21074",
 
       #uri = "https://gitlab.gnome.org/GNOME/vte/-/archive/0.79.91/vte-0.79.91.tar.gz",
       #sha256sum = "8f6d9ac516ad3fedebaa439f62ebcc98a2a5d96c3326a7a860dfc49b646423d6",
+
+      uri = "https://gitlab.gnome.org/GNOME/vte/-/archive/0.82.1/vte-0.82.1.tar.bz2",
+      sha256sum = "8ba2a82c19c96e56fb77560c1caa49ca0a236e65d3b9123465794d863cd2a0d1"
     },
 
     llvmProvider = drvs.llvmFull,
@@ -36,7 +39,8 @@
       drvs.graphene,
       drvs.gsettingsDesktopSchemas,
       drvs.gsound,
-      drvs.gtk4,
+      drvs.gtk4_21,
+      drvs.librsvg,
       drvs.gudev,
       # drvs.harfbuzz,
       drvs.harfbuzzFull,
@@ -72,7 +76,7 @@
       drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
-      drvs.pango_1_56,
+      drvs.pango,
       drvs.pcre2,
       drvs.pixman,
       drvs.readline,
@@ -91,7 +95,8 @@
       drvs.curl,
       drvs.lz4,
       drvs.gtk3,
-      drvs.pango,
+      drvs.simdutf,
+      drvs.fmt,
     ],
     buildEnv = {
       # EXTRA_LDFLAGS = [

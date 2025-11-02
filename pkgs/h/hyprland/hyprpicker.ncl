@@ -14,6 +14,7 @@
       drvs.libevdev,
       drvs.mtdev,
       drvs.pango,
+      drvs.fribidi,
       drvs.cairo,
       drvs.libpng,
       drvs.freetype,

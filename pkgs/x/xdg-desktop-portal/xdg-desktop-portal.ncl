@@ -31,6 +31,34 @@
       ],
     },
 
+    preConfigurePhase =
+      let syms = [
+        "gvdb_table_free",
+        "gvdb_table_get_names",
+        "gvdb_table_get_raw_value",
+        "gvdb_table_get_table",
+        "gvdb_table_get_value",
+        "gvdb_table_has_value",
+        "gvdb_table_is_valid",
+        "gvdb_table_list",
+        "gvdb_table_new",
+        "gvdb_table_new_from_bytes",
+      ],
+      in
+      (
+        std.array.map
+          (fun s =>
+            (
+              m%"sed -i 's|%{s}|__xdg_document_portal__%{s}|g' ${SRC}/document-portal/gvdb/gvdb-reader.c"%
+              ++ "\n"
+              ++ m%"sed -i 's|%{s}|__xdg_document_portal__%{s}|g' ${SRC}/document-portal/gvdb/gvdb-reader.h"%
+              ++ "\n"
+              ++ m%"sed -i 's|%{s}|__xdg_document_portal__%{s}|g' ${SRC}/document-portal/permission-db.c"%
+            )
+          )
+          syms
+      ),
+
     biDrvs =
       [
         drvs.alsaLibs,

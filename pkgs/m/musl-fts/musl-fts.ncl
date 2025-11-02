@@ -5,6 +5,9 @@
     singleSource = {
       uri = "https://github.com/void-linux/musl-fts/archive/refs/tags/v1.2.7.tar.gz",
       sha256sum = "49ae567a96dbab22823d045ffebe0d6b14b9b799925e9ca9274d47d26ff482a6",
-    }
+    },
+    preConfigurePhase = [
+      m%"echo pkgconfigdir=/usr/lib/pkgconfig >> ${SRC}/Makefile.am"%,
+    ],
   }
 }

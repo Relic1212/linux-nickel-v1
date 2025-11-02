@@ -25,6 +25,7 @@ in
         "-DCMAKE_C_FLAGS_RELEASE:STRING=\"-O0 -DNDEBUG\"",
         "-DCMAKE_CXX_FLAGS_RELEASE:STRING=\"-O0 -DNDEBUG\"",
       ],
+    pkgconfProvider | priority -1 = drvs.pkgconf,
 
     # buildPhase=[
     #   "ninja bin/cmake"

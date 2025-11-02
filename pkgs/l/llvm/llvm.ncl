@@ -30,6 +30,7 @@
       #       # "ln -s llvm-readobj llvm-readelf",
       #       "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin",
       #     ]
+      pkgconfProvider | priority -1 = drvs.pkgconf,
     },
 
   _llvmBaseTargetStage1 | lib.CmakePackage = {

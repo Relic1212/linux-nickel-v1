@@ -35,7 +35,13 @@
         dest = "wlroots"
       }
     ],
-    buildEnv.EXTRA_LDFLAGS = ["-lc++"], # @ (if distro.pam then ["-lcap"] else []),
+    buildEnv.EXTRA_LDFLAGS = [
+      "-lc++",
+      # "-flto",
+      #  "-Wl,--as-needed",
+      #  "-Wl,-z,relro",
+      #  "-Wl,-z,now",
+    ], # @ (if distro.pam then ["-lcap"] else []),
 
     # baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
 
@@ -70,6 +76,7 @@
       "mv ${SRC}/wlroots ${SRC}/subprojects",
     ],
     llvmProvider = drvs.llvmFull,
+    # buildEnv._isMold = true,
     biDrvs = [
       drvs.expat,
       drvs.jsonC,
@@ -92,6 +99,7 @@
       drvs.libevdev,
       drvs.mtdev,
       drvs.pango,
+      drvs.fribidi,
       drvs.cairo,
       drvs.libpng,
       drvs.freetype,

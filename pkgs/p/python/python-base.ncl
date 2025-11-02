@@ -9,6 +9,8 @@
     singleSource = {
       uri = "https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tar.xz",
       sha256sum = "f6d419a6d8743ab26700801b4908d26d97e8b986e14f95de31b32de2b0e79554",
+      # uri = "https://www.python.org/ftp/python/3.13.9/Python-3.13.9.tar.xz",
+      # sha256sum = "ed5ef34cda36cfa2f3a340f07cac7e7814f91c7f3c411f6d3562323a866c5c66",
     },
     makeArgs = (if isStatic then ["LINKFORSHARED=''"] else []) @ (lib.AutotoolsPackage.makeArgs),
     extraEnv =

@@ -16,13 +16,14 @@
           "%{pythonExecutable} setup.py install --prefix=/usr --root=${DEST} --skip-build"
         ],
         enableCcache | priority -1000 = false,
+        pythonProvider | default = drvs.pythonFull,
         baseBuildinputPackages | priority -1000 =
           Package.baseBuildinputPackages
           @ (
             if (stage == -1) then
               (
                 [
-                  drvs.pythonFull,
+                  pythonProvider,
                   # drvs.pkgconf,
                   # drvs.musl,
                   drvs.pythonSetuptools,

@@ -33,6 +33,7 @@
       "-Dwindow=true",
     ],
     biDrvs = [
+      drvs.fribidi,
       drvs.fontconfig,
       drvs.freetype,
       drvs.zlibNg,

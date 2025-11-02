@@ -1,0 +1,1796 @@
+diff --git a/lib/toyflags.h b/lib/toyflags.h
+index 07e1d68..41d0a3e 100644
+--- a/lib/toyflags.h
++++ b/lib/toyflags.h
+@@ -10,7 +10,7 @@
+ // If no location bits set, command not listed in "toybox" command's output.
+ #define TOYFLAG_USR      (1<<0)
+ #define TOYFLAG_BIN      (1<<1)
+-#define TOYFLAG_SBIN     (1<<2)
++// #define TOYFLAG_BIN     (1<<2)
+ #define TOYMASK_LOCATION ((1<<4)-1)
+ 
+ // This is a shell built-in function, running in the same process context.
+diff --git a/main.c b/main.c
+index aa6a52c..9afda69 100644
+--- a/main.c
++++ b/main.c
+@@ -302,7 +302,7 @@ void toy_exec(char *argv[])
+ // If first argument starts with - output list of command install paths.
+ void toybox_main(void)
+ {
+-  char *toy_paths[] = {"usr/", "bin/", "sbin/", 0}, *s = toys.argv[1];
++  char *toy_paths[] = {"usr/", "bin/", 0}, *s = toys.argv[1];
+   int i, len = 0;
+   unsigned width = 80;
+ 
+diff --git a/scripts/install.c b/scripts/install.c
+index c88174d..ed0129f 100644
+--- a/scripts/install.c
++++ b/scripts/install.c
+@@ -37,7 +37,7 @@ static char help_data[] =
+ 
+ int main(int argc, char *argv[])
+ {
+-  static char *toy_paths[]={"usr/","bin/","sbin/",0};
++  static char *toy_paths[]={"usr/","bin/",0};
+   int i, len = 0;
+ 
+   if (argc>1 && !strcmp(argv[1], "--help"))
+diff --git a/scripts/prereq/generated/newtoys.h b/scripts/prereq/generated/newtoys.h
+index ebe49dc..eef40cc 100644
+--- a/scripts/prereq/generated/newtoys.h
++++ b/scripts/prereq/generated/newtoys.h
+@@ -4,33 +4,33 @@ USE_SH(OLDTOY(-sh, sh, 0))
+ USE_SH(OLDTOY(-toysh, sh, 0))
+ USE_SH(OLDTOY(., source, TOYFLAG_NOFORK))
+ USE_TRUE(OLDTOY(:, true, TOYFLAG_NOFORK|TOYFLAG_NOHELP))
+-USE_TEST_GLUE(OLDTOY([, test, TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_NOHELP))
++USE_TEST_GLUE(OLDTOY([, test, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_NOHELP))
+ USE_SH(OLDTOY([[, test, TOYFLAG_NOFORK|TOYFLAG_NOHELP))
+-USE_GROUPADD(OLDTOY(addgroup, groupadd, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
+-USE_USERADD(OLDTOY(adduser, useradd, TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_SBIN))
++USE_GROUPADD(OLDTOY(addgroup, groupadd, TOYFLAG_NEEDROOT|TOYFLAG_USR|TOYFLAG_BIN))
++USE_USERADD(OLDTOY(adduser, useradd, TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_USR|TOYFLAG_BIN))
+ USE_ASCII(NEWTOY(ascii, 0, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ USE_BASE32(NEWTOY(base32, "diw#<0=76[!dw]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ USE_BASE64(NEWTOY(base64, "diw#<0=76[!dw]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ USE_BASENAME(NEWTOY(basename, "^<1as:", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_SH(OLDTOY(bash, sh, TOYFLAG_BIN))
++USE_SH(OLDTOY(bash, sh, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_BZCAT(NEWTOY(bzcat, 0, TOYFLAG_USR|TOYFLAG_BIN))
+-USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_BIN))
+-USE_CHATTR(NEWTOY(chattr, "?p#v#R", TOYFLAG_BIN))
+-USE_CHMOD(NEWTOY(chmod, "<2?cvfR[-cvf]", TOYFLAG_BIN))
+-USE_CHOWN(OLDTOY(chown, chgrp, TOYFLAG_BIN))
+-USE_CKSUM(NEWTOY(cksum, "HIPLN", TOYFLAG_BIN))
++USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CHATTR(NEWTOY(chattr, "?p#v#R", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CHMOD(NEWTOY(chmod, "<2?cvfR[-cvf]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CHOWN(OLDTOY(chown, chgrp, TOYFLAG_USR|TOYFLAG_BIN))
++USE_CKSUM(NEWTOY(cksum, "HIPLN", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_CMP(NEWTOY(cmp, "<1>4ls(silent)(quiet)n#<1[!ls]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)))
+-USE_CROND(NEWTOY(crond, "fbSl#<0=8d#<0L:c:[-bf][-LS][-ld]", TOYFLAG_USR|TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
+-USE_GROUPDEL(OLDTOY(delgroup, groupdel, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
+-USE_USERDEL(OLDTOY(deluser, userdel, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_CROND(NEWTOY(crond, "fbSl#<0=8d#<0L:c:[-bf][-LS][-ld]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_GROUPDEL(OLDTOY(delgroup, groupdel, TOYFLAG_NEEDROOT|TOYFLAG_USR|TOYFLAG_BIN))
++USE_USERDEL(OLDTOY(deluser, userdel, TOYFLAG_NEEDROOT|TOYFLAG_USR|TOYFLAG_BIN))
+ USE_DEMO_UTF8TOWC(NEWTOY(demo_utf8towc, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_DIRNAME(NEWTOY(dirname, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_DUMPLEASES(NEWTOY(dumpleases, ">0arf:[!ar]", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_ECHO(NEWTOY(echo, "^?Een[-eE]", TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_LINEBUF))
+-USE_EGREP(OLDTOY(egrep, grep, TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_ECHO(NEWTOY(echo, "^?Een[-eE]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_LINEBUF))
++USE_EGREP(OLDTOY(egrep, grep, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+ USE_FALLOCATE(NEWTOY(fallocate, ">1l#|o#", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_FALSE(NEWTOY(false, NULL, TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
+-USE_FGREP(OLDTOY(fgrep, grep, TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_FALSE(NEWTOY(false, NULL, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
++USE_FGREP(OLDTOY(fgrep, grep, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+ USE_FOLD(NEWTOY(fold, "bsw#<1=80", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_FTPPUT(OLDTOY(ftpput, ftpget, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_GETFATTR(NEWTOY(getfattr, "(only-values)dhn:", TOYFLAG_USR|TOYFLAG_BIN))
+@@ -40,53 +40,53 @@ USE_GITFETCH(NEWTOY(gitfetch, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_GITINIT(NEWTOY(gitinit, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_GITREMOTE(NEWTOY(gitremote, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_GPIODETECT(NEWTOY(gpiodetect, ">0", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_GREP(NEWTOY(grep, "(line-buffered)(color):;(exclude-dir)*S(exclude)*M(include)*ZzEFHIab(byte-offset)h(no-filename)ino(only-matching)rRsvwc(count)L(files-without-match)l(files-with-matches)q(quiet)(silent)e*f*C#B#A#m#x[!wx][!EF]", TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_GREP(NEWTOY(grep, "(line-buffered)(color):;(exclude-dir)*S(exclude)*M(include)*ZzEFHIab(byte-offset)h(no-filename)ino(only-matching)rRsvwc(count)L(files-without-match)l(files-with-matches)q(quiet)(silent)e*f*C#B#A#m#x[!wx][!EF]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+ USE_GZIP(NEWTOY(gzip,    "n(no-name)cdfkt123456789[-123456789]", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_REBOOT(OLDTOY(halt, reboot, TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_REBOOT(OLDTOY(halt, reboot, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ USE_HEAD(NEWTOY(head, "?n(lines)#<0=10c(bytes)#<0qv[-nc]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+-USE_HWCLOCK(NEWTOY(hwclock, ">0(fast)f(rtc):u(utc)l(localtime)t(systz)s(hctosys)r(show)w(systohc)[-ul][!rtsw]", TOYFLAG_SBIN))
+-USE_I2CTRANSFER(NEWTOY(i2ctransfer, "<2vfy", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_HWCLOCK(NEWTOY(hwclock, ">0(fast)f(rtc):u(utc)l(localtime)t(systz)s(hctosys)r(show)w(systohc)[-ul][!rtsw]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_I2CTRANSFER(NEWTOY(i2ctransfer, "<2vfy", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_ID(NEWTOY(id, ">1"SKIP_TOYBOX_LSM_NONE("Z")"nGgru[!"SKIP_TOYBOX_LSM_NONE("Z")"Ggu]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+-USE_INSMOD(NEWTOY(insmod, "<1", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
+-USE_IP(OLDTOY(ipaddr, ip, TOYFLAG_SBIN))
++USE_INSMOD(NEWTOY(insmod, "<1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_IP(OLDTOY(ipaddr, ip, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_IPCRM(NEWTOY(ipcrm, "m*M*s*S*q*Q*", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_IP(OLDTOY(iplink, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iproute, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iprule, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iptunnel, ip, TOYFLAG_SBIN))
+-USE_LAST(NEWTOY(last, "f:W", TOYFLAG_BIN))
+-USE_LN(NEWTOY(ln, "<1rt:Tvnfs", TOYFLAG_BIN))
+-USE_LS(NEWTOY(ls, "(sort):(color):;(full-time)(show-control-chars)\377(block-size)#=1024<1\241(group-directories-first)\376ZgoACFHLNRSUXabcdfhikl@mnpqrstuw#=80<0x1[-Cxm1][-Cxml][-Cxmo][-Cxmg][-cu][-ftS][-HL][-Nqb][-k\377]", TOYFLAG_BIN))
+-USE_LSATTR(NEWTOY(lsattr, "ldapvR", TOYFLAG_BIN))
+-USE_LSMOD(NEWTOY(lsmod, NULL, TOYFLAG_SBIN))
++USE_IP(OLDTOY(iplink, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iproute, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iprule, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iptunnel, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_LAST(NEWTOY(last, "f:W", TOYFLAG_USR|TOYFLAG_BIN))
++USE_LN(NEWTOY(ln, "<1rt:Tvnfs", TOYFLAG_USR|TOYFLAG_BIN))
++USE_LS(NEWTOY(ls, "(sort):(color):;(full-time)(show-control-chars)\377(block-size)#=1024<1\241(group-directories-first)\376ZgoACFHLNRSUXabcdfhikl@mnpqrstuw#=80<0x1[-Cxm1][-Cxml][-Cxmo][-Cxmg][-cu][-ftS][-HL][-Nqb][-k\377]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_LSATTR(NEWTOY(lsattr, "ldapvR", TOYFLAG_USR|TOYFLAG_BIN))
++USE_LSMOD(NEWTOY(lsmod, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_LSOF(NEWTOY(lsof, "lp*t", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_LSPCI(NEWTOY(lspci, "eDmkn@x@i:", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_LSUSB(NEWTOY(lsusb, "ti:", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_MAKEDEVS(NEWTOY(makedevs, "<1>1d:", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_MDEV(NEWTOY(mdev, "s", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK))
+-USE_MKDIR(NEWTOY(mkdir, "<1"SKIP_TOYBOX_LSM_NONE("Z:")"vp(parent)(parents)m:", TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
++USE_MKDIR(NEWTOY(mkdir, "<1"SKIP_TOYBOX_LSM_NONE("Z:")"vp(parent)(parents)m:", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+ USE_MKFIFO(NEWTOY(mkfifo, "<1"SKIP_TOYBOX_LSM_NONE("Z:")"m:", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+-USE_MKNOD(NEWTOY(mknod, "<2>4m(mode):"SKIP_TOYBOX_LSM_NONE("Z:"), TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
++USE_MKNOD(NEWTOY(mknod, "<2>4m(mode):"SKIP_TOYBOX_LSM_NONE("Z:"), TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+ USE_MKPASSWD(NEWTOY(mkpasswd, ">2S:m:P#=0<0", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_MODINFO(NEWTOY(modinfo, "<1b:k:F:0", TOYFLAG_SBIN))
+-USE_MODPROBE(NEWTOY(modprobe, "alrqvsDbd*", TOYFLAG_SBIN))
++USE_MODINFO(NEWTOY(modinfo, "<1b:k:F:0", TOYFLAG_USR|TOYFLAG_BIN))
++USE_MODPROBE(NEWTOY(modprobe, "alrqvsDbd*", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_NBD_CLIENT(OLDTOY(nbd-client, nbd_client, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_NBD_SERVER(OLDTOY(nbd-server, nbd_server, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_NETCAT(OLDTOY(nc, netcat, TOYFLAG_USR|TOYFLAG_BIN))
+-USE_NETCAT(NEWTOY(netcat, "^tElLw#<1W#<1p#<1>65535q#<1O:o:s:f:46uUnz[!tlL][!Lw][!Lu][!46U][!oO]", TOYFLAG_BIN))
++USE_NETCAT(NEWTOY(netcat, "^tElLw#<1W#<1p#<1>65535q#<1O:o:s:f:46uUnz[!tlL][!Lw][!Lu][!46U][!oO]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_OD(NEWTOY(od, "j#vw#<1=16N#xsodcbA:t*", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_PASSWD(NEWTOY(passwd, ">1a:dlu", TOYFLAG_STAYROOT|TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MOREHELP(CFG_PASSWD_SAD)))
+ USE_PASTE(NEWTOY(paste, "d:s", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_PGREP(NEWTOY(pgrep, "acld:u*U*t*s*P*g*G*fnovxL:[-no]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_PING(OLDTOY(ping6, ping, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+-USE_REBOOT(OLDTOY(poweroff, reboot, TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_REBOOT(OLDTOY(poweroff, reboot, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ USE_ULIMIT(OLDTOY(prlimit, ulimit, TOYFLAG_USR|TOYFLAG_BIN))
+-USE_READAHEAD(NEWTOY(readahead, NULL, TOYFLAG_BIN))
++USE_READAHEAD(NEWTOY(readahead, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_READLINK(NEWTOY(readlink, "<1vnf(canonicalize)emqz[-mef][-qv]", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_RM(NEWTOY(rm, "f(force)iRrv[-fi]", TOYFLAG_BIN))
+-USE_RMDIR(NEWTOY(rmdir, "<1(ignore-fail-on-non-empty)p(parents)", TOYFLAG_BIN))
+-USE_RMMOD(NEWTOY(rmmod, "<1wf", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
+-USE_SED(NEWTOY(sed, "(help)(version)(tarxform)e*f*i:;nErz(null-data)s[+Er]", TOYFLAG_BIN|TOYFLAG_AUTOCONF))
++USE_RM(NEWTOY(rm, "f(force)iRrv[-fi]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_RMDIR(NEWTOY(rmdir, "<1(ignore-fail-on-non-empty)p(parents)", TOYFLAG_USR|TOYFLAG_BIN))
++USE_RMMOD(NEWTOY(rmmod, "<1wf", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_SED(NEWTOY(sed, "(help)(version)(tarxform)e*f*i:;nErz(null-data)s[+Er]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_AUTOCONF))
+ USE_SETFATTR(NEWTOY(setfattr, "hn:|v:x:|[!xv]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_SHA1SUM(OLDTOY(sha1sum, md5sum, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_SHA224SUM(OLDTOY(sha224sum, md5sum, TOYFLAG_USR|TOYFLAG_BIN))
+@@ -95,26 +95,26 @@ USE_SHA384SUM(OLDTOY(sha384sum, md5sum, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_SHA512SUM(OLDTOY(sha512sum, md5sum, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_SKELETON_ALIAS(NEWTOY(skeleton_alias, "b#dq", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_SORT(NEWTOY(sort, USE_TOYBOX_FLOAT("g")"S:T:m" "o:k*t:" "xVbMCcszdfirun", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_MOREHELP(CFG_TOYBOX_FLOAT)))
+-USE_STRACE(NEWTOY(strace, "^p#s#v", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_STRACE(NEWTOY(strace, "^p#s#v", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_STRINGS(NEWTOY(strings, "t:an#=4<1fo", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_SYSLOGD(NEWTOY(syslogd,">0l#<1>8=8R:b#<0>99=1s#<0=200m#<0>71582787=20O:p:f:a:nSKLD", TOYFLAG_SBIN|TOYFLAG_STAYROOT))
++USE_SYSLOGD(NEWTOY(syslogd,">0l#<1>8=8R:b#<0>99=1s#<0=200m#<0>71582787=20O:p:f:a:nSKLD", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_STAYROOT))
+ USE_TAIL(NEWTOY(tail, "?fFs:c(bytes)-n(lines)-[-cn][-fF]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ USE_TAR(NEWTOY(tar, "&(one-file-system)(no-ignore-case)(ignore-case)(no-anchored)(anchored)(no-wildcards)(wildcards)(no-wildcards-match-slash)(wildcards-match-slash)(show-transformed-names)(selinux)(restrict)(full-time)(no-recursion)(null)(numeric-owner)(no-same-permissions)(overwrite)(exclude)*(sort);:(mode):(mtime):(group):(owner):(to-command):~(strip-components)(strip)#~(transform)(xform)*Z(zstd)o(no-same-owner)p(same-permissions)k(keep-old)c(create)|h(dereference)x(extract)|t(list)|v(verbose)J(xz)j(bzip2)z(gzip)S(sparse)O(to-stdout)P(absolute-names)m(touch)X(exclude-from)*T(files-from)*I(use-compress-program):C(directory):f(file):as[!txc][!jzJa]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK))
+ USE_TASKSET(NEWTOY(taskset, "^pa", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TEE(NEWTOY(tee, "ia", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_TELNET(NEWTOY(telnet, "<1>2", TOYFLAG_BIN))
++USE_TELNET(NEWTOY(telnet, "<1>2", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TELNETD(NEWTOY(telnetd, "w#<0b:p#<0>65535=23f:l:FSKi[!wi]", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_SH(OLDTOY(toysh, sh, TOYFLAG_BIN))
++USE_SH(OLDTOY(toysh, sh, TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TR(NEWTOY(tr, "^<1>2Ccstd[+cC]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TRACEROUTE(NEWTOY(traceroute, "<1>2i:f#<1>255=1z#<0>86400=0g*w#<0>86400=5t#<0>255=0s:q#<1>255=3p#<1>65535=33434m#<1>255=30rvndlIUF64", TOYFLAG_STAYROOT|TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TRACEROUTE(OLDTOY(traceroute6,traceroute, TOYFLAG_STAYROOT|TOYFLAG_USR|TOYFLAG_BIN))
+-USE_TRUE(NEWTOY(true, NULL, TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
++USE_TRUE(NEWTOY(true, NULL, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
+ USE_TRUNCATE(NEWTOY(truncate, "<1s:|c", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TSORT(NEWTOY(tsort, ">1", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_TCPSVD(OLDTOY(udpsvd, tcpsvd, TOYFLAG_USR|TOYFLAG_BIN))
+-USE_UNAME(NEWTOY(uname, "paomvrns", TOYFLAG_BIN))
++USE_UNAME(NEWTOY(uname, "paomvrns", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_UNICODE(NEWTOY(unicode, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+-USE_USERADD(NEWTOY(useradd, "<1>2u#<0G:s:g:h:SDH", TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_SBIN))
++USE_USERADD(NEWTOY(useradd, "<1>2u#<0G:s:g:h:SDH", TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_USR|TOYFLAG_BIN))
+ USE_UUDECODE(NEWTOY(uudecode, ">1o:", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK))
+ USE_UUENCODE(NEWTOY(uuencode, "<1>2m", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_WC(NEWTOY(wc, "Lcmwl", TOYFLAG_USR|TOYFLAG_BIN))
+diff --git a/scripts/probes/cmd2dpkg b/scripts/probes/cmd2dpkg
+index 6a9c348..4ef2cdf 100755
+--- a/scripts/probes/cmd2dpkg
++++ b/scripts/probes/cmd2dpkg
+@@ -8,7 +8,7 @@
+ declare -A ray
+ 
+ # Sad that this is NOT in the default path, but less dumb than /bin/sh->dash
+-PATH="$PATH":/sbin:/usr/sbin
++PATH="$PATH":/bin:/usr/bin
+ 
+ # Only checks installed packages, puts anything it can't find in none:
+ for i in $(./toybox)
+diff --git a/toys/android/getenforce.c b/toys/android/getenforce.c
+index b828ce5..6ca64d3 100644
+--- a/toys/android/getenforce.c
++++ b/toys/android/getenforce.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2014 The Android Open Source Project
+ 
+-USE_GETENFORCE(NEWTOY(getenforce, ">0", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_GETENFORCE(NEWTOY(getenforce, ">0", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config GETENFORCE
+   bool "getenforce"
+diff --git a/toys/android/load_policy.c b/toys/android/load_policy.c
+index 523c68f..aa30a37 100644
+--- a/toys/android/load_policy.c
++++ b/toys/android/load_policy.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2015 The Android Open Source Project
+ 
+-USE_LOAD_POLICY(NEWTOY(load_policy, "<1>1", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_LOAD_POLICY(NEWTOY(load_policy, "<1>1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LOAD_POLICY
+   bool "load_policy"
+diff --git a/toys/android/log.c b/toys/android/log.c
+index 1b05f4e..38c5b9f 100644
+--- a/toys/android/log.c
++++ b/toys/android/log.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2016 The Android Open Source Project
+ 
+-USE_LOG(NEWTOY(log, "b:p:t:", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_LOG(NEWTOY(log, "b:p:t:", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LOG
+   bool "log"
+diff --git a/toys/android/restorecon.c b/toys/android/restorecon.c
+index 0b8cdd0..4ca4fa3 100644
+--- a/toys/android/restorecon.c
++++ b/toys/android/restorecon.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2015 The Android Open Source Project
+ 
+-USE_RESTORECON(NEWTOY(restorecon, "<1DFnRrv", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_RESTORECON(NEWTOY(restorecon, "<1DFnRrv", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config RESTORECON
+   bool "restorecon"
+diff --git a/toys/android/runcon.c b/toys/android/runcon.c
+index 5eb8fa6..39b4d36 100644
+--- a/toys/android/runcon.c
++++ b/toys/android/runcon.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2015 The Android Open Source Project
+ 
+-USE_RUNCON(NEWTOY(runcon, "^<2", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_RUNCON(NEWTOY(runcon, "^<2", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config RUNCON
+   bool "runcon"
+diff --git a/toys/android/sendevent.c b/toys/android/sendevent.c
+index b952d19..94724c8 100644
+--- a/toys/android/sendevent.c
++++ b/toys/android/sendevent.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2016 The Android Open Source Project
+ 
+-USE_SENDEVENT(NEWTOY(sendevent, "<4>4", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_SENDEVENT(NEWTOY(sendevent, "<4>4", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SENDEVENT
+   bool "sendevent"
+diff --git a/toys/android/setenforce.c b/toys/android/setenforce.c
+index 8194484..69f2505 100644
+--- a/toys/android/setenforce.c
++++ b/toys/android/setenforce.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2014 The Android Open Source Project
+ 
+-USE_SETENFORCE(NEWTOY(setenforce, "<1>1", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_SETENFORCE(NEWTOY(setenforce, "<1>1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SETENFORCE
+   bool "setenforce"
+diff --git a/toys/example/demo_many_options.c b/toys/example/demo_many_options.c
+index c568060..e4b2bb6 100644
+--- a/toys/example/demo_many_options.c
++++ b/toys/example/demo_many_options.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2015 Rob Landley <rob@landley.net>
+ 
+-USE_DEMO_MANY_OPTIONS(NEWTOY(demo_many_options, "ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba", TOYFLAG_BIN))
++USE_DEMO_MANY_OPTIONS(NEWTOY(demo_many_options, "ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DEMO_MANY_OPTIONS
+   bool "demo_many_options"
+diff --git a/toys/example/demo_number.c b/toys/example/demo_number.c
+index 42b62b5..a38f2a4 100644
+--- a/toys/example/demo_number.c
++++ b/toys/example/demo_number.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2015 Rob Landley <rob@landley.net>
+ 
+-USE_DEMO_NUMBER(NEWTOY(demo_number, "D#=3<3M#<0hcdbs", TOYFLAG_BIN))
++USE_DEMO_NUMBER(NEWTOY(demo_number, "D#=3<3M#<0hcdbs", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DEMO_NUMBER
+   bool "demo_number"
+diff --git a/toys/example/demo_scankey.c b/toys/example/demo_scankey.c
+index 05ffc41..09ac133 100644
+--- a/toys/example/demo_scankey.c
++++ b/toys/example/demo_scankey.c
+@@ -4,7 +4,7 @@
+  *
+  * TODO sigwinch
+ 
+-USE_DEMO_SCANKEY(NEWTOY(demo_scankey, 0, TOYFLAG_BIN))
++USE_DEMO_SCANKEY(NEWTOY(demo_scankey, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DEMO_SCANKEY
+   bool "demo_scankey"
+diff --git a/toys/lsb/dmesg.c b/toys/lsb/dmesg.c
+index 29539af..0ca5ff3 100644
+--- a/toys/lsb/dmesg.c
++++ b/toys/lsb/dmesg.c
+@@ -7,7 +7,7 @@
+  * Linux 6.0 celebrates the 10th anniversary of this being in "testing":
+  * http://kernel.org/doc/Documentation/ABI/testing/dev-kmsg
+ 
+-USE_DMESG(NEWTOY(dmesg, "w(follow)W(follow-new)CSTtrs#<1n#c[!Ttr][!Cc][!SWw]", TOYFLAG_BIN|TOYFLAG_LINEBUF))
++USE_DMESG(NEWTOY(dmesg, "w(follow)W(follow-new)CSTtrs#<1n#c[!Ttr][!Cc][!SWw]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ 
+ config DMESG
+   bool "dmesg"
+diff --git a/toys/lsb/hostname.c b/toys/lsb/hostname.c
+index 3c15b86..35d0696 100644
+--- a/toys/lsb/hostname.c
++++ b/toys/lsb/hostname.c
+@@ -4,8 +4,8 @@
+  *
+  * http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/hostname.html
+ 
+-USE_HOSTNAME(NEWTOY(hostname, ">1bdsfF:[!bdsf]", TOYFLAG_BIN))
+-USE_DNSDOMAINNAME(NEWTOY(dnsdomainname, ">0", TOYFLAG_BIN))
++USE_HOSTNAME(NEWTOY(hostname, ">1bdsfF:[!bdsf]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_DNSDOMAINNAME(NEWTOY(dnsdomainname, ">0", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config HOSTNAME
+   bool "hostname"
+diff --git a/toys/lsb/mknod.c b/toys/lsb/mknod.c
+index 7d3eabc..a9a0a75 100644
+--- a/toys/lsb/mknod.c
++++ b/toys/lsb/mknod.c
+@@ -4,7 +4,7 @@
+  *
+  * http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/mknod.html
+ 
+-USE_MKNOD(NEWTOY(mknod, "<2>4m(mode):"SKIP_TOYBOX_LSM_NONE("Z:"), TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
++USE_MKNOD(NEWTOY(mknod, "<2>4m(mode):"SKIP_TOYBOX_LSM_NONE("Z:"), TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+ 
+ config MKNOD
+   bool "mknod"
+diff --git a/toys/lsb/mktemp.c b/toys/lsb/mktemp.c
+index a84c1a0..483b2b9 100644
+--- a/toys/lsb/mktemp.c
++++ b/toys/lsb/mktemp.c
+@@ -4,7 +4,7 @@
+  *
+  * http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/mktemp.html
+ 
+-USE_MKTEMP(NEWTOY(mktemp, ">1(tmpdir);:uqd(directory)p:t", TOYFLAG_BIN))
++USE_MKTEMP(NEWTOY(mktemp, ">1(tmpdir);:uqd(directory)p:t", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config MKTEMP
+   bool "mktemp"
+diff --git a/toys/lsb/mount.c b/toys/lsb/mount.c
+index 84d82e2..51fcf6d 100644
+--- a/toys/lsb/mount.c
++++ b/toys/lsb/mount.c
+@@ -11,7 +11,7 @@
+  * TODO fstab user
+  * TODO mount [^/]*:def = nfs, \\samba
+ 
+-USE_MOUNT(NEWTOY(mount, "?RO:afnrvwt:o*[-rw]", TOYFLAG_BIN|TOYFLAG_STAYROOT))
++USE_MOUNT(NEWTOY(mount, "?RO:afnrvwt:o*[-rw]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_STAYROOT))
+ //USE_NFSMOUNT(NEWTOY(nfsmount, "<2>2", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_STAYROOT))
+ 
+ config MOUNT
+diff --git a/toys/lsb/pidof.c b/toys/lsb/pidof.c
+index 791eed0..3a8d69c 100644
+--- a/toys/lsb/pidof.c
++++ b/toys/lsb/pidof.c
+@@ -5,7 +5,7 @@
+  *
+  * http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/pidof.html
+ 
+-USE_PIDOF(NEWTOY(pidof, "so:x", TOYFLAG_BIN))
++USE_PIDOF(NEWTOY(pidof, "so:x", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config PIDOF
+   bool "pidof"
+diff --git a/toys/lsb/su.c b/toys/lsb/su.c
+index 7871722..7d72005 100644
+--- a/toys/lsb/su.c
++++ b/toys/lsb/su.c
+@@ -7,7 +7,7 @@
+  * TODO: suid support
+  * Supports undocumented compatibility options: -m synonym for -p, - for -l
+ 
+-USE_SU(NEWTOY(su, "^lmpu:g:c:s:[!lmp]", TOYFLAG_BIN|TOYFLAG_ROOTONLY))
++USE_SU(NEWTOY(su, "^lmpu:g:c:s:[!lmp]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ROOTONLY))
+ 
+ config SU
+   bool "su"
+diff --git a/toys/lsb/sync.c b/toys/lsb/sync.c
+index b12a8cc..f2a6903 100644
+--- a/toys/lsb/sync.c
++++ b/toys/lsb/sync.c
+@@ -4,7 +4,7 @@
+  *
+  * http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/sync.html
+ 
+-USE_SYNC(NEWTOY(sync, NULL, TOYFLAG_BIN))
++USE_SYNC(NEWTOY(sync, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SYNC
+   bool "sync"
+diff --git a/toys/lsb/umount.c b/toys/lsb/umount.c
+index 464b02b..8efbf0f 100644
+--- a/toys/lsb/umount.c
++++ b/toys/lsb/umount.c
+@@ -8,7 +8,7 @@
+  * nor per-process mount namespaces can work sanely with mtab. The kernel
+  * tracks mount points now, a userspace application can't do so anymore.
+ 
+-USE_UMOUNT(NEWTOY(umount, "cndDflrat*v[!na]", TOYFLAG_BIN|TOYFLAG_STAYROOT))
++USE_UMOUNT(NEWTOY(umount, "cndDflrat*v[!na]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_STAYROOT))
+ 
+ config UMOUNT
+   bool "umount"
+diff --git a/toys/net/ifconfig.c b/toys/net/ifconfig.c
+index e215508..3b70995 100644
+--- a/toys/net/ifconfig.c
++++ b/toys/net/ifconfig.c
+@@ -11,7 +11,7 @@
+  * outfill|keepalive INTEGER - SLIP analog dialup line quality monitoring
+  * metric INTEGER - added to Linux 0.9.10 with comment "never used", still true
+ 
+-USE_IFCONFIG(NEWTOY(ifconfig, "^?aS", TOYFLAG_SBIN))
++USE_IFCONFIG(NEWTOY(ifconfig, "^?aS", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config IFCONFIG
+   bool "ifconfig"
+diff --git a/toys/net/netcat.c b/toys/net/netcat.c
+index a280a1c..915b003 100644
+--- a/toys/net/netcat.c
++++ b/toys/net/netcat.c
+@@ -4,7 +4,7 @@
+  *
+  * TODO: genericize for telnet/microcom/tail-f, fix -t with login_tty()
+ 
+-USE_NETCAT(NEWTOY(netcat, "^tElLw#<1W#<1p#<1>65535q#<1O:o:s:f:46uUnz[!tlL][!Lw][!Lu][!46U][!oO]", TOYFLAG_BIN))
++USE_NETCAT(NEWTOY(netcat, "^tElLw#<1W#<1p#<1>65535q#<1O:o:s:f:46uUnz[!tlL][!Lw][!Lu][!46U][!oO]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_NETCAT(OLDTOY(nc, netcat, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config NETCAT
+diff --git a/toys/net/netstat.c b/toys/net/netstat.c
+index fe012c3..3d9302b 100644
+--- a/toys/net/netstat.c
++++ b/toys/net/netstat.c
+@@ -5,7 +5,7 @@
+  *
+  * Not in SUSv4.
+  *
+-USE_NETSTAT(NEWTOY(netstat, "pWrxwutneal", TOYFLAG_BIN))
++USE_NETSTAT(NEWTOY(netstat, "pWrxwutneal", TOYFLAG_USR|TOYFLAG_BIN))
+ config NETSTAT
+   bool "netstat"
+   default y
+diff --git a/toys/net/rfkill.c b/toys/net/rfkill.c
+index 47e7ab2..e50cc2e 100644
+--- a/toys/net/rfkill.c
++++ b/toys/net/rfkill.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_RFKILL(NEWTOY(rfkill, "<1>2", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_RFKILL(NEWTOY(rfkill, "<1>2", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config RFKILL
+   bool "rfkill"
+diff --git a/toys/other/blkdiscard.c b/toys/other/blkdiscard.c
+index 652d5eb..4d332f8 100644
+--- a/toys/other/blkdiscard.c
++++ b/toys/other/blkdiscard.c
+@@ -8,7 +8,7 @@
+  * Size parsing does not match util-linux where MB, GB, TB are multiples of
+  * 1000 and MiB, TiB, GiB are multipes of 1024.
+ 
+-USE_BLKDISCARD(NEWTOY(blkdiscard, "<1>1f(force)l(length)#<0o(offset)#<0s(secure)z(zeroout)[!sz]", TOYFLAG_BIN))
++USE_BLKDISCARD(NEWTOY(blkdiscard, "<1>1f(force)l(length)#<0o(offset)#<0s(secure)z(zeroout)[!sz]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config BLKDISCARD
+   bool "blkdiscard"
+diff --git a/toys/other/blkid.c b/toys/other/blkid.c
+index 5a5726e..8059eba 100644
+--- a/toys/other/blkid.c
++++ b/toys/other/blkid.c
+@@ -5,8 +5,8 @@
+  * See ftp://ftp.kernel.org/pub/linux/utils/util-linux/v2.24/libblkid-docs/api-index-full.html
+  * TODO: -U and -L should require arguments
+ 
+-USE_BLKID(NEWTOY(blkid, "ULo:s*[!LU]", TOYFLAG_BIN|TOYFLAG_LINEBUF))
+-USE_FSTYPE(NEWTOY(fstype, "<1", TOYFLAG_BIN|TOYFLAG_LINEBUF))
++USE_BLKID(NEWTOY(blkid, "ULo:s*[!LU]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
++USE_FSTYPE(NEWTOY(fstype, "<1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ 
+ config BLKID
+   bool "blkid"
+diff --git a/toys/other/blockdev.c b/toys/other/blockdev.c
+index 25553e9..9989ad5 100644
+--- a/toys/other/blockdev.c
++++ b/toys/other/blockdev.c
+@@ -4,7 +4,7 @@
+  *
+  * No Standard.
+ 
+-USE_BLOCKDEV(NEWTOY(blockdev, "<1>1(setro)(setrw)(getro)(getss)(getbsz)(setbsz)#<0(getsz)(getsize)(getsize64)(getra)(setra)#<0(flushbufs)(rereadpt)",TOYFLAG_SBIN))
++USE_BLOCKDEV(NEWTOY(blockdev, "<1>1(setro)(setrw)(getro)(getss)(getbsz)(setbsz)#<0(getsz)(getsize)(getsize64)(getra)(setra)#<0(flushbufs)(rereadpt)",TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config BLOCKDEV
+   bool "blockdev"
+diff --git a/toys/other/chroot.c b/toys/other/chroot.c
+index d791f34..9bb063b 100644
+--- a/toys/other/chroot.c
++++ b/toys/other/chroot.c
+@@ -7,7 +7,7 @@
+  * The container guys use pivot_root() to deal with this, which does actually
+  * edit mount tree. (New option? Kernel patch?)
+ 
+-USE_CHROOT(NEWTOY(chroot, "^<1", TOYFLAG_USR|TOYFLAG_SBIN|TOYFLAG_ARGFAIL(125)))
++USE_CHROOT(NEWTOY(chroot, "^<1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(125)))
+ 
+ config CHROOT
+   bool "chroot"
+diff --git a/toys/other/devmem.c b/toys/other/devmem.c
+index 121b64e..df41866 100644
+--- a/toys/other/devmem.c
++++ b/toys/other/devmem.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2019 The Android Open Source Project
+ 
+-USE_DEVMEM(NEWTOY(devmem, "<1(no-sync)(no-mmap)f:", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_DEVMEM(NEWTOY(devmem, "<1(no-sync)(no-mmap)f:", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DEVMEM
+   bool "devmem"
+diff --git a/toys/other/dos2unix.c b/toys/other/dos2unix.c
+index 083a814..4284eb8 100644
+--- a/toys/other/dos2unix.c
++++ b/toys/other/dos2unix.c
+@@ -2,8 +2,8 @@
+  *
+  * Copyright 2012 Rob Landley <rob@landley.net>
+ 
+-USE_DOS2UNIX(NEWTOY(dos2unix, 0, TOYFLAG_BIN))
+-USE_UNIX2DOS(NEWTOY(unix2dos, 0, TOYFLAG_BIN))
++USE_DOS2UNIX(NEWTOY(dos2unix, 0, TOYFLAG_USR|TOYFLAG_BIN))
++USE_UNIX2DOS(NEWTOY(unix2dos, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DOS2UNIX
+   bool "dos2unix/unix2dos"
+diff --git a/toys/other/freeramdisk.c b/toys/other/freeramdisk.c
+index 9e6845a..6d939b4 100644
+--- a/toys/other/freeramdisk.c
++++ b/toys/other/freeramdisk.c
+@@ -4,7 +4,7 @@
+  *
+  * No Standard
+ 
+-USE_FREERAMDISK(NEWTOY(freeramdisk, "<1>1", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_FREERAMDISK(NEWTOY(freeramdisk, "<1>1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config FREERAMDISK
+   bool "freeramdisk"
+diff --git a/toys/other/fsfreeze.c b/toys/other/fsfreeze.c
+index 84188d3..0a92eff 100644
+--- a/toys/other/fsfreeze.c
++++ b/toys/other/fsfreeze.c
+@@ -2,7 +2,7 @@
+  *
+  * No standard.
+ 
+-USE_FSFREEZE(NEWTOY(fsfreeze, "<1>1f|u|[!fu]", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_FSFREEZE(NEWTOY(fsfreeze, "<1>1f|u|[!fu]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config FSFREEZE
+   bool "fsfreeze"
+diff --git a/toys/other/fsync.c b/toys/other/fsync.c
+index e155b60..3d73251 100644
+--- a/toys/other/fsync.c
++++ b/toys/other/fsync.c
+@@ -4,7 +4,7 @@
+  *
+  * No Standard.
+ 
+-USE_FSYNC(NEWTOY(fsync, "<1d", TOYFLAG_BIN))
++USE_FSYNC(NEWTOY(fsync, "<1d", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config FSYNC
+   bool "fsync"
+diff --git a/toys/other/help.c b/toys/other/help.c
+index 64f6a02..dac09cc 100644
+--- a/toys/other/help.c
++++ b/toys/other/help.c
+@@ -4,7 +4,7 @@
+  *
+  * Often a shell builtin.
+ 
+-USE_HELP(NEWTOY(help, "ahu", TOYFLAG_BIN|TOYFLAG_MAYFORK))
++USE_HELP(NEWTOY(help, "ahu", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK))
+ 
+ config HELP
+   bool "help"
+diff --git a/toys/other/hwclock.c b/toys/other/hwclock.c
+index 2f11cd4..82b4823 100644
+--- a/toys/other/hwclock.c
++++ b/toys/other/hwclock.c
+@@ -5,7 +5,7 @@
+  * No standard, but see Documentation/rtc.txt in the linux kernel source.
+  *
+  * TODO: get/set subsecond time
+-USE_HWCLOCK(NEWTOY(hwclock, ">0(fast)f(rtc):u(utc)l(localtime)t(systz)s(hctosys)r(show)w(systohc)[-ul][!rtsw]", TOYFLAG_SBIN))
++USE_HWCLOCK(NEWTOY(hwclock, ">0(fast)f(rtc):u(utc)l(localtime)t(systz)s(hctosys)r(show)w(systohc)[-ul][!rtsw]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config HWCLOCK
+   bool "hwclock"
+diff --git a/toys/other/i2ctools.c b/toys/other/i2ctools.c
+index fc905ea..488f528 100644
+--- a/toys/other/i2ctools.c
++++ b/toys/other/i2ctools.c
+@@ -13,11 +13,11 @@
+  * TODO: I2C_M_TEN bit addressing (-t, larger range in probe...)
+ 
+ // note: confirm() needs "y" to be in same place for all commands
+-USE_I2CDETECT(NEWTOY(i2cdetect, ">3aF#<0>63lqry[!qr][!Fl]", TOYFLAG_USR|TOYFLAG_SBIN))
+-USE_I2CDUMP(NEWTOY(i2cdump, "<2>2fy", TOYFLAG_USR|TOYFLAG_SBIN))
+-USE_I2CGET(NEWTOY(i2cget, "<2>3fy", TOYFLAG_USR|TOYFLAG_SBIN))
+-USE_I2CSET(NEWTOY(i2cset, "<4fy", TOYFLAG_USR|TOYFLAG_SBIN))
+-USE_I2CTRANSFER(NEWTOY(i2ctransfer, "<2vfy", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_I2CDETECT(NEWTOY(i2cdetect, ">3aF#<0>63lqry[!qr][!Fl]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_I2CDUMP(NEWTOY(i2cdump, "<2>2fy", TOYFLAG_USR|TOYFLAG_BIN))
++USE_I2CGET(NEWTOY(i2cget, "<2>3fy", TOYFLAG_USR|TOYFLAG_BIN))
++USE_I2CSET(NEWTOY(i2cset, "<4fy", TOYFLAG_USR|TOYFLAG_BIN))
++USE_I2CTRANSFER(NEWTOY(i2ctransfer, "<2vfy", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config I2CDETECT
+   bool "i2cdetect"
+diff --git a/toys/other/insmod.c b/toys/other/insmod.c
+index 176e5a6..ed98644 100644
+--- a/toys/other/insmod.c
++++ b/toys/other/insmod.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_INSMOD(NEWTOY(insmod, "<1", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_INSMOD(NEWTOY(insmod, "<1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config INSMOD
+   bool "insmod"
+diff --git a/toys/other/login.c b/toys/other/login.c
+index 62c1293..7d012fd 100644
+--- a/toys/other/login.c
++++ b/toys/other/login.c
+@@ -5,7 +5,7 @@
+  * No support for PAM/securetty/selinux/login script/issue/utmp
+  * Relies on libcrypt for hash calculation.
+ 
+-USE_LOGIN(NEWTOY(login, ">1f:ph:", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_LOGIN(NEWTOY(login, ">1f:ph:", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config LOGIN
+   bool "login"
+diff --git a/toys/other/losetup.c b/toys/other/losetup.c
+index 0973273..993fb71 100644
+--- a/toys/other/losetup.c
++++ b/toys/other/losetup.c
+@@ -4,7 +4,7 @@
+  *
+  * No standard. (Sigh.)
+ 
+-USE_LOSETUP(NEWTOY(losetup, ">2S(sizelimit)#s(show)ro#j:fdcaD[!afj]", TOYFLAG_SBIN))
++USE_LOSETUP(NEWTOY(losetup, ">2S(sizelimit)#s(show)ro#j:fdcaD[!afj]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LOSETUP
+   bool "losetup"
+diff --git a/toys/other/lsattr.c b/toys/other/lsattr.c
+index 93af8cd..e1b3765 100644
+--- a/toys/other/lsattr.c
++++ b/toys/other/lsattr.c
+@@ -7,8 +7,8 @@
+  *
+  * TODO cleanup
+ 
+-USE_LSATTR(NEWTOY(lsattr, "ldapvR", TOYFLAG_BIN))
+-USE_CHATTR(NEWTOY(chattr, "?p#v#R", TOYFLAG_BIN))
++USE_LSATTR(NEWTOY(lsattr, "ldapvR", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CHATTR(NEWTOY(chattr, "?p#v#R", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LSATTR
+   bool "lsattr"
+diff --git a/toys/other/lsmod.c b/toys/other/lsmod.c
+index 4d16048..d3153c4 100644
+--- a/toys/other/lsmod.c
++++ b/toys/other/lsmod.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_LSMOD(NEWTOY(lsmod, NULL, TOYFLAG_SBIN))
++USE_LSMOD(NEWTOY(lsmod, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LSMOD
+   bool "lsmod"
+diff --git a/toys/other/mkswap.c b/toys/other/mkswap.c
+index 806e182..eed6119 100644
+--- a/toys/other/mkswap.c
++++ b/toys/other/mkswap.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2009 Rob Landley <rob@landley.net>
+ 
+-USE_MKSWAP(NEWTOY(mkswap, "<1>1L:", TOYFLAG_SBIN))
++USE_MKSWAP(NEWTOY(mkswap, "<1>1L:", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config MKSWAP
+   bool "mkswap"
+diff --git a/toys/other/modinfo.c b/toys/other/modinfo.c
+index 5a94a4f..cfb1e2b 100644
+--- a/toys/other/modinfo.c
++++ b/toys/other/modinfo.c
+@@ -4,7 +4,7 @@
+  *
+  * TODO: cleanup
+ 
+-USE_MODINFO(NEWTOY(modinfo, "<1b:k:F:0", TOYFLAG_SBIN))
++USE_MODINFO(NEWTOY(modinfo, "<1b:k:F:0", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config MODINFO
+   bool "modinfo"
+diff --git a/toys/other/mountpoint.c b/toys/other/mountpoint.c
+index 7985cbb..433cc3c 100644
+--- a/toys/other/mountpoint.c
++++ b/toys/other/mountpoint.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_MOUNTPOINT(NEWTOY(mountpoint, "<1qdx[-dx]", TOYFLAG_BIN))
++USE_MOUNTPOINT(NEWTOY(mountpoint, "<1qdx[-dx]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config MOUNTPOINT
+   bool "mountpoint"
+diff --git a/toys/other/nologin.c b/toys/other/nologin.c
+index 851cd79..f9d0eb3 100644
+--- a/toys/other/nologin.c
++++ b/toys/other/nologin.c
+@@ -4,7 +4,7 @@
+  *
+  * No standard.
+ 
+-USE_NOLOGIN(NEWTOY(nologin, 0, TOYFLAG_BIN|TOYFLAG_NOHELP))
++USE_NOLOGIN(NEWTOY(nologin, 0, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP))
+ 
+ config NOLOGIN
+   bool "nologin"
+diff --git a/toys/other/oneit.c b/toys/other/oneit.c
+index 45eb1fb..4067ddb 100644
+--- a/toys/other/oneit.c
++++ b/toys/other/oneit.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2005, 2007 by Rob Landley <rob@landley.net>.
+ 
+-USE_ONEIT(NEWTOY(oneit, "^<1nc:p3[!pn]", TOYFLAG_SBIN))
++USE_ONEIT(NEWTOY(oneit, "^<1nc:p3[!pn]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config ONEIT
+   bool "oneit"
+diff --git a/toys/other/openvt.c b/toys/other/openvt.c
+index 66d8a36..159e0cf 100644
+--- a/toys/other/openvt.c
++++ b/toys/other/openvt.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_OPENVT(NEWTOY(openvt, "^<1c#<1>63sw", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_OPENVT(NEWTOY(openvt, "^<1c#<1>63sw", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ USE_CHVT(NEWTOY(chvt, "<1>1", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_DEALLOCVT(NEWTOY(deallocvt, ">1", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+diff --git a/toys/other/partprobe.c b/toys/other/partprobe.c
+index 69e6643..e22d984 100644
+--- a/toys/other/partprobe.c
++++ b/toys/other/partprobe.c
+@@ -4,7 +4,7 @@
+  *
+  * see http://man7.org/linux/man-pages/man8/partprobe.8.html
+ 
+-USE_PARTPROBE(NEWTOY(partprobe, "<1", TOYFLAG_SBIN))
++USE_PARTPROBE(NEWTOY(partprobe, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config PARTPROBE
+   bool "partprobe"
+diff --git a/toys/other/pivot_root.c b/toys/other/pivot_root.c
+index f9a8918..52b8377 100644
+--- a/toys/other/pivot_root.c
++++ b/toys/other/pivot_root.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Rob Landley <rob@landley.net>
+ 
+-USE_PIVOT_ROOT(NEWTOY(pivot_root, "<2>2", TOYFLAG_SBIN))
++USE_PIVOT_ROOT(NEWTOY(pivot_root, "<2>2", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config PIVOT_ROOT
+   bool "pivot_root"
+diff --git a/toys/other/printenv.c b/toys/other/printenv.c
+index 41cd0bd..64988d3 100644
+--- a/toys/other/printenv.c
++++ b/toys/other/printenv.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Georgi Chorbadzhiyski <georgi@unixsol.org>
+ 
+-USE_PRINTENV(NEWTOY(printenv, "(null)0", TOYFLAG_BIN))
++USE_PRINTENV(NEWTOY(printenv, "(null)0", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config PRINTENV
+   bool "printenv"
+diff --git a/toys/other/readahead.c b/toys/other/readahead.c
+index 4d52e44..f51357f 100644
+--- a/toys/other/readahead.c
++++ b/toys/other/readahead.c
+@@ -4,7 +4,7 @@
+  *
+  * No standard.
+ 
+-USE_READAHEAD(NEWTOY(readahead, NULL, TOYFLAG_BIN))
++USE_READAHEAD(NEWTOY(readahead, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config READAHEAD
+   bool "readahead"
+diff --git a/toys/other/reboot.c b/toys/other/reboot.c
+index 4770d1f..972f652 100644
+--- a/toys/other/reboot.c
++++ b/toys/other/reboot.c
+@@ -2,9 +2,9 @@
+  *
+  * Copyright 2013 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_REBOOT(NEWTOY(reboot, "d:fn", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
+-USE_REBOOT(OLDTOY(halt, reboot, TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
+-USE_REBOOT(OLDTOY(poweroff, reboot, TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_REBOOT(NEWTOY(reboot, "d:fn", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_REBOOT(OLDTOY(halt, reboot, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
++USE_REBOOT(OLDTOY(poweroff, reboot, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config REBOOT
+   bool "reboot"
+diff --git a/toys/other/rmmod.c b/toys/other/rmmod.c
+index 0450c0b..18f8609 100644
+--- a/toys/other/rmmod.c
++++ b/toys/other/rmmod.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_RMMOD(NEWTOY(rmmod, "<1wf", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_RMMOD(NEWTOY(rmmod, "<1wf", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config RMMOD
+   bool "rmmod"
+diff --git a/toys/other/stat.c b/toys/other/stat.c
+index 463aa46..c91a4ce 100644
+--- a/toys/other/stat.c
++++ b/toys/other/stat.c
+@@ -2,7 +2,7 @@
+  * Copyright 2012 <warior.linux@gmail.com>
+  * Copyright 2013 <anand.sinha85@gmail.com>
+ 
+-USE_STAT(NEWTOY(stat, "<1c:(format)fLt", TOYFLAG_BIN))
++USE_STAT(NEWTOY(stat, "<1c:(format)fLt", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config STAT
+   bool stat
+diff --git a/toys/other/swapoff.c b/toys/other/swapoff.c
+index bd6a41a..3383881 100644
+--- a/toys/other/swapoff.c
++++ b/toys/other/swapoff.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_SWAPOFF(NEWTOY(swapoff, "<1>1av", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_SWAPOFF(NEWTOY(swapoff, "<1>1av", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config SWAPOFF
+   bool "swapoff"
+diff --git a/toys/other/swapon.c b/toys/other/swapon.c
+index e27517d..0fea81f 100644
+--- a/toys/other/swapon.c
++++ b/toys/other/swapon.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_SWAPON(NEWTOY(swapon, "<1>1p#<0>32767d", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_SWAPON(NEWTOY(swapon, "<1>1p#<0>32767d", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config SWAPON
+   bool "swapon"
+diff --git a/toys/other/switch_root.c b/toys/other/switch_root.c
+index 1c75060..ad76863 100644
+--- a/toys/other/switch_root.c
++++ b/toys/other/switch_root.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2005 Rob Landley <rob@landley.net>
+ 
+-USE_SWITCH_ROOT(NEWTOY(switch_root, "<2c:h", TOYFLAG_SBIN))
++USE_SWITCH_ROOT(NEWTOY(switch_root, "<2c:h", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SWITCH_ROOT
+   bool "switch_root"
+diff --git a/toys/other/sysctl.c b/toys/other/sysctl.c
+index 7a2cba6..4f86318 100644
+--- a/toys/other/sysctl.c
++++ b/toys/other/sysctl.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_SYSCTL(NEWTOY(sysctl, "^neNqwpaA[!ap][!aq][!aw][+aA]", TOYFLAG_SBIN))
++USE_SYSCTL(NEWTOY(sysctl, "^neNqwpaA[!ap][!aq][!aw][+aA]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SYSCTL
+   bool "sysctl"
+diff --git a/toys/other/usleep.c b/toys/other/usleep.c
+index e09a17c..d0645c6 100644
+--- a/toys/other/usleep.c
++++ b/toys/other/usleep.c
+@@ -2,7 +2,7 @@
+  *
+  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
+ 
+-USE_USLEEP(NEWTOY(usleep, "<1>1", TOYFLAG_BIN))
++USE_USLEEP(NEWTOY(usleep, "<1>1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config USLEEP
+   bool "usleep"
+diff --git a/toys/other/vconfig.c b/toys/other/vconfig.c
+index 83674d8..b7c98d1 100644
+--- a/toys/other/vconfig.c
++++ b/toys/other/vconfig.c
+@@ -5,7 +5,7 @@
+  *
+  * No standard
+ 
+-USE_VCONFIG(NEWTOY(vconfig, "<2>4", TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_VCONFIG(NEWTOY(vconfig, "<2>4", TOYFLAG_NEEDROOT|TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config VCONFIG
+   bool "vconfig"
+diff --git a/toys/other/vmstat.c b/toys/other/vmstat.c
+index 44ec551..64d8463 100644
+--- a/toys/other/vmstat.c
++++ b/toys/other/vmstat.c
+@@ -5,7 +5,7 @@
+  * TODO: I have no idea how "system" category is calculated.
+  * whatever we're doing isn't matching what other implementations are doing.
+ 
+-USE_VMSTAT(NEWTOY(vmstat, ">2n", TOYFLAG_BIN|TOYFLAG_LINEBUF))
++USE_VMSTAT(NEWTOY(vmstat, ">2n", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_LINEBUF))
+ 
+ config VMSTAT
+   bool "vmstat"
+diff --git a/toys/other/watchdog.c b/toys/other/watchdog.c
+index fb49b01..6f9e6a1 100644
+--- a/toys/other/watchdog.c
++++ b/toys/other/watchdog.c
+@@ -4,7 +4,7 @@
+  *
+  * See kernel.org/doc/Documentation/watchdog/watchdog-api.txt
+ 
+-USE_WATCHDOG(NEWTOY(watchdog, "<1>1Ft#=4<1T#=60<1", TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_WATCHDOG(NEWTOY(watchdog, "<1>1Ft#=4<1T#=60<1", TOYFLAG_NEEDROOT|TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config WATCHDOG
+   bool "watchdog"
+diff --git a/toys/pending/arping.c b/toys/pending/arping.c
+index aae7161..cd762c8 100644
+--- a/toys/pending/arping.c
++++ b/toys/pending/arping.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_ARPING(NEWTOY(arping, "<1>1s:I:w#<0c#<0AUDbqf[+AU][+Df]", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_ARPING(NEWTOY(arping, "<1>1s:I:w#<0c#<0AUDbqf[+AU][+Df]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config ARPING
+   bool "arping"
+diff --git a/toys/pending/bootchartd.c b/toys/pending/bootchartd.c
+index bbb06b4..a468823 100644
+--- a/toys/pending/bootchartd.c
++++ b/toys/pending/bootchartd.c
+@@ -252,7 +252,7 @@ void bootchartd_main()
+     sigatexit(generic_signal);
+     raise(SIGSTOP);
+     if (!bchartd_opt && !getenv("PATH"))
+-      putenv("PATH=/sbin:/usr/sbin:/bin:/usr/bin");
++      putenv("/bin:/usr/bin");
+     start_logging();
+     stop_logging(tmp_dir, bchartd_opt == 1 ? toys.optargs[1] : NULL);
+     return;
+diff --git a/toys/pending/brctl.c b/toys/pending/brctl.c
+index 1ff1372..601b6d0 100644
+--- a/toys/pending/brctl.c
++++ b/toys/pending/brctl.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_BRCTL(NEWTOY(brctl, "<1", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_BRCTL(NEWTOY(brctl, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config BRCTL
+   bool "brctl"
+diff --git a/toys/pending/crond.c b/toys/pending/crond.c
+index cef27ea..bc3812d 100644
+--- a/toys/pending/crond.c
++++ b/toys/pending/crond.c
+@@ -4,7 +4,7 @@
+  *
+  * No Standard
+ 
+-USE_CROND(NEWTOY(crond, "fbSl#<0=8d#<0L:c:[-bf][-LS][-ld]", TOYFLAG_USR|TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_CROND(NEWTOY(crond, "fbSl#<0=8d#<0L:c:[-bf][-LS][-ld]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config CROND
+   bool "crond"
+diff --git a/toys/pending/dhcp.c b/toys/pending/dhcp.c
+index a72f9f0..b0d6962 100644
+--- a/toys/pending/dhcp.c
++++ b/toys/pending/dhcp.c
+@@ -5,7 +5,7 @@
+  *
+  * See RFC 2132, and 3442 (option 121)
+ 
+-USE_DHCP(NEWTOY(dhcp, "V:H:F:x*r:O*A#<0=20T#<0=3t#<0=3s:p:i:SBRCuaovqnbf", TOYFLAG_SBIN|TOYFLAG_ROOTONLY))
++USE_DHCP(NEWTOY(dhcp, "V:H:F:x*r:O*A#<0=20T#<0=3t#<0=3s:p:i:SBRCuaovqnbf", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ROOTONLY))
+ 
+ config DHCP
+   bool "dhcp"
+diff --git a/toys/pending/dhcp6.c b/toys/pending/dhcp6.c
+index c186b48..6790b70 100644
+--- a/toys/pending/dhcp6.c
++++ b/toys/pending/dhcp6.c
+@@ -3,7 +3,7 @@
+  * Copyright 2015 Rajni Kant <rajnikant12345@gmail.com>
+  *
+  * Not in SUSv4.
+-USE_DHCP6(NEWTOY(dhcp6, "r:A#<0T#<0t#<0s:p:i:SRvqnbf", TOYFLAG_SBIN|TOYFLAG_ROOTONLY))
++USE_DHCP6(NEWTOY(dhcp6, "r:A#<0T#<0t#<0s:p:i:SRvqnbf", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ROOTONLY))
+ 
+ config DHCP6
+   bool "dhcp6"
+diff --git a/toys/pending/dhcpd.c b/toys/pending/dhcpd.c
+index 5b5c63e..dceca9b 100644
+--- a/toys/pending/dhcpd.c
++++ b/toys/pending/dhcpd.c
+@@ -5,7 +5,7 @@
+  * Copyright 2015 Yeongdeok Suh <skyducks111@gmail.com>
+  *
+  * No Standard
+-USE_DHCPD(NEWTOY(dhcpd, ">1P#<0>65535fi:S46[!46]", TOYFLAG_SBIN|TOYFLAG_ROOTONLY))
++USE_DHCPD(NEWTOY(dhcpd, ">1P#<0>65535fi:S46[!46]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ROOTONLY))
+ 
+ config DHCPD
+   bool "dhcpd"
+diff --git a/toys/pending/fdisk.c b/toys/pending/fdisk.c
+index fd8db25..f1a5e7a 100644
+--- a/toys/pending/fdisk.c
++++ b/toys/pending/fdisk.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_FDISK(NEWTOY(fdisk, "C#<0H#<0S#<0b#<512ul", TOYFLAG_SBIN))
++USE_FDISK(NEWTOY(fdisk, "C#<0H#<0S#<0b#<512ul", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config FDISK
+   bool "fdisk"
+diff --git a/toys/pending/getty.c b/toys/pending/getty.c
+index 1bd795d..481fad7 100644
+--- a/toys/pending/getty.c
++++ b/toys/pending/getty.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_GETTY(NEWTOY(getty, "<2t#<0H:I:l:f:iwnmLh", TOYFLAG_SBIN))
++USE_GETTY(NEWTOY(getty, "<2t#<0H:I:l:f:iwnmLh", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config GETTY
+   bool "getty"
+@@ -208,7 +208,7 @@ static void utmp_entry(void)
+ 
+ void getty_main(void)
+ {
+-  char ch, *cmd[3] = {TT.l ? : "/bin/login", 0, 0}; // space to add username
++  char ch, *cmd[3] = {TT.l ? : "/usr/bin/login", 0, 0}; // space to add username
+ 
+   if (!FLAG(f)) TT.f = "/etc/issue";
+   uname(&TT.uts);
+diff --git a/toys/pending/groupadd.c b/toys/pending/groupadd.c
+index 67c0e92..0fb0f64 100644
+--- a/toys/pending/groupadd.c
++++ b/toys/pending/groupadd.c
+@@ -5,8 +5,8 @@
+  *
+  * See http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/groupadd.html
+ 
+-USE_GROUPADD(NEWTOY(groupadd, "<1>2R:g#<0>2147483647S", TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
+-USE_GROUPADD(OLDTOY(addgroup, groupadd, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_GROUPADD(NEWTOY(groupadd, "<1>2R:g#<0>2147483647S", TOYFLAG_NEEDROOT|TOYFLAG_BIN))
++USE_GROUPADD(OLDTOY(addgroup, groupadd, TOYFLAG_NEEDROOT|TOYFLAG_BIN))
+ 
+ config GROUPADD
+   bool "groupadd"
+diff --git a/toys/pending/groupdel.c b/toys/pending/groupdel.c
+index 4c3eae5..27eb011 100644
+--- a/toys/pending/groupdel.c
++++ b/toys/pending/groupdel.c
+@@ -5,8 +5,8 @@
+  *
+  * See http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/groupdel.html
+ 
+-USE_GROUPDEL(NEWTOY(groupdel, "<1>2?", TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
+-USE_GROUPDEL(OLDTOY(delgroup, groupdel, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_GROUPDEL(NEWTOY(groupdel, "<1>2?", TOYFLAG_NEEDROOT|TOYFLAG_BIN))
++USE_GROUPDEL(OLDTOY(delgroup, groupdel, TOYFLAG_NEEDROOT|TOYFLAG_BIN))
+ 
+ config GROUPDEL
+   bool "groupdel"
+diff --git a/toys/pending/init.c b/toys/pending/init.c
+index 84077b4..f7ad178 100644
+--- a/toys/pending/init.c
++++ b/toys/pending/init.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_INIT(NEWTOY(init, "", TOYFLAG_SBIN))
++USE_INIT(NEWTOY(init, "", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config INIT
+   bool "init"
+@@ -133,7 +133,7 @@ static void parse_inittab(void)
+   if (!fp) {
+     error_msg("Unable to open /etc/inittab. Using Default inittab");
+     add_new_action(SYSINIT, "/etc/init.d/rcS", "");
+-    add_new_action(RESPAWN, "/sbin/getty -n -l /bin/sh -L 115200 tty1 vt100", "");
++    add_new_action(RESPAWN, "/usr/bin/getty -n -l /bin/sh -L 115200 tty1 vt100", "");
+     return;
+   }
+ 
+@@ -470,7 +470,7 @@ void init_main(void)
+   setsid();
+ 
+   putenv("HOME=/");
+-  putenv("PATH=/sbin:/usr/sbin:/bin:/usr/bin");
++  putenv("PATH=/bin:/usr/bin");
+   putenv("SHELL=/bin/sh");
+   putenv("USER=root");
+ 
+diff --git a/toys/pending/ip.c b/toys/pending/ip.c
+index 505c1d1..553e51f 100644
+--- a/toys/pending/ip.c
++++ b/toys/pending/ip.c
+@@ -7,12 +7,12 @@
+  *
+  * No Standard.
+  *
+-USE_IP(NEWTOY(ip, NULL, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(ipaddr, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iplink, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iproute, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iprule, ip, TOYFLAG_SBIN))
+-USE_IP(OLDTOY(iptunnel, ip, TOYFLAG_SBIN))
++USE_IP(NEWTOY(ip, NULL, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(ipaddr, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iplink, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iproute, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iprule, ip, TOYFLAG_USR|TOYFLAG_BIN))
++USE_IP(OLDTOY(iptunnel, ip, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config IP
+   bool "ip"
+diff --git a/toys/pending/klogd.c b/toys/pending/klogd.c
+index 8ea8a48..8b1dc21 100644
+--- a/toys/pending/klogd.c
++++ b/toys/pending/klogd.c
+@@ -5,7 +5,7 @@
+  *
+  * No standard
+ 
+-USE_KLOGD(NEWTOY(klogd, "c#<1>8ns", TOYFLAG_SBIN))
++USE_KLOGD(NEWTOY(klogd, "c#<1>8ns", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config KLOGD
+   bool "klogd"
+diff --git a/toys/pending/last.c b/toys/pending/last.c
+index 4730a67..3998058 100644
+--- a/toys/pending/last.c
++++ b/toys/pending/last.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_LAST(NEWTOY(last, "f:W", TOYFLAG_BIN))
++USE_LAST(NEWTOY(last, "f:W", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LAST
+   bool "last"
+diff --git a/toys/pending/modprobe.c b/toys/pending/modprobe.c
+index 4db3dde..6925a5f 100644
+--- a/toys/pending/modprobe.c
++++ b/toys/pending/modprobe.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_MODPROBE(NEWTOY(modprobe, "alrqvsDbd*", TOYFLAG_SBIN))
++USE_MODPROBE(NEWTOY(modprobe, "alrqvsDbd*", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config MODPROBE
+   bool "modprobe"
+diff --git a/toys/pending/route.c b/toys/pending/route.c
+index 0308c92..a605a64 100644
+--- a/toys/pending/route.c
++++ b/toys/pending/route.c
+@@ -12,7 +12,7 @@
+  *
+  * mod dyn reinstate metric netmask gw mss window irtt dev
+ 
+-USE_ROUTE(NEWTOY(route, "?neA:", TOYFLAG_SBIN))
++USE_ROUTE(NEWTOY(route, "?neA:", TOYFLAG_USR|TOYFLAG_BIN))
+ config ROUTE
+   bool "route"
+   default n
+diff --git a/toys/pending/sh.c b/toys/pending/sh.c
+index bebe7bd..59e38c1 100644
+--- a/toys/pending/sh.c
++++ b/toys/pending/sh.c
+@@ -66,9 +66,9 @@ USE_SH(NEWTOY(unalias, "<1a", TOYFLAG_NOFORK))
+ USE_SH(NEWTOY(unset, "fvn[!fv]", TOYFLAG_NOFORK))
+ USE_SH(NEWTOY(wait, "n", TOYFLAG_NOFORK))
+ 
+-USE_SH(NEWTOY(sh, "^(noediting)(noprofile)(norc)sc:i", TOYFLAG_BIN))
+-USE_SH(OLDTOY(toysh, sh, TOYFLAG_BIN))
+-USE_SH(OLDTOY(bash, sh, TOYFLAG_BIN))
++USE_SH(NEWTOY(sh, "^(noediting)(noprofile)(norc)sc:i", TOYFLAG_USR|TOYFLAG_BIN))
++USE_SH(OLDTOY(toysh, sh, TOYFLAG_USR|TOYFLAG_BIN))
++USE_SH(OLDTOY(bash, sh, TOYFLAG_USR|TOYFLAG_BIN))
+ // Login lies in argv[0], so add some aliases to catch that
+ USE_SH(OLDTOY(-sh, sh, 0))
+ USE_SH(OLDTOY(-toysh, sh, 0))
+diff --git a/toys/pending/strace.c b/toys/pending/strace.c
+index f612f07..4192482 100644
+--- a/toys/pending/strace.c
++++ b/toys/pending/strace.c
+@@ -4,7 +4,7 @@
+  *
+  * See https://man7.org/linux/man-pages/man2/syscall.2.html
+ 
+-USE_STRACE(NEWTOY(strace, "^p#s#v", TOYFLAG_USR|TOYFLAG_SBIN))
++USE_STRACE(NEWTOY(strace, "^p#s#v", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config STRACE
+   bool "strace"
+diff --git a/toys/pending/stty.c b/toys/pending/stty.c
+index 25d2d9b..51f3f3d 100644
+--- a/toys/pending/stty.c
++++ b/toys/pending/stty.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://pubs.opengroup.org/onlinepubs/9699919799/utilities/stty.html
+ 
+-USE_STTY(NEWTOY(stty, "?aF:g[!ag]", TOYFLAG_BIN))
++USE_STTY(NEWTOY(stty, "?aF:g[!ag]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config STTY
+   bool "stty"
+diff --git a/toys/pending/sulogin.c b/toys/pending/sulogin.c
+index 4c26f35..6c9fb18 100644
+--- a/toys/pending/sulogin.c
++++ b/toys/pending/sulogin.c
+@@ -8,7 +8,7 @@
+  * No support for PAM/securetty/selinux/login script/issue/utmp
+ 
+ 
+-USE_SULOGIN(NEWTOY(sulogin, "t#<0=0", TOYFLAG_SBIN|TOYFLAG_NEEDROOT))
++USE_SULOGIN(NEWTOY(sulogin, "t#<0=0", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NEEDROOT))
+ 
+ config SULOGIN
+   bool "sulogin"
+diff --git a/toys/pending/syslogd.c b/toys/pending/syslogd.c
+index 43ccd9b..5a99d31 100644
+--- a/toys/pending/syslogd.c
++++ b/toys/pending/syslogd.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard
+ 
+-USE_SYSLOGD(NEWTOY(syslogd,">0l#<1>8=8R:b#<0>99=1s#<0=200m#<0>71582787=20O:p:f:a:nSKLD", TOYFLAG_SBIN|TOYFLAG_STAYROOT))
++USE_SYSLOGD(NEWTOY(syslogd,">0l#<1>8=8R:b#<0>99=1s#<0=200m#<0>71582787=20O:p:f:a:nSKLD", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_STAYROOT))
+ 
+ config SYSLOGD
+   bool "syslogd"
+diff --git a/toys/pending/telnet.c b/toys/pending/telnet.c
+index 6b2c273..a379b4b 100644
+--- a/toys/pending/telnet.c
++++ b/toys/pending/telnet.c
+@@ -6,7 +6,7 @@
+  *
+  * Not in SUSv4.
+ 
+-USE_TELNET(NEWTOY(telnet, "<1>2", TOYFLAG_BIN))
++USE_TELNET(NEWTOY(telnet, "<1>2", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config TELNET
+   bool "telnet"
+diff --git a/toys/pending/telnetd.c b/toys/pending/telnetd.c
+index 47107dc..0287d6a 100644
+--- a/toys/pending/telnetd.c
++++ b/toys/pending/telnetd.c
+@@ -274,7 +274,7 @@ void telnetd_main(void)
+   struct timeval tv, *tv_ptr = NULL;
+   int pty_fd, new_fd, c = 0, w, master_fd = 0;
+ 
+-  if (!FLAG(l)) TT.login_path = "/bin/login";
++  if (!FLAG(l)) TT.login_path = "/usr/bin/login";
+   if (!FLAG(f)) TT.issue_path = "/etc/issue.net";
+   if (FLAG(w)) toys.optflags |= FLAG_F;
+   if (!FLAG(i)) {
+diff --git a/toys/pending/tftpd.c b/toys/pending/tftpd.c
+index b1ebb01..127b950 100644
+--- a/toys/pending/tftpd.c
++++ b/toys/pending/tftpd.c
+@@ -5,7 +5,7 @@
+  *
+  * No Standard.
+ 
+-USE_TFTPD(NEWTOY(tftpd, "rcu:l", TOYFLAG_BIN))
++USE_TFTPD(NEWTOY(tftpd, "rcu:l", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config TFTPD
+   bool "tftpd"
+diff --git a/toys/pending/useradd.c b/toys/pending/useradd.c
+index 261c7e4..4fe58d8 100644
+--- a/toys/pending/useradd.c
++++ b/toys/pending/useradd.c
+@@ -5,8 +5,8 @@
+  *
+  * See http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/useradd.html
+ 
+-USE_USERADD(NEWTOY(useradd, "<1>2u#<0G:s:g:h:SDH", TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_SBIN))
+-USE_USERADD(OLDTOY(adduser, useradd, TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_SBIN))
++USE_USERADD(NEWTOY(useradd, "<1>2u#<0G:s:g:h:SDH", TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_BIN))
++USE_USERADD(OLDTOY(adduser, useradd, TOYFLAG_NEEDROOT|TOYFLAG_UMASK|TOYFLAG_BIN))
+ 
+ config USERADD
+   bool "useradd"
+diff --git a/toys/pending/userdel.c b/toys/pending/userdel.c
+index a77fb28..05176b9 100644
+--- a/toys/pending/userdel.c
++++ b/toys/pending/userdel.c
+@@ -4,8 +4,8 @@
+  *
+  * See http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/userdel.html
+ 
+-USE_USERDEL(NEWTOY(userdel, "<1>1r", TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
+-USE_USERDEL(OLDTOY(deluser, userdel, TOYFLAG_NEEDROOT|TOYFLAG_SBIN))
++USE_USERDEL(NEWTOY(userdel, "<1>1r", TOYFLAG_NEEDROOT|TOYFLAG_BIN))
++USE_USERDEL(OLDTOY(deluser, userdel, TOYFLAG_NEEDROOT|TOYFLAG_BIN))
+ 
+ config USERDEL
+   bool "userdel"
+diff --git a/toys/posix/cat.c b/toys/posix/cat.c
+index 1226651..045dd98 100644
+--- a/toys/posix/cat.c
++++ b/toys/posix/cat.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/cat.html
+ 
+-USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_BIN))
++USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CAT
+   bool "cat"
+diff --git a/toys/posix/chgrp.c b/toys/posix/chgrp.c
+index a4fc41c..d8f2e7d 100644
+--- a/toys/posix/chgrp.c
++++ b/toys/posix/chgrp.c
+@@ -5,8 +5,8 @@
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/chown.html
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/chgrp.html
+ 
+-USE_CHGRP(NEWTOY(chgrp, "<2h(no-dereference)PLHRfv[-HLP]", TOYFLAG_BIN))
+-USE_CHOWN(OLDTOY(chown, chgrp, TOYFLAG_BIN))
++USE_CHGRP(NEWTOY(chgrp, "<2h(no-dereference)PLHRfv[-HLP]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CHOWN(OLDTOY(chown, chgrp, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CHGRP
+   bool "chgrp"
+diff --git a/toys/posix/chmod.c b/toys/posix/chmod.c
+index dc9630e..b48d182 100644
+--- a/toys/posix/chmod.c
++++ b/toys/posix/chmod.c
+@@ -6,7 +6,7 @@
+  *
+  * Deviations from posix: -cfv
+ 
+-USE_CHMOD(NEWTOY(chmod, "<2?cvfR[-cvf]", TOYFLAG_BIN))
++USE_CHMOD(NEWTOY(chmod, "<2?cvfR[-cvf]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CHMOD
+   bool "chmod"
+diff --git a/toys/posix/cksum.c b/toys/posix/cksum.c
+index 1662c15..6b87ecb 100644
+--- a/toys/posix/cksum.c
++++ b/toys/posix/cksum.c
+@@ -4,8 +4,8 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/cksum.html
+ 
+-USE_CKSUM(NEWTOY(cksum, "HIPLN", TOYFLAG_BIN))
+-USE_CRC32(NEWTOY(crc32, 0, TOYFLAG_BIN))
++USE_CKSUM(NEWTOY(cksum, "HIPLN", TOYFLAG_USR|TOYFLAG_BIN))
++USE_CRC32(NEWTOY(crc32, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CKSUM
+   bool "cksum"
+diff --git a/toys/posix/cp.c b/toys/posix/cp.c
+index 1f1816e..33cfe5a 100644
+--- a/toys/posix/cp.c
++++ b/toys/posix/cp.c
+@@ -15,8 +15,8 @@
+ // options shared between mv/cp must be in same order (right to left)
+ // for FLAG macros to work out right in shared infrastructure.
+ 
+-USE_CP(NEWTOY(cp, "<1(preserve):;D(parents)RHLPprudaslv(verbose)nF(remove-destination)fit:T[-HLPd][-niu][+Rr]", TOYFLAG_BIN))
+-USE_MV(NEWTOY(mv, "<1x(swap)v(verbose)nF(remove-destination)fit:T[-ni]", TOYFLAG_BIN))
++USE_CP(NEWTOY(cp, "<1(preserve):;D(parents)RHLPprudaslv(verbose)nF(remove-destination)fit:T[-HLPd][-niu][+Rr]", TOYFLAG_USR|TOYFLAG_BIN))
++USE_MV(NEWTOY(mv, "<1x(swap)v(verbose)nF(remove-destination)fit:T[-ni]", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_INSTALL(NEWTOY(install, "<1cdDp(preserve-timestamps)svt:m:o:g:", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CP
+diff --git a/toys/posix/cpio.c b/toys/posix/cpio.c
+index 321bbfd..b9feadd 100644
+--- a/toys/posix/cpio.c
++++ b/toys/posix/cpio.c
+@@ -19,7 +19,7 @@
+  * TODO: hardlink support, -A, -0, -a, -L, --sparse
+  * TODO: --renumber-archives (probably always?) --ignore-devno --reproducible
+ 
+-USE_CPIO(NEWTOY(cpio, "(ignore-devno)(renumber-inodes)(quiet)(no-preserve-owner)R(owner):md(make-directories)uLH:p|i|t|F:v(verbose)o|[!pio][!pot][!pF]", TOYFLAG_BIN))
++USE_CPIO(NEWTOY(cpio, "(ignore-devno)(renumber-inodes)(quiet)(no-preserve-owner)R(owner):md(make-directories)uLH:p|i|t|F:v(verbose)o|[!pio][!pot][!pF]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config CPIO
+   bool "cpio"
+diff --git a/toys/posix/date.c b/toys/posix/date.c
+index 81e6b7e..8a71a98 100644
+--- a/toys/posix/date.c
++++ b/toys/posix/date.c
+@@ -7,7 +7,7 @@
+  * Note: setting a 2 year date is 50 years back/forward from today,
+  * not posix's hardwired magic dates.
+ 
+-USE_DATE(NEWTOY(date, ">1d:D:I(iso-8601):;r:s:u(utc)[!dr]", TOYFLAG_BIN))
++USE_DATE(NEWTOY(date, ">1d:D:I(iso-8601):;r:s:u(utc)[!dr]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DATE
+   bool "date"
+diff --git a/toys/posix/df.c b/toys/posix/df.c
+index a771f4e..6db8c28 100644
+--- a/toys/posix/df.c
++++ b/toys/posix/df.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/df.html
+ 
+-USE_DF(NEWTOY(df, "HPkhit*a[-HPh]", TOYFLAG_BIN))
++USE_DF(NEWTOY(df, "HPkhit*a[-HPh]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config DF
+   bool "df"
+diff --git a/toys/posix/echo.c b/toys/posix/echo.c
+index 702efee..b704c6d 100644
+--- a/toys/posix/echo.c
++++ b/toys/posix/echo.c
+@@ -9,7 +9,7 @@
+  * We also honor -- to _stop_ option parsing (bash doesn't, we go with
+  * consistency over compatibility here).
+ 
+-USE_ECHO(NEWTOY(echo, "^?Een[-eE]", TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_LINEBUF))
++USE_ECHO(NEWTOY(echo, "^?Een[-eE]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_LINEBUF))
+ 
+ config ECHO
+   bool "echo"
+diff --git a/toys/posix/false.c b/toys/posix/false.c
+index e933799..7f5d244 100644
+--- a/toys/posix/false.c
++++ b/toys/posix/false.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/false.html
+ 
+-USE_FALSE(NEWTOY(false, NULL, TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
++USE_FALSE(NEWTOY(false, NULL, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
+ 
+ config FALSE
+   bool "false"
+diff --git a/toys/posix/grep.c b/toys/posix/grep.c
+index eeaff60..db4bbc6 100644
+--- a/toys/posix/grep.c
++++ b/toys/posix/grep.c
+@@ -7,9 +7,9 @@
+  * Posix doesn't even specify -r: too many deviations to document.
+  * TODO: -i is only ascii case insensitive, not unicode.
+ 
+-USE_GREP(NEWTOY(grep, "(line-buffered)(color):;(exclude-dir)*S(exclude)*M(include)*ZzEFHIab(byte-offset)h(no-filename)ino(only-matching)rRsvwc(count)L(files-without-match)l(files-with-matches)q(quiet)(silent)e*f*C#B#A#m#x[!wx][!EF]", TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+-USE_EGREP(OLDTOY(egrep, grep, TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+-USE_FGREP(OLDTOY(fgrep, grep, TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_GREP(NEWTOY(grep, "(line-buffered)(color):;(exclude-dir)*S(exclude)*M(include)*ZzEFHIab(byte-offset)h(no-filename)ino(only-matching)rRsvwc(count)L(files-without-match)l(files-with-matches)q(quiet)(silent)e*f*C#B#A#m#x[!wx][!EF]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_EGREP(OLDTOY(egrep, grep, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
++USE_FGREP(OLDTOY(fgrep, grep, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_ARGFAIL(2)|TOYFLAG_LINEBUF|TOYFLAG_AUTOCONF))
+ 
+ config GREP
+   bool "grep"
+diff --git a/toys/posix/kill.c b/toys/posix/kill.c
+index 44a6efe..e4d2ebe 100644
+--- a/toys/posix/kill.c
++++ b/toys/posix/kill.c
+@@ -13,8 +13,8 @@
+  *
+  * TODO: toysh jobspec support, -n -L
+ 
+-USE_KILL(NEWTOY(kill, "?ls: ", TOYFLAG_BIN|TOYFLAG_MAYFORK))
+-USE_KILLALL5(NEWTOY(killall5, "?o*ls: [!lo][!ls]", TOYFLAG_SBIN))
++USE_KILL(NEWTOY(kill, "?ls: ", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK))
++USE_KILLALL5(NEWTOY(killall5, "?o*ls: [!lo][!ls]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config KILL
+   bool "kill"
+diff --git a/toys/posix/ln.c b/toys/posix/ln.c
+index d60ad18..fee1570 100644
+--- a/toys/posix/ln.c
++++ b/toys/posix/ln.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/ln.html
+ 
+-USE_LN(NEWTOY(ln, "<1rt:Tvnfs", TOYFLAG_BIN))
++USE_LN(NEWTOY(ln, "<1rt:Tvnfs", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LN
+   bool "ln"
+diff --git a/toys/posix/ls.c b/toys/posix/ls.c
+index 7a8dfd2..5a1754f 100644
+--- a/toys/posix/ls.c
++++ b/toys/posix/ls.c
+@@ -13,7 +13,7 @@
+  * Deviations from gnu: -N switches off -q (no --show-control-chars)
+  *   No --quoting-style=shell-escape, mostly because no short or long opt for it
+ 
+-USE_LS(NEWTOY(ls, "(sort):(color):;(full-time)(show-control-chars)\377(block-size)#=1024<1\241(group-directories-first)\376ZgoACFHLNRSUXabcdfhikl@mnpqrstuw#=80<0x1[-Cxm1][-Cxml][-Cxmo][-Cxmg][-cu][-ftS][-HL][-Nqb][-k\377]", TOYFLAG_BIN))
++USE_LS(NEWTOY(ls, "(sort):(color):;(full-time)(show-control-chars)\377(block-size)#=1024<1\241(group-directories-first)\376ZgoACFHLNRSUXabcdfhikl@mnpqrstuw#=80<0x1[-Cxm1][-Cxml][-Cxmo][-Cxmg][-cu][-ftS][-HL][-Nqb][-k\377]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config LS
+   bool "ls"
+diff --git a/toys/posix/mkdir.c b/toys/posix/mkdir.c
+index c883a93..02f9b08 100644
+--- a/toys/posix/mkdir.c
++++ b/toys/posix/mkdir.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/mkdir.html
+ 
+-USE_MKDIR(NEWTOY(mkdir, "<1"SKIP_TOYBOX_LSM_NONE("Z:")"vp(parent)(parents)m:", TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
++USE_MKDIR(NEWTOY(mkdir, "<1"SKIP_TOYBOX_LSM_NONE("Z:")"vp(parent)(parents)m:", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK|TOYFLAG_MOREHELP(!CFG_TOYBOX_LSM_NONE)))
+ 
+ config MKDIR
+   bool "mkdir"
+diff --git a/toys/posix/nice.c b/toys/posix/nice.c
+index 928c025..23f2701 100644
+--- a/toys/posix/nice.c
++++ b/toys/posix/nice.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/nice.html
+ 
+-USE_NICE(NEWTOY(nice, "^<1n#", TOYFLAG_BIN))
++USE_NICE(NEWTOY(nice, "^<1n#", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config NICE
+   bool "nice"
+diff --git a/toys/posix/ps.c b/toys/posix/ps.c
+index b561021..0188d8d 100644
+--- a/toys/posix/ps.c
++++ b/toys/posix/ps.c
+@@ -45,7 +45,7 @@
+  * TODO: pgrep -f only searches the amount of cmdline that fits in toybuf.
+  * TODO: pgrep qemu-system-i386 never matches because one char too long
+ 
+-USE_PS(NEWTOY(ps, "k(sort)*P(ppid)*aAdeflMno*O*p(pid)*s*t*Tu*U*g*G*wZ[!ol][+Ae][!oO]", TOYFLAG_BIN))
++USE_PS(NEWTOY(ps, "k(sort)*P(ppid)*aAdeflMno*O*p(pid)*s*t*Tu*U*g*G*wZ[!ol][+Ae][!oO]", TOYFLAG_USR|TOYFLAG_BIN))
+ // stayroot because iotop needs root to read other process' proc/$$/io
+ // TOP and IOTOP have a large common option block used for common processing,
+ // the default values are different but the flags are in the same order.
+diff --git a/toys/posix/pwd.c b/toys/posix/pwd.c
+index c6f45ad..3cc406f 100644
+--- a/toys/posix/pwd.c
++++ b/toys/posix/pwd.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/pwd.html
+ 
+-USE_PWD(NEWTOY(pwd, ">0LP[-LP]", TOYFLAG_BIN|TOYFLAG_MAYFORK))
++USE_PWD(NEWTOY(pwd, ">0LP[-LP]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK))
+ 
+ config PWD
+   bool "pwd"
+diff --git a/toys/posix/rm.c b/toys/posix/rm.c
+index 27a461f..247793e 100644
+--- a/toys/posix/rm.c
++++ b/toys/posix/rm.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html
+ 
+-USE_RM(NEWTOY(rm, "f(force)iRrv[-fi]", TOYFLAG_BIN))
++USE_RM(NEWTOY(rm, "f(force)iRrv[-fi]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config RM
+   bool "rm"
+diff --git a/toys/posix/rmdir.c b/toys/posix/rmdir.c
+index 3714f33..aca113b 100644
+--- a/toys/posix/rmdir.c
++++ b/toys/posix/rmdir.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/rmdir.html
+ 
+-USE_RMDIR(NEWTOY(rmdir, "<1(ignore-fail-on-non-empty)p(parents)", TOYFLAG_BIN))
++USE_RMDIR(NEWTOY(rmdir, "<1(ignore-fail-on-non-empty)p(parents)", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config RMDIR
+   bool "rmdir"
+diff --git a/toys/posix/sed.c b/toys/posix/sed.c
+index 0858849..1dfd56c 100644
+--- a/toys/posix/sed.c
++++ b/toys/posix/sed.c
+@@ -22,7 +22,7 @@
+  * print, l escapes \n
+  * Added --tarxform mode to support tar --xform
+ 
+-USE_SED(NEWTOY(sed, "(help)(version)(tarxform)e*f*i:;nErz(null-data)s[+Er]", TOYFLAG_BIN|TOYFLAG_AUTOCONF))
++USE_SED(NEWTOY(sed, "(help)(version)(tarxform)e*f*i:;nErz(null-data)s[+Er]", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_AUTOCONF))
+ 
+ config SED
+   bool "sed"
+diff --git a/toys/posix/sleep.c b/toys/posix/sleep.c
+index 0eb2270..7c3ab12 100644
+--- a/toys/posix/sleep.c
++++ b/toys/posix/sleep.c
+@@ -5,7 +5,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/sleep.html
+ 
+-USE_SLEEP(NEWTOY(sleep, "<1", TOYFLAG_BIN))
++USE_SLEEP(NEWTOY(sleep, "<1", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config SLEEP
+   bool "sleep"
+diff --git a/toys/posix/test.c b/toys/posix/test.c
+index 6480e5c..10b78a5 100644
+--- a/toys/posix/test.c
++++ b/toys/posix/test.c
+@@ -7,7 +7,7 @@
+  * Deviations from posix: -k, [[ < > =~ ]]
+ 
+ USE_TEST(NEWTOY(test, 0, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
+-USE_TEST_GLUE(OLDTOY([, test, TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_NOHELP))
++USE_TEST_GLUE(OLDTOY([, test, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_MAYFORK|TOYFLAG_NOHELP))
+ USE_SH(OLDTOY([[, test, TOYFLAG_NOFORK|TOYFLAG_NOHELP))
+ 
+ config TEST
+diff --git a/toys/posix/touch.c b/toys/posix/touch.c
+index 0196b30..d4275a2 100644
+--- a/toys/posix/touch.c
++++ b/toys/posix/touch.c
+@@ -7,7 +7,7 @@
+  * -f is ignored for BSD/macOS compatibility. busybox/coreutils also support
+  * this, but only coreutils documents it in --help output.
+ 
+-USE_TOUCH(NEWTOY(touch, "<1acd:fmr:t:h[!dtr]", TOYFLAG_BIN))
++USE_TOUCH(NEWTOY(touch, "<1acd:fmr:t:h[!dtr]", TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config TOUCH
+   bool "touch"
+diff --git a/toys/posix/true.c b/toys/posix/true.c
+index 8e56269..0d0b175 100644
+--- a/toys/posix/true.c
++++ b/toys/posix/true.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/true.html
+ 
+-USE_TRUE(NEWTOY(true, NULL, TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
++USE_TRUE(NEWTOY(true, NULL, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_NOHELP|TOYFLAG_MAYFORK))
+ USE_TRUE(OLDTOY(:, true, TOYFLAG_NOFORK|TOYFLAG_NOHELP))
+ 
+ config TRUE
+diff --git a/toys/posix/uname.c b/toys/posix/uname.c
+index dfa5762..4964284 100644
+--- a/toys/posix/uname.c
++++ b/toys/posix/uname.c
+@@ -4,7 +4,7 @@
+  *
+  * See http://opengroup.org/onlinepubs/9699919799/utilities/uname.html
+ 
+-USE_UNAME(NEWTOY(uname, "paomvrns", TOYFLAG_BIN))
++USE_UNAME(NEWTOY(uname, "paomvrns", TOYFLAG_USR|TOYFLAG_BIN))
+ USE_ARCH(NEWTOY(arch, 0, TOYFLAG_USR|TOYFLAG_BIN))
+ 
+ config ARCH
+diff --git a/www/code.html b/www/code.html
+index 58b3803..5a1bda6 100644
+--- a/www/code.html
++++ b/www/code.html
+@@ -366,7 +366,7 @@ parsing is done before calling toy_main().</p></li>
+ <ul>
+ <li><b>TOYFLAG_USR</b> - Install this command under /usr</li>
+ <li><b>TOYFLAG_BIN</b> - Install this command under /bin</li>
+-<li><b>TOYFLAG_SBIN</b> - Install this command under /sbin</li>
++<li><b>TOYFLAG_BIN</b> - Install this command under /sbin</li>
+ <li><b>TOYFLAG_NOFORK</b> - This command can be used as a shell builtin.</li>
+ <li><b>TOYFLAG_UMASK</b> - Call umask(0) before running this command.</li>
+ <li><b>TOYFLAG_STAYROOT</b> - Don't drop permissions for this command if toybox is installed SUID root.</li>

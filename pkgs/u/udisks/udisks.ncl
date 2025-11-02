@@ -1,0 +1,45 @@
+{
+  lib,
+  drvs,
+  udisks | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/storaged-project/udisks/archive/refs/tags/udisks-2.10.2.tar.gz",
+      sha256sum = "69479fde489f8c5b3908f583f35d38c2273c38572adac3597a8a0ff855b436de"
+    },
+    biDrvs = [
+      drvs.acl,
+      drvs.attr,
+      drvs.bash,
+      drvs.dbus,
+      drvs.docbookXml,
+      drvs.docbookXslNons,
+      drvs.duktape,
+      drvs.eudev,
+      drvs.expat,
+      drvs.gettext,
+      drvs.glib,
+      drvs.gobjectDynamic,
+      drvs.gtkDoc,
+      drvs.gudev,
+      drvs.inih,
+      drvs.libcap,
+      drvs.libdrm,
+      drvs.libevdev,
+      drvs.libffi,
+      drvs.libinput,
+      drvs.libpciaccess,
+      drvs.libxkbcommon,
+      drvs.libxslt,
+      drvs.linuxHeaders,
+      drvs.mtdev,
+      (drvs.muslShared & { priority = -1 }),
+      drvs.pcre2,
+      #   drvs.perl,
+      drvs.polkit,
+      drvs.scdoc,
+      drvs.zlibNg,
+      drvs.elogindWithPolkit,
+      drvs.libpamFinal,
+    ]
+  }
+}

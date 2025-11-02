@@ -91,7 +91,7 @@ in
           let _ec = enableCcache in
           let _sbi = symlinkBuldInputs in
           let df = deterministicFetcher, of = outputFile, oss = outputSha256sum in
-          drvUtils.pkgToHash {
+          drvUtils.pkgToHash (std.record.freeze {
             name = _name,
             buildInputsValidated = _bs,
             sourceInputs = _sis,
@@ -104,7 +104,7 @@ in
             deterministicFetcher = df,
             outputFile = of,
             outputSha256sum = oss
-          },
+          }),
         options | default = {},
         deterministicFetcher | Bool | default = false,
         outputFile | String | default = "",
@@ -168,6 +168,10 @@ in
         llvmProviders | not_exported | default = [llvmProvider] @ (if buildEnv._isMold then [drvs.mold] else []),
         muslProvider | not_exported | default = if (!debug) then drvs.musl else drvs.muslDebug,
         muslProviders | default = if (!useMimalloc) then [muslProvider] else [drvs.muslProvider, drvs.mimalloc],
+
+        # pkgconfProvider | not_exported | default = drvs.pkgconf,
+        pkgconfProvider | not_exported | default = drvs.pkgconfMeson,
+
         baseBuildinputPackages | not_exported | Array Dyn | default = utilsProviders,
         # biPkgs | Array Dyn | not_exported | default = [],
         # biDrvs | Array { name | String, drvHash | String, priority | Number | optional } | not_exported | default = [],
@@ -262,7 +266,7 @@ in
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
 
         enableParallel | Bool | default = true,
-        enableCcache | Bool | default = true,
+        enableCcache | Bool | default = buildInChroot,
         buildInChroot | Bool | default = (stage != 0),
         stage | Number | default = -1,
       },

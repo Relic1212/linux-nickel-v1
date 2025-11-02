@@ -19,6 +19,7 @@
       drvs.libffi,
       drvs.harfbuzz,
       drvs.pango,
+      drvs.fribidi,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.basu,

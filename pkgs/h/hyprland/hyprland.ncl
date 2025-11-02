@@ -74,6 +74,7 @@
           drvs.libevdev,
           drvs.mtdev,
           drvs.pango,
+          drvs.fribidi,
           drvs.cairo,
           drvs.libpng,
           drvs.freetype,
@@ -343,16 +344,6 @@
 & {
   lib,
   drvs,
-  librsvg | lib.MesonPackage = {
-    singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/librsvg/-/archive/2.59.2/librsvg-2.59.2.tar.gz",
-      sha256sum = "ddd8e51426b41ef886898dc4198ca48d7e296668be19595173631fc86c79d689",
-    }
-  }
-}
-& {
-  lib,
-  drvs,
   libzip | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
@@ -594,6 +585,7 @@
       drvs.waylandProtocols,
       drvs.hyprgraphics,
       drvs.pcre2,
+      drvs.fribidi,
     ],
     preConfigurePhase = [
       "sed -i 's@#include <GLES3/gl32.h>@@g' ${SRC}/src/includes.hpp",

@@ -22,16 +22,22 @@
         baseMesonArgs | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then constants.mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
         configurePhase | priority -1000 =
-          if (!useMuon) then
+          if (
+            !useMuon
+            # true
+            ) then
             [
               "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
             ]
           else
             [
-              "(cd ${SRC} && meson setup %{std.string.join constants.buildFlagSep mesonArgs} ../build .)"
+              "(cd ${SRC} && meson setup %{std.string.join constants.buildFlagSep mesonArgs} ../build)"
             ],
         buildPhase | priority -1000 =
-          if (!useMuon) then
+          if (
+            !useMuon
+            # true
+            ) then
             [
               "meson compile"
             ]
@@ -43,6 +49,9 @@
           "meson install --destdir ${DEST}"
         ],
         useMuon | Bool | default = false,
+        usePkgconf | Bool | default = true,
+        pkgconfProvider,
+
         pythonProvider | default = drvs.pythonFull,
         baseBuildinputPackages | priority -1000 =
           utilsProviders
@@ -53,7 +62,7 @@
                   if useMuon then
                     [
                       drvs.muon,
-                      drvs.pkgconf,
+                      drvs.samurai,
                       muslProvider,
                     ]
                   else
@@ -61,10 +70,13 @@
                       drvs.meson,
                       drvs.samurai,
                       pythonProvider,
-                      drvs.pkgconf,
                       muslProvider,
                     ]
                 )
+                @ (if usePkgconf then [ 
+                  # drvs.pkgconf
+                  pkgconfProvider
+                  ] else [])
                 @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
               )
