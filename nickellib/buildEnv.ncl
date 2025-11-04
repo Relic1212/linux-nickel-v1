@@ -62,6 +62,7 @@
     _isStatic | Bool | default = true,
     _isLlvm | Bool | default = true,
     _isMold | Bool | default = false,
+    _isPic | Bool | default = false,
     _ld = if _isMold then "mold" else "lld",
     _debug | Bool | default = false,
     # _debug ,
@@ -90,6 +91,7 @@
         CROSS_CFLAGS,
         STATIC_CFLAGS,
         LLVM_CFLAGS,
+        FPIC_CFLAGS,
         STAGE_CFLAGS,
         EXTRA_CFLAGS
       ],
@@ -108,6 +110,7 @@
         CROSS_CXXFLAGS,
         STATIC_CXXFLAGS,
         LLVM_CXXFLAGS,
+        FPIC_CXXFLAGS,
         STAGE_CXXFLAGS,
         EXTRA_CXXFLAGS
       ],
@@ -117,6 +120,7 @@
         CROSS_LDFLAGS,
         STATIC_LDFLAGS,
         LLVM_LDFLAGS,
+        FPIC_CFLAGS,
         STAGE_LDFLAGS,
         EXTRA_LDFLAGS
       ],
@@ -169,6 +173,11 @@
     LLVM_CPPFLAGS | nullOrArray | default = null,
     LLVM_CXXFLAGS | nullOrArray | default = if _isLlvm then [_optFlag, "-pipe"] else null,
     LLVM_LDFLAGS | nullOrArray | default = if _isLlvm then ["-fuse-ld=%{_ld}", "-stdlib=libc++", "-rtlib=compiler-rt", "-unwindlib=libunwind"] else null,
+
+    FPIC_CFLAGS | nullOrArray | default = if (!_isPic) then null else ["-fPIC"],
+    FPIC_CPPFLAGS | nullOrArray | default = if (!_isPic) then null else ["-fPIC"],
+    FPIC_CXXFLAGS | nullOrArray | default = if (!_isPic) then null else ["-fPIC"],
+    FPIC_LDFLAGS | nullOrArray | default = if (!_isPic) then null else ["-fPIC"],
 
     STAGE_CFLAGS | nullOrArray | default = null,
     STAGE_CPPFLAGS | nullOrArray | default = null,
