@@ -25,7 +25,7 @@
           if (
             !useMuon
             # true
-            ) then
+          ) then
             [
               "meson setup %{std.string.join constants.buildFlagSep mesonArgs} . ${SRC}"
             ]
@@ -37,7 +37,7 @@
           if (
             !useMuon
             # true
-            ) then
+          ) then
             [
               "meson compile"
             ]
@@ -73,10 +73,15 @@
                       muslProvider,
                     ]
                 )
-                @ (if usePkgconf then [ 
-                  # drvs.pkgconf
-                  pkgconfProvider
-                  ] else [])
+                @ (
+                  if usePkgconf then
+                    [
+                      # drvs.pkgconf
+                      pkgconfProvider
+                    ]
+                  else
+                    []
+                )
                 @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
               )
