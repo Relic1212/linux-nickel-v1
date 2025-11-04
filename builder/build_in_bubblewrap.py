@@ -129,7 +129,7 @@ class builder:
         if len(self.failed_builds) > 0:
             print("The following failed to build", self.failed_builds)
 
-    def build(self, h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict, keep_going: bool = False, prev_failed=None) -> None:
+    def build(self, h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict, keep_going: bool = False, prev_failed=None, delete_tmpfs_build_on_success=True) -> None:
 
         # h=hash
         # drv_s=pkgs[hash]
@@ -317,7 +317,7 @@ class builder:
         # subprocess.run(["rm","-rf",tmp_workdir],check=True)
 
         tmpfs_build = True
-        delete_tmpfs_build_on_success = True
+        # delete_tmpfs_build_on_success = True
         tmpfs_dirs_to_delete = []
         if tmpfs_build:
             if os.path.exists(tmp_workdir):

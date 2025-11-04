@@ -7,7 +7,10 @@ import hashlib
 import sys
 from builder import build_in_bubblewrap
 
+import argparse
+
 KNOWN_SLOW = ["base-image", "base-image-small"]
+
 
 class GraphNode:
     def __init__(self, name, packages):
@@ -47,7 +50,8 @@ def a():
             print("d", d)
             print("sha", hashlib.sha256(json.dumps(d).encode()).hexdigest())
 
-def pn_to_pn_key(pn:str):
+
+def pn_to_pn_key(pn: str):
     pn_key = ""
     upper = False
     for c in pn:
@@ -59,10 +63,9 @@ def pn_to_pn_key(pn:str):
                 pn_key += c.upper()
                 upper = False
             else:
-                pn_key += c 
+                pn_key += c
     return pn_key
-            
-        
+
 
 def get_drvs(pn):
     fp = "nickellib/pkgs2.ncl"
@@ -113,7 +116,8 @@ def build_all(drvs):
     for k in drvs["hashByName"].keys():
         pn_hash = drvs["hashByName"][k]
         try:
-            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"])
+            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(
+                drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"])
             s.append(k)
         except KeyboardInterrupt as e:
             raise e
@@ -205,11 +209,19 @@ def diff2(drvs):
 
 
 def test():
-    pn = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--keep-failed", "-k", action="store_true")
+    parser.add_argument("pn")
+    # pn = sys.argv[1]
+    args = parser.parse_args()
+    pn = args.pn
+    keep_failed = args.keep_failed
+    # print(args)
+    # exit()
 
     if not pn in KNOWN_SLOW:
         pn_key = pn_to_pn_key(pn)
-        if pn in ["all", "diff","diff2"]:
+        if pn in ["all", "diff", "diff2"]:
             pn_key = ""
     else:
         pn_key = ""
@@ -237,7 +249,7 @@ def test():
     keep_going = True
     # keep_going = False
     build_in_bubblewrap.build(
-        pn_hash, drvs["drvByHash"], pkg_names=nbh, pkghash2sysroothash=pkghash2sysroothash, keep_going=keep_going)
+        pn_hash, drvs["drvByHash"], pkg_names=nbh, pkghash2sysroothash=pkghash2sysroothash, keep_going=keep_going, delete_tmpfs_build_on_success=(not keep_failed))
 
 
 if __name__ == "__main__":
