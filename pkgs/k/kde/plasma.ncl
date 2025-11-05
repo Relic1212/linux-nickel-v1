@@ -11,7 +11,7 @@
 
       name,
       singleSource | priority -999 =
-        let version = "6.5.0" in
+        let version = "6.5.2" in
         {
           uri = "https://download.kde.org/stable/plasma/%{version}/%{name}-%{version}.tar.xz",
           # uri = "https://download.kde.org/stable/plasma/6.4.5/%{name}-6.4.5.tar.xz",

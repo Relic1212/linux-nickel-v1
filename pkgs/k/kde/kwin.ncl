@@ -5,7 +5,7 @@
   kwin | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://download.kde.org/stable/plasma/6.5.0/kwin-6.5.0.tar.xz",
+      uri = "https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz",
       # sha256sum = "decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7"
       sha256sum = _plasma_sources."%{uri}",
     },
@@ -241,11 +241,15 @@
         )
       )
       in
-      [],
+      [
+        # let old = "ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate",
+        #     new = "ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::Modulate" in
+        # m%"sed -i 's@%{old}@%{new}@g' ${SRC}/src/opengl/eglcontext.cpp"%
+      ],
     patches = [
       # https://github.com/celestiamobile/celestia-web/blob/b278e8111a6090bdb023235a086203664d8cb336/patches/gles.patch#L124
       {
-        sha256sum = "60b8802949a6c9cc4e612d65aa3bf253bd07a2b1385ad02a53069704549ad775",
+        sha256sum = "211fb884bb5fa319949859ba340e1d08725c214c6b6feea1d250ddac9b41cc2d",
         file = "0001-kwin.patch",
       }
     ]

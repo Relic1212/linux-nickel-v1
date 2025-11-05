@@ -1,8 +1,8 @@
-https://download.kde.org/stable/plasma/6.5.0/kdecoration-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/kwayland-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/plasma-activities-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/libplasma-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/breeze-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/kwin-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/kglobalacceld-6.5.0.tar.xz
-https://download.kde.org/stable/plasma/6.5.0/knighttime-6.5.0.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kdecoration-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kwayland-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/plasma-activities-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/libplasma-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/breeze-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kglobalacceld-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/knighttime-6.5.2.tar.xz

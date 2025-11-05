@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2e9e8177af..bb3872ff3d 100644
+index 1141784b07..40e005398c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -102,6 +102,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
@@ -130,7 +130,7 @@ index f238e90c15..c7eb694f48 100644
  
  namespace KWin
 diff --git a/src/backends/drm/drm_gpu.h b/src/backends/drm/drm_gpu.h
-index c52b098d5e..fea5c2a764 100644
+index 5f6d311f85..170ef5abc6 100644
 --- a/src/backends/drm/drm_gpu.h
 +++ b/src/backends/drm/drm_gpu.h
 @@ -21,7 +21,12 @@
@@ -214,6 +214,32 @@ index a252660b57..43e7ec8894 100644
  target_link_libraries(kcm_kwin4_genericscripted
      KF6::KCMUtils #KCModule
      KF6::I18n
+diff --git a/src/main.cpp b/src/main.cpp
+index bb58445e2b..edfeee5c48 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -70,6 +70,11 @@
+ 
+ Q_DECLARE_METATYPE(KSharedConfigPtr)
+ 
++static void kwin_resources_init()
++{
++    Q_INIT_RESOURCE(resources);
++}
++
+ namespace KWin
+ {
+ 
+@@ -103,6 +108,9 @@ void Application::setConfigLock(bool lock)
+ 
+ void Application::start()
+ {
++    
++    kwin_resources_init;
++
+     // Prevent KWin from synchronously autostarting kactivitymanagerd
+     // Indeed, kactivitymanagerd being a QApplication it will depend
+     // on KWin startup... this is unsatisfactory dependency wise,
 diff --git a/src/opengl/egl_context_attribute_builder.cpp b/src/opengl/egl_context_attribute_builder.cpp
 index d4c561d27d..02e945734a 100644
 --- a/src/opengl/egl_context_attribute_builder.cpp
