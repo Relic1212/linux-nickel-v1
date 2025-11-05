@@ -157,15 +157,15 @@
     debug = true,
     cmakeExtraArgsRecord = {
 
-      "-DKWIN_BUILD_DECORATIONS" = false,
+      "-DKWIN_BUILD_DECORATIONS" = true,
       "-DKWIN_BUILD_KCMS" = false,
-      "-DKWIN_BUILD_NOTIFICATIONS" = false,
+      "-DKWIN_BUILD_NOTIFICATIONS" = true,
       "-DKWIN_BUILD_SCREENLOCKER" = false,
       "-DKWIN_BUILD_TABBOX" = false,
       "-DKWIN_BUILD_X11" = false,
       "-DKWIN_BUILD_X11_BACKEND" = false,
       "-DKWIN_BUILD_GLOBALSHORTCUTS" = false,
-      "-DKWIN_BUILD_RUNNERS" = false,
+      "-DKWIN_BUILD_RUNNERS" = true,
 
       "-DBUILD_TESTING" = false,
 

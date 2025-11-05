@@ -131,10 +131,31 @@
       #         sha256sum = "aedd8bcbbb527f6a7da83d7cd72506608a486394805d9bf0037b2f899f0b7e53  plasma-activities-6.3.3.tar.xz
       # ",
       #       },
+
+      # cmakeExtraArgsRecord = {
+      #   "-DQT_NO_CREATE_VERSIONLESS_FUNCTIONS" = false
+      # },
+      preConfigurePhase = [
+        m%"sed -i 's|qt_add_dbus_interface|qt6_add_dbus_interface|g' ${SRC}/src/lib/CMakeLists.txt"%
+      ],
       biDrvs =
         _plasma.biDrvs
         @ [
+          drvs.acl,
+          drvs.alsaLibs,
+          drvs.attr,
           drvs.boost,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.solid,
+          drvs.utilLinuxWeak,
         ]
     },
 
@@ -145,10 +166,45 @@
       #   uri = "https://download.kde.org/stable/plasma/6.4.3/libplasma-6.4.3.tar.xz",
       #   sha256sum = "c7afa64a9cc058515afb06dcb1d3f647904c2eea40bbae43540f9f02314488ac",
       # },
+      cmakeExtraArgsRecord = {
+        "-DWITHOUT_X11" = true
+      },
+      patches = [
+        {
+          sha256sum = "78de16567fec6f83a301968592bfcf31c09ebb4895b3555b067281609d60e4f1",
+          file = "0001-libplasma.patch"
+        }
+      ],
+      preConfigurePhase = [
+        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/src/plasmaquick/CMakeLists.txt"%,
+        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/templates/plasma6-wallpaper-with-qml-extension/plugin/CMakeLists.txt"%,
+        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/PlasmaMacros.cmake"%,
+        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/src/declarativeimports/kirigamiplasmastyle/CMakeLists.txt"%,
+      ],
       biDrvs =
         _plasma.biDrvs
         @ [
+          drvs.acl,
+          drvs.alsaLibs,
+          drvs.attr,
+          drvs.boost,
+          drvs.breeze,
+          drvs.breezeIcons,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kconfigwidgets,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kxmlgui,
           drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.plasmaActivities,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.libxcb,
         ]
     },
 
@@ -161,6 +217,35 @@
       # },
       cmakeExtraArgsRecord = {
         "-DBUILD_QT5" = false,
+
+        # "-DWITH_DECORATIONS" = false,
       },
+      preConfigurePhase = [
+        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/kdecoration/CMakeLists.txt"%,
+        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/kstyle/CMakeLists.txt"%,
+      ],
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.acl,
+          drvs.alsaLibs,
+          drvs.attr,
+          drvs.boost,
+          drvs.breezeIcons,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kconfigwidgets,
+          drvs.kdecoration,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kxmlgui,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+        ]
     },
 }
