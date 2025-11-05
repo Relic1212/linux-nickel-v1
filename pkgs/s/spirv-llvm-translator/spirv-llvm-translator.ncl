@@ -6,7 +6,7 @@
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [
-      drvs.spirvHeaders2,
+      drvs.spirvHeaders,
       drvs.spirvTools,
       # drvs.llvmFull,
       drvs.llvmConfigStatic,

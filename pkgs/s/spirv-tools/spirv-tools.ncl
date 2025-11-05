@@ -27,7 +27,7 @@
     # },
     biDrvs = [
       drvs.pythonFull,
-      drvs.spirvHeaders,
+      drvs.spirvHeaders_1_3_296,
     ],
     # patches = [
     #   {
@@ -37,8 +37,8 @@
     # ]
   },
 
-  spirvHeaders2,
-  _spirvTools2 | lib.CmakePackage =
+  spirvHeaders,
+  spirvTools | lib.CmakePackage =
     # _spirvTools
     # & 
     {
@@ -64,7 +64,7 @@
             #   uri = "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/vulkan-sdk-1.4.328.1.tar.gz",
             #   sha256sum = "602364ab7bf404a7f352df7da5c645f1c4558a9c92616f8ee33422b04d5e35b7"
             # }
-            spirvHeaders2.singleSource,
+            spirvHeaders.singleSource,
         },
       ],
       patches = [

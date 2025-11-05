@@ -500,13 +500,14 @@
   let newMesa = (true) in
   {
     _mesa250,
-    _mesa2521,
+    # _mesa2521,
     _mesa2426,
     _spirvTools,
-    _spirvTools2,
-    mesa2 = if newMesa then _mesa2521 else _mesa2426,
+    # _spirvTools2,
+    # mesa2 = if newMesa then _mesa2521 else _mesa2426,
     # mesa2 = _mesa2521,
-    spirvTools = if newMesa then _spirvTools2 else _spirvTools,
+    # spirvTools = if newMesa then _spirvTools2 else _spirvTools,
+    # spirvTools = _spirvTools2
     # spirvTools2 = _spirvTools2,
 
     # mesa2 = _mesa2426,

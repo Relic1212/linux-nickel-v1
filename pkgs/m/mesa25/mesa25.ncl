@@ -2,7 +2,7 @@
   drvs,
   mesa,
   lib,
-  _mesa2521 | lib.MesonPackage = {
+  mesa2 | lib.MesonPackage = {
 
     extraMesonArgs = [
       "-Dgles1=disabled",
@@ -47,8 +47,12 @@
     ],
 
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.1/mesa-mesa-25.2.1.tar.gz",
-      sha256sum = "ae8534d4da0b8fc0e384db9e82605677143ff86bfcb7833bd8551ad36e99ca73",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.1/mesa-mesa-25.2.1.tar.gz",
+      # sha256sum = "ae8534d4da0b8fc0e384db9e82605677143ff86bfcb7833bd8551ad36e99ca73",
+
+
+      uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.6/mesa-mesa-25.2.6.tar.bz2",
+      sha256sum = "a33d8400c0f4ee729c1b7224834a84415681c842dbd36e2431fade180440d0a5",
     },
 
     extraEnv = {
@@ -89,7 +93,7 @@
       drvs.pyyaml,
       drvs.llvmConfigStatic,
       drvs.spirvTools,
-      drvs.spirvHeaders2,
+      drvs.spirvHeaders,
       drvs.spirvLlvmTranslator,
       # drvs.spirvTools_glslang,
       # drvs.glslang,
