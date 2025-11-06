@@ -35,7 +35,7 @@
 & {
   lib,
   drvs,
-  _utilLinux241 | lib.MesonPackage = {
+  utilLinux | lib.MesonPackage = {
     singleSource = {
       # uri = "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.1.tar.gz",
       # sha256sum = "c756213ed3f17b74c1525fc0ed839d6d09f1731ee443e2415c42071afed58ff9",
@@ -107,20 +107,20 @@
   },
 
   utilLinuxLogin =
-    _utilLinux241
+    utilLinux
     & {
       debug = true,
-      biDrvs | priority 1 = _utilLinux241.biDrvs @ [drvs.libpam131],
-      extraMesonArgs | priority 1 = _utilLinux241.extraMesonArgs @ ["-Dbuild-login=enabled"],
+      biDrvs | priority 1 = utilLinux.biDrvs @ [drvs.libpam131],
+      extraMesonArgs | priority 1 = utilLinux.extraMesonArgs @ ["-Dbuild-login=enabled"],
     }
 }
 & {
   _utilLinux240,
-  _utilLinux241,
+  # _utilLinux241,
 
   # utilLinux241 = _utilLinux241,
   # utilLinux = _utilLinux240,
 
-  utilLinux = _utilLinux241,
+  # utilLinux = _utilLinux241,
   utilLinux240 = _utilLinux240,
 }
