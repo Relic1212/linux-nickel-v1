@@ -20,6 +20,8 @@
       EXTRA_LDFLAGS =
         [
           "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat) -pthread",
+          "-lQt6MultimediaQuick",
+          "/usr/lib/qt6/qml/QtMultimedia/libquickmultimediaplugin.a",
         ]
         @ (
           if options.x11 then
@@ -30,6 +32,8 @@
               "$(pkg-config --static --libs xcb-shm)",
               "$(pkg-config --static --libs x11-xcb)",
               "$(pkg-config --static --libs xau)",
+              "$(pkg-config --static --libs libavdevice)",
+              "$(pkg-config --static --libs libpulse)",
             ]
           else
             []
@@ -75,8 +79,11 @@
     # ],
     patches = [
       {
-        sha256sum = "d973b39e5dbb76067839362df5a7159857279017f3d061d8bc3f357fec3bfdf3",
-        file = "fix-quickshell2.patch"
+        # sha256sum = "d973b39e5dbb76067839362df5a7159857279017f3d061d8bc3f357fec3bfdf3",
+        # file = "fix-quickshell2.patch",
+
+        sha256sum = "feb151bab65843bf172a0c0e838d9aa7ab385e477f7d8bdf008fe00c8e4de662",
+        file = "fix-quickshell3.patch",
       }
     ],
     biDrvs =
@@ -172,6 +179,8 @@
         drvs.lua,
         drvs.alsaLibs,
         drvs.jemalloc,
+        drvs.qtmultimedia,
+        drvs.pulseaudio17,
       ]
       @ (
         if options.x11 then

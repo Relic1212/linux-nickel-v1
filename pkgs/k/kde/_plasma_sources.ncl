@@ -32,4 +32,6 @@
   "https://download.kde.org/stable/plasma/6.5.2/layer-shell-qt-6.5.2.tar.xz" = "4530bb88e3fb2b6358ba8169a0c83922d9dbc33210f8d8d2b7d0479dd449633d",
 
   "https://download.kde.org/stable/plasma/6.5.2/kscreenlocker-6.5.2.tar.xz" = "d009894a88964a0c44370ddd5a83b7a95e64f6aad2f47b26fef7cc881d0d04b6",
+
+  "https://download.kde.org/stable/plasma/6.5.2/libksysguard-6.5.2.tar.xz" = "4d23a22871ca947cf6fcba21e3bc4d1abd16aabb2f721199dfa34fd33f8945fb",
 }

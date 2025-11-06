@@ -1604,6 +1604,48 @@
         ]
     },
 
+  phonon =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://invent.kde.org/libraries/phonon/-/archive/v4.12.0/phonon-v4.12.0.tar.bz2",
+        sha256sum = "36fa4224ff15400417d360b2fac0743e531d965832a7d3a6fba419e33238bec0"
+      },
+      cmakeExtraArgsRecord = {
+        "-DPHONON_BUILD_QT5" = false,
+        "-DPHONON_BUILD_DESIGNER_PLUGIN" = false,
+      },
+      preConfigurePhase = [
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+      ],
+    },
+
+  polkitQt6 =
+    _kf
+    & {
+      singleSource = {
+        uri = "https://download.kde.org/stable/polkit-qt-1/polkit-qt-1-0.200.0.tar.xz",
+        sha256sum = "5d3b611c062d2b76a93750bb10c907bfd21d1ff08d0a15dc2cf63e278e1677fb",
+      },
+      cmakeExtraArgsRecord = {
+        "-DQT_MAJOR_VERSION" = "6"
+      },
+      preConfigurePhase = [
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+      ],
+      biDrvs | priority 1 =
+        _kf.biDrvs
+        @ [
+          drvs.polkit,
+          drvs.elogindWithPolkit,
+          drvs.libpamFinalUdev,
+          drvs.duktape,
+          drvs.attr,
+          drvs.acl,
+          drvs.libcap,
+        ]
+    },
+
   plasmaWaylandProtocols =
     _kf
     & {

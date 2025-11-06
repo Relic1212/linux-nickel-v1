@@ -225,5 +225,67 @@
         ),
     },
 
-  libpamFinal = libpam & { options.isFinal = true }
+  libpamFinal = libpam & { options.isFinal = true },
+
+  libpamFinalUdev =
+    libpamFinal
+    & {
+      postInstallPhase | priority 1 =
+        libpamFinal.postInstallPhase
+        @ (
+          std.array.map
+            (fun s => "llvm-objcopy --redefine-sym %{s}=pam_private__%{s} ${DEST}/usr/lib/libpam.a")
+            [
+              "cescape",
+              "cescape_char",
+              "close_many",
+              "close_nointr",
+              "endswith",
+              "fd_wait_for_event",
+              "flush_fd",
+              "hexchar",
+              "loop_read",
+              "loop_read_exact",
+              "octchar",
+              "page_size",
+              "parse_uid",
+              "safe_atoi",
+              "safe_atolli",
+              "safe_close",
+              "strnappend",
+              "touch_file",
+              "unhexchar",
+              "unoctchar",
+              "cmsg_close_all",
+              "filename_is_valid",
+              "get_user_creds",
+              "getpeercred",
+              "greedy_realloc",
+              "is_main_thread",
+              "log_level_from_string",
+              "log_level_to_string_alloc",
+              "mkostemp_safe",
+              "null_or_empty",
+              "path_compare",
+              "path_make_absolute",
+              "path_strv_resolve",
+              "path_strv_resolve_uniq",
+              "rlimit_from_string",
+              "rlimit_to_string",
+              "saved_argc",
+              "saved_argv",
+              "signal_to_string",
+              "tempfn_xxxxxx",
+              "fd_is_mount_point",
+              "fopen_mode_to_flags",
+              "mkdir_p_internal",
+              "mkdir_parents_internal",
+              "path_extend_internal",
+              "path_is_mount_point",
+              "read_full_file_full",
+              "read_full_stream_full",
+              "warn_file_is_world_accessible",
+            ]
+        )
+    }
 }
