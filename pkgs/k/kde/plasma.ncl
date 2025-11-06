@@ -337,6 +337,22 @@
   kscreenlocker =
     _plasma
     & {
+      patches = [
+        {
+          sha256sum = "5e4b4dbc36700faabe5d32085e3c13c5b595fe14cedd7cba1afcca980944a194",
+
+          file = "0001-kscreenlocker2.patch"
+        }
+      ],
+
+      buildEnv = {
+        EXTRA_LDFLAGS | priority 1 =
+          _plasma.buildEnv.EXTRA_LDFLAGS
+          @ [
+            "-lcap",
+            "-lpam_misc",
+          ],
+      },
       biDrvs =
         _plasma.biDrvs
         @ [
@@ -361,7 +377,7 @@
           drvs.libplasma,
           drvs.xcbUtilKeysyms,
           drvs.layerShellQt,
-          drvs.libpamFinal,
+          drvs.libpamFinalUdev,
           drvs.libx11,
           drvs.libxau,
           drvs.libxcursor,
@@ -373,6 +389,7 @@
           drvs.xorgMacros,
           drvs.xorgproto,
           drvs.xtrans,
+          drvs.libcap,
         ]
     },
 
@@ -526,6 +543,8 @@
           drvs.libkscreen,
           drvs.layerShellQt,
           drvs.kwin,
+          drvs.libpamFinalUdev,
+          drvs.kscreenlocker,
         ]
     },
 }
