@@ -10,5 +10,11 @@
     biDrvs = [
       drvs.zlibNg
     ]
-  }
+  },
+  libpngPic =
+    libpng
+    & {
+      buildEnv._isPic = true,
+      biDrvs | priority 1 = [drvs.zlibNgPic]
+    }
 }
