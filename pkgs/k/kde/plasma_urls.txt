@@ -7,4 +7,9 @@ https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/kglobalacceld-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/knighttime-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/plasma-workspace-6.5.2.tar.xz
-
+https://download.kde.org/stable/plasma/6.5.2/plasma5support-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/plasma-activities-stats-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kscreen-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/libkscreen-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/layer-shell-qt-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/kscreenlocker-6.5.2.tar.xz
