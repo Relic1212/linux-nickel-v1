@@ -163,40 +163,52 @@
   clangCross =
     _llvmBaseTarget
     & {
-      cmakeArgs | priority 1 =
-        (
-        # lib.functions.replaceArrayElem
 
-        # "-DCMAKE_INSTALL_PREFIX=/usr"
-        #"-DCMAKE_INSTALL_PREFIX=/${TARGET}"
-        (
-          lib.functions.replaceArrayElem
-            "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=OFF"
-            "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=ON"
-            (
-              lib.functions.replaceArrayElem
-                "-DLLVM_TARGETS_TO_BUILD='X86'"
-                "-DLLVM_TARGETS_TO_BUILD='AArch64;X86'"
-                llvm.cmakeArgs
-            )
-        )
-        )
-        @ [
-          # "-DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON",
-          # "-DLLVM_RUNTIME_TARGETS='AArch64;X86'",
-          #  "-DLLVM_RUNTIME_TARGETS='aarch64-unknown-linux-musl'",
-          # "-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE:STRING=x86_64-unknown-linux-musl",
-          # "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING=aarch64-unknown-linux-musl",
-          # "-DCMAKE_SYSROOT="
-          #    "-DLIBCXX_INSTALL_INCLUDE_TARGET_DIR:STRING=include/c++/v1",
-          # "-DLIBCXXABI_INSTALL_LIBRARY_DIR:STRING=lib",
-          # "-DLIBCXX_INSTALL_LIBRARY_DIR:STRING=lib",
-          # "-DLIBUNWIND_INSTALL_LIBRARY_DIR:STRING=lib",
-          # "-DCOMPILER_RT_INSTALL_BINARY_DIR:PATH=lib/bin",
-          # "-DCOMPILER_RT_INSTALL_DATA_DIR:PATH=share",
-          # "-DCOMPILER_RT_INSTALL_INCLUDE_DIR:PATH=include",
-          # "-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
-        ],
+      cmakeExtraArgsRecord = {
+        "-DLLVM_TARGETS_TO_BUILD" | priority 1 = "'AArch64;X86'",
+        "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL" | priority 1 = "ON",
+        # "-DLLVM_RUNTIME_TARGETS" = "'AArch64;X86'",
+        # "-DLLVM_RUNTIME_TARGETS" = "'aarch64-unknown-linux-musl'",
+        # "-DLLVM_ENABLE_RUNTIMES"="'libcxx;libcxxabi;compiler-rt;libunwind'",
+        # "-DLLVM_ENABLE_RUNTIMES" | priority 1 = "'compiler-rt'",
+      },
+      # buildEnv = {
+      #   LLVM_LDFLAGS = []
+      # },
+      # cmakeArgs | priority 1 =
+      #   (
+      #   # lib.functions.replaceArrayElem
+
+      #   # "-DCMAKE_INSTALL_PREFIX=/usr"
+      #   #"-DCMAKE_INSTALL_PREFIX=/${TARGET}"
+      #   (
+      #     lib.functions.replaceArrayElem
+      #       "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=OFF"
+      #       "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL=ON"
+      #       (
+      #         lib.functions.replaceArrayElem
+      #           "-DLLVM_TARGETS_TO_BUILD='X86'"
+      #           "-DLLVM_TARGETS_TO_BUILD='AArch64;X86'"
+      #           llvm.cmakeArgs
+      #       )
+      #   )
+      #   )
+      #   @ [
+      #     # "-DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON",
+      #     # "-DLLVM_RUNTIME_TARGETS='AArch64;X86'",
+      #     #  "-DLLVM_RUNTIME_TARGETS='aarch64-unknown-linux-musl'",
+      #     # "-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE:STRING=x86_64-unknown-linux-musl",
+      #     # "-DLLVM_DEFAULT_TARGET_TRIPLE:STRING=aarch64-unknown-linux-musl",
+      #     # "-DCMAKE_SYSROOT="
+      #     #    "-DLIBCXX_INSTALL_INCLUDE_TARGET_DIR:STRING=include/c++/v1",
+      #     # "-DLIBCXXABI_INSTALL_LIBRARY_DIR:STRING=lib",
+      #     # "-DLIBCXX_INSTALL_LIBRARY_DIR:STRING=lib",
+      #     # "-DLIBUNWIND_INSTALL_LIBRARY_DIR:STRING=lib",
+      #     # "-DCOMPILER_RT_INSTALL_BINARY_DIR:PATH=lib/bin",
+      #     # "-DCOMPILER_RT_INSTALL_DATA_DIR:PATH=share",
+      #     # "-DCOMPILER_RT_INSTALL_INCLUDE_DIR:PATH=include",
+      #     # "-DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib",
+      #   ],
 
       #       buildPhase = [
       #   "ninja clang lld"
@@ -208,7 +220,7 @@
 
       buildInputs | priority 1 = [
         drvs.busybox,
-        drvs.llvm,
+        drvs.llvmFull,
         drvs.musl,
         drvs.samurai,
         drvs.ccacheBin,
@@ -216,13 +228,20 @@
         drvs.cmake,
         drvs.python,
       ],
+
+      buildPhase | priority 1 = [
+        "cmake --build ."
+      ],
+      installPhase | priority 1 = [
+        "cmake --install ."
+      ],
       postInstallPhase = [
-        "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin"
+        # "cp /tmp/workdir/build/bin/llvm-config ${DEST}/usr/bin"
       ]
     },
 
   libcxxAarch64 =
-    let majorVersion = "20" in
+    let majorVersion = "21" in
     _llvmBaseTarget
     & {
       cmakeArgs | priority 2 =

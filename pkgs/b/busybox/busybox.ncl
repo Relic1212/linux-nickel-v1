@@ -77,7 +77,7 @@
       baseBuildinputPackages = [],
       buildInputs = [
         drvs.busybox,
-        drvs.llvm,
+        drvs.clangCross,
         drvs.muslAarch64,
         drvs.musl,
         drvs.libcxxAarch64,
