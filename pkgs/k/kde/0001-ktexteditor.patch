@@ -1,0 +1,21 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 651ffaa..d900e91 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -334,11 +334,11 @@ set_target_properties(KF6TextEditor
+    EXPORT_NAME "TextEditor"
+ )
+ 
+-add_executable(ktexteditor_script_tester
+-    scripttester/ktexteditorscripttester.cpp
+-    scripttester/scripttester.cpp
+-    scripttester/ktexteditorscripttester.qrc
+-)
++# add_executable(ktexteditor_script_tester
++#     scripttester/ktexteditorscripttester.cpp
++#     scripttester/scripttester.cpp
++#     scripttester/ktexteditorscripttester.qrc
++# )
+ target_link_libraries(ktexteditor_script_tester
+     Qt6::Qml
+     KF6TextEditor

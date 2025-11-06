@@ -19,6 +19,7 @@
       version = "6.19",
 
       waylandSyms = false,
+      xkbcommonX11 | default = false,
     },
 
     biDrvs | priority -2 =
@@ -83,7 +84,18 @@
         ###
         drvs.jsonC,
         drvs.pcre2,
-        drvs.libxkbcommon,
+      ]
+      @ (
+        if options.xkbcommonX11 then
+          [
+            drvs.libxkbcommonX11,
+          ]
+        else
+          [
+            drvs.libxkbcommon,
+          ]
+      )
+      @ [
         drvs.openssl,
         drvs.kmod,
         drvs.zstd,
@@ -392,6 +404,7 @@
         _kf.biDrvs
         @ [
           drvs.acl,
+          drvs.alsaLibs,
           drvs.attr,
           drvs.breezeIcons,
           drvs.bzip2,
@@ -419,8 +432,8 @@
           drvs.knotifications,
           drvs.kpackage,
           drvs.kservice,
-          drvs.solid,
           drvs.ksvg,
+          drvs.kwallet,
           drvs.kwidgetsaddons,
           drvs.kwindowsystem,
           drvs.libcanberra,
@@ -428,11 +441,10 @@
           drvs.libtool,
           drvs.libvorbis,
           drvs.plasmaWaylandProtocols,
+          drvs.solid,
           drvs.switcherooControl,
           drvs.utilLinuxWeak,
           drvs.vala,
-          drvs.kwallet,
-          drvs.alsaLibs,
           # drvs.gpgme,
 
           # drvs.libassuan,
@@ -1136,6 +1148,459 @@
           drvs.isoCodes,
           drvs.pythonFull,
           drvs.gettext,
+        ]
+    },
+
+  knotifyconfig =
+    _kf
+    & {
+
+      preConfigurePhase = [
+        m%"sed -i 's|find_package(KF6Completion ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6Completion ${KF_DEP_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
+      ],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.qtmultimedia,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.breezeIcons,
+          drvs.libcanberra,
+        ],
+    },
+
+  kparts =
+    _kf
+    & {
+      preConfigurePhase = [
+        m%"sed -i 's|find_package(KF6JobWidgets ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6JobWidgets ${KF_DEP_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
+      ],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kconfigwidgets,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kxmlgui,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.breezeIcons,
+          drvs.libcanberra,
+        ],
+    },
+
+  krunner =
+    _kf
+    & {
+      cmakeExtraArgsRecord = {},
+      preConfigurePhase = [
+        m%"sed -i 's| SHARED| STATIC|g' ${SRC}/src/CMakeLists.txt"%,
+      ],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.kitemmodels,
+        ],
+    },
+
+  kstatusnotifieritem =
+    _kf
+    & {
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+        ],
+    },
+
+  syntaxHighlighting =
+    _kf
+    & {
+
+      cmakeExtraArgsRecord = {
+        "-DKSYNTAXHIGHLIGHTING_USE_GUI" = false
+      },
+
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.perl,
+        ],
+    },
+  ktexteditor =
+    _kf
+    & {
+
+      cmakeExtraArgsRecord = {
+        "-DENABLE_KAUTH" = false,
+      },
+
+      preConfigurePhase = [
+        m%"sed -i 's|find_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
+        m%"sed -i 's|accessibleInterfaceFactory|__kde_ktexteditor__accessibleInterfaceFactory|g' ${SRC}/src/view/kateviewinternal.cpp"%,
+        m%"sed -i 's|accessibleInterfaceFactory|__kde_ktexteditor__accessibleInterfaceFactory|g' ${SRC}/src/view/kateviewaccessible.h"%,
+        m%"sed -i 's| MODULE| STATIC|g' ${SRC}/src/part/CMakeLists.txt"%,
+      ],
+
+      # patches = [
+      #   {
+      #     sha256sum = "1b0ce45cae4c9453a5d890db5894f0b76f9050fa19f76b51fbfc725c3f4aa94d",
+
+      #     file =  "0001-ktexteditor.patch"
+      #   }
+      # ],
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kparts,
+          drvs.kxmlgui,
+          drvs.qtmultimedia,
+          drvs.qtspeech,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.breezeIcons,
+          drvs.kconfigwidgets,
+          drvs.sonnet,
+          drvs.hunspell,
+          drvs.syntaxHighlighting,
+          drvs.acl,
+          drvs.attr,
+        ],
+    },
+
+  kitemmodels =
+    _kf
+    & {
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+        ],
+    },
+  ktextwidgets =
+    _kf
+    & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_TEXT_TO_SPEECH" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.kcompletion,
+          drvs.sonnet,
+          drvs.hunspell,
+        ],
+    },
+  sonnet =
+    _kf
+    & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_TEXT_TO_SPEECH" = false,
+        "-DBUILD_DESIGNERPLUGIN" = false,
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.kcompletion,
+          drvs.hunspell,
+        ],
+    },
+
+  prison =
+    _kf
+    & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_MULTIMEDIA" = false
+      },
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+          drvs.libqrencode,
+        ],
+    },
+  kunitconversion =
+    _kf
+    & {
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
         ]
     },
 

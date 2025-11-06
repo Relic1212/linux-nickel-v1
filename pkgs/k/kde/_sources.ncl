@@ -38,4 +38,28 @@
   "https://download.kde.org/stable/frameworks/6.19/kdeclarative-6.19.0.tar.xz" = "0c71a9a08f447b20fa06be836d059b2cd4791e972e279d99464e2dd0dbff7a90",
   "https://download.kde.org/stable/frameworks/6.19/attica-6.19.0.tar.xz" = "30813efb577f75b87eec4f02300a906e5f39a8dd2c7e7488958a7ffeaaaee1a8",
   "https://download.kde.org/stable/frameworks/6.19/kholidays-6.19.0.tar.xz" = "7876116dc022fe722294305cd58dde53fd21bcd664188ad26aceed63e55ddc86",
+
+  "https://download.kde.org/stable/frameworks/6.19/kitemviews-6.19.0.tar.xz" = "d5865512eee33997e97b766acaccb32236b93e0f81a1a7912065cc7c02b3f252",
+
+  "https://download.kde.org/stable/frameworks/6.19/knotifyconfig-6.19.0.tar.xz" = "cd1933ba68630139cd1bf456f085b33e0c354fd0f1f0e4c46822b09eb5c5c31f",
+
+  "https://download.kde.org/stable/frameworks/6.19/kparts-6.19.0.tar.xz" = "cddc3b6a4fc0a3f41fa5791997c9ddf4ca98855839be465ebe5d0c3cefe350d8",
+
+  "https://download.kde.org/stable/frameworks/6.19/krunner-6.19.0.tar.xz" = "d59ca1a7142529bdca28f539dc7b3784f975be68b36c69d0c3e6835966ec32ab",
+
+  "https://download.kde.org/stable/frameworks/6.19/kstatusnotifieritem-6.19.0.tar.xz" = "5e40cb3eee9ad5695d504c790475223601e8569cfe5fbc3717480da2f3556949",
+
+  "https://download.kde.org/stable/frameworks/6.19/ktexteditor-6.19.0.tar.xz" = "f2382910fe32e92bfd07def4e8f53d58d85725194a244123d938ab0c42a807f1",
+
+  "https://download.kde.org/stable/frameworks/6.19/ktextwidgets-6.19.0.tar.xz" = "d9fa49ee95cf03321d2b2d89bd6952734323b75a2d983b97702d14bce4809f16",
+
+  "https://download.kde.org/stable/frameworks/6.19/prison-6.19.0.tar.xz" = "bfd623f95e00af25ec49966679010c411ef8798b7c1a31c258484c31067d5356",
+
+  "https://download.kde.org/stable/frameworks/6.19/kitemmodels-6.19.0.tar.xz" = "96e74a13100d0266ac31bfd1527901637f2bf4d6bc7d46a497e6dc9291bdb98e",
+
+  "https://download.kde.org/stable/frameworks/6.19/sonnet-6.19.0.tar.xz" = "4b102a359c5da1796862dbc24fb395c1220847f0584fa7a974ec118d644acfa0",
+
+  "https://download.kde.org/stable/frameworks/6.19/syntax-highlighting-6.19.0.tar.xz" = "13a72e89bae0af936a2d54b02473e96dea560effc4b03fd43d69e4582c1dbd19",
+
+  "https://download.kde.org/stable/frameworks/6.19/kunitconversion-6.19.0.tar.xz" = "d4f0e39e27596c6550f3fc72fb67b0d4966acfd7d702a011a0fca420b6f9b393",
 }

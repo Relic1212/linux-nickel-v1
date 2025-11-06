@@ -21,30 +21,30 @@
       biDrvs | priority -1 =
         _kf.biDrvs
         @ [
-          drvs.kcoreaddons,
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
           drvs.kcodecs,
+          drvs.kcolorscheme,
           drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
           drvs.kguiaddons,
           drvs.ki18n,
-          drvs.gettext,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kauth,
-          drvs.kglobalaccel,
-          drvs.kpackage,
+          drvs.kiconthemes,
           drvs.kidletime,
-          drvs.kcrash,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
           drvs.kservice,
           drvs.ksvg,
-          drvs.kdbusaddons,
-          drvs.plasmaWaylandProtocols,
+          drvs.kwidgetsaddons,
           drvs.kwindowsystem,
-          drvs.kirigami,
-          drvs.karchive,
-          drvs.kiconthemes,
-          drvs.kio,
-          drvs.knotifications,
-          drvs.kcmutils,
+          drvs.plasmaWaylandProtocols,
         ]
     }
   ),
@@ -159,6 +159,32 @@
         ]
     },
 
+  plasmaActivitiesStats =
+    _plasma
+    & {
+
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.acl,
+          drvs.alsaLibs,
+          drvs.attr,
+          drvs.boost,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.plasmaActivities,
+        ]
+    },
+
   libplasma =
     _plasma
     & {
@@ -246,6 +272,260 @@
           drvs.libvorbis,
           drvs.solid,
           drvs.utilLinuxWeak,
+        ]
+    },
+
+  plasma5support =
+    _plasma
+    & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_X11" = false,
+      },
+
+      preConfigurePhase = [
+        m%"sed -i 's| SHARED| STATIC|g' ${SRC}/src/dataengines/weather/ions/CMakeLists.txt"%,
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+      ],
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.solid,
+          drvs.kholidays,
+          drvs.kunitconversion,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.bzip2,
+          drvs.breezeIcons,
+          drvs.plasmaActivities,
+          drvs.acl,
+          drvs.attr,
+        ]
+    },
+
+  kscreen =
+    _plasma
+    & {
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.solid,
+          drvs.kholidays,
+          drvs.kunitconversion,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.bzip2,
+          drvs.breezeIcons,
+          drvs.plasmaActivities,
+          drvs.acl,
+          drvs.attr,
+          drvs.kconfigwidgets,
+          drvs.kxmlgui,
+          drvs.libxcb,
+          drvs.libkscreen,
+          drvs.libplasma,
+        ]
+    },
+
+  kscreenlocker =
+    _plasma
+    & {
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.solid,
+          drvs.kholidays,
+          drvs.kunitconversion,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.bzip2,
+          drvs.breezeIcons,
+          drvs.plasmaActivities,
+          drvs.acl,
+          drvs.attr,
+          drvs.kconfigwidgets,
+          drvs.kxmlgui,
+          drvs.libxcb,
+          drvs.libkscreen,
+          drvs.libplasma,
+          drvs.xcbUtilKeysyms,
+          drvs.layerShellQt,
+          drvs.libpamFinal,
+          drvs.libx11,
+          drvs.libxau,
+          drvs.libxcursor,
+          drvs.libxcvt,
+          drvs.libxfixes,
+          drvs.libxrender,
+          drvs.xcbProto,
+          drvs.xcbRenderutil,
+          drvs.xorgMacros,
+          drvs.xorgproto,
+          drvs.xtrans,
+        ]
+    },
+
+  libkscreen =
+    _plasma
+    & {
+      # cmakeExtraArgs = {
+      #   "-DCMAKE_DISABLE_FIND_PACKAGE_"
+      # },
+      preConfigurePhase = [
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+      ],
+
+      patches = [
+        {
+          sha256sum = "d7f480c0dced2abc34aa2c879c198a5d5781ab70d28802d69dc0b80efd1a96b1",
+          file = "0001-libkscreen.patch",
+        }
+      ],
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.solid,
+          drvs.kholidays,
+          drvs.kunitconversion,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.bzip2,
+          drvs.breezeIcons,
+          drvs.plasmaActivities,
+          drvs.acl,
+          drvs.attr,
+          drvs.kconfigwidgets,
+          drvs.kxmlgui,
+          drvs.libxcb,
+        ]
+    },
+
+  layerShellQt =
+    _plasma
+    & {
+      preConfigurePhase = [
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+        m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+      ],
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.solid,
+          drvs.kholidays,
+          drvs.kunitconversion,
+          drvs.utilLinuxWeak,
+          drvs.libcanberra,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.bzip2,
+          drvs.breezeIcons,
+          drvs.plasmaActivities,
+          drvs.acl,
+          drvs.attr,
+          drvs.kconfigwidgets,
+          drvs.kxmlgui,
+          drvs.libxcb,
+        ]
+    },
+  plasmaWorkspace =
+    _plasma
+    & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_X11" = false,
+      },
+      biDrvs =
+        _plasma.biDrvs
+        @ [
+          drvs.acl,
+          drvs.alsaLibs,
+          drvs.attr,
+          drvs.boost,
+          drvs.breeze,
+          drvs.breezeIcons,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
+          drvs.kconfigwidgets,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kxmlgui,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+          drvs.plasmaActivities,
+          drvs.solid,
+          drvs.utilLinuxWeak,
+          drvs.libxcb,
+          drvs.libplasma,
+          drvs.qtlocation,
+          drvs.qtpositioning,
+          drvs.qcoro,
+          drvs.harfbuzz,
+          drvs.kdeclarative,
+          drvs.kdecoration,
+          drvs.kded,
+          drvs.kglobalacceld,
+          drvs.kholidays,
+          drvs.knewstuff,
+          drvs.knighttime,
+          drvs.kwallet,
+          drvs.kwayland,
+          drvs.lcms,
+          drvs.libcap,
+          drvs.libdisplayinfo,
+          drvs.libx11,
+          drvs.libxau,
+          drvs.libxcursor,
+          drvs.libxcvt,
+          drvs.libxfixes,
+          drvs.libxrender,
+          # drvs.mesaExpKwin,
+          drvs.pythonFull,
+          # drvs.qtsensorsKwin,
+          drvs.switcherooControl,
+          drvs.vala,
+          drvs.xcbProto,
+          drvs.xcbRenderutil,
+          drvs.xorgMacros,
+          drvs.xorgproto,
+          drvs.xtrans,
+          drvs.attica,
+          drvs.knotifyconfig,
+          drvs.kparts,
+          drvs.krunner,
+          drvs.kstatusnotifieritem,
+          drvs.syntaxHighlighting,
+          drvs.ktexteditor,
+          drvs.kitemmodels,
+          drvs.ktextwidgets,
+          drvs.sonnet,
+          drvs.prison,
+          drvs.hunspell,
+          drvs.kunitconversion,
+          drvs.plasma5support,
+          drvs.plasmaActivitiesStats,
+          drvs.libkscreen,
+          drvs.layerShellQt,
+          drvs.kwin,
         ]
     },
 }

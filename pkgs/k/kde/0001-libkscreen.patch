@@ -1,0 +1,334 @@
+diff --git a/backends/CMakeLists.txt b/backends/CMakeLists.txt
+index e522ac2..c56bb4d 100644
+--- a/backends/CMakeLists.txt
++++ b/backends/CMakeLists.txt
+@@ -3,7 +3,7 @@ add_subdirectory(kwayland)
+ 
+ if(${XCB_RANDR_FOUND})
+     message(STATUS "Will build xrandr backend.")
+-    add_subdirectory(xrandr)
++    # add_subdirectory(xrandr)
+ else()
+     message(STATUS "Not building xrandr backend, no XCB_RANDR_FOUND set.")
+ endif()
+diff --git a/backends/xcbeventlistener.cpp b/backends/xcbeventlistener.cpp
+index 2f40654..e3ea520 100644
+--- a/backends/xcbeventlistener.cpp
++++ b/backends/xcbeventlistener.cpp
+@@ -9,7 +9,6 @@
+ #include "../xcbwrapper.h"
+ 
+ #include <QGuiApplication>
+-#include <QtGui/private/qtx11extras_p.h>
+ 
+ Q_LOGGING_CATEGORY(KSCREEN_XCB_HELPER, "kscreen.xcb.helper")
+ 
+@@ -22,55 +21,55 @@ XCBEventListener::XCBEventListener()
+     , m_versionMinor(0)
+     , m_window(0)
+ {
+-    xcb_connection_t *c = QX11Info::connection();
+-    xcb_prefetch_extension_data(c, &xcb_randr_id);
+-    auto cookie = xcb_randr_query_version(c, XCB_RANDR_MAJOR_VERSION, XCB_RANDR_MINOR_VERSION);
+-    const auto *queryExtension = xcb_get_extension_data(c, &xcb_randr_id);
+-    if (!queryExtension) {
+-        qCDebug(KSCREEN_XCB_HELPER) << "Fail to query for xrandr extension";
+-        return;
+-    }
+-    if (!queryExtension->present) {
+-        qCDebug(KSCREEN_XCB_HELPER) << "XRandR extension is not present at all";
+-        return;
+-    }
+-
+-    m_isRandrPresent = queryExtension->present;
+-    m_randrBase = queryExtension->first_event;
+-    m_randrErrorBase = queryExtension->first_error;
+-    m_majorOpcode = queryExtension->major_opcode;
+-
+-    xcb_generic_error_t *error = nullptr;
+-    auto *versionReply = xcb_randr_query_version_reply(c, cookie, &error);
+-    Q_ASSERT_X(versionReply, "xrandrxcbhelper", "Query to fetch xrandr version failed");
+-    if (error) {
+-        qFatal("Error while querying for xrandr version: %d", error->error_code);
+-    }
+-    m_versionMajor = versionReply->major_version;
+-    m_versionMinor = versionReply->minor_version;
+-    free(versionReply);
+-
+-    qCDebug(KSCREEN_XCB_HELPER).nospace() << "Detected XRandR " << m_versionMajor << "." << m_versionMinor;
+-    qCDebug(KSCREEN_XCB_HELPER) << "Event Base: " << m_randrBase;
+-    qCDebug(KSCREEN_XCB_HELPER) << "Event Error: " << m_randrErrorBase;
+-
+-    uint32_t rWindow = QX11Info::appRootWindow();
+-    m_window = xcb_generate_id(c);
+-    xcb_create_window(c, XCB_COPY_FROM_PARENT, m_window, rWindow, 0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT, XCB_COPY_FROM_PARENT, 0, nullptr);
+-
+-    xcb_randr_select_input(c,
+-                           m_window,
+-                           XCB_RANDR_NOTIFY_MASK_SCREEN_CHANGE | XCB_RANDR_NOTIFY_MASK_OUTPUT_CHANGE | XCB_RANDR_NOTIFY_MASK_CRTC_CHANGE
+-                               | XCB_RANDR_NOTIFY_MASK_OUTPUT_PROPERTY);
+-
+-    qApp->installNativeEventFilter(this);
++    // xcb_connection_t *c = QX11Info::connection();
++    // xcb_prefetch_extension_data(c, &xcb_randr_id);
++    // auto cookie = xcb_randr_query_version(c, XCB_RANDR_MAJOR_VERSION, XCB_RANDR_MINOR_VERSION);
++    // const auto *queryExtension = xcb_get_extension_data(c, &xcb_randr_id);
++    // if (!queryExtension) {
++    //     qCDebug(KSCREEN_XCB_HELPER) << "Fail to query for xrandr extension";
++    //     return;
++    // }
++    // if (!queryExtension->present) {
++    //     qCDebug(KSCREEN_XCB_HELPER) << "XRandR extension is not present at all";
++    //     return;
++    // }
++
++    // m_isRandrPresent = queryExtension->present;
++    // m_randrBase = queryExtension->first_event;
++    // m_randrErrorBase = queryExtension->first_error;
++    // m_majorOpcode = queryExtension->major_opcode;
++
++    // xcb_generic_error_t *error = nullptr;
++    // auto *versionReply = xcb_randr_query_version_reply(c, cookie, &error);
++    // Q_ASSERT_X(versionReply, "xrandrxcbhelper", "Query to fetch xrandr version failed");
++    // if (error) {
++    //     qFatal("Error while querying for xrandr version: %d", error->error_code);
++    // }
++    // m_versionMajor = versionReply->major_version;
++    // m_versionMinor = versionReply->minor_version;
++    // free(versionReply);
++
++    // qCDebug(KSCREEN_XCB_HELPER).nospace() << "Detected XRandR " << m_versionMajor << "." << m_versionMinor;
++    // qCDebug(KSCREEN_XCB_HELPER) << "Event Base: " << m_randrBase;
++    // qCDebug(KSCREEN_XCB_HELPER) << "Event Error: " << m_randrErrorBase;
++
++    // uint32_t rWindow = QX11Info::appRootWindow();
++    // m_window = xcb_generate_id(c);
++    // xcb_create_window(c, XCB_COPY_FROM_PARENT, m_window, rWindow, 0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT, XCB_COPY_FROM_PARENT, 0, nullptr);
++
++    // xcb_randr_select_input(c,
++    //                        m_window,
++    //                        XCB_RANDR_NOTIFY_MASK_SCREEN_CHANGE | XCB_RANDR_NOTIFY_MASK_OUTPUT_CHANGE | XCB_RANDR_NOTIFY_MASK_CRTC_CHANGE
++    //                            | XCB_RANDR_NOTIFY_MASK_OUTPUT_PROPERTY);
++
++    // qApp->installNativeEventFilter(this);
+ }
+ 
+ XCBEventListener::~XCBEventListener()
+ {
+-    if (m_window && QX11Info::connection()) {
+-        xcb_destroy_window(QX11Info::connection(), m_window);
+-    }
++    // if (m_window && QX11Info::connection()) {
++    //     xcb_destroy_window(QX11Info::connection(), m_window);
++    // }
+ }
+ 
+ QString XCBEventListener::rotationToString(xcb_randr_rotation_t rotation)
+@@ -179,17 +178,17 @@ void XCBEventListener::handleXRandRNotify(xcb_generic_event_t *e)
+         Q_EMIT outputChanged(output.output, output.crtc, output.mode, (xcb_randr_connection_t)output.connection);
+ 
+     } else if (randrEvent->subCode == XCB_RANDR_NOTIFY_OUTPUT_PROPERTY) {
+-        xcb_randr_output_property_t property = randrEvent->u.op;
++        // xcb_randr_output_property_t property = randrEvent->u.op;
+ 
+-        XCB::ScopedPointer<xcb_get_atom_name_reply_t> reply(
+-            xcb_get_atom_name_reply(QX11Info::connection(), xcb_get_atom_name(QX11Info::connection(), property.atom), nullptr));
++        // XCB::ScopedPointer<xcb_get_atom_name_reply_t> reply(
++        //     xcb_get_atom_name_reply(QX11Info::connection(), xcb_get_atom_name(QX11Info::connection(), property.atom), nullptr));
+ 
+-        qCDebug(KSCREEN_XCB_HELPER) << "RRNotify_OutputProperty (ignored)";
+-        qCDebug(KSCREEN_XCB_HELPER) << "\tTimestamp: " << property.timestamp;
+-        qCDebug(KSCREEN_XCB_HELPER) << "\tOutput: " << property.output;
+-        qCDebug(KSCREEN_XCB_HELPER) << "\tProperty: "
+-                                    << QByteArray::fromRawData(xcb_get_atom_name_name(reply.data()), xcb_get_atom_name_name_length(reply.data()));
+-        qCDebug(KSCREEN_XCB_HELPER) << "\tState (newValue, Deleted): " << property.status;
++        // qCDebug(KSCREEN_XCB_HELPER) << "RRNotify_OutputProperty (ignored)";
++        // qCDebug(KSCREEN_XCB_HELPER) << "\tTimestamp: " << property.timestamp;
++        // qCDebug(KSCREEN_XCB_HELPER) << "\tOutput: " << property.output;
++        // qCDebug(KSCREEN_XCB_HELPER) << "\tProperty: "
++        //                             << QByteArray::fromRawData(xcb_get_atom_name_name(reply.data()), xcb_get_atom_name_name_length(reply.data()));
++        // qCDebug(KSCREEN_XCB_HELPER) << "\tState (newValue, Deleted): " << property.status;
+     }
+ }
+ 
+diff --git a/src/backendmanager.cpp b/src/backendmanager.cpp
+index 5d69e8b..5f7d88a 100644
+--- a/src/backendmanager.cpp
++++ b/src/backendmanager.cpp
+@@ -24,7 +24,6 @@
+ #include <QGuiApplication>
+ #include <QStandardPaths>
+ #include <QThread>
+-#include <QtGui/private/qtx11extras_p.h>
+ 
+ #include <memory>
+ 
+@@ -132,9 +131,7 @@ QFileInfo BackendManager::preferredBackend(const QString &backend)
+     } else if (!env_kscreen_backend.isEmpty()) {
+         backendFilter = env_kscreen_backend;
+     } else {
+-        if (QX11Info::isPlatformX11()) {
+-            backendFilter = QStringLiteral("XRandR");
+-        } else if (QGuiApplication::platformName().startsWith(QLatin1String("wayland"))) {
++        if (QGuiApplication::platformName().startsWith(QLatin1String("wayland"))) {
+             backendFilter = QStringLiteral("KWayland");
+         } else {
+             backendFilter = QStringLiteral("QScreen");
+diff --git a/src/libdpms/dpms.cpp b/src/libdpms/dpms.cpp
+index 70cd9de..7dda109 100644
+--- a/src/libdpms/dpms.cpp
++++ b/src/libdpms/dpms.cpp
+@@ -8,14 +8,11 @@
+ #include "xcbdpmshelper_p.h"
+ 
+ #include <QGuiApplication>
+-#include <QtGui/private/qtx11extras_p.h>
+ 
+ KScreen::Dpms::Dpms(QObject *parent)
+     : QObject(parent)
+ {
+-    if (QX11Info::isPlatformX11()) {
+-        m_helper.reset(new XcbDpmsHelper);
+-    } else if (QGuiApplication::platformName().startsWith(QLatin1String("wayland"), Qt::CaseInsensitive)) {
++    if (QGuiApplication::platformName().startsWith(QLatin1String("wayland"), Qt::CaseInsensitive)) {
+         m_helper.reset(new WaylandDpmsHelper);
+     } else {
+         qCWarning(KSCREEN_DPMS) << "dpms unsupported on this system";
+diff --git a/src/libdpms/xcbdpmshelper.cpp b/src/libdpms/xcbdpmshelper.cpp
+index e6cab45..f1fd1f1 100644
+--- a/src/libdpms/xcbdpmshelper.cpp
++++ b/src/libdpms/xcbdpmshelper.cpp
+@@ -8,7 +8,6 @@
+ #include "xcbdpmshelper_p.h"
+ 
+ #include <QGuiApplication>
+-#include <QtGui/private/qtx11extras_p.h>
+ 
+ #include <kscreendpms_debug.h>
+ 
+@@ -20,69 +19,69 @@ using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
+ XcbDpmsHelper::XcbDpmsHelper()
+     : AbstractDpmsHelper()
+ {
+-    auto *c = QX11Info::connection();
++    // auto *c = QX11Info::connection();
+ 
+-    xcb_prefetch_extension_data(c, &xcb_dpms_id);
+-    auto *extension = xcb_get_extension_data(c, &xcb_dpms_id);
+-    if (!extension || !extension->present) {
+-        qCWarning(KSCREEN_DPMS) << "DPMS extension not available";
+-        setSupported(false);
+-        return;
+-    }
++    // xcb_prefetch_extension_data(c, &xcb_dpms_id);
++    // auto *extension = xcb_get_extension_data(c, &xcb_dpms_id);
++    // if (!extension || !extension->present) {
++    //     qCWarning(KSCREEN_DPMS) << "DPMS extension not available";
++    //     setSupported(false);
++    //     return;
++    // }
+ 
+-    ScopedCPointer<xcb_dpms_capable_reply_t> capableReply(xcb_dpms_capable_reply(c, xcb_dpms_capable(c), nullptr));
+-    setSupported(capableReply && capableReply->capable);
++    // ScopedCPointer<xcb_dpms_capable_reply_t> capableReply(xcb_dpms_capable_reply(c, xcb_dpms_capable(c), nullptr));
++    // setSupported(capableReply && capableReply->capable);
+ 
+-    // Disable a default timeout, if any
+-    xcb_dpms_set_timeouts(QX11Info::connection(), 0, 0, 0);
++    // // Disable a default timeout, if any
++    // xcb_dpms_set_timeouts(QX11Info::connection(), 0, 0, 0);
+ }
+ 
+ XcbDpmsHelper::~XcbDpmsHelper() = default;
+ 
+ void XcbDpmsHelper::trigger(KScreen::Dpms::Mode mode, const QList<QScreen *> &screens)
+ {
+-    setHasPendingChanges(true);
+-    auto *c = QX11Info::connection();
+-
+-    if (screens != qGuiApp->screens()) {
+-        qCWarning(KSCREEN_DPMS) << "DPMS actions are applied to all screens on X11";
+-    }
+-
+-    ScopedCPointer<xcb_dpms_info_reply_t> infoReply(xcb_dpms_info_reply(c, xcb_dpms_info(c), nullptr));
+-
+-    if (!infoReply) {
+-        qCWarning(KSCREEN_DPMS) << "Failed to query DPMS state, cannot trigger";
+-        return;
+-    }
+-
+-    xcb_dpms_dpms_mode_t level = XCB_DPMS_DPMS_MODE_ON;
+-    switch (mode) {
+-    case KScreen::Dpms::Toggle:
+-        if (infoReply->power_level == XCB_DPMS_DPMS_MODE_ON) {
+-            level = XCB_DPMS_DPMS_MODE_OFF;
+-        } else {
+-            level = XCB_DPMS_DPMS_MODE_ON;
+-        }
+-        break;
+-    case KScreen::Dpms::Off:
+-        level = XCB_DPMS_DPMS_MODE_OFF;
+-        break;
+-    case KScreen::Dpms::Standby:
+-        level = XCB_DPMS_DPMS_MODE_STANDBY;
+-        break;
+-    case KScreen::Dpms::Suspend:
+-        level = XCB_DPMS_DPMS_MODE_SUSPEND;
+-        break;
+-    case KScreen::Dpms::On:
+-        level = XCB_DPMS_DPMS_MODE_ON;
+-        break;
+-    }
+-
+-    if (!infoReply->state) {
+-        xcb_dpms_enable(c);
+-    }
+-
+-    xcb_dpms_force_level(c, level);
+-
+-    setHasPendingChanges(false);
++    // setHasPendingChanges(true);
++    // auto *c = QX11Info::connection();
++
++    // if (screens != qGuiApp->screens()) {
++    //     qCWarning(KSCREEN_DPMS) << "DPMS actions are applied to all screens on X11";
++    // }
++
++    // ScopedCPointer<xcb_dpms_info_reply_t> infoReply(xcb_dpms_info_reply(c, xcb_dpms_info(c), nullptr));
++
++    // if (!infoReply) {
++    //     qCWarning(KSCREEN_DPMS) << "Failed to query DPMS state, cannot trigger";
++    //     return;
++    // }
++
++    // xcb_dpms_dpms_mode_t level = XCB_DPMS_DPMS_MODE_ON;
++    // switch (mode) {
++    // case KScreen::Dpms::Toggle:
++    //     if (infoReply->power_level == XCB_DPMS_DPMS_MODE_ON) {
++    //         level = XCB_DPMS_DPMS_MODE_OFF;
++    //     } else {
++    //         level = XCB_DPMS_DPMS_MODE_ON;
++    //     }
++    //     break;
++    // case KScreen::Dpms::Off:
++    //     level = XCB_DPMS_DPMS_MODE_OFF;
++    //     break;
++    // case KScreen::Dpms::Standby:
++    //     level = XCB_DPMS_DPMS_MODE_STANDBY;
++    //     break;
++    // case KScreen::Dpms::Suspend:
++    //     level = XCB_DPMS_DPMS_MODE_SUSPEND;
++    //     break;
++    // case KScreen::Dpms::On:
++    //     level = XCB_DPMS_DPMS_MODE_ON;
++    //     break;
++    // }
++
++    // if (!infoReply->state) {
++    //     xcb_dpms_enable(c);
++    // }
++
++    // xcb_dpms_force_level(c, level);
++
++    // setHasPendingChanges(false);
+ }

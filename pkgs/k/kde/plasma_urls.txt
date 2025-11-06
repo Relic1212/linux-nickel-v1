@@ -6,3 +6,5 @@ https://download.kde.org/stable/plasma/6.5.2/breeze-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/kglobalacceld-6.5.2.tar.xz
 https://download.kde.org/stable/plasma/6.5.2/knighttime-6.5.2.tar.xz
+https://download.kde.org/stable/plasma/6.5.2/plasma-workspace-6.5.2.tar.xz
+
