@@ -1,0 +1,59 @@
+diff --git a/alacritty/build.rs b/alacritty/build.rs
+index db35c963..1f44b992 100644
+--- a/alacritty/build.rs
++++ b/alacritty/build.rs
+@@ -12,6 +12,13 @@ fn main() {
+     }
+     println!("cargo:rustc-env=VERSION={version}");
+ 
++    println!("cargo:rustc-link-lib=static=EGL");
++    println!("cargo:rustc-link-lib=static=gallium_dri"); 
++    println!("cargo:rustc-link-lib=static=wayland-server"); 
++    println!("cargo:rustc-link-lib=static=wayland-client");
++    println!("cargo:rustc-link-search=native=/usr/lib");
++
++
+     let dest = env::var("OUT_DIR").unwrap();
+     let mut file = File::create(Path::new(&dest).join("gl_bindings.rs")).unwrap();
+ 
+diff --git a/alacritty/src/main.rs b/alacritty/src/main.rs
+index 54de44bc..5152b01a 100644
+--- a/alacritty/src/main.rs
++++ b/alacritty/src/main.rs
+@@ -254,3 +254,10 @@ fn log_config_path(config: &UiConfig) {
+ 
+     info!("{msg}");
+ }
++
++
++#[link(name="EGL",kind="static")]
++#[link(name="gallium_dri",kind="static")]
++#[link(name="GLESv2",kind="static")]
++#[link(name="gbm",kind="static")]
++unsafe extern {}
+\ No newline at end of file
+diff --git a/alacritty/src/renderer/mod.rs b/alacritty/src/renderer/mod.rs
+index 162de9c7..23208a8c 100644
+--- a/alacritty/src/renderer/mod.rs
++++ b/alacritty/src/renderer/mod.rs
+@@ -122,13 +122,13 @@ impl Renderer {
+     ) -> Result<Self, Error> {
+         // We need to load OpenGL functions once per instance, but only after we make our context
+         // current due to WGL limitations.
+-        if !GL_FUNS_LOADED.swap(true, Ordering::Relaxed) {
+-            let gl_display = context.display();
+-            gl::load_with(|symbol| {
+-                let symbol = CString::new(symbol).unwrap();
+-                gl_display.get_proc_address(symbol.as_c_str()).cast()
+-            });
+-        }
++        // if !GL_FUNS_LOADED.swap(true, Ordering::Relaxed) {
++        //     let gl_display = context.display();
++        //     gl::load_with(|symbol| {
++        //         let symbol = CString::new(symbol).unwrap();
++        //         gl_display.get_proc_address(symbol.as_c_str()).cast()
++        //     });
++        // }
+ 
+         let shader_version = gl_get_string(gl::SHADING_LANGUAGE_VERSION, "shader version")?;
+         let gl_version = gl_get_string(gl::VERSION, "OpenGL version")?;
