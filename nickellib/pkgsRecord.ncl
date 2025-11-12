@@ -45,44 +45,32 @@ in
 let ro = {
 
   __pkgs_unfiletered,
-  r1 =
-    let drvs_nameonly =
-      std.record.map
-        (fun k v =>
-          v
-          & {
-            name = keyToName k,
-            drvHash | default = "204a9243c33380ce82fc6019dabcafc010a66c9b2a6cb0f99005b048248f08c5",
-          }
+  r1 = {
+    __pkgs_unfiletered = (
+      name_pkgs (
+        (
+          importlib
+          & imported
         )
-        (imported & { drvs = std.record.map (fun k v => { name = keyToName k }) (imported & { drvs = {} }) } & importlib)
-    in
-    {
-      __pkgs_unfiletered = (
-        name_pkgs (
-          (
-            importlib
-            & imported
-          )
-          & {
-            lib,
-            pkgs = __pkgs_unfiletered,
-            drvs =
-              std.record.map
-                (fun k v =>
-                  # std.trace k
-                  {
-                    name = keyToName k,
-                    keyName = k,
-                    drvHash = v.drvHash,
-                  }
-                )
-                (__pkgs_unfiletered),
-            distro = (import "../distro/default.ncl")
-          }
-        )
+        & {
+          lib,
+          pkgs = __pkgs_unfiletered,
+          drvs =
+            std.record.map
+              (fun k v =>
+                # std.trace k
+                {
+                  name = keyToName k,
+                  keyName = k,
+                  drvHash = v.drvHash,
+                }
+              )
+              (__pkgs_unfiletered),
+          distro = (import "../distro/default.ncl")
+        }
       )
-    }
+    )
+  }
 }
 in
 let __pkgs_unfiletered = ro.r1.__pkgs_unfiletered
