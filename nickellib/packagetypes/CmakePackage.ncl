@@ -57,6 +57,7 @@
 
         enableParallel,
         debug,
+        noDev | Bool | default = false,
         cmakeArgs | Array String | default =
           cmakeArgsPrepend
           @ (
@@ -73,7 +74,7 @@
             )
           )
           )
-          @ extraCmakeArgs,
+          @ extraCmakeArgs @ (if noDev then  ["-Wno-dev" ] else []),
         cmakeArgsPrepend | Array String | default = [],
 
         extraCmakeArgs | Array String | default = [],
@@ -84,6 +85,8 @@
 
         pkgconfProvider,
 
+        muslProvider,
+
         baseBuildinputPackages | priority -1000 =
           utilsProviders
           @ (
@@ -93,7 +96,7 @@
                   drvs.cmake,
                   # drvs.pkgconf,
                   pkgconfProvider,
-                  drvs.musl,
+                  muslProvider,
                 ]
                 @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
