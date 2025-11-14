@@ -12,6 +12,11 @@
     buildPhase = [
       "export HOME=/tmp",
       "export TERM=dumb",
+      "mkdir /tmp/workdir/build/bin",
+      m%"printf "#!/bin/sh\nexec /usr/bin/true" > /tmp/workdir/build/bin/tput"%,
+      m%"chmod +x /tmp/workdir/build/bin/tput"%,
+      m%"export PATH="/tmp/workdir/build/bin:${PATH}""%,
+      "which tput",
       "cd yodl",
       m%"for f in $(find . -type f); do sed -i 's|#!\/bin\/bash|#!\/usr\/bin\/bash|g' $f;done"%,
       "sed -i 's|gcc|clang|g' INSTALL.im",
