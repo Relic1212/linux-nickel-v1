@@ -18,6 +18,13 @@
       "ln -s /usr/bin/bash sh"
     ]
   },
+  bashBinBash | lib.Package = {
+    postInstallPhase = [
+      "install -d -m0755 ${DEST}/bin",
+      "cd ${DEST}/bin",
+      "ln -s /usr/bin/bash bash"
+    ]
+  },
   busyboxAarch64,
   bashAarch64 =
     bash
