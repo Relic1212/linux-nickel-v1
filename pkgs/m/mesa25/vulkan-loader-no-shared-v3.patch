@@ -1,0 +1,50 @@
+diff --git a/loader/CMakeLists.txt b/loader/CMakeLists.txt
+index 008b71da4..4483d0cef 100644
+--- a/loader/CMakeLists.txt
++++ b/loader/CMakeLists.txt
+@@ -21,7 +21,12 @@ include(CheckIncludeFile)
+ 
+ add_library(loader_specific_options INTERFACE)
+ target_link_libraries(loader_specific_options INTERFACE loader_common_options Vulkan::Headers)
+-target_include_directories(loader_specific_options INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/generated ${CMAKE_CURRENT_BINARY_DIR})
++target_include_directories(loader_specific_options
++    INTERFACE 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated> 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++)
+ 
+ if(WIN32)
+ 
+@@ -419,7 +424,8 @@ else()
+         message(WARNING "The APPLE_STATIC_LOADER option has been set. Note that this will only work on MacOS and is not supported "
+                 "or tested as part of the loader. Use it at your own risk.")
+     else()
+-        add_library(vulkan SHARED)
++        add_library(vulkan STATIC)
++        target_compile_definitions(vulkan PRIVATE APPLE_STATIC_LOADER)
+     endif()
+ 
+     target_sources(vulkan PRIVATE ${NORMAL_LOADER_SRCS})
+@@ -528,7 +534,7 @@ if (APPLE_STATIC_LOADER)
+ endif()
+ 
+ # Generate CMake Configuration File (IE: VulkanLoaderConfig.cmake)
+-install(TARGETS vulkan EXPORT VulkanLoaderConfig)
++install(TARGETS vulkan loader_specific_options loader_common_options platform_wsi EXPORT VulkanLoaderConfig)
+ set_target_properties(vulkan PROPERTIES EXPORT_NAME "Loader")
+ install(EXPORT VulkanLoaderConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VulkanLoader NAMESPACE Vulkan::)
+ 
+diff --git a/loader/vk_loader_platform.h b/loader/vk_loader_platform.h
+index 987337c93..491c9a964 100644
+--- a/loader/vk_loader_platform.h
++++ b/loader/vk_loader_platform.h
+@@ -76,7 +76,7 @@
+ #endif  // defined(_WIN32)
+ 
+ #if defined(APPLE_STATIC_LOADER) && !defined(__APPLE__)
+-#error "APPLE_STATIC_LOADER can only be defined on Apple platforms!"
++// #error "APPLE_STATIC_LOADER can only be defined on Apple platforms!"
+ #endif
+ 
+ #if defined(APPLE_STATIC_LOADER)

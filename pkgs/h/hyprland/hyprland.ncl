@@ -17,8 +17,11 @@
             # uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.50.1/source-v0.50.1.tar.gz",
             # sha256sum = "2e7280e08d9b0460159bdfcdebdf6c532a79843a6a1e8417f78c15f6293fc956",
 
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.51.1.tar.gz",
-            sha256sum = "ebcdde9b3cec53dc1841cb221f0d3e26c3086f7c59416bf85243ec700a4a7f68",
+            # uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.51.1.tar.gz",
+            # sha256sum = "ebcdde9b3cec53dc1841cb221f0d3e26c3086f7c59416bf85243ec700a4a7f68",
+
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.52.0.tar.gz",
+            sha256sum = "8f1f9051a48356dc6e0fb127ca29f991b758bae28c66ba6b0cdf0c99efcc1751",
           },
           # src = {
           #   uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.45.2.tar.gz",
@@ -114,6 +117,10 @@
           drvs.spirvTools,
           drvs.glaze,
           drvs.cmake,
+          drvs.libjpegTurboStatic,
+          drvs.libspng,
+          drvs.libwebp,
+          drvs.file, # libmagic
         ]
         @ (
           if options.glx then
@@ -175,7 +182,17 @@
       #    "%,
       #],
       buildEnv = {
-        EXTRA_LDFLAGS = ["$(pkg-config --libs --static libseat)", "-ltomlplusplus", "-lzip", "-ldisplay-info"] @ (if distro.pam then ["-lcap"] else []),
+        EXTRA_LDFLAGS =
+          [
+            "$(pkg-config --libs --static libseat)",
+            "$(pkg-config --libs --static libjpeg)",
+            "$(pkg-config --libs --static libwebp)",
+            "$(pkg-config --libs --static libmagic)",
+            "-ltomlplusplus",
+            "-lzip",
+            "-ldisplay-info"
+          ]
+          @ (if distro.pam then ["-lcap"] else []),
         # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
         #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
         #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
@@ -220,8 +237,11 @@
 
       # uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.8.2.tar.gz",
       # sha256sum = "932f8b0023edcbfd01106c634010cad1533dccf295c2817d66da0e455e12753a",
-      uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.10.0.tar.gz",
-      sha256sum = "0e2d2495166e314a4ef52d97bcae6f82ee10a1247a60e42b2087d876a7563b0c",
+      # uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.10.0.tar.gz",
+      # sha256sum = "0e2d2495166e314a4ef52d97bcae6f82ee10a1247a60e42b2087d876a7563b0c",
+
+      uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.10.1.tar.gz",
+      sha256sum = "052d6081e44ee8d4ee8e623b6b01108a9f61fec34bf396071196fdf69929d273",
     },
     biDrvs = [
       drvs.pixman,
@@ -430,6 +450,9 @@
 
           # uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.6.4.tar.gz",
           # sha256sum = "0d4f99abc21b04fc126dd754e306bb84cd334131d542ff2e0c172190c6570384",
+          # uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.7.0.tar.gz",
+          # sha256sum = "ee419006d7cd20927b9b7c8b5fc430571c151b0385d600508de1a7957294498c",
+
           uri = "https://github.com/hyprwm/hyprland-protocols/archive/refs/tags/v0.7.0.tar.gz",
           sha256sum = "ee419006d7cd20927b9b7c8b5fc430571c151b0385d600508de1a7957294498c",
         }
@@ -513,9 +536,18 @@
     generator = "Ninja",
 
     singleSource = {
-      uri = "https://github.com/hyprwm/hyprgraphics/archive/refs/tags/v0.1.5.tar.gz",
-      sha256sum = "03bdd5a6e456c31cc17f973656326220f94e58a5f4ab33b2450ccb5d6a697a4c"
+      # uri = "https://github.com/hyprwm/hyprgraphics/archive/refs/tags/v0.1.5.tar.gz",
+      # sha256sum = "03bdd5a6e456c31cc17f973656326220f94e58a5f4ab33b2450ccb5d6a697a4c",
+      uri = "https://github.com/hyprwm/hyprgraphics/archive/refs/tags/v0.3.0.tar.gz",
+      sha256sum = "01ccac9fdb269be7990358e14eccfda07e641885ba6a14fbafa1dfa7617d16ff",
     },
+
+    patches = [
+      {
+        sha256sum = "84097f3c9db4e5dc5482624c4e0ced9a1d6175b4a1c8408b1515b0fbb0f1e9ae",
+        file = "hyprgraphics-no-svg.patch"
+      }
+    ],
     biDrvs = [
       drvs.pixman,
       drvs.expat,
@@ -541,6 +573,8 @@
       drvs.libspng,
       drvs.file,
       drvs.libwebp,
+      drvs.fribidi,
+      drvs.pcre2,
     ],
     preConfigurePhase = [
       "sed -i 's@hyprgraphics SHARED@hyprgraphics STATIC@g' ${SRC}/CMakeLists.txt"

@@ -5,8 +5,11 @@
     name = "libxkbcommon",
 
     singleSource = {
-      uri = "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.10.0.tar.gz",
-      sha256sum = "0427585a4d6ca17c9fc1ac4b539bf303348e9080af70c5ea402503bc370a9631"
+      # uri = "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.10.0.tar.gz",
+      # sha256sum = "0427585a4d6ca17c9fc1ac4b539bf303348e9080af70c5ea402503bc370a9631",
+
+      uri = "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.13.0.tar.gz",
+      sha256sum = "cd9367eec501867dfe7ddc3f6b18a026f2a2844a89d19108448d376cb849c9ed",
     },
     extraMesonArgs = ["-Denable-x11=false", "-Denable-xkbregistry=false"],
     biDrvs = [

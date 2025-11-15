@@ -39,5 +39,10 @@
       #   }
       # }
     ],
-  }
+  },
+  spirvLlvmTranslatorDebug =
+    spirvLlvmTranslator
+    & {
+      debug = true,
+    },
 }

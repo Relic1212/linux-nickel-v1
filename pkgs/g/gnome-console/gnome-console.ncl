@@ -97,6 +97,8 @@
       drvs.vte,
       drvs.lz4,
       drvs.desktopFileUtils,
+      drvs.simdutf,
+      drvs.fmt,
     ],
   }
 }

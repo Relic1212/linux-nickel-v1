@@ -82,12 +82,10 @@
     extraCargoFlags = [
       "--no-default-features",
       "--features=wayland",
-      "--verbose",
     ],
     extraEnv = {
       EXTRA_RUSTFLAGS =
         [
-          # "-v",
           # "$(pkg-config --static --libs egl)",
           "-C link-arg=-lc++",
         ]
@@ -119,7 +117,7 @@
       m%"sed -i 's@"x11",@"serde",@g' ${SRC}/vendor/winit-*/Cargo.toml"%,
       m%"sed -i 's@"x11-dlopen",@@g' ${SRC}/vendor/winit-*/Cargo.toml"%,
       m%"sed -i 's@"xkbcommon-dl/x11",@@g' ${SRC}/vendor/winit-*/Cargo.toml"%,
-      m%"sed -i 's@0.30.8@0.30.12@g' ${SRC}/vendor/winit-*/Cargo.toml"%,
+      # m%"sed -i 's@0.30.8@0.30.12@g' ${SRC}/vendor/winit-*/Cargo.toml"%,
       # m%"sed -i 's@"std"@"std","serde"@g' ${SRC}/vendor/winit-*/dpi/Cargo.toml"%,
       m%"sed -i 's@"winit/wayland-dlopen",@@g' ${SRC}/alacritty/Cargo.toml"%,
 
@@ -151,7 +149,7 @@
       "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
     ],
 
-    release = false,
+    # release = false,
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [

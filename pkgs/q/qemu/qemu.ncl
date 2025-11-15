@@ -64,7 +64,7 @@
         drvs.libcap,
         drvs.libdrm,
         drvs.libelf,
-        drvs.libepoxyPatched,
+        drvs.libepoxy,
         drvs.libfdt,
         drvs.libffi,
         drvs.libgtop,

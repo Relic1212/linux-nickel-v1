@@ -26,9 +26,7 @@
       drvs.libdrm,
       drvs.libxkbcommon,
       drvs.pixman,
-      # drvs.eudev,
-      drvs.libudevZero,
-      drvs.seatd,
+      drvs.eudev,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -45,7 +43,12 @@
       drvs.hwdata,
       drvs.linuxHeaders,
       drvs.wlroots18,
-      drvs.pkgconf,
+      drvs.pkgconfMeson,
+      drvs.spirvTools,
+    ],
+
+    propagatedBuildInputs = [
+      drvs.seatd,
     ],
 
     extraMakeArgs = [
@@ -56,7 +59,8 @@
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "-lc++"
+        "-lc++",
+        "-lcap",
       ],
     },
   }

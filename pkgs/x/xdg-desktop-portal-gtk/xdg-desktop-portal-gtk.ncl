@@ -113,7 +113,6 @@
         drvs.xdgDesktopPortal,
         drvs.gettext,
         drvs.inih,
-        drvs.libcamera,
         drvs.flatpak,
       ]
       @ (

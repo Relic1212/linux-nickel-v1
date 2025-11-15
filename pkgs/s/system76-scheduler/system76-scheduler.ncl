@@ -71,7 +71,7 @@
       drvs.jansson,
       drvs.fdkAac,
       drvs.ldacbt,
-      # drvs.libcamera,
+      # 
       drvs.libyaml,
       drvs.llvmConfigStatic,
       drvs.libstdcppCompat,

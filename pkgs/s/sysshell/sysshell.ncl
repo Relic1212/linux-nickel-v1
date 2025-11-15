@@ -3,18 +3,20 @@
   drvs,
   sysboard | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/System64fumo/sysboard/archive/2beb0e77edac1d75f7ad8f57759f813cd7888ec2.tar.gz",
-      sha256sum = "b7f1b1dc40532eb28c0954d74e16f0897bfd045b1bb4b0c70a3e941eb7d97570"
+      uri = "https://github.com/System64fumo/sysboard/archive/d7788339878447dba5ecc1d4cc92cdbea78785eb.tar.gz",
+      sha256sum = "478fc2713be68b4580ff6315988d50f92719356553932d37b56bc24f31f34e68"
     },
     debug = true,
     patches = [
       {
-        sha256sum = "638a1c52e8fd26e8fceed588c02f1c20d8ad899e065baaa89f562666290a08e5",
+        sha256sum = "b718f851bbb620315a345daa491f3b00eb3b7d616d0793bb44b5294ca322b316",
         file = "sysboard.patch"
       }
     ],
-    # buildEnv.EXTRA_LDFLAGS = ["-Wl,--verbose"],
-    # buildEnv.EXTRA_CFLAGS = ["--verbose"],
+    buildEnv.EXTRA_LDFLAGS = [
+      "-Wl,--verbose",
+    ],
+    buildEnv.EXTRA_CFLAGS = ["--verbose"],
 
     makeTargets = [
       "sysboard"
@@ -42,7 +44,6 @@
       drvs.ncurses,
       drvs.readline,
       drvs.pcre2,
-      #drvs.pango, #??
       drvs.pango,
       drvs.cairo,
       drvs.libpng,

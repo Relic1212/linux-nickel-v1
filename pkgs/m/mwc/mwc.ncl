@@ -26,7 +26,6 @@
       drvs.libxkbcommon,
       drvs.pixman,
       drvs.eudev,
-      drvs.seatd,
       drvs.libdisplayinfo,
       drvs.libinput,
       drvs.libffi,
@@ -68,6 +67,9 @@
       drvs.xcbUtilWm,
       drvs.wlroots18,
       drvs.scenefx,
+    ],
+    propagatedBuildInputs = [
+      drvs.seatd,
     ],
 
     buildEnv = {

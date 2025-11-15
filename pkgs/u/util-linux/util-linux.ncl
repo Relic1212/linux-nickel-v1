@@ -105,6 +105,20 @@
       drvs.ncurses,
     ]
   },
+  utilLinuxCol =
+    utilLinux
+    & {
+      extraMesonArgs | priority 1 =
+        utilLinux.extraMesonArgs
+        @ [
+          "-Dbuild-col=enabled",
+        ],
+      preConfigurePhase | priority 1 =
+        utilLinux.preConfigurePhase
+        @ [
+          m%"sed -i "s@not get_option('build-col').require(is_glibc).disabled()@true@g" ${SRC}/meson.build"%,
+        ]
+    },
 
   utilLinuxLogin =
     utilLinux

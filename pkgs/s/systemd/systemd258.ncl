@@ -5,8 +5,11 @@
     singleSource = {
       # uri = "https://github.com/systemd/systemd/archive/refs/tags/v257.8.tar.gz",
       # sha256sum = "f280278161446fe3838bedb970c7b3998043ad107f7627735a81483218c6f6f9",
-      uri = "https://github.com/systemd/systemd/archive/refs/tags/v258-rc3.tar.gz",
-      sha256sum = "302ea319d7264cd1f26e1eb10d29d5d1d1a5ab98cde63f719922bfd150b63ac1"
+      # uri = "https://github.com/systemd/systemd/archive/refs/tags/v258-rc3.tar.gz",
+      # sha256sum = "302ea319d7264cd1f26e1eb10d29d5d1d1a5ab98cde63f719922bfd150b63ac1",
+
+      uri = "https://github.com/systemd/systemd/archive/refs/tags/v258.1.tar.gz",
+      sha256sum = "8eb34eaf2f78330217280bd7a923578f37e28d3f3ac5168e336ebc9cad84a34d"
     },
     sourceInputs = [
       { src = singleSource },
@@ -63,7 +66,7 @@
         "-Dxz=disabled",
         "-Dlz4=disabled",
         "-Dzlib=disabled",
-        "-Duserdb=false",
+        "-Duserdb=true",
         "-Danalyze=false",
         "-Dfirstboot=false",
         "-Dinitrd=false",
@@ -112,6 +115,7 @@
       drvs.basefiles,
       drvs.gnugrep,
       drvs.kmod,
+      drvs.openssl,
       drvs.libcap,
       drvs.pythonDynamic,
       drvs.pythonJinja2,

@@ -80,6 +80,7 @@
       drvs.flex,
       drvs.bison,
       drvs.m4,
+      drvs.fribidi,
     ],
 
     extraMesonArgs = [

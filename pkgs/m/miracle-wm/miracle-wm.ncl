@@ -183,10 +183,11 @@
   lib,
   drvs,
   mir | lib.CmakePackage = {
+    
 
     singleSource = {
-      uri = "https://github.com/canonical/mir/releases/download/v2.21.1/mir-2.21.1.tar.xz",
-      sha256sum = "ed7cb0701298e5e4f7401462b03c073735543c37dca74ae60eb2328aeb1d9a51"
+      uri = "https://github.com/canonical/mir/archive/refs/tags/v2.23.0.tar.gz",
+      sha256sum = "8c39b7f327d945b2c4680b1a0de7969ca3245a35c5eade1c39ff738325b412c0"
     },
 
     generator = "Ninja",
@@ -307,10 +308,10 @@
 & {
   lib,
   drvs,
-  glm101 | lib.CmakePackage = {
+  glm102 | lib.CmakePackage = {
     singleSource = {
-      uri = "https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz",
-      sha256sum = "9f3174561fd26904b23f0db5e560971cbf9b3cbda0b280f04d5c379d03bf234c"
+      uri = "https://github.com/g-truc/glm/archive/refs/tags/1.0.2.tar.gz",
+      sha256sum = "19edf2e860297efab1c74950e6076bf4dad9de483826bc95e2e0f2c758a43f65"
     },
     generator = "Ninja",
   }

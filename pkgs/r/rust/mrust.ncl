@@ -1,7 +1,8 @@
 {
   lib,
   drvs,
-  mrust | lib.MakePackage =
+  # mrust = _mrust,
+  _mrust | lib.MakePackage =
     let rustver =
       # "1.29.0"
       "1.54.0"

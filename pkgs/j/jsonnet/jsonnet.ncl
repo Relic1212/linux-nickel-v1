@@ -24,6 +24,7 @@
       "-DUSE_SYSTEM_GTEST" = true,
 
       "-DBUILD_TESTS:BOOL" = false,
+      "-DCMAKE_POLICY_VERSION_MINIMUM" = "3.5",
     },
     # preConfigurePhase = [
     #     m%"sed -i 's@ SHARED @ @g' ${SRC}/core/CMakeLists.txt"%

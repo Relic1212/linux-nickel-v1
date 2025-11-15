@@ -2,8 +2,11 @@ let s = {
   # uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.2.2.tar.gz",
   # sha256sum = "ce8f339b8dbe3774bfa397d5e0007f14776b0c0efd09b8d1d845157f75c33dbf",
 
-  uri = "https://github.com/AvengeMedia/danklinux/archive/3c468ff5332748aa84852a05bdabcf703d956f7c.tar.gz",
-  sha256sum = "6ec725aaa93f5b8442fdeef8a139617aa408a648eafc89db3337f6277c915919",
+  # uri = "https://github.com/AvengeMedia/danklinux/archive/3c468ff5332748aa84852a05bdabcf703d956f7c.tar.gz",
+  # sha256sum = "6ec725aaa93f5b8442fdeef8a139617aa408a648eafc89db3337f6277c915919",
+
+  uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.4.1.tar.gz",
+  sha256sum = "ff2d9c426651945e3444b9ec65b7c4212ca5c8523efdbd88f1ae5c1de67d6bff",
 }
 in
 
@@ -30,7 +33,9 @@ in
     ],
     outputFile = "source.tar",
     # outputSha256sum = "81acc3aae11a61be8c19b4bed9d8f478798bd74e5615929598f7328d02ceef22",
-    outputSha256sum = "295aa1a69c07a42227c660b9906ea20f2a95db03a615664bcc518015ef8d6116",
+    # outputSha256sum = "295aa1a69c07a42227c660b9906ea20f2a95db03a615664bcc518015ef8d6116",
+
+    outputSha256sum = "0c23706cec211353947fab5bf890d32ea003670c25e698500fe5f910e4ff1239",
 
     biDrvs = [
       drvs.go_1_24,

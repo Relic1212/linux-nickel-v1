@@ -4,8 +4,8 @@
   mpd | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/jcorporation/myMPD/archive/refs/tags/v18.2.0.tar.gz",
-      sha256sum = "29f912ed806d7fa60a067a7f7a02a1202d2f97ae64d7e4eca736259ed13fee56"
+      uri = "https://github.com/jcorporation/myMPD/archive/refs/tags/v22.1.2.tar.gz",
+      sha256sum = "c992c1e9e02fdff42d7c3ede8e99baa9727d510716005e6fd4958de6eab17da8"
     },
     biDrvs = [
       drvs.perl,

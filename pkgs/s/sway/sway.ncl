@@ -29,8 +29,8 @@
           # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.18.2/downloads/wlroots-0.18.2.tar.gz",
           # sha256sum = "cf776c169169f279808d9eabc6583f484338dcd454c966a285ff178c88c105d4",
 
-          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.0/downloads/wlroots-0.19.0.tar.gz",
-          sha256sum = "aefb0fe2633b0aad1d66123b2f41afab004fb625e2a7790492cdd39a805cac91",
+          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.2/downloads/wlroots-0.19.2.tar.gz",
+          sha256sum = "09a0a8d60104c8b0772fee4f60ba76a89aed7e59dff7659d00960fba06bdf267",
         },
         dest = "wlroots"
       }
@@ -56,8 +56,9 @@
 
     # baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
 
-    preConfigurePhase = [
-      m%"
+    preConfigurePhase =
+      [
+        m%"
             fix_symbol(){
                 echo    sed -i "s@${1}(@${1}_sway(@g"
                 for f in $(find ${SRC} -type f -name '*.h' |grep -v subprojects);do
@@ -70,11 +71,23 @@
                 done
             }
             "%,
-      "fix_symbol \"list_insert\"",
-      "fix_symbol \"parse_boolean\"",
-      "mkdir -p ${SRC}/subprojects",
-      "mv ${SRC}/wlroots ${SRC}/subprojects",
-    ],
+        "fix_symbol \"list_insert\"",
+        "fix_symbol \"parse_boolean\"",
+        "mkdir -p ${SRC}/subprojects",
+        "mv ${SRC}/wlroots ${SRC}/subprojects",
+      ]
+      @ (
+        std.array.map
+          (fun s => "sed -i 's|expand_path|sway__expand_path|g' ${SRC}/%{s}"
+          )
+          [
+            "common/stringop.c",
+            "include/stringop.h",
+            "sway/commands/output/color_profile.c",
+            "sway/commands/output/background.c",
+            "sway/commands/input/xkb_file.c",
+          ]
+      ),
     llvmProvider = drvs.llvmFull,
     # buildEnv._isMold = true,
     biDrvs = [

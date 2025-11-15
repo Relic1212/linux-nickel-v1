@@ -4,16 +4,17 @@
   kitty | lib.MakePackage = {
     # https://github.com/gentoo/gentoo/blob/master/x11-terms/kitty/kitty-0.42.2-r1.ebuild
     singleSource = {
-      uri = "https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.42.2.tar.gz",
-      sha256sum = "6d16d4832e63f03ff2afca31681433f779ed148b4c6a8f09da3a09c97b0e0017"
+
+      uri = "https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.44.0.tar.gz",
+      sha256sum = "26099d1324cf6bad6faf58ff894521266ee5d59fda0175c3baffbaa67a336c36",
     },
 
     sourceInputs = [
       { src = singleSource },
       {
         src = {
-          uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.42.2-vendor.tar.xz",
-          sha256sum = "4b14b91410c5e4c5c8f42bd308d346f30481b8a485bb66c13b67a09eb693484c"
+          uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.44.0-vendor.tar.xz",
+          sha256sum = "73f7f060ef95261f189d0a55b77b2b5c2c3b2b6b01502f8ec8a4071204b01af3"
         },
         dest = "vendor-new",
       }
@@ -31,7 +32,7 @@
       drvs.libelf,
       drvs.libpciaccess,
       drvs.libdrm,
-      drvs.libxkbcommon,
+      drvs.libxkbcommonX11,
       drvs.pixman,
       drvs.eudev,
       drvs.seatd,
@@ -97,22 +98,24 @@
       drvs.symbolsNerdFont,
       drvs.simde,
       drvs.mpdecimal,
+      drvs.libxinerama,
+      drvs.libxi,
     ],
 
     separateBuildDir = false,
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",
-      "export CGO_ENABLED=1",
+      "export CGO_ENABLED=0",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
       "rm -rf vendor",
       "mv vendor-new/vendor vendor",
       m%"sed -i "s@pkg_config('gl'@pkg_config('egl'@g" ${SRC}/setup.py"%,
       m%"sed -i "s@'x11 wayland'@'wayland'@g" ${SRC}/setup.py"%,
-      m%"sed -i "s@ldflags.append('-shared')@@g" ${SRC}/setup.py"%,
+      m%"sed -i "s@ldflags.append('-shared')@ldflags.append('-static')@g" ${SRC}/setup.py"%,
       m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
-      m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
+      # m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
       m%"sed -i "s@ans.cflags.append('-fPIC')@@g" ${SRC}/glfw/glfw.py"%,
     ],
 

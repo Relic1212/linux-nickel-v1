@@ -11,6 +11,12 @@
     buildEnv = {
       EXTRA_LDFLAGS = ["-lc++"],
     },
+    patches = [
+      {
+        sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
+        file = "libepoxy.patch"
+      }
+    ],
     extraMesonArgs = [
       "-Dglx=no",
       "-Degl=yes",
@@ -52,40 +58,40 @@
     ],
   },
 }
-& {
-  lib,
-  drvs,
-  libepoxy,
-  libepoxyPatched =
-    libepoxy
-    & {
-      # debug = true,
-      patches = [
-        {
-          sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
-          file = "libepoxy.patch"
-        }
-      ]
-    }
-}
-& {
-  libepoxy,
-  lib,
-  drvs,
-  libepoxyNoEgl | lib.MesonPackage = {
-    singleSource = libepoxy.singleSource,
-    buildEnv = {
-      EXTRA_LDFLAGS = ["-lc++"],
-    },
-    extraMesonArgs = [
-      "-Dglx=no",
-      "-Degl=no",
-      "-Dx11=false",
-      "-Ddocs=false",
-      "-Dtests=false",
-    ],
-  }
-}
+# & {
+#   lib,
+#   drvs,
+#   libepoxy,
+#   libepoxyPatched =
+#     libepoxy
+#     & {
+#       # debug = true,
+#       patches = [
+#         {
+#           sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
+#           file = "libepoxy.patch"
+#         }
+#       ]
+#     }
+# }
+# & {
+#   libepoxy,
+#   lib,
+#   drvs,
+#   libepoxyNoEgl | lib.MesonPackage = {
+#     singleSource = libepoxy.singleSource,
+#     buildEnv = {
+#       EXTRA_LDFLAGS = ["-lc++"],
+#     },
+#     extraMesonArgs = [
+#       "-Dglx=no",
+#       "-Degl=no",
+#       "-Dx11=false",
+#       "-Ddocs=false",
+#       "-Dtests=false",
+#     ],
+#   }
+# }
 & {
   lib,
   drvs,

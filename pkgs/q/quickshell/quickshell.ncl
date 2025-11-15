@@ -20,6 +20,8 @@
       EXTRA_LDFLAGS =
         [
           "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat) -pthread",
+          "$(pkg-config --static --libs libavdevice)",
+          "$(pkg-config --static --libs libpulse)",
           "-lQt6MultimediaQuick",
           "/usr/lib/qt6/qml/QtMultimedia/libquickmultimediaplugin.a",
         ]
@@ -32,8 +34,6 @@
               "$(pkg-config --static --libs xcb-shm)",
               "$(pkg-config --static --libs x11-xcb)",
               "$(pkg-config --static --libs xau)",
-              "$(pkg-config --static --libs libavdevice)",
-              "$(pkg-config --static --libs libpulse)",
             ]
           else
             []
@@ -172,7 +172,7 @@
         # drvs.libfreeaptx,
         drvs.fdkAac,
         drvs.ldacbt,
-        # drvs.libcamera,
+        # 
         drvs.libyaml,
         drvs.libsndfile,
         drvs.libopus,

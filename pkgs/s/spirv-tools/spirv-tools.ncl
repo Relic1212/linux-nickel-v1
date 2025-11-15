@@ -83,5 +83,10 @@
         drvs.pythonFull,
         # drvs.spirvHeaders2,
       ],
-    }
+    },
+  spirvToolsDebug =
+    spirvTools
+    & {
+      debug = true,
+    },
 }

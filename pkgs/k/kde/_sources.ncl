@@ -62,4 +62,5 @@
   "https://download.kde.org/stable/frameworks/6.19/syntax-highlighting-6.19.0.tar.xz" = "13a72e89bae0af936a2d54b02473e96dea560effc4b03fd43d69e4582c1dbd19",
 
   "https://download.kde.org/stable/frameworks/6.19/kunitconversion-6.19.0.tar.xz" = "d4f0e39e27596c6550f3fc72fb67b0d4966acfd7d702a011a0fca420b6f9b393",
+  "https://download.kde.org/stable/frameworks/6.19/kpty-6.19.0.tar.xz" = "78544c16cecc7dbcffd0335bf945eec8103115786e1158235481ac152f4bb40c",
 }

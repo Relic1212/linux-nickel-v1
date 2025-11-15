@@ -196,6 +196,11 @@
           "fd_is_mount_point",
           "ascii_is_valid",
           "path_is_mount_point",
+
+          # kmod
+          "path_make_absolute_cwd",
+          "memdup",
+          "mkdir_p",
         ]
         in std.array.map (fun sym => "llvm-objcopy --redefine-sym %{sym}=elogind_private__%{sym} ${DEST}/usr/lib/libelogind.a") symsbols
       ),

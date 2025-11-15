@@ -1,0 +1,163 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6d302de..986a2e3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,8 +59,7 @@ pkg_check_modules(
+   libjpeg
+   libwebp
+   libmagic
+-  libpng
+-  librsvg-2.0)
++  libpng)
+ 
+ pkg_check_modules(
+   JXL
+diff --git a/src/image/Image.cpp b/src/image/Image.cpp
+index 00d13d1..138566f 100644
+--- a/src/image/Image.cpp
++++ b/src/image/Image.cpp
+@@ -9,7 +9,7 @@
+ #endif
+ #include "formats/Webp.hpp"
+ #include "formats/Png.hpp"
+-#include "formats/Svg.hpp"
++// #include "formats/Svg.hpp"
+ #include <magic.h>
+ #include <format>
+ 
+@@ -65,10 +65,12 @@ Hyprgraphics::CImage::CImage(const std::string& path, const Vector2D& size) : fi
+     } else if (path.ends_with(".webp") || path.ends_with(".WEBP")) {
+         CAIROSURFACE = WEBP::createSurfaceFromWEBP(path);
+         mime         = "image/webp";
+-    } else if (path.ends_with(".svg") || path.ends_with(".SVG")) {
+-        CAIROSURFACE = SVG::createSurfaceFromSVG(path, m_svgSize);
+-        mime         = "image/svg";
+-    } else if (path.ends_with(".jxl") || path.ends_with(".JXL")) {
++    } 
++    // else if (path.ends_with(".svg") || path.ends_with(".SVG")) {
++    //     CAIROSURFACE = SVG::createSurfaceFromSVG(path, m_svgSize);
++    //     mime         = "image/svg";
++    // } 
++    else if (path.ends_with(".jxl") || path.ends_with(".JXL")) {
+ 
+ #ifdef JXL_FOUND
+         CAIROSURFACE = JXL::createSurfaceFromJXL(path);
+@@ -126,11 +128,13 @@ Hyprgraphics::CImage::CImage(const std::string& path, const Vector2D& size) : fi
+             CAIROSURFACE  = BMP::createSurfaceFromBMP(path);
+             imageHasAlpha = false;
+             mime          = "image/bmp";
+-        } else if (first_word == "SVG") {
+-            CAIROSURFACE  = SVG::createSurfaceFromSVG(path, m_svgSize);
+-            imageHasAlpha = false;
+-            mime          = "image/svg";
+-        } else {
++        } 
++        // else if (first_word == "SVG") {
++        //     CAIROSURFACE  = SVG::createSurfaceFromSVG(path, m_svgSize);
++        //     imageHasAlpha = false;
++        //     mime          = "image/svg";
++        // } 
++        else {
+             lastError = "unrecognized image";
+             return;
+         }
+diff --git a/src/image/formats/Svg.cpp b/src/image/formats/Svg.cpp
+deleted file mode 100644
+index c48a1fa..0000000
+--- a/src/image/formats/Svg.cpp
++++ /dev/null
+@@ -1,63 +0,0 @@
+-#include "Svg.hpp"
+-#include <filesystem>
+-#include <fstream>
+-#include <librsvg/rsvg.h>
+-#include <hyprutils/utils/ScopeGuard.hpp>
+-#include <hyprutils/string/String.hpp>
+-
+-using namespace Hyprutils::Utils;
+-using namespace Hyprutils::Math;
+-using namespace Hyprutils::String;
+-
+-static std::optional<std::string> readFileAsString(const std::string& path) {
+-    std::error_code ec;
+-
+-    if (!std::filesystem::exists(path, ec) || ec)
+-        return std::nullopt;
+-
+-    std::ifstream file(path);
+-    if (!file.good())
+-        return std::nullopt;
+-
+-    return trim(std::string((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>())));
+-}
+-
+-std::expected<cairo_surface_t*, std::string> SVG::createSurfaceFromSVG(const std::string& path, const Vector2D& size) {
+-    if (!std::filesystem::exists(path))
+-        return std::unexpected("loading svg: file doesn't exist");
+-
+-    if (size.x < 1 || size.y < 1)
+-        return std::unexpected("loading svg: invalid size");
+-
+-    auto       cairoSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, size.x, size.y);
+-
+-    const auto PCAIRO = cairo_create(cairoSurface);
+-
+-    cairo_save(PCAIRO);
+-    cairo_set_operator(PCAIRO, CAIRO_OPERATOR_CLEAR);
+-    cairo_paint(PCAIRO);
+-    cairo_restore(PCAIRO);
+-
+-    GError* error = nullptr;
+-    auto    file  = readFileAsString(path);
+-
+-    if (!file)
+-        return std::unexpected("loading png: file doesn't exist / inaccessible");
+-
+-    RsvgHandle* handle = rsvg_handle_new_from_data((unsigned char*)file->data(), file->size(), &error);
+-
+-    if (!handle)
+-        return std::unexpected("loading svg: rsvg failed to read data");
+-
+-    RsvgRectangle rect = {0, 0, (double)size.x, (double)size.y};
+-
+-    if (!rsvg_handle_render_document(handle, PCAIRO, &rect, &error))
+-        return std::unexpected("loading svg: rsvg failed to render");
+-
+-    // done
+-    cairo_surface_flush(cairoSurface);
+-    cairo_destroy(PCAIRO);
+-    g_object_unref(handle);
+-
+-    return cairoSurface;
+-}
+\ No newline at end of file
+diff --git a/src/image/formats/Svg.hpp b/src/image/formats/Svg.hpp
+deleted file mode 100644
+index 93bb759..0000000
+--- a/src/image/formats/Svg.hpp
++++ /dev/null
+@@ -1,11 +0,0 @@
+-#pragma once
+-
+-#include <cairo/cairo.h>
+-#include <string>
+-#include <expected>
+-#include <png.h>
+-#include <hyprutils/math/Vector2D.hpp>
+-
+-namespace SVG {
+-    std::expected<cairo_surface_t*, std::string> createSurfaceFromSVG(const std::string&, const Hyprutils::Math::Vector2D& size);
+-};
+diff --git a/tests/image.cpp b/tests/image.cpp
+index 887e5af..fa5c8a5 100644
+--- a/tests/image.cpp
++++ b/tests/image.cpp
+@@ -10,7 +10,7 @@
+ using namespace Hyprgraphics;
+ 
+ static bool tryLoadImageFromFile(const std::string& path) {
+-    auto image = path.ends_with("svg") ? CImage(path, {512, 512}) : CImage(path);
++    auto image = false ? CImage(path, {512, 512}) : CImage(path);
+ 
+     if (!image.success()) {
+         std::println("Failed to load {}: {}", path, image.getError());

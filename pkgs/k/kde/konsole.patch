@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8e60d15..49271d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,6 +46,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED
+     Multimedia
+     PrintSupport
+     Widgets
++    QuickWidgets
+ )
+ 
+ find_package(KF6 ${KF6_DEP_VERSION} REQUIRED
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9571a7c..41d5d16 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -311,7 +311,7 @@ set_target_properties(konsoleprivate PROPERTIES
+ 
+ install(TARGETS konsoleprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+ 
+-add_library(konsoleapp SHARED Application.cpp
++add_library(konsoleapp STATIC Application.cpp
+     MainWindow.cpp
+     settings/ConfigurationDialog.cpp
+     settings/ConfigDialogButtonGroupManager.cpp
+@@ -389,7 +389,7 @@ set(konsolepart_PART_SRCS Part.cpp
+     delegates/ProfileShortcutDelegate.cpp
+ )
+ 
+-add_library(konsolepart MODULE ${konsolepart_PART_SRCS})
++add_library(konsolepart STATIC ${konsolepart_PART_SRCS})
+ generate_export_header(konsolepart BASE_NAME konsole)
+ set_target_properties(konsolepart PROPERTIES DEFINE_SYMBOL KONSOLE_PART)
+ target_link_libraries(konsolepart
+diff --git a/src/main.cpp b/src/main.cpp
+index 8427968..a82f340 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -47,6 +47,13 @@ using Konsole::Application;
+ #include <QTimer>
+ #endif
+ 
++static void konsole_resources_init()
++{
++    Q_INIT_RESOURCE(konsole);
++    Q_INIT_RESOURCE(data);
++}
++
++
+ // fill the KAboutData structure with information about contributors to Konsole.
+ void fillAboutData(KAboutData &aboutData);
+ 
+@@ -134,6 +141,7 @@ static void migrateRenamedConfigKeys()
+ // ***
+ int main(int argc, char *argv[])
+ {
++    konsole_resources_init();
+ #ifdef PROFILE_STARTUP
+     QElapsedTimer timer;
+     timer.start();

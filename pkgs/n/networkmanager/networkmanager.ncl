@@ -3,8 +3,8 @@
   drvs,
   networkmanager | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.0/NetworkManager-1.54.0.tar.gz",
-      sha256sum = "c5356e5a86b351dc79d23c8685d02b91917d1f107628c97d370c6441a8322a93"
+      uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.1/NetworkManager-1.54.1.tar.bz2",
+      sha256sum = "da7a7f8197580a34c5e346338b0fe1f951f369568e0e0b361f23cb281d301e75"
     },
     patches = [
       {
@@ -30,7 +30,7 @@
       drvs.libffi,
       drvs.zlibNg,
       drvs.openresolv,
-      drvs.ppp,
+      # drvs.ppp,
       drvs.libpsl,
       drvs.curl,
       drvs.newt,

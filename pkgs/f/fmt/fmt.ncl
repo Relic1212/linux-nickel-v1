@@ -36,5 +36,17 @@
     #   file = "6e462b89aa22fd5f737ed162d0150e145ccb1914.diff",
     #   sha256sum = "bba32cb1b8ea7bb1ce19513f612be1c4a3ec4b7f8f24d994f40eaf0fd10418f4"
     # }]
+  },
+
+  fmt9 | lib.CmakePackage = {
+    generator = "Ninja",
+
+    singleSource = {
+      uri = "https://github.com/fmtlib/fmt/archive/refs/tags/9.1.0.tar.gz",
+      sha256sum = "5dea48d1fcddc3ec571ce2058e13910a0d4a6bab4cc09a809d8b1dd1c88ae6f2",
+    },
+    cmakeExtraArgsRecord = {
+      "-DFMT_TEST" = false,
+    },
   }
 }

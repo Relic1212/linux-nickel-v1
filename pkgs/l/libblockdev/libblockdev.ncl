@@ -6,6 +6,27 @@
       uri = "https://github.com/storaged-project/libblockdev/archive/refs/tags/3.4.0.tar.gz",
       sha256sum = "7cb0b4018600ab82d1d1f00e46c1b1d7a0cdab8f4682952dd9dba1ce7f6ebed4"
     },
+    extraConfigureFlags = [
+      "--disable-tests",
+      "--without-escrow",
+      "--without-tools",
+      # "--without-nvme",
+      # "--without-smart",
+      "--without-btrfs",
+      # "--without-crypto",
+      # "--without-dm",
+      # "--without-loop",
+      "--without-lvm",
+      "--without-lvm_dbus",
+      # "--without-mdraid",
+      "--without-mpath",
+      # "--without-swap",
+      # "--without-part",
+      # "--without-fs",
+      "--without-nvdimm",
+      # "--without-smart",
+    ],
+    configureScript = "bash ${SRC}/configure",
     biDrvs = [
       drvs.autoconfArchive,
       drvs.glib,
@@ -17,10 +38,43 @@
       drvs.openssl,
       drvs.pcre2,
       drvs.pythonFull,
-      drvs.utilLinux,
+      drvs.utilLinux & { priority = 2 },
       drvs.xz,
       drvs.zlibNg,
       drvs.zstd,
+      drvs.gperf,
+      drvs.eudev,
+      drvs.jsonGlib,
+      drvs.bash,
+      drvs.bashBinBash,
+      drvs.e2fsprogs & { priority = -1 },
+      drvs.lvm2,
+      drvs.readline,
+      drvs.parted & { priority = 1 },
+      drvs.libbytesize,
+      drvs.gmp,
+      drvs.mpfr,
+      drvs.cryptsetup,
+      drvs.popt,
+      drvs.jsonC,
+      drvs.keyutils,
+      drvs.coreutils & { priority = 1 },
+      drvs.libnvme,
+      drvs.libatasmart,
+    ]
+  },
+
+  libbytesize | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/storaged-project/libbytesize/archive/refs/tags/2.11.tar.gz",
+      sha256sum = "794fc1804dd16ff0d5a505dbab2dd84c174d1159f4a58f3764fee1c8e5d949ca"
+    },
+    biDrvs = [
+      drvs.gettext,
+      drvs.pythonFull,
+      drvs.pcre2,
+      drvs.gmp,
+      drvs.mpfr,
     ]
   }
 }

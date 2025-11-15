@@ -93,7 +93,6 @@
         drvs.libfreeaptx,
         drvs.fdkAac,
         drvs.ldacbt,
-        drvs.libcamera,
         drvs.libyaml,
       ]
       @ (

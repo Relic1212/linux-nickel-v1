@@ -64,7 +64,6 @@
       drvs.libfreeaptx,
       drvs.fdkAac,
       drvs.ldacbt,
-      drvs.libcamera,
       drvs.libyaml,
       drvs.pipewire,
       drvs.fftw,

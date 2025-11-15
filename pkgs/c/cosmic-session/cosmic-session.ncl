@@ -127,7 +127,6 @@
       drvs.jsonC,
       drvs.kmod,
       drvs.ldacbt,
-      drvs.libcamera,
       drvs.libdisplayinfo,
       drvs.libdlEgl,
       drvs.libdrm,

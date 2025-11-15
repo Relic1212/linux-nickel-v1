@@ -18,14 +18,16 @@
       ],
     }
   ),
+  systemd258,
   systemdBoot | lib.MesonPackage = {
     name = "systemd-boot",
     sourceInputs = [
       {
-        src = {
-          uri = "https://github.com/systemd/systemd/archive/refs/tags/v257.5.tar.gz",
-          sha256sum = "4d65f9482608cf9f7823df42a6d7796f0e0dfcfb94301df75effff86d40da33e",
-        }
+        src = systemd258.singleSource,
+        #  {
+        #   uri = "https://github.com/systemd/systemd/archive/refs/tags/v257.5.tar.gz",
+        #   sha256sum = "4d65f9482608cf9f7823df42a6d7796f0e0dfcfb94301df75effff86d40da33e",
+        # }
       }
     ],
     biDrvs = [
@@ -120,7 +122,7 @@
       "-Dmachined=false",
       "-Dmicrohttpd=disabled",
       "-Dnetworkd=false",
-      "-Dnscd=false",
+      # "-Dnscd=false",
       "-Dnss-myhostname=false",
       "-Dnss-resolve=disabled",
       "-Dnss-systemd=false",

@@ -1,0 +1,203 @@
+diff --git a/include/utility/atomic_queue/atomic_queue.h b/include/utility/atomic_queue/atomic_queue.h
+index ee30520..27ff32a 100644
+--- a/include/utility/atomic_queue/atomic_queue.h
++++ b/include/utility/atomic_queue/atomic_queue.h
+@@ -393,13 +393,13 @@ class AtomicQueue2 : public AtomicQueueCommon<AtomicQueue2<T, SIZE, MINIMIZE_CON
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail % size_);
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::template do_pop_any<T>(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head % size_);
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::template do_push_any<U>(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+@@ -521,13 +521,13 @@ class AtomicQueueB2 : public AtomicQueueCommon<AtomicQueueB2<T, A, MAXIMIZE_THRO
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail & (size_ - 1));
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::template do_pop_any<T>(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head & (size_ - 1));
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::template do_push_any<U>(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+diff --git a/libananicycpp_bpf/src/trace_helpers.c b/libananicycpp_bpf/src/trace_helpers.c
+index 192979f..08ee973 100644
+--- a/libananicycpp_bpf/src/trace_helpers.c
++++ b/libananicycpp_bpf/src/trace_helpers.c
+@@ -19,6 +19,7 @@
+ #include <bpf/btf.h>
+ #include <bpf/libbpf.h>
+ #include <limits.h>
++#include <unistd.h>
+ #include "trace_helpers.h"
+ #include "uprobe_helpers.h"
+ 
+diff --git a/libananicycpp_netlink/src/netlink_program_utils.c b/libananicycpp_netlink/src/netlink_program_utils.c
+index e5d17c1..a0ec940 100644
+--- a/libananicycpp_netlink/src/netlink_program_utils.c
++++ b/libananicycpp_netlink/src/netlink_program_utils.c
+@@ -11,6 +11,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
++#include <unistd.h>
++
++
+ struct ananicy_cpp_netlink {
+   int32_t nl_sock;
+   struct __attribute__ ((aligned(NLMSG_ALIGNTO))) {
+diff --git a/src/main.cpp b/src/main.cpp
+index bb416b1..c0aa441 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -26,6 +26,10 @@
+ 
+ #include <spdlog/spdlog.h>
+ 
++#include <unistd.h>
++#include <sys/types.h>
++
++
+ using namespace std::chrono_literals;
+ 
+ using std::filesystem::path;
+diff --git a/src/platform/linux/backtrace.cpp b/src/platform/linux/backtrace.cpp
+index e9391e3..d294d65 100644
+--- a/src/platform/linux/backtrace.cpp
++++ b/src/platform/linux/backtrace.cpp
+@@ -2,7 +2,7 @@
+ 
+ #include <cstdlib> // for free
+ #include <cxxabi.h> // for abi::__cxa_demangle
+-#include <execinfo.h> // for backtrace, backtrace_symbols
++// #include <execinfo.h> // for backtrace, backtrace_symbols
+ 
+ #include <exception> // for current_exception, exception_ptr
+ #include <iostream> // for cerr
+@@ -14,20 +14,20 @@ static constexpr std::int32_t BACKTRACE_LENGTH = 20;
+ namespace backtrace_handler {
+ 
+ void print_trace() noexcept {
+-  void  *backtrace_buffer[BACKTRACE_LENGTH];
+-  int    size = backtrace(backtrace_buffer, BACKTRACE_LENGTH);
+-  char **lines = backtrace_symbols(backtrace_buffer, size);
+-  if (lines != nullptr) {
+-    std::cerr << fmt::format("Obtained {} stack frames.\n", size);
+-    for (int i = 0; i < size; ++i) {
+-      std::cerr << fmt::format("({}) {}\n", i, lines[i]);
+-    }
+-  }
+-
+-  // NOTE: You have to call here `free` function directly
+-  // because of delete/free their allocators does not
+-  // have exactly same behaviour
+-  free(lines);
++  // void  *backtrace_buffer[BACKTRACE_LENGTH];
++//   int    size = backtrace(backtrace_buffer, BACKTRACE_LENGTH);
++//   char **lines = backtrace_symbols(backtrace_buffer, size);
++//   if (lines != nullptr) {
++//     std::cerr << fmt::format("Obtained {} stack frames.\n", size);
++//     for (int i = 0; i < size; ++i) {
++//       std::cerr << fmt::format("({}) {}\n", i, lines[i]);
++//     }
++//   }
++
++//   // NOTE: You have to call here `free` function directly
++//   // because of delete/free their allocators does not
++//   // have exactly same behaviour
++//   free(lines);
+ }
+ 
+ [[noreturn]] static void terminate_handler() noexcept(false) {
+diff --git a/src/platform/linux/debug.cpp b/src/platform/linux/debug.cpp
+index 1cbfb48..64275c7 100644
+--- a/src/platform/linux/debug.cpp
++++ b/src/platform/linux/debug.cpp
+@@ -12,6 +12,10 @@
+ 
+ #include <spdlog/spdlog.h>
+ 
++#include <unistd.h>
++
++
++
+ namespace ananicy_debug {
+ void print_file(const std::string &path) {
+   const auto file_data = read_file(path);
+diff --git a/src/platform/linux/process.cpp b/src/platform/linux/process.cpp
+index be98fa9..20b5429 100644
+--- a/src/platform/linux/process.cpp
++++ b/src/platform/linux/process.cpp
+@@ -20,6 +20,10 @@
+ 
+ #include <spdlog/spdlog.h>
+ 
++#include <unistd.h>
++
++
++
+ namespace fs = std::filesystem;
+ 
+ #if defined(USE_BPF_PROC_IMPL)
+diff --git a/src/platform/linux/process_info.cpp b/src/platform/linux/process_info.cpp
+index 38dc32f..0bd3085 100644
+--- a/src/platform/linux/process_info.cpp
++++ b/src/platform/linux/process_info.cpp
+@@ -14,6 +14,10 @@
+ 
+ #include <spdlog/spdlog.h>
+ 
++#ifndef SCHED_ISO
++#define SCHED_ISO 4
++#endif
++
+ namespace fs = std::filesystem;
+ 
+ namespace process_info {
+diff --git a/src/platform/linux/syscalls.h b/src/platform/linux/syscalls.h
+index 03a4ad9..f3cdce1 100644
+--- a/src/platform/linux/syscalls.h
++++ b/src/platform/linux/syscalls.h
+@@ -46,11 +46,11 @@ enum {
+  */
+ #define IOPRIO_NORM (4)
+ 
+-static int ioprio_set(__priority_which_t _which, id_t _who, int _prio) {
++static int ioprio_set(int _which, id_t _who, int _prio) {
+   return static_cast<int>(syscall(SYS_ioprio_set, _which, _who, _prio));
+ }
+ 
+-static int ioprio_get(__priority_which_t _which, id_t _who) {
++static int ioprio_get(int _which, id_t _who) {
+   return static_cast<int>(syscall(SYS_ioprio_get, _which, _who));
+ }
+ 
+diff --git a/src/tests/unit-core.cpp b/src/tests/unit-core.cpp
+index c954c81..97f4b23 100644
+--- a/src/tests/unit-core.cpp
++++ b/src/tests/unit-core.cpp
+@@ -11,6 +11,10 @@
+ 
+ #include <spdlog/spdlog.h>
+ 
++
++#include <unistd.h>
++#include <sys/types.h>
++
+ namespace fs = std::filesystem;
+ 
+ static fs::path get_cgroup_path(const std::string_view &cgroup_name) {

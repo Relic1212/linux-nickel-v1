@@ -11,8 +11,8 @@
       nonCrateSourceInputs = [
         {
           src = {
-            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.3.0.tar.gz",
-            sha256sum = "422b4bab88d6a4da9eabcc947b4e8e0c7fbd123c88700f8750da45910bfb03b6"
+            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.4.0.tar.gz",
+            sha256sum = "5f0c3f97b807e72edccc844c6a685ec9862199f16a665df07de5b1d20ec21233"
           }
         }
       ],

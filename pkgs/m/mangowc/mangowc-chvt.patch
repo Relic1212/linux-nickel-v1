@@ -1,0 +1,48 @@
+diff --git a/src/config/parse_config.h b/src/config/parse_config.h
+index 72140d1..4120bfb 100644
+--- a/src/config/parse_config.h
++++ b/src/config/parse_config.h
+@@ -104,7 +104,7 @@ typedef struct {
+ #define CHVT(n)                                                                \
+ 	{                                                                          \
+ 		WLR_MODIFIER_CTRL | WLR_MODIFIER_ALT,                                  \
+-			{.keysym = XKB_KEY_XF86Switch_VT_##n, .type = KEY_TYPE_SYM}, chvt, \
++			{.keysym = XKB_KEY_XF86Switch_VT_##n, .type = KEY_TYPE_SYM}, mangowc__chvt, \
+ 		{                                                                      \
+ 			.ui = (n)                                                          \
+ 		}                                                                      \
+@@ -967,7 +967,7 @@ FuncType parse_func_name(char *func_name, Arg *arg, char *arg_value,
+ 	} else if (strcmp(func_name, "togglegaps") == 0) {
+ 		func = togglegaps;
+ 	} else if (strcmp(func_name, "chvt") == 0) {
+-		func = chvt;
++		func = mangowc__chvt;
+ 		(*arg).ui = atoi(arg_value);
+ 	} else if (strcmp(func_name, "spawn") == 0) {
+ 		func = spawn;
+diff --git a/src/dispatch/bind_declare.h b/src/dispatch/bind_declare.h
+index b38e2da..12995ab 100644
+--- a/src/dispatch/bind_declare.h
++++ b/src/dispatch/bind_declare.h
+@@ -38,7 +38,7 @@ int toggleglobal(const Arg *arg);
+ int incnmaster(const Arg *arg);
+ int focusmon(const Arg *arg);
+ int focusstack(const Arg *arg);
+-int chvt(const Arg *arg);
++int mangowc__chvt(const Arg *arg);
+ int reload_config(const Arg *arg);
+ int smartmovewin(const Arg *arg);
+ int smartresizewin(const Arg *arg);
+diff --git a/src/dispatch/bind_define.h b/src/dispatch/bind_define.h
+index 57efa88..448e92c 100644
+--- a/src/dispatch/bind_define.h
++++ b/src/dispatch/bind_define.h
+@@ -30,7 +30,7 @@ int bind_to_view(const Arg *arg) {
+ 	return 0;
+ }
+ 
+-int chvt(const Arg *arg) {
++int mangowc__chvt(const Arg *arg) {
+ 	wlr_session_change_vt(session, arg->ui);
+ 	return 0;
+ }

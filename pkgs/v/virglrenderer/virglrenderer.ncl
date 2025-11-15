@@ -103,7 +103,7 @@
       drvs.glib,
       drvs.hwdata,
       drvs.linuxHeaders,
-      drvs.libepoxyPatched,
+      drvs.libepoxy,
       drvs.pyyaml,
     ],
   }

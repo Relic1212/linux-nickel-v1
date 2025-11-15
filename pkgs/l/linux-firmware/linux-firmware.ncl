@@ -3,16 +3,16 @@
   drvs,
   drvs,
   linuxFirmware | lib.MakePackage = {
-    name = "linux-firmware",
     singleSource = {
-      uri = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-20240909.tar.gz",
-      sha256sum = "93e9b6ae2240661639c874f5fc38f677d18afe365b17a13fee6b4fc4fba42c10",
+      uri = "https://gitlab.com/kernel-firmware/linux-firmware/-/archive/20251111/linux-firmware-20251111.tar.bz2",
+      sha256sum = "8324e267819aaae01e809f73399ff52418de646201739f3e1a68067a359bacda",
     },
     # buildDir = "${SRC}",
     separateBuildDir = false,
     biDrvs = [
       drvs.rdfind,
       (drvs.coreutils & { priority = 1 }),
+      (drvs.findutils & { priority = 1 }), # xtype: https://gitlab.com/kernel-firmware/linux-firmware/-/commit/121e467fde66011caa2ff64b96738cbc68dc993e
       drvs.zstd,
     ],
     makeInstallTargets = [

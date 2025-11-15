@@ -28,7 +28,7 @@
       "ln -s /usr/bin/true stty",
     ]
   },
-  baseBaseRootfs = (
+  _baseBaseRootfs = (
     _rootfs
     & {
 
@@ -112,7 +112,7 @@
           drvs.pigz,
           drvs.curl,
           drvs.metalog,
-          #drvs.zsh,
+          drvs.zsh,
           # drvs.fish,
           drvs.fish4Cmake,
           drvs.mawk,
@@ -167,6 +167,8 @@
           # drvs.elogind,
           drvs.polkit,
           drvs.elogindWithPolkit,
+          # drvs.openrcSettingsd,
+          # drvs.openntpd,
           # drvs-basu,
           drvs.openssl,
           drvs.fscrypt,
@@ -208,9 +210,12 @@
               drvs.niriSessionManager,
               drvs.nirinit,
               drvs.nirius,
+              drvs.niriTag,
               drvs.swaytreesave,
               drvs.stasis,
               drvs.system76Scheduler,
+              drvs.mwc,
+              drvs.mangowc,
 
               # ### QT
               # drvs.qtdeclarative,
@@ -329,6 +334,10 @@
                 # drvs.sndiod,
                 drvs.desktopFileUtils,
                 drvs.squeekboard,
+                # drvs.udisks,
+                # drvs.fwupd,
+                drvs.ananicyCpp,
+                drvs.ananicyRulesCachyos,
                 # drvs.sysboard,
                 drvs.lisgd,
                 drvs.glib,
@@ -348,6 +357,7 @@
                 drvs.btop,
                 drvs.htop,
                 drvs.starship,
+                drvs.bat,
                 drvs.papyrusIconTheme,
                 drvs.geoclue,
                 drvs.socat,
@@ -356,6 +366,7 @@
                 drvs.adwGtk3,
                 # drvs.swappy,
                 drvs.wezterm,
+                drvs.konsole,
                 drvs.micro,
                 # ttyescape
                 drvs.buffybox,
@@ -428,6 +439,78 @@
     drvs.cosmicExtExtraSessions,
   ],
 
+  _plasmaPackages = [
+    drvs.breeze,
+    drvs.kbookmarks,
+    drvs.kcompletion,
+    drvs.kconfigwidgets,
+    drvs.kitemviews,
+    drvs.kjobwidgets,
+    drvs.kxmlgui,
+    drvs.plasmaActivities,
+    drvs.solid,
+    drvs.libplasma,
+    drvs.qtlocation,
+    drvs.qtpositioning,
+    drvs.qcoro,
+    drvs.kdeclarative,
+    drvs.kdecoration,
+    drvs.kded,
+    drvs.kglobalacceld,
+    drvs.kholidays,
+    drvs.knewstuff,
+    drvs.knighttime,
+    drvs.kwallet,
+    drvs.kwayland,
+    drvs.switcherooControl,
+    drvs.attica,
+    drvs.knotifyconfig,
+    drvs.kparts,
+    drvs.krunner,
+    drvs.kstatusnotifieritem,
+    drvs.syntaxHighlighting,
+    drvs.ktexteditor,
+    drvs.kitemmodels,
+    drvs.ktextwidgets,
+    drvs.sonnet,
+    drvs.prison,
+    drvs.hunspell,
+    drvs.kunitconversion,
+    drvs.plasma5support,
+    drvs.plasmaActivitiesStats,
+    drvs.libkscreen,
+    drvs.layerShellQt,
+    drvs.kwin,
+    drvs.kscreenlocker,
+    drvs.phonon,
+    drvs.polkitQt6,
+    drvs.libksysguard,
+    drvs.karchive,
+    drvs.kauth,
+    drvs.kcmutils,
+    drvs.kcodecs,
+    drvs.kcolorscheme,
+    drvs.kconfig,
+    drvs.kcoreaddons,
+    drvs.kcrash,
+    drvs.kdbusaddons,
+    drvs.kglobalaccel,
+    drvs.kguiaddons,
+    drvs.ki18n,
+    drvs.kiconthemes,
+    drvs.kidletime,
+    drvs.kio,
+    drvs.kirigami,
+    drvs.knotifications,
+    drvs.kpackage,
+    drvs.kservice,
+    drvs.ksvg,
+    drvs.kwidgetsaddons,
+    drvs.kwindowsystem,
+    drvs.plasmaWaylandProtocols,
+    drvs.plasmaWorkspace,
+  ],
+
   cosmicPackages | lib.Package = {
     biDrvs = _cosmicPackages
   },
@@ -463,9 +546,11 @@
           std.array.map
             (fun x => (x & { dest = "rootfs/" }))
             (
-              baseBaseRootfs.biDrvs
-              @ _cosmicPackages
+              _baseBaseRootfs.biDrvs
+              # @ _cosmicPackages
               # @ [drvs.kwin]
+              # @ [drvs.gnomeTerminal]
+              # @ _plasmaPackages
             )
         ),
     },
@@ -494,9 +579,9 @@
 
   aarch64Image | lib.Package = {
     biDrvs = [
-      # drvs.busyboxAarch64,
-      drvs.dashAarch64,
-      drvs.dashSh,
+      drvs.busyboxAarch64,
+      # drvs.dashAarch64,
+      # drvs.dashSh,
       drvs.linuxAarch64,
       drvs.basefiles,
       drvs.erofsUtils,
@@ -509,7 +594,8 @@
               -L aarch6-root \
                   \
               ${DEST}/aarch64-root.img /aarch64-unknown-linux-musl/
-            "%
+            "%,
+      m%"cp /aarch64-unknown-linux-musl/boot/Image ${DEST}"%,
     ],
   }
 }

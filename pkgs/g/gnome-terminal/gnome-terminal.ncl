@@ -4,14 +4,18 @@
 
   gnomeTerminal | lib.MesonPackage = {
     singleSource = {
-      uri = "https://download.gnome.org/sources/gnome-terminal/3.56/gnome-terminal-3.56.2.tar.xz",
-      sha256sum = "235bc09dfa34cc5f1e95122e9bf60203a84daf861cfacf7e4496c5f548239978"
+      # uri = "https://download.gnome.org/sources/gnome-terminal/3.56/gnome-terminal-3.56.2.tar.xz",
+      # sha256sum = "235bc09dfa34cc5f1e95122e9bf60203a84daf861cfacf7e4496c5f548239978",
+      uri = "https://download.gnome.org/sources/gnome-terminal/3.58/gnome-terminal-3.58.0.tar.xz",
+      sha256sum = "07ebc7af13516be5b37777f520d2640b33120620e99bbb05deea5f8280fd69ce",
     },
 
     extraMesonArgs = [
       "-Ddocs=false",
       "-Dnautilus_extension=false",
       "-Dsearch_provider=false",
+      "-Dvte:_systemd=false",
+      "-Dvte:vapi=false",
     ],
 
     preConfigurePhase = [
@@ -22,6 +26,9 @@
       sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/src/terminal.cc
       "%,
       m%"sed -i 's@g_module_open@g_module_open_gross_hack@g' ${SRC}/src/server.cc"%,
+      m%"sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/subprojects/vte/src/widget.cc"%,
+      "sed -i 's@shared_library@library@g' ${SRC}/subprojects/vte/src/meson.build",
+      "sed -i 's@debug_sources +@@g' ${SRC}/subprojects/vte/src/app/meson.build",
     ],
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
@@ -107,6 +114,11 @@
       drvs.libhandy,
       drvs.libxslt,
       drvs.itstool,
+      drvs.nettleGmp,
+      drvs.gmp,
+      drvs.libtasn1,
+      drvs.gnutls,
+      drvs.libicu,
     ],
   }
 }
@@ -213,4 +225,15 @@
 
         std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libgtk-3.a") symbols,
     }
+}
+& {
+  lib,
+  drvs,
+  libicu | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://github.com/unicode-org/icu/releases/download/release-78.1/icu4c-78.1-sources.tgz",
+      sha256sum = "6217f58ca39b23127605cfc6c7e0d3475fe4b0d63157011383d716cb41617886"
+    },
+    configureScript = "${SRC}/source/configure",
+  }
 }

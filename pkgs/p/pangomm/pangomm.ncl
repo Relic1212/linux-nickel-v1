@@ -35,7 +35,7 @@
       drvs.fribidi,
       drvs.gdkPixbufFull,
       drvs.libjpegTurbo,
-      drvs.libepoxy,
+      # drvs.libepoxy,
       drvs.atSpi2Core,
       drvs.mesa2,
       drvs.libelf,

@@ -883,13 +883,35 @@
           drvs.kcoreaddons,
           drvs.plasmaWaylandProtocols,
           drvs.waylandWeaksyms,
+          # drvs.xcbUtilKeysyms,
+          # drvs.libxcursor,
+          # drvs.xorgMacros,
+          # drvs.xorgproto,
+          # drvs.xtrans,
+          # drvs.libxcb,
+          # drvs.xcbProto,
+          # drvs.libxau,
+          # drvs.libx11,
+          # drvs.libxrender,
+          # drvs.libxfixes,
+          # drvs.xcbRenderutil,
+          # drvs.xcbUtilWm,
         ],
       cmakeExtraArgsRecord = {
         "-DKWINDOWSYSTEM_X11" = false,
+        "-DKWINDOWSYSTEM_WAYLAND" = true,
       },
       preConfigurePhase = [
-        "sed -i 's@MODULE@STATIC@g' ${SRC}/src/platforms/wayland/CMakeLists.txt"
-      ]
+        "sed -i 's@MODULE@STATIC@g' ${SRC}/src/platforms/wayland/CMakeLists.txt",
+        m%"sed -i 's|KWaylandExtras\n|KWaylandExtras\nKUserTimestamp\n|g' ${SRC}/src/CMakeLists.txt"%,
+      ],
+
+      # patches = [
+      #   {
+      #     sha256sum = "f9be16ff0648fd001fd67e34a86d1645ccc2cbdc2ee716604403988f6434afb5",
+      #     file =  "0001-kwindowsystem.patch"
+      #   }
+      # ]
     },
 
   kauth =
@@ -1316,6 +1338,39 @@
         ],
     },
 
+  kpty =
+    _kf
+    & {
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          drvs.gettext,
+          drvs.karchive,
+          drvs.kauth,
+          drvs.kcmutils,
+          drvs.kcodecs,
+          drvs.kcolorscheme,
+          drvs.kconfig,
+          drvs.kcoreaddons,
+          drvs.kcrash,
+          drvs.kdbusaddons,
+          drvs.kglobalaccel,
+          drvs.kguiaddons,
+          drvs.ki18n,
+          drvs.kiconthemes,
+          drvs.kidletime,
+          drvs.kio,
+          drvs.kirigami,
+          drvs.knotifications,
+          drvs.kpackage,
+          drvs.kservice,
+          drvs.ksvg,
+          drvs.kwidgetsaddons,
+          drvs.kwindowsystem,
+          drvs.plasmaWaylandProtocols,
+        ],
+    },
+
   syntaxHighlighting =
     _kf
     & {
@@ -1360,7 +1415,15 @@
 
       cmakeExtraArgsRecord = {
         "-DENABLE_KAUTH" = false,
+        "-DQT_DEBUG_FIND_PACKAGE" = true,
       },
+
+      buildEnv.EXTRA_LDFLAGS | priority 1 =
+        _kf.buildEnv.EXTRA_LDFLAGS
+        @ [
+          "$(pkg-config --static --libs libavdevice)",
+          "$(pkg-config --static --libs libpulse)",
+        ],
 
       preConfigurePhase = [
         m%"sed -i 's|find_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
@@ -1422,6 +1485,21 @@
           drvs.syntaxHighlighting,
           drvs.acl,
           drvs.attr,
+          drvs.readline,
+          drvs.sbc,
+          drvs.pulseaudio17,
+          drvs.pipewire,
+          drvs.libsndfile,
+          drvs.libusb,
+          drvs.libjpegTurbo,
+          drvs.libopus,
+          drvs.ldacbt,
+          drvs.libcap,
+          drvs.jansson,
+          drvs.fdkAac,
+          drvs.ffmpeg,
+          drvs.alsaLibs,
+          drvs.atSpi2Core,
         ],
     },
 

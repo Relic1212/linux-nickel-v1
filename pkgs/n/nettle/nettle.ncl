@@ -13,5 +13,20 @@
         drvs.m4
       ],
     }
-    in _nettle
+    in _nettle,
+
+  nettleGmp =
+    nettle
+    & {
+      biDrvs | priority 1 = [
+        drvs.m4,
+        drvs.gmp,
+      ],
+      extraConfigureFlags = [
+        "HOST_CC='clang -static'",
+      ],
+      extraMakeArgs = [
+        "HOST_CC='clang -static'",
+      ],
+    },
 }

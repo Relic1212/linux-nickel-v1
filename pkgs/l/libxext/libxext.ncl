@@ -67,5 +67,26 @@
       drvs.libxfixes,
       drvs.libxext,
     ]
+  },
+
+  libxtst | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://xorg.freedesktop.org/releases/individual/lib/libXtst-1.2.5.tar.xz",
+      sha256sum = "b50d4c25b97009a744706c1039c598f4d8e64910c9fde381994e1cae235d9242",
+    },
+    biDrvs = [
+      drvs.pkgconf,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+      drvs.libxi,
+    ]
   }
 }

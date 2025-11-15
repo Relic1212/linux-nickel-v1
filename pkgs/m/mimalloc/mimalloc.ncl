@@ -28,19 +28,19 @@
     postInstallPhase = [
       # "cp build/mimalloc.o .",
       # "cp build/mimalloc.o .",
-      # m%"
-      #       {
-      #           echo "CREATE libc.a"
-      #           echo "ADDLIB /usr/lib/libc.a"
-      #           echo "DELETE aligned_alloc.lo calloc.lo donate.lo free.lo libc_calloc.lo lite_malloc.lo malloc.lo malloc_usable_size.lo memalign.lo posix_memalign.lo realloc.lo reallocarray.lo valloc.lo"
-      #           echo "ADDLIB libmimalloc.a"
-      #           echo "SAVE"
-      #       } | ar -M
-      #       "%,
-      "cp /usr/lib/libc.a .",
-      "ar d libc.a aligned_alloc.lo calloc.lo donate.lo free.lo libc_calloc.lo lite_malloc.lo malloc_usable_size.lo memalign.lo posix_memalign.lo realloc.lo reallocarray.lo valloc.lo",
-      "ar d libc.a malloc.lo",
-      "ar r libc.a mimalloc.o",
+      m%"
+      {
+          echo "CREATE libc.a"
+          echo "ADDLIB /usr/lib/libc.a"
+          echo "DELETE aligned_alloc.lo calloc.lo donate.lo free.lo libc_calloc.lo lite_malloc.lo malloc.lo malloc_usable_size.lo memalign.lo posix_memalign.lo realloc.lo reallocarray.lo valloc.lo"
+          echo "ADDLIB libmimalloc.a"
+          echo "SAVE"
+      } | ar -M
+       "%,
+      # "cp /usr/lib/libc.a .",
+      # "ar d libc.a aligned_alloc.lo calloc.lo donate.lo free.lo libc_calloc.lo lite_malloc.lo malloc_usable_size.lo memalign.lo posix_memalign.lo realloc.lo reallocarray.lo valloc.lo",
+      # "ar d libc.a malloc.lo",
+      # "ar r libc.a mimalloc.o",
       "install -m0755 libc.a ${DEST}/usr/lib",
     ]
   }

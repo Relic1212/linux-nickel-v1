@@ -83,6 +83,7 @@
         # "ln -s /run /var/run",
         "mkdir -p -m 0755 /run/dropbear",
         "ln -s /run/dropbear /etc/dropbear",
+        "mkdir -p -m 0755 /var/lib/power-profiles-daemon",
         # FIXME
         # "mkdir -p -m0755 /root",
         # "echo 'pipewire:x:509:' >> /etc/group",
