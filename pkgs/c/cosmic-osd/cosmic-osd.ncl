@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.0.0-beta.3.tar.gz",
+        uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"e6c4a8b7b66d945bda585a0414098f78af7533057b6a1534ee3e01ed70be5556"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "fcc1e357b29109836a37a23a0f33f3c8e2c86226d62e5dc16dd175748dd4d462"
@@ -25,7 +25,7 @@
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
-      m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
+      # m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,

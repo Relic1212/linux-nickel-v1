@@ -26,8 +26,8 @@
 
           # uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v21.1.1.tar.gz",
           # sha256sum = "dda46febdb060a1d5cc2ceeb9682ccaf33e55ae294fd0793274531b54f07c46b",
-          uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v21.1.0.tar.gz",
-          sha256sum = "4f7019a06c731daebbc18080db338964002493ead4cfb440fef95d120c50a170",
+          uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v21.1.2.tar.gz",
+          sha256sum = "8c91542b579a3b27b7aeae1db12004eb412c9ed9bdff0a29ee862c3551cadfe3",
         }
       },
       # {

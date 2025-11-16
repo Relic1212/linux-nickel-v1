@@ -511,9 +511,9 @@
     drvs.plasmaWorkspace,
   ],
 
-  cosmicPackages | lib.Package = {
-    biDrvs = _cosmicPackages
-  },
+  # cosmicPackages | lib.Package = {
+  #   biDrvs = _cosmicPackages
+  # },
 
   # TODO: uneccesary paths
   # /usr/share/hypr/wall0.png
@@ -547,7 +547,7 @@
             (fun x => (x & { dest = "rootfs/" }))
             (
               _baseBaseRootfs.biDrvs
-              # @ _cosmicPackages
+              @ _cosmicPackages
               # @ [drvs.kwin]
               # @ [drvs.gnomeTerminal]
               # @ _plasmaPackages

@@ -183,7 +183,6 @@
   lib,
   drvs,
   mir | lib.CmakePackage = {
-    
 
     singleSource = {
       uri = "https://github.com/canonical/mir/archive/refs/tags/v2.23.0.tar.gz",

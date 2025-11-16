@@ -174,8 +174,8 @@
 
   testFetcher | lib.DeterministicFetcher = {
     buildPhase = [
-      "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.3.tar.gz",
-      "cp epoch-1.0.0-beta.3.tar.gz ${DEST}/out.tar.gz",
+      "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
+      "cp epoch-1.0.0-beta.6.tar.gz ${DEST}/out.tar.gz",
     ],
     outputFile = "out.tar.gz",
     outputSha256sum = (import "src.sha256sum" as 'Text), # "7bd9f19a69fb9708448d0a551d2c8bf5abf809457694f17aefd8d4d03b70d16d",
@@ -196,7 +196,7 @@
   _cosmicSrcSha256sums,
   cosmicCompSources | lib.DeterministicFetcher = {
     singleSource = {
-      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.3.tar.gz",
+      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
       sha256sum = _cosmicSrcSha256sums."%{uri}",
     },
     extraEnv = {

@@ -2,7 +2,7 @@
   lib,
   drvs,
   _rootfs2,
-  niriImage =
+  _niriImage =
     _rootfs2
     & {
       enableCcache = false,

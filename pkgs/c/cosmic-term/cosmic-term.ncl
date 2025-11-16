@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.0.0-beta.3.tar.gz",
+        uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"9bff7b2b9dd5e0200d955c0a4ef966e3c2f19aa8dc574dbfcda7ed9aae313ece"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "cba881ee68370c682f4082d33cfdfa73dbcfd9d9fbdffa6f38377d8a3984f502"
@@ -39,6 +39,8 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+
+      # "patch -p1 < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch",
     ]
     #     @
     #     ( std .array.map 
