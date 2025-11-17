@@ -26,7 +26,8 @@
     ],
     extraEnv | priority -10 = lib.AutotoolsPackage.extraEnv & (if isLlvm then { LIBCC_LDFLAGS = ["--rtlib=compiler-rt"] } else {}),
     #configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])
-    extraConfigureFlags = ["--enable-static", "--disable-shared"],
+    debug,
+    extraConfigureFlags = ["--enable-static", "--disable-shared"] @ (if debug then ["--enable-debug"] else []),
   },
 
   muslStage0 = _muslBase & { stage = 0 },
@@ -105,15 +106,17 @@
     & {
       extraConfigureFlags | priority 1 = ["--enable-static", "--enable-shared"],
     },
-  muslBothWeakDl =
+  muslBothRenamedDl =
     muslBoth
     & {
+      debug = true,
       postInstallPhase = [
         "cd ${DEST}/usr/lib",
-        "objcopy -W dlopen libc.a",
-        "objcopy --redefine-sym=dlopen=dlopen_old_and_bad libc.a",
-        "objcopy -W dlsym libc.a",
-        "objcopy --redefine-sym=dlsym=dlsym_old_and_bad libc.a",
+        # "objcopy -W dlopen libc.a",
+        "objcopy --redefine-sym=dlopen=dlopen_libc libc.a",
+        # "objcopy -W dlsym libc.a",
+        "objcopy --redefine-sym=dlsym=dlsym_libc libc.a",
+        "objcopy --redefine-sym=dladdr=dladdr_libc libc.a",
       ]
     },
   muslDebug =
