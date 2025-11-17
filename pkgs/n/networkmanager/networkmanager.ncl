@@ -6,13 +6,27 @@
       uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.1/NetworkManager-1.54.1.tar.bz2",
       sha256sum = "da7a7f8197580a34c5e346338b0fe1f951f369568e0e0b361f23cb281d301e75"
     },
+
+    sourceInputs = [
+      {
+        src = singleSource,
+      },
+      {
+        src = {
+          uri = "/run/data/user/Projects/test-static-linking/extern-sym/lib.c",
+          sha256sum = "d704ffb1050791c7486b1350f89a689746a42d0c432f92477eb2fd0f435a98f7",
+        },
+        dest = "lib"
+      }
+    ],
     patches = [
       {
         sha256sum = "987b0a3c0f089de18d4349970391130a9e68fd59dd4adced12d4b67ff42b83a2",
         file = "networkmanager.patch"
       }
     ],
-    muslProvider = drvs.muslDebug,
+    # muslProvider = drvs.muslDebug,
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
       drvs.iwd,
       drvs.dbus,
@@ -25,7 +39,7 @@
       drvs.utilLinux,
       drvs.eudevNm,
       drvs.libndp,
-      drvs.glibNoDl,
+      drvs.glibDebug,
       drvs.pcre2,
       drvs.libffi,
       drvs.zlibNg,
@@ -62,14 +76,21 @@
       EXTRA_LDFLAGS = [
         "-Wl,--undefined-version",
         "-lncursesw",
+        "${SRC}/lib/libdl_fake.a",
       ]
     },
-    preConfigurePhase = [
-      m%"sed -i "s|subdir('nm-initrd-generator')||g" ${SRC}/src/meson.build"%,
-      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_library@library@g' ${f};done"%,
-      m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_module@library@g' ${f};done"%,
-      m%"for f in $(find ${SRC}/tools -name '*.sh' -type f); do sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${f};done"%,
-    ]
+    preConfigurePhase =
+      [
+        m%"sed -i "s|subdir('nm-initrd-generator')||g" ${SRC}/src/meson.build"%,
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_library@library@g' ${f};done"%,
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_module@library@g' ${f};done"%,
+        m%"for f in $(find ${SRC}/tools -name '*.sh' -type f); do sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${f};done"%,
+      ]
+      @ [
+        "clang  --verbose -g -c ${SRC}/lib/lib.c -o ${SRC}/lib/lib.c.o",
+        "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
+        "llvm-ranlib ${SRC}/lib/libdl_fake.a",
+      ]
   }
 }
 & {

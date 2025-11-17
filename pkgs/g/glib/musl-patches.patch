@@ -1,0 +1,130 @@
+diff --git a/glib/gquark.c b/glib/gquark.c
+index 0b6863a23..883631b3e 100644
+--- a/glib/gquark.c
++++ b/glib/gquark.c
+@@ -60,6 +60,9 @@ static gint           quark_block_offset = 0;
+ void
+ g_quark_init (void)
+ {
++  if (quark_ht)
++    return;
++
+   g_assert (quark_seq_id == 0);
+   quark_ht = g_hash_table_new (g_str_hash, g_str_equal);
+   quarks = g_new (gchar*, QUARK_BLOCK_SIZE);
+@@ -138,6 +141,9 @@ g_quark_try_string (const gchar *string)
+     return 0;
+ 
+   G_LOCK (quark_global);
++#if !defined(__GLIBC__)
++  g_quark_init ();
++#endif
+   quark = GPOINTER_TO_UINT (g_hash_table_lookup (quark_ht, string));
+   G_UNLOCK (quark_global);
+ 
+@@ -179,6 +185,8 @@ quark_from_string (const gchar *string,
+ {
+   GQuark quark = 0;
+ 
++  g_quark_init();
++
+   quark = GPOINTER_TO_UINT (g_hash_table_lookup (quark_ht, string));
+ 
+   if (!quark)
+@@ -286,6 +294,7 @@ quark_new (gchar *string)
+   GQuark quark;
+   gchar **quarks_new;
+ 
++  g_quark_init ();
+   if (quark_seq_id % QUARK_BLOCK_SIZE == 0)
+     {
+       quarks_new = g_new (gchar*, quark_seq_id + QUARK_BLOCK_SIZE);
+diff --git a/gobject/gtype.c b/gobject/gtype.c
+index 4469aacfd..1521b0a32 100644
+--- a/gobject/gtype.c
++++ b/gobject/gtype.c
+@@ -167,6 +167,9 @@ static void                             type_iface_vtable_iface_init_Wm (TypeNod
+ static gboolean				type_node_is_a_L		(TypeNode		*node,
+ 									 TypeNode		*iface_node);
+ 
++#if !defined(__GLIBC__)
++static void gobject_init (void);
++#endif
+ 
+ /* --- enumeration --- */
+ 
+@@ -2434,7 +2437,10 @@ g_type_register_fundamental (GType                       type_id,
+ 			     GTypeFlags			 flags)
+ {
+   TypeNode *node;
+-  
++ 
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+   g_return_val_if_fail (type_id > 0, 0);
+   g_return_val_if_fail (type_name != NULL, 0);
+@@ -2552,6 +2558,9 @@ g_type_register_static (GType            parent_type,
+   TypeNode *pnode, *node;
+   GType type = 0;
+   
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+   g_return_val_if_fail (parent_type > 0, 0);
+   g_return_val_if_fail (type_name != NULL, 0);
+@@ -2607,6 +2616,9 @@ g_type_register_dynamic (GType        parent_type,
+   TypeNode *pnode, *node;
+   GType type;
+   
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+   g_return_val_if_fail (parent_type > 0, 0);
+   g_return_val_if_fail (type_name != NULL, 0);
+@@ -3164,6 +3176,9 @@ g_type_name (GType type)
+ {
+   TypeNode *node;
+   
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+   
+   node = lookup_type_node_I (type);
+@@ -4229,6 +4244,9 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+ void
+ g_type_init_with_debug_flags (GTypeDebugFlags debug_flags)
+ {
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+ 
+   if (debug_flags)
+@@ -4248,6 +4266,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
+ void
+ g_type_init (void)
+ {
++#if !defined(__GLIBC__)
++  gobject_init();
++#endif 
+   g_assert_type_system_initialized ();
+ }
+ 
+@@ -4259,6 +4280,12 @@ gobject_init (void)
+   TypeNode *node;
+   GType type G_GNUC_UNUSED  /* when compiling with G_DISABLE_ASSERT */;
+ 
++#if !defined(__GLIBC__)
++  static int gobject_initialized = 0;
++  if (gobject_initialized)
++    return;
++  gobject_initialized = 1;
++#endif
+   /* Ensure GLib is initialized first, see
+    * https://bugzilla.gnome.org/show_bug.cgi?id=756139
+    */
