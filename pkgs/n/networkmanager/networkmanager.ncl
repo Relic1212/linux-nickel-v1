@@ -22,7 +22,7 @@
     ],
     patches = [
       {
-        sha256sum = "fcdc1d6f5d81d7c3510dba4af47149b8ec3a3078a076840085091da541b93857",
+        sha256sum = "5cd25b56c0f74b2e7f725132e63b5b28cc045582ac8241a47e9402557c34cb7e",
         file = "networkmanager-all.patch"
       },
     ],
@@ -77,6 +77,15 @@
         "clang  --verbose -g -c ${SRC}/lib/lib.c -o ${SRC}/lib/lib.c.o",
         "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
         "llvm-ranlib ${SRC}/lib/libdl_fake.a",
+      ]
+      @ [
+        m%"sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${SRC}/man/meson.build"%,
+        m%"
+      for f in $(find ${SRC}/man -type f -name '*.xml' ); do
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+      done
+      "%,
       ],
     postInstallPhase = [
       "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
@@ -114,6 +123,8 @@
         drvs.libtasn1,
         drvs.nettleGmp,
         drvs.gnutls,
+        drvs.docbookXslNons,
+        drvs.docbookXml,
       ]
       @ (
         if distro.elogind then

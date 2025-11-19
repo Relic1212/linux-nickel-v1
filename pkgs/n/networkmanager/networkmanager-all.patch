@@ -1,5 +1,5 @@
 diff --git a/meson.build b/meson.build
-index 0e3852a926..74a9a37910 100644
+index c256823eb9..933dc9527f 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -255,9 +255,9 @@ linker_script_binary   = join_paths(source_root, 'linker-script-binary.ver')
@@ -15,6 +15,19 @@ index 0e3852a926..74a9a37910 100644
  
  uuid_dep = dependency('uuid')
  libelogind_dep = dependency('libelogind', version: '>= 219', required: false)
+@@ -1033,9 +1033,11 @@ if enable_qt != 'false'
+   endif
+ endif
+ 
++subdir('man')
++
+ if enable_docs
+   assert(enable_introspection, '-Ddocs=true requires -Dintrospection=true')
+-  subdir('man')
++  # subdir('man')
+   subdir('docs')
+   meson.add_dist_script(
+     'tools/meson-dist-data.sh',
 diff --git a/src/c-stdaux/meson.build b/src/c-stdaux/meson.build
 index 6af822be6f..afded54026 100644
 --- a/src/c-stdaux/meson.build
@@ -265,3 +278,19 @@ index 610e22792e..006e536e84 100644
    link_depends: linker_script_binary,
  )
  
+diff --git a/tools/meson-dist-data.sh b/tools/meson-dist-data.sh
+index da1e5e66df..ddaa1446e7 100755
+--- a/tools/meson-dist-data.sh
++++ b/tools/meson-dist-data.sh
+@@ -22,8 +22,8 @@ fi
+ ensure_var_path "MESON_DIST_ROOT"
+ ensure_var_path "MESON_BUILD_ROOT"
+ 
+-ninja -C "$MESON_BUILD_ROOT" all libnm-doc NetworkManager-doc
++ninja -C "$MESON_BUILD_ROOT" all
+ 
+-cp -Tr "$MESON_BUILD_ROOT/docs/api/html" "$MESON_DIST_ROOT/docs/api/html"
+-cp -Tr "$MESON_BUILD_ROOT/docs/libnm/html" "$MESON_DIST_ROOT/docs/libnm/html"
++# cp -Tr "$MESON_BUILD_ROOT/docs/api/html" "$MESON_DIST_ROOT/docs/api/html"
++# cp -Tr "$MESON_BUILD_ROOT/docs/libnm/html" "$MESON_DIST_ROOT/docs/libnm/html"
+ cp "$MESON_BUILD_ROOT/man/"*.[1-8] "$MESON_DIST_ROOT/man"
