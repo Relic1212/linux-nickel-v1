@@ -51,9 +51,11 @@
       "-Dkernel_firmware_dir='/usr/lib/firmware'",
       "-Diptables='/usr/bin/iptables'",
       "-Dip6tables='/usr/bin/ip6tables'",
+      "-Ddhcpcd='/usr/bin/dhcpcd'",
       "-Dnft='/usr/bin/nft'",
       "-Dudev_dir='/usr/lib/udev'",
       "-Dconfig_wifi_backend_default=iwd",
+
       # "-Ddocs=true",
     ],
 
