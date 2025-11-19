@@ -1,0 +1,224 @@
+diff --git a/meson.build b/meson.build
+index 0e3852a926..74a9a37910 100644
+--- a/meson.build
++++ b/meson.build
+@@ -255,9 +255,9 @@ linker_script_binary   = join_paths(source_root, 'linker-script-binary.ver')
+ linker_script_devices  = join_paths(source_root, 'linker-script-devices.ver')
+ linker_script_settings = join_paths(source_root, 'linker-script-settings.ver')
+ 
+-ldflags_linker_script_binary   = [ '-Wl,--version-script,@0@'.format(linker_script_binary) ]
+-ldflags_linker_script_devices  = [ '-Wl,--version-script,@0@'.format(linker_script_devices) ]
+-ldflags_linker_script_settings = [ '-Wl,--version-script,@0@'.format(linker_script_settings) ]
++ldflags_linker_script_binary   = [ ]
++ldflags_linker_script_devices  = [  ]
++ldflags_linker_script_settings = [  ]
+ 
+ uuid_dep = dependency('uuid')
+ libelogind_dep = dependency('libelogind', version: '>= 219', required: false)
+diff --git a/src/c-stdaux/meson.build b/src/c-stdaux/meson.build
+index 6af822be6f..afded54026 100644
+--- a/src/c-stdaux/meson.build
++++ b/src/c-stdaux/meson.build
+@@ -90,12 +90,12 @@ add_project_arguments(cflags, language: 'c')
+ # Version Scripts
+ #
+ 
+-use_version_scripts = get_option('version-scripts')
+-if use_version_scripts == 'auto'
+-        use_version_scripts = meson.get_compiler('c').has_link_argument(
+-                '-Wl,--version-script=' + (meson.current_source_dir() / 'src/libcstdaux.sym')
+-        ) ? 'yes' : 'no'
+-endif
++# use_version_scripts = get_option('version-scripts')
++# if use_version_scripts == 'auto'
++#         use_version_scripts = meson.get_compiler('c').has_link_argument(
++#                 '-Wl,--version-script=' + (meson.current_source_dir() / 'src/libcstdaux.sym')
++#         ) ? 'yes' : 'no'
++# endif
+ 
+ #
+ # Subdir Delegation
+diff --git a/src/core/devices/meson.build b/src/core/devices/meson.build
+index 66f7aa928b..f7a618296b 100644
+--- a/src/core/devices/meson.build
++++ b/src/core/devices/meson.build
+@@ -7,9 +7,9 @@ if enable_modem_manager
+   subdir('bluetooth')
+ endif
+ 
+-if enable_wifi
+-  subdir('wifi')
+-endif
++# if enable_wifi
++#   subdir('wifi')
++# endif
+ 
+ if enable_teamdctl
+   subdir('team')
+diff --git a/src/core/devices/nm-device-factory.c b/src/core/devices/nm-device-factory.c
+index 1585836281..dd27be3c36 100644
+--- a/src/core/devices/nm-device-factory.c
++++ b/src/core/devices/nm-device-factory.c
+@@ -326,6 +326,8 @@ factories_list_unref(GSList *list)
+     g_slist_free_full(list, g_object_unref);
+ }
+ 
++extern NMDeviceFactory *device_wifi__nm_device_factory_create(GError **);
++
+ static void
+ load_factories_from_dir(const char                       *dirname,
+                         NMDeviceFactoryManagerFactoryFunc callback,
+@@ -346,6 +348,10 @@ load_factories_from_dir(const char                       *dirname,
+ 
+         item = strrchr(*path, '/');
+         g_assert(item);
++        // fprintf(stderr,"(load_factories_from_dir) path=\"%s\"\n", *path);
++        if (strcmp(*path, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so")==0){
++            factory = device_wifi__nm_device_factory_create(&error);
++        } else {
+ 
+         plugin = g_module_open(*path, G_MODULE_BIND_LOCAL);
+ 
+@@ -368,6 +374,7 @@ load_factories_from_dir(const char                       *dirname,
+         g_module_make_resident(plugin);
+ 
+         factory = create_func(&error);
++        }
+         if (!factory) {
+             nm_log_warn(LOGD_PLATFORM,
+                         "(%s): failed to initialize device factory: %s",
+@@ -377,9 +384,11 @@ load_factories_from_dir(const char                       *dirname,
+             continue;
+         }
+         g_clear_error(&error);
+-
++        if (strcmp(*path, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so")){
+         _add_factory(factory, g_module_name(plugin), callback, user_data);
+-
++        } else {
++        _add_factory(factory, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so", callback, user_data);
++        }
+         g_object_unref(factory);
+     }
+     g_strfreev(paths);
+diff --git a/src/core/devices/wifi/nm-wifi-factory.c b/src/core/devices/wifi/nm-wifi-factory.c
+index 19880a908b..6710a67e37 100644
+--- a/src/core/devices/wifi/nm-wifi-factory.c
++++ b/src/core/devices/wifi/nm-wifi-factory.c
+@@ -52,7 +52,7 @@ NM_DEVICE_FACTORY_DECLARE_TYPES(
+                                                 NM_SETTING_OLPC_MESH_SETTING_NAME))
+ 
+ G_MODULE_EXPORT NMDeviceFactory *
+-nm_device_factory_create(GError **error)
++device_wifi__nm_device_factory_create(GError **error)
+ {
+     return g_object_new(NM_TYPE_WIFI_FACTORY, NULL);
+ }
+diff --git a/src/core/meson.build b/src/core/meson.build
+index 6cf891ee7e..9de965b103 100644
+--- a/src/core/meson.build
++++ b/src/core/meson.build
+@@ -89,6 +89,8 @@ if enable_selinux
+   nm_deps += selinux_dep
+ endif
+ 
++subdir('devices/wifi')
++
+ libNetworkManager = static_library(
+   'NetworkManager',
+   sources: files(
+@@ -180,6 +182,7 @@ libNetworkManager = static_library(
+     libNetworkManagerBase,
+     libnm_systemd_core,
+     libnm_systemd_shared,
++    libnm_device_plugin_wifi,
+   ],
+ )
+ 
+@@ -274,19 +277,19 @@ NetworkManager_all_sym = executable(
+   ],
+ )
+ 
+-ver_script = custom_target(
+-  'NetworkManager.ver',
+-  output: 'NetworkManager.ver',
+-  depends: [
+-    NetworkManager_all_sym,
+-    core_plugins,
+-  ],
+-  command: [
+-    join_paths(source_root, 'tools', 'create-exports-NetworkManager.sh'),
+-    '--called-from-build',
+-    source_root,
+-  ],
+-)
++# ver_script = custom_target(
++#   'NetworkManager.ver',
++#   output: 'NetworkManager.ver',
++#   depends: [
++#     NetworkManager_all_sym,
++#     core_plugins,
++#   ],
++#   command: [
++#     join_paths(source_root, 'tools', 'create-exports-NetworkManager.sh'),
++#     '--called-from-build',
++#     source_root,
++#   ],
++# )
+ 
+ NetworkManager = executable(
+   'NetworkManager',
+@@ -313,11 +316,11 @@ NetworkManager = executable(
+     libc_rbtree,
+     libc_siphash,
+   ],
+-  link_args: [
+-    '-rdynamic',
+-    '-Wl,--version-script,@0@'.format(ver_script.full_path()),
+-  ],
+-  link_depends: ver_script,
++  # link_args: [
++  #   '-rdynamic',
++  #   '-Wl,--version-script,@0@'.format(ver_script.full_path()),
++  # ],
++  # link_depends: ver_script,
+   install: true,
+   install_dir: nm_sbindir,
+ )
+diff --git a/src/libnm-client-impl/meson.build b/src/libnm-client-impl/meson.build
+index b49366292f..b97c76bb9e 100644
+--- a/src/libnm-client-impl/meson.build
++++ b/src/libnm-client-impl/meson.build
+@@ -73,7 +73,7 @@ libnm_client_impl = static_library(
+   ],
+ )
+ 
+-linker_script = join_paths(meson.current_source_dir(), 'libnm.ver')
++# linker_script = join_paths(meson.current_source_dir(), 'libnm.ver')
+ 
+ libnm = shared_library(
+   'nm',
+@@ -98,8 +98,8 @@ libnm = shared_library(
+     libnmdbus,
+     libc_siphash,
+   ],
+-  link_args: '-Wl,--version-script,@0@'.format(linker_script),
+-  link_depends: linker_script,
++  # link_args: '-Wl,--version-script,@0@'.format(linker_script),
++  # link_depends: linker_script,
+   install: true,
+ )
+ 
+diff --git a/src/libnm-core-impl/meson.build b/src/libnm-core-impl/meson.build
+index 610e22792e..006e536e84 100644
+--- a/src/libnm-core-impl/meson.build
++++ b/src/libnm-core-impl/meson.build
+@@ -114,7 +114,7 @@ gen_metadata_nm_settings_libnm_core = executable(
+     libnm_std_aux,
+     libc_siphash,
+   ],
+-  link_args: ldflags_linker_script_binary,
++  # link_args: ldflags_linker_script_binary,
+   link_depends: linker_script_binary,
+ )
+ 
