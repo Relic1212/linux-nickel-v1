@@ -38,11 +38,31 @@ index 6af822be6f..afded54026 100644
  
  #
  # Subdir Delegation
+diff --git a/src/core/devices/adsl/nm-atm-manager.c b/src/core/devices/adsl/nm-atm-manager.c
+index f3c0d36730..2436445f36 100644
+--- a/src/core/devices/adsl/nm-atm-manager.c
++++ b/src/core/devices/adsl/nm-atm-manager.c
+@@ -52,7 +52,7 @@ NM_DEVICE_FACTORY_DECLARE_TYPES(
+     NM_DEVICE_FACTORY_DECLARE_SETTING_TYPES(NM_SETTING_ADSL_SETTING_NAME));
+ 
+ G_MODULE_EXPORT NMDeviceFactory *
+-nm_device_factory_create(GError **error)
++device_adsl__nm_device_factory_create(GError **error)
+ {
+     return g_object_new(NM_TYPE_ATM_MANAGER, NULL);
+ }
 diff --git a/src/core/devices/meson.build b/src/core/devices/meson.build
-index 66f7aa928b..f7a618296b 100644
+index 66f7aa928b..7d892bcd5e 100644
 --- a/src/core/devices/meson.build
 +++ b/src/core/devices/meson.build
-@@ -7,9 +7,9 @@ if enable_modem_manager
+@@ -1,15 +1,15 @@
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ 
+-subdir('adsl')
++# subdir('adsl')
+ 
+ if enable_modem_manager
+   subdir('wwan')
    subdir('bluetooth')
  endif
  
@@ -56,19 +76,20 @@ index 66f7aa928b..f7a618296b 100644
  if enable_teamdctl
    subdir('team')
 diff --git a/src/core/devices/nm-device-factory.c b/src/core/devices/nm-device-factory.c
-index 1585836281..dd27be3c36 100644
+index 1585836281..ff015469e4 100644
 --- a/src/core/devices/nm-device-factory.c
 +++ b/src/core/devices/nm-device-factory.c
-@@ -326,6 +326,8 @@ factories_list_unref(GSList *list)
+@@ -326,6 +326,9 @@ factories_list_unref(GSList *list)
      g_slist_free_full(list, g_object_unref);
  }
  
 +extern NMDeviceFactory *device_wifi__nm_device_factory_create(GError **);
++extern NMDeviceFactory *device_adsl__nm_device_factory_create(GError **);
 +
  static void
  load_factories_from_dir(const char                       *dirname,
                          NMDeviceFactoryManagerFactoryFunc callback,
-@@ -346,6 +348,10 @@ load_factories_from_dir(const char                       *dirname,
+@@ -346,6 +349,10 @@ load_factories_from_dir(const char                       *dirname,
  
          item = strrchr(*path, '/');
          g_assert(item);
@@ -79,7 +100,7 @@ index 1585836281..dd27be3c36 100644
  
          plugin = g_module_open(*path, G_MODULE_BIND_LOCAL);
  
-@@ -368,6 +374,7 @@ load_factories_from_dir(const char                       *dirname,
+@@ -368,6 +375,7 @@ load_factories_from_dir(const char                       *dirname,
          g_module_make_resident(plugin);
  
          factory = create_func(&error);
@@ -87,7 +108,7 @@ index 1585836281..dd27be3c36 100644
          if (!factory) {
              nm_log_warn(LOGD_PLATFORM,
                          "(%s): failed to initialize device factory: %s",
-@@ -377,9 +384,11 @@ load_factories_from_dir(const char                       *dirname,
+@@ -377,9 +385,11 @@ load_factories_from_dir(const char                       *dirname,
              continue;
          }
          g_clear_error(&error);
@@ -101,6 +122,26 @@ index 1585836281..dd27be3c36 100644
          g_object_unref(factory);
      }
      g_strfreev(paths);
+@@ -428,5 +438,18 @@ nm_device_factory_manager_load_factories(NMDeviceFactoryManagerFactoryFunc callb
+     _ADD_INTERNAL(nm_wireguard_device_factory_get_type);
+     _ADD_INTERNAL(nm_wpan_device_factory_get_type);
+ 
+-    load_factories_from_dir(NMPLUGINDIR, callback, user_data);
++    // load_factories_from_dir(NMPLUGINDIR, callback, user_data);
++
++    GError          *error = NULL;
++    _add_factory(device_wifi__nm_device_factory_create(&error), "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so", callback, user_data);
++    g_clear_error(&error);
++
++    _add_factory(device_adsl__nm_device_factory_create(&error), "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-adsl.so", callback, user_data);
++    g_clear_error(&error);
++
++
++
++
++
++
+ }
 diff --git a/src/core/devices/wifi/nm-wifi-factory.c b/src/core/devices/wifi/nm-wifi-factory.c
 index 19880a908b..6710a67e37 100644
 --- a/src/core/devices/wifi/nm-wifi-factory.c
@@ -115,27 +156,29 @@ index 19880a908b..6710a67e37 100644
      return g_object_new(NM_TYPE_WIFI_FACTORY, NULL);
  }
 diff --git a/src/core/meson.build b/src/core/meson.build
-index 6cf891ee7e..9de965b103 100644
+index 6cf891ee7e..c36b3b4ff5 100644
 --- a/src/core/meson.build
 +++ b/src/core/meson.build
-@@ -89,6 +89,8 @@ if enable_selinux
+@@ -89,6 +89,9 @@ if enable_selinux
    nm_deps += selinux_dep
  endif
  
 +subdir('devices/wifi')
++subdir('devices/adsl')
 +
  libNetworkManager = static_library(
    'NetworkManager',
    sources: files(
-@@ -180,6 +182,7 @@ libNetworkManager = static_library(
+@@ -180,6 +183,8 @@ libNetworkManager = static_library(
      libNetworkManagerBase,
      libnm_systemd_core,
      libnm_systemd_shared,
 +    libnm_device_plugin_wifi,
++    libnm_device_plugin_adsl,
    ],
  )
  
-@@ -274,19 +277,19 @@ NetworkManager_all_sym = executable(
+@@ -274,19 +279,19 @@ NetworkManager_all_sym = executable(
    ],
  )
  
@@ -168,7 +211,7 @@ index 6cf891ee7e..9de965b103 100644
  
  NetworkManager = executable(
    'NetworkManager',
-@@ -313,11 +316,11 @@ NetworkManager = executable(
+@@ -313,11 +318,11 @@ NetworkManager = executable(
      libc_rbtree,
      libc_siphash,
    ],

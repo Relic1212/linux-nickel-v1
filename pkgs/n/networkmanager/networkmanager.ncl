@@ -21,16 +21,8 @@
       }
     ],
     patches = [
-      # {
-      #   sha256sum = "987b0a3c0f089de18d4349970391130a9e68fd59dd4adced12d4b67ff42b83a2",
-      #   file = "networkmanager.patch"
-      # },
-      # {
-      #   sha256sum = "4a317a4575156e3b9eaf3302ce84153fd96564d88f4b5bba2d04d2a9d6017ff0",
-      #   file = "networkmanager-wifi.patch"
-      # },
       {
-        sha256sum = "b93d7e4bde0c1020d4c2cacde9bc2ede4dad3b6ee38b38b65bd9a1d39cf78dbb",
+        sha256sum = "fcdc1d6f5d81d7c3510dba4af47149b8ec3a3078a076840085091da541b93857",
         file = "networkmanager-all.patch"
       },
     ],
@@ -62,6 +54,7 @@
       "-Dnft='/usr/bin/nft'",
       "-Dudev_dir='/usr/lib/udev'",
       "-Dconfig_wifi_backend_default=iwd",
+      # "-Ddocs=true",
     ],
 
     buildEnv = {
@@ -85,10 +78,10 @@
         "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
         "llvm-ranlib ${SRC}/lib/libdl_fake.a",
       ],
-      postInstallPhase = [
-        "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
-        "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
-      ],
+    postInstallPhase = [
+      "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
+      "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
+    ],
     # muslProvider = drvs.muslDebug,
     muslProvider = drvs.muslBothRenamedDl,
     biDrvs =
