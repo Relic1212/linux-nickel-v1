@@ -173,7 +173,6 @@
       drvs.zlibNg,
       drvs.zstd,
       drvs.pipewire,
-      drvs.dinit,
       drvs.libstdcppCompat,
       drvs.libpamFinal,
       drvs.libcap,

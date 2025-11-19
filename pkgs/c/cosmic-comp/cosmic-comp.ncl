@@ -3,6 +3,14 @@
   drvs,
   distro,
   cosmicComp | lib.CargoPackage = {
+    sourceInputs = [
+      {
+        src = {
+          uri = "https://github.com/pop-os/cosmic-comp/commit/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch",
+          sha256sum = "370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835"
+        }
+      },
+    ],
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -15,6 +23,7 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+      "(cd ${SRC} && patch -p1 < ../packed/370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch)",
     ],
 
     extraEnv = {
@@ -159,7 +168,6 @@
       drvs.zlibNg,
       drvs.zstd,
       drvs.pipewire,
-      drvs.dinit,
       drvs.libstdcppCompat,
       drvs.seatd,
       drvs.elogindWithPolkit,

@@ -176,7 +176,6 @@
       drvs.pipewire, # needed
       drvs.elogindWithPolkit,
       drvs.libcap,
-      drvs.dinit,
       drvs.libstdcppCompat,
     ],
   },
