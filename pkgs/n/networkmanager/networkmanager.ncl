@@ -4,8 +4,11 @@
   distro,
   networkmanager | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.1/NetworkManager-1.54.1.tar.bz2",
-      sha256sum = "da7a7f8197580a34c5e346338b0fe1f951f369568e0e0b361f23cb281d301e75"
+      # uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.1/NetworkManager-1.54.1.tar.bz2",
+      # sha256sum = "da7a7f8197580a34c5e346338b0fe1f951f369568e0e0b361f23cb281d301e75",
+
+      uri = "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.54.2/NetworkManager-1.54.2.tar.bz2",
+      sha256sum = "33bbe9141fcbc0a58e3752be766182564c23acbb520ef82c3397c4d94e4f0dac",
     },
 
     sourceInputs = [
@@ -33,7 +36,8 @@
       "-Dtests=no",
       "-Dsession_tracking=elogind",
       "-Dsession_tracking_consolekit=false",
-      "-Dpolkit=false",
+      "-Dpolkit=true",
+      "-Dmodify_system=true",
       "-Dintrospection=false",
       "-Dsystemd_journal=false",
       "-Dsystemdsystemunitdir=no",
@@ -44,8 +48,8 @@
       "-Dovs=false",
       "-Dnm_cloud_setup=false",
       "-Dnbft=false",
-      "-Dppp=true",
-      "-Dpppd='/usr/bin/pppd'",
+      "-Dppp=false",
+      # "-Dpppd='/usr/bin/pppd'",
       "-Diwd=true",
       # "-Djansson=true",
       "-Dkernel_firmware_dir='/usr/lib/firmware'",
@@ -89,10 +93,10 @@
       done
       "%,
       ],
-    postInstallPhase = [
-      "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
-      "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
-    ],
+    # postInstallPhase = [
+    #   "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
+    #   "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
+    # ],
     # muslProvider = drvs.muslDebug,
     muslProvider = drvs.muslBothRenamedDl,
     biDrvs =
@@ -125,8 +129,15 @@
         drvs.libtasn1,
         drvs.nettleGmp,
         drvs.gnutls,
+        drvs.dnsmasq,
         drvs.docbookXslNons,
         drvs.docbookXml,
+        drvs.polkit,
+        drvs.gettext,
+        drvs.libnftnl,
+        drvs.libedit,
+        drvs.libmnl,
+        drvs.nftables,
       ]
       @ (
         if distro.elogind then
