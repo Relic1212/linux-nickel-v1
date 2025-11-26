@@ -8,8 +8,10 @@ let s = {
   # uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.4.1.tar.gz",
   # sha256sum = "ff2d9c426651945e3444b9ec65b7c4212ca5c8523efdbd88f1ae5c1de67d6bff",
 
-  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v0.5.2.tar.gz",
-  sha256sum = "fbee73ece21b037a187e310f0c39eba4a4d3b08d29213b3a430cb07482030cd9",
+  # uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v0.5.2.tar.gz",
+  # sha256sum = "fbee73ece21b037a187e310f0c39eba4a4d3b08d29213b3a430cb07482030cd9",
+  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v0.6.2.tar.gz",
+  sha256sum = "a9f78299d560f3e361fd32757b2ccf869036a9f7e4ae33462368284e8f90fa78"
 }
 in
 
@@ -39,7 +41,8 @@ in
     # outputSha256sum = "81acc3aae11a61be8c19b4bed9d8f478798bd74e5615929598f7328d02ceef22",
     # outputSha256sum = "295aa1a69c07a42227c660b9906ea20f2a95db03a615664bcc518015ef8d6116",
 
-    outputSha256sum = "ea86c62610cf63ae559997939eb3d130c4f0065f34361c2d8724619f25347491",
+    # outputSha256sum = "ea86c62610cf63ae559997939eb3d130c4f0065f34361c2d8724619f25347491",
+    outputSha256sum = "bc3e984282fdfcbfb2b6bea55759dc4e1f2ddb7492ff203feda926da181f9e98",
 
     biDrvs = [
       drvs.go_1_24,
