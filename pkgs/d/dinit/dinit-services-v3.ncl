@@ -269,6 +269,13 @@ let _services =
       #   restart = false,
       #   "depends-on" = ["varrw"],
       # },
+      "networkmanager" = {
+        type = "process",
+        command = "/usr/bin/NetworkManager -n",
+        "depends-on" = ["iwd"],
+        logfile = "/var/log/networkmanager.log",
+        "smooth-recovery" = "yes",
+      },
 
       rcboot = {
         type = "scripted",
@@ -370,7 +377,6 @@ let _services =
       v4l2loopback = {
         type = "scripted",
         command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
-        restart = false,
         "depends-on" = ["early-filesystems"],
       },
 
