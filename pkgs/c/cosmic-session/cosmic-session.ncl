@@ -85,6 +85,9 @@
     postInstallPhase = [
       "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
       m%"sed -i 's|/bin/bash|/usr/bin/bash|g' ${DEST}/usr/bin/start-cosmic"%,
+
+      # https://wiki.nixos.org/wiki/COSMIC#Clipboard
+      # m%"sed -i "s|export DCONF_PROFILE=/usr/share/dconf/profile/cosmic|export DCONF_PROFILE=/usr/share/dconf/profile/cosmic\nexport COSMIC_DATA_CONTROL_ENABLED=1|g" ${DEST}/usr/bin/start-cosmic"%,
     ],
 
     utilsProviders,
