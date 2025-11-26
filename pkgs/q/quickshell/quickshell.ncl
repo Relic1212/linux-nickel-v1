@@ -231,8 +231,11 @@
 
         # uri = "https://github.com/quickshell-mirror/quickshell/archive/3e2ce40b18af943f9ba370ed73565e9f487663ef.tar.gz",
         # sha256sum = "cfcea1449650f4502a20a4a1a2ab973eebdc04203121f9c5674179b531824bee",    
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/fc704e6b5d445899a1565955268c91942a4f263f.tar.gz",
-        sha256sum = "48b5ac6c321ea867fc5279478185e49292137b52d9fa3a2e93a07fabe353bee1",
+        # uri = "https://github.com/quickshell-mirror/quickshell/archive/fc704e6b5d445899a1565955268c91942a4f263f.tar.gz",
+        # sha256sum = "48b5ac6c321ea867fc5279478185e49292137b52d9fa3a2e93a07fabe353bee1",
+
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/ed036d514b0fdbce03158a0b331305be166f4555.tar.gz",
+        sha256sum = "de7acc2e26e555f4bc52d19f06920b78abb7a0f2b7bb92dfcecf5bb0ae88bad4",
       },
     }
 }
