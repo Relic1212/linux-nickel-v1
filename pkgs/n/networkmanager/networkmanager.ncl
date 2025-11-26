@@ -15,13 +15,13 @@
       {
         src = singleSource,
       },
-      {
-        src = {
-          uri = "/run/data/user/Projects/test-static-linking/extern-sym/lib.c",
-          sha256sum = "802d8bf8504c0b6ba72170da7afea8fd056ed2eec4a05918cf111ce554971653",
-        },
-        dest = "lib"
-      }
+      # {
+      #   src = {
+      #     uri = "/run/data/user/Projects/test-static-linking/extern-sym/lib.c",
+      #     sha256sum = "802d8bf8504c0b6ba72170da7afea8fd056ed2eec4a05918cf111ce554971653",
+      #   },
+      #   dest = "lib"
+      # }
     ],
     patches = [
       {
@@ -30,7 +30,7 @@
       },
     ],
 
-    debug = true,
+    # debug = true,
 
     extraMesonArgs = [
       "-Dtests=no",
@@ -68,7 +68,7 @@
       EXTRA_LDFLAGS = [
         # "-Wl,--undefined-version",
         "-lncursesw",
-        "${SRC}/lib/libdl_fake.a",
+        # "${SRC}/lib/libdl_fake.a",
         "$(pkg-config --static --libs gnutls)",
       ]
     },
@@ -79,11 +79,11 @@
         m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_module@library@g' ${f};done"%,
         m%"for f in $(find ${SRC}/tools -name '*.sh' -type f); do sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${f};done"%,
       ]
-      @ [
-        "clang  --verbose -g -c ${SRC}/lib/lib.c -o ${SRC}/lib/lib.c.o",
-        "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
-        "llvm-ranlib ${SRC}/lib/libdl_fake.a",
-      ]
+      # @ [
+      #   "clang  --verbose -g -c ${SRC}/lib/lib.c -o ${SRC}/lib/lib.c.o",
+      #   "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
+      #   "llvm-ranlib ${SRC}/lib/libdl_fake.a",
+      # ]
       @ [
         m%"sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${SRC}/man/meson.build"%,
         m%"
@@ -93,12 +93,16 @@
       done
       "%,
       ],
-    # postInstallPhase = [
-    #   "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
-    #   "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
-    # ],
+    postInstallPhase = [
+      #   "cd ${DEST}/usr/lib/NetworkManager/1.54.1/",
+      #   "ln -s libnm-device-plugin-wifi.a libnm-device-plugin-wifi.so",
+      "install -dm0755 ${DEST}/var/lib/NetworkManager/system-connections",
+      "cd ${DEST}/etc/NetworkManager/",
+      "rm -r system-connections",
+      "ln -s /var/lib/NetworkManager/system-connections system-connections",
+    ],
     # muslProvider = drvs.muslDebug,
-    muslProvider = drvs.muslBothRenamedDl,
+    # muslProvider = drvs.muslBothRenamedDl,
     biDrvs =
       [
         drvs.iwd,
@@ -117,7 +121,7 @@
         drvs.libffi,
         drvs.zlibNg,
         drvs.openresolv,
-        drvs.ppp,
+        # drvs.ppp,
         drvs.libpsl,
         drvs.curl,
         drvs.newt,

@@ -1,0 +1,58 @@
+diff --git a/src/core/devices/nm-device-factory.c b/src/core/devices/nm-device-factory.c
+index 1585836281..495e48ac04 100644
+--- a/src/core/devices/nm-device-factory.c
++++ b/src/core/devices/nm-device-factory.c
+@@ -326,6 +326,8 @@ factories_list_unref(GSList *list)
+     g_slist_free_full(list, g_object_unref);
+ }
+ 
++extern NMDeviceFactory *device_wifi__nm_device_factory_create(GError **);
++
+ static void
+ load_factories_from_dir(const char                       *dirname,
+                         NMDeviceFactoryManagerFactoryFunc callback,
+@@ -346,6 +348,9 @@ load_factories_from_dir(const char                       *dirname,
+ 
+         item = strrchr(*path, '/');
+         g_assert(item);
++        if (strcmp(*path, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so")){
++            factory = device_wifi__nm_device_factory_create(&error);
++        } else {
+ 
+         plugin = g_module_open(*path, G_MODULE_BIND_LOCAL);
+ 
+@@ -368,6 +373,7 @@ load_factories_from_dir(const char                       *dirname,
+         g_module_make_resident(plugin);
+ 
+         factory = create_func(&error);
++        }
+         if (!factory) {
+             nm_log_warn(LOGD_PLATFORM,
+                         "(%s): failed to initialize device factory: %s",
+@@ -377,9 +383,11 @@ load_factories_from_dir(const char                       *dirname,
+             continue;
+         }
+         g_clear_error(&error);
+-
++        if (strcmp(*path, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so")){
+         _add_factory(factory, g_module_name(plugin), callback, user_data);
+-
++        } else {
++        _add_factory(factory, "/usr/lib/NetworkManager/1.54.1/libnm-device-plugin-wifi.so", callback, user_data);
++        }
+         g_object_unref(factory);
+     }
+     g_strfreev(paths);
+diff --git a/src/core/devices/wifi/nm-wifi-factory.c b/src/core/devices/wifi/nm-wifi-factory.c
+index 19880a908b..6710a67e37 100644
+--- a/src/core/devices/wifi/nm-wifi-factory.c
++++ b/src/core/devices/wifi/nm-wifi-factory.c
+@@ -52,7 +52,7 @@ NM_DEVICE_FACTORY_DECLARE_TYPES(
+                                                 NM_SETTING_OLPC_MESH_SETTING_NAME))
+ 
+ G_MODULE_EXPORT NMDeviceFactory *
+-nm_device_factory_create(GError **error)
++device_wifi__nm_device_factory_create(GError **error)
+ {
+     return g_object_new(NM_TYPE_WIFI_FACTORY, NULL);
+ }
