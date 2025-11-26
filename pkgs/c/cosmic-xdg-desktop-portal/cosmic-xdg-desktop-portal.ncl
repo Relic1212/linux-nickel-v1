@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
+        uri = "https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"330efa06b12560fcdd0c2238107d31d8f5776d2512c76dab8b9027a640446c60"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "7776bbab4a448d061225d8e0648f1d5887145366bed6b7eb2b5c0509911c804e"

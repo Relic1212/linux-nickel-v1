@@ -4,7 +4,7 @@
   _cosmicSrcSha256sums,
   cosmicWallpapers | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
+      uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz",
       sha256sum = _cosmicSrcSha256sums."%{uri}",
     },
     extraMakeArgs = [

@@ -1,5 +1,8 @@
 import hashlib
-import requests
+# import requests
+import urllib.request
+
+
 def fetch(url):
 
     headers = {
@@ -18,10 +21,11 @@ def fetch(url):
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
     }
 
-    response = requests.get(url, headers=headers,timeout=120)
+    # response = requests.get(url, headers=headers,timeout=120)
+    request = urllib.request.Request(url=url, headers=headers)
+    response = urllib.request.urlopen(request)
 
     return response
-
 
 
 with open("src.txt") as f:
@@ -31,14 +35,15 @@ for url in urls:
     try:
         print(f"# fetching url: {url}")
         r = fetch(url)
-        c = r.content
+        print("# status:", r.status)
+        c = r.read()
         h = hashlib.sha256(c).hexdigest()
-        print( "#", r.status_code)
+        # print("#", r.status_code)
         s = (
             f"\"{url}\" = \"" + h + "\","
         )
         print(s)
-        with open("_cosmic_sources.ncl","a") as f:
+        with open("_cosmic_sources.ncl", "a") as f:
             f.write(s)
-    except:
+    except FileExistsError:
         pass

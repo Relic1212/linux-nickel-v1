@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.0.0-beta.6.tar.gz",
+        uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"e6c4a8b7b66d945bda585a0414098f78af7533057b6a1534ee3e01ed70be5556"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "fcc1e357b29109836a37a23a0f33f3c8e2c86226d62e5dc16dd175748dd4d462"
@@ -56,21 +56,24 @@
     cargoFlags,
     target,
 
-    buildPhase = [
-      "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
-    ],
-    installPhase = [
-      "make TARGET=%{target}/release DESTDIR=$DEST install",
-    ],
+    # buildPhase = [
+    #   "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+    # ],
+    # installPhase = [
+    #   "make TARGET=%{target}/release DESTDIR=$DEST install",
+    # ],
 
     postInstallPhase = [
       "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
     ],
 
-    extraEnv.EXTRA_RUSTFLAGS = [
-      "-C link-arg=-L/usr/lib/pulseaudio",
-      "-C link-arg=-lpulsecommon-17.0",
-    ],
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=-L/usr/lib/pulseaudio",
+        "-C link-arg=-lpulsecommon-17.0",
+      ],
+      POLKIT_AGENT_HELPER_1 = "/usr/lib/polkit-1/polkit-agent-helper-1",
+    },
 
     utilsProviders,
     baseBuildinputPackages =
