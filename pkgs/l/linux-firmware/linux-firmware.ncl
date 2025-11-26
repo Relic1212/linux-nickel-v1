@@ -15,6 +15,14 @@
       (drvs.findutils & { priority = 1 }), # xtype: https://gitlab.com/kernel-firmware/linux-firmware/-/commit/121e467fde66011caa2ff64b96738cbc68dc993e
       drvs.zstd,
     ],
+    extraMakeArgs = [
+      "FIRMWAREDIR=/usr/lib/firmware",
+    ],
+    extraMakeInstallArgs =
+      [
+        "PREFIX=/usr",
+      ]
+      @ extraMakeArgs,
     makeInstallTargets = [
       "install-zst"
     ],

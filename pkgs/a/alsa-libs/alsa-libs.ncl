@@ -106,11 +106,10 @@
     extraConfigureFlags = [
       "--disable-nls",
       "--with-curses=ncursesw",
+      "--with-hotplug-dir=/usr/lib/firmware",
     ],
     preConfigurePhase = [
-      m%"
-        find ${SRC} -type f | xargs sed -i 's@u_int32_t@uint32_t@g'
-        "%
+      m%"find ${SRC} -type f | xargs sed -i 's@u_int32_t@uint32_t@g'"%,
     ],
     biDrvs = [
       # drvs.autoconf,
