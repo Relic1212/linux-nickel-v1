@@ -10,18 +10,18 @@
         "-Dgles1=disabled",
         "-Dxmlconfig=disabled",
         "-Dshared-llvm=disabled",
-        # "-Dgles2=enabled",
-        "-Dgles2=disabled",
+        "-Dgles2=enabled",
+        # "-Dgles2=disabled",
         #   "-Ddri3=disabled",
         # "-Dopengl=true",
         "-Dopengl=false",
-        # "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
-        "-Dgallium-drivers=''",
+        "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
+        # "-Dgallium-drivers=''",
         # "-Dplatforms='wayland,x11'",
         "-Dplatforms=''",
         "-Dcpp_rtti=false",
-        # "-Dgbm=enabled",
-        "-Dgbm=disabled",
+        "-Dgbm=enabled",
+        # "-Dgbm=disabled",
         "-Dzstd=disabled",
         "-Dzlib=disabled",
         "-Dglvnd=disabled",
@@ -40,7 +40,7 @@
         "-Dglx=disabled",
         #   "-Dopencl-spirv=false",
         #   "-Dosmesa=false",
-        "-Dvulkan-beta=false",
+        "-Dvulkan-beta=true",
         # "-Degl-native-platform=wayland",
         # "-Degl-native-platform=drm",
         # "-Degl-native-platform=auto",
@@ -270,8 +270,8 @@
       # uri = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.4.318.tar.gz",
       # sha256sum = "24df01da8a5c54ee19dfee92259b7edcf44693875fbf96ccdfec69d6e3eef0bc",
 
-      uri = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.4.331.tar.gz",
-      sha256sum = "7536a34b2b089fc85ce015060d2a114f3f298315104ee43f710e986d923d821b",
+      uri = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.4.334.tar.gz",
+      sha256sum = "f6b858ed8ff5747a32e7840ba20c565c6477c5c1c171bfc25195ef1730b349cc",
     }
   }
 }
@@ -283,8 +283,8 @@
     singleSource = {
       # uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.318.tar.gz",
       # sha256sum = "b0e9488ab13d1fa946d50d7905fa71ea0536151db846ae4d3b485f869639efcb",
-      uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.331.tar.gz",
-      sha256sum = "c5ef1bf3c9c832c804339737bcd5a5433d6cd9095a9aa928e929d087f31c0198",
+      uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.334.tar.gz",
+      sha256sum = "c2020c76f24c8f1139fe76f06d4d15bad615895de4ec32f9034cb321514824dd",
     },
 
     patches = [
@@ -427,6 +427,8 @@
         sway.buildEnv.EXTRA_LDFLAGS
         @ [
           "-L/tmp/workdir/src/lib",
+          "-Wl,--allow-multiple-definition",
+
           # "-Wl,--whole-archive",
           "-l:libdl_vulkan.a",
           "-l:libVkLayer_MESA_device_select.a",
@@ -435,9 +437,18 @@
           # "-l:libvulkan_radeon.a",
           # "-l:libvulkan_intel.a",
           # "-l:libvulkan_virtio.a",
-          "$(pkg-config --libs --static vulkan_radeon)",
+          # "$(pkg-config --libs --static vulkan_radeon)",
+          "-Wl,--whole-archive",
+          # "-Wl,--allow-multiple-definition",
+          "-lvulkan_radeon",
+          # "-Wl,--no-allow-multiple-definition",
+          "-Wl,--no-whole-archive",
+
           #  "-Wl,-u,vkCreateSampler",
-        ],
+        ]
+        @ (
+          std.string.split " " "-lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendDirective -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMObjectYAML -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoGSYM -lLLVMDebugInfoDWARF -lLLVMDebugInfoDWARFLowLevel -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -lrt -ldl -lm -lelf -leu -lz -ldrm_amdgpu -pthread -ldrm -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link"
+        ),
 
       preConfigurePhase | priority 1 =
         sway.preConfigurePhase
@@ -525,7 +536,7 @@
     singleSource = {
       uri = "/home/user/Projects/test-static-linking/vulkan/dl2.c",
       # uri = "/home/user/Projects/test-static-linking/vulkan/libdl_vulkan.a",
-      sha256sum = "59ec2a82f978de4f808053003392defda5fae99efcaae0f0c34ff90c0f4e8d8f"
+      sha256sum = "0825fb0144c1348fd86d2c0e31a5e91d7db33c201ad12b87af8efa898d56c729"
     },
     buildPhase = [
       "clang -c g ${SRC}/dl2.c -o dl.c.o",
@@ -539,6 +550,76 @@
     ],
     biDrvs = [
       drvs.llvm,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  vulkanTools | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/KhronosGroup/Vulkan-Tools/archive/refs/tags/v1.4.334.tar.gz",
+      sha256sum = "ae6c8ec78c6ebe2ec7c3034ac99454eaa2e855fe2b3df0ea858c2ba669b7fd83",
+    },
+    debug = true,
+    preConfigurePhase = [
+      m%"sed -i 's|MODULE|STATIC|g' ${SRC}/icd/CMakeLists.txt"%,
+    ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static xau)"
+      ],
+    },
+    llvmProvider | priority 1 = drvs.llvmFull,
+    biDrvs = [
+      drvs.libelf,
+      drvs.libdrmDebug,
+      drvs.zlibNg,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.libpciaccess,
+      drvs.libffi,
+      drvs.bison,
+      drvs.flex,
+      drvs.linuxHeaders,
+      drvs.m4,
+      drvs.git,
+      drvs.pyyaml,
+      drvs.llvmConfigStatic,
+      drvs.spirvToolsDebug,
+      drvs.glslangDebug,
+      drvs.spirvLlvmTranslatorDebug,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.libxcursor,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.xcbRenderutil,
+      drvs.libxfont2,
+      drvs.libfontenc,
+      drvs.libxcvt,
+      drvs.libxshmfence,
+      # drvs.xwayland,
+      drvs.libxkbfile,
+      drvs.openssl,
+      drvs.xcbUtilWm,
+      drvs.xcbUtilErrors,
+      drvs.libxext,
+      drvs.libxf86vm,
+      drvs.libxrandr,
+      drvs.zstd,
+      drvs.mesaFull,
+      drvs.vulkanHeaders,
+      drvs.vulkanLoader,
     ]
   }
 }
