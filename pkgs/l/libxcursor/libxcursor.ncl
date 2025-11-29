@@ -210,3 +210,170 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  libxdamage | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libXdamage-1.1.6.tar.xz",
+      sha256sum = "52733c1f5262fca35f64e7d5060c6fcd81a880ba8e1e65c9621cf0727afb5d11",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libxcomposite | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libXcomposite-0.4.6.tar.xz",
+      sha256sum = "fe40bcf0ae1a09070eba24088a5eb9810efe57453779ec1e20a55080c6dc2c87",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libxres | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libXres-1.2.3.tar.xz",
+      sha256sum = "d2de8f5401d6c86a8992791654547eb8def585dfdc0c08cc16e24ef6aeeb69dc",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libxmu | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libXmu-1.2.1.tar.xz",
+      sha256sum = "fcb27793248a39e5fcc5b9c4aec40cc0734b3ca76aac3d7d1c264e7f7e14e8b2",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+      drvs.libxt,
+      drvs.libsm,
+      drvs.libice,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libxt | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libXt-1.3.1.tar.xz",
+      sha256sum = "e0a774b33324f4d4c05b199ea45050f87206586d81655f8bef4dba434d931288",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+      drvs.libsm,
+      drvs.libice,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libice | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libICE-1.1.2.tar.xz",
+      sha256sum = "974e4ed414225eb3c716985df9709f4da8d22a67a2890066bc6dfc89ad298625",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  libsm | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.x.org/releases/individual/lib/libSM-1.2.6.tar.xz",
+      sha256sum = "be7c0abdb15cbfd29ac62573c1c82e877f9d4047ad15321e7ea97d1e43d835be",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.libxext,
+      drvs.libice,
+    ]
+  }
+}
