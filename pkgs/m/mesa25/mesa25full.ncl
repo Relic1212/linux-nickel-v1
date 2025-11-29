@@ -84,8 +84,8 @@
           m%"echo "
         pkg.generate(libvulkan_radeon)
         " >> ${SRC}/src/amd/vulkan/meson.build"%,
-
           # m%"sed -i "s|'hidden'|'default'|g" ${SRC}/src/vulkan/runtime/meson.build"%,
+          # m%"sed -i "s|'hidden'|'default'|g" ${SRC}/src/amd/vulkan/meson.build"%,
           # m%"sed -i "s|GetPhysicalDeviceProperties2|GetPhysicalDeviceProperties|g" ${SRC}/src/vulkan/wsi/wsi_common.c"%,
           # m%"sed -i 's|&pdp2|\&\(pdp2.properties\)|g' ${SRC}/src/vulkan/wsi/wsi_common.c"%,
         ],
@@ -437,14 +437,17 @@
           # "-l:libvulkan_radeon.a",
           # "-l:libvulkan_intel.a",
           # "-l:libvulkan_virtio.a",
-          "-Wl,--allow-multiple-definition",
-          "-Wl,--whole-archive",
-          "-lvulkan_radeon",
-          "-Wl,--no-whole-archive",
-
-          # "-Wl,--undefined=vk_common_GetPhysicalDeviceProperties2",
-
-          #  "-Wl,-u,vkCreateSampler",   
+          # "-Wl,--allow-multiple-definition",
+          # "-Wl,--whole-archive",
+          # "-lvulkan_radeon",
+          # "-Wl,--no-whole-archive",
+          "-Wl,-u,vk_common_GetPhysicalDeviceProperties2",
+          "-Wl,-u,vk_common_CreateSamplerYcbcrConversion",
+          "-Wl,-u,radv_CreateSampler",
+          "-Wl,-u,radv_CreateDescriptorPool",
+          "-Wl,-u,vk_common_CreateFramebuffer",
+          "-Wl,-u,vk_common_CmdCopyBufferToImage",
+          "-Wl,-u,radv_CmdCopyBufferToImage2",
           "$(pkg-config --libs --static vulkan_radeon)",
         ]
       # @ (
