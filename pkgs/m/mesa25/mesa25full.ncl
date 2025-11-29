@@ -52,6 +52,9 @@
       baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
       debug = true,
       buildEnv._debug = true,
+      options = {
+        renamedDl | default = true,
+      },
 
       patches | priority 1 =
         mesa2.patches
@@ -122,25 +125,30 @@
             @ (std.array.map (fun sym => "llvm-objcopy --redefine-sym %{sym}=virtio__%{sym} ${DEST}/usr/lib/libvulkan_virtio.a") syms)
           )
         )
-        @ [
-          # "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
-          # "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
-          # "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
-          m%"for f in $(find ${DEST}/usr/lib -name '*.a'); do
+        @ (
+          if options.renamedDl then
+            [
+              # "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
+              # "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
+              # "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan_radeon.a",
+              m%"for f in $(find ${DEST}/usr/lib -name '*.a'); do
             llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${f}
             llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${f}
             llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${f}
           done
           "%,
 
-          # m%"
-          # for sym in $(llvm-nm ${DEST}/usr/lib/libvulkan_radeon.a |grep " t vk_"|cut -d ' ' -f3); do
-          #   echo "globalizing ${sym} in libvulkan_radeon"
-          #   llvm-objcopy --globalize-symbol ${sym} ${DEST}/usr/lib/libvulkan_radeon.a
-          # done
-          # "%,
-          # m%"llvm-objcopy --globalize-symbol vk_physical_device_from_handle ${DEST}/usr/lib/libvulkan_radeon.a"%
-        ],
+              # m%"
+              # for sym in $(llvm-nm ${DEST}/usr/lib/libvulkan_radeon.a |grep " t vk_"|cut -d ' ' -f3); do
+              #   echo "globalizing ${sym} in libvulkan_radeon"
+              #   llvm-objcopy --globalize-symbol ${sym} ${DEST}/usr/lib/libvulkan_radeon.a
+              # done
+              # "%,
+              # m%"llvm-objcopy --globalize-symbol vk_physical_device_from_handle ${DEST}/usr/lib/libvulkan_radeon.a"%
+            ]
+          else
+            []
+        ),
       llvmProvider | priority 1 = drvs.llvmFull,
       biDrvs | priority 1 = [
         drvs.libelf,
@@ -188,6 +196,11 @@
         drvs.libxrandr,
         drvs.zstd,
       ]
+    },
+  mesaFullDl =
+    mesaFull
+    & {
+      options.renamedDl = false,
     }
 }
 & {
@@ -326,14 +339,22 @@
       "-DBUILD_WSI_XLIB_XRANDR_SUPPORT" = false,
     },
     debug = true,
+    options = {
+      renameDl | default = true,
+    },
 
-    postInstallPhase = [
-      # "llvm-objcopy -W loader_platform_open_library ${DEST}/usr/lib/libvulkan.a",
-      # "llvm-objcopy -W loader_platform_get_proc_address ${DEST}/usr/lib/libvulkan.a",
-      "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan.a",
-      "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan.a",
-      "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan.a",
-    ],
+    postInstallPhase = (
+      if options.renameDl then
+        [
+          # "llvm-objcopy -W loader_platform_open_library ${DEST}/usr/lib/libvulkan.a",
+          # "llvm-objcopy -W loader_platform_get_proc_address ${DEST}/usr/lib/libvulkan.a",
+          "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan.a",
+          "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan.a",
+          "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan.a",
+        ]
+      else
+        []
+    ),
     llvmProvider | priority 1 = drvs.llvmFullDebug,
 
     biDrvs = [
@@ -386,7 +407,13 @@
       drvs.zstd,
       # drvs.mesaFull,
     ]
-  }
+  },
+  vulkanLoaderDl =
+    vulkanLoader
+    & {
+
+      options.renameDl = false,
+    },
 }
 & {
   lib,
@@ -544,17 +571,27 @@
       sha256sum = "0825fb0144c1348fd86d2c0e31a5e91d7db33c201ad12b87af8efa898d56c729"
     },
     buildPhase = [
-      "clang -c g ${SRC}/dl2.c -o dl.c.o",
+      "clang -g -c ${SRC}/dl2.c -o dl.c.o",
       "llvm-ar rcs libdl_vulkan.a dl.c.o",
       "llvm-ranlib libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dlopen=stub_dlopen libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dlsym=stub_dlsym libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dladdr=stub_dladdr libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dlopen_vulkan=dlopen libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dlsym_vulkan=dlsym libdl_vulkan.a",
+      "llvm-objcopy --redefine-sym=dladdr_vulkan=dladdr libdl_vulkan.a",
     ],
 
     installPhase = [
       "install -d -m755 ${DEST}/usr/lib",
       "install -m755 libdl_vulkan.a ${DEST}/usr/lib",
     ],
+    enableCcache = false,
+    muslProvider,
     biDrvs = [
       drvs.llvm,
+      muslProvider,
+      drvs.vulkanHeaders,
     ]
   }
 }

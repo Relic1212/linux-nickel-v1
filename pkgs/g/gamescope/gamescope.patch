@@ -1,0 +1,82 @@
+diff --git a/src/rendervulkan.cpp b/src/rendervulkan.cpp
+index 1ca3cb3..96f694e 100644
+--- a/src/rendervulkan.cpp
++++ b/src/rendervulkan.cpp
+@@ -13,7 +13,8 @@
+ #include <dlfcn.h>
+ #include "vulkan_include.h"
+ #include "Utils/Algorithm.h"
+-
++// #include <vulkan/vulkan.h>
++// #include <vulkan/vulkan_core.h>
+ #if defined(__linux__)
+ #include <sys/sysmacros.h>
+ #endif
+@@ -91,26 +92,26 @@ static const mat3x4& colorspace_to_conversion_from_srgb_matrix(EStreamColorspace
+ 	}
+ }
+ 
+-PFN_vkGetInstanceProcAddr g_pfn_vkGetInstanceProcAddr;
+-PFN_vkCreateInstance g_pfn_vkCreateInstance;
++// extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
++// PFN_vkCreateInstance g_pfn_vkCreateInstance;
+ 
+ static VkResult vulkan_load_module()
+ {
+ 	static VkResult s_result = []()
+ 	{
+-		void* pModule = dlopen( "libvulkan.so.1", RTLD_NOW | RTLD_LOCAL );
+-		if ( !pModule )
+-			pModule = dlopen( "libvulkan.so", RTLD_NOW | RTLD_LOCAL );
+-		if ( !pModule )
+-			return VK_ERROR_INITIALIZATION_FAILED;
++		// void* pModule = dlopen( "libvulkan.so.1", RTLD_NOW | RTLD_LOCAL );
++		// if ( !pModule )
++		// 	pModule = dlopen( "libvulkan.so", RTLD_NOW | RTLD_LOCAL );
++		// if ( !pModule )
++		// 	return VK_ERROR_INITIALIZATION_FAILED;
+ 
+-		g_pfn_vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym( pModule, "vkGetInstanceProcAddr" );
+-		if ( !g_pfn_vkGetInstanceProcAddr )
+-			return VK_ERROR_INITIALIZATION_FAILED;
++		// g_pfn_vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(vkGetInstanceProcAddr);
++		// if ( !g_pfn_vkGetInstanceProcAddr )
++		// 	return VK_ERROR_INITIALIZATION_FAILED;
+ 
+-		g_pfn_vkCreateInstance = (PFN_vkCreateInstance) g_pfn_vkGetInstanceProcAddr( nullptr, "vkCreateInstance" );
+-		if ( !g_pfn_vkCreateInstance )
+-			return VK_ERROR_INITIALIZATION_FAILED;
++		// g_pfn_vkCreateInstance = (PFN_vkCreateInstance) vkGetInstanceProcAddr( nullptr, "vkCreateInstance" );
++		// if ( !g_pfn_vkCreateInstance )
++		// 	return VK_ERROR_INITIALIZATION_FAILED;
+ 
+ 		return VK_SUCCESS;
+ 	}();
+@@ -279,7 +280,7 @@ bool CVulkanDevice::BInit(VkInstance instance, VkSurfaceKHR surface)
+ 	g_output.surface = surface;
+ 
+ 	m_instance = instance;
+-	#define VK_FUNC(x) vk.x = (PFN_vk##x) g_pfn_vkGetInstanceProcAddr(instance, "vk"#x);
++	#define VK_FUNC(x) vk.x = (PFN_vk##x) vkGetInstanceProcAddr(instance, "vk"#x);
+ 	VULKAN_INSTANCE_FUNCTIONS
+ 	#undef VK_FUNC
+ 
+@@ -3460,7 +3461,7 @@ VkInstance vulkan_get_instance( void )
+ 		};
+ 
+ 		VkInstance instance = nullptr;
+-		result = g_pfn_vkCreateInstance(&createInfo, 0, &instance);
++		result = vkCreateInstance(&createInfo, 0, &instance);
+ 		if ( result != VK_SUCCESS )
+ 		{
+ 			vk_errorf( result, "vkCreateInstance failed" );
+diff --git a/src/vulkan_include.h b/src/vulkan_include.h
+index 1f78e52..b91ab91 100644
+--- a/src/vulkan_include.h
++++ b/src/vulkan_include.h
+@@ -1,4 +1,4 @@
+ #pragma once
+ 
+-#define VK_NO_PROTOTYPES
++// #define VK_NO_PROTOTYPES
+ #include <vulkan/vulkan_core.h>
