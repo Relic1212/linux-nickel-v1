@@ -413,6 +413,12 @@
     & {
 
       options.renameDl = false,
+        cmakeExtraArgsRecord = {
+      "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
+      "-DBUILD_WSI_XCB_SUPPORT" | priority 1= true,
+      "-DBUILD_WSI_XLIB_SUPPORT"| priority 1 = true,
+      "-DBUILD_WSI_XLIB_XRANDR_SUPPORT" | priority 1= true,
+    },
     },
 }
 & {
@@ -568,7 +574,7 @@
     singleSource = {
       uri = "/home/user/Projects/test-static-linking/vulkan/dl2.c",
       # uri = "/home/user/Projects/test-static-linking/vulkan/libdl_vulkan.a",
-      sha256sum = "0825fb0144c1348fd86d2c0e31a5e91d7db33c201ad12b87af8efa898d56c729"
+      sha256sum = "36d9366fae076e1e34471f87d09c252a2d66416210dbe28a6f42005e88975b6d"
     },
     buildPhase = [
       "clang -g -c ${SRC}/dl2.c -o dl.c.o",

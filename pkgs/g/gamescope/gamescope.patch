@@ -1,5 +1,17 @@
+diff --git a/src/Backends/OpenVRBackend.cpp b/src/Backends/OpenVRBackend.cpp
+index f3ffbdb..92e3e4a 100644
+--- a/src/Backends/OpenVRBackend.cpp
++++ b/src/Backends/OpenVRBackend.cpp
+@@ -1,6 +1,6 @@
+ #include <vector>
+ #include <memory>
+-#define VK_NO_PROTOTYPES
++// #define VK_NO_PROTOTYPES
+ #include <vulkan/vulkan.h>
+ #include <linux/input-event-codes.h>
+ 
 diff --git a/src/rendervulkan.cpp b/src/rendervulkan.cpp
-index 1ca3cb3..96f694e 100644
+index 1ca3cb3..7762712 100644
 --- a/src/rendervulkan.cpp
 +++ b/src/rendervulkan.cpp
 @@ -13,7 +13,8 @@
@@ -59,6 +71,15 @@ index 1ca3cb3..96f694e 100644
 -	#define VK_FUNC(x) vk.x = (PFN_vk##x) g_pfn_vkGetInstanceProcAddr(instance, "vk"#x);
 +	#define VK_FUNC(x) vk.x = (PFN_vk##x) vkGetInstanceProcAddr(instance, "vk"#x);
  	VULKAN_INSTANCE_FUNCTIONS
+ 	#undef VK_FUNC
+ 
+@@ -650,7 +651,7 @@ bool CVulkanDevice::createDevice()
+ 		return false;
+ 	}
+ 
+-	#define VK_FUNC(x) vk.x = (PFN_vk##x) vk.GetDeviceProcAddr(device(), "vk"#x);
++	#define VK_FUNC(x) vk.x = (PFN_vk##x) vkGetDeviceProcAddr(device(), "vk"#x);
+ 	VULKAN_DEVICE_FUNCTIONS
  	#undef VK_FUNC
  
 @@ -3460,7 +3461,7 @@ VkInstance vulkan_get_instance( void )

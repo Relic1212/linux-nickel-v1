@@ -13,8 +13,11 @@
             # uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.14.2.tar.gz",
             # sha256sum = "b45f38c26d12a630917e812623b9e64e3ff44c3d9f7e9a9c49a73d5372896685",
 
-            uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.14.5.tar.gz",
-            sha256sum = "2a27905b0f19184d284dbc7aed3687901fb28af1859ef69cee3c46443be58811",
+            # uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.14.5.tar.gz",
+            # sha256sum = "2a27905b0f19184d284dbc7aed3687901fb28af1859ef69cee3c46443be58811",
+
+            uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.17.tar.gz",
+            sha256sum = "315d30faa7cc73b15f58d4169fba669da978fbddf707e87a85e79d83eb15d530",
           }
         },
         {
@@ -99,12 +102,13 @@
       patches = [
         {
           file = "gamescope.patch",
-          sha256sum = "5ae1f5fd84a4ff2778f260723a07329228be16ac09e7064e4d5369b3fb3040c2",
+          sha256sum = "fa53b50a85f56993eada4abfe7912039d130ccfda67c78dba36d00b57f24ba35",
         },
       ],
       buildEnv.EXTRA_LDFLAGS = [
         "-lc++",
         "-ldl_vulkan",
+        "-lvulkan",
         "-l:libVkLayer_MESA_device_select.a",
         "-Wl,-u,vk_common_GetPhysicalDeviceProperties2",
         "-Wl,-u,vk_common_CreateSamplerYcbcrConversion",
@@ -113,6 +117,9 @@
         "-Wl,-u,vk_common_CreateFramebuffer",
         "-Wl,-u,vk_common_CmdCopyBufferToImage",
         "-Wl,-u,radv_CmdCopyBufferToImage2",
+        "-Wl,-u,radv_AllocateDescriptorSets",
+        # "-Wl,-u,vk_common_ImportSemaphoreFdKHR",
+        "-Wl,-u,radv_GetInstanceProcAddr",
         "$(pkg-config --libs --static vulkan_radeon)",
       ],
       preConfigurePhase = [
