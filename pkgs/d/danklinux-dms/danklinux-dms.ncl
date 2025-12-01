@@ -80,8 +80,6 @@ in
       drvs.go_1_24,
       drvs.llvm,
       drvs.musl,
-      drvs.emptyResolvConf,
-      drvs.caCertificates,
     ]
   }
 }
