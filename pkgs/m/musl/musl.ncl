@@ -117,6 +117,9 @@
         # "objcopy -W dlsym libc.a",
         "objcopy --redefine-sym=dlsym=dlsym_libc libc.a",
         "objcopy --redefine-sym=dladdr=dladdr_libc libc.a",
+        "objcopy --globalize-symbol stub_dlopen libc.a",
+        "objcopy --globalize-symbol stub_dlsym libc.a",
+        "objcopy --globalize-symbol stub_dladdr libc.a",
       ]
     },
   muslDebug =
