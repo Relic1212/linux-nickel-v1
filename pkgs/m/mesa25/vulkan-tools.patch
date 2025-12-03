@@ -1,0 +1,1464 @@
+diff --git a/cube/cube.c b/cube/cube.c
+index d28285de..7c46f201 100644
+--- a/cube/cube.c
++++ b/cube/cube.c
+@@ -3704,10 +3704,10 @@ static const struct wl_registry_listener registry_listener = {registry_handle_gl
+ 
+ #if defined(VK_USE_PLATFORM_XCB_KHR)
+ static const char *demo_init_xcb_connection(struct demo *demo) {
+-    demo->xcb_library = initialize_xcb();
+-    if (NULL == demo->xcb_library) {
+-        return "Cannot load XCB dynamic library.";
+-    }
++    // demo->xcb_library = initialize_xcb();
++    // if (NULL == demo->xcb_library) {
++    //     return "Cannot load XCB dynamic library.";
++    // }
+ 
+     const xcb_setup_t *setup;
+     xcb_screen_iterator_t iter;
+@@ -3733,19 +3733,19 @@ static const char *demo_init_xcb_connection(struct demo *demo) {
+ #endif
+ #if defined(VK_USE_PLATFORM_XLIB_KHR)
+ static const char *demo_init_xlib_connection(struct demo *demo) {
+-    demo->xlib_library = initialize_xlib();
+-    if (NULL == demo->xlib_library) {
+-        return "Cannot load XLIB dynamic library.";
+-    }
++    // demo->xlib_library = initialize_xlib();
++    // if (NULL == demo->xlib_library) {
++    //     return "Cannot load XLIB dynamic library.";
++    // }
+     return NULL;
+ }
+ #endif
+ #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+ static const char *demo_init_wayland_connection(struct demo *demo) {
+-    demo->wayland_library = initialize_wayland();
+-    if (NULL == demo->wayland_library) {
+-        return "Cannot load wayland dynamic library.";
+-    }
++    // demo->wayland_library = initialize_wayland();
++    // if (NULL == demo->wayland_library) {
++    //     return "Cannot load wayland dynamic library.";
++    // }
+ 
+     demo->wayland_display = wl_display_connect(NULL);
+ 
+diff --git a/cube/cube.cpp b/cube/cube.cpp
+index de411cfa..12aec40b 100644
+--- a/cube/cube.cpp
++++ b/cube/cube.cpp
+@@ -1270,10 +1270,10 @@ void Demo::init(int argc, char **argv) {
+ 
+ #if defined(VK_USE_PLATFORM_XCB_KHR)
+ const char *Demo::init_xcb_connection() {
+-    xcb_library = initialize_xcb();
+-    if (NULL == xcb_library) {
+-        return "Cannot load XLIB dynamic library.";
+-    }
++    // xcb_library = initialize_xcb();
++    // if (NULL == xcb_library) {
++    //     return "Cannot load XLIB dynamic library.";
++    // }
+     const xcb_setup_t *setup;
+     xcb_screen_iterator_t iter;
+     int scr;
+@@ -1298,19 +1298,19 @@ const char *Demo::init_xcb_connection() {
+ #endif
+ #if defined(VK_USE_PLATFORM_XLIB_KHR)
+ const char *Demo::init_xlib_connection() {
+-    xlib_library = initialize_xlib();
+-    if (NULL == xlib_library) {
+-        return "Cannot load XLIB dynamic library.";
+-    }
++    // xlib_library = initialize_xlib();
++    // if (NULL == xlib_library) {
++    //     return "Cannot load XLIB dynamic library.";
++    // }
+     return NULL;
+ }
+ #endif
+ #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+ const char *Demo::init_wayland_connection() {
+-    wayland_library = initialize_wayland();
+-    if (NULL == wayland_library) {
+-        return "Cannot load wayland dynamic library.";
+-    }
++    // wayland_library = initialize_wayland();
++    // if (NULL == wayland_library) {
++    //     return "Cannot load wayland dynamic library.";
++    // }
+     wayland_display = wl_display_connect(nullptr);
+ 
+     if (wayland_display == nullptr) {
+diff --git a/cube/cube_functions.h b/cube/cube_functions.h
+index 975f65f6..4dadcd76 100644
+--- a/cube/cube_functions.h
++++ b/cube/cube_functions.h
+@@ -31,151 +31,152 @@
+ #endif
+ 
+ // We are providing storage for all functions, make sure the vulkan headers doesn't conflate with ours.
+-#if !defined(VK_NO_PROTOTYPES)
+-#define VK_NO_PROTOTYPES
+-#endif
++// #if !defined(VK_NO_PROTOTYPES)
++// #define VK_NO_PROTOTYPES
++// #endif
+ 
+ #include <vulkan/vulkan.h>
++#include <vulkan/vulkan_core.h>
+ 
+-void* vulkan_library;
++// void* vulkan_library;
+ 
+-// Global Functions
+-PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+-PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+-PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
+-PFN_vkCreateInstance vkCreateInstance;
++// // Global Functions
++// PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
++// PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
++// PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
++// PFN_vkCreateInstance vkCreateInstance;
+ 
+ // Per-platform Instance functions
+-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+-PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+-PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+-PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_XCB_KHR)
+-PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_METAL_EXT)
+-PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
+-#endif
+-#if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
+-PFN_vkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXT;
+-#endif
+-#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+-PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
+-#endif
++// #if defined(VK_USE_PLATFORM_WIN32_KHR)
++// PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
++// PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_ANDROID_KHR)
++// PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_XLIB_KHR)
++// PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_XCB_KHR)
++// PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_METAL_EXT)
++// PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
++// #endif
++// #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
++// PFN_vkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXT;
++// #endif
++// #if defined(VK_USE_PLATFORM_SCREEN_QNX)
++// PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
++// #endif
+ 
+ // Instance functions
+ PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
+-PFN_vkCreateDevice vkCreateDevice;
++// PFN_vkCreateDevice vkCreateDevice;
+ PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
+-PFN_vkDestroyInstance vkDestroyInstance;
+-PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+-PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
+-PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+-PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
+-PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
+-PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
+-PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
+-PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
+-PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+-PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
+-PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
+-PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
+-PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
+-PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
+-PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR;
++// PFN_vkDestroyInstance vkDestroyInstance;
++// PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
++// PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
++// PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
++// PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
++// PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
++// PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
++// PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
++// PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
++// PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
++// PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
++// PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
++// PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
++// PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
++// PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
++// PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
++// PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
++// PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
++// PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR;
+ 
+-// While technically a device function, it needs to be loaded with get instance proc addr
+-PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
++// // While technically a device function, it needs to be loaded with get instance proc addr
++// PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
+ 
+-// Device functions
+-PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
+-PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
+-PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
+-PFN_vkAllocateMemory vkAllocateMemory;
+-PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
+-PFN_vkBindBufferMemory vkBindBufferMemory;
+-PFN_vkBindImageMemory vkBindImageMemory;
++// // Device functions
++// PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
++// PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
++// PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
++// PFN_vkAllocateMemory vkAllocateMemory;
++// PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
++// PFN_vkBindBufferMemory vkBindBufferMemory;
++// PFN_vkBindImageMemory vkBindImageMemory;
+ PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT;
+-PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
+-PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
+-PFN_vkCmdBindPipeline vkCmdBindPipeline;
+-PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
+-PFN_vkCmdDraw vkCmdDraw;
++// PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
++// PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
++// PFN_vkCmdBindPipeline vkCmdBindPipeline;
++// PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
++// PFN_vkCmdDraw vkCmdDraw;
+ PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT;
+-PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
+-PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
+-PFN_vkCmdSetScissor vkCmdSetScissor;
+-PFN_vkCmdSetViewport vkCmdSetViewport;
+-PFN_vkCreateBuffer vkCreateBuffer;
+-PFN_vkCreateCommandPool vkCreateCommandPool;
+-PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
+-PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
+-PFN_vkCreateFence vkCreateFence;
+-PFN_vkCreateFramebuffer vkCreateFramebuffer;
+-PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
+-PFN_vkCreateImage vkCreateImage;
+-PFN_vkCreateImageView vkCreateImageView;
+-PFN_vkCreatePipelineCache vkCreatePipelineCache;
+-PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
+-PFN_vkCreateRenderPass vkCreateRenderPass;
+-PFN_vkCreateSampler vkCreateSampler;
+-PFN_vkCreateSemaphore vkCreateSemaphore;
+-PFN_vkCreateShaderModule vkCreateShaderModule;
+-PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
+-PFN_vkDestroyBuffer vkDestroyBuffer;
+-PFN_vkDestroyCommandPool vkDestroyCommandPool;
+-PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
+-PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
+-PFN_vkDestroyDevice vkDestroyDevice;
+-PFN_vkDestroyFence vkDestroyFence;
+-PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
+-PFN_vkDestroyImage vkDestroyImage;
+-PFN_vkDestroyImageView vkDestroyImageView;
+-PFN_vkDestroyPipeline vkDestroyPipeline;
+-PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
+-PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+-PFN_vkDestroyRenderPass vkDestroyRenderPass;
+-PFN_vkDestroySampler vkDestroySampler;
+-PFN_vkDestroySemaphore vkDestroySemaphore;
+-PFN_vkDestroyShaderModule vkDestroyShaderModule;
+-PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
+-PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
+-PFN_vkEndCommandBuffer vkEndCommandBuffer;
+-PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
+-PFN_vkFreeMemory vkFreeMemory;
+-PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
+-PFN_vkGetDeviceQueue vkGetDeviceQueue;
+-PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+-PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
++// PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
++// PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
++// PFN_vkCmdSetScissor vkCmdSetScissor;
++// PFN_vkCmdSetViewport vkCmdSetViewport;
++// PFN_vkCreateBuffer vkCreateBuffer;
++// PFN_vkCreateCommandPool vkCreateCommandPool;
++// PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
++// PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
++// PFN_vkCreateFence vkCreateFence;
++// PFN_vkCreateFramebuffer vkCreateFramebuffer;
++// PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
++// PFN_vkCreateImage vkCreateImage;
++// PFN_vkCreateImageView vkCreateImageView;
++// PFN_vkCreatePipelineCache vkCreatePipelineCache;
++// PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
++// PFN_vkCreateRenderPass vkCreateRenderPass;
++// PFN_vkCreateSampler vkCreateSampler;
++// PFN_vkCreateSemaphore vkCreateSemaphore;
++// PFN_vkCreateShaderModule vkCreateShaderModule;
++// PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
++// PFN_vkDestroyBuffer vkDestroyBuffer;
++// PFN_vkDestroyCommandPool vkDestroyCommandPool;
++// PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
++// PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
++// PFN_vkDestroyDevice vkDestroyDevice;
++// PFN_vkDestroyFence vkDestroyFence;
++// PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
++// PFN_vkDestroyImage vkDestroyImage;
++// PFN_vkDestroyImageView vkDestroyImageView;
++// PFN_vkDestroyPipeline vkDestroyPipeline;
++// PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
++// PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
++// PFN_vkDestroyRenderPass vkDestroyRenderPass;
++// PFN_vkDestroySampler vkDestroySampler;
++// PFN_vkDestroySemaphore vkDestroySemaphore;
++// PFN_vkDestroyShaderModule vkDestroyShaderModule;
++// PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
++// PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
++// PFN_vkEndCommandBuffer vkEndCommandBuffer;
++// PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
++// PFN_vkFreeMemory vkFreeMemory;
++// PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
++// PFN_vkGetDeviceQueue vkGetDeviceQueue;
++// PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
++// PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
+ PFN_vkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLE;
+ PFN_vkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLE;
+-PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
+-PFN_vkMapMemory vkMapMemory;
+-PFN_vkQueuePresentKHR vkQueuePresentKHR;
+-PFN_vkQueueSubmit vkQueueSubmit;
+-PFN_vkResetCommandBuffer vkResetCommandBuffer;
+-PFN_vkResetFences vkResetFences;
++// PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
++// PFN_vkMapMemory vkMapMemory;
++// PFN_vkQueuePresentKHR vkQueuePresentKHR;
++// PFN_vkQueueSubmit vkQueueSubmit;
++// PFN_vkResetCommandBuffer vkResetCommandBuffer;
++// PFN_vkResetFences vkResetFences;
+ PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
+-PFN_vkUnmapMemory vkUnmapMemory;
+-PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
+-PFN_vkWaitForFences vkWaitForFences;
++// PFN_vkUnmapMemory vkUnmapMemory;
++// PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
++// PFN_vkWaitForFences vkWaitForFences;
+ 
+ #define LOAD_INSTANCE_FUNCTION(instance, function) function = (PFN_##function)vkGetInstanceProcAddr(instance, #function)
+ #define LOAD_DEVICE_FUNCTION(device, function) function = (PFN_##function)vkGetDeviceProcAddr(device, #function)
+ 
+ static VkResult load_vulkan_library() {
+-    vulkan_library = NULL;
++    // vulkan_library = NULL;
+ #if defined(WIN32)
+     HMODULE library = LoadLibraryA("vulkan-1.dll");
+     if (library == NULL) return VK_ERROR_INITIALIZATION_FAILED;
+@@ -198,157 +199,157 @@ static VkResult load_vulkan_library() {
+ 
+     vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+ #else  // Assume everything else supports dlopen
+-    void* library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
+-    if (library == NULL) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
+-    if (library == NULL) {
+-        return VK_ERROR_INITIALIZATION_FAILED;
+-    }
+-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
++    // void* library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
++    // if (library == NULL) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
++    // if (library == NULL) {
++    //     return VK_ERROR_INITIALIZATION_FAILED;
++    // }
++    // vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+ #endif
+-    if (vkGetInstanceProcAddr == NULL) {
+-        return VK_ERROR_INITIALIZATION_FAILED;
+-    }
+-    vulkan_library = library;
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
++    // if (vkGetInstanceProcAddr == NULL) {
++    //     return VK_ERROR_INITIALIZATION_FAILED;
++    // }
++    // vulkan_library = library;
++    // LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
++    // LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
++    // LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
+ 
+     return VK_SUCCESS;
+ }
+ 
+ static void unload_vulkan_library() {
+-    if (vulkan_library != NULL) {
++    // if (vulkan_library != NULL) {
+ #if defined(WIN32)
+         FreeLibrary((HMODULE)vulkan_library);
+ #else
+-        dlclose(vulkan_library);
++        // dlclose(vulkan_library);
+ #endif
+-        vulkan_library = NULL;
+-    }
++        // vulkan_library = NULL;
++    // }
+ }
+ 
+ static void load_vulkan_instance_functions(VkInstance instance) {
+-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateWin32SurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateAndroidSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_XCB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_METAL_EXT)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateMetalSurfaceEXT);
+-#endif
+-#if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDirectFBSurfaceEXT);
+-#endif
+-#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateScreenSurfaceQNX);
+-#endif
++// #if defined(VK_USE_PLATFORM_WIN32_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateWin32SurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_ANDROID_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateAndroidSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_XLIB_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_XCB_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_METAL_EXT)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateMetalSurfaceEXT);
++// #endif
++// #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateDirectFBSurfaceEXT);
++// #endif
++// #if defined(VK_USE_PLATFORM_SCREEN_QNX)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateScreenSurfaceQNX);
++// #endif
+     LOAD_INSTANCE_FUNCTION(instance, vkCreateDebugUtilsMessengerEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
+     LOAD_INSTANCE_FUNCTION(instance, vkDestroyDebugUtilsMessengerEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceProcAddr);
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDisplayPlaneSurfaceKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
++//     LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
++//     LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
++//     LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceProcAddr);
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateDisplayPlaneSurfaceKHR);
+ }
+ static void load_vulkan_device_functions(VkDevice device) {
+-    LOAD_DEVICE_FUNCTION(device, vkAcquireNextImageKHR);
+-    LOAD_DEVICE_FUNCTION(device, vkAllocateCommandBuffers);
+-    LOAD_DEVICE_FUNCTION(device, vkAllocateDescriptorSets);
+-    LOAD_DEVICE_FUNCTION(device, vkAllocateMemory);
+-    LOAD_DEVICE_FUNCTION(device, vkBeginCommandBuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkBindBufferMemory);
+-    LOAD_DEVICE_FUNCTION(device, vkBindImageMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkAcquireNextImageKHR);
++    // LOAD_DEVICE_FUNCTION(device, vkAllocateCommandBuffers);
++    // LOAD_DEVICE_FUNCTION(device, vkAllocateDescriptorSets);
++    // LOAD_DEVICE_FUNCTION(device, vkAllocateMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkBeginCommandBuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkBindBufferMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkBindImageMemory);
+     LOAD_DEVICE_FUNCTION(device, vkCmdBeginDebugUtilsLabelEXT);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdBeginRenderPass);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdBindDescriptorSets);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdBindPipeline);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdCopyBufferToImage);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdDraw);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdBeginRenderPass);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdBindDescriptorSets);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdBindPipeline);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdCopyBufferToImage);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdDraw);
+     LOAD_DEVICE_FUNCTION(device, vkCmdEndDebugUtilsLabelEXT);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdEndRenderPass);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdPipelineBarrier);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdSetScissor);
+-    LOAD_DEVICE_FUNCTION(device, vkCmdSetViewport);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateBuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateCommandPool);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateDescriptorPool);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateDescriptorSetLayout);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateFence);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateFramebuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateGraphicsPipelines);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateImage);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateImageView);
+-    LOAD_DEVICE_FUNCTION(device, vkCreatePipelineCache);
+-    LOAD_DEVICE_FUNCTION(device, vkCreatePipelineLayout);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateRenderPass);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateSampler);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateSemaphore);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateShaderModule);
+-    LOAD_DEVICE_FUNCTION(device, vkCreateSwapchainKHR);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyBuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyCommandPool);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyDescriptorPool);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyDescriptorSetLayout);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyDevice);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyFence);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyFramebuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyImage);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyImageView);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyPipeline);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyPipelineCache);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyPipelineLayout);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyRenderPass);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroySampler);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroySemaphore);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroyShaderModule);
+-    LOAD_DEVICE_FUNCTION(device, vkDestroySwapchainKHR);
+-    LOAD_DEVICE_FUNCTION(device, vkDeviceWaitIdle);
+-    LOAD_DEVICE_FUNCTION(device, vkEndCommandBuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkFreeCommandBuffers);
+-    LOAD_DEVICE_FUNCTION(device, vkFreeMemory);
+-    LOAD_DEVICE_FUNCTION(device, vkGetBufferMemoryRequirements);
+-    LOAD_DEVICE_FUNCTION(device, vkGetDeviceProcAddr);
+-    LOAD_DEVICE_FUNCTION(device, vkGetDeviceQueue);
+-    LOAD_DEVICE_FUNCTION(device, vkGetImageMemoryRequirements);
+-    LOAD_DEVICE_FUNCTION(device, vkGetImageSubresourceLayout);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdEndRenderPass);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdPipelineBarrier);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdSetScissor);
++    // LOAD_DEVICE_FUNCTION(device, vkCmdSetViewport);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateBuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateCommandPool);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateDescriptorPool);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateDescriptorSetLayout);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateFence);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateFramebuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateGraphicsPipelines);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateImage);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateImageView);
++    // LOAD_DEVICE_FUNCTION(device, vkCreatePipelineCache);
++    // LOAD_DEVICE_FUNCTION(device, vkCreatePipelineLayout);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateRenderPass);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateSampler);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateSemaphore);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateShaderModule);
++    // LOAD_DEVICE_FUNCTION(device, vkCreateSwapchainKHR);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyBuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyCommandPool);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyDescriptorPool);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyDescriptorSetLayout);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyDevice);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyFence);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyFramebuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyImage);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyImageView);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyPipeline);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyPipelineCache);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyPipelineLayout);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyRenderPass);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroySampler);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroySemaphore);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroyShaderModule);
++    // LOAD_DEVICE_FUNCTION(device, vkDestroySwapchainKHR);
++    // LOAD_DEVICE_FUNCTION(device, vkDeviceWaitIdle);
++    // LOAD_DEVICE_FUNCTION(device, vkEndCommandBuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkFreeCommandBuffers);
++    // LOAD_DEVICE_FUNCTION(device, vkFreeMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkGetBufferMemoryRequirements);
++    // LOAD_DEVICE_FUNCTION(device, vkGetDeviceProcAddr);
++    // LOAD_DEVICE_FUNCTION(device, vkGetDeviceQueue);
++    // LOAD_DEVICE_FUNCTION(device, vkGetImageMemoryRequirements);
++    // LOAD_DEVICE_FUNCTION(device, vkGetImageSubresourceLayout);
+     LOAD_DEVICE_FUNCTION(device, vkGetPastPresentationTimingGOOGLE);
+     LOAD_DEVICE_FUNCTION(device, vkGetRefreshCycleDurationGOOGLE);
+-    LOAD_DEVICE_FUNCTION(device, vkGetSwapchainImagesKHR);
+-    LOAD_DEVICE_FUNCTION(device, vkMapMemory);
+-    LOAD_DEVICE_FUNCTION(device, vkQueuePresentKHR);
+-    LOAD_DEVICE_FUNCTION(device, vkQueueSubmit);
+-    LOAD_DEVICE_FUNCTION(device, vkResetCommandBuffer);
+-    LOAD_DEVICE_FUNCTION(device, vkResetFences);
++    // LOAD_DEVICE_FUNCTION(device, vkGetSwapchainImagesKHR);
++    // LOAD_DEVICE_FUNCTION(device, vkMapMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkQueuePresentKHR);
++    // LOAD_DEVICE_FUNCTION(device, vkQueueSubmit);
++    // LOAD_DEVICE_FUNCTION(device, vkResetCommandBuffer);
++    // LOAD_DEVICE_FUNCTION(device, vkResetFences);
+     LOAD_DEVICE_FUNCTION(device, vkSetDebugUtilsObjectNameEXT);
+-    LOAD_DEVICE_FUNCTION(device, vkUnmapMemory);
+-    LOAD_DEVICE_FUNCTION(device, vkUpdateDescriptorSets);
+-    LOAD_DEVICE_FUNCTION(device, vkWaitForFences);
++    // LOAD_DEVICE_FUNCTION(device, vkUnmapMemory);
++    // LOAD_DEVICE_FUNCTION(device, vkUpdateDescriptorSets);
++    // LOAD_DEVICE_FUNCTION(device, vkWaitForFences);
+ }
+ 
+ #undef LOAD_INSTANCE_FUNCTION
+diff --git a/cube/wayland_loader.h b/cube/wayland_loader.h
+index 7d7d9141..857e13f9 100644
+--- a/cube/wayland_loader.h
++++ b/cube/wayland_loader.h
+@@ -45,74 +45,74 @@ typedef void (*PFN_wl_proxy_destroy)(struct wl_proxy *proxy);
+ typedef int (*PFN_wl_display_roundtrip)(struct wl_display *display);
+ typedef void (*PFN_wl_display_disconnect)(struct wl_display *display);
+ 
+-static PFN_wl_display_connect cube_wl_display_connect = NULL;
+-static PFN_wl_display_flush cube_wl_display_flush = NULL;
+-static PFN_wl_display_dispatch cube_wl_display_dispatch = NULL;
+-static PFN_wl_display_prepare_read cube_wl_display_prepare_read = NULL;
+-static PFN_wl_display_dispatch_pending cube_wl_display_dispatch_pending = NULL;
+-static PFN_wl_display_read_events cube_wl_display_read_events = NULL;
+-static PFN_wl_proxy_marshal cube_wl_proxy_marshal = NULL;
+-static PFN_wl_proxy_marshal_constructor cube_wl_proxy_marshal_constructor = NULL;
+-static PFN_wl_proxy_marshal_constructor_versioned cube_wl_proxy_marshal_constructor_versioned = NULL;
+-static PFN_wl_proxy_marshal_flags cube_wl_proxy_marshal_flags = NULL;
+-static PFN_wl_proxy_get_version cube_wl_proxy_get_version = NULL;
+-static PFN_wl_proxy_add_listener cube_wl_proxy_add_listener = NULL;
+-static PFN_wl_proxy_destroy cube_wl_proxy_destroy = NULL;
+-static PFN_wl_display_roundtrip cube_wl_display_roundtrip = NULL;
+-static PFN_wl_display_disconnect cube_wl_display_disconnect = NULL;
++// static PFN_wl_display_connect cube_wl_display_connect = NULL;
++// static PFN_wl_display_flush cube_wl_display_flush = NULL;
++// static PFN_wl_display_dispatch cube_wl_display_dispatch = NULL;
++// static PFN_wl_display_prepare_read cube_wl_display_prepare_read = NULL;
++// static PFN_wl_display_dispatch_pending cube_wl_display_dispatch_pending = NULL;
++// static PFN_wl_display_read_events cube_wl_display_read_events = NULL;
++// static PFN_wl_proxy_marshal cube_wl_proxy_marshal = NULL;
++// static PFN_wl_proxy_marshal_constructor cube_wl_proxy_marshal_constructor = NULL;
++// static PFN_wl_proxy_marshal_constructor_versioned cube_wl_proxy_marshal_constructor_versioned = NULL;
++// static PFN_wl_proxy_marshal_flags cube_wl_proxy_marshal_flags = NULL;
++// static PFN_wl_proxy_get_version cube_wl_proxy_get_version = NULL;
++// static PFN_wl_proxy_add_listener cube_wl_proxy_add_listener = NULL;
++// static PFN_wl_proxy_destroy cube_wl_proxy_destroy = NULL;
++// static PFN_wl_display_roundtrip cube_wl_display_roundtrip = NULL;
++// static PFN_wl_display_disconnect cube_wl_display_disconnect = NULL;
+ 
+ // Use macro's to redefine the PFN's as the functions in client code
+-#define wl_display_connect cube_wl_display_connect
+-#define wl_display_flush cube_wl_display_flush
+-#define wl_display_dispatch cube_wl_display_dispatch
+-#define wl_display_prepare_read cube_wl_display_prepare_read
+-#define wl_display_dispatch_pending cube_wl_display_dispatch_pending
+-#define wl_display_read_events cube_wl_display_read_events
+-#define wl_proxy_marshal cube_wl_proxy_marshal
+-#define wl_proxy_marshal_constructor cube_wl_proxy_marshal_constructor
+-#define wl_proxy_marshal_constructor_versioned cube_wl_proxy_marshal_constructor_versioned
+-#define wl_proxy_marshal_flags cube_wl_proxy_marshal_flags
+-#define wl_proxy_get_version cube_wl_proxy_get_version
+-#define wl_proxy_add_listener cube_wl_proxy_add_listener
+-#define wl_proxy_destroy cube_wl_proxy_destroy
+-#define wl_display_roundtrip cube_wl_display_roundtrip
+-#define wl_display_disconnect cube_wl_display_disconnect
++// #define wl_display_connect cube_wl_display_connect
++// #define wl_display_flush cube_wl_display_flush
++// #define wl_display_dispatch cube_wl_display_dispatch
++// #define wl_display_prepare_read cube_wl_display_prepare_read
++// #define wl_display_dispatch_pending cube_wl_display_dispatch_pending
++// #define wl_display_read_events cube_wl_display_read_events
++// #define wl_proxy_marshal cube_wl_proxy_marshal
++// #define wl_proxy_marshal_constructor cube_wl_proxy_marshal_constructor
++// #define wl_proxy_marshal_constructor_versioned cube_wl_proxy_marshal_constructor_versioned
++// #define wl_proxy_marshal_flags cube_wl_proxy_marshal_flags
++// #define wl_proxy_get_version cube_wl_proxy_get_version
++// #define wl_proxy_add_listener cube_wl_proxy_add_listener
++// #define wl_proxy_destroy cube_wl_proxy_destroy
++// #define wl_display_roundtrip cube_wl_display_roundtrip
++// #define wl_display_disconnect cube_wl_display_disconnect
+ 
+ static inline void *initialize_wayland() {
+     void *wayland_library = NULL;
+-    if (NULL == wayland_library) {
+-        wayland_library = dlopen("libwayland-client.so.0", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == wayland_library) {
+-        wayland_library = dlopen("libwayland-client.so", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == wayland_library) {
+-        return NULL;
+-    }
++    // if (NULL == wayland_library) {
++    //     wayland_library = dlopen("libwayland-client.so.0", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == wayland_library) {
++    //     wayland_library = dlopen("libwayland-client.so", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == wayland_library) {
++    //     return NULL;
++    // }
+ 
+ #ifdef __cplusplus
+ #define TYPE_CONVERSION(type) reinterpret_cast<type>
+ #else
+ #define TYPE_CONVERSION(type)
+ #endif
+-    cube_wl_display_connect = TYPE_CONVERSION(PFN_wl_display_connect)(dlsym(wayland_library, "wl_display_connect"));
+-    cube_wl_display_flush = TYPE_CONVERSION(PFN_wl_display_flush)(dlsym(wayland_library, "wl_display_flush"));
+-    cube_wl_display_dispatch = TYPE_CONVERSION(PFN_wl_display_dispatch)(dlsym(wayland_library, "wl_display_dispatch"));
+-    cube_wl_display_prepare_read = TYPE_CONVERSION(PFN_wl_display_prepare_read)(dlsym(wayland_library, "wl_display_prepare_read"));
+-    cube_wl_display_dispatch_pending =
+-        TYPE_CONVERSION(PFN_wl_display_dispatch_pending)(dlsym(wayland_library, "wl_display_dispatch_pending"));
+-    cube_wl_display_read_events = TYPE_CONVERSION(PFN_wl_display_read_events)(dlsym(wayland_library, "wl_display_read_events"));
+-    cube_wl_proxy_marshal = TYPE_CONVERSION(PFN_wl_proxy_marshal)(dlsym(wayland_library, "wl_proxy_marshal"));
+-    cube_wl_proxy_marshal_constructor =
+-        TYPE_CONVERSION(PFN_wl_proxy_marshal_constructor)(dlsym(wayland_library, "wl_proxy_marshal_constructor"));
+-    cube_wl_proxy_marshal_constructor_versioned = TYPE_CONVERSION(PFN_wl_proxy_marshal_constructor_versioned)(
+-        dlsym(wayland_library, "wl_proxy_marshal_constructor_versioned"));
+-    cube_wl_proxy_marshal_flags = TYPE_CONVERSION(PFN_wl_proxy_marshal_flags)(dlsym(wayland_library, "wl_proxy_marshal_flags"));
+-    cube_wl_proxy_get_version = TYPE_CONVERSION(PFN_wl_proxy_get_version)(dlsym(wayland_library, "wl_proxy_get_version"));
+-    cube_wl_proxy_add_listener = TYPE_CONVERSION(PFN_wl_proxy_add_listener)(dlsym(wayland_library, "wl_proxy_add_listener"));
+-    cube_wl_proxy_destroy = TYPE_CONVERSION(PFN_wl_proxy_destroy)(dlsym(wayland_library, "wl_proxy_destroy"));
+-    cube_wl_display_roundtrip = TYPE_CONVERSION(PFN_wl_display_roundtrip)(dlsym(wayland_library, "wl_display_roundtrip"));
+-    cube_wl_display_disconnect = TYPE_CONVERSION(PFN_wl_display_disconnect)(dlsym(wayland_library, "wl_display_disconnect"));
++    // cube_wl_display_connect = TYPE_CONVERSION(PFN_wl_display_connect)(dlsym(wayland_library, "wl_display_connect"));
++    // cube_wl_display_flush = TYPE_CONVERSION(PFN_wl_display_flush)(dlsym(wayland_library, "wl_display_flush"));
++    // cube_wl_display_dispatch = TYPE_CONVERSION(PFN_wl_display_dispatch)(dlsym(wayland_library, "wl_display_dispatch"));
++    // cube_wl_display_prepare_read = TYPE_CONVERSION(PFN_wl_display_prepare_read)(dlsym(wayland_library, "wl_display_prepare_read"));
++    // cube_wl_display_dispatch_pending =
++    //     TYPE_CONVERSION(PFN_wl_display_dispatch_pending)(dlsym(wayland_library, "wl_display_dispatch_pending"));
++    // cube_wl_display_read_events = TYPE_CONVERSION(PFN_wl_display_read_events)(dlsym(wayland_library, "wl_display_read_events"));
++    // cube_wl_proxy_marshal = TYPE_CONVERSION(PFN_wl_proxy_marshal)(dlsym(wayland_library, "wl_proxy_marshal"));
++    // cube_wl_proxy_marshal_constructor =
++    //     TYPE_CONVERSION(PFN_wl_proxy_marshal_constructor)(dlsym(wayland_library, "wl_proxy_marshal_constructor"));
++    // cube_wl_proxy_marshal_constructor_versioned = TYPE_CONVERSION(PFN_wl_proxy_marshal_constructor_versioned)(
++    //     dlsym(wayland_library, "wl_proxy_marshal_constructor_versioned"));
++    // cube_wl_proxy_marshal_flags = TYPE_CONVERSION(PFN_wl_proxy_marshal_flags)(dlsym(wayland_library, "wl_proxy_marshal_flags"));
++    // cube_wl_proxy_get_version = TYPE_CONVERSION(PFN_wl_proxy_get_version)(dlsym(wayland_library, "wl_proxy_get_version"));
++    // cube_wl_proxy_add_listener = TYPE_CONVERSION(PFN_wl_proxy_add_listener)(dlsym(wayland_library, "wl_proxy_add_listener"));
++    // cube_wl_proxy_destroy = TYPE_CONVERSION(PFN_wl_proxy_destroy)(dlsym(wayland_library, "wl_proxy_destroy"));
++    // cube_wl_display_roundtrip = TYPE_CONVERSION(PFN_wl_display_roundtrip)(dlsym(wayland_library, "wl_display_roundtrip"));
++    // cube_wl_display_disconnect = TYPE_CONVERSION(PFN_wl_display_disconnect)(dlsym(wayland_library, "wl_display_disconnect"));
+ 
+     return wayland_library;
+ }
+diff --git a/cube/xcb_loader.h b/cube/xcb_loader.h
+index cecd2540..b51efcdc 100644
+--- a/cube/xcb_loader.h
++++ b/cube/xcb_loader.h
+@@ -50,53 +50,53 @@ typedef const struct xcb_setup_t *(*PFN_xcb_get_setup)(xcb_connection_t *c);
+ typedef xcb_screen_iterator_t (*PFN_xcb_setup_roots_iterator)(const xcb_setup_t *R);
+ typedef void (*PFN_xcb_screen_next)(xcb_screen_iterator_t *i);
+ 
+-static PFN_xcb_destroy_window cube_xcb_destroy_window = NULL;
+-static PFN_xcb_disconnect cube_xcb_disconnect = NULL;
+-static PFN_xcb_flush cube_xcb_flush = NULL;
+-static PFN_xcb_wait_for_event cube_xcb_wait_for_event = NULL;
+-static PFN_xcb_poll_for_event cube_xcb_poll_for_event = NULL;
+-static PFN_xcb_generate_id cube_xcb_generate_id = NULL;
+-static PFN_xcb_create_window cube_xcb_create_window = NULL;
+-static PFN_xcb_intern_atom cube_xcb_intern_atom = NULL;
+-static PFN_xcb_intern_atom_reply cube_xcb_intern_atom_reply = NULL;
+-static PFN_xcb_change_property cube_xcb_change_property = NULL;
+-static PFN_xcb_map_window cube_xcb_map_window = NULL;
+-static PFN_xcb_configure_window cube_xcb_configure_window = NULL;
+-static PFN_xcb_connect cube_xcb_connect = NULL;
+-static PFN_xcb_connection_has_error cube_xcb_connection_has_error = NULL;
+-static PFN_xcb_get_setup cube_xcb_get_setup = NULL;
+-static PFN_xcb_setup_roots_iterator cube_xcb_setup_roots_iterator = NULL;
+-static PFN_xcb_screen_next cube_xcb_screen_next = NULL;
++// static PFN_xcb_destroy_window cube_xcb_destroy_window = NULL;
++// static PFN_xcb_disconnect cube_xcb_disconnect = NULL;
++// static PFN_xcb_flush cube_xcb_flush = NULL;
++// static PFN_xcb_wait_for_event cube_xcb_wait_for_event = NULL;
++// static PFN_xcb_poll_for_event cube_xcb_poll_for_event = NULL;
++// static PFN_xcb_generate_id cube_xcb_generate_id = NULL;
++// static PFN_xcb_create_window cube_xcb_create_window = NULL;
++// static PFN_xcb_intern_atom cube_xcb_intern_atom = NULL;
++// static PFN_xcb_intern_atom_reply cube_xcb_intern_atom_reply = NULL;
++// static PFN_xcb_change_property cube_xcb_change_property = NULL;
++// static PFN_xcb_map_window cube_xcb_map_window = NULL;
++// static PFN_xcb_configure_window cube_xcb_configure_window = NULL;
++// static PFN_xcb_connect cube_xcb_connect = NULL;
++// static PFN_xcb_connection_has_error cube_xcb_connection_has_error = NULL;
++// static PFN_xcb_get_setup cube_xcb_get_setup = NULL;
++// static PFN_xcb_setup_roots_iterator cube_xcb_setup_roots_iterator = NULL;
++// static PFN_xcb_screen_next cube_xcb_screen_next = NULL;
+ 
+-#define xcb_destroy_window cube_xcb_destroy_window
+-#define xcb_disconnect cube_xcb_disconnect
+-#define xcb_flush cube_xcb_flush
+-#define xcb_wait_for_event cube_xcb_wait_for_event
+-#define xcb_poll_for_event cube_xcb_poll_for_event
+-#define xcb_generate_id cube_xcb_generate_id
+-#define xcb_create_window cube_xcb_create_window
+-#define xcb_intern_atom cube_xcb_intern_atom
+-#define xcb_intern_atom_reply cube_xcb_intern_atom_reply
+-#define xcb_change_property cube_xcb_change_property
+-#define xcb_map_window cube_xcb_map_window
+-#define xcb_configure_window cube_xcb_configure_window
+-#define xcb_connect cube_xcb_connect
+-#define xcb_connection_has_error cube_xcb_connection_has_error
+-#define xcb_get_setup cube_xcb_get_setup
+-#define xcb_setup_roots_iterator cube_xcb_setup_roots_iterator
+-#define xcb_screen_next cube_xcb_screen_next
++// #define xcb_destroy_window cube_xcb_destroy_window
++// #define xcb_disconnect cube_xcb_disconnect
++// #define xcb_flush cube_xcb_flush
++// #define xcb_wait_for_event cube_xcb_wait_for_event
++// #define xcb_poll_for_event cube_xcb_poll_for_event
++// #define xcb_generate_id cube_xcb_generate_id
++// #define xcb_create_window cube_xcb_create_window
++// #define xcb_intern_atom cube_xcb_intern_atom
++// #define xcb_intern_atom_reply cube_xcb_intern_atom_reply
++// #define xcb_change_property cube_xcb_change_property
++// #define xcb_map_window cube_xcb_map_window
++// #define xcb_configure_window cube_xcb_configure_window
++// #define xcb_connect cube_xcb_connect
++// #define xcb_connection_has_error cube_xcb_connection_has_error
++// #define xcb_get_setup cube_xcb_get_setup
++// #define xcb_setup_roots_iterator cube_xcb_setup_roots_iterator
++// #define xcb_screen_next cube_xcb_screen_next
+ 
+ void *initialize_xcb() {
+     void *xcb_library = NULL;
+-    if (NULL == xcb_library) {
+-        xcb_library = dlopen("libxcb.so.1", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == xcb_library) {
+-        xcb_library = dlopen("libxcb.so", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == xcb_library) {
+-        return NULL;
+-    }
++    // if (NULL == xcb_library) {
++    //     xcb_library = dlopen("libxcb.so.1", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == xcb_library) {
++    //     xcb_library = dlopen("libxcb.so", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == xcb_library) {
++    //     return NULL;
++    // }
+ 
+ #ifdef __cplusplus
+ #define TYPE_CONVERSION(type) reinterpret_cast<type>
+@@ -104,23 +104,23 @@ void *initialize_xcb() {
+ #define TYPE_CONVERSION(type)
+ #endif
+ 
+-    cube_xcb_destroy_window = TYPE_CONVERSION(PFN_xcb_destroy_window)(dlsym(xcb_library, "xcb_destroy_window"));
+-    cube_xcb_disconnect = TYPE_CONVERSION(PFN_xcb_disconnect)(dlsym(xcb_library, "xcb_disconnect"));
+-    cube_xcb_flush = TYPE_CONVERSION(PFN_xcb_flush)(dlsym(xcb_library, "xcb_flush"));
+-    cube_xcb_wait_for_event = TYPE_CONVERSION(PFN_xcb_wait_for_event)(dlsym(xcb_library, "xcb_wait_for_event"));
+-    cube_xcb_poll_for_event = TYPE_CONVERSION(PFN_xcb_poll_for_event)(dlsym(xcb_library, "xcb_poll_for_event"));
+-    cube_xcb_generate_id = TYPE_CONVERSION(PFN_xcb_generate_id)(dlsym(xcb_library, "xcb_generate_id"));
+-    cube_xcb_create_window = TYPE_CONVERSION(PFN_xcb_create_window)(dlsym(xcb_library, "xcb_create_window"));
+-    cube_xcb_intern_atom = TYPE_CONVERSION(PFN_xcb_intern_atom)(dlsym(xcb_library, "xcb_intern_atom"));
+-    cube_xcb_intern_atom_reply = TYPE_CONVERSION(PFN_xcb_intern_atom_reply)(dlsym(xcb_library, "xcb_intern_atom_reply"));
+-    cube_xcb_change_property = TYPE_CONVERSION(PFN_xcb_change_property)(dlsym(xcb_library, "xcb_change_property"));
+-    cube_xcb_map_window = TYPE_CONVERSION(PFN_xcb_map_window)(dlsym(xcb_library, "xcb_map_window"));
+-    cube_xcb_configure_window = TYPE_CONVERSION(PFN_xcb_configure_window)(dlsym(xcb_library, "xcb_configure_window"));
+-    cube_xcb_connect = TYPE_CONVERSION(PFN_xcb_connect)(dlsym(xcb_library, "xcb_connect"));
+-    cube_xcb_connection_has_error = TYPE_CONVERSION(PFN_xcb_connection_has_error)(dlsym(xcb_library, "xcb_connection_has_error"));
+-    cube_xcb_get_setup = TYPE_CONVERSION(PFN_xcb_get_setup)(dlsym(xcb_library, "xcb_get_setup"));
+-    cube_xcb_setup_roots_iterator = TYPE_CONVERSION(PFN_xcb_setup_roots_iterator)(dlsym(xcb_library, "xcb_setup_roots_iterator"));
+-    cube_xcb_screen_next = TYPE_CONVERSION(PFN_xcb_screen_next)(dlsym(xcb_library, "xcb_screen_next"));
++    // cube_xcb_destroy_window = TYPE_CONVERSION(PFN_xcb_destroy_window)(dlsym(xcb_library, "xcb_destroy_window"));
++    // cube_xcb_disconnect = TYPE_CONVERSION(PFN_xcb_disconnect)(dlsym(xcb_library, "xcb_disconnect"));
++    // cube_xcb_flush = TYPE_CONVERSION(PFN_xcb_flush)(dlsym(xcb_library, "xcb_flush"));
++    // cube_xcb_wait_for_event = TYPE_CONVERSION(PFN_xcb_wait_for_event)(dlsym(xcb_library, "xcb_wait_for_event"));
++    // cube_xcb_poll_for_event = TYPE_CONVERSION(PFN_xcb_poll_for_event)(dlsym(xcb_library, "xcb_poll_for_event"));
++    // cube_xcb_generate_id = TYPE_CONVERSION(PFN_xcb_generate_id)(dlsym(xcb_library, "xcb_generate_id"));
++    // cube_xcb_create_window = TYPE_CONVERSION(PFN_xcb_create_window)(dlsym(xcb_library, "xcb_create_window"));
++    // cube_xcb_intern_atom = TYPE_CONVERSION(PFN_xcb_intern_atom)(dlsym(xcb_library, "xcb_intern_atom"));
++    // cube_xcb_intern_atom_reply = TYPE_CONVERSION(PFN_xcb_intern_atom_reply)(dlsym(xcb_library, "xcb_intern_atom_reply"));
++    // cube_xcb_change_property = TYPE_CONVERSION(PFN_xcb_change_property)(dlsym(xcb_library, "xcb_change_property"));
++    // cube_xcb_map_window = TYPE_CONVERSION(PFN_xcb_map_window)(dlsym(xcb_library, "xcb_map_window"));
++    // cube_xcb_configure_window = TYPE_CONVERSION(PFN_xcb_configure_window)(dlsym(xcb_library, "xcb_configure_window"));
++    // cube_xcb_connect = TYPE_CONVERSION(PFN_xcb_connect)(dlsym(xcb_library, "xcb_connect"));
++    // cube_xcb_connection_has_error = TYPE_CONVERSION(PFN_xcb_connection_has_error)(dlsym(xcb_library, "xcb_connection_has_error"));
++    // cube_xcb_get_setup = TYPE_CONVERSION(PFN_xcb_get_setup)(dlsym(xcb_library, "xcb_get_setup"));
++    // cube_xcb_setup_roots_iterator = TYPE_CONVERSION(PFN_xcb_setup_roots_iterator)(dlsym(xcb_library, "xcb_setup_roots_iterator"));
++    // cube_xcb_screen_next = TYPE_CONVERSION(PFN_xcb_screen_next)(dlsym(xcb_library, "xcb_screen_next"));
+ 
+     return xcb_library;
+ }
+diff --git a/cube/xlib_loader.h b/cube/xlib_loader.h
+index 5553558d..7b43cf09 100644
+--- a/cube/xlib_loader.h
++++ b/cube/xlib_loader.h
+@@ -43,47 +43,47 @@ typedef int (*PFN_XFlush)(Display* /* display */
+ );
+ typedef Status (*PFN_XSetWMProtocols)(Display*, Window, Atom*, int);
+ 
+-static PFN_XDestroyWindow cube_XDestroyWindow = NULL;
+-static PFN_XOpenDisplay cube_XOpenDisplay = NULL;
+-static PFN_XCreateColormap cube_XCreateColormap = NULL;
+-static PFN_XCreateWindow cube_XCreateWindow = NULL;
+-static PFN_XSelectInput cube_XSelectInput = NULL;
+-static PFN_XMapWindow cube_XMapWindow = NULL;
+-static PFN_XInternAtom cube_XInternAtom = NULL;
+-static PFN_XNextEvent cube_XNextEvent = NULL;
+-static PFN_XPending cube_XPending = NULL;
+-static PFN_XGetVisualInfo cube_XGetVisualInfo = NULL;
+-static PFN_XCloseDisplay cube_XCloseDisplay = NULL;
+-static PFN_XInitThreads cube_XInitThreads = NULL;
+-static PFN_XFlush cube_XFlush = NULL;
+-static PFN_XSetWMProtocols cube_XSetWMProtocols = NULL;
++// static PFN_XDestroyWindow cube_XDestroyWindow = NULL;
++// static PFN_XOpenDisplay cube_XOpenDisplay = NULL;
++// static PFN_XCreateColormap cube_XCreateColormap = NULL;
++// static PFN_XCreateWindow cube_XCreateWindow = NULL;
++// static PFN_XSelectInput cube_XSelectInput = NULL;
++// static PFN_XMapWindow cube_XMapWindow = NULL;
++// static PFN_XInternAtom cube_XInternAtom = NULL;
++// static PFN_XNextEvent cube_XNextEvent = NULL;
++// static PFN_XPending cube_XPending = NULL;
++// static PFN_XGetVisualInfo cube_XGetVisualInfo = NULL;
++// static PFN_XCloseDisplay cube_XCloseDisplay = NULL;
++// static PFN_XInitThreads cube_XInitThreads = NULL;
++// static PFN_XFlush cube_XFlush = NULL;
++// static PFN_XSetWMProtocols cube_XSetWMProtocols = NULL;
+ 
+-#define XDestroyWindow cube_XDestroyWindow
+-#define XOpenDisplay cube_XOpenDisplay
+-#define XCreateColormap cube_XCreateColormap
+-#define XCreateWindow cube_XCreateWindow
+-#define XSelectInput cube_XSelectInput
+-#define XMapWindow cube_XMapWindow
+-#define XInternAtom cube_XInternAtom
+-#define XNextEvent cube_XNextEvent
+-#define XPending cube_XPending
+-#define XGetVisualInfo cube_XGetVisualInfo
+-#define XCloseDisplay cube_XCloseDisplay
+-#define XInitThreads cube_XInitThreads
+-#define XFlush cube_XFlush
+-#define XSetWMProtocols cube_XSetWMProtocols
++// #define XDestroyWindow cube_XDestroyWindow
++// #define XOpenDisplay cube_XOpenDisplay
++// #define XCreateColormap cube_XCreateColormap
++// #define XCreateWindow cube_XCreateWindow
++// #define XSelectInput cube_XSelectInput
++// #define XMapWindow cube_XMapWindow
++// #define XInternAtom cube_XInternAtom
++// #define XNextEvent cube_XNextEvent
++// #define XPending cube_XPending
++// #define XGetVisualInfo cube_XGetVisualInfo
++// #define XCloseDisplay cube_XCloseDisplay
++// #define XInitThreads cube_XInitThreads
++// #define XFlush cube_XFlush
++// #define XSetWMProtocols cube_XSetWMProtocols
+ 
+ void* initialize_xlib() {
+     void* xlib_library = NULL;
+-    if (NULL == xlib_library) {
+-        xlib_library = dlopen("libX11.so.6", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == xlib_library) {
+-        xlib_library = dlopen("libX11.so", RTLD_NOW | RTLD_LOCAL);
+-    }
+-    if (NULL == xlib_library) {
+-        return NULL;
+-    }
++    // if (NULL == xlib_library) {
++    //     xlib_library = dlopen("libX11.so.6", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == xlib_library) {
++    //     xlib_library = dlopen("libX11.so", RTLD_NOW | RTLD_LOCAL);
++    // }
++    // if (NULL == xlib_library) {
++    //     return NULL;
++    // }
+ 
+ #ifdef __cplusplus
+ #define TYPE_CONVERSION(type) reinterpret_cast<type>
+@@ -91,20 +91,20 @@ void* initialize_xlib() {
+ #define TYPE_CONVERSION(type)
+ #endif
+ 
+-    cube_XDestroyWindow = TYPE_CONVERSION(PFN_XDestroyWindow)(dlsym(xlib_library, "XDestroyWindow"));
+-    cube_XOpenDisplay = TYPE_CONVERSION(PFN_XOpenDisplay)(dlsym(xlib_library, "XOpenDisplay"));
+-    cube_XCreateColormap = TYPE_CONVERSION(PFN_XCreateColormap)(dlsym(xlib_library, "XCreateColormap"));
+-    cube_XCreateWindow = TYPE_CONVERSION(PFN_XCreateWindow)(dlsym(xlib_library, "XCreateWindow"));
+-    cube_XSelectInput = TYPE_CONVERSION(PFN_XSelectInput)(dlsym(xlib_library, "XSelectInput"));
+-    cube_XMapWindow = TYPE_CONVERSION(PFN_XMapWindow)(dlsym(xlib_library, "XMapWindow"));
+-    cube_XInternAtom = TYPE_CONVERSION(PFN_XInternAtom)(dlsym(xlib_library, "XInternAtom"));
+-    cube_XNextEvent = TYPE_CONVERSION(PFN_XNextEvent)(dlsym(xlib_library, "XNextEvent"));
+-    cube_XPending = TYPE_CONVERSION(PFN_XPending)(dlsym(xlib_library, "XPending"));
+-    cube_XGetVisualInfo = TYPE_CONVERSION(PFN_XGetVisualInfo)(dlsym(xlib_library, "XGetVisualInfo"));
+-    cube_XCloseDisplay = TYPE_CONVERSION(PFN_XCloseDisplay)(dlsym(xlib_library, "XCloseDisplay"));
+-    cube_XInitThreads = TYPE_CONVERSION(PFN_XInitThreads)(dlsym(xlib_library, "XInitThreads"));
+-    cube_XFlush = TYPE_CONVERSION(PFN_XFlush)(dlsym(xlib_library, "XFlush"));
+-    cube_XSetWMProtocols = TYPE_CONVERSION(PFN_XSetWMProtocols)(dlsym(xlib_library, "XSetWMProtocols"));
++    // cube_XDestroyWindow = TYPE_CONVERSION(PFN_XDestroyWindow)(dlsym(xlib_library, "XDestroyWindow"));
++    // cube_XOpenDisplay = TYPE_CONVERSION(PFN_XOpenDisplay)(dlsym(xlib_library, "XOpenDisplay"));
++    // cube_XCreateColormap = TYPE_CONVERSION(PFN_XCreateColormap)(dlsym(xlib_library, "XCreateColormap"));
++    // cube_XCreateWindow = TYPE_CONVERSION(PFN_XCreateWindow)(dlsym(xlib_library, "XCreateWindow"));
++    // cube_XSelectInput = TYPE_CONVERSION(PFN_XSelectInput)(dlsym(xlib_library, "XSelectInput"));
++    // cube_XMapWindow = TYPE_CONVERSION(PFN_XMapWindow)(dlsym(xlib_library, "XMapWindow"));
++    // cube_XInternAtom = TYPE_CONVERSION(PFN_XInternAtom)(dlsym(xlib_library, "XInternAtom"));
++    // cube_XNextEvent = TYPE_CONVERSION(PFN_XNextEvent)(dlsym(xlib_library, "XNextEvent"));
++    // cube_XPending = TYPE_CONVERSION(PFN_XPending)(dlsym(xlib_library, "XPending"));
++    // cube_XGetVisualInfo = TYPE_CONVERSION(PFN_XGetVisualInfo)(dlsym(xlib_library, "XGetVisualInfo"));
++    // cube_XCloseDisplay = TYPE_CONVERSION(PFN_XCloseDisplay)(dlsym(xlib_library, "XCloseDisplay"));
++    // cube_XInitThreads = TYPE_CONVERSION(PFN_XInitThreads)(dlsym(xlib_library, "XInitThreads"));
++    // cube_XFlush = TYPE_CONVERSION(PFN_XFlush)(dlsym(xlib_library, "XFlush"));
++    // cube_XSetWMProtocols = TYPE_CONVERSION(PFN_XSetWMProtocols)(dlsym(xlib_library, "XSetWMProtocols"));
+ 
+     return xlib_library;
+ }
+diff --git a/vulkaninfo/CMakeLists.txt b/vulkaninfo/CMakeLists.txt
+index 71e504a7..743ef4b0 100644
+--- a/vulkaninfo/CMakeLists.txt
++++ b/vulkaninfo/CMakeLists.txt
+@@ -60,7 +60,7 @@ target_include_directories(vulkaninfo PRIVATE
+     .
+ )
+ 
+-target_compile_definitions(vulkaninfo PRIVATE VK_ENABLE_BETA_EXTENSIONS VK_NO_PROTOTYPES)
++target_compile_definitions(vulkaninfo PRIVATE VK_ENABLE_BETA_EXTENSIONS)
+ 
+ if (CMAKE_SYSTEM_NAME MATCHES "Linux|BSD|GNU")
+     option(BUILD_WSI_XCB_SUPPORT "Build XCB WSI support" ON)
+diff --git a/vulkaninfo/vulkaninfo_functions.h b/vulkaninfo/vulkaninfo_functions.h
+index 87e93f51..f467918f 100644
+--- a/vulkaninfo/vulkaninfo_functions.h
++++ b/vulkaninfo/vulkaninfo_functions.h
+@@ -31,99 +31,99 @@
+ #endif
+ 
+ // We are providing storage for all functions, make sure the vulkan headers doesn't conflate with ours.
+-#if !defined(VK_NO_PROTOTYPES)
+-#define VK_NO_PROTOTYPES
+-#endif
++// #if !defined(VK_NO_PROTOTYPES)
++// #define VK_NO_PROTOTYPES
++// #endif
+ 
+ #include <vulkan/vulkan.h>
+ 
+-void* vulkan_library;
++// void* vulkan_library;
+ 
+-// Global Functions
+-PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+-PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+-PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
+-PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
+-PFN_vkCreateInstance vkCreateInstance;
++// // Global Functions
++// PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
++// PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
++// PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
++// PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
++// PFN_vkCreateInstance vkCreateInstance;
+ 
+ // Per-platform Instance functions
+-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+-PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+-PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+-PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_XCB_KHR)
+-PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
+-#endif
+-#if defined(VK_USE_PLATFORM_METAL_EXT)
+-PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
+-#endif
+-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+-PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
+-#endif
+-#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+-PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
+-#endif
+-#if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
+-PFN_vkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXT;
+-#endif
+-#if defined(VK_USE_PLATFORM_GGP)
+-PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
+-#endif
+-// Instance functions
+-PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
+-PFN_vkCreateDevice vkCreateDevice;
+-PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
+-PFN_vkDestroyInstance vkDestroyInstance;
+-PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+-PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
+-PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
+-PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
+-PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
+-PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
+-PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
+-PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+-PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
+-PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
+-PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
+-PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
+-PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
+-PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR;
+-PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR;
+-PFN_vkEnumeratePhysicalDeviceGroupsKHR vkEnumeratePhysicalDeviceGroupsKHR;
+-PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
+-PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+-PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
+-PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+-PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
+-PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXT;
+-PFN_vkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXT;
+-PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
+-
+-// Device functions
+-PFN_vkCreateImage vkCreateImage;
+-PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+-PFN_vkDestroyImage vkDestroyImage;
+-PFN_vkDestroyDevice vkDestroyDevice;
++// #if defined(VK_USE_PLATFORM_WIN32_KHR)
++// PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
++// PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_ANDROID_KHR)
++// PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_XLIB_KHR)
++// PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_XCB_KHR)
++// PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
++// #endif
++// #if defined(VK_USE_PLATFORM_METAL_EXT)
++// PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
++// #endif
++// #if defined(VK_USE_PLATFORM_MACOS_MVK)
++// PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
++// #endif
++// #if defined(VK_USE_PLATFORM_SCREEN_QNX)
++// PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
++// #endif
++// #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
++// PFN_vkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXT;
++// #endif
++// #if defined(VK_USE_PLATFORM_GGP)
++// PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
++// #endif
++// // Instance functions
++// PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
++// PFN_vkCreateDevice vkCreateDevice;
++// PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
++// PFN_vkDestroyInstance vkDestroyInstance;
++// PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
++// PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
++// PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
++// PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
++// PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
++// PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
++// PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
++// PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
++// PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
++// PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
++// PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
++// PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
++// PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
++// PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
++// PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
++// PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
++// PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR;
++// PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR;
++// PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR;
++// PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR;
++// PFN_vkEnumeratePhysicalDeviceGroupsKHR vkEnumeratePhysicalDeviceGroupsKHR;
++// PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
++// PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
++// PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
++// PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
++// PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
++// PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
++// PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
++// PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXT;
++// PFN_vkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXT;
++// PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
++
++// // Device functions
++// PFN_vkCreateImage vkCreateImage;
++// PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
++// PFN_vkDestroyImage vkDestroyImage;
++// PFN_vkDestroyDevice vkDestroyDevice;
+ 
+ #define LOAD_INSTANCE_FUNCTION(instance, function) function = (PFN_##function)vkGetInstanceProcAddr(instance, #function)
+ 
+ static VkResult load_vulkan_library() {
+-    vulkan_library = NULL;
++    // vulkan_library = NULL;
+ #if defined(WIN32)
+     HMODULE library = LoadLibraryA("vulkan-1.dll");
+     if (library == NULL) return VK_ERROR_INITIALIZATION_FAILED;
+@@ -146,109 +146,109 @@ static VkResult load_vulkan_library() {
+ 
+     vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+ #else  // Assume everything else supports dlopen
+-    void* library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
+-    if (library == NULL) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
+-    if (library == NULL) {
+-        return VK_ERROR_INITIALIZATION_FAILED;
+-    }
+-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+-#endif
+-    if (vkGetInstanceProcAddr == NULL) {
+-        return VK_ERROR_INITIALIZATION_FAILED;
+-    }
+-    vulkan_library = library;
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceVersion);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
++    // void* library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
++    // if (library == NULL) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
++    // if (library == NULL) {
++    //     return VK_ERROR_INITIALIZATION_FAILED;
++    // }
++    // vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
++#endif
++    // if (vkGetInstanceProcAddr == NULL) {
++    //     return VK_ERROR_INITIALIZATION_FAILED;
++    // }
++    // vulkan_library = library;
++    // LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
++    // LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
++    // LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceVersion);
++    // LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
+ 
+     return VK_SUCCESS;
+ }
+ 
+ static void unload_vulkan_library() {
+-    if (vulkan_library != NULL) {
++    // if (vulkan_library != NULL) {
+ #if defined(WIN32)
+         FreeLibrary((HMODULE)vulkan_library);
+ #else
+-        dlclose(vulkan_library);
++        // dlclose(vulkan_library);
+ #endif
+-        vulkan_library = NULL;
+-    }
++    //     vulkan_library = NULL;
++    // }
+ }
+ 
+ static void load_vulkan_instance_functions(VkInstance instance) {
+-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateWin32SurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateAndroidSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_XCB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
+-#endif
+-#if defined(VK_USE_PLATFORM_METAL_EXT)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateMetalSurfaceEXT);
+-#endif
+-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateMacOSSurfaceMVK);
+-#endif
+-#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateScreenSurfaceQNX);
+-#endif
+-#if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDirectFBSurfaceEXT);
+-#endif
+-#if defined(VK_USE_PLATFORM_GGP)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateStreamDescriptorSurfaceGGP);
+-#endif
+-
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDebugReportCallbackEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyDebugReportCallbackEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormats2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoFormatPropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDeviceGroupsKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceGroupPresentCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceImageFormatProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2EXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceToolPropertiesEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties2KHR);
+-
+-    // Load device functions using vkGetInstanceProcAddr, vulkaninfo doesn't care about the extra indirection it causes
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateImage);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetImageMemoryRequirements);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyImage);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyDevice);
++// #if defined(VK_USE_PLATFORM_WIN32_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateWin32SurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_ANDROID_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateAndroidSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_XLIB_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_XCB_KHR)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
++// #endif
++// #if defined(VK_USE_PLATFORM_METAL_EXT)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateMetalSurfaceEXT);
++// #endif
++// #if defined(VK_USE_PLATFORM_MACOS_MVK)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateMacOSSurfaceMVK);
++// #endif
++// #if defined(VK_USE_PLATFORM_SCREEN_QNX)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateScreenSurfaceQNX);
++// #endif
++// #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateDirectFBSurfaceEXT);
++// #endif
++// #if defined(VK_USE_PLATFORM_GGP)
++//     LOAD_INSTANCE_FUNCTION(instance, vkCreateStreamDescriptorSurfaceGGP);
++// #endif
++
++    // LOAD_INSTANCE_FUNCTION(instance, vkCreateDebugReportCallbackEXT);
++    // LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
++    // LOAD_INSTANCE_FUNCTION(instance, vkDestroyDebugReportCallbackEXT);
++    // LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
++    // LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoCapabilitiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormats2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoFormatPropertiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDeviceGroupsKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceGroupPresentCapabilitiesKHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceImageFormatProperties);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties2KHR);
++    // LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2EXT);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceToolPropertiesEXT);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties2KHR);
++
++    // // Load device functions using vkGetInstanceProcAddr, vulkaninfo doesn't care about the extra indirection it causes
++    // LOAD_INSTANCE_FUNCTION(instance, vkCreateImage);
++    // LOAD_INSTANCE_FUNCTION(instance, vkGetImageMemoryRequirements);
++    // LOAD_INSTANCE_FUNCTION(instance, vkDestroyImage);
++    // LOAD_INSTANCE_FUNCTION(instance, vkDestroyDevice);
+ }
+ 
+ #undef LOAD_INSTANCE_FUNCTION

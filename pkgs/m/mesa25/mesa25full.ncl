@@ -610,16 +610,57 @@
       uri = "https://github.com/KhronosGroup/Vulkan-Tools/archive/refs/tags/v1.4.334.tar.gz",
       sha256sum = "ae6c8ec78c6ebe2ec7c3034ac99454eaa2e855fe2b3df0ea858c2ba669b7fd83",
     },
+    patches = [
+      {
+        sha256sum = "94adcd41e39f05f362a39f6002665ccf40961797fd20ed8f7580eee516346000",
+        file ="vulkan-tools.patch"
+      }
+    ],
     debug = true,
     preConfigurePhase = [
       m%"sed -i 's|MODULE|STATIC|g' ${SRC}/icd/CMakeLists.txt"%,
     ],
     buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static xau)"
+      EXTRA_CPPFLAGS = [
+        "-DVK_ONLY_EXPORTED_PROTOTYPES",
       ],
+      EXTRA_CFLAGS = [
+        "-DVK_ONLY_EXPORTED_PROTOTYPES",
+      ],
+      EXTRA_CXXFLAGS = [
+        "-DVK_ONLY_EXPORTED_PROTOTYPES",
+      ],
+      EXTRA_LDFLAGS = [
+        "-DVK_ONLY_EXPORTED_PROTOTYPES",
+        "$(pkg-config --libs --static xau)",
+        "$(pkg-config --libs --static xcb)",
+        "$(pkg-config --libs --static x11)",
+        "$(pkg-config --libs --static x11-xcb)",
+        "$(pkg-config --libs --static wayland-client)",
+
+        "-ldl_vulkan",
+        "-lvulkan",
+        "-lc++",
+        "-lc",
+        "-l:libVkLayer_MESA_device_select.a",
+        "-Wl,-u,vk_common_GetPhysicalDeviceProperties2",
+        "-Wl,-u,vk_common_CreateSamplerYcbcrConversion",
+        "-Wl,-u,radv_CreateSampler",
+        "-Wl,-u,radv_CreateDescriptorPool",
+        "-Wl,-u,vk_common_CreateFramebuffer",
+        "-Wl,-u,vk_common_CmdCopyBufferToImage",
+        "-Wl,-u,radv_CmdCopyBufferToImage2",
+        "-Wl,-u,radv_AllocateDescriptorSets",
+        "-Wl,-u,radv_GetInstanceProcAddr",
+        "$(pkg-config --libs --static vulkan_radeon)",
+      ],
+
+
+      
     },
     llvmProvider | priority 1 = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
+
     biDrvs = [
       drvs.libelf,
       drvs.libdrmDebug,
@@ -639,7 +680,7 @@
       drvs.spirvToolsDebug,
       drvs.glslangDebug,
       drvs.spirvLlvmTranslatorDebug,
-      drvs.wayland,
+      drvs.waylandWeaksyms2,
       drvs.waylandProtocols,
       drvs.libxcursor,
       drvs.xorgMacros,
@@ -665,9 +706,10 @@
       drvs.libxf86vm,
       drvs.libxrandr,
       drvs.zstd,
-      drvs.mesaFull,
+      drvs.mesaFullDl,
       drvs.vulkanHeaders,
-      drvs.vulkanLoader,
+      drvs.vulkanLoaderDl,
+      drvs.libdl_vulkan,
     ]
   }
 }
