@@ -116,7 +116,7 @@
         drvs.utilLinux,
         drvs.eudevNm,
         drvs.libndp,
-        drvs.glibDebug,
+        drvs.glibPatched,
         drvs.pcre2,
         drvs.libffi,
         drvs.zlibNg,

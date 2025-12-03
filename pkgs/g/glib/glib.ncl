@@ -18,7 +18,7 @@
       m%"sed -i 's@-Wl,--whole-archive@@g' ${DEST}/usr/lib/pkgconfig/gmodule-export-2.0.pc"%,
     ]
   },
-  glibDebug =
+  glibPatched =
     glib
     & {
       singleSource,
@@ -92,10 +92,10 @@
   lib,
   drvs,
   glib,
-  glibDebug,
+  glibPatched,
   glibNoDl =
     let _g =
-      glibDebug
+      glibPatched
     in
     _g
     & {
