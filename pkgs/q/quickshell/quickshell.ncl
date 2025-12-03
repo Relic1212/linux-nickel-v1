@@ -39,10 +39,13 @@
             []
         )
     },
+    preConfigurePhase = [
+      m%"sed -i 's@#include <bits/types/sigset_t.h>@@g' ${SRC}/src/crash/handler.cpp"%,
+    ],
     options = {
-      x11 | default = false,
-      crash | default = false,
-      polkit | default = false,
+      x11 | default = true,
+      crash | default = true,
+      polkit | default = true,
     },
     cmakeExtraArgsRecord = {
       # "-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
@@ -206,6 +209,14 @@
           ]
         else
           []
+      )
+      @ (
+        if options.crash then
+          [
+            drvs.breakpad,
+          ]
+        else
+          []
       ),
     allowDubplicateBuldInputs = true,
     propagatedBuildInputs = [
@@ -226,16 +237,8 @@
         # crash =true,
       },
       singleSource | priority 1 = {
-        # uri = "https://github.com/quickshell-mirror/quickshell/archive/e9a574d919a89602d2868621576b2ccae54a5cb0.tar.gz",
-        # sha256sum = "637efbe5f117953c689caed88ae23dde9bc9bc480dc4063b3770903114b8c3ed",
-
-        # uri = "https://github.com/quickshell-mirror/quickshell/archive/3e2ce40b18af943f9ba370ed73565e9f487663ef.tar.gz",
-        # sha256sum = "cfcea1449650f4502a20a4a1a2ab973eebdc04203121f9c5674179b531824bee",    
-        # uri = "https://github.com/quickshell-mirror/quickshell/archive/fc704e6b5d445899a1565955268c91942a4f263f.tar.gz",
-        # sha256sum = "48b5ac6c321ea867fc5279478185e49292137b52d9fa3a2e93a07fabe353bee1",
-
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/ed036d514b0fdbce03158a0b331305be166f4555.tar.gz",
-        sha256sum = "de7acc2e26e555f4bc52d19f06920b78abb7a0f2b7bb92dfcecf5bb0ae88bad4",
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/d24e8e9736287d01ee73ef9d573d2bc316a62d5c.tar.gz",
+        sha256sum = "9ea4da34e98928e00f3460722563bdc609310b15a4454d31a65ce2fd7a12e0e9",
       },
     }
 }
