@@ -73,8 +73,10 @@
         # }
 
         src = {
-          uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.08.tar.gz",
-          sha256sum = "69f8227d621ee6389bcd5368a250c189e672d02528472dc5ef0e3eccf80cf0b8"
+          # uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.08.tar.gz",
+          # sha256sum = "69f8227d621ee6389bcd5368a250c189e672d02528472dc5ef0e3eccf80cf0b8",
+          uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.11.tar.gz",
+          sha256sum = "9a9a58dbe12e065776cc80424f22c89489f2662e881152ceae46e68bb8677d8c",
         }
       },
       {
@@ -85,8 +87,11 @@
         # },
 
         src = {
-          uri = "https://github.com/YaLTeR/niri/releases/download/v25.08/niri-25.08-vendored-dependencies.tar.xz",
-          sha256sum = "5a0a36b1a52985a60d5d6864c2ef7df2b0f5f9fea2a775662e7777cf536277bd"
+          # uri = "https://github.com/YaLTeR/niri/releases/download/v25.08/niri-25.08-vendored-dependencies.tar.xz",
+          # sha256sum = "5a0a36b1a52985a60d5d6864c2ef7df2b0f5f9fea2a775662e7777cf536277bd",
+
+          uri = "https://github.com/YaLTeR/niri/releases/download/v25.11/niri-25.11-vendored-dependencies.tar.xz",
+          sha256sum = "c0af02de767654a8bc5cd72f9721e60e4a7b1e2abf0e52119fd7f947373026cc",
         }
 
         # src = {
@@ -119,8 +124,8 @@
       #   file = "no-winit.patch"
       # },
       {
-        sha256sum = "aaec4a14b9de5225bd802f7191be9194b791b36a09ffd7dcb15451a3fe1c579d",
-        file = "niri-25.08-no-winit.patch"
+        sha256sum = "b97a8743a685a803bcfdb04807931fe5b7b7ebaa209e04d764a83eaf2c9203ea",
+        file = "niri-25.11-no-winit.patch"
       }
     ],
 
