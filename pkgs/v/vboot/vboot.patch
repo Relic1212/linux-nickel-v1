@@ -1,0 +1,31 @@
+diff --git a/Makefile b/Makefile
+index 5bc352cb..b6de40f9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -119,7 +119,7 @@ COMMON_FLAGS := -pipe ${WERROR} -Wall -Wstrict-prototypes -Wtype-limits \
+ 	-Wundef -Wmissing-prototypes -Wno-trigraphs -Wredundant-decls -Wshadow \
+ 	-Wwrite-strings -Wstrict-aliasing -Wdate-time \
+ 	-Wint-conversion -ffunction-sections -fdata-sections \
+-	-Wformat -Wno-format-security -std=gnu11 ${DEBUG_FLAGS} ${CPPFLAGS}
++	-Wformat -Wno-format-security -Wno-uninitialized-const-pointer -std=gnu11 ${DEBUG_FLAGS} ${CPPFLAGS}
+ 
+ # test_ccflag
+ # $(1): compiler flags to test
+@@ -1044,7 +1044,7 @@ ${UTILLIB}: ${UTILLIB_OBJS} ${FWLIB_OBJS} ${TLCL_OBJS}
+ 	${Q}ar qcT $@ $^
+ 
+ .PHONY: hostlib
+-hostlib: ${HOSTLIB} ${HOSTLIB_STATIC}
++hostlib: ${HOSTLIB_STATIC}
+ 
+ # TODO: better way to make .a than duplicating this recipe each time?
+ ${HOSTLIB_STATIC}: ${HOSTLIB_OBJS}
+@@ -1084,7 +1084,7 @@ headers_install:
+ 		firmware/include/tpm2_tss_constants.h
+ 
+ .PHONY: lib_install
+-lib_install: ${HOSTLIB} ${HOSTLIB_STATIC}
++lib_install: ${HOSTLIB_STATIC}
+ 	@${PRINTF} "    INSTALL       HOSTLIB\n"
+ 	${Q}mkdir -p ${UL_DIR}
+ 	${Q}${INSTALL} -t ${UL_DIR} -m644 $^
