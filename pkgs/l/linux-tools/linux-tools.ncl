@@ -4,14 +4,14 @@
   linux,
   linuxTools | lib.MakePackage =
     let tools = [
-      # "acpi",
+      "acpi",
       "counter",
       "cpupower",
       "gpio",
       "hv",
       # "firewire",
       #   "perf",
-    #   "selftests",
+      #   "selftests",
       "bootconfig",
       "spi",
       "turbostat",
@@ -46,14 +46,13 @@
           # https://bugs.gentoo.org/791364
           m%"sed -i "s@#include <linux/limits.h>@#include <linux/limits.h>\n#include <linux/stddef.h>@g" ${SRC}/tools/hv/vmbus_bufring.c"%,
 
-        #   m%"sed -i "s@#include <assert.h>@#include <assert.h>\n#include <linux/stddef.h>@g" ${SRC}/tools/bootconfig/main.c"%,
+          #   m%"sed -i "s@#include <assert.h>@#include <assert.h>\n#include <linux/stddef.h>@g" ${SRC}/tools/bootconfig/main.c"%,
           m%"sed -i "s@#include <string.h>@#include <string.h>\n#include <linux/stddef.h>@g" ${SRC}/tools/bootconfig/include/linux/bootconfig.h"%,
-
+          m%"sed -i "s@#include <uuid/uuid.h>@#include <uuid/uuid.h>\n#include <basename.h>@g" ${SRC}/tools/power/acpi/tools/pfrut/pfrut.c"%,
           m%"sed -i 's@bin\/false@usr\/bin\/false@g' ${SRC}/Makefile"%,
-
           m%"sed -i 's@-Wno-maybe-uninitialized@@g' ${SRC}/tools/virtio/Makefile"%,
-
           m%"sed -i 's@OBJTOOL_LDFLAGS := @OBJTOOL_LDFLAGS := -lz -leu @g' ${SRC}/tools/objtool/Makefile"%,
+          m%"sed -i 's|\/usr||g' ${SRC}/tools/debugging/Makefile"%,
         ]
         @ (
           std.array.map
@@ -830,6 +829,40 @@
               "tools/usb/usbip/INSTALL",
               "tools/usb/usbip/vudc/vudc_server_example.sh",
             ]
+        )
+        @ (
+          std.array.map
+            (fun f => m%"sed -i 's@lib64@lib@g' ${SRC}/%{f}"%
+            )
+            [
+              "tools/lib/api/Makefile",
+              "tools/lib/bpf/libbpf.c",
+              "tools/lib/bpf/Makefile",
+              "tools/lib/bpf/usdt.c",
+              "tools/lib/perf/Makefile",
+              "tools/lib/subcmd/Makefile",
+              "tools/lib/symbol/Makefile",
+              "tools/lib/thermal/Makefile",
+              "tools/net/ynl/Makefile",
+              # "tools/perf/Documentation/examples.txt",
+              # "tools/perf/Documentation/perf-probe.txt",
+              # "tools/perf/Documentation/perf-trace.txt",
+              "tools/perf/Makefile.config",
+              "tools/perf/tests/make",
+              "tools/perf/tests/shell/common/patterns.sh",
+              "tools/perf/tests/shell/test_java_symbol.sh",
+              # "tools/power/cpupower/README",
+              "tools/thermal/lib/Makefile",
+            ]
+        )
+        @ (
+          std.array.map
+            (fun f => m%"sed -i "s@\/sbin@\/usr\/bin@g" ${SRC}/%{f}"%
+            )
+            [
+              "tools/power/x86/turbostat/turbostat.c",
+              "tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c",
+            ]
         ),
       makeArgs,
       makeInstallArgs,
@@ -840,15 +873,23 @@
         "HOSTCC='clang -static'",
         "STATIC=true",
         "NLS=false",
+        "BINDIR=/usr/bin",
+        "SBINDIR=bin",
+        "sbindir=/usr/bin",
+        "prefix=/usr",
+        # "LP64=0",
+        # "IS_64_BIT=1",
         "-j1",
-         "HOSTLDFLAGS=%{ lib.functions.varToExportvar extraEnv.HOSTLDFLAGS}",
-           "HOSTCFLAGS=%{ lib.functions.varToExportvar  extraEnv.HOSTCFLAGS}",
-         
+        "HOSTLDFLAGS=%{ lib.functions.varToExportvar extraEnv.HOSTLDFLAGS}",
+        "HOSTCFLAGS=%{ lib.functions.varToExportvar  extraEnv.HOSTCFLAGS}",
       ],
       extraMakeInstallArgs = [
         "NLS=false",
         "STATIC=true",
-
+        "BINDIR=/usr/bin",
+        "SBINDIR=bin",
+        "sbindir=/usr/bin",
+        "prefix=/usr",
       ],
       buildEnv = {
         LD = "ld.lld"
@@ -899,7 +940,9 @@
         drvs.ncurses,
         drvs.readline,
         drvs.libnl,
-        
+        # drvs.libtraceevent,
+        # drvs.libtracefs,
+        drvs.basenameCompat,
       ],
     }
 }
