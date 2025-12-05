@@ -4,11 +4,10 @@
   kwallet | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.19.0/kwallet-v6.19.0.tar.gz",
-      sha256sum = "436a650d014e164d7a2511f36246f9277d444f9648b6b1182f3fed2e1a5162ca"
+      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.20.0/kwallet-v6.20.0.tar.gz",
+      sha256sum = "1e1f1015f40de030546606a6c085116a13b4fd85660e96badd7de929ff9a30e5"
     },
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     preConfigurePhase = [
       "sed -i 's@KF6WalletBackend SHARED@KF6WalletBackend STATIC@g' ${SRC}/src/runtime/kwalletbackend/CMakeLists.txt"
@@ -135,8 +134,8 @@
   ecm | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.19.0/extra-cmake-modules-v6.19.0.tar.gz",
-      sha256sum = "90784adc538cfba1dd2131530ad947cee0c5600c13223e546c1eeaf23c53135a"
+      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.20.0/extra-cmake-modules-v6.20.0.tar.gz",
+      sha256sum = "ff1127407baaf72ed4ac16f98797fb051bcb26199178f271c0bd42d325a9ff74"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -225,7 +224,7 @@
     postInstallPhase = [
       "sed -i 's@6 EQUAL 6 AND NOT @true@' ${DEST}/usr/lib/cmake/Qca-qt6/Qca-qt6Config.cmake"
     ],
-    symlinkBuldInputs = true,
+
     biDrvs = [
       drvs.pixman,
       drvs.expat,

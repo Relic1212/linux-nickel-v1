@@ -1,5 +1,7 @@
 import hashlib
-import requests
+import urllib.request
+
+
 def fetch(url):
 
     headers = {
@@ -18,27 +20,37 @@ def fetch(url):
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
     }
 
-    response = requests.get(url, headers=headers,timeout=10)
+    request = urllib.request.Request(url=url, headers=headers)
+    response = urllib.request.urlopen(request, timeout=10)
 
     return response
 
 
+fn = "plasma_urls.txt"
+fn = "urls"
 
-with open("plasma_urls.txt") as f:
+if fn == "plasma_urls.txt":
+    fn_out = "_plasma_sources.ncl"
+else:
+    fn_out = "_sources.ncl"
+with open(fn, "r") as f:
     urls = [l.strip() for l in f.readlines()]
 
 for url in urls:
     try:
         print(f"# fetching url: {url}")
         r = fetch(url)
-        c = r.content
+        c = r.read()
         h = hashlib.sha256(c).hexdigest()
-        print( "#", r.status_code)
+        assert(r.status==200)
+        print("#", r.status)
         s = (
             f"\"{url}\" = \"" + h + "\","
         )
         print(s)
-        with open("_plasma_sources.ncl","a") as f:
+        with open(fn_out, "a") as f:
             f.write(s)
-    except:
+    except Exception as e:
+        print("fail:",url)
+        raise e
         pass

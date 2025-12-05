@@ -6,17 +6,17 @@
     name,
     singleSource | priority -1000 = {
       # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
-      uri = "https://download.kde.org/stable/frameworks/6.19/%{name}-6.19.0.tar.xz",
+      uri = "https://download.kde.org/stable/frameworks/6.20/%{name}-6.20.0.tar.xz",
       sha256sum = _kf_sources."%{uri}",
     },
 
     generator = "Ninja",
 
     llvmProvider = drvs.llvmFull,
-    # symlinkBuldInputs = true,
+    # 
 
     options = {
-      version = "6.19",
+      version = "6.20",
 
       waylandSyms = false,
       xkbcommonX11 | default = false,
@@ -1168,8 +1168,10 @@
           drvs.kcoreaddons,
           drvs.gperf,
           drvs.isoCodes,
-          drvs.pythonFull,
+          drvs.pythonDynamic,
+          drvs.pythonLxml,
           drvs.gettext,
+          drvs.muslShared & { priority = -1 },
         ]
     },
 
@@ -1416,6 +1418,7 @@
       cmakeExtraArgsRecord = {
         "-DENABLE_KAUTH" = false,
         "-DQT_DEBUG_FIND_PACKAGE" = true,
+        "-DFFMPEG_DIR" = "/usr",
       },
 
       buildEnv.EXTRA_LDFLAGS | priority 1 =
@@ -1426,7 +1429,7 @@
         ],
 
       preConfigurePhase = [
-        m%"sed -i 's|find_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
+        m%"sed -i 's|find_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)|find_package(KF6Notifications ${KF_DEP_VERSION} REQUIRED)\nfind_package(KF6Archive ${KF_DEP_VERSION} REQUIRED)\ninclude(FindFFmpeg)\ninclude(QtFindPackageHelpers)\nqt_find_package(FFmpeg PROVIDED_TARGETS FFmpeg::avformat QMAKE_LIB ffmpeg REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
         m%"sed -i 's|accessibleInterfaceFactory|__kde_ktexteditor__accessibleInterfaceFactory|g' ${SRC}/src/view/kateviewinternal.cpp"%,
         m%"sed -i 's|accessibleInterfaceFactory|__kde_ktexteditor__accessibleInterfaceFactory|g' ${SRC}/src/view/kateviewaccessible.h"%,
         m%"sed -i 's| MODULE| STATIC|g' ${SRC}/src/part/CMakeLists.txt"%,

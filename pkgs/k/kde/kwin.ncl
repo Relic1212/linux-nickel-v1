@@ -259,6 +259,7 @@
   qtsensorsKwin =
     qtsensors
     & {
+      srcName = "qtsensors",
       postInstallPhase = [
         "cd ${DEST}/usr/lib/qt6/plugins/sensors/",
         m%"for sym in $(llvm-nm libqtsensors_iio-sensor-proxy.a | grep OrgFreedesktopDBusPropertiesInterface);do
