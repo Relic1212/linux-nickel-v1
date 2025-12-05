@@ -3,7 +3,7 @@
   drvs,
   xcbImdkit | lib.CmakePackage = {
     generator = "Ninja",
-    symlinkBuldInputs = true,
+
     singleSource = {
       uri = "https://github.com/fcitx/xcb-imdkit/archive/refs/tags/1.0.9.tar.gz",
       sha256sum = "c2f0bbad8a335a64cdc7c19ac7b6ea1f0887dd6300ca9a4fa2e2fec6b9d3f695"

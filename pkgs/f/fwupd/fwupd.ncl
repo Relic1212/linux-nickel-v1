@@ -8,7 +8,7 @@
     },
     extraMesonArgs = [
       "-Dintrospection=disabled",
-      # "-Dplugin_uefi_capsule_splash=false",
+      "-Dplugin_uefi_capsule_splash=false",
       "-Dplugin_flashrom=disabled",
     ],
     preConfigurePhase = [

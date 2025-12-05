@@ -37,7 +37,7 @@
     pythonProvider = drvs.pythonDynamic,
     useMuon,
     # useMuon = true,
-    # symlinkBuldInputs = true,
+    # 
 
     biDrvs =
       (if useMuon then [pythonProvider] else [])

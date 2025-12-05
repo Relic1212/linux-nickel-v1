@@ -273,7 +273,7 @@ ${ROOT_HASH} ${SALT} \
 
 
 # EXTRA_CMDLINE="lsm=lockdown,capability,yama,selinux,bpf,landlock,ima,evm"
-EXTRA_CMDLINE="console=tty1 sysctl.kernel.sysrq=1 raid=noautodetect ro rootwait lsm=lockdown,capability firmware_class.path=/usr/lib/firmware"
+# EXTRA_CMDLINE="console=tty1 sysctl.kernel.sysrq=1 raid=noautodetect ro rootwait lsm=lockdown,capability firmware_class.path=/usr/lib/firmware"
 # EXTRA_CMDLINE="debug sysctl.kernel.sysrq=1 rootwait lsm=lockdown,capability"
 
 

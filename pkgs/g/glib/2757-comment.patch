@@ -1,0 +1,85 @@
+diff --git a/gobject/gtype.c b/gobject/gtype.c
+index 4469aacfd..0c65c74e3 100644
+--- a/gobject/gtype.c
++++ b/gobject/gtype.c
+@@ -4236,22 +4236,13 @@ g_type_init_with_debug_flags (GTypeDebugFlags debug_flags)
+ }
+ G_GNUC_END_IGNORE_DEPRECATIONS
+ 
+-/**
+- * g_type_init:
+- *
+- * This function used to initialise the type system.  Since GLib 2.36,
+- * the type system is initialised automatically and this function does
+- * nothing.
+- *
+- * Deprecated: 2.36: the type system is now initialised automatically
+- */
+-void
+-g_type_init (void)
+-{
+-  g_assert_type_system_initialized ();
+-}
+ 
+-static void
++#ifdef GOBJECT_STATIC_COMPILATION
++void gobject_init (void);
++#else
++static
++#endif
++void
+ gobject_init (void)
+ {
+   const gchar *env_string;
+@@ -4259,6 +4250,13 @@ gobject_init (void)
+   TypeNode *node;
+   GType type G_GNUC_UNUSED  /* when compiling with G_DISABLE_ASSERT */;
+ 
++  static gboolean gobject_inited = FALSE;
++
++  if (gobject_inited)
++    return;
++
++  gobject_inited = TRUE;
++
+   /* Ensure GLib is initialized first, see
+    * https://bugzilla.gnome.org/show_bug.cgi?id=756139
+    */
+@@ -4346,6 +4344,37 @@ gobject_init (void)
+   _g_signal_init ();
+ }
+ 
++
++/**
++ * g_type_init:
++ *
++ * This function used to initialise the type system.  Since GLib 2.36,
++ * the type system is initialised automatically and this function does
++ * nothing.
++ *
++ * Deprecated: 2.36: the type system is now initialised automatically
++ */
++// void
++// g_type_init (void)
++// {
++//   g_assert_type_system_initialized ();
++// }
++
++// https://gitlab.gnome.org/GNOME/glib/-/merge_requests/2757
++void
++g_type_init (void)
++{
++#ifdef GOBJECT_STATIC_COMPILATION
++  if (static_quark_type_flags)
++    return;
++  gobject_init ();
++#else
++  g_assert_type_system_initialized ();
++#endif
++}
++
++
++
+ #ifdef G_PLATFORM_WIN32
+ 
+ void gobject_win32_init (void);

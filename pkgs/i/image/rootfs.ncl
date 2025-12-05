@@ -257,6 +257,9 @@
           fi
           "%,
         # "touch /tmp/workdir/out/destdir/rootfs/etc/mtab",
+
+        # https://community.frame.work/t/system-gets-really-slow/61854/2
+        m%"export EXTRA_CMDLINE="console=tty1 sysctl.kernel.sysrq=1 raid=noautodetect amdgpu.dcdebugmask=0x10 ro rootwait lsm=lockdown,capability firmware_class.path=/usr/lib/firmware""%,
         m%"
           genimage \
           -r image \

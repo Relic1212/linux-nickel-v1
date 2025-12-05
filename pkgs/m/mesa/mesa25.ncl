@@ -26,7 +26,7 @@
       drvs.waylandProtocols,
     ],
     llvmProvider = drvs.llvmFull,
-    # symlinkBuldInputs = true,
+    # 
     baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
     extraMesonArgs = [
       "-Dgles1=disabled",

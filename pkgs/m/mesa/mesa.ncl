@@ -2,7 +2,7 @@
   lib,
   drvs,
   mesa | lib.MesonPackage = {
-    symlinkBuldInputs = true,
+
     singleSource = {
       uri = "https://archive.mesa3d.org/mesa-24.0.4.tar.xz",
       sha256sum = "90febd30a098cbcd97ff62ecc3dcf5c93d76f7fa314de944cfce81951ba745f0",

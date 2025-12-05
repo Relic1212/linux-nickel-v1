@@ -413,12 +413,12 @@
     & {
 
       options.renameDl = false,
-        cmakeExtraArgsRecord = {
-      "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
-      "-DBUILD_WSI_XCB_SUPPORT" | priority 1= true,
-      "-DBUILD_WSI_XLIB_SUPPORT"| priority 1 = true,
-      "-DBUILD_WSI_XLIB_XRANDR_SUPPORT" | priority 1= true,
-    },
+      cmakeExtraArgsRecord = {
+        "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
+        "-DBUILD_WSI_XCB_SUPPORT" | priority 1 = true,
+        "-DBUILD_WSI_XLIB_SUPPORT" | priority 1 = true,
+        "-DBUILD_WSI_XLIB_XRANDR_SUPPORT" | priority 1 = true,
+      },
     },
 }
 & {
@@ -613,7 +613,7 @@
     patches = [
       {
         sha256sum = "94adcd41e39f05f362a39f6002665ccf40961797fd20ed8f7580eee516346000",
-        file ="vulkan-tools.patch"
+        file = "vulkan-tools.patch"
       }
     ],
     debug = true,
@@ -637,7 +637,6 @@
         "$(pkg-config --libs --static x11)",
         "$(pkg-config --libs --static x11-xcb)",
         "$(pkg-config --libs --static wayland-client)",
-
         "-ldl_vulkan",
         "-lvulkan",
         "-lc++",
@@ -654,9 +653,6 @@
         "-Wl,-u,radv_GetInstanceProcAddr",
         "$(pkg-config --libs --static vulkan_radeon)",
       ],
-
-
-      
     },
     llvmProvider | priority 1 = drvs.llvmFull,
     muslProvider = drvs.muslBothRenamedDl,

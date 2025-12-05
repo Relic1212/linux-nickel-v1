@@ -59,7 +59,7 @@
     ],
 
     llvmProvider = drvs.llvmFull,
-    # symlinkBuldInputs = true,
+    # 
     biDrvs = [
 
       #drvs.pythonFull,

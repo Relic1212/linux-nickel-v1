@@ -12,7 +12,7 @@
       "--prefix=/usr",
     ],
     separateBuildDir = false,
-    symlinkBuldInputs = true,
+
     buildPhase = [
       #"./b2"
 

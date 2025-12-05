@@ -50,13 +50,12 @@
           drvs.busyboxFinal,
         ],
         utilsSbase = [
-          (drvs.gnugrep & { priority = 1 }),
-          (
-            drvs.uutilsFindutils & { priority = 1 }
-          ),
+          drvs.gnugrep & { priority = 1 },
+          drvs.uutilsFindutils & { priority = 1 },
           drvs.sbase,
-          (drvs.ubase & { priority = -1 }), # df
+          drvs.ubase & { priority = -1 }, # df
           drvs.emptyStty,
+          drvs.lsof,
         ],
 
         utils = utilsSbase,
@@ -159,6 +158,9 @@
           drvs.openssh,
           drvs.openresolv,
           drvs.caCertificates,
+          drvs.dnsmasq,
+          drvs.networkmanager,
+          drvs.nftables,
 
           # enc
           drvs.e2fsprogs,
@@ -334,8 +336,8 @@
                 # drvs.sndiod,
                 drvs.desktopFileUtils,
                 drvs.squeekboard,
-                # drvs.udisks,
-                # drvs.fwupd,
+                drvs.udisks,
+                drvs.fwupd,
                 drvs.ananicyCpp,
                 drvs.ananicyRulesCachyos,
                 # drvs.sysboard,
@@ -367,6 +369,7 @@
                 # drvs.swappy,
                 drvs.wezterm,
                 drvs.konsole,
+                drvs.alacritty,
                 drvs.micro,
                 # ttyescape
                 drvs.buffybox,
@@ -406,7 +409,6 @@
         )
     }
   ),
-
   _cosmicPackages = [
     drvs.bash,
     drvs.cosmicApplets,
@@ -437,6 +439,7 @@
     drvs.cosmicInitialSetup,
     drvs.cosmicExtAlternativeStartup,
     drvs.cosmicExtExtraSessions,
+    drvs.cosmicUtilsClipboardManager,
   ],
 
   _plasmaPackages = [
@@ -549,7 +552,7 @@
               _baseBaseRootfs.biDrvs
               @ _cosmicPackages
               # @ [drvs.kwin]
-              # @ [drvs.gnomeTerminal]
+              # @ [drvs.networkmanager]
               # @ _plasmaPackages
             )
         ),

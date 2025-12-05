@@ -22,3 +22,4 @@ https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.0.0-beta.8.tar.g
 https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz
 https://github.com/pop-os/cosmic-workspaces-epoch/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz
 https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz
+https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz

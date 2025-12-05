@@ -23,8 +23,19 @@
       drvs.graphviz,
     ]
   },
-  valaShared | lib.AutotoolsPackage = {
+  valaDoc =
+    vala
+    & {
+      extraConfigureFlags = [
+        "--enable-valadoc",
+      ],
+    },
+  valaShared | lib.AutomakePackage = {
     singleSource = vala.singleSource,
+    # singleSource = {
+    #   uri = "https://gitlab.gnome.org/GNOME/vala/-/archive/0.56.18/vala-0.56.18.tar.bz2",
+    #   sha256sum = "702e82db5cd462870a5d30ac3da415dd7156b084920b2e41e7ec61d36e2b5b98",
+    # },
     isLlvm,
     biDrvs =
       [
@@ -32,15 +43,19 @@
         drvs.libffi,
         drvs.zlibNg,
         drvs.glibDynamic,
-        drvs.pkgconf,
+        # drvs.pkgconf,
         drvs.bison,
         drvs.flex,
-        drvs.m4,
-        drvs.libtool,
+        # drvs.m4,
+        # drvs.libtool,
         drvs.pythonDynamic,
         drvs.muslShared,
         drvs.gobjectDynamic,
         drvs.graphvizPic,
+        drvs.bash,
+        drvs.bashSh & { priority = 1 },
+        drvs.autoconfArchive,
+        drvs.vala,
       ]
       @ (
         if isLlvm then
@@ -56,26 +71,30 @@
     buildEnv = {
       _isStatic = false,
       # _isLlvm = false,
-      EXTRA_LDFLAGS = [
-        "-lpcre2-posix",
-        "-lpcre2-8 -lffi"
-      ],
-      # EXTRA_CFLAGS = EXTRA_LDFLAGS,
+      # EXTRA_LDFLAGS = [
+      #   "-lpcre2-posix",
+      #   "-lpcre2-8 -lffi"
+      # ],
+      EXTRA_CFLAGS = ["--verbose"],
     },
-    extraEnv = {
-      LIBS = buildEnv.EXTRA_LDFLAGS
-    },
+    # extraEnv = {
+    #   LIBS = buildEnv.EXTRA_LDFLAGS
+    # },
     # llvmProvider = drvs.llvmFullPic,
-    # separateBuildDir = false,
+    separateBuildDir = false,
     # enableParallel = false,
     extraConfigureFlags = [
       "--enable-static",
       "--enable-shared",
+      # "--disable-shared",
     ],
-    extraMakeArgs = [
-      "LDFLAGS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
-      "LIBS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
-    ]
+    # preConfigurePhase =[
+    #   "touch ${SRC}/ChangeLog",
+    # ],
+    # extraMakeArgs = [
+    #   "LDFLAGS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
+    #   "LIBS=\"%{std.string.join " " buildEnv.LDFLAGS}\"",
+    # ]
   }
 }
 & {

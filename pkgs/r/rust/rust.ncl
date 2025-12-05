@@ -4,7 +4,7 @@
   rust | lib.AutotoolsPackage =
     let tgt = "x86_64-unknown-linux-musl" in
     {
-      # symlinkBuldInputs = true,
+      # 
 
       sourceInputs = [
         {

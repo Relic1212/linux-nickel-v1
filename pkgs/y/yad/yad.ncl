@@ -12,7 +12,7 @@
         "$(pkg-config --libs --static expat gtk+-3.0 epoxy xi)"
       ]
     },
-    symlinkBuldInputs = true,
+
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [

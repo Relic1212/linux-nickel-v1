@@ -10,7 +10,7 @@
     buildEnv.EXTRA_LDFLAGS = ["-lc++"],
 
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
+
     biDrvs = [
       drvs.dbus,
       drvs.alsaLibs,

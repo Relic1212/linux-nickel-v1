@@ -24,4 +24,6 @@
   "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz" = "98558954c9d61268051183de2c8be88086ae595e529438c1f53e65c2a596f408",
   "https://github.com/pop-os/cosmic-workspaces-epoch/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz" = "484d5c81896291ad7f87d94b83255d63f8fd09e1f16ead28e4e783c2c9ebd5a7",
   "https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz" = "6fbe7ebdb17998ee8b6a9731c5713493fa50f7730c9f5dfe678484b60aba96db",
+
+  "https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz" = "46705596a78c467192d440209139aeeee88b28ea179f45442ba8c0aeb6714412",
 }

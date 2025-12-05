@@ -3,8 +3,8 @@
   drvs,
   astalIo | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/Aylur/astal/archive/2c5eb54f39e1710c6e2c80915a240978beb3269a.tar.gz",
-      sha256sum = "964b819379d5ac18d54a728526e59ee95f24e07e3f79de4efdb945cc059b1d93"
+      uri = "https://github.com/Aylur/astal/archive/5baeb660214bcafc9ae0b733a1bc84f5fa6078f4.tar.gz",
+      sha256sum = "3fd8b398609c8e0141333529e55eb897b1c4d0844c18ebf6fbf4b9b231644926"
     },
 
     llvmProvider = drvs.llvmFull,
@@ -48,7 +48,7 @@
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
       drvs.gtk4,
-      drvs.valaShared,
+      drvs.vala,
       drvs.pythonSetuptools,
       drvs.libtiff,
       drvs.graphene,

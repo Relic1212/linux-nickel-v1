@@ -33,7 +33,7 @@
       CGO_LDFLAGS = buildEnv.LDFLAGS
     },
 
-    # symlinkBuldInputs = true,
+    # 
 
     separateBuildDir = false,
     configurePhase = [

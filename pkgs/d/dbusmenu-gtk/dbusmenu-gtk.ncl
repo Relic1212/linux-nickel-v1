@@ -8,7 +8,7 @@
     },
     llvmProvider = drvs.llvmFull,
     # perlProvider = drvs.perlDynamic,
-    # symlinkBuldInputs = true,
+    # 
     biDrvs = [
       drvs.fontconfig,
       drvs.freetype,
@@ -137,7 +137,7 @@
       uri = "https://gitlab.gnome.org/GNOME/gtk-doc/-/archive/1.34.0/gtk-doc-1.34.0.tar.gz",
       sha256sum = "e1d544fa70ae60014a241b674c9d989f4ad6a96554652ebf73bbe94b4da1aa35",
     },
-    # symlinkBuldInputs = true,
+    # 
     llvmProvider = drvs.llvmFull,
     pythonProvider | priority 2 = drvs.pythonDynamicPic,
     biDrvs = [
@@ -375,6 +375,9 @@
     isStatic = false,
     buildEnv = {
       _isStatic = false,
+      EXTRA_CPPFLAGS = [
+        "-I/usr/include/libxml2/",
+      ],
     },
     separateBuildDir = false,
     buildPhase = [
@@ -389,12 +392,13 @@
       drvs.pythonInstaller,
       drvs.pythonGpep517,
       drvs.pythonFlitCore,
-      drvs.libxml2Dynamic,
+      drvs.libxml2,
       drvs.muslShared,
       drvs.libxslt,
       drvs.pkgconf,
       drvs.cmake,
       drvs.llvmFull,
+      drvs.zlibNg,
     ],
   }
 }

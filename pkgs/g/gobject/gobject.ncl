@@ -111,10 +111,18 @@
         # "--prefer-static",
         "-Ddefault_library=both",
         "-Dbuild_introspection_data=true",
+        "-Dgir_dir_prefix=/usr/share",
       ],
+      #       preConfigurePhase | priority 1 =
+      #         gobjectDynamic.preConfigurePhase
+      #         @ [
+      #           m%"printf "foreach gir: uninstalled_gir_files\n\tinstall_data(gir.full_path(), install_dir: girdir)\nendforeach
+      # " >> ${SRC}/meson.build"%,
+      #         ],
       postInstallPhase = [
-        "install -m0755 gir/GObject-2.0.gir ${DEST}/usr/share/gir-1.0",
-        "install -m0755 gir/GLib-2.0.gir ${DEST}/usr/share/gir-1.0",
+        "for f in $(ls gir); do if [ ! -e ${DEST}/usr/share/gir-1.0/${f} ]; then install -m0755 gir/${f} ${DEST}/usr/share/gir-1.0 ;fi;done",
+        # "install -m0755 gir/GObject-2.0.gir ${DEST}/usr/share/gir-1.0",
+        # "install -m0755 gir/GLib-2.0.gir ${DEST}/usr/share/gir-1.0",
       ]
     },
 
@@ -145,6 +153,8 @@
       buildEnv = {
         _isStatic | force = false
       },
+      # options.patched = true,
+
       extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=both"],
       biDrvs | priority 1 = [
         drvs.pcre2,
