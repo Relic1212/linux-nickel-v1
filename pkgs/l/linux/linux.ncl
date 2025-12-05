@@ -209,6 +209,16 @@ in
 {
   lib,
   drvs,
+  _linuxSources = {
+    "6.17.6" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.6.tar.xz",
+      sha256sum = "8ecfbc6b693448abb46144a8d04d1e1631639c7661c1088425a2e5406f13c69c",
+    },
+    "6.18.0" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.tar.xz",
+      sha256sum = "9106a4605da9e31ff17659d958782b815f9591ab308d03b0ee21aad6c7dced4b",
+    },
+  },
   linuxHeaders,
   libModulesDirectory | lib.Package = {
     name = "lib-modules-directory",
@@ -237,25 +247,12 @@ in
     let baseConfig = kconfigFiles.alpine
     in
     {
-      # name = "linux",
-      singleSource = {
-        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz",
-        # sha256sum = "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
-
-        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz",
-        # sha256sum = "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d"
-
-        # uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.3.tar.xz",
-        # sha256sum = "3ecc8619d8a5b5f675224d2f52c71d1fc09bc3f9c019d8bd82d0581e03689499",
-        uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.6.tar.xz",
-        sha256sum = "8ecfbc6b693448abb46144a8d04d1e1631639c7661c1088425a2e5406f13c69c",
-      },
-      # sourceInputs = linuxHeaders.sourceInputs,
+      singleSource = _linuxSources."%{options.version}",
 
       options = {
         #  version = linuxHeaders.options.version ,
-        # version = "6.17.3",
-        version = std.array.at 0 (std.string.split ".tar" (std.array.at 1 (std.string.split "-" singleSource.uri))),
+        # version = "6.17.6",
+        version = "6.18.0",
         compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
@@ -268,6 +265,9 @@ in
       extraFiles = [
         options.configFile,
       ],
+      # buildEnv = {
+      #   EXTRA_CFLAGS = ["-Wno-unused-but-set-parameter"],
+      # },
 
       extraEnv = {
         KBUILD_BUILD_TIMESTAMP = "''",
@@ -387,6 +387,7 @@ in
 
         CONFIG_IKCONFIG_PROC=y
         CONFIG_IKCONFIG=y
+        CONFIG_DRM_WERROR=n
 
         CONFIG_CMDLINE_BOOL=y
         CONFIG_CMDLINE=\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"

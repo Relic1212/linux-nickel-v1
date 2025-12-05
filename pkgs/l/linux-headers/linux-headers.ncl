@@ -1,7 +1,8 @@
 {
   lib,
   drvs,
-  linux,
+  # linux,
+  _linuxSources,
   ############
   _linuxHeadersBase | lib.MakePackage = {
     baseName = "linux-headers",
@@ -12,15 +13,8 @@
       # version = "6.13.8"
       version = "6.17.6"
     },
-    sourceInputs = [
-      {
-        src = linux.singleSource,
-        # {
-        #   uri = "https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-%{options.version}.tar.gz",
-        #   sha256sum = "a9f61a4db3e3f2d73129b99ef371686ac096e7ac6c40b81a9d60dda9527fe570",
-        # },
-      },
-    ],
+      singleSource = _linuxSources."%{options.version}",
+  
     buildDir = "/tmp/workdir/src",
     separateBuildDir = false,
     buildEnv,
