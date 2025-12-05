@@ -12,6 +12,8 @@
     extraMakeArgs = [
       "SBINDIR=/usr/bin",
       "BINDIR=/usr/bin",
+      "CFLAGS=\"${CFLAGS}\"",
+      "LDFLAGS=\"${LDFLAGS}\"",
     ],
     extraMakeInstallArgs =
       [
