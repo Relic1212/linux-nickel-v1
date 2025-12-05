@@ -4,7 +4,8 @@ import subprocess
 import json
 
 try:
-    import hashes, bubblewrap
+    import hashes
+    import bubblewrap
 
     # import builder.hashes as hashes
 except:
@@ -18,30 +19,21 @@ except:
     from builder import dirpaths
 
 
-def fetch_by_hash(h:str,drv_dict):
-    drv_s=drv_dict[h]
+def fetch_by_hash(h: str, drv_dict):
+    drv_s = drv_dict[h]
     fetch_by_drv_string(drv_s=drv_s)
 
-def fetch_by_drv_string(drv_s:str):
-    drv=json.loads(drv_s)
+
+def fetch_by_drv_string(drv_s: str):
+    drv = json.loads(drv_s)
     fetch_by_drv(drv=drv)
 
-def fetch_by_drv(drv:dict):
-    uri=drv['uri']
-    sha256sum=drv['sha256sum']
-    fetch(uri=uri,sha256sum=sha256sum)
-def fetch(uri: str, sha256sum):
-    """_summary_
 
-    Args:
-        uri (str): _description_
-        sha256sum (_type_): _description_
+def fetch_by_drv(drv: dict):
+    uri = drv['uri']
+    sha256sum = drv['sha256sum']
+    fetch_method = drv['fetchMethod']
 
-    Raises:
-        Exception: _description_
-        Exception: _description_
-        Exception: _description_
-    """
     if uri.startswith("http") or uri.startswith("git://"):
         t = "online"
     elif os.path.exists(uri):
@@ -52,7 +44,7 @@ def fetch(uri: str, sha256sum):
     if t == "local":
         cmd = "cp"
     else:
-        if uri.endswith(".git") or uri.startswith("git://"):
+        if uri.endswith(".git") or uri.startswith("git://") or (fetch_method == "git"):
             cmd = "git"
         else:
             cmd = "wget"
@@ -75,10 +67,11 @@ def fetch(uri: str, sha256sum):
     #     network=True,
     #     env=env,
     # )
-    if cmd !="git":
+    if cmd != "git":
         subprocess.run(carr, cwd=packedwd, env=env, check=True)
     else:
-        subprocess.run(["git","clone",uri], cwd=packedwd, env=env, check=True)
+        subprocess.run(["git", "clone", uri],
+                       cwd=packedwd, env=env, check=True)
 
     dirs = os.listdir(packedwd)
     if len(dirs) != 1:
@@ -87,14 +80,16 @@ def fetch(uri: str, sha256sum):
 
     if cmd == "git":
         ds = os.listdir(packedwd)
-        if len(ds)!=1:
-            raise Exception(f"{packedwd} (fetched with git) does not contain exactly one directory")
-        gitwd= ds[0]
-        cmd_arr = ["git", "reset" ,"--hard", sha256sum]
+        if len(ds) != 1:
+            raise Exception(
+                f"{packedwd} (fetched with git) does not contain exactly one directory")
+        gitwd = ds[0]
+        cmd_arr = ["git", "reset", "--hard", sha256sum]
         bubblewrap.run_in_bwrap_chroot(
             sysroot="/",
             sysroot_args=[],
-            extra_bwrap_args=bwrap_args + [ "--chdir", f"/tmp/workdir/packed/{gitwd}" ] + cmd_arr,
+            extra_bwrap_args=bwrap_args +
+            ["--chdir", f"/tmp/workdir/packed/{gitwd}"] + cmd_arr,
             network=False,
             env=env
         )
@@ -104,7 +99,8 @@ def fetch(uri: str, sha256sum):
         h = hashes.compute_file_or_dir_sha256sum(fetched)
 
         if h != sha256sum:
-            raise Exception(f"sha256sum missmatch for {uri}\nExpected: {sha256sum}\nGot: {h}")
+            raise Exception(
+                f"sha256sum missmatch for {uri}\nExpected: {sha256sum}\nGot: {h}")
         else:
             print(f"verified that {h} == {sha256sum}")
 

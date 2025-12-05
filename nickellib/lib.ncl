@@ -91,20 +91,22 @@ in
           let _ec = enableCcache in
           let _sbi = symlinkBuldInputs in
           let df = deterministicFetcher, of = outputFile, oss = outputSha256sum in
-          drvUtils.pkgToHash (std.record.freeze {
-            name = _name,
-            buildInputsValidated = _bs,
-            sourceInputs = _sis,
-            patches = _pds,
-            extraFiles = _efs,
-            scriptContent = _sc,
-            buildInChroot = _bic,
-            enableCcache = _ec,
-            symlinkBuldInputs = _sbi,
-            deterministicFetcher = df,
-            outputFile = of,
-            outputSha256sum = oss
-          }),
+          drvUtils.pkgToHash (
+            std.record.freeze {
+              name = _name,
+              buildInputsValidated = _bs,
+              sourceInputs = _sis,
+              patches = _pds,
+              extraFiles = _efs,
+              scriptContent = _sc,
+              buildInChroot = _bic,
+              enableCcache = _ec,
+              symlinkBuldInputs = _sbi,
+              deterministicFetcher = df,
+              outputFile = of,
+              outputSha256sum = oss
+            }
+          ),
         options | default = {},
         deterministicFetcher | Bool | default = false,
         outputFile | String | default = "",
@@ -274,6 +276,7 @@ in
       Src = {
         uri | nullOrString | default = null,
         sha256sum | String | default = "",
+        fetchMethod | default = null,
       },
       SourceInput = {
         src | Src,
