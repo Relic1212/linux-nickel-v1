@@ -4,18 +4,20 @@
 
   ffmpeg | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://www.ffmpeg.org/releases/ffmpeg-7.1.tar.xz",
-      sha256sum = "40973d44970dbc83ef302b0609f2e74982be2d85916dd2ee7472d30678a7abe6"
+      uri = "https://www.ffmpeg.org/releases/ffmpeg-8.0.1.tar.xz",
+      sha256sum = "05ee0b03119b45c0bdb4df654b96802e909e0a752f72e4fe3794f487229e5a41"
     },
     extraEnv = {
       HOSTCC = ["clang", "-static"],
+      HCFLAGS = ["-static"],
+      HLDFLAGS = ["-static"],
     },
     configureFlags = [
       "--prefix=/usr",
       "--enable-static",
       "--disable-shared",
-      "--host-cc=clang",
-      "--host-ld=clang",
+      "--host-cc='clang -static'",
+      "--host-ld='clang -static'",
       "--ld=clang",
       "--cc=clang",
       "--cxx=clang++",
@@ -27,7 +29,8 @@
       "--enable-libfontconfig",
       "--enable-libfreetype",
       "--enable-libfribidi",
-      #"--enable-openssl",
+      "--enable-openssl",
+      "--enable-version3",
       # "--enable-opengl",
     ],
 
