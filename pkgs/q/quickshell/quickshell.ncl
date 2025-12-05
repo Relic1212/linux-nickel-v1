@@ -14,7 +14,7 @@
     },
 
     llvmProvider = drvs.llvmFull,
-    # symlinkBuldInputs = true,
+    # 
 
     buildEnv = {
       EXTRA_LDFLAGS =
@@ -41,6 +41,8 @@
     },
     preConfigurePhase = [
       m%"sed -i 's@#include <bits/types/sigset_t.h>@@g' ${SRC}/src/crash/handler.cpp"%,
+      # m%"sed -i "s@qt_add_executable(quickshell main.cpp)@qt_add_executable(quickshell main.cpp)\nfind_package(Qt6WaylandScannerTools REQUIRED)@g" ${SRC}/src/CMakeLists.txt"%,
+      m%"sed -i "s@set(QT_FPDEPS Gui Qml Quick QuickControls2 Widgets ShaderTools)@set(QT_FPDEPS Gui Qml Quick QuickControls2 Widgets ShaderTools WaylandScannerTools WaylandCompositor)@g" ${SRC}/CMakeLists.txt"%,
     ],
     options = {
       x11 | default = true,
