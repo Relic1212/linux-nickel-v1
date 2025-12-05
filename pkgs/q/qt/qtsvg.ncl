@@ -3,12 +3,8 @@
   drvs,
   qtsvg | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtsvg-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "2dfc5de5fd891ff2afd9861e519bf1a26e6deb729b3133f68a28ba763c9abbd5"
-    },
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     biDrvs = [
       drvs.mesa2,
@@ -62,7 +58,6 @@
       # ]
     },
 
-    symlinkBuldInputs = true,
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",

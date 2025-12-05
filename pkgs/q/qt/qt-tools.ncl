@@ -3,14 +3,9 @@
   drvs,
   qtTools | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      # uri = "https://github.com/qt/qttools/archive/refs/tags/v6.8.2.tar.gz",
-      # sha256sum = "ead70f80f197fd746a5cbf57a8a2be6537cb0015a48361f108aa7e36d5a982fe",
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qttools-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "90c4a562f4ccfd043fd99f34c600853e0b5ba9babc6ec616c0f306f2ce3f4b4c"
-    },
+    srcName = "qttools",
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     biDrvs = [
       drvs.bison,

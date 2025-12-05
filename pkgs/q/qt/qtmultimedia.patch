@@ -1,0 +1,13 @@
+diff --git a/src/plugins/multimedia/ffmpeg/CMakeLists.txt b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
+index 602a0ba..84ed093 100644
+--- a/src/plugins/multimedia/ffmpeg/CMakeLists.txt
++++ b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
+@@ -280,7 +280,7 @@ if (QT_DEPLOY_FFMPEG AND FFMPEG_SHARED_LIBRARIES AND (BUILD_SHARED_LIBS OR UIKIT
+     qt_internal_multimedia_copy_or_install_ffmpeg()
+ endif()
+ 
+-if( NOT (UIKIT AND FFMPEG_SHARED_LIBRARIES) )
++if(BUILD_SHARED_LIBS)
+     qt_internal_extend_target(FFmpegMediaPluginImplPrivate PUBLIC_LIBRARIES ${ffmpeg_libs})
+ else()
+     # applications need to link against the ffmpeg libs via qt_add_ios_ffmpeg_libraries

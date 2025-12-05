@@ -5,6 +5,14 @@
     QtPackage =
       CmakePackage
       & {
+        name,
+        srcName | default = name,
+        qtSources,
+        # singleSource | priority -1000 = {
+        #   uri = "https://download.qt.io/archive/qt/6.10/%{qtSources.version}/submodules/%{srcName}-everywhere-src-%{qtSources.version}.tar.xz",
+        #   sha256sum = qtSources.sources."%{uri}",
+        # },
+        singleSource | priority -1000 = qtSources."%{srcName}",
 
         cmakeExtraArgsRecord = {
 
@@ -39,3 +47,6 @@
       }
   }
 }
+& (
+  import "_qtcommon.ncl"
+)

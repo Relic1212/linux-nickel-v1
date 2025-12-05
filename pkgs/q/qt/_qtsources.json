@@ -1,0 +1,54 @@
+{
+    "qtlocation": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtlocation-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "2b9618f1b99cdc51d6697a79f3a57f4c2b629711549912067db8cd2b40794f09"
+    },
+    "qtmultimedia": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtmultimedia-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "f7a4f9bc2840d4f0f9f7329f0dcb3d3500c54177b8e368091a3727c7320e67b8"
+    },
+    "qtpositioning": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtpositioning-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "abb311ef1bd6e39f090d22480e265d13f8537d2e2f4c88f22d6519547f46be23"
+    },
+    "qtsensors": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtsensors-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "49ce9ce033234689706dfcacef4eac7e562cff127cacc889ffcb3b68d684b395"
+    },
+    "qtspeech": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtspeech-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "42caec540f6e10de8628819d10477ed2dc202134753ea68dfc1aa536108b7f4f"
+    },
+    "qtsvg": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtsvg-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "c02f355a58f3bbcf404a628bf488b6aeb2d84a94c269afdb86f6e529343ab01f"
+    },
+    "qttools": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qttools-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "8148408380ffea03101a26305c812b612ea30dbc07121e58707601522404d49b"
+    },
+    "qt5compat": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qt5compat-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "72396d160a153dee01b41cf0cae9ad46204cf613adb791b3ee85a7efeadffe24"
+    },
+    "qtbase": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtbase-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d"
+    },
+    "qtdeclarative": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtdeclarative-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "4fb4efb894e0b96288543505d69794d684bcfbe4940ce181d3e6817bda54843e"
+    },
+    "qtquick3d": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtquick3d-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "17d40272becef0dab71b60333bcf0c23d1d25dcf1df16ee9bf0daa7e4de403e6"
+    },
+    "qtshadertools": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtshadertools-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "b67894a63352b53dad0d46f5300c62b8cd6783db575492d6b25d4fdc9af55bb6"
+    },
+    "qtwayland": {
+        "uri": "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtwayland-everywhere-src-6.10.1.tar.xz",
+        "sha256sum": "49bf6db800227a6b2c971f4c5d03dd1e81297e7ffb296ce4a96437304f27cb13"
+    }
+}

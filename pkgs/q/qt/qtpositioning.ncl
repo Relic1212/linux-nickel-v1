@@ -3,10 +3,10 @@
   drvs,
   qtpositioning | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtpositioning-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "7062734b4989248ca3f0e3e4aebb9aa2e7ed2d6bf19e779e520c6ef69706ff26"
-    },
+    # singleSource = {
+    #   uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtpositioning-everywhere-src-6.9.1.tar.xz",
+    #   sha256sum = "7062734b4989248ca3f0e3e4aebb9aa2e7ed2d6bf19e779e520c6ef69706ff26"
+    # },
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [

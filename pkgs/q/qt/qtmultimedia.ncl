@@ -3,11 +3,61 @@
   drvs,
   qtmultimedia | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
 
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtmultimedia-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "955e36459518ee55f8e2bb79defc6e44aa94dc1edf5ac58a22d7734b2e07391d"
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
+      ]
     },
+    patches = [
+      {
+        sha256sum = "50a6a59f65477ee1c883333a4a47907cdb137f12534663865db1c9477cd5dace",
+        file = "qtmultimedia.patch",
+      },
+    ],
+    postInstallPhase =
+      std.array.map
+        (fun s => "llvm-objcopy --redefine-sym %{s}=qt6multimedia_private__%{s} ${DEST}/usr/lib/libQt6Multimedia.a")
+        [
+          "pw_check_library_version",
+          "pw_context_connect_fd",
+          "pw_context_connect",
+          "pw_context_destroy",
+          "pw_context_new",
+          "pw_core_disconnect",
+          "pw_deinit",
+          "pw_get_library_version",
+          "pw_init",
+          "pw_properties_free",
+          "pw_properties_new_dict",
+          "pw_proxy_destroy",
+          "pw_stream_add_listener",
+          "pw_stream_connect",
+          "pw_stream_dequeue_buffer",
+          "pw_stream_destroy",
+          "pw_stream_disconnect",
+          "pw_stream_get_time_n",
+          "pw_stream_new_simple",
+          "pw_stream_new",
+          "pw_stream_queue_buffer",
+          "pw_stream_set_active",
+          "pw_thread_loop_destroy",
+          "pw_thread_loop_get_loop",
+          "pw_thread_loop_in_thread",
+          "pw_thread_loop_lock",
+          "pw_thread_loop_new",
+          "pw_thread_loop_signal",
+          "pw_thread_loop_start",
+          "pw_thread_loop_stop",
+          "pw_thread_loop_timed_wait",
+          "pw_thread_loop_unlock",
+        ],
+    # cmakeExtraArgsRecord = {
+    #   "-DQT_DEBUG_FIND_PACKAGE" = "ON",
+    #   # "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
+    #   "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
+    # },
+
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
@@ -93,48 +143,5 @@
       drvs.zlibNg,
       drvs.zstd,
     ],
-
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
-      ]
-    },
-    postInstallPhase =
-      std.array.map
-        (fun s => "llvm-objcopy --redefine-sym %{s}=qt6multimedia_private__%{s} ${DEST}/usr/lib/libQt6Multimedia.a")
-        [
-          "pw_check_library_version",
-          "pw_deinit",
-          "pw_get_library_version",
-          "pw_init",
-          "pw_properties_free",
-          "pw_properties_new_dict",
-          "pw_proxy_destroy",
-          "pw_stream_add_listener",
-          "pw_stream_connect",
-          "pw_stream_dequeue_buffer",
-          "pw_stream_destroy",
-          "pw_stream_disconnect",
-          "pw_stream_new",
-          "pw_stream_queue_buffer",
-          "pw_thread_loop_destroy",
-          "pw_thread_loop_get_loop",
-          "pw_thread_loop_lock",
-          "pw_thread_loop_new",
-          "pw_thread_loop_start",
-          "pw_thread_loop_stop",
-          "pw_context_connect_fd",
-          "pw_context_destroy",
-          "pw_context_new",
-          "pw_core_disconnect",
-          "pw_thread_loop_signal",
-          "pw_thread_loop_timed_wait",
-          "pw_thread_loop_unlock",
-        ],
-    # cmakeExtraArgsRecord = {
-    #   "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-    #   # "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
-    #   "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
-    # },
   }
 }

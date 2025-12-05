@@ -3,12 +3,8 @@
   drvs,
   qtdeclarative | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qtdeclarative/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "00f09b210c7c4268646645baf39fa436563f1cfc232f12ce0b2d37f9bb83da94"
-    },
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     biDrvs =
       [
@@ -68,7 +64,7 @@
     buildEnv = {
       EXTRA_LDFLAGS = [
         #   "$(pkg-config --libs --static gbm glesv2 dri egl)",
-        "$(pkg-config --libs --static glib-2.0 gmodule-2.0)",
+        "$(pkg-config --libs --static glib-2.0 gmodule-2.0 fontconfig)",
       ]
     },
     cmakeExtraArgsRecord = {

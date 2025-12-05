@@ -3,12 +3,8 @@
   drvs,
   qt5compat | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qt5compat/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "14a97fb93c342a6dcfff3bc827c7cdaff4dcb4853135aa7e391aa5df96fd7440"
-    },
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     biDrvs = [
       drvs.mesa2,

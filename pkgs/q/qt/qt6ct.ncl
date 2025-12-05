@@ -3,20 +3,25 @@
   drvs,
   qt6ct | lib.QtPackage = {
     singleSource = {
-      uri = "https://github.com/trialuser02/qt6ct/releases/download/0.9/qt6ct-0.9.tar.xz",
-      sha256sum = "0a9f00db7f9c2003b33fad1715cbf2a483bf50a99079b97bf8e5d0bdbd3392cd"
+      uri = "https://www.opencode.net/trialuser/qt6ct/-/archive/0.11/qt6ct-0.11.tar.bz2",
+      sha256sum = "c26bc87b8e1603e194f9793db58667722672a6c26dfc0e080a4b2afe35fe2583"
     },
-    llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
+
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --static --libs fontconfig)",
+      ],
+    },
 
     preConfigurePhase = [
       "sed -i 's@ SHARED@@g' ${SRC}/src/qt6ct-common/CMakeLists.txt",
       "sed -i 's@ MODULE@@g' ${SRC}/src/qt6ct-style/CMakeLists.txt",
       "sed -i 's@ MODULE@@g' ${SRC}/src/qt6ct-qtplugin/CMakeLists.txt",
     ],
+
+    llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.mesa2,
-      # drvs.pkgconf,
       drvs.libelf,
       drvs.libdrm,
       drvs.zlibNg,
@@ -59,6 +64,7 @@
       drvs.glib,
       ### -font
       drvs.qtsvg,
+      drvs.qtTools,
     ],
   }
 }

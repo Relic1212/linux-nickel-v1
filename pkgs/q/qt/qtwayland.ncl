@@ -3,10 +3,10 @@
   drvs,
   qtwayland | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "735bced5fc1ab11e3c3b6cc3ca321f148d2fe80675a2a27b41ddbd372ca4e6ea"
-    },
+    # singleSource = {
+    #   uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.9.1.tar.gz",
+    #   sha256sum = "735bced5fc1ab11e3c3b6cc3ca321f148d2fe80675a2a27b41ddbd372ca4e6ea"
+    # },
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
@@ -35,6 +35,7 @@
       drvs.qtbase,
       drvs.qtdeclarative,
       drvs.qtshadertools,
+      drvs.qtsvg,
 
       ###
       drvs.expat,

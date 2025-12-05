@@ -3,10 +3,7 @@
   drvs,
   qtshadertools | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qtshadertools/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "c2aafc1f28a59e69f19494211763948cc8f69f71d22fdbdbefd418e40c267b86"
-    },
+
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [
@@ -55,20 +52,12 @@
     ],
 
     buildEnv = {
-      # EXTRA_LDFLAGS = [
-      #   "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      # ]
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static fontconfig)",
+      ]
     },
-    symlinkBuldInputs = true,
     cmakeExtraArgsRecord = {
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
-
-      "-DQT_QPA_DEFAULT_PLATFORM" = "wayland",
-
-      "-DQT_QPA_PLATFORMS" = "wayland",
-      "-DINSTALL_QMLDIR" = "/usr/lib/qt6/qml",
-      "-DINSTALL_PLUGINSDIR" = "/usr/lib/qt6/plugins",
     },
   }
 }

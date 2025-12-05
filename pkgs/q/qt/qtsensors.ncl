@@ -1,14 +1,10 @@
 {
   lib,
   drvs,
-  qtsensors | lib.CmakePackage = {
+  qtsensors | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtsensors-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "f04b131acacfd42dfe056bd5861ff1e12e2ab57b3e20332becefa3644a409c6c"
-    },
+
     llvmProvider = drvs.llvmFull,
-    symlinkBuldInputs = true,
 
     biDrvs = [
       drvs.mesa2,
@@ -59,15 +55,15 @@
       drvs.glib,
     ],
 
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 dri egl)",
-      ]
-    },
+    # buildEnv = {
+    #   EXTRA_LDFLAGS = [
+    #     "$(pkg-config --libs --static gbm glesv2 dri egl)",
+    #   ]
+    # },
 
-    cmakeExtraArgsRecord = {
+    # cmakeExtraArgsRecord = {
 
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
-    },
+    #   "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
+    # },
   }
 }

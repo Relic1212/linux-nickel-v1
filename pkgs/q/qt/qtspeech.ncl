@@ -3,11 +3,10 @@
   drvs,
   qtspeech | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-
-      uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtspeech-everywhere-src-6.9.1.tar.xz",
-      sha256sum = "6807f59fcae2ef8f1f64210cfbfc8bcee1a40ed2d21eaee6673aba36bb7c1428"
-    },
+    # singleSource = {
+    #   uri = "https://download.qt.io/archive/qt/6.9/6.9.1/submodules/qtspeech-everywhere-src-6.9.1.tar.xz",
+    #   sha256sum = "6807f59fcae2ef8f1f64210cfbfc8bcee1a40ed2d21eaee6673aba36bb7c1428"
+    # },
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [

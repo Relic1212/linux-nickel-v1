@@ -3,10 +3,10 @@
   drvs,
   qtquick3d | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qtquick3d/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "127ea0306c5ca1a67d90b13c8d60a21b8e52ade007853bac7bcbf55af61ae0db"
-    },
+    # singleSource = {
+    #   uri = "https://github.com/qt/qtquick3d/archive/refs/tags/v6.9.1.tar.gz",
+    #   sha256sum = "127ea0306c5ca1a67d90b13c8d60a21b8e52ade007853bac7bcbf55af61ae0db"
+    # },
     llvmProvider = drvs.llvmFull,
 
     biDrvs = [

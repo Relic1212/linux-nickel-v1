@@ -47,13 +47,8 @@ in
   drvs,
   qtbase | lib.QtPackage = {
     generator = "Ninja",
-    singleSource = {
-      uri = "https://github.com/qt/qtbase/archive/refs/tags/v6.9.1.tar.gz",
-      sha256sum = "487e49508b8b4bb74908882cde04d3473f2c783651c72c75ee4a2a4691788263"
-    },
-    llvmProvider = drvs.llvmFull,
 
-    symlinkBuldInputs = true,
+    llvmProvider = drvs.llvmFull,
 
     biDrvs =
       [
@@ -137,6 +132,7 @@ in
       ],
 
     preConfigurePhase = [
+      # "echo 'forced rebuild'",
       m%"sed -i 's@\/bin\/pwd@\/usr\/bin\/pwd@g' ${SRC}/configure"%,
     ],
     options = {
@@ -175,6 +171,7 @@ in
   qtbaseX11 =
     qtbase
     & {
+      srcName = "qtbase",
       options.x11 = true,
       buildEnv = {
         EXTRA_LDFLAGS = [
