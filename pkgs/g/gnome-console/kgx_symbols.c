@@ -1189,6 +1189,8 @@ extern void* g_binding_group_get_type;
 
 extern void* g_signal_group_get_type;
 
+extern void* pango_font_family_get_type;
+
 // https://github.com/stal-ix/ix/blob/c13a771e9f68146b7e66722c0d8d16f0c076462f/pkgs/die/c/registar.sh
 extern void adw_stylesheet_get_resource(void);
 extern void adw_get_resource(void);
@@ -1203,6 +1205,7 @@ __attribute__((constructor)) void register_ptyxis_internal()
 
 	register_symbol("g_binding_group_get_type", &g_binding_group_get_type);
 	register_symbol("g_signal_group_get_type", &g_signal_group_get_type);
+	register_symbol("pango_font_family_get_type", &pango_font_family_get_type);
 
 	register_symbol("gtk_a11y_overlay_get_type", &gtk_a11y_overlay_get_type);
 	register_symbol("gtk_about_dialog_get_type", &gtk_about_dialog_get_type);

@@ -4,18 +4,18 @@
 
   gnomeConsole | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/console/-/archive/47.2.1/console-47.2.1.tar.gz",
-      sha256sum = "954d346b4ad4c6f1089e68088d2112c7d1e2e1b52232d323ea411acc73dc75c9",
-      # uri = "https://gitlab.gnome.org/GNOME/console/-/archive/49.1/console-49.1.tar.bz2",
-      # sha256sum = "970f195dc3743a92f6662fc94d1ba4732b9effeccbfbb92760c07fcd7aa82514",
+      # uri = "https://gitlab.gnome.org/GNOME/console/-/archive/47.2.1/console-47.2.1.tar.gz",
+      # sha256sum = "954d346b4ad4c6f1089e68088d2112c7d1e2e1b52232d323ea411acc73dc75c9",
+      uri = "https://gitlab.gnome.org/GNOME/console/-/archive/49.1/console-49.1.tar.bz2",
+      sha256sum = "970f195dc3743a92f6662fc94d1ba4732b9effeccbfbb92760c07fcd7aa82514",
     },
 
-    patches = [
-      {
-        sha256sum = "0a7591e5e2cb0e8fc1216906384c58c05807760cb2c1948ee6968c88fb9cd32f",
-        file = "0001-locale.patch",
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "0a7591e5e2cb0e8fc1216906384c58c05807760cb2c1948ee6968c88fb9cd32f",
+    #     file = "0001-locale.patch",
+    #   }
+    # ],
 
     buildEnv.EXTRA_LDFLAGS = [
       "-lc++",
