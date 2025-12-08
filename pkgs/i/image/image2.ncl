@@ -12,7 +12,7 @@
       "install -d -m0755  ${DEST}/etc/dinit",
       m%"
       echo '
-      PATH=/usr/bin:/bin
+      PATH=/usr/bin
       SYSTEMD_LOG_LEVEL=debug
       SYSTEMD_LOG_LOCATION=1
       ' > ${DEST}/etc/dinit/environment
@@ -27,7 +27,7 @@
     # drvs.uutils,
     # drvs.uutilsSymlinks,
     # drvs.uutilsFindutils,
-    drvs.busyboxFinal,
+    drvs.busyboxFinal & { priority = 1 },
     drvs.gnused,
     drvs.gnugrep,
     (drvs.sbase & { priority = -1 }),
@@ -61,7 +61,7 @@
     drvs.dinit,
     drvs.dinitServicesV3,
     drvs.dinitUtils,
-    _shadow,
+    drvs.shadowPamSystemd & { priority = 2 },
     drvs.libpam,
     drvs.cryptoPam,
     # drvs.gnomeKeyring,
@@ -101,11 +101,12 @@
     # enc
     drvs.e2fsprogs,
     drvs.fscryptUnlockHome,
-    drvs.fscryptUnlockHomeAgreety,
+    # drvs.fscryptUnlockHomeAgreety,
     # drvs.fscryptUnlockHomeElogind,
-    drvs._elogind255,
-    drvs.eudev,
+    # drvs._elogind255,
+    # drvs.eudev,
     # drvs.systemd258,
+    drvs.systemd259 & { priority = -1 },
     (drvs.dinitEnv & { priority = 1 }),
     # drvs-basu,
     drvs.openssl,
@@ -174,6 +175,8 @@
     # drvs.sndiod,
     drvs.desktopFileUtils,
     drvs.bluez,
+    drvs.tuigreet,
+    drvs.tuigreetConfig,
 
     # drvs.flatpak,
     # drvs.fuse,
@@ -197,10 +200,11 @@
   # /usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so
   # /usr/bin/gtk-builder-tool
   # /usr/bin/gtk-query-im*
-  _baseImageSmall =
+  baseImageSmall =
     _rootfs2
     & {
       enableCcache = false,
+
       biDrvs =
         [
           # drvs.baseBaseRootfs,

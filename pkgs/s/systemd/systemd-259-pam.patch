@@ -1,0 +1,72 @@
+diff --git a/src/login/pam_systemd.c b/src/login/pam_systemd.c
+index ce6e5e137e..b1b14bfcbb 100644
+--- a/src/login/pam_systemd.c
++++ b/src/login/pam_systemd.c
+@@ -52,8 +52,19 @@
+ #include "user-util.h"
+ #include "userdb.h"
+ 
++#include <dlfcn.h>
++
+ #define LOGIN_SLOW_BUS_CALL_TIMEOUT_USEC (2*USEC_PER_MINUTE)
+ 
++void* _pam_systemd_dlopen(const char *mod_path);
++void* _pam_systemd_dlsym(void *handle, const char *symbol);
++/* Session Management API's */
++int pam_systemd_pam_sm_open_session(pam_handle_t *pamh, int flags,
++			int argc, const char **argv);
++
++int pam_systemd_pam_sm_close_session(pam_handle_t *pamh, int flags,
++			int argc, const char **argv);
++
+ static int parse_caps(
+                 pam_handle_t *handle,
+                 const char *value,
+@@ -1722,7 +1733,7 @@ static int close_osc_context(pam_handle_t *handle, bool debug) {
+         return PAM_SUCCESS;
+ }
+ 
+-_public_ PAM_EXTERN int pam_sm_open_session(
++_public_ PAM_EXTERN int pam_systemd_pam_sm_open_session(
+                 pam_handle_t *handle,
+                 int flags,
+                 int argc, const char **argv) {
+@@ -1812,7 +1823,7 @@ _public_ PAM_EXTERN int pam_sm_open_session(
+         return open_osc_context(handle, c.type, ur, debug);
+ }
+ 
+-_public_ PAM_EXTERN int pam_sm_close_session(
++_public_ PAM_EXTERN int pam_systemd_pam_sm_close_session(
+                 pam_handle_t *handle,
+                 int flags,
+                 int argc, const char **argv) {
+@@ -1896,3 +1907,29 @@ _public_ PAM_EXTERN int pam_sm_close_session(
+ 
+         return PAM_SUCCESS;
+ }
++
++void* _pam_systemd_dlopen(const char *mod_path)
++{
++        // fprintf(stderr, "(pam_systemd.a) _pam_systemd_dlopen called with mod_path \"%s\"\n",mod_path);
++
++	return (void*)mod_path;
++}
++
++void*  _pam_systemd_dlsym(void *handle, const char *symbol)
++{       
++        // fprintf(stderr, "(pam_systemd.a) _pam_systemd_dlsym called with symbol \"%s\"\n", symbol);
++        if (strcmp(symbol, "pam_sm_open_session" )==0){
++                // fprintf(stderr, "(pam_systemd.a) returning pam_systemd_pam_sm_open_session\n");
++
++                return pam_systemd_pam_sm_open_session;
++        } 
++
++        if (strcmp(symbol, "pam_sm_close_session" )==0){
++                // fprintf(stderr, "(pam_systemd.a) returning pam_systemd_pam_sm_close_session\n");
++
++                return pam_systemd_pam_sm_close_session;
++        }
++        fprintf(stderr, "(pam_systemd.a)WARNING: returning NULL for symbol %s\n", symbol);
++
++	return NULL;
++}

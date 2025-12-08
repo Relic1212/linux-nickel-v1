@@ -66,14 +66,27 @@
         uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.7.1/Linux-PAM-1.7.1.tar.xz",
         sha256sum = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0",
       },
-      patches = [
-        {
-          sha256sum = "d6812b8ab638dac08c534a0794a8d02d1e76789b34db9530be126f3f4b90c95b",
-          file = "libpam.patch",
-        }
-      ],
+      patches =
+        [
+          {
+            sha256sum = "d6812b8ab638dac08c534a0794a8d02d1e76789b34db9530be126f3f4b90c95b",
+            file = "libpam.patch",
+          }
+        ]
+        @ (
+          if options.systemd then
+            [
+              {
+                file = "libpam-1.7.1-systemd.patch",
+                sha256sum = "3dc9fc623544a584ce993f55244ac4075e91a57ccccfda6b5f19ce4701268a90"
+              },
+            ]
+          else
+            []
+        ),
       options = {
         isFinal | Bool | default = false,
+        systemd | Bool | default = false,
       },
       extraMesonArgs = [
         "-Dexamples=false",
@@ -226,6 +239,17 @@
     },
 
   libpamFinal = libpam & { options.isFinal = true },
+  libpamFinalSystemd =
+    libpamFinal
+    & {
+      options.systemd = true,
+      postInstallPhase | priority 1 =
+        libpamFinal.postInstallPhase
+        @ [
+          "ar dv ${DEST}/usr/lib/libpam.a pam_dynamic_systemd.c.o",
+          "sed -i 's|-lpam|-lcrypto -lssl -lpam_systemd -lpam|g' ${DEST}/usr/lib/pkgconfig/pam.pc",
+        ],
+    },
 
   libpamFinalUdev =
     libpamFinal

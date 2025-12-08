@@ -46,6 +46,9 @@
       ],
       extraMakeArgs = ["VERBOSE=1"],
       debug = true,
+      options = {
+        pam_elogind | default = "pam_elogind"
+      },
       # buildEnv.EXTRA_CFLAGS = ["-DOPENPAM_STATIC_MODULES"],
       # buildEnv.EXTRA_CPPFLAGS = buildEnv.EXTRA_CFLAGS,
       postInstallPhase = [
@@ -69,12 +72,12 @@
         auth            required        pam_securetty.so debug
         auth            include         system-auth
         -auth           optional        pam_gnome_keyring.so
-        account         required        pam_nologin.so debug
+        account         required        pam_nologin.so
         account         include         system-auth
         password        include         system-auth
         session         include         system-auth
         session         required        pam_loginuid.so
-        -session        optional        pam_elogind.so debug
+        -session        optional        %{options.pam_elogind}.so debug
         -session        optional        pam_gnome_keyring.so auto_start
         " > ${DEST}/etc/pam.d/login
         "%,
@@ -105,12 +108,53 @@
       ]
     },
 
-  shadowPamTest | lib.Package = {
-    biDrvs = [
-      drvs.basefiles,
-      drvs.libpam,
-      drvs.shadowPam,
-      drvs.strace,
-    ]
-  }
+  shadowPamSystemd =
+    shadowPam
+    & {
+      debug = true,
+      options.pam_elogind = "pam_systemd",
+      buildEnv.EXTRA_LDFLAGS | priority 1 = [
+        "-Wl,--allow-multiple-definition",
+
+        #   "-lpam_systemd",
+        #   "-lpam_misc",
+        #   "-lcap",
+        #   "$(pkg-config --static --libs openssl)",
+      ],
+
+      extraEnv = {
+
+        LIBS = [
+          # "-Wl,--allow-multiple-definition",
+          "-lpam_misc",
+          "-lpam_systemd",
+          # "-Wl,--no-allow-multiple-definition",
+          "-lcap",
+          "-lssl",
+          "-lcrypto",
+          "-lmount",
+        ]
+      },
+
+      extraConfigureFlags | priority 2 =
+        shadowPam.extraConfigureFlags
+        @ [
+          m%"LIBS="${LIBS}""%,
+          m%"LIBPAM="${LIBS}""%,
+        ],
+
+      muslProvider = drvs.muslBothRenamedDl,
+      biDrvs | priority 2 =
+        shadow.biDrvs
+        @ [
+          # drvs.libpam,
+          drvs.libpamFinalSystemd,
+          drvs.openssl,
+          drvs.libpamSystemd,
+          drvs.systemdLibdl,
+          drvs.utilLinux,
+          (drvs.libarchive & { priority = 1 }), # busybox cpio not good enough
+          # drvs.elogind255,
+        ],
+    }
 }

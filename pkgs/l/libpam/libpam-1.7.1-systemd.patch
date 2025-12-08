@@ -1,0 +1,81 @@
+diff --git a/libpam/meson.build b/libpam/meson.build
+index 3d35391..7fdfa62 100644
+--- a/libpam/meson.build
++++ b/libpam/meson.build
+@@ -11,6 +11,7 @@ libpam_src = [
+   'pam_dynamic_defs.c',
+   'pam_dynamic_elogind.c',
+   'pam_dynamic_gnome_keyring.c',
++  'pam_dynamic_systemd.c',
+   'pam_end.c',
+   'pam_env.c',
+   'pam_get_authtok.c',
+diff --git a/libpam/pam_dynamic.c b/libpam/pam_dynamic.c
+index 41e3434..133e0a9 100644
+--- a/libpam/pam_dynamic.c
++++ b/libpam/pam_dynamic.c
+@@ -155,6 +155,7 @@
+ 
+ #include "pam_dynamic_elogind.h"
+ #include "pam_dynamic_gnome_keyring.h"
++#include "pam_dynamic_systemd.h"
+ 
+ void *_pam_dlopen(const char *mod_path)
+ {
+@@ -449,6 +450,11 @@ void *_pam_dlopen(const char *mod_path)
+           return _pam_gnome_keyring_dlopen(mod_path);
+ 	}
+ 
++	if (strcmp("/usr/lib/security/pam_systemd.so", mod_path)==0){
++		
++          return _pam_systemd_dlopen(mod_path);
++	}
++
+ 	fprintf(stderr, "WARNING, using libc dlopen for %s\n",mod_path);
+ 	return dlopen(mod_path, RTLD_NOW);
+ }
+@@ -995,6 +1001,11 @@ servicefn _pam_dlsym(void *handle, const char *symbol)
+ 		
+           return (servicefn)_pam_gnome_keyring_dlsym(handle,symbol);
+ 	}
++
++	if (strcmp("/usr/lib/security/pam_systemd.so", shandle)==0){
++		
++          return (servicefn)_pam_systemd_dlsym(handle,symbol);
++	}
+   
+ 	
+ 	fprintf(stderr, "(_pam_dlsym) falling back to libc dlsym for symbol %s (%s)\n",symbol,shandle );
+diff --git a/libpam/pam_dynamic_systemd.c b/libpam/pam_dynamic_systemd.c
+new file mode 100644
+index 0000000..663cfac
+--- /dev/null
++++ b/libpam/pam_dynamic_systemd.c
+@@ -0,0 +1,15 @@
++#include <dlfcn.h>
++#include <string.h>
++#include <stdio.h>
++
++
++
++void* __attribute__((weak)) _pam_systemd_dlopen(const char *mod_path)
++{
++	return NULL;
++}
++
++void* __attribute__((weak)) _pam_systemd_dlsym(void *handle, const char *symbol)
++{
++	return NULL;
++}
+\ No newline at end of file
+diff --git a/libpam/pam_dynamic_systemd.h b/libpam/pam_dynamic_systemd.h
+new file mode 100644
+index 0000000..3009a9c
+--- /dev/null
++++ b/libpam/pam_dynamic_systemd.h
+@@ -0,0 +1,4 @@
++
++void* _pam_systemd_dlopen(const char *mod_path);
++
++void* _pam_systemd_dlsym(void *handle, const char *symbol);
+\ No newline at end of file

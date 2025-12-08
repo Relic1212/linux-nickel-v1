@@ -1,0 +1,2235 @@
+diff --git a/meson.build b/meson.build
+index 6f4017d5e2..6cd169cd17 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1249,7 +1249,6 @@ libkmod = dependency('libkmod',
+                      version : '>= 15',
+                      required : get_option('kmod'))
+ conf.set10('HAVE_KMOD', libkmod.found())
+-libkmod_cflags = libkmod.partial_dependency(includes: true, compile_args: true)
+ 
+ libxenctrl = dependency('xencontrol',
+                         version : '>= 4.9',
+diff --git a/src/analyze/analyze-verify-util.c b/src/analyze/analyze-verify-util.c
+index 40952531d7..a898f0e5fd 100644
+--- a/src/analyze/analyze-verify-util.c
++++ b/src/analyze/analyze-verify-util.c
+@@ -49,7 +49,7 @@ int verify_prepare_filename(const char *filename, char **ret) {
+         assert(filename);
+         assert(ret);
+ 
+-        r = path_make_absolute_cwd(filename, &abspath);
++        r = path_make_absolute_cwd__systemd(filename, &abspath);
+         if (r < 0)
+                 return r;
+ 
+@@ -85,7 +85,7 @@ static int find_unit_directory(const char *p, char **ret) {
+         assert(p);
+         assert(ret);
+ 
+-        r = path_make_absolute_cwd(p, &a);
++        r = path_make_absolute_cwd__systemd(p, &a);
+         if (r < 0)
+                 return r;
+ 
+diff --git a/src/basic/alloc-util.c b/src/basic/alloc-util.c
+index 58b70dede4..bfd202256f 100644
+--- a/src/basic/alloc-util.c
++++ b/src/basic/alloc-util.c
+@@ -4,7 +4,7 @@
+ 
+ #include "alloc-util.h"
+ 
+-void* memdup(const void *p, size_t l) {
++void* memdup__systemd(const void *p, size_t l) {
+         void *ret;
+ 
+         assert(l == 0 || p);
+@@ -21,7 +21,7 @@ void* memdup_suffix0(const void *p, size_t l) {
+ 
+         assert(l == 0 || p);
+ 
+-        /* The same as memdup() but place a safety NUL byte after the allocated memory */
++        /* The same as memdup__systemd() but place a safety NUL byte after the allocated memory */
+ 
+         if (_unlikely_(l == SIZE_MAX)) /* prevent overflow */
+                 return NULL;
+diff --git a/src/basic/alloc-util.h b/src/basic/alloc-util.h
+index cd062d5fe3..35af97ac3b 100644
+--- a/src/basic/alloc-util.h
++++ b/src/basic/alloc-util.h
+@@ -48,7 +48,7 @@
+ #define free_and_replace(a, b)                  \
+         free_and_replace_full(a, b, free)
+ 
+-void* memdup(const void *p, size_t l) _alloc_(2);
++void* memdup__systemd(const void *p, size_t l) _alloc_(2);
+ void* memdup_suffix0(const void *p, size_t l); /* We can't use _alloc_() here, since we return a buffer one byte larger than the specified size */
+ 
+ #define memdupa(p, l)                           \
+@@ -96,7 +96,7 @@ _alloc_(2, 3) static inline void *memdup_multiply(const void *p, size_t need, si
+         if (size_multiply_overflow(size, need))
+                 return NULL;
+ 
+-        return memdup(p, size * need);
++        return memdup__systemd(p, size * need);
+ }
+ 
+ /* Note that we can't decorate this function with _alloc_() since the returned memory area is one byte larger
+diff --git a/src/basic/chase.c b/src/basic/chase.c
+index a90ae41d99..1728ce7f91 100644
+--- a/src/basic/chase.c
++++ b/src/basic/chase.c
+@@ -623,7 +623,7 @@ int chase(const char *path, const char *root, ChaseFlags flags, char **ret_path,
+                 flags &= ~CHASE_AT_RESOLVE_IN_ROOT;
+ 
+         } else {
+-                r = path_make_absolute_cwd(root, &root_abs);
++                r = path_make_absolute_cwd__systemd(root, &root_abs);
+                 if (r < 0)
+                         return r;
+ 
+@@ -644,7 +644,7 @@ int chase(const char *path, const char *root, ChaseFlags flags, char **ret_path,
+         }
+ 
+         if (!absolute) {
+-                r = path_make_absolute_cwd(path, &absolute);
++                r = path_make_absolute_cwd__systemd(path, &absolute);
+                 if (r < 0)
+                         return r;
+         }
+@@ -718,7 +718,7 @@ int chaseat_prefix_root(const char *path, const char *root, char **ret) {
+                 if (empty_or_root(root))
+                         return -EINVAL;
+ 
+-                r = path_make_absolute_cwd(root, &root_abs);
++                r = path_make_absolute_cwd__systemd(root, &root_abs);
+                 if (r < 0)
+                         return r;
+ 
+@@ -756,7 +756,7 @@ int chase_extract_filename(const char *path, const char *root, char **ret) {
+         if (!empty_or_root(root)) {
+                 _cleanup_free_ char *root_abs = NULL;
+ 
+-                r = path_make_absolute_cwd(root, &root_abs);
++                r = path_make_absolute_cwd__systemd(root, &root_abs);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/basic/conf-files.c b/src/basic/conf-files.c
+index 77affe269c..6ac96a662a 100644
+--- a/src/basic/conf-files.c
++++ b/src/basic/conf-files.c
+@@ -62,7 +62,7 @@ static int prepare_dirs(const char *root, char * const *dirs, int *ret_rfd, char
+         if (root) {
+                 /* When a non-trivial root is specified, we will prefix the result later. Hence, it is not
+                  * necessary to modify each config directories here. but needs to normalize the root directory. */
+-                r = path_make_absolute_cwd(root, &root_abs);
++                r = path_make_absolute_cwd__systemd(root, &root_abs);
+                 if (r < 0)
+                         return log_debug_errno(r, "Failed to make '%s' absolute: %m", root);
+ 
+@@ -183,7 +183,7 @@ int conf_file_new(const char *path, const char *root, ChaseFlags chase_flags, Co
+ 
+         _cleanup_free_ char *path_abs = NULL;
+         if (!root_abs) {
+-                r = path_make_absolute_cwd(path, &path_abs);
++                r = path_make_absolute_cwd__systemd(path, &path_abs);
+                 if (r < 0)
+                         return log_debug_errno(r, "Failed to make '%s' absolute: %m", path);
+ 
+@@ -843,7 +843,7 @@ int conf_file_read(
+                 log_debug("Reading config from stdin%s", glyph(GLYPH_ELLIPSIS));
+ 
+         } else if (is_path(fn)) {
+-                r = path_make_absolute_cwd(fn, &_fn);
++                r = path_make_absolute_cwd__systemd(fn, &_fn);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to make path absolute: %m");
+                 fn = _fn;
+diff --git a/src/basic/iovec-util.c b/src/basic/iovec-util.c
+index ec8af57e64..a495ea3924 100644
+--- a/src/basic/iovec-util.c
++++ b/src/basic/iovec-util.c
+@@ -115,7 +115,7 @@ struct iovec* iovec_memdup(const struct iovec *source, struct iovec *ret) {
+         if (!iovec_is_set(source))
+                 *ret = (struct iovec) {};
+         else {
+-                void *p = memdup(source->iov_base, source->iov_len);
++                void *p = memdup__systemd(source->iov_base, source->iov_len);
+                 if (!p)
+                         return NULL;
+ 
+diff --git a/src/basic/iovec-wrapper.c b/src/basic/iovec-wrapper.c
+index b4519f808d..c640a8b127 100644
+--- a/src/basic/iovec-wrapper.c
++++ b/src/basic/iovec-wrapper.c
+@@ -140,7 +140,7 @@ int iovw_append(struct iovec_wrapper *target, const struct iovec_wrapper *source
+         FOREACH_ARRAY(iovec, source->iovec, source->count) {
+                 void *dup;
+ 
+-                dup = memdup(iovec->iov_base, iovec->iov_len);
++                dup = memdup__systemd(iovec->iov_base, iovec->iov_len);
+                 if (!dup) {
+                         r = -ENOMEM;
+                         goto rollback;
+diff --git a/src/basic/mkdir.c b/src/basic/mkdir.c
+index 5f1ecad562..c38d35028c 100644
+--- a/src/basic/mkdir.c
++++ b/src/basic/mkdir.c
+@@ -195,7 +195,7 @@ int mkdir_p_internal(const char *prefix, const char *path, mode_t mode, uid_t ui
+         return 0;
+ }
+ 
+-int mkdir_p(const char *path, mode_t mode) {
++int mkdir_p__systemd(const char *path, mode_t mode) {
+         return mkdir_p_internal(NULL, path, mode, UID_INVALID, UID_INVALID, 0, mkdirat_errno_wrapper);
+ }
+ 
+diff --git a/src/basic/mkdir.h b/src/basic/mkdir.h
+index f286598a2a..c271f636c1 100644
+--- a/src/basic/mkdir.h
++++ b/src/basic/mkdir.h
+@@ -20,7 +20,7 @@ static inline int mkdir_parents(const char *path, mode_t mode) {
+         return mkdirat_parents(AT_FDCWD, path, mode);
+ }
+ int mkdir_parents_safe(const char *prefix, const char *path, mode_t mode, uid_t uid, gid_t gid, MkdirFlags flags);
+-int mkdir_p(const char *path, mode_t mode);
++int mkdir_p__systemd(const char *path, mode_t mode);
+ int mkdir_p_safe(const char *prefix, const char *path, mode_t mode, uid_t uid, gid_t gid, MkdirFlags flags);
+ int mkdir_p_root_full(const char *root, const char *p, uid_t uid, gid_t gid, mode_t m, usec_t ts, Hashmap *subvolumes);
+ static inline int mkdir_p_root(const char *root, const char *p, uid_t uid, gid_t gid, mode_t m) {
+diff --git a/src/basic/path-util.c b/src/basic/path-util.c
+index 7d11467a23..37a9299fcc 100644
+--- a/src/basic/path-util.c
++++ b/src/basic/path-util.c
+@@ -75,7 +75,7 @@ int safe_getcwd(char **ret) {
+         return 0;
+ }
+ 
+-int path_make_absolute_cwd(const char *p, char **ret) {
++int path_make_absolute_cwd__systemd(const char *p, char **ret) {
+         char *c;
+         int r;
+ 
+@@ -246,7 +246,7 @@ int path_strv_make_absolute_cwd(char **l) {
+         STRV_FOREACH(s, l) {
+                 char *t;
+ 
+-                r = path_make_absolute_cwd(*s, &t);
++                r = path_make_absolute_cwd__systemd(*s, &t);
+                 if (r < 0)
+                         return r;
+ 
+@@ -696,7 +696,7 @@ int open_and_check_executable(const char *name, const char *root, char **ret_pat
+                 if (resolved)
+                         *ret_path = TAKE_PTR(resolved);
+                 else {
+-                        r = path_make_absolute_cwd(name, ret_path);
++                        r = path_make_absolute_cwd__systemd(name, ret_path);
+                         if (r < 0)
+                                 return r;
+ 
+diff --git a/src/basic/path-util.h b/src/basic/path-util.h
+index 5b2baef4e1..35299a16c6 100644
+--- a/src/basic/path-util.h
++++ b/src/basic/path-util.h
+@@ -37,7 +37,7 @@ static inline bool path_is_absolute(const char *p) {
+ int path_split_and_make_absolute(const char *p, char ***ret);
+ char* path_make_absolute(const char *p, const char *prefix);
+ int safe_getcwd(char **ret);
+-int path_make_absolute_cwd(const char *p, char **ret);
++int path_make_absolute_cwd__systemd(const char *p, char **ret);
+ int path_make_relative(const char *from, const char *to, char **ret);
+ int path_make_relative_parent(const char *from_child, const char *to, char **ret);
+ 
+diff --git a/src/boot/fuzz-bcd.c b/src/boot/fuzz-bcd.c
+index cb5be7a9b7..1d915d1140 100644
+--- a/src/boot/fuzz-bcd.c
++++ b/src/boot/fuzz-bcd.c
+@@ -14,7 +14,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+ 
+         fuzz_setup_logging();
+ 
+-        p = memdup(data, size);
++        p = memdup__systemd(data, size);
+         assert_se(p);
+ 
+         char16_t *title = get_bcd_title(p, size);
+diff --git a/src/boot/fuzz-efi-string.c b/src/boot/fuzz-efi-string.c
+index ae19216f40..c61ffb66a1 100644
+--- a/src/boot/fuzz-efi-string.c
++++ b/src/boot/fuzz-efi-string.c
+@@ -5,7 +5,7 @@
+ #include "fuzz.h"
+ 
+ static char16_t *memdup_str16(const uint8_t *data, size_t size) {
+-        char16_t *ret = memdup(data, size);
++        char16_t *ret = memdup__systemd(data, size);
+         assert_se(ret);
+         ret[size / sizeof(char16_t) - 1] = '\0';
+         return ret;
+diff --git a/src/core/dbus-execute.c b/src/core/dbus-execute.c
+index 83b0ddcb9e..0305440957 100644
+--- a/src/core/dbus-execute.c
++++ b/src/core/dbus-execute.c
+@@ -2565,7 +2565,7 @@ int bus_exec_context_set_transient_property(
+                                 _cleanup_free_ char *a = NULL, *b = NULL;
+                                 _cleanup_free_ void *copy = NULL;
+ 
+-                                copy = memdup(p, sz);
++                                copy = memdup__systemd(p, sz);
+                                 if (!copy)
+                                         return -ENOMEM;
+ 
+diff --git a/src/core/execute.c b/src/core/execute.c
+index 08210edb1e..ddccdeb490 100644
+--- a/src/core/execute.c
++++ b/src/core/execute.c
+@@ -2808,7 +2808,7 @@ int exec_runtime_make(
+         }
+ 
+         if (exec_needs_ephemeral(context)) {
+-                r = mkdir_p("/var/lib/systemd/ephemeral-trees", 0755);
++                r = mkdir_p__systemd("/var/lib/systemd/ephemeral-trees", 0755);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/core/kmod-setup.c b/src/core/kmod-setup.c
+index e8230d4adf..7ec3c7c784 100644
+--- a/src/core/kmod-setup.c
++++ b/src/core/kmod-setup.c
+@@ -8,13 +8,29 @@
+ #include "fileio.h"
+ #include "kmod-setup.h"
+ #include "log.h"
+-#include "module-util.h"
++
+ #include "recurse-dir.h"
+ #include "string-util.h"
+ #include "strv.h"
+ #include "virt.h"
+ 
+ #if HAVE_KMOD
++#include "module-util.h"
++
++static void systemd_kmod_log(
++                void *data,
++                int priority,
++                const char *file, int line,
++                const char *fn,
++                const char *format,
++                va_list args) {
++
++        /* library logging is enabled at debug only */
++        DISABLE_WARNING_FORMAT_NONLITERAL;
++        log_internalv(LOG_DEBUG, 0, file, line, fn, format, args);
++        REENABLE_WARNING;
++}
++
+ static int match_modalias_recurse_dir_cb(
+                 RecurseDirEvent event,
+                 const char *path,
+@@ -143,7 +159,6 @@ int kmod_setup(void) {
+ #endif
+         };
+ 
+-        int r;
+ 
+         if (have_effective_cap(CAP_SYS_MODULE) <= 0)
+                 return 0;
+@@ -162,9 +177,12 @@ int kmod_setup(void) {
+                                   "this by loading the module...", kmod->module);
+ 
+                 if (!ctx) {
+-                        r = module_setup_context(&ctx);
+-                        if (r < 0)
+-                                return log_error_errno(r, "Failed to initialize kmod context: %m");
++                        ctx = kmod_new(NULL, NULL);
++                        if (!ctx)
++                                return log_oom();
++
++                        kmod_set_log_fn(ctx, systemd_kmod_log, NULL);
++                        kmod_load_resources(ctx);
+                 }
+ 
+                 (void) module_load_and_warn(ctx, kmod->module, kmod->warn_if_unavailable);
+diff --git a/src/core/meson.build b/src/core/meson.build
+index acf665fba4..e2273f722e 100644
+--- a/src/core/meson.build
++++ b/src/core/meson.build
+@@ -201,9 +201,9 @@ executables += [
+                 ],
+                 'dependencies' : [
+                         libapparmor_cflags,
+-                        libkmod_cflags,
+-                        libseccomp_cflags,
+-                        libselinux_cflags,
++                        libkmod,
++                        libseccomp,
++                        libselinux,
+                 ],
+         },
+         libexec_template + {
+diff --git a/src/core/namespace.c b/src/core/namespace.c
+index c8dcccf46d..7c2e25b632 100644
+--- a/src/core/namespace.c
++++ b/src/core/namespace.c
+@@ -1977,7 +1977,7 @@ static int apply_one_mount(
+                 /* When we create implicit mounts, we might need to create the path ourselves as it is on a
+                  * just-created tmpfs, for example. */
+                 if (m->create_source_dir) {
+-                        r = mkdir_p(mount_entry_source(m), m->source_dir_mode);
++                        r = mkdir_p__systemd(mount_entry_source(m), m->source_dir_mode);
+                         if (r < 0)
+                                 return log_debug_errno(r, "Failed to create source directory %s: %m", mount_entry_source(m));
+ 
+@@ -2943,13 +2943,13 @@ int setup_namespace(const NamespaceParameters *p, char **reterr_path) {
+ 
+         /* Create the source directory to allow runtime propagation of mounts */
+         if (setup_propagate)
+-                (void) mkdir_p(p->propagate_dir, 0600);
++                (void) mkdir_p__systemd(p->propagate_dir, 0600);
+ 
+         if (p->n_extension_images > 0 || !strv_isempty(p->extension_directories)) {
+                 /* ExtensionImages/Directories mountpoint directories will be created while parsing the
+                  * mounts to create, so have the parent ready */
+                 char *extension_dir = strjoina(p->private_namespace_dir, "/unit-extensions");
+-                (void) mkdir_p(extension_dir, 0600);
++                (void) mkdir_p__systemd(extension_dir, 0600);
+         }
+ 
+         /* Remount / as SLAVE so that nothing now mounted in the namespace
+@@ -3296,7 +3296,7 @@ static int setup_one_tmp_dir(const char *id, const char *prefix, char **path, ch
+                  * read-only. This way the service will get the EROFS result as if it was writing to the real
+                  * file system. */
+                 WITH_UMASK(0000)
+-                        r = mkdir_p(RUN_SYSTEMD_EMPTY, 0500);
++                        r = mkdir_p__systemd(RUN_SYSTEMD_EMPTY, 0500);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/coredump/coredumpctl.c b/src/coredump/coredumpctl.c
+index 321e9067f3..2b4e576e70 100644
+--- a/src/coredump/coredumpctl.c
++++ b/src/coredump/coredumpctl.c
+@@ -87,9 +87,9 @@ static int add_match(sd_journal *j, const char *match) {
+         if (strchr(match, '='))
+                 field = NULL;
+         else if (is_path(match)) {
+-                r = path_make_absolute_cwd(match, &p);
++                r = path_make_absolute_cwd__systemd(match, &p);
+                 if (r < 0)
+-                        return log_error_errno(r, "path_make_absolute_cwd(\"%s\"): %m", match);
++                        return log_error_errno(r, "path_make_absolute_cwd__systemd(\"%s\"): %m", match);
+ 
+                 match = p;
+                 field = "COREDUMP_EXE";
+diff --git a/src/dissect/dissect.c b/src/dissect/dissect.c
+index b991acab75..c468b2ba42 100644
+--- a/src/dissect/dissect.c
++++ b/src/dissect/dissect.c
+@@ -1757,7 +1757,7 @@ static int action_with(DissectedImage *m, LoopDevice *d) {
+         if (r < 0)
+                 return log_error_errno(r, "Failed to generate temporary mount directory: %m");
+ 
+-        r = mkdir_p(temp, 0700);
++        r = mkdir_p__systemd(temp, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create mount point: %m");
+ 
+diff --git a/src/home/homed-manager.c b/src/home/homed-manager.c
+index c54cc43fd3..aea3560708 100644
+--- a/src/home/homed-manager.c
++++ b/src/home/homed-manager.c
+@@ -1371,7 +1371,7 @@ static int manager_generate_key_pair(Manager *m) {
+ 
+         log_info("Successfully created Ed25519 key pair.");
+ 
+-        (void) mkdir_p("/var/lib/systemd/home", 0755);
++        (void) mkdir_p__systemd("/var/lib/systemd/home", 0755);
+ 
+         /* Write out public key (note that we only do that as a help to the user, we don't make use of this ever */
+         r = fopen_temporary("/var/lib/systemd/home/local.public", &fpublic, &temp_public);
+diff --git a/src/home/homework-mount.c b/src/home/homework-mount.c
+index 56b83147bf..53cf91f56e 100644
+--- a/src/home/homework-mount.c
++++ b/src/home/homework-mount.c
+@@ -89,7 +89,7 @@ int home_unshare_and_mkdir(void) {
+         if (r < 0)
+                 return r;
+ 
+-        (void) mkdir_p(HOME_RUNTIME_WORK_DIR, 0700);
++        (void) mkdir_p__systemd(HOME_RUNTIME_WORK_DIR, 0700);
+         return 0;
+ }
+ 
+@@ -140,7 +140,7 @@ int home_move_mount(const char *mount_suffix, const char *target) {
+         } else
+                 d = HOME_RUNTIME_WORK_DIR;
+ 
+-        r = mkdir_p(target, 0700);
++        r = mkdir_p__systemd(target, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create directory '%s': %m", target);
+ 
+diff --git a/src/journal/journald-manager.c b/src/journal/journald-manager.c
+index e1e9cba0ed..40cb86be5b 100644
+--- a/src/journal/journald-manager.c
++++ b/src/journal/journald-manager.c
+@@ -2355,7 +2355,7 @@ int manager_init(Manager *m) {
+         if (!m->runtime_directory)
+                 return log_oom();
+ 
+-        (void) mkdir_p(m->runtime_directory, 0755);
++        (void) mkdir_p__systemd(m->runtime_directory, 0755);
+ 
+         m->user_journals = ordered_hashmap_new(&journal_file_hash_ops_offline_close);
+         if (!m->user_journals)
+diff --git a/src/kernel-install/kernel-install.c b/src/kernel-install/kernel-install.c
+index 97c4b3a352..3e8e2459d3 100644
+--- a/src/kernel-install/kernel-install.c
++++ b/src/kernel-install/kernel-install.c
+@@ -341,7 +341,7 @@ static int context_set_path(Context *c, const char *s, const char *source, const
+                         return log_warning_errno(r, "Failed to chase path %s for %s specified via %s, ignoring: %m",
+                                                  s, name, source);
+         } else {
+-                r = path_make_absolute_cwd(s, &p);
++                r = path_make_absolute_cwd__systemd(s, &p);
+                 if (r < 0)
+                         return log_warning_errno(r, "Failed to make path '%s' for %s specified via %s absolute, ignoring: %m",
+                                                  s, name, source);
+@@ -389,7 +389,7 @@ static int context_set_path_strv(Context *c, char* const* strv, const char *sour
+                                 return log_warning_errno(r, "Failed to chase path %s for %s specified via %s: %m",
+                                                          *s, name, source);
+                 } else {
+-                        r = path_make_absolute_cwd(*s, &p);
++                        r = path_make_absolute_cwd__systemd(*s, &p);
+                         if (r < 0)
+                                 return log_warning_errno(r, "Failed to make path '%s' for %s specified via %s absolute, ignoring: %m",
+                                                          *s, name, source);
+diff --git a/src/libsystemd-network/dhcp-option.c b/src/libsystemd-network/dhcp-option.c
+index a840b61462..1cff246cd6 100644
+--- a/src/libsystemd-network/dhcp-option.c
++++ b/src/libsystemd-network/dhcp-option.c
+@@ -460,7 +460,7 @@ int sd_dhcp_option_new(uint8_t option, const void *data, size_t length, sd_dhcp_
+         assert_return(ret, -EINVAL);
+         assert_return(length == 0 || data, -EINVAL);
+ 
+-        _cleanup_free_ void *q = memdup(data, length);
++        _cleanup_free_ void *q = memdup__systemd(data, length);
+         if (!q)
+                 return -ENOMEM;
+ 
+diff --git a/src/libsystemd-network/dhcp6-option.c b/src/libsystemd-network/dhcp6-option.c
+index 4eef68fa3b..ed88468b42 100644
+--- a/src/libsystemd-network/dhcp6-option.c
++++ b/src/libsystemd-network/dhcp6-option.c
+@@ -889,7 +889,7 @@ int sd_dhcp6_option_new(uint16_t option, const void *data, size_t length, uint32
+         assert_return(ret, -EINVAL);
+         assert_return(length == 0 || data, -EINVAL);
+ 
+-        _cleanup_free_ void *q = memdup(data, length);
++        _cleanup_free_ void *q = memdup__systemd(data, length);
+         if (!q)
+                 return -ENOMEM;
+ 
+diff --git a/src/libsystemd-network/fuzz-dhcp-server.c b/src/libsystemd-network/fuzz-dhcp-server.c
+index f20d993941..6b11eeaef6 100644
+--- a/src/libsystemd-network/fuzz-dhcp-server.c
++++ b/src/libsystemd-network/fuzz-dhcp-server.c
+@@ -75,7 +75,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+ 
+         fuzz_setup_logging();
+ 
+-        assert_se(duped = memdup(data, size));
++        assert_se(duped = memdup__systemd(data, size));
+ 
+         dir_fd = mkdtemp_open(NULL, 0, &tmpdir);
+         assert_se(dir_fd >= 0);
+diff --git a/src/libsystemd-network/lldp-neighbor.c b/src/libsystemd-network/lldp-neighbor.c
+index 727e8feb33..007c2e25f4 100644
+--- a/src/libsystemd-network/lldp-neighbor.c
++++ b/src/libsystemd-network/lldp-neighbor.c
+@@ -237,7 +237,7 @@ int lldp_neighbor_parse(sd_lldp_neighbor *n) {
+                                 return log_lldp_rx_errno(n->lldp_rx, SYNTHETIC_ERRNO(EBADMSG),
+                                                          "Duplicate chassis ID field, ignoring datagram.");
+ 
+-                        n->id.chassis_id = memdup(p, length);
++                        n->id.chassis_id = memdup__systemd(p, length);
+                         if (!n->id.chassis_id)
+                                 return log_oom_debug();
+ 
+@@ -254,7 +254,7 @@ int lldp_neighbor_parse(sd_lldp_neighbor *n) {
+                                 return log_lldp_rx_errno(n->lldp_rx, SYNTHETIC_ERRNO(EBADMSG),
+                                                          "Duplicate port ID field, ignoring datagram.");
+ 
+-                        n->id.port_id = memdup(p, length);
++                        n->id.port_id = memdup__systemd(p, length);
+                         if (!n->id.port_id)
+                                 return log_oom_debug();
+ 
+diff --git a/src/libsystemd-network/sd-dhcp-lease.c b/src/libsystemd-network/sd-dhcp-lease.c
+index 9f89f7bdaf..926d57ac4f 100644
+--- a/src/libsystemd-network/sd-dhcp-lease.c
++++ b/src/libsystemd-network/sd-dhcp-lease.c
+@@ -1099,7 +1099,7 @@ int dhcp_lease_parse_options(uint8_t code, uint8_t len, const void *option, void
+                 else {
+                         void *p;
+ 
+-                        p = memdup(option, len);
++                        p = memdup__systemd(option, len);
+                         if (!p)
+                                 return -ENOMEM;
+ 
+@@ -1253,7 +1253,7 @@ int dhcp_lease_insert_private_option(sd_dhcp_lease *lease, uint8_t tag, const vo
+ 
+         option->tag = tag;
+         option->length = len;
+-        option->data = memdup(data, len);
++        option->data = memdup__systemd(data, len);
+         if (!option->data) {
+                 free(option);
+                 return -ENOMEM;
+diff --git a/src/libsystemd-network/sd-dhcp6-lease.c b/src/libsystemd-network/sd-dhcp6-lease.c
+index 278962808a..bd54e0c303 100644
+--- a/src/libsystemd-network/sd-dhcp6-lease.c
++++ b/src/libsystemd-network/sd-dhcp6-lease.c
+@@ -160,7 +160,7 @@ int dhcp6_lease_set_clientid(sd_dhcp6_lease *lease, const uint8_t *id, size_t le
+         assert(id || len == 0);
+ 
+         if (len > 0) {
+-                clientid = memdup(id, len);
++                clientid = memdup__systemd(id, len);
+                 if (!clientid)
+                         return -ENOMEM;
+         }
+@@ -192,7 +192,7 @@ int dhcp6_lease_set_serverid(sd_dhcp6_lease *lease, const uint8_t *id, size_t le
+         assert(id || len == 0);
+ 
+         if (len > 0) {
+-                serverid = memdup(id, len);
++                serverid = memdup__systemd(id, len);
+                 if (!serverid)
+                         return -ENOMEM;
+         }
+diff --git a/src/libsystemd-network/test-dhcp-client.c b/src/libsystemd-network/test-dhcp-client.c
+index a14a97c179..ac14296603 100644
+--- a/src/libsystemd-network/test-dhcp-client.c
++++ b/src/libsystemd-network/test-dhcp-client.c
+@@ -205,7 +205,7 @@ int dhcp_network_send_raw_socket(int s, const union sockaddr_union *link, const
+         size = sizeof(DHCPPacket);
+         assert_se(len > size);
+ 
+-        discover = memdup(packet, len);
++        discover = memdup__systemd(packet, len);
+ 
+         assert_se(discover->ip.ttl == IPDEFTTL);
+         assert_se(discover->ip.protocol == IPPROTO_UDP);
+diff --git a/src/libsystemd-network/test-dhcp6-client.c b/src/libsystemd-network/test-dhcp6-client.c
+index f2b6ce8598..e98ea3af4f 100644
+--- a/src/libsystemd-network/test-dhcp6-client.c
++++ b/src/libsystemd-network/test-dhcp6-client.c
+@@ -242,7 +242,7 @@ TEST(option) {
+         assert_se(optval == packet + 11);
+ 
+         free(buf);
+-        assert_se(buf = memdup(result, sizeof(result)));
++        assert_se(buf = memdup__systemd(result, sizeof(result)));
+         pos = 7;
+         assert_se(dhcp6_option_append(&buf, &pos, optcode, optlen, optval) >= 0);
+ 
+diff --git a/src/libsystemd/sd-bus/bus-socket.c b/src/libsystemd/sd-bus/bus-socket.c
+index 1ab014e825..adee0f2e90 100644
+--- a/src/libsystemd/sd-bus/bus-socket.c
++++ b/src/libsystemd/sd-bus/bus-socket.c
+@@ -823,7 +823,7 @@ static int bus_socket_inotify_setup(sd_bus *b) {
+                           sizeof(b->sockaddr.un.sun_path));
+ 
+         /* Make sure the path is absolute */
+-        r = path_make_absolute_cwd(p, &absolute);
++        r = path_make_absolute_cwd__systemd(p, &absolute);
+         if (r < 0)
+                 goto fail;
+ 
+@@ -1342,7 +1342,7 @@ static int bus_socket_make_message(sd_bus *bus, size_t size) {
+                 return r;
+ 
+         if (bus->rbuffer_size > size) {
+-                b = memdup((const uint8_t*) bus->rbuffer + size,
++                b = memdup__systemd((const uint8_t*) bus->rbuffer + size,
+                            bus->rbuffer_size - size);
+                 if (!b)
+                         return -ENOMEM;
+diff --git a/src/libsystemd/sd-bus/fuzz-bus-message.c b/src/libsystemd/sd-bus/fuzz-bus-message.c
+index e2c4167f3c..bf1621f29b 100644
+--- a/src/libsystemd/sd-bus/fuzz-bus-message.c
++++ b/src/libsystemd/sd-bus/fuzz-bus-message.c
+@@ -21,7 +21,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+         r = sd_bus_new(&bus);
+         assert_se(r >= 0);
+ 
+-        assert_se(buffer = memdup(data, size));
++        assert_se(buffer = memdup__systemd(data, size));
+ 
+         r = bus_message_from_malloc(bus, buffer, size, NULL, 0, NULL, &m);
+         if (r == -EBADMSG)
+diff --git a/src/libsystemd/sd-device/test-sd-device.c b/src/libsystemd/sd-device/test-sd-device.c
+index 02525c83ec..f6ac087416 100644
+--- a/src/libsystemd/sd-device/test-sd-device.c
++++ b/src/libsystemd/sd-device/test-sd-device.c
+@@ -57,7 +57,7 @@ TEST(mdio_bus) {
+ 
+                 ASSERT_OK_ERRNO(setenv("SYSTEMD_DEVICE_VERIFY_SYSFS", "0", /* overwrite = */ false));
+                 ASSERT_OK(mount_nofollow_verbose(LOG_ERR, "tmpfs", "/sys/bus/", "tmpfs", 0, NULL));
+-                r = mkdir_p(syspath, 0755);
++                r = mkdir_p__systemd(syspath, 0755);
+                 if (ERRNO_IS_NEG_PRIVILEGE(r)) {
+                         log_tests_skipped("Lacking privileges to create %s", syspath);
+                         _exit(EXIT_SUCCESS);
+diff --git a/src/libsystemd/sd-event/sd-event.c b/src/libsystemd/sd-event/sd-event.c
+index a2a70c9940..3984674c96 100644
+--- a/src/libsystemd/sd-event/sd-event.c
++++ b/src/libsystemd/sd-event/sd-event.c
+@@ -4030,7 +4030,7 @@ static int source_memory_pressure_write(sd_event_source *s) {
+ 
+                 assert((size_t) n < s->memory_pressure.write_buffer_size);
+ 
+-                c = memdup((uint8_t*) s->memory_pressure.write_buffer + n, s->memory_pressure.write_buffer_size - n);
++                c = memdup__systemd((uint8_t*) s->memory_pressure.write_buffer + n, s->memory_pressure.write_buffer_size - n);
+                 if (!c)
+                         return -ENOMEM;
+ 
+diff --git a/src/libsystemd/sd-journal/catalog.c b/src/libsystemd/sd-journal/catalog.c
+index 0751480fe5..fd20f0d673 100644
+--- a/src/libsystemd/sd-journal/catalog.c
++++ b/src/libsystemd/sd-journal/catalog.c
+@@ -194,7 +194,7 @@ static int finish_item(
+                 free(prev);
+         } else {
+                 /* A new item */
+-                combined = memdup(payload, payload_size + 1);
++                combined = memdup__systemd(payload, payload_size + 1);
+                 if (!combined)
+                         return log_oom();
+ 
+diff --git a/src/libsystemd/sd-journal/sd-journal.c b/src/libsystemd/sd-journal/sd-journal.c
+index a02c358fad..55b431ebc5 100644
+--- a/src/libsystemd/sd-journal/sd-journal.c
++++ b/src/libsystemd/sd-journal/sd-journal.c
+@@ -306,7 +306,7 @@ _public_ int sd_journal_add_match(sd_journal *j, const void *data, size_t size)
+ 
+         m->hash = hash;
+         m->size = size;
+-        m->data = memdup(data, size);
++        m->data = memdup__systemd(data, size);
+         if (!m->data)
+                 goto fail;
+ 
+diff --git a/src/libsystemd/sd-netlink/netlink-socket.c b/src/libsystemd/sd-netlink/netlink-socket.c
+index 28fd2bc3d9..c0cbe5c072 100644
+--- a/src/libsystemd/sd-netlink/netlink-socket.c
++++ b/src/libsystemd/sd-netlink/netlink-socket.c
+@@ -322,7 +322,7 @@ static int parse_message_one(sd_netlink *nl, uint32_t group, const struct nlmsgh
+                 return r;
+ 
+         m->multicast_group = group;
+-        m->hdr = memdup(hdr, hdr->nlmsg_len);
++        m->hdr = memdup__systemd(hdr, hdr->nlmsg_len);
+         if (!m->hdr)
+                 return -ENOMEM;
+ 
+diff --git a/src/libsystemd/sd-resolve/sd-resolve.c b/src/libsystemd/sd-resolve/sd-resolve.c
+index 0f189a5044..ac2df03b61 100644
+--- a/src/libsystemd/sd-resolve/sd-resolve.c
++++ b/src/libsystemd/sd-resolve/sd-resolve.c
+@@ -706,7 +706,7 @@ static int unserialize_addrinfo(const void **p, size_t *length, struct addrinfo
+         };
+ 
+         if (s.ai_addrlen > 0) {
+-                ai->ai_addr = memdup((const uint8_t*) *p + sizeof(AddrInfoSerialization), s.ai_addrlen);
++                ai->ai_addr = memdup__systemd((const uint8_t*) *p + sizeof(AddrInfoSerialization), s.ai_addrlen);
+                 if (!ai->ai_addr) {
+                         free(ai);
+                         return -ENOMEM;
+@@ -714,7 +714,7 @@ static int unserialize_addrinfo(const void **p, size_t *length, struct addrinfo
+         }
+ 
+         if (s.canonname_len > 0) {
+-                ai->ai_canonname = memdup((const uint8_t*) *p + sizeof(AddrInfoSerialization) + s.ai_addrlen, s.canonname_len);
++                ai->ai_canonname = memdup__systemd((const uint8_t*) *p + sizeof(AddrInfoSerialization) + s.ai_addrlen, s.canonname_len);
+                 if (!ai->ai_canonname) {
+                         free(ai->ai_addr);
+                         free(ai);
+diff --git a/src/machine/machinectl.c b/src/machine/machinectl.c
+index cf8f7d48b9..5d06208f22 100644
+--- a/src/machine/machinectl.c
++++ b/src/machine/machinectl.c
+@@ -668,7 +668,7 @@ static int map_netif(sd_bus *bus, const char *member, sd_bus_message *m, sd_bus_
+                 return -EBADMSG;
+ 
+         i->n_netif = l / sizeof(int32_t);
+-        i->netif = memdup(v, l);
++        i->netif = memdup__systemd(v, l);
+         if (!i->netif)
+                 return -ENOMEM;
+ 
+@@ -1165,7 +1165,7 @@ static int copy_files(int argc, char *argv[], void *userdata) {
+         container_path = copy_from ? argv[2] : dest;
+ 
+         if (!path_is_absolute(host_path)) {
+-                r = path_make_absolute_cwd(host_path, &abs_host_path);
++                r = path_make_absolute_cwd__systemd(host_path, &abs_host_path);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to make path absolute: %m");
+ 
+diff --git a/src/measure/measure-tool.c b/src/measure/measure-tool.c
+index 1cc681f973..f17228825b 100644
+--- a/src/measure/measure-tool.c
++++ b/src/measure/measure-tool.c
+@@ -683,7 +683,7 @@ static int pcr_states_save(PcrState *pcr_states, size_t n) {
+                 if (!pcr_states[i].value)
+                         continue;
+ 
+-                saved = memdup(pcr_states[i].value, pcr_states[i].value_size);
++                saved = memdup__systemd(pcr_states[i].value, pcr_states[i].value_size);
+                 if (!saved)
+                         return log_oom();
+ 
+diff --git a/src/modules-load/meson.build b/src/modules-load/meson.build
+index 23707c172b..4b857506c3 100644
+--- a/src/modules-load/meson.build
++++ b/src/modules-load/meson.build
+@@ -8,7 +8,7 @@ executables += [
+         libexec_template + {
+                 'name' : 'systemd-modules-load',
+                 'sources' : files('modules-load.c'),
+-                'dependencies' : libkmod_cflags,
++                'dependencies' : libkmod,
+         },
+ ]
+ 
+diff --git a/src/modules-load/modules-load.c b/src/modules-load/modules-load.c
+index 4d5d136b2f..a07019c09e 100644
+--- a/src/modules-load/modules-load.c
++++ b/src/modules-load/modules-load.c
+@@ -70,6 +70,14 @@ static int modules_list_append_dup(OrderedSet **module_set, const char *module)
+ 
+         return modules_list_append_suffix(module_set, TAKE_PTR(m));
+ }
++static void systemd_kmod_log(void *data, int priority, const char *file, int line,
++                             const char *fn, const char *format, va_list args) {
++
++        DISABLE_WARNING_FORMAT_NONLITERAL;
++        log_internalv(priority, 0, file, line, fn, format, args);
++        REENABLE_WARNING;
++}
++
+ 
+ static int parse_proc_cmdline_item(const char *key, const char *value, void *data) {
+         int r;
+@@ -394,6 +402,8 @@ static int run(int argc, char *argv[]) {
+         size_t n_threads = 0;
+         char *module;
+         int ret = 0, r;
++        _cleanup_(kmod_unrefp) struct kmod_ctx *ctx = NULL;
++        int r, k;
+ 
+         r = parse_argv(argc, argv);
+         if (r <= 0)
+@@ -407,6 +417,15 @@ static int run(int argc, char *argv[]) {
+         if (r < 0)
+                 log_warning_errno(r, "Failed to parse kernel command line, ignoring: %m");
+ 
++        ctx = kmod_new(NULL, NULL);
++        if (!ctx)
++                return log_oom();
++
++        kmod_load_resources(ctx);
++        kmod_set_log_fn(ctx, systemd_kmod_log, NULL);
++        
++        r = 0;
++
+         if (argc > optind) {
+                 for (int i = optind; i < argc; i++) {
+                         r = apply_file_from_path(argv[i], &module_set);
+diff --git a/src/network/generator/network-generator-main.c b/src/network/generator/network-generator-main.c
+index c449a6d305..71230e8dc5 100644
+--- a/src/network/generator/network-generator-main.c
++++ b/src/network/generator/network-generator-main.c
+@@ -131,7 +131,7 @@ static int context_save(Context *context) {
+         if (!p)
+                 return log_oom();
+ 
+-        r = mkdir_p(p, 0755);
++        r = mkdir_p__systemd(p, 0755);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create directory " NETWORK_UNIT_DIRECTORY ": %m");
+ 
+diff --git a/src/network/tc/qdisc.c b/src/network/tc/qdisc.c
+index e16ace841e..c4424e18d0 100644
+--- a/src/network/tc/qdisc.c
++++ b/src/network/tc/qdisc.c
+@@ -311,7 +311,7 @@ static int qdisc_dup(const QDisc *src, QDisc **ret) {
+         assert(ret);
+ 
+         if (QDISC_VTABLE(src))
+-                dst = memdup(src, QDISC_VTABLE(src)->object_size);
++                dst = memdup__systemd(src, QDISC_VTABLE(src)->object_size);
+         else
+                 dst = newdup(QDisc, src, 1);
+         if (!dst)
+diff --git a/src/network/tc/tclass.c b/src/network/tc/tclass.c
+index 3b53a59a1b..a6f873829c 100644
+--- a/src/network/tc/tclass.c
++++ b/src/network/tc/tclass.c
+@@ -261,7 +261,7 @@ static int tclass_dup(const TClass *src, TClass **ret) {
+         assert(ret);
+ 
+         if (TCLASS_VTABLE(src))
+-                dst = memdup(src, TCLASS_VTABLE(src)->object_size);
++                dst = memdup__systemd(src, TCLASS_VTABLE(src)->object_size);
+         else
+                 dst = newdup(TClass, src, 1);
+         if (!dst)
+diff --git a/src/nspawn/nspawn-mount.c b/src/nspawn/nspawn-mount.c
+index 0617e28a5f..9056711ac0 100644
+--- a/src/nspawn/nspawn-mount.c
++++ b/src/nspawn/nspawn-mount.c
+@@ -101,7 +101,7 @@ static int source_path_parse(const char *p, char **ret) {
+                 return 0;
+         }
+ 
+-        return path_make_absolute_cwd(p, ret);
++        return path_make_absolute_cwd__systemd(p, ret);
+ }
+ 
+ static int source_path_parse_nullable(const char *p, char **ret) {
+@@ -517,7 +517,7 @@ int mount_sysfs(const char *dest, MountSettingsMask mount_settings) {
+                 if (!x)
+                         return log_oom();
+ 
+-                (void) mkdir_p(x, 0755);
++                (void) mkdir_p__systemd(x, 0755);
+         }
+ 
+         return mount_nofollow_verbose(LOG_ERR, NULL, top, NULL,
+@@ -1459,8 +1459,8 @@ int pin_fully_visible_api_fs(void) {
+ 
+         log_debug("Pinning fully visible API FS");
+ 
+-        (void) mkdir_p(NSPAWN_PRIVATE_FULLY_VISIBLE_PROCFS, 0755);
+-        (void) mkdir_p(NSPAWN_PRIVATE_FULLY_VISIBLE_SYSFS, 0755);
++        (void) mkdir_p__systemd(NSPAWN_PRIVATE_FULLY_VISIBLE_PROCFS, 0755);
++        (void) mkdir_p__systemd(NSPAWN_PRIVATE_FULLY_VISIBLE_SYSFS, 0755);
+ 
+         r = mount_follow_verbose(LOG_ERR, "proc", NSPAWN_PRIVATE_FULLY_VISIBLE_PROCFS, "proc", PROC_DEFAULT_MOUNT_FLAGS, NULL);
+         if (r < 0)
+diff --git a/src/nspawn/nspawn-network.c b/src/nspawn/nspawn-network.c
+index 50ffffdd3c..ee2bb57a8d 100644
+--- a/src/nspawn/nspawn-network.c
++++ b/src/nspawn/nspawn-network.c
+@@ -490,7 +490,7 @@ static int netns_child_begin(int netns_fd, int *ret_original_netns_fd) {
+         if (r < 0)
+                 log_debug_errno(r, "Failed to unmount directories below /sys/, ignoring: %m");
+ 
+-        (void) mkdir_p("/sys/", 0755);
++        (void) mkdir_p__systemd("/sys/", 0755);
+ 
+         /* Populate new sysfs instance associated with the client netns, to make sd_device usable. */
+         r = mount_nofollow_verbose(LOG_ERR, "sysfs", "/sys/", "sysfs",
+diff --git a/src/nspawn/nspawn.c b/src/nspawn/nspawn.c
+index 9a896951e4..8a32c0df7f 100644
+--- a/src/nspawn/nspawn.c
++++ b/src/nspawn/nspawn.c
+@@ -2789,13 +2789,13 @@ static int mount_tunnel_dig(const char *root) {
+                 return 0;
+         }
+ 
+-        (void) mkdir_p("/run/systemd/nspawn/", 0755);
+-        (void) mkdir_p("/run/systemd/nspawn/propagate", 0600);
++        (void) mkdir_p__systemd("/run/systemd/nspawn/", 0755);
++        (void) mkdir_p__systemd("/run/systemd/nspawn/propagate", 0600);
+         _cleanup_free_ char *p = path_join("/run/systemd/nspawn/propagate/", arg_machine);
+         if (!p)
+                 return log_oom();
+ 
+-        (void) mkdir_p(p, 0600);
++        (void) mkdir_p__systemd(p, 0600);
+ 
+         r = make_run_host(root);
+         if (r < 0)
+@@ -3759,7 +3759,7 @@ static int setup_unix_export_dir_outside(char **ret) {
+         if (r < 0 && r != -ENOENT)
+                 return log_error_errno(r, "Failed to detect if '%s' is a mount point: %m", p);
+ 
+-        r = mkdir_p(p, 0755);
++        r = mkdir_p__systemd(p, 0755);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create '%s': %m", p);
+ 
+diff --git a/src/nsresourced/nsresourced-manager.c b/src/nsresourced/nsresourced-manager.c
+index 5aa429a088..9b2dd522ce 100644
+--- a/src/nsresourced/nsresourced-manager.c
++++ b/src/nsresourced/nsresourced-manager.c
+@@ -459,7 +459,7 @@ static int manager_make_listen_socket(Manager *m) {
+                 if (bind(m->listen_fd, &sockaddr.sa, sockaddr_un_len(&sockaddr.un)) < 0)
+                         return log_error_errno(errno, "Failed to bind socket: %m");
+ 
+-        r = mkdir_p("/run/systemd/userdb", 0755);
++        r = mkdir_p__systemd("/run/systemd/userdb", 0755);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create /run/systemd/userdb: %m");
+ 
+diff --git a/src/nsresourced/userns-restrict.c b/src/nsresourced/userns-restrict.c
+index 6a8306de66..d70b9c4049 100644
+--- a/src/nsresourced/userns-restrict.c
++++ b/src/nsresourced/userns-restrict.c
+@@ -84,8 +84,8 @@ int userns_restrict_install(
+                 struct bpf_map *map;
+ 
+                 /* libbpf will only create one level of dirs. Let's create the rest */
+-                (void) mkdir_p(MAP_LINK_PREFIX, 0755);
+-                (void) mkdir_p(PROGRAM_LINK_PREFIX, 0755);
++                (void) mkdir_p__systemd(MAP_LINK_PREFIX, 0755);
++                (void) mkdir_p__systemd(PROGRAM_LINK_PREFIX, 0755);
+ 
+                 map = sym_bpf_object__next_map(obj->obj, NULL);
+                 while (map) {
+diff --git a/src/pcrlock/pcrlock.c b/src/pcrlock/pcrlock.c
+index 525e9c5f4b..c403e78d68 100644
+--- a/src/pcrlock/pcrlock.c
++++ b/src/pcrlock/pcrlock.c
+@@ -463,7 +463,7 @@ static int event_log_record_add_bank(
+         if (hash_size > sizeof_field(TPM2B_DIGEST, buffer))
+                 return -E2BIG;
+ 
+-        h = memdup(hash, hash_size);
++        h = memdup__systemd(hash, hash_size);
+         if (!h)
+                 return -ENOMEM;
+ 
+@@ -535,7 +535,7 @@ static int event_log_record_parse_variable_data(
+         if (rec->firmware_payload_size != m + vdata->variableDataLength)
+                 return log_debug_errno(SYNTHETIC_ERRNO(EBADMSG), "EFI variable data has wrong size.");
+ 
+-        p16 = memdup(vdata->unicodeName, vdata->unicodeNameLength * 2); /* Copy out, to align properly */
++        p16 = memdup__systemd(vdata->unicodeName, vdata->unicodeNameLength * 2); /* Copy out, to align properly */
+         if (!p16)
+                 return log_oom_debug();
+ 
+@@ -956,7 +956,7 @@ static int event_log_load_firmware(EventLog *el) {
+                 record->pcr = event->pcrIndex;
+                 record->source = path;
+                 record->firmware_event_type = event->eventType;
+-                record->firmware_payload = memdup(payload, payload_size);
++                record->firmware_payload = memdup__systemd(payload, payload_size);
+                 if (!record->firmware_payload)
+                         return log_oom();
+                 record->firmware_payload_size = payload_size;
+diff --git a/src/repart/repart.c b/src/repart/repart.c
+index 497654d012..535639d019 100644
+--- a/src/repart/repart.c
++++ b/src/repart/repart.c
+@@ -6626,7 +6626,7 @@ static int partition_populate_filesystem(Context *context, Partition *p, const c
+                 static const char fs[] = "/run/systemd/mount-root";
+                 /* This is a child process with its own mount namespace and propagation to host turned off */
+ 
+-                r = mkdir_p(fs, 0700);
++                r = mkdir_p__systemd(fs, 0700);
+                 if (r < 0) {
+                         log_error_errno(r, "Failed to create mount point: %m");
+                         _exit(EXIT_FAILURE);
+diff --git a/src/resolve/resolved-dns-trust-anchor.c b/src/resolve/resolved-dns-trust-anchor.c
+index e29a9d2325..1c40754b88 100644
+--- a/src/resolve/resolved-dns-trust-anchor.c
++++ b/src/resolve/resolved-dns-trust-anchor.c
+@@ -71,7 +71,7 @@ static int add_root_ksk(
+         rr->ds.algorithm = algorithm;
+         rr->ds.digest_type = digest_type;
+         rr->ds.digest_size = digest_size;
+-        rr->ds.digest = memdup(digest, rr->ds.digest_size);
++        rr->ds.digest = memdup__systemd(digest, rr->ds.digest_size);
+         if (!rr->ds.digest)
+                 return  -ENOMEM;
+ 
+diff --git a/src/resolve/test-dns-packet-append.c b/src/resolve/test-dns-packet-append.c
+index eaffc57184..82dcc4f05d 100644
+--- a/src/resolve/test-dns-packet-append.c
++++ b/src/resolve/test-dns-packet-append.c
+@@ -1123,7 +1123,7 @@ TEST(packet_append_answer_rrsig_with_a) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         rr->rrsig.signature_size = sizeof(signature);
+-        rr->rrsig.signature = memdup(signature, rr->rrsig.signature_size);
++        rr->rrsig.signature = memdup__systemd(signature, rr->rrsig.signature_size);
+ 
+         dns_answer_add(answer, rr, 1, 0, NULL);
+         dns_resource_record_unref(rr);
+diff --git a/src/resolve/test-dns-packet-extract.c b/src/resolve/test-dns-packet-extract.c
+index dfbfd832f2..92f66fd60f 100644
+--- a/src/resolve/test-dns-packet-extract.c
++++ b/src/resolve/test-dns-packet-extract.c
+@@ -3749,7 +3749,7 @@ TEST(packet_reply_rrsig_for_a) {
+         rr->rrsig.signer = strdup("example.com");
+ 
+         rr->rrsig.signature_size = sizeof(signature);
+-        rr->rrsig.signature = memdup(signature, rr->rrsig.signature_size);
++        rr->rrsig.signature = memdup__systemd(signature, rr->rrsig.signature_size);
+ 
+         check_answer_contains(packet, rr, DNS_ANSWER_SECTION_ANSWER | DNS_ANSWER_CACHEABLE);
+         dns_resource_record_unref(rr);
+diff --git a/src/resolve/test-dns-rr.c b/src/resolve/test-dns-rr.c
+index c679e45bee..f1d94a6b2c 100644
+--- a/src/resolve/test-dns-rr.c
++++ b/src/resolve/test-dns-rr.c
+@@ -1790,7 +1790,7 @@ TEST(dns_resource_record_equal_rrsig_copy) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1815,7 +1815,7 @@ TEST(dns_resource_record_equal_rrsig_bad_type_covered) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1841,7 +1841,7 @@ TEST(dns_resource_record_equal_rrsig_bad_algorithm) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1867,7 +1867,7 @@ TEST(dns_resource_record_equal_rrsig_bad_labels) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1893,7 +1893,7 @@ TEST(dns_resource_record_equal_rrsig_bad_original_ttl) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1919,7 +1919,7 @@ TEST(dns_resource_record_equal_rrsig_bad_expiration) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1945,7 +1945,7 @@ TEST(dns_resource_record_equal_rrsig_bad_inception) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1971,7 +1971,7 @@ TEST(dns_resource_record_equal_rrsig_bad_key_tag) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -1997,7 +1997,7 @@ TEST(dns_resource_record_equal_rrsig_bad_signer) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+@@ -2024,7 +2024,7 @@ TEST(dns_resource_record_equal_rrsig_bad_signature) {
+                 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+         };
+         a->rrsig.signature_size = sizeof(signature);
+-        a->rrsig.signature = memdup(signature, a->rrsig.signature_size);
++        a->rrsig.signature = memdup__systemd(signature, a->rrsig.signature_size);
+ 
+         b = dns_resource_record_copy(a);
+         ASSERT_NOT_NULL(b);
+diff --git a/src/resolve/test-dnssec.c b/src/resolve/test-dnssec.c
+index eaa4ef9959..9a67aab2a1 100644
+--- a/src/resolve/test-dnssec.c
++++ b/src/resolve/test-dnssec.c
+@@ -52,7 +52,7 @@ TEST(dnssec_verify_dns_key) {
+         ds1->ds.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         ds1->ds.digest_type = DNSSEC_DIGEST_SHA1;
+         ds1->ds.digest_size = sizeof(ds1_fprint);
+-        ds1->ds.digest = memdup(ds1_fprint, ds1->ds.digest_size);
++        ds1->ds.digest = memdup__systemd(ds1_fprint, ds1->ds.digest_size);
+         assert_se(ds1->ds.digest);
+ 
+         log_info("DS1: %s", strna(dns_resource_record_to_string(ds1)));
+@@ -64,7 +64,7 @@ TEST(dnssec_verify_dns_key) {
+         ds2->ds.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         ds2->ds.digest_type = DNSSEC_DIGEST_SHA256;
+         ds2->ds.digest_size = sizeof(ds2_fprint);
+-        ds2->ds.digest = memdup(ds2_fprint, ds2->ds.digest_size);
++        ds2->ds.digest = memdup__systemd(ds2_fprint, ds2->ds.digest_size);
+         assert_se(ds2->ds.digest);
+ 
+         log_info("DS2: %s", strna(dns_resource_record_to_string(ds2)));
+@@ -76,7 +76,7 @@ TEST(dnssec_verify_dns_key) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -118,7 +118,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example1) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_ED25519;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -130,7 +130,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example1) {
+         ds->ds.algorithm = DNSSEC_ALGORITHM_ED25519;
+         ds->ds.digest_type = DNSSEC_DIGEST_SHA256;
+         ds->ds.digest_size = sizeof(ds_fprint);
+-        ds->ds.digest = memdup(ds_fprint, ds->ds.digest_size);
++        ds->ds.digest = memdup__systemd(ds_fprint, ds->ds.digest_size);
+         assert_se(ds->ds.digest);
+ 
+         log_info("DS: %s", strna(dns_resource_record_to_string(ds)));
+@@ -157,7 +157,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example1) {
+         rrsig->rrsig.signer = strdup("example.com.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -206,7 +206,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example2) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_ED25519;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -218,7 +218,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example2) {
+         ds->ds.algorithm = DNSSEC_ALGORITHM_ED25519;
+         ds->ds.digest_type = DNSSEC_DIGEST_SHA256;
+         ds->ds.digest_size = sizeof(ds_fprint);
+-        ds->ds.digest = memdup(ds_fprint, ds->ds.digest_size);
++        ds->ds.digest = memdup__systemd(ds_fprint, ds->ds.digest_size);
+         assert_se(ds->ds.digest);
+ 
+         log_info("DS: %s", strna(dns_resource_record_to_string(ds)));
+@@ -245,7 +245,7 @@ TEST(dnssec_verify_rfc8080_ed25519_example2) {
+         rrsig->rrsig.signer = strdup("example.com.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -295,7 +295,7 @@ TEST(dnssec_verify_rfc6605_example1) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_ECDSAP256SHA256;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -307,7 +307,7 @@ TEST(dnssec_verify_rfc6605_example1) {
+         ds->ds.algorithm = DNSSEC_ALGORITHM_ECDSAP256SHA256;
+         ds->ds.digest_type = DNSSEC_DIGEST_SHA256;
+         ds->ds.digest_size = sizeof(ds_fprint);
+-        ds->ds.digest = memdup(ds_fprint, ds->ds.digest_size);
++        ds->ds.digest = memdup__systemd(ds_fprint, ds->ds.digest_size);
+         assert_se(ds->ds.digest);
+ 
+         log_info("DS: %s", strna(dns_resource_record_to_string(ds)));
+@@ -332,7 +332,7 @@ TEST(dnssec_verify_rfc6605_example1) {
+         rrsig->rrsig.signer = strdup("example.net.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -389,7 +389,7 @@ TEST(dnssec_verify_rfc6605_example2) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_ECDSAP384SHA384;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -401,7 +401,7 @@ TEST(dnssec_verify_rfc6605_example2) {
+         ds->ds.algorithm = DNSSEC_ALGORITHM_ECDSAP384SHA384;
+         ds->ds.digest_type = DNSSEC_DIGEST_SHA384;
+         ds->ds.digest_size = sizeof(ds_fprint);
+-        ds->ds.digest = memdup(ds_fprint, ds->ds.digest_size);
++        ds->ds.digest = memdup__systemd(ds_fprint, ds->ds.digest_size);
+         assert_se(ds->ds.digest);
+ 
+         log_info("DS: %s", strna(dns_resource_record_to_string(ds)));
+@@ -426,7 +426,7 @@ TEST(dnssec_verify_rfc6605_example2) {
+         rrsig->rrsig.signer = strdup("example.net.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -491,7 +491,7 @@ TEST(dnssec_verify_rrset) {
+         rrsig->rrsig.signer = strdup("Nasa.Gov.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -503,7 +503,7 @@ TEST(dnssec_verify_rrset) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -582,7 +582,7 @@ TEST(dnssec_verify_rrset2) {
+         rrsig->rrsig.signer = strdup("Nasa.Gov.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -594,7 +594,7 @@ TEST(dnssec_verify_rrset2) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -705,7 +705,7 @@ TEST(dnssec_verify_rrset3) {
+         rrsig->rrsig.signer = strdup("kodapan.se.");
+         assert_se(rrsig->rrsig.signer);
+         rrsig->rrsig.signature_size = sizeof(signature_blob);
+-        rrsig->rrsig.signature = memdup(signature_blob, rrsig->rrsig.signature_size);
++        rrsig->rrsig.signature = memdup__systemd(signature_blob, rrsig->rrsig.signature_size);
+         assert_se(rrsig->rrsig.signature);
+ 
+         log_info("RRSIG: %s", strna(dns_resource_record_to_string(rrsig)));
+@@ -717,7 +717,7 @@ TEST(dnssec_verify_rrset3) {
+         dnskey->dnskey.protocol = 3;
+         dnskey->dnskey.algorithm = DNSSEC_ALGORITHM_RSASHA256;
+         dnskey->dnskey.key_size = sizeof(dnskey_blob);
+-        dnskey->dnskey.key = memdup(dnskey_blob, sizeof(dnskey_blob));
++        dnskey->dnskey.key = memdup__systemd(dnskey_blob, sizeof(dnskey_blob));
+         assert_se(dnskey->dnskey.key);
+ 
+         log_info("DNSKEY: %s", strna(dns_resource_record_to_string(dnskey)));
+@@ -756,10 +756,10 @@ TEST(dnssec_nsec3_hash) {
+         rr->nsec3.algorithm = DNSSEC_DIGEST_SHA1;
+         rr->nsec3.flags = 1;
+         rr->nsec3.iterations = 1;
+-        rr->nsec3.salt = memdup(salt, sizeof(salt));
++        rr->nsec3.salt = memdup__systemd(salt, sizeof(salt));
+         assert_se(rr->nsec3.salt);
+         rr->nsec3.salt_size = sizeof(salt);
+-        rr->nsec3.next_hashed_name = memdup(next_hashed_name, sizeof(next_hashed_name));
++        rr->nsec3.next_hashed_name = memdup__systemd(next_hashed_name, sizeof(next_hashed_name));
+         assert_se(rr->nsec3.next_hashed_name);
+         rr->nsec3.next_hashed_name_size = sizeof(next_hashed_name);
+ 
+diff --git a/src/shared/bootspec.c b/src/shared/bootspec.c
+index b6b5d6e50b..ec5d6c7d9b 100644
+--- a/src/shared/bootspec.c
++++ b/src/shared/bootspec.c
+@@ -629,7 +629,7 @@ static int config_check_inode_relevant_and_unseen(BootConfig *config, int fd, co
+                 return false;
+         }
+ 
+-        d = memdup(&st, sizeof(st));
++        d = memdup__systemd(&st, sizeof(st));
+         if (!d)
+                 return log_oom();
+ 
+diff --git a/src/shared/copy.c b/src/shared/copy.c
+index f88d1617b1..b89f3641a1 100644
+--- a/src/shared/copy.c
++++ b/src/shared/copy.c
+@@ -489,7 +489,7 @@ int copy_bytes_full(
+                                         if (ret_remains) {
+                                                 void *copy;
+ 
+-                                                copy = memdup(p, z);
++                                                copy = memdup__systemd(p, z);
+                                                 if (!copy)
+                                                         return -ENOMEM;
+ 
+diff --git a/src/shared/creds-util.c b/src/shared/creds-util.c
+index a54883744f..d31cc62bf2 100644
+--- a/src/shared/creds-util.c
++++ b/src/shared/creds-util.c
+@@ -452,7 +452,7 @@ static int make_credential_host_secret(
+         if (ret) {
+                 void *copy;
+ 
+-                copy = memdup(buf.data, sizeof(buf.data));
++                copy = memdup__systemd(buf.data, sizeof(buf.data));
+                 if (!copy)
+                         return -ENOMEM;
+ 
+@@ -592,7 +592,7 @@ int get_credential_host_secret(CredentialSecretFlags flags, struct iovec *ret) {
+ 
+                                 assert(sz <= sizeof(f->data)); /* Ensure we don't read past f->data bounds */
+ 
+-                                copy = memdup(f->data, sz);
++                                copy = memdup__systemd(f->data, sz);
+                                 if (!copy)
+                                         return log_oom_debug();
+ 
+diff --git a/src/shared/dissect-image.c b/src/shared/dissect-image.c
+index 6bc6b66722..520b9dd753 100644
+--- a/src/shared/dissect-image.c
++++ b/src/shared/dissect-image.c
+@@ -2241,7 +2241,7 @@ static int mount_partition(
+                          * image (as the branch above does) but the host hierarchy, and the created directory might
+                          * survive our mount in the host hierarchy hence. */
+                         if (FLAGS_SET(flags, DISSECT_IMAGE_MKDIR)) {
+-                                r = mkdir_p(where, 0755);
++                                r = mkdir_p__systemd(where, 0755);
+                                 if (r < 0)
+                                         return r;
+                         }
+@@ -2325,7 +2325,7 @@ static int mount_root_tmpfs(const char *where, uid_t uid_shift, uid_t uid_range,
+         /* For images that contain /usr/ but no rootfs, let's mount rootfs as tmpfs */
+ 
+         if (FLAGS_SET(flags, DISSECT_IMAGE_MKDIR)) {
+-                r = mkdir_p(where, 0755);
++                r = mkdir_p__systemd(where, 0755);
+                 if (r < 0)
+                         return r;
+         }
+@@ -4412,7 +4412,7 @@ int mount_image_privately_interactively(
+         if (r < 0)
+                 return log_error_errno(r, "Failed to detach mount namespace: %m");
+ 
+-        r = mkdir_p("/run/systemd/mount-rootfs", 0555);
++        r = mkdir_p__systemd("/run/systemd/mount-rootfs", 0555);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create mount point: %m");
+ 
+diff --git a/src/shared/dns-packet.c b/src/shared/dns-packet.c
+index 04178e5df2..5eac361036 100644
+--- a/src/shared/dns-packet.c
++++ b/src/shared/dns-packet.c
+@@ -1445,7 +1445,7 @@ static int dns_packet_read_memdup(
+         else {
+                 void *copy;
+ 
+-                copy = memdup(src, size);
++                copy = memdup__systemd(src, size);
+                 if (!copy)
+                         return -ENOMEM;
+ 
+diff --git a/src/shared/dns-rr.c b/src/shared/dns-rr.c
+index 0fa730c13b..d931595bdf 100644
+--- a/src/shared/dns-rr.c
++++ b/src/shared/dns-rr.c
+@@ -1826,7 +1826,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+         case DNS_TYPE_SSHFP:
+                 copy->sshfp.algorithm = rr->sshfp.algorithm;
+                 copy->sshfp.fptype = rr->sshfp.fptype;
+-                copy->sshfp.fingerprint = memdup(rr->sshfp.fingerprint, rr->sshfp.fingerprint_size);
++                copy->sshfp.fingerprint = memdup__systemd(rr->sshfp.fingerprint, rr->sshfp.fingerprint_size);
+                 if (!copy->sshfp.fingerprint)
+                         return NULL;
+                 copy->sshfp.fingerprint_size = rr->sshfp.fingerprint_size;
+@@ -1836,7 +1836,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->dnskey.flags = rr->dnskey.flags;
+                 copy->dnskey.protocol = rr->dnskey.protocol;
+                 copy->dnskey.algorithm = rr->dnskey.algorithm;
+-                copy->dnskey.key = memdup(rr->dnskey.key, rr->dnskey.key_size);
++                copy->dnskey.key = memdup__systemd(rr->dnskey.key, rr->dnskey.key_size);
+                 if (!copy->dnskey.key)
+                         return NULL;
+                 copy->dnskey.key_size = rr->dnskey.key_size;
+@@ -1853,7 +1853,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->rrsig.signer = strdup(rr->rrsig.signer);
+                 if (!copy->rrsig.signer)
+                         return NULL;
+-                copy->rrsig.signature = memdup(rr->rrsig.signature, rr->rrsig.signature_size);
++                copy->rrsig.signature = memdup__systemd(rr->rrsig.signature, rr->rrsig.signature_size);
+                 if (!copy->rrsig.signature)
+                         return NULL;
+                 copy->rrsig.signature_size = rr->rrsig.signature_size;
+@@ -1874,7 +1874,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->ds.key_tag = rr->ds.key_tag;
+                 copy->ds.algorithm = rr->ds.algorithm;
+                 copy->ds.digest_type = rr->ds.digest_type;
+-                copy->ds.digest = memdup(rr->ds.digest, rr->ds.digest_size);
++                copy->ds.digest = memdup__systemd(rr->ds.digest, rr->ds.digest_size);
+                 if (!copy->ds.digest)
+                         return NULL;
+                 copy->ds.digest_size = rr->ds.digest_size;
+@@ -1884,11 +1884,11 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->nsec3.algorithm = rr->nsec3.algorithm;
+                 copy->nsec3.flags = rr->nsec3.flags;
+                 copy->nsec3.iterations = rr->nsec3.iterations;
+-                copy->nsec3.salt = memdup(rr->nsec3.salt, rr->nsec3.salt_size);
++                copy->nsec3.salt = memdup__systemd(rr->nsec3.salt, rr->nsec3.salt_size);
+                 if (!copy->nsec3.salt)
+                         return NULL;
+                 copy->nsec3.salt_size = rr->nsec3.salt_size;
+-                copy->nsec3.next_hashed_name = memdup(rr->nsec3.next_hashed_name, rr->nsec3.next_hashed_name_size);
++                copy->nsec3.next_hashed_name = memdup__systemd(rr->nsec3.next_hashed_name, rr->nsec3.next_hashed_name_size);
+                 if (!copy->nsec3.next_hashed_name)
+                         return NULL;
+                 copy->nsec3.next_hashed_name_size = rr->nsec3.next_hashed_name_size;
+@@ -1903,7 +1903,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->tlsa.cert_usage = rr->tlsa.cert_usage;
+                 copy->tlsa.selector = rr->tlsa.selector;
+                 copy->tlsa.matching_type = rr->tlsa.matching_type;
+-                copy->tlsa.data = memdup(rr->tlsa.data, rr->tlsa.data_size);
++                copy->tlsa.data = memdup__systemd(rr->tlsa.data, rr->tlsa.data_size);
+                 if (!copy->tlsa.data)
+                         return NULL;
+                 copy->tlsa.data_size = rr->tlsa.data_size;
+@@ -1914,7 +1914,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+                 copy->caa.tag = strdup(rr->caa.tag);
+                 if (!copy->caa.tag)
+                         return NULL;
+-                copy->caa.value = memdup(rr->caa.value, rr->caa.value_size);
++                copy->caa.value = memdup__systemd(rr->caa.value, rr->caa.value_size);
+                 if (!copy->caa.value)
+                         return NULL;
+                 copy->caa.value_size = rr->caa.value_size;
+@@ -1950,7 +1950,7 @@ DnsResourceRecord *dns_resource_record_copy(DnsResourceRecord *rr) {
+ 
+         case DNS_TYPE_OPT:
+         default:
+-                copy->generic.data = memdup(rr->generic.data, rr->generic.data_size);
++                copy->generic.data = memdup__systemd(rr->generic.data, rr->generic.data_size);
+                 if (!copy->generic.data)
+                         return NULL;
+                 copy->generic.data_size = rr->generic.data_size;
+@@ -2093,7 +2093,7 @@ DnsTxtItem *dns_txt_item_copy(DnsTxtItem *first) {
+         LIST_FOREACH(items, i, first) {
+                 DnsTxtItem *j;
+ 
+-                j = memdup(i, offsetof(DnsTxtItem, data) + i->length + 1);
++                j = memdup__systemd(i, offsetof(DnsTxtItem, data) + i->length + 1);
+                 if (!j)
+                         return dns_txt_item_free_all(copy);
+ 
+@@ -2132,7 +2132,7 @@ DnsSvcParam *dns_svc_params_copy(DnsSvcParam *first) {
+         LIST_FOREACH(params, i, first) {
+                 DnsSvcParam *j;
+ 
+-                j = memdup(i, offsetof(DnsSvcParam, value) + i->length);
++                j = memdup__systemd(i, offsetof(DnsSvcParam, value) + i->length);
+                 if (!j)
+                         return dns_svc_param_free_all(copy);
+ 
+diff --git a/src/shared/loop-util.c b/src/shared/loop-util.c
+index e9064c2910..77744ee379 100644
+--- a/src/shared/loop-util.c
++++ b/src/shared/loop-util.c
+@@ -450,7 +450,7 @@ static int loop_device_make_internal(
+         }
+ 
+         if (path) {
+-                r = path_make_absolute_cwd(path, &backing_file);
++                r = path_make_absolute_cwd__systemd(path, &backing_file);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/shared/meson.build b/src/shared/meson.build
+index 671bcb2f4f..e9f2721aaf 100644
+--- a/src/shared/meson.build
++++ b/src/shared/meson.build
+@@ -264,6 +264,12 @@ if conf.get('HAVE_LIBBPF') == 1
+         shared_sources += files('bpf-link.c')
+ endif
+ 
++
++if conf.get('HAVE_KMOD') == 1
++        shared_sources += files('module-util.c')
++endif
++
++
+ if conf.get('HAVE_PAM') == 1
+         shared_sources += files('pam-util.c')
+ endif
+@@ -374,9 +380,9 @@ libshared_deps = [threads,
+                   libdw_cflags,
+                   libelf_cflags,
+                   libfido2_cflags,
+-                  libgcrypt_cflags,
++                  libgcrypt,
+                   libidn_cflags,
+-                  libkmod_cflags,
++                  libkmod,
+                   libmount_cflags,
+                   libopenssl,
+                   libp11kit_cflags,
+diff --git a/src/shared/module-util.c b/src/shared/module-util.c
+index 25367c4da6..29d985533f 100644
+--- a/src/shared/module-util.c
++++ b/src/shared/module-util.c
+@@ -9,46 +9,6 @@
+ 
+ #if HAVE_KMOD
+ 
+-static void *libkmod_dl = NULL;
+-
+-DLSYM_PROTOTYPE(kmod_list_next) = NULL;
+-DLSYM_PROTOTYPE(kmod_load_resources) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_initstate) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_module) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_get_name) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_new_from_lookup) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_probe_insert_module) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_unref) = NULL;
+-DLSYM_PROTOTYPE(kmod_module_unref_list) = NULL;
+-DLSYM_PROTOTYPE(kmod_new) = NULL;
+-DLSYM_PROTOTYPE(kmod_set_log_fn) = NULL;
+-DLSYM_PROTOTYPE(kmod_unref) = NULL;
+-DLSYM_PROTOTYPE(kmod_validate_resources) = NULL;
+-
+-int dlopen_libkmod(void) {
+-        ELF_NOTE_DLOPEN("kmod",
+-                        "Support for loading kernel modules",
+-                        ELF_NOTE_DLOPEN_PRIORITY_RECOMMENDED,
+-                        "libkmod.so.2");
+-
+-        return dlopen_many_sym_or_warn(
+-                        &libkmod_dl,
+-                        "libkmod.so.2",
+-                        LOG_DEBUG,
+-                        DLSYM_ARG(kmod_list_next),
+-                        DLSYM_ARG(kmod_load_resources),
+-                        DLSYM_ARG(kmod_module_get_initstate),
+-                        DLSYM_ARG(kmod_module_get_module),
+-                        DLSYM_ARG(kmod_module_get_name),
+-                        DLSYM_ARG(kmod_module_new_from_lookup),
+-                        DLSYM_ARG(kmod_module_probe_insert_module),
+-                        DLSYM_ARG(kmod_module_unref),
+-                        DLSYM_ARG(kmod_module_unref_list),
+-                        DLSYM_ARG(kmod_new),
+-                        DLSYM_ARG(kmod_set_log_fn),
+-                        DLSYM_ARG(kmod_unref),
+-                        DLSYM_ARG(kmod_validate_resources));
+-}
+ 
+ static int parse_proc_cmdline_item(const char *key, const char *value, void *data) {
+         char ***denylist = ASSERT_PTR(data);
+@@ -68,21 +28,21 @@ static int parse_proc_cmdline_item(const char *key, const char *value, void *dat
+ }
+ 
+ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose) {
++        const int probe_flags = KMOD_PROBE_APPLY_BLACKLIST;
++        struct kmod_list *itr;
+         _cleanup_(kmod_module_unref_listp) struct kmod_list *modlist = NULL;
++
+         _cleanup_strv_free_ char **denylist = NULL;
+         bool denylist_parsed = false;
+-        struct kmod_list *itr;
+-        int r;
+ 
+-        assert(ctx);
+-        assert(module);
++        int r;
+ 
+         /* verbose==true means we should log at non-debug level if we
+          * fail to find or load the module. */
+ 
+         log_debug("Loading module: %s", module);
+ 
+-        r = sym_kmod_module_new_from_lookup(ctx, module, &modlist);
++        r = kmod_module_new_from_lookup(ctx, module, &modlist);
+         if (r < 0)
+                 return log_full_errno(verbose ? LOG_ERR : LOG_DEBUG, r,
+                                       "Failed to look up module alias '%s': %m", module);
+@@ -92,25 +52,25 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                       SYNTHETIC_ERRNO(ENOENT),
+                                       "Failed to find module '%s'", module);
+ 
+-        sym_kmod_list_foreach(itr, modlist) {
++        kmod_list_foreach(itr, modlist) {
+                 _cleanup_(kmod_module_unrefp) struct kmod_module *mod = NULL;
+                 int state, err;
+ 
+-                mod = sym_kmod_module_get_module(itr);
+-                state = sym_kmod_module_get_initstate(mod);
++                mod = kmod_module_get_module(itr);
++                state = kmod_module_get_initstate(mod);
+ 
+                 switch (state) {
+                 case KMOD_MODULE_BUILTIN:
+                         log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                 "Module '%s' is built in", sym_kmod_module_get_name(mod));
++                                 "Module '%s' is built in", kmod_module_get_name(mod));
+                         break;
+ 
+                 case KMOD_MODULE_LIVE:
+-                        log_debug("Module '%s' is already loaded", sym_kmod_module_get_name(mod));
++                        log_debug("Module '%s' is already loaded", kmod_module_get_name(mod));
+                         break;
+ 
+                 default:
+-                        err = sym_kmod_module_probe_insert_module(
++                        err = kmod_module_probe_insert_module(
+                                         mod,
+                                         KMOD_PROBE_APPLY_BLACKLIST,
+                                         /* extra_options= */ NULL,
+@@ -119,10 +79,10 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                         /* print_action= */ NULL);
+                         if (err == 0)
+                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                         "Inserted module '%s'", sym_kmod_module_get_name(mod));
++                                         "Inserted module '%s'", kmod_module_get_name(mod));
+                         else if (err == KMOD_PROBE_APPLY_BLACKLIST)
+                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                         "Module '%s' is deny-listed (by kmod)", sym_kmod_module_get_name(mod));
++                                         "Module '%s' is deny-listed (by kmod)", kmod_module_get_name(mod));
+                         else {
+                                 assert(err < 0);
+ 
+@@ -136,9 +96,9 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+ 
+                                                 denylist_parsed = true;
+                                         }
+-                                        if (strv_contains(denylist, sym_kmod_module_get_name(mod))) {
++                                        if (strv_contains(denylist, kmod_module_get_name(mod))) {
+                                                 log_full(verbose ? LOG_INFO : LOG_DEBUG,
+-                                                         "Module '%s' is deny-listed (by kernel)", sym_kmod_module_get_name(mod));
++                                                         "Module '%s' is deny-listed (by kernel)", kmod_module_get_name(mod));
+                                                 continue;
+                                         }
+                                 }
+@@ -149,7 +109,7 @@ int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose)
+                                                                 LOG_ERR,
+                                                err,
+                                                "Failed to insert module '%s': %m",
+-                                               sym_kmod_module_get_name(mod));
++                                               kmod_module_get_name(mod));
+                                 if (!IN_SET(err, -ENODEV, -ENOENT))
+                                         r = err;
+                         }
+diff --git a/src/shared/module-util.h b/src/shared/module-util.h
+index f5eaf35c90..b17cf95505 100644
+--- a/src/shared/module-util.h
++++ b/src/shared/module-util.h
+@@ -3,54 +3,14 @@
+ 
+ #include "shared-forward.h"
+ 
+-#if HAVE_KMOD
+ 
+ #include <libkmod.h> /* IWYU pragma: export */
+ 
+-#include "dlfcn-util.h"
+-
+-extern DLSYM_PROTOTYPE(kmod_list_next);
+-extern DLSYM_PROTOTYPE(kmod_load_resources);
+-extern DLSYM_PROTOTYPE(kmod_module_get_initstate);
+-extern DLSYM_PROTOTYPE(kmod_module_get_module);
+-extern DLSYM_PROTOTYPE(kmod_module_get_name);
+-extern DLSYM_PROTOTYPE(kmod_module_new_from_lookup);
+-extern DLSYM_PROTOTYPE(kmod_module_probe_insert_module);
+-extern DLSYM_PROTOTYPE(kmod_module_unref);
+-extern DLSYM_PROTOTYPE(kmod_module_unref_list);
+-extern DLSYM_PROTOTYPE(kmod_new);
+-extern DLSYM_PROTOTYPE(kmod_set_log_fn);
+-extern DLSYM_PROTOTYPE(kmod_unref);
+-extern DLSYM_PROTOTYPE(kmod_validate_resources);
+-
+-int dlopen_libkmod(void);
+-
+-DEFINE_TRIVIAL_CLEANUP_FUNC_FULL_RENAME(struct kmod_ctx*, sym_kmod_unref, kmod_unrefp, NULL);
+-DEFINE_TRIVIAL_CLEANUP_FUNC_FULL_RENAME(struct kmod_module*, sym_kmod_module_unref, kmod_module_unrefp, NULL);
+-DEFINE_TRIVIAL_CLEANUP_FUNC_FULL_RENAME(struct kmod_list*, sym_kmod_module_unref_list, kmod_module_unref_listp, NULL);
+-
+-#define sym_kmod_list_foreach(list_entry, first_entry) \
+-        for (list_entry = first_entry; \
+-                list_entry != NULL; \
+-                list_entry = sym_kmod_list_next(first_entry, list_entry))
+ 
+-int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose);
+-int module_setup_context(struct kmod_ctx **ret);
+-
+-#else
+-
+-struct kmod_ctx;
+ 
+-static inline int dlopen_libkmod(void) {
+-        return -EOPNOTSUPP;
+-}
++DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_ctx*, kmod_unref);
++DEFINE_TRIVIAL_CLEANUP_FUNC(struct kmod_module*, kmod_module_unref);
++DEFINE_TRIVIAL_CLEANUP_FUNC_FULL(struct kmod_list*, kmod_module_unref_list, NULL);
+ 
+-static inline int module_setup_context(struct kmod_ctx **ret) {
+-        return -EOPNOTSUPP;
+-}
+ 
+-static inline int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose) {
+-        return -EOPNOTSUPP;
+-}
+-
+-#endif
++int module_load_and_warn(struct kmod_ctx *ctx, const char *module, bool verbose);
+diff --git a/src/shared/mount-setup.c b/src/shared/mount-setup.c
+index cbd3e1d107..b45c401e77 100644
+--- a/src/shared/mount-setup.c
++++ b/src/shared/mount-setup.c
+@@ -307,7 +307,7 @@ static int mount_one(const MountPoint *p, bool relabel) {
+         if (relabel)
+                 (void) mkdir_p_label(p->where, 0755);
+         else
+-                (void) mkdir_p(p->where, 0755);
++                (void) mkdir_p__systemd(p->where, 0755);
+ 
+         _cleanup_free_ char *extend_options = NULL;
+         const char *o;
+diff --git a/src/shared/parse-argument.c b/src/shared/parse-argument.c
+index f8cd7f30ff..3685248e71 100644
+--- a/src/shared/parse-argument.c
++++ b/src/shared/parse-argument.c
+@@ -94,7 +94,7 @@ int parse_path_argument(const char *path, bool suppress_root, char **arg) {
+                 return 0;
+         }
+ 
+-        r = path_make_absolute_cwd(path, &p);
++        r = path_make_absolute_cwd__systemd(path, &p);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to parse path \"%s\" and make it absolute: %m", path);
+ 
+diff --git a/src/shared/pretty-print.c b/src/shared/pretty-print.c
+index dab8761d2e..b63e9b3070 100644
+--- a/src/shared/pretty-print.c
++++ b/src/shared/pretty-print.c
+@@ -131,7 +131,7 @@ int file_url_from_path(const char *path, char **ret) {
+                 return -errno;
+ 
+         if (!path_is_absolute(path)) {
+-                r = path_make_absolute_cwd(path, &absolute);
++                r = path_make_absolute_cwd__systemd(path, &absolute);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/shared/selinux-util.c b/src/shared/selinux-util.c
+index 4fca62b66d..aac15e8e5f 100644
+--- a/src/shared/selinux-util.c
++++ b/src/shared/selinux-util.c
+@@ -823,7 +823,7 @@ int mac_selinux_bind(int fd, const struct sockaddr *addr, socklen_t addrlen) {
+         else {
+                 _cleanup_free_ char *newpath = NULL;
+ 
+-                r = path_make_absolute_cwd(path, &newpath);
++                r = path_make_absolute_cwd__systemd(path, &newpath);
+                 if (r < 0)
+                         return r;
+ 
+diff --git a/src/shutdown/umount.c b/src/shutdown/umount.c
+index 46f208824a..49d871fa32 100644
+--- a/src/shutdown/umount.c
++++ b/src/shutdown/umount.c
+@@ -438,7 +438,7 @@ static int mount_points_list_umount(MountPoint **head, bool *changed, bool last_
+ 
+                         /* on error of is_dir, assume directory */
+                         if (is_dir(m->path, true) != 0) {
+-                                r = mkdir_p(newpath, 0000);
++                                r = mkdir_p__systemd(newpath, 0000);
+                                 if (r < 0) {
+                                         log_full_errno(last_try ? LOG_ERR : LOG_INFO, r, "Could not create directory %s: %m", newpath);
+                                         continue;
+diff --git a/src/sysext/sysext.c b/src/sysext/sysext.c
+index ab1f69f8c9..01f30eff6a 100644
+--- a/src/sysext/sysext.c
++++ b/src/sysext/sysext.c
+@@ -478,7 +478,7 @@ static int unmerge_subprocess(
+                 return r;
+ 
+         /* Let's create the workspace if it's missing */
+-        r = mkdir_p(workspace, 0700);
++        r = mkdir_p__systemd(workspace, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create '%s': %m", workspace);
+ 
+@@ -1001,7 +1001,7 @@ static int resolve_mutable_directory(
+                 if (!path_in_root)
+                         return log_oom();
+ 
+-                r = mkdir_p(path_in_root, 0700);
++                r = mkdir_p__systemd(path_in_root, 0700);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to create a directory '%s': %m", path_in_root);
+ 
+@@ -1365,11 +1365,11 @@ static int mount_overlayfs_with_op(
+         assert(op);
+         assert(overlay_path);
+ 
+-        r = mkdir_p(overlay_path, 0700);
++        r = mkdir_p__systemd(overlay_path, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to make directory '%s': %m", overlay_path);
+ 
+-        r = mkdir_p(meta_path, 0700);
++        r = mkdir_p__systemd(meta_path, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to make directory '%s': %m", meta_path);
+ 
+@@ -1382,7 +1382,7 @@ static int mount_overlayfs_with_op(
+                 return log_error_errno(r, "Failed to fix SELinux label for '%s': %m", meta_path);
+ 
+         if (op->upper_dir && op->work_dir) {
+-                r = mkdir_p(op->work_dir, 0700);
++                r = mkdir_p__systemd(op->work_dir, 0700);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to make directory '%s': %m", op->work_dir);
+ 
+@@ -1567,7 +1567,7 @@ static int store_info_in_meta(
+         if (!f)
+                 return log_oom();
+ 
+-        r = mkdir_p(f, 0755);
++        r = mkdir_p__systemd(f, 0755);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create directory '%s': %m", f);
+ 
+@@ -1760,7 +1760,7 @@ static int merge_subprocess(
+                 return log_error_errno(r, "Failed to remount /run/ MS_SLAVE: %m");
+ 
+         /* Let's create the workspace if it's missing */
+-        r = mkdir_p(workspace, 0700);
++        r = mkdir_p__systemd(workspace, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create '%s': %m", workspace);
+ 
+@@ -1794,7 +1794,7 @@ static int merge_subprocess(
+                 if (!p)
+                         return log_oom();
+ 
+-                r = mkdir_p(p, 0700);
++                r = mkdir_p__systemd(p, 0700);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to create %s: %m", p);
+ 
+@@ -2081,7 +2081,7 @@ static int merge_subprocess(
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to resolve hierarchy '%s%s': %m", strempty(arg_root), *h);
+ 
+-                r = mkdir_p(resolved, 0755);
++                r = mkdir_p__systemd(resolved, 0755);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to create hierarchy mount point '%s': %m", resolved);
+ 
+diff --git a/src/systemctl/systemctl-enable.c b/src/systemctl/systemctl-enable.c
+index c760b917f6..6eb78c3ecf 100644
+--- a/src/systemctl/systemctl-enable.c
++++ b/src/systemctl/systemctl-enable.c
+@@ -44,7 +44,7 @@ static int normalize_link_paths(char **paths) {
+ 
+                 char *normalized_path;
+ 
+-                r = path_make_absolute_cwd(*u, &normalized_path);
++                r = path_make_absolute_cwd__systemd(*u, &normalized_path);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to normalize path '%s': %m", *u);
+ 
+diff --git a/src/systemctl/systemctl-util.c b/src/systemctl/systemctl-util.c
+index 20bae11fa2..0369485f38 100644
+--- a/src/systemctl/systemctl-util.c
++++ b/src/systemctl/systemctl-util.c
+@@ -952,7 +952,7 @@ int mangle_names(const char *operation, char * const *original_names, char ***re
+ 
+                 if (is_path(*name))
+                         /* When enabling units qualified path names are OK, too, hence allow them explicitly. */
+-                        r = path_make_absolute_cwd(*name, &mangled);
++                        r = path_make_absolute_cwd__systemd(*name, &mangled);
+                 else
+                         r = unit_name_mangle_with_suffix(*name, operation,
+                                                          arg_quiet ? 0 : UNIT_NAME_MANGLE_WARN,
+diff --git a/src/test/meson.build b/src/test/meson.build
+index 2974700954..9ae07a1766 100644
+--- a/src/test/meson.build
++++ b/src/test/meson.build
+@@ -295,9 +295,9 @@ executables += [
+         test_template + {
+                 'sources' : files('test-dlopen-so.c'),
+                 'dependencies' : [
+-                        libblkid_cflags,
+-                        libkmod_cflags,
+-                        libmount_cflags,
++                        libblkid,
++                        libkmod,
++                        libmount,
+                         libp11kit_cflags,
+                         libseccomp_cflags,
+                 ],
+@@ -374,7 +374,7 @@ executables += [
+         },
+         test_template + {
+                 'sources' : files('test-netlink-manual.c'),
+-                'dependencies' : libkmod_cflags,
++                'dependencies' : libkmod,
+                 'conditions' : ['HAVE_KMOD'],
+                 'type' : 'manual',
+         },
+diff --git a/src/test/test-copy.c b/src/test/test-copy.c
+index e1bb7ae049..18afb0abab 100644
+--- a/src/test/test-copy.c
++++ b/src/test/test-copy.c
+@@ -190,7 +190,7 @@ TEST(copy_tree) {
+         ignorep = strjoina(original_dir, "ignore/file");
+         assert_se(write_string_file(ignorep, "ignore", WRITE_STRING_FILE_CREATE|WRITE_STRING_FILE_MKDIR_0755) == 0);
+         assert_se(RET_NERRNO(stat(ignorep, &st)) >= 0);
+-        assert_se(cp = memdup(&st, sizeof(st)));
++        assert_se(cp = memdup__systemd(&st, sizeof(st)));
+         assert_se(hashmap_ensure_put(&denylist, &inode_hash_ops, cp, INT_TO_PTR(DENY_INODE)) >= 0);
+         TAKE_PTR(cp);
+ 
+diff --git a/src/udev/meson.build b/src/udev/meson.build
+index 7df5b3de85..fe2b95a19b 100644
+--- a/src/udev/meson.build
++++ b/src/udev/meson.build
+@@ -116,7 +116,7 @@ endif
+ udev_dependencies = [
+         libacl_cflags,
+         libblkid_cflags,
+-        libkmod_cflags,
++        libkmod,
+         libmount_cflags,
+         threads,
+ ]
+diff --git a/src/udev/test-udev-spawn.c b/src/udev/test-udev-spawn.c
+index 73cfe7abc2..9600e1c704 100644
+--- a/src/udev/test-udev-spawn.c
++++ b/src/udev/test-udev-spawn.c
+@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
+         test_event_spawn_cat(true, 5);
+         test_event_spawn_cat(false, 5);
+ 
+-        assert_se(path_make_absolute_cwd(argv[0], &self) >= 0);
++        assert_se(path_make_absolute_cwd__systemd(argv[0], &self) >= 0);
+         path_simplify(self);
+ 
+         test_event_spawn_self(self, "test1", true);
+diff --git a/src/udev/udev-builtin-kmod.c b/src/udev/udev-builtin-kmod.c
+index 4fe37971ee..062971ea0f 100644
+--- a/src/udev/udev-builtin-kmod.c
++++ b/src/udev/udev-builtin-kmod.c
+@@ -13,6 +13,10 @@
+ 
+ static struct kmod_ctx *ctx = NULL;
+ 
++_printf_(6,0) static void udev_kmod_log(void *data, int priority, const char *file, int line, const char *fn, const char *format, va_list args) {
++        log_internalv(priority, 0, file, line, fn, format, args);
++}
++
+ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+         sd_device *dev = ASSERT_PTR(ASSERT_PTR(event)->dev);
+         int r;
+@@ -38,7 +42,7 @@ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+ 
+                 r = sd_device_get_property_value(dev, "MODALIAS", &modalias);
+                 if (r < 0)
+-                        return log_device_warning_errno(dev, r, "Failed to read property \"MODALIAS\": %m");
++                        return log_device_warning_errno(dev, r, "Failed to read property \"MODALIAS\".");
+ 
+                 (void) module_load_and_warn(ctx, modalias, /* verbose = */ false);
+         }
+@@ -48,25 +52,27 @@ static int builtin_kmod(UdevEvent *event, int argc, char *argv[]) {
+ 
+ /* called at udev startup and reload */
+ static int builtin_kmod_init(void) {
+-        int r;
+ 
+         if (ctx)
+                 return 0;
++        
++        ctx = kmod_new(NULL, NULL);
++        if (!ctx)
++                return -ENOMEM;
+ 
+-        r = module_setup_context(&ctx);
+-        if (r < 0)
+-                return log_error_errno(r, "Failed to initialize libkmod context: %m");
+ 
+         log_debug("Loaded kernel module index.");
++
++        kmod_set_log_fn(ctx, udev_kmod_log, NULL);
++        kmod_load_resources(ctx);
++
+         return 0;
+ }
+ 
+ /* called on udev shutdown and reload request */
+ static void builtin_kmod_exit(void) {
+-        if (!ctx)
+-                return;
+ 
+-        ctx = sym_kmod_unref(ctx);
++        ctx = kmod_unref(ctx);
+         log_debug("Unloaded kernel module index.");
+ }
+ 
+@@ -75,7 +81,7 @@ static bool builtin_kmod_should_reload(void) {
+         if (!ctx)
+                 return false;
+ 
+-        if (sym_kmod_validate_resources(ctx) != KMOD_RESOURCES_OK) {
++        if (kmod_validate_resources(ctx) != KMOD_RESOURCES_OK) {
+                 log_debug("Kernel module index needs reloading.");
+                 return true;
+         }
+diff --git a/src/udev/udev-node.c b/src/udev/udev-node.c
+index 5abaf1eff3..17a0e8d117 100644
+--- a/src/udev/udev-node.c
++++ b/src/udev/udev-node.c
+@@ -367,7 +367,7 @@ static int stack_directory_open_and_lock(
+                 return log_device_debug_errno(dev, r, "Failed to build stack directory name for '%s': %m", slink);
+ 
+         FOREACH_STRING(s, "/run/udev/links/", "/run/udev/links.lock/") {
+-                r = mkdir_p(s, 0755);
++                r = mkdir_p__systemd(s, 0755);
+                 if (r < 0)
+                         return log_device_debug_errno(dev, r, "Failed to create '%s': %m", s);
+         }
+diff --git a/src/udev/udevadm-lock.c b/src/udev/udevadm-lock.c
+index 17b9e2d3e9..004fb2469b 100644
+--- a/src/udev/udevadm-lock.c
++++ b/src/udev/udevadm-lock.c
+@@ -94,7 +94,7 @@ static int parse_argv(int argc, char *argv[]) {
+                         _cleanup_free_ char *s = NULL;
+                         char ***l = c == 'd' ? &arg_devices : &arg_backing;
+ 
+-                        r = path_make_absolute_cwd(optarg, &s);
++                        r = path_make_absolute_cwd__systemd(optarg, &s);
+                         if (r < 0)
+                                 return log_error_errno(r, "Failed to make path '%s' absolute: %m", optarg);
+ 
+diff --git a/src/userdb/userdbd-manager.c b/src/userdb/userdbd-manager.c
+index 91fa09d316..6fb27f63ae 100644
+--- a/src/userdb/userdbd-manager.c
++++ b/src/userdb/userdbd-manager.c
+@@ -290,7 +290,7 @@ static int manager_make_listen_socket(Manager *m) {
+         if (m->listen_fd >= 0)
+                 return 0;
+ 
+-        r = mkdir_p("/run/systemd/userdb", 0755);
++        r = mkdir_p__systemd("/run/systemd/userdb", 0755);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create /run/systemd/userdb: %m");
+ 
+diff --git a/src/vmspawn/vmspawn-mount.c b/src/vmspawn/vmspawn-mount.c
+index feff5c8f4a..cb96a06d66 100644
+--- a/src/vmspawn/vmspawn-mount.c
++++ b/src/vmspawn/vmspawn-mount.c
+@@ -43,7 +43,7 @@ int runtime_mount_parse(RuntimeMountContext *ctx, const char *s, bool read_only)
+         if (isempty(source_rel))
+                 return -EINVAL;
+ 
+-        r = path_make_absolute_cwd(source_rel, &mount.source);
++        r = path_make_absolute_cwd__systemd(source_rel, &mount.source);
+         if (r < 0)
+                 return r;
+ 
+diff --git a/src/vmspawn/vmspawn.c b/src/vmspawn/vmspawn.c
+index 633e6a25ca..a7291950d9 100644
+--- a/src/vmspawn/vmspawn.c
++++ b/src/vmspawn/vmspawn.c
+@@ -1239,7 +1239,7 @@ static int start_tpm(
+                 state_dir = transient_state_dir;
+         }
+ 
+-        r = mkdir_p(state_dir, 0700);
++        r = mkdir_p__systemd(state_dir, 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Failed to create TPM state directory '%s': %m", state_dir);
+ 
+@@ -1956,7 +1956,7 @@ static int run_virtual_machine(int kvm_device_fd, int vhost_device_fd) {
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to lookup runtime directory: %m");
+                 if (r > 0) { /* We need to create our own runtime dir */
+-                        r = mkdir_p(runtime_dir, 0755);
++                        r = mkdir_p__systemd(runtime_dir, 0755);
+                         if (r < 0)
+                                 return log_error_errno(r, "Failed to create runtime directory '%s': %m", runtime_dir);
+ 
+diff --git a/src/volatile-root/volatile-root.c b/src/volatile-root/volatile-root.c
+index 4febb162bd..b0811aa401 100644
+--- a/src/volatile-root/volatile-root.c
++++ b/src/volatile-root/volatile-root.c
+@@ -28,7 +28,7 @@ static int make_volatile(const char *path) {
+         if (r < 0)
+                 return log_error_errno(r, "/usr not available in old root: %m");
+ 
+-        r = mkdir_p("/run/systemd/volatile-sysroot", 0700);
++        r = mkdir_p__systemd("/run/systemd/volatile-sysroot", 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Couldn't generate volatile sysroot directory: %m");
+ 
+@@ -79,7 +79,7 @@ static int make_overlay(const char *path) {
+ 
+         assert(path);
+ 
+-        r = mkdir_p("/run/systemd/overlay-sysroot", 0700);
++        r = mkdir_p__systemd("/run/systemd/overlay-sysroot", 0700);
+         if (r < 0)
+                 return log_error_errno(r, "Couldn't create overlay sysroot directory: %m");
+ 
+diff --git a/src/vpick/vpick-tool.c b/src/vpick/vpick-tool.c
+index 5f114b168b..e3f6713645 100644
+--- a/src/vpick/vpick-tool.c
++++ b/src/vpick/vpick-tool.c
+@@ -233,7 +233,7 @@ static int run(int argc, char *argv[]) {
+ 
+         for (int i = optind; i < argc; i++) {
+                 _cleanup_free_ char *p = NULL;
+-                r = path_make_absolute_cwd(argv[i], &p);
++                r = path_make_absolute_cwd__systemd(argv[i], &p);
+                 if (r < 0)
+                         return log_error_errno(r, "Failed to make path '%s' absolute: %m", argv[i]);
+ 
