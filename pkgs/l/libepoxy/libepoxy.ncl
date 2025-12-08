@@ -11,12 +11,12 @@
     buildEnv = {
       EXTRA_LDFLAGS = ["-lc++"],
     },
-    patches = [
-      {
-        sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
-        file = "libepoxy.patch"
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "befaeae6934deeef9a1bc4249b1d81ae9753fed4640857c4702cf5028698f14a",
+    #     file = "libepoxy.patch"
+    #   }
+    # ],
     extraMesonArgs = [
       "-Dglx=no",
       "-Degl=yes",
