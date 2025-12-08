@@ -42,463 +42,472 @@ let serviceToString = (fun service =>
   std.string.join "\n" _arr
 )
 in
-let _services =
-  let useUdev = true in
-  let enableBluetooth = true in
-  let useElogind = true in
+let
+  useUdev = true,
+  enableBluetooth = true,
+  useElogind = true,
+  prepSystemd = true
+in
 
-  (
-    {
-      boot | Service = {
-        type = "internal",
-        "depends-ms" =
-          [
-            # "tty1", 
-            "tuigreet",
-            "tty2"
-          ]
-          @ (if useElogind then ["elogind"] else ["seatd"]),
-
-        "waits-for" =
-          [
-            "dbusd",
-            # "dhcpcd",
-            "iwd",
-            "make-shared-root",
-            "mount-others",
-            "earlyoom",
-            #"dropbear",
-            "upowerd",
-            "power-profiles-daemon",
-            # "v4l2loopback",
-            "netdev",
-            "netdev-lo",
-            "rtkit",
-          ]
-          @ (
-            if enableBluetooth then
-              [
-                "bluetooth"
-              ]
-            else
-              []
-          ),
-      },
-
-      cfg80211 = {
-        type = "scripted",
-        command = "/usr/bin/modprobe cfg80211",
-        # command = "/usr/bin/modprobe -a cfg80211 iwlmvm",
-        #
-        restart = false,
-        "depends-on" = ["early-filesystems"],
-      },
-      dbusd = {
-        type = "process",
-        command = "/usr/bin/dbus-daemon --system --nofork --nopidfile --print-address=4",
-        "depends-on" = ["rcboot"],
-        logfile = "/var/log/dbus-daemon.log",
-        ready-notification = "pipefd:4",
-        smooth-recovery = "yes",
-      },
-
-      dhcpcd = {
-        type = "process",
-        command = "/usr/bin/dhcpcd -B -M", #" --logfile /var/log/dhcpcd-service.log",
-        logfile = "/var/log/dhcpcd.log",
-        restart = false,
-        "depends-on" = [
-          "varrw",
-          "hostname",
-          "udevd",
-        ],
-        "waits-for" = [
-          "netdev",
-          "udev-settle",
+let _services = (
+  {
+    boot | Service = {
+      type = "internal",
+      "depends-ms" =
+        [
+          # "tty1", 
+          "tty2"
         ]
-      },
+        @ (if useElogind then ["elogind"] else ["seatd"]),
 
-      dropbear = {
-        type = "process",
-        command = "/usr/bin/dropbear -E -F -P /run/dropbear.pid -R",
-        logfile = "/var/log/dropbear.log",
-        "waits-for" = [
-          #"dhcpcd",
-          "dropbear-keys"
-        ],
-      },
-
-      "dropbear-keys" = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/dropbear-keys.sh",
-        restart = false,
-        options = "starts-rwfs",
-        "depends-on" = ["early-filesystems"],
-      },
-
-      "early-filesystems" = {
-        type = "scripted",
-        command = "/usr/libexec/mount-early",
-        restart = false,
-        options = "starts-rwfs",
-      },
-      earlyoom = {
-        type = "process",
-        command = "/usr/bin/earlyoom",
-        logfile = "/var/log/earlyoom.log",
-        "waits-for" = [
-          "zram-init",
-          "varrw"
-        ],
-      },
-      filesystems = {
-        type = "scripted",
-        command = "/usr/bin/mount -a",
-        restart = false,
-        logfile = "/var/log/dinit-filesystems.log",
-        "options" = "start-interruptible",
-        "start-timeout" = "1200", # 20 minutes
-        "depends-on" = [
-          "udevd",
-          "varrw"
-        ],
-        "waits-for" = ["udev-settle"],
-      },
-
-      greetd = {
-        # https://aur.archlinux.org/cgit/aur.git/tree/greetd?h=greetd-artix-dinit
-        type = "process",
-        command = "/usr/bin/greetd",
-        "depends-on" = ["loginready", "greetd-apply-perms"],
-        "smooth-recovery" = "true",
-        logfile = "/var/log/greetd.log"
-      },
-
-      "greetd-apply-perms" = {
-        type = "scripted",
-        command = "chown -R greeter:greeter /var/lib/greeter",
-        "depends-on" = ["varrw"],
-      },
-
-      hostname = {
-        type = "scripted",
-        # command = m%"/usr/bin/hostname \$(cat /etc/hostname)"%,
-        command = m%"/usr/bin/hostname linux"%,
-
-        restart = false,
-        depends-on = ["early-filesystems"],
-      },
-
-      iwd = {
-        type = "process",
-        command = "/usr/libexec/iwd",
-        "depends-on" = [
+      "waits-for" =
+        [
           "dbusd",
-          "cfg80211",
-          " hostname",
-          "udevd"
-        ],
-        "waits-for" = ["udev-settle"],
-
-        logfile = "/var/log/iwd-daemon.log",
-        "smooth-recovery" = "yes",
-      },
-
-      loadkeys = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/loadkeys.sh",
-        restart = false,
-        options = "start-interruptible",
-        "start-timeout" = "1200", # 20 minutes
-        "depends-on" = ["early-filesystems"],
-      },
-
-      loginready = {
-        type = "internal",
-        restart = false,
-        options = "runs-on-console",
-        "depends-on" = ["filesystems"],
-        "waits-for" =
-          [
-            # "udevd",
-            "syslogd",
-            "loadkeys",
-            "create-x11-socket",
-          ]
-          @ (if useElogind then ["elogind"] else []),
-      },
-      "make-shared-root" = {
-        type = "scripted",
-        command = "/usr/bin/mount --make-shared /",
-        restart = false,
-        "depends-on" = ["varrw"],
-      },
-      "mount-others" = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/mount-other.sh",
-        restart = false,
-
-        "depends-on" = [
-          "udevd",
-        ],
-        "waits-for" = [
-          "udev-settle",
+          # "dhcpcd",
+          "iwd",
+          "make-shared-root",
+          "mount-others",
+          "earlyoom",
+          #"dropbear",
+          "upowerd",
+          "power-profiles-daemon",
+          # "v4l2loopback",
+          "netdev",
+          "netdev-lo",
+          "rtkit",
+          "tun",
+          "tuigreet",
         ]
-      },
-      "netdev" = {
-        type = "scripted",
-        command = "/usr/bin/ip link set group 0 up",
-        restart = false,
-        "depends-on" = ["varrw"],
-      },
-      "netdev-lo" = {
-        type = "scripted",
-        command = "/usr/bin/ip link set lo up",
-        restart = false,
-        "depends-on" = ["varrw"],
-      },
-      # "netdev-eth0" = {
-      #   type = "scripted",
-      #   command = "/usr/bin/ip link set eth0 up",
-      #   restart = false,
-      #   "depends-on" = ["varrw"],
-      # },
-      #    "netdev-ens2" = {
-      #   type = "scripted",
-      #   command = "/usr/bin/ip link set ens2 up",
-      #   restart = false,
-      #   "depends-on" = ["varrw"],
-      # },
-      "networkmanager" = {
-        type = "process",
-        command = "/usr/bin/NetworkManager -n",
-        "depends-on" = ["iwd"],
-        logfile = "/var/log/networkmanager.log",
-        "smooth-recovery" = "yes",
-      },
+        @ (
+          if enableBluetooth then
+            [
+              "bluetooth"
+            ]
+          else
+            []
+        ),
+    },
 
-      rcboot = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/rcboot.sh",
-        logfile = "/var/log/rcboot.log",
-        restart = false,
-        "depends-on" = ["varrw"],
-      },
+    cfg80211 = {
+      type = "scripted",
+      command = "/usr/bin/modprobe cfg80211",
+      # command = "/usr/bin/modprobe -a cfg80211 iwlmvm",
+      #
+      restart = false,
+      "depends-on" = ["early-filesystems"],
+    },
+    dbusd = {
+      type = "process",
+      command = "/usr/bin/dbus-daemon --system --nofork --nopidfile --print-address=4",
+      "depends-on" = ["rcboot"],
+      logfile = "/var/log/dbus-daemon.log",
+      ready-notification = "pipefd:4",
+      smooth-recovery = "yes",
+    },
 
-      recovery = {
-        type = "process",
-        command = "/usr/bin/sulogin",
-        options = "runs-on-console"
-      },
+    dhcpcd = {
+      type = "process",
+      command = "/usr/bin/dhcpcd -B -M", #" --logfile /var/log/dhcpcd-service.log",
+      logfile = "/var/log/dhcpcd.log",
+      restart = false,
+      "depends-on" = [
+        "varrw",
+        "hostname",
+        "udevd",
+      ],
+      "waits-for" = [
+        "netdev",
+        "udev-settle",
+      ]
+    },
 
-      rtkit = {
-        type = "process",
-        command = "/usr/libexec/rtkit-daemon",
-        "depends-on" = [
-          "dbusd"
-        ],
-        logfile = "/var/log/rtkit-daemon.log",
-      },
+    dropbear = {
+      type = "process",
+      command = "/usr/bin/dropbear -E -F -P /run/dropbear.pid -R",
+      logfile = "/var/log/dropbear.log",
+      "waits-for" = [
+        #"dhcpcd",
+        "dropbear-keys"
+      ],
+    },
 
-      seatd = {
-        type = "process",
-        command = "/usr/bin/seatd -g seat",
-        logfile = "/var/log/seatd-daemon.log",
-        smooth-recovery = true,
-        "waits-for" =
+    "dropbear-keys" = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/dropbear-keys.sh",
+      restart = false,
+      options = "starts-rwfs",
+      "depends-on" = ["early-filesystems"],
+    },
+
+    "early-filesystems" = {
+      type = "scripted",
+      command = "/usr/libexec/mount-early",
+      restart = false,
+      options = "starts-rwfs",
+    },
+    earlyoom = {
+      type = "process",
+      command = "/usr/bin/earlyoom",
+      logfile = "/var/log/earlyoom.log",
+      "waits-for" = [
+        "zram-init",
+        "varrw"
+      ],
+    },
+    filesystems = {
+      type = "scripted",
+      command = "/usr/bin/mount -a",
+      restart = false,
+      logfile = "/var/log/dinit-filesystems.log",
+      "options" = "start-interruptible",
+      "start-timeout" = "1200", # 20 minutes
+      "depends-on" = [
+        "udevd",
+        "varrw"
+      ],
+      "waits-for" = ["udev-settle"],
+    },
+
+    greetd = {
+      # https://aur.archlinux.org/cgit/aur.git/tree/greetd?h=greetd-artix-dinit
+      type = "process",
+      command = "/usr/bin/greetd",
+      "depends-on" = ["loginready", "greetd-apply-perms"],
+      "smooth-recovery" = "true",
+      logfile = "/var/log/greetd.log"
+    },
+
+    "greetd-apply-perms" = {
+      type = "scripted",
+      command = "chown -R greeter:greeter /var/lib/greeter",
+      "depends-on" = ["varrw"],
+    },
+
+    hostname = {
+      type = "scripted",
+      # command = m%"/usr/bin/hostname \$(cat /etc/hostname)"%,
+      command = m%"/usr/bin/hostname linux"%,
+
+      restart = false,
+      depends-on = ["early-filesystems"],
+    },
+
+    iwd = {
+      type = "process",
+      command = "/usr/libexec/iwd",
+      "depends-on" = [
+        "dbusd",
+        "cfg80211",
+        " hostname",
+        "udevd"
+      ],
+      "waits-for" = ["udev-settle"],
+
+      logfile = "/var/log/iwd-daemon.log",
+      "smooth-recovery" = "yes",
+    },
+
+    loadkeys = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/loadkeys.sh",
+      restart = false,
+      options = "start-interruptible",
+      "start-timeout" = "1200", # 20 minutes
+      "depends-on" = ["early-filesystems"],
+    },
+
+    loginready = {
+      type = "internal",
+      restart = false,
+      options = "runs-on-console",
+      "depends-on" = ["filesystems"],
+      "waits-for" =
+        [
+          # "udevd",
+          "syslogd",
+          "loadkeys",
+          "create-x11-socket",
+        ]
+        @ (if useElogind then ["elogind"] else []),
+    },
+    "make-shared-root" = {
+      type = "scripted",
+      command = "/usr/bin/mount --make-shared /",
+      restart = false,
+      "depends-on" = ["varrw"],
+    },
+    tun = {
+      type = "scripted",
+      command = "/usr/bin/modprobe tun",
+      restart = false,
+      "depends-on" = ["early-filesystems"],
+    },
+    "mount-others" = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/mount-other.sh",
+      restart = false,
+
+      "depends-on" = [
+        "udevd",
+      ],
+      "waits-for" = [
+        "udev-settle",
+      ]
+    },
+    "netdev" = {
+      type = "scripted",
+      command = "/usr/bin/ip link set group 0 up",
+      restart = false,
+      "depends-on" = ["varrw"],
+    },
+    "netdev-lo" = {
+      type = "scripted",
+      command = "/usr/bin/ip link set lo up",
+      restart = false,
+      "depends-on" = ["varrw"],
+    },
+    # "netdev-eth0" = {
+    #   type = "scripted",
+    #   command = "/usr/bin/ip link set eth0 up",
+    #   restart = false,
+    #   "depends-on" = ["varrw"],
+    # },
+    #    "netdev-ens2" = {
+    #   type = "scripted",
+    #   command = "/usr/bin/ip link set ens2 up",
+    #   restart = false,
+    #   "depends-on" = ["varrw"],
+    # },
+    "networkmanager" = {
+      type = "process",
+      command = "/usr/bin/NetworkManager -n",
+      "depends-on" = ["iwd"],
+      logfile = "/var/log/networkmanager.log",
+      "smooth-recovery" = "yes",
+    },
+
+    rcboot = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/rcboot.sh",
+      logfile = "/var/log/rcboot.log",
+      restart = false,
+      "depends-on" = ["varrw"],
+    },
+
+    recovery = {
+      type = "process",
+      command = "/usr/bin/sulogin",
+      options = "runs-on-console"
+    },
+
+    rtkit = {
+      type = "process",
+      command = "/usr/libexec/rtkit-daemon",
+      "depends-on" = [
+        "dbusd"
+      ],
+      logfile = "/var/log/rtkit-daemon.log",
+    },
+
+    seatd = {
+      type = "process",
+      command = "/usr/bin/seatd -g seat",
+      logfile = "/var/log/seatd-daemon.log",
+      smooth-recovery = true,
+      "waits-for" =
+        if useUdev then
+          [
+            "udev-settle",
+            # "mdevd-coldplug",
+          ]
+        else
+          [
+            "mdevd-coldplug",
+          ],
+      "depends-on" =
+        [
+          "varrw",
+          # "udevd"
+          # "mdevd",
+        ]
+        @ (
           if useUdev then
             [
-              "udev-settle",
-              # "mdevd-coldplug",
+              "udevd"
             ]
           else
             [
-              "mdevd-coldplug",
-            ],
-        "depends-on" =
-          [
-            "varrw",
-            # "udevd"
-            # "mdevd",
-          ]
-          @ (
-            if useUdev then
-              [
-                "udevd"
-              ]
-            else
-              [
-                "mdevd"
-              ]
-          ),
-      },
-
-      # syslogd = {
-      #   type = "process",
-      #   "smooth-recovery" = true,
-      #   command = "/usr/bin/syslogd -n",
-      #   "pid-file" = "/run/syslogd.pid",
-      #   options = "starts-log",
-      # },
-
-      syslogd = {
-        type = "process",
-        "smooth-recovery" = true,
-        command = "/usr/bin/metalog",
-        "depends-on" = [
-          "varrw",
-        ],
-        "pid-file" = "/var/run/syslogd.pid",
-        # "log-type" = "buffer",
-        options = "starts-log",
-      },
-      upowerd = {
-        type = "process",
-        command = "/usr/libexec/upowerd",
-        "depends-on" =
-          [
-            "varrw",
-          ]
-          @ (if useElogind then ["elogind"] else []),
-        logfile = [
-          "/var/log/upowerd.log"
-        ]
-      },
-
-      "power-profiles-daemon" = {
-        type = "process",
-        command = "/usr/libexec/power-profiles-daemon -v",
-        "depends-on" = [
-          "upowerd",
-          "dbusd"
-        ],
-        logfile = "/var/log/power-profiles-daemon.log"
-      },
-      v4l2loopback = {
-        type = "scripted",
-        command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
-        "depends-on" = ["early-filesystems"],
-      },
-
-      varrw = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/varrw.sh",
-        restart = false,
-        options = "starts-rwfs",
-        logfile = "/run/rootrw.log",
-        "depends-on" = [
-          "early-filesystems",
-          # "udevd",
-        ],
-      },
-      "zram-init" = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/zram-init.sh",
-
-        restart = false,
-        "depends-on" = [
-          "early-filesystems",
-        ],
-      },
-      "create-x11-socket" = {
-        type = "scripted",
-        command = "/etc/dinit.d/scripts/create-x11-socket.sh",
-
-        "depends-on" = [
-          "early-filesystems",
-        ],
-      }
-    }
-    & (
-      if useUdev then
-        {
-
-          "udev-settle" = {
-            type = "scripted",
-            command = "/usr/bin/udevadm settle",
-            restart = false,
-            "waits-for" = ["udevd", "udev-trigger"],
-          },
-
-          # Trigger udev events for already-present devices.
-          "udev-trigger" = {
-            type = "scripted",
-            command = "/usr/bin/udevadm trigger --action=add",
-            logfile = "/run/udev-trigger.log",
-            restart = false,
-            "depends-on" = ["udevd"],
-          },
-
-          udevd = {
-            type = "scripted",
-            command = "/usr/bin/udevd --daemon",
-            "stop-command" = "/usr/bin/udevadm control -e",
-            logfile = "/run/udevd.log",
-            restart = false,
-            depends-on = "early-filesystems",
-          },
-        }
-      else
-        {
-          mdevd = {
-            type = "process",
-            command = "/usr/bin/mdevd -v3",
-            "depends-on" = [
-              "early-filesystems"
-            ],
-            logfile = "/run/mdevd.log",
-          },
-          "mdevd-coldplug" = {
-            type = "scripted",
-
-            command = "/usr/bin/mdevd-coldplug",
-            "depends-on" = ["mdevd"],
-          },
-        }
-    )
-    & (
-      if enableBluetooth then
-        {
-          bluetooth = {
-            type = "process",
-            command = "/usr/libexec/bluetooth/bluetoothd -n",
-            logfile = "/var/log/bluetooth.log",
-            "smooth-recovery" = "true",
-            "depends-on" = [
-              "udevd",
-              "varrw",
-              "dbusd",
-              "filesystems",
-            ],
-            "waits-for" = ["udev-settle"],
-          }
-        }
-      else
-        {}
-    )
-    & (
-      if useElogind then
-        {
-          elogind = {
-            type = "process",
-            command = "/usr/libexec/elogind",
-            logfile = "/var/log/elogind.log",
-            smooth-recovery = "yes",
-
-            "depends-on" = [
-              "dbusd",
-              "udevd",
-              "varrw",
-            ],
-            "waits-for" = [
-              "udev-settle",
+              "mdevd"
             ]
-          }
-        }
-      else
-        {}
-    )
+        ),
+    },
+
+    # syslogd = {
+    #   type = "process",
+    #   "smooth-recovery" = true,
+    #   command = "/usr/bin/syslogd -n",
+    #   "pid-file" = "/run/syslogd.pid",
+    #   options = "starts-log",
+    # },
+
+    syslogd = {
+      type = "process",
+      "smooth-recovery" = true,
+      command = "/usr/bin/metalog",
+      "depends-on" = [
+        "varrw",
+      ],
+      "pid-file" = "/var/run/syslogd.pid",
+      # "log-type" = "buffer",
+      options = "starts-log",
+    },
+    upowerd = {
+      type = "process",
+      command = "/usr/libexec/upowerd",
+      "depends-on" =
+        [
+          "varrw",
+        ]
+        @ (if useElogind then ["elogind"] else []),
+      logfile = [
+        "/var/log/upowerd.log"
+      ]
+    },
+
+    "power-profiles-daemon" = {
+      type = "process",
+      command = "/usr/libexec/power-profiles-daemon -v",
+      "depends-on" = [
+        "upowerd",
+        "dbusd"
+      ],
+      logfile = "/var/log/power-profiles-daemon.log"
+    },
+    v4l2loopback = {
+      type = "scripted",
+      command = "/usr/bin/modprobe v4l2loopback devices=2 video_nr=4,10 card_label='MiA3','OBS-Cam' exclusive_caps=1,1",
+      "depends-on" = ["early-filesystems"],
+    },
+
+    varrw = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/varrw.sh",
+      restart = false,
+      options = "starts-rwfs",
+      logfile = "/run/rootrw.log",
+      "depends-on" = [
+        "early-filesystems",
+        # "udevd",
+      ],
+    },
+    "zram-init" = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/zram-init.sh",
+
+      restart = false,
+      "depends-on" = [
+        "early-filesystems",
+      ],
+    },
+    "create-x11-socket" = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/create-x11-socket.sh",
+
+      "depends-on" = [
+        "early-filesystems",
+      ],
+    }
+  }
+  & (
+    if useUdev then
+      {
+
+        "udev-settle" = {
+          type = "scripted",
+          command = "/usr/bin/udevadm settle",
+          restart = false,
+          "waits-for" = ["udevd", "udev-trigger"],
+        },
+
+        # Trigger udev events for already-present devices.
+        "udev-trigger" = {
+          type = "scripted",
+          command = "/usr/bin/udevadm trigger --action=add",
+          logfile = "/run/udev-trigger.log",
+          restart = false,
+          "depends-on" = ["udevd"],
+        },
+
+        udevd = {
+          type = "scripted",
+          command = "/usr/bin/udevd --daemon",
+          "stop-command" = "/usr/bin/udevadm control -e",
+          logfile = "/run/udevd.log",
+          restart = false,
+          depends-on = "early-filesystems",
+        },
+      }
+    else
+      {
+        mdevd = {
+          type = "process",
+          command = "/usr/bin/mdevd -v3",
+          "depends-on" = [
+            "early-filesystems"
+          ],
+          logfile = "/run/mdevd.log",
+        },
+        "mdevd-coldplug" = {
+          type = "scripted",
+
+          command = "/usr/bin/mdevd-coldplug",
+          "depends-on" = ["mdevd"],
+        },
+      }
   )
+  & (
+    if enableBluetooth then
+      {
+        bluetooth = {
+          type = "process",
+          command = "/usr/libexec/bluetooth/bluetoothd -n",
+          logfile = "/var/log/bluetooth.log",
+          "smooth-recovery" = "true",
+          "depends-on" = [
+            "udevd",
+            "varrw",
+            "dbusd",
+            "filesystems",
+          ],
+          "waits-for" = ["udev-settle"],
+        }
+      }
+    else
+      {}
+  )
+  & (
+    if useElogind then
+      {
+        elogind = {
+          type = "process",
+          command = "/usr/libexec/elogind",
+          logfile = "/var/log/elogind.log",
+          smooth-recovery = "yes",
+
+          "depends-on" = [
+            "dbusd",
+            "udevd",
+            "varrw",
+          ],
+          "waits-for" = [
+            "udev-settle",
+          ]
+        }
+      }
+    else
+      {}
+  )
+)
 in
 
 let services = (std.record.map (fun k v => serviceToString v) _services)
@@ -523,11 +532,22 @@ let scripts = {
             loadkeys sv-latin1
             "%,
 
-  "rcboot.sh" = m%"
+  "rcboot.sh" =
+    m%"
             #!/bin/sh -e
             /usr/bin/mkdir -p -m755 /run/dbus
             /usr/bin/chown -R messagebus:messagebus /run/dbus
-            "%,
+            "%
+    ++ (
+      if (!prepSystemd) then
+        ""
+      else
+        "\n"
+        ++ m%"
+            /usr/bin/mkdir -p /run/systemd/seats
+            /usr/bin/mkdir -p /run/systemd/system
+            "%
+    ),
   "varrw.sh" = m%"
             #!/bin/sh -e
             mkdir -p /run/var_overlay/upper
