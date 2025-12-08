@@ -9,6 +9,9 @@
       uri = "https://github.com/kmod-project/kmod/archive/refs/tags/v34.tar.gz",
       sha256sum = "cb47be49366b596e4554eeeb7595b128feb261619c7675603e004b07c5ebbd5b"
     },
+    options = {
+      renameSyms | default = false,
+    },
 
     patches = [
       {
@@ -56,6 +59,18 @@
       m%"sed -i "s|shared_library|library|g" ${SRC}/meson.build"%,
       m%"sed -i "s|\/lib\/modules|\/usr\/lib\/modules|g" ${SRC}/meson.build"%,
     ],
+    postInstallPhase = (
+      if (!options.renameSyms) then
+        []
+      else
+        std.array.map
+          (fun sym => "llvm-objcopy --redefine-sym %{sym}=kmod_private__%{sym} ${DEST}/usr/lib/libkmod.a")
+          [
+            "memdup",
+            "mkdir_p",
+            "path_make_absolute_cwd",
+          ]
+    ),
 
     biDrvs = [
       drvs.xz,
@@ -65,5 +80,10 @@
       drvs.scdoc,
       # drvs.bash,
     ],
-  }
+  },
+  kmodRenamedSyms =
+    kmod
+    & {
+      options.renameSyms = true,
+    }
 }
