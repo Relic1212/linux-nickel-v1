@@ -6,7 +6,7 @@
       "sed -i 's@-Werror=implicit-fallthrough=3@-Werror=implicit-fallthrough@g' ${SRC}/meson.build",
       "sed -i 's@-Werror=maybe-uninitialized@-Werror=uninitialized@g' ${SRC}/meson.build",
       "sed -i 's@-Wmaybe-uninitialized@-Wuninitialized@g' ${SRC}/meson.build",
-      m%"sed -i "s@\'--release\'@\'--release\',\'--offline\',\'--target\', \'x86_64-unknown-linux-musl\'@g" ${SRC}/meson.build"%,
+      m%"sed -i "s@\'--release\'@\'--release\',\'--offline\',\'--target\', \'x86_64-unknown-linux-musl\', \'--verbose\'@g" ${SRC}/meson.build"%,
       m%"sed -i 's@\.\/@\.\/x86_64-unknown-linux-musl\/@g' ${SRC}/cargo_build.py"%,
     ]
     in
@@ -37,7 +37,7 @@
         drvs.cairo,
         drvs.libpng,
         drvs.harfbuzz,
-        drvs.glibDynamic,
+        drvs.glibPatched,
         drvs.hwdata,
         drvs.gobjectDynamic,
         drvs.cairoGobject,
