@@ -32,7 +32,7 @@
         "--with-thin-check=none",
         "--with-thin-dump=none",
         "--with-thin-repair=none",
-        "--with-staticdir=bin",
+        "--with-staticdir=/usr/bin",
         "--with-usrsbindir=bin",
       ],
     biDrvs = [
