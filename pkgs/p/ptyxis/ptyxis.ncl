@@ -10,10 +10,47 @@
       sha256sum = "ee2985a293ff7699d6b627ec6d5f2989a135c4e90cee34566e07c9199d9098b7"
     },
 
+    extraFiles = [
+      {
+        file = "ptyxis_symbols.c",
+        sha256sum = "a34c19d3d23e163ca95479f986990edc2c7aab30c2cd8205f31f61d2f150acba"
+      },
+    ],
+
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-ldl_factory",
+        "$(pkg-config --static --libs egl)",
+        # "/tmp/workdir/src/symbols.o",
+      ],
+    },
+    extraMesonArgs = [
+      "-Dgeneric=terminal",
+      # m%"-Dc_link_args="-lc++ -static --static -ldl_factory $(pkg-config --libs --static gtk4) /tmp/workdir/src/symbols.o""%,
+      m%"-Dc_link_args="-lc++ -static --static -ldl_factory $(pkg-config --static --libs egl)""%,
+    ],
+
+    preConfigurePhase = [
+      m%"sed -i "s@target_machine.cpu_family() == 'x86_64'@false@g" ${SRC}/agent/meson.build"%,
+      m%"sed -i "s@release_link_args = \[\]@release_link_args = \['-static', '--static', \]@g" ${SRC}/meson.build"%,
+      m%"
+      sed -i 's@ W_EXITCODE (exit_status, term_sig)@((exit_status) << 8 | (term_sig))@g' ${SRC}/src/ptyxis-application.c
+      "%,
+      "${CC} ${CFLAGS} -c /tmp/workdir/files/ptyxis_symbols.c -o ${SRC}/symbols.o",
+      m%"sed -i "s@c_args: ptyxis_c_args,@c_args: ptyxis_c_args,\n  link_args: '/tmp/workdir/src/symbols.o', @g" ${SRC}/src/meson.build"%,
+    ],
+    # buildPhase = [
+    #         "echo 'ENTERING BUILD PHASE'",
+    #         "meson compile 2>&1 >build_log_piped.txt",
+    #         "echo 'FINISHED BUILD PHASE'",
+
+    # ]
+
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
-
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
+      drvs.libdlFactoryBig,
 
       #drvs.harfbuzz,
       drvs.atSpi2Core,
@@ -27,10 +64,7 @@
       drvs.fribidi,
       drvs.gdkPixbufFull,
       drvs.gettext,
-      # drvs.glibDynamic,
-      # drvs.glibDynamic2,
-      # drvs.glib,
-      drvs.glibNoExportDynamic,
+      drvs.glibPatched,
       drvs.gmobile,
       drvs.gnomeDesktop,
       drvs.gobjectDynamic,
@@ -71,7 +105,6 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.mesa2,
-      drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
       drvs.pango,
@@ -97,24 +130,6 @@
       drvs.fmt,
       drvs.simdutf,
     ],
-    extraMesonArgs = [
-      "-Dgeneric=terminal",
-      "-Dc_link_args='-lc++ -static --static'",
-    ],
-
-    preConfigurePhase = [
-      m%"sed -i "s@target_machine.cpu_family() == 'x86_64'@false@g" ${SRC}/agent/meson.build"%,
-      m%"sed -i "s@release_link_args = \[\]@release_link_args = \['-static', '--static'\]@g" ${SRC}/meson.build"%,
-      m%"
-      sed -i 's@ W_EXITCODE (exit_status, term_sig)@((exit_status) << 8 | (term_sig))@g' ${SRC}/src/ptyxis-application.c
-      "%,
-    ],
-    # buildPhase = [
-    #         "echo 'ENTERING BUILD PHASE'",
-    #         "meson compile 2>&1 >build_log_piped.txt",
-    #         "echo 'FINISHED BUILD PHASE'",
-
-    # ]
   }
 }
 & {
