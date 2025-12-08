@@ -13,7 +13,7 @@
     extraFiles = [
       {
         file = "ptyxis_symbols.c",
-        sha256sum = "a34c19d3d23e163ca95479f986990edc2c7aab30c2cd8205f31f61d2f150acba"
+        sha256sum = "31072beaf3def78cfbc1bf373989539e9852278bd6d4c57bb90a0a1cdd5077b2"
       },
     ],
 
