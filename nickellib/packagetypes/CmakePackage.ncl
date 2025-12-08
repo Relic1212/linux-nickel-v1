@@ -74,7 +74,8 @@
             )
           )
           )
-          @ extraCmakeArgs @ (if noDev then  ["-Wno-dev" ] else []),
+          @ extraCmakeArgs
+          @ (if noDev then ["-Wno-dev"] else []),
         cmakeArgsPrepend | Array String | default = [],
 
         extraCmakeArgs | Array String | default = [],
