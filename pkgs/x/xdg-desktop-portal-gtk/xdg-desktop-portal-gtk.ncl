@@ -46,7 +46,7 @@
         drvs.fribidi,
         drvs.fuse,
         drvs.gdkPixbufFull,
-        drvs.glibDynamic,
+        drvs.glibPatched,
         drvs.gobjectDynamic,
         drvs.gperf,
         drvs.gpgme,
