@@ -1,0 +1,14 @@
+{
+  lib,
+  drvs,
+  gnupatch | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://ftp.gnu.org/gnu/patch/patch-2.8.tar.xz",
+      sha256sum = "f87cee69eec2b4fcbf60a396b030ad6aa3415f192aa5f7ee84cad5e11f7f5ae3"
+    },
+    biDrvs = [
+      drvs.linuxHeaders,
+      drvs.pkgconfMeson,
+    ]
+  }
+}
