@@ -20,12 +20,13 @@
         enableCcache,
         separateBuildDir | priority -1000 = false,
         llvmProviders | not_exported,
+        muslProvider,
         baseBuildinputPackages | priority -1000 =
           utilsProviders
           @ (
             if (stage == -1) then
               (
-                [drvs.gnumake, drvs.musl]
+                [drvs.gnumake, muslProvider]
                 @ (if isLlvm then llvmProviders else [])
                 @ (if enableCcache then [drvs.ccacheBin] else [])
               )

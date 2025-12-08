@@ -57,19 +57,30 @@
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
           ],
         pkgconfProvider,
+        muslProvider,
         perlProvider | not_exported | default = drvs.perl,
+        utilsProviders,
+        isLlvm,
+        llvmProviders,
+        enableCcache,
         baseBuildinputPackages | priority -999 =
-          AutotoolsPackage.baseBuildinputPackages
+          # AutotoolsPackage.baseBuildinputPackages
+          AutotoolsPackage.utilsProviders
           @ (
             if (stage == -1) then
-              [
-                perlProvider,
-                drvs.automake,
-                drvs.autoconf,
-                drvs.m4,
-                drvs.libtool,
-                pkgconfProvider,
-              ]
+              (
+                [drvs.gnumake, muslProvider]
+                @ (if isLlvm then AutotoolsPackage.llvmProviders else [])
+                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ [
+                  perlProvider,
+                  drvs.automake,
+                  drvs.autoconf,
+                  drvs.m4,
+                  drvs.libtool,
+                  pkgconfProvider,
+                ]
+              )
             else
               []
           ),

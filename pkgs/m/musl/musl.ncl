@@ -7,6 +7,7 @@
     isLlvm = (stage != 0),
     baseName = "musl",
     isStatic = false,
+    muslProvider = drvs.musl,
     # buildEnv._isStatic |priority 1 = true,
 
     sourceInputs = [
