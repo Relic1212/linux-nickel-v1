@@ -31,6 +31,12 @@
   git,
   gitFull | lib.AutotoolsPackage = {
     singleSource = git.singleSource,
+    extraConfigureFlags = [
+      "--with-curl",
+      "--with-expat",
+      "--with-openssl",
+      "--with-libpcre2",
+    ],
 
     extraMakeArgs = [
       "CURL_LDFLAGS='-lcurl -lpsl -lssl -lcrypto -lz'",
