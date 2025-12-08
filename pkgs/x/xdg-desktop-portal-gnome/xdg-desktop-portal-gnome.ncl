@@ -70,7 +70,7 @@
       drvs.fuse,
       drvs.gdkPixbufFull,
       drvs.gettext,
-      drvs.glibDynamic,
+      drvs.glibPatched,
       drvs.gmobile,
       drvs.gnomeDesktop4,
       drvs.gobjectDynamic,
