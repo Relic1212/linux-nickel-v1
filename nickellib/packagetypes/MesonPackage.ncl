@@ -19,7 +19,8 @@
         muslProvider | not_exported,
 
         mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
-        baseMesonArgs | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then constants.mesonArgsStatic else []),
+        mesonArgsStatic | default = constants.mesonArgsStatic,
+        baseMesonArgs | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then mesonArgsStatic else []),
         extraMesonArgs | Array String | default = [],
         configurePhase | priority -1000 =
           if (
