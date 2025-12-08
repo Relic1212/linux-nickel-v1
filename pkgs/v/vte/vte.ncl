@@ -13,6 +13,49 @@
       sha256sum = "8ba2a82c19c96e56fb77560c1caa49ca0a236e65d3b9123465794d863cd2a0d1"
     },
 
+    buildEnv = {
+      # EXTRA_LDFLAGS = [
+      #     "$(pkg-config --libs --static harfbuzz)",
+      # ],
+    },
+    extraMesonArgs = [
+      "-Da11y=false",
+      "-D_b_symbolic_functions=false",
+      "-Dgir=false",
+      "-Dgnutls=true",
+      "-Dicu=false",
+      "-Dgtk4=true",
+      "-Dgtk3=true",
+      "-D_systemd=false",
+      "-Dvapi=false",
+
+      #"-Dcpp_link_args=\"$(pkg-config --libs --static harfbuzz)\""
+    ],
+    # https://gitlab.gnome.org/GNOME/vte/-/issues/72
+
+    preConfigurePhase = [
+      # m%"
+      # sed -i 's@W_EXITCODE(ret, sig)@((ret) << 8 | (sig))@g' ${SRC}/src/widget.cc
+      # "%,
+      m%"
+        sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/src/widget.cc
+        "%,
+      "sed -i 's@shared_library@library@g' ${SRC}/src/meson.build",
+
+      #"sed -i 's@_vte_debug_hexdump@_vte_debug_hexdump_debug_private@g' ${SRC}/src/debug.cc",
+
+      # "sed -i 's@_vte_debug_hexdump@_vte_debug_hexdump_debug_private@g' ${SRC}/src/debug.hh",
+      "sed -i 's@debug_sources +@@g' ${SRC}/src/app/meson.build",
+    ],
+    # buildPhase = [
+    #     "ninja src/libvte-2.91.a",
+    #     "echo 'LIBVTE IS BUILT'",
+    #     "ninja src/libvte-2.91-gtk4.a",
+    # ],
+    # installPhase = [
+
+    # ]
+
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
 
@@ -97,48 +140,10 @@
       drvs.gtk3,
       drvs.simdutf,
       drvs.fmt,
+      drvs.gmp,
+      drvs.libtasn1,
+      drvs.nettleGmp,
+      drvs.gnutls,
     ],
-    buildEnv = {
-      # EXTRA_LDFLAGS = [
-      #     "$(pkg-config --libs --static harfbuzz)",
-      # ],
-    },
-    extraMesonArgs = [
-      "-Da11y=false",
-      "-D_b_symbolic_functions=false",
-      "-Dgir=false",
-      "-Dgnutls=false",
-      "-Dicu=false",
-      "-Dgtk4=true",
-      "-Dgtk3=true",
-      "-D_systemd=false",
-      "-Dvapi=false",
-
-      #"-Dcpp_link_args=\"$(pkg-config --libs --static harfbuzz)\""
-    ],
-    # https://gitlab.gnome.org/GNOME/vte/-/issues/72
-
-    preConfigurePhase = [
-      # m%"
-      # sed -i 's@W_EXITCODE(ret, sig)@((ret) << 8 | (sig))@g' ${SRC}/src/widget.cc
-      # "%,
-      m%"
-        sed -i 's@W_EXITCODE(0, SIGKILL)@((0) << 8 | (SIGKILL))@g' ${SRC}/src/widget.cc
-        "%,
-      "sed -i 's@shared_library@library@g' ${SRC}/src/meson.build",
-
-      #"sed -i 's@_vte_debug_hexdump@_vte_debug_hexdump_debug_private@g' ${SRC}/src/debug.cc",
-
-      # "sed -i 's@_vte_debug_hexdump@_vte_debug_hexdump_debug_private@g' ${SRC}/src/debug.hh",
-      "sed -i 's@debug_sources +@@g' ${SRC}/src/app/meson.build",
-    ],
-    # buildPhase = [
-    #     "ninja src/libvte-2.91.a",
-    #     "echo 'LIBVTE IS BUILT'",
-    #     "ninja src/libvte-2.91-gtk4.a",
-    # ],
-    # installPhase = [
-
-    # ]
   }
 }

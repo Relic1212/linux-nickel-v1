@@ -129,6 +129,10 @@
       drvs.desktopFileUtils,
       drvs.fmt,
       drvs.simdutf,
+      drvs.gmp,
+      drvs.libtasn1,
+      drvs.nettleGmp,
+      drvs.gnutls,
     ],
   }
 }
