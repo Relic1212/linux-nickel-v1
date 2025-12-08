@@ -13,8 +13,8 @@
       # version = "6.13.8"
       version = "6.17.6"
     },
-      singleSource = _linuxSources."%{options.version}",
-  
+    singleSource = _linuxSources."%{options.version}",
+
     buildDir = "/tmp/workdir/src",
     separateBuildDir = false,
     buildEnv,
