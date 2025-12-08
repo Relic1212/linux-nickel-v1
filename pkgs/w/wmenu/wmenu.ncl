@@ -3,8 +3,8 @@
   drvs,
   wmenu | lib.MesonPackage = {
     singleSource = {
-      uri = "https://codeberg.org/adnano/wmenu/archive/0.1.9.tar.gz",
-      sha256sum = "1b457dfdbf8404748a036d8ee4fab1853d5dd28b132531321b7afc78e85bc1cd"
+      uri = "https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz",
+      sha256sum = "4e6aea3f8975fec720f6eb87aad620d5297a8a5a137615e4cf047e95d2b9d308"
     },
     biDrvs = [
       drvs.fontconfig,
@@ -28,6 +28,7 @@
       drvs.scdoc,
       drvs.glib,
       drvs.hwdata,
+      drvs.fribidi,
     ],
   }
 }
