@@ -6,6 +6,9 @@
       uri = "https://github.com/linux-nvme/libnvme/archive/refs/tags/v1.15.tar.gz",
       sha256sum = "c21cd9379390bdc52c9d9569a241274f8115fc247b76a5d922d639f48c8174a2"
     },
+    postInstallPhase = [
+      "objcopy --redefine-sym startswith=libnvme__startswith ${DEST}/usr/lib/libnvme.a", # clashes with elogind
+    ],
     biDrvs = [
       drvs.bash,
       drvs.linuxHeaders,
