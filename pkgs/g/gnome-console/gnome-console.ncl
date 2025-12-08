@@ -1,13 +1,14 @@
 {
   lib,
   drvs,
+
   gnomeConsole | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/console/-/archive/47.2.1/console-47.2.1.tar.gz",
-      sha256sum = "954d346b4ad4c6f1089e68088d2112c7d1e2e1b52232d323ea411acc73dc75c9"
+      sha256sum = "954d346b4ad4c6f1089e68088d2112c7d1e2e1b52232d323ea411acc73dc75c9",
+      # uri = "https://gitlab.gnome.org/GNOME/console/-/archive/49.1/console-49.1.tar.bz2",
+      # sha256sum = "970f195dc3743a92f6662fc94d1ba4732b9effeccbfbb92760c07fcd7aa82514",
     },
-
-    llvmProvider = drvs.llvmFull,
 
     patches = [
       {
@@ -15,9 +16,22 @@
         file = "0001-locale.patch",
       }
     ],
-    buildEnv.EXTRA_LDFLAGS = ["-lc++"],
 
+    buildEnv.EXTRA_LDFLAGS = [
+      "-lc++",
+      "-ldl_factory",
+      "$(pkg-config --static --libs egl)",
+    ],
+    preConfigurePhase = [
+      m%"echo '%{import "./kgx_symbols.c" as 'Text}' > ${SRC}/kgx_symbols.c"%,
+      "${CC} ${CFLAGS} -c ${SRC}/kgx_symbols.c -o ${SRC}/symbols.o",
+      m%"sed -i "s@c_args: kgx_cargs,@c_args: kgx_cargs,\nlink_args: '/tmp/workdir/src/symbols.o',@g" ${SRC}/src/meson.build"%,
+    ],
+    llvmProvider = drvs.llvmFull,
+
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
+      drvs.libdlFactory,
 
       #drvs.harfbuzz,
       drvs.atSpi2Core,
@@ -34,7 +48,7 @@
       # drvs.glibDynamic,
       # drvs.glibDynamic2,
       # drvs.glib,
-      drvs.glibNoExportDynamic,
+      drvs.glibPatched,
       drvs.gmobile,
       drvs.gnomeDesktop,
       drvs.gobjectDynamic,
@@ -42,7 +56,7 @@
       drvs.graphene,
       drvs.gsettingsDesktopSchemas,
       drvs.gsound,
-      drvs.gtk4,
+      drvs.gtk4_21,
       drvs.gudev,
       drvs.harfbuzzFull,
       drvs.hwdata,
@@ -63,6 +77,7 @@
       drvs.libpng,
       drvs.libportal,
       drvs.libpsl,
+      drvs.librsvg,
       drvs.libseccomp,
       drvs.libtiff,
       drvs.libtool,
@@ -74,7 +89,6 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.mesa2,
-      drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
       drvs.pango,
@@ -91,7 +105,7 @@
       drvs.xz,
       drvs.zlibNg,
       drvs.zstd,
-      drvs.libadwaita,
+      drvs.libadwaitaShared_181,
       drvs.curl,
       drvs.appstream,
       drvs.vte,
@@ -99,6 +113,10 @@
       drvs.desktopFileUtils,
       drvs.simdutf,
       drvs.fmt,
+      drvs.gmp,
+      drvs.libtasn1,
+      drvs.nettleGmp,
+      drvs.gnutls,
     ],
   }
 }
