@@ -545,6 +545,7 @@
           "$(pkg-config --static --libs liblzma)",
           "$(pkg-config --static --libs gio-2.0)",
           "-lc++",
+          "-lsensors",
           "-Wl,--start-group",
           "/usr/lib/libkdecorations3private.a",
           "/usr/lib/libkdecorations3.a",
