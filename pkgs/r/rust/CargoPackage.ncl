@@ -62,10 +62,11 @@
 
         sccacheProvider | default = drvs.sccache,
         rustProvider | default = drvs.rust,
+        muslProvider | priority -1000 = drvs.muslShared,
         baseBuildinputPackages | priority -1000 =
           [
             rustProvider,
-            drvs.muslShared,
+            muslProvider,
             drvs.pkgconf,
             drvs.clangCc,
           ]
