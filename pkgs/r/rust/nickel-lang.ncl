@@ -10,13 +10,18 @@
     {
       singleSource = {
 
-        uri = "https://github.com/tweag/nickel/archive/refs/tags/1.12.2.tar.gz",
-        sha256sum = "1161b901c238d78dfb2529fee878f37d69c4187ba10d5bd0e2723836d19f7c15"
+        uri = "https://github.com/tweag/nickel/archive/refs/tags/1.14.0.tar.gz",
+        sha256sum = "7bd9d368f780d506dc63895b7b033ec8b5a98507c7738c2cc263ee5be87cdf67",
       },
       crates = _crates,
 
+      extraCargoFlags = [
+        "--verbose",
+      ],
+
       biDrvs = [
         drvs.pythonFull,
+        drvs.mimalloc & { priority = 1 },
       ],
       target,
       installPhase = [
@@ -24,5 +29,5 @@
         "install -m0755 target/%{target}/release/nickel ${DEST}/usr/bin",
         "install -m0755 target/%{target}/release/nls ${DEST}/usr/bin",
       ]
-    }
+    },
 }
