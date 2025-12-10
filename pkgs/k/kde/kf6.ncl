@@ -2,9 +2,9 @@
   lib,
   drvs,
   _kf_sources = import "_sources.ncl",
-  _kf | lib.CmakePackage = {
+  _kf | lib.QtPackage = {
     name,
-    singleSource | priority -1000 = {
+    singleSource | priority -999 = {
       # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
       uri = "https://download.kde.org/stable/frameworks/6.20/%{name}-6.20.0.tar.xz",
       sha256sum = _kf_sources."%{uri}",
@@ -22,8 +22,11 @@
       xkbcommonX11 | default = false,
     },
 
+    muslProvider = drvs.muslBothRenamedDl,
+
     biDrvs | priority -2 =
       [
+        drvs.libdlFactory,
         drvs.pixman,
         drvs.expat,
         drvs.libffi,
@@ -104,13 +107,21 @@
         drvs.libinput,
         drvs.ecm,
       ],
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
-      ]
-    },
+    buildEnv =
+      let common_flags = ["-DQT_STATICPLUGIN"] in
+      {
+        EXTRA_CFLAGS = common_flags,
+        EXTRA_CPPFLAGS = common_flags,
+        EXTRA_CXXFLAGS = common_flags,
+
+        BASE_LDFLAGS | priority 1 = [],
+        EXTRA_LDFLAGS = [
+          "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
+          "-ldl_factory",
+        ]
+      },
     cmakeExtraArgsRecord = {
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
 
       #"-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
 
@@ -1171,7 +1182,7 @@
           drvs.pythonDynamic,
           drvs.pythonLxml,
           drvs.gettext,
-          drvs.muslShared & { priority = -1 },
+          # drvs.muslShared & { priority = -1 },
         ]
     },
 
@@ -1780,3 +1791,4 @@
     ]
   }
 }
+& (import "./kde_obj.ncl")

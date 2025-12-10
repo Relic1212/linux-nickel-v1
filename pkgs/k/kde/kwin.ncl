@@ -249,7 +249,7 @@
     patches = [
       # https://github.com/celestiamobile/celestia-web/blob/b278e8111a6090bdb023235a086203664d8cb336/patches/gles.patch#L124
       {
-        sha256sum = "211fb884bb5fa319949859ba340e1d08725c214c6b6feea1d250ddac9b41cc2d",
+        sha256sum = "675af456221c613ce0826dbb6775e2866e020eb79e36d80e7c10e7f3881613aa",
         file = "0001-kwin.patch",
       }
     ]

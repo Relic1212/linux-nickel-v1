@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1141784b07..40e005398c 100644
+index 1141784b07..e6f78f4674 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -102,6 +102,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
@@ -44,6 +44,22 @@ index 1141784b07..40e005398c 100644
  pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info>=0.2.0)
  add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
  
+@@ -499,11 +506,11 @@ add_subdirectory(data)
+ add_subdirectory(kconf_update)
+ add_subdirectory(src)
+ 
+-if (BUILD_TESTING)
+-    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
+-        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+-    endif()
++if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
++    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
++endif()
+ 
++if (BUILD_TESTING)
+     add_subdirectory(autotests)
+     add_subdirectory(tests)
+ endif()
 diff --git a/KWinConfig.cmake.in b/KWinConfig.cmake.in
 index 84c878a581..5cbc51522a 100644
 --- a/KWinConfig.cmake.in
