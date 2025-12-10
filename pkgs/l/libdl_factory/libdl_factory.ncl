@@ -21,4 +21,18 @@
     & {
       options.stable = 5 * 2048,
     },
+
+  muslDlFactory =
+    libdlFactory
+    & {
+      options = {
+        stable = 20 * 2048,
+        dtable = 2048,
+      },
+      postInstallPhase = [
+        # dladdr and sladdr_stub in same file - keep dladdr as it's weak anyway
+        (import "./libc.sh" as 'Text),
+        "install -m0755 libc.a ${DEST}/usr/lib/",
+      ]
+    }
 }
