@@ -3,7 +3,7 @@
   drvs,
   cosmicIcons | lib.Package = {
     singleSource = {
-      uri = "https://github.com/pop-os/cosmic-icons/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz",
+      uri = "https://github.com/pop-os/cosmic-icons/archive/refs/tags/epoch-1.0.0.tar.gz",
       sha256sum = "7336228a063795d59c8b5b90aa78527034f624446b556196ce2ff68d8018b3ae"
     },
     separateBuildDir = false,

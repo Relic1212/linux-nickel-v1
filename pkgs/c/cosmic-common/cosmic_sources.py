@@ -44,6 +44,6 @@ for url in urls:
         )
         print(s)
         with open("_cosmic_sources.ncl", "a") as f:
-            f.write(s)
+            f.write(s + "\n")
     except FileExistsError:
         pass

@@ -7,7 +7,7 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/pop-os/cosmic-settings/archive/refs/tags/epoch-1.0.0-beta.8.tar.gz",
+        uri = "https://github.com/pop-os/cosmic-settings/archive/refs/tags/epoch-1.0.0.tar.gz",
         sha256sum = _cosmicSrcSha256sums."%{uri}", #"95e632d20cf802fe293014dd9707e65bd7d6ab9e7459957f40b01c928908e34a"
       },
       outputSha256sum = (import "src.sha256sum" as 'Text), # "4f25a13405a019d470e37910fb9710110076c0df7ef1d331d6e224efbe413ead"
@@ -38,16 +38,15 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-      m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
     ],
 
     extraEnv = {
       EXTRA_RUSTFLAGS =
         [
           "-C link-arg=-rtlib=compiler-rt",
-          "-C link-arg=-lpulse",
-          "-C link-arg=-L/usr/lib/pulseaudio",
-          "-C link-arg=-lpulsecommon-17.0",
+          # "-C link-arg=-lpulse",
+          # "-C link-arg=-L/usr/lib/pulseaudio",
+          # "-C link-arg=-lpulsecommon-17.0",
           "-C link-arg=-lc++",
           "-C link-arg=-L/usr/lib/clang/21/lib/linux",
           "-C link-arg=-lclang_rt.builtins-x86_64",
@@ -109,7 +108,6 @@
     enableSccache = true,
     biDrvs = [
       (drvs.findutils & { priority = 1 }),
-      drvs.pulseaudio17,
       drvs.just,
       drvs.cosmicSettingsSources,
       drvs.alsaLibs,
