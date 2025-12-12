@@ -166,5 +166,41 @@
       options = {
         gtk = [drvs.gtk4_21, drvs.librsvg, drvs.glibNoExportDynamic, ]
       }
-    }
+    },
+
+  libadwaitaInitResources | lib.Package = {
+    enableCcache = false,
+    buildPhase = [
+      m%"
+        echo '
+extern void adw_stylesheet_get_resource(void);
+extern void adw_get_resource(void);
+__attribute__((constructor)) static void adwaita_init_resources()
+{
+	adw_stylesheet_get_resource();
+	adw_get_resource();
+}
+' > adwaita_init_resources.c"%,
+      "${CC} ${CFLAGS} -c adwaita_init_resources.c -o adwaita_init_resources.o"
+    ],
+
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/lib",
+      "install -dm0755 ${DEST}/usr/lib/pkgconfig",
+      "install -m0755 adwaita_init_resources.o ${DEST}/usr/lib",
+      m%"echo 'prefix=/usr
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: Adwaita
+Description: Building blocks for modern GNOME applications
+Version: 1.7.6
+Requires: glib-2.0, fribidi, gio-2.0, gtk4 >=  4.17.5, appstream
+Libs: -L${prefix}/lib -ladwaita-1 /usr/lib/adwaita_init_resources.o -lm
+Cflags: -I${includedir}/libadwaita-1' > ${DEST}/usr/lib/pkgconfig/libadwaita-1.pc"%,
+    ],
+    biDrvs = [
+      drvs.llvm,
+    ]
+  }
 }
