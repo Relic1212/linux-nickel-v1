@@ -20,12 +20,15 @@
     # libcamera needs this
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "-lc++"
+        "-lc++",
+        "-ldl_factory",
       ],
     },
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs =
       [
+        drvs.libdlFactory,
         drvs.alsaLibs,
         drvs.appstream,
         drvs.atSpi2Core,
@@ -89,7 +92,7 @@
         drvs.lz4,
         drvs.m4,
         drvs.mesa2,
-        drvs.muslShared,
+        # drvs.muslShared,
         drvs.ncurses,
         drvs.openssl,
         drvs.ostree,
