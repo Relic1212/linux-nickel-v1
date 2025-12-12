@@ -38,14 +38,22 @@
     #   "-Dlockdown=disabled",
     # ],
 
-    # libcamera needs this
-    # buildEnv = {
-    #   EXTRA_LDFLAGS = [
-    #     "-lc++"
-    #   ],
-    # },
+    # libcamera needs -lc++
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        # "-lc++",
+        "-ldl_factory",
+      ],
+    },
+    preConfigurePhase = [
+      m%"sed -i "s|dependencies: deps,|dependencies: deps,\nlink_args: \[ '/usr/lib/adwaita_init_resources.o' \],|g" ${SRC}/src/meson.build"%,
+    ],
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
+
     biDrvs = [
+      drvs.libadwaitaInitResources,
+      drvs.libdlFactory,
       drvs.alsaLibs,
       drvs.appstream,
       drvs.atSpi2Core,
@@ -128,7 +136,7 @@
       drvs.lz4,
       drvs.m4,
       drvs.mesa2,
-      drvs.muslShared,
+      # drvs.muslShared,
       drvs.ncurses,
       drvs.openssl,
       drvs.ostree,
