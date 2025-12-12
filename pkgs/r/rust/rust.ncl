@@ -2,66 +2,75 @@
   lib,
   drvs,
   rust | lib.AutotoolsPackage =
-    let tgt = "x86_64-unknown-linux-musl" in
+    let tgt = "x86_64-unknown-linux-musl", p190 = true in
     {
       # 
 
       sourceInputs = [
         {
-          src = {
-            # uri = "https://static.rust-lang.org/dist/rustc-1.85.1-src.tar.xz",
-            # sha256sum = "b1fbf809efe9f036939401e142631c201a53bcf43ec1696bd9f5290ba236a266",
+          src =
+            if (!p190) then
+              {
 
-            uri = "https://static.rust-lang.org/dist/rustc-1.89.0-src.tar.xz",
-            sha256sum = "0b9d55610d8270e06c44f459d1e2b7918a5e673809c592abed9b9c600e33d95a",
-          },
+                uri = "https://static.rust-lang.org/dist/rustc-1.89.0-src.tar.xz",
+                sha256sum = "0b9d55610d8270e06c44f459d1e2b7918a5e673809c592abed9b9c600e33d95a",
+              }
+            else
+              {
+
+                uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.91.1-src.tar.xz",
+                sha256sum | priority 1 = "66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab",
+              },
         },
         {
           dest = "local",
-          src = {
-            # uri = "https://static.rust-lang.org/dist/rust-std-1.84.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "5f976818603468384bd78fde6c4e12f2b0a996d55f4985a33a68b5af54974ac0",
+          src =
+            if (!p190) then
+              {
 
-            # uri = "https://static.rust-lang.org/dist/rust-std-1.85.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "27cebed8bafcb07c1c61a3dfc548efc3c032720d953375391896b664f8fe06f5",
+                uri = "https://static.rust-lang.org/dist/rust-std-1.88.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "0c42b63c18a6343851e0f27aeb5cff73146c86fc95bc4e2bf51b726c4311249e",
+              }
+            else
+              {
 
-            uri = "https://static.rust-lang.org/dist/rust-std-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "0c42b63c18a6343851e0f27aeb5cff73146c86fc95bc4e2bf51b726c4311249e",
-          }
+                uri = "https://static.rust-lang.org/dist/rust-std-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "38490d575786f4688e83b357baeb022d8dde0ace2cb8c1357e060c76644fc56a",
+              }
         },
         {
           dest = "local1",
-          src = {
-            # uri = "https://static.rust-lang.org/dist/rustc-1.84.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "bb96af675e34195588ab322ddaeabadd8bf4da08869aef3c91b7e7bbaf9a74b1",
+          src =
+            if (!p190) then
+              {
 
-            # uri = "https://static.rust-lang.org/dist/rustc-1.85.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "229735169a7dfdd460cc36e3a7f44729555d7de10af88494b77a93ce767d86c3",
+                uri = "https://static.rust-lang.org/dist/rustc-1.88.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "58c2003a5e1c3f03e0b3b59677866d212b19d2d74473f63e52f60244fc062a76",
+              }
+            else
+              {
 
-            uri = "https://static.rust-lang.org/dist/rustc-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "58c2003a5e1c3f03e0b3b59677866d212b19d2d74473f63e52f60244fc062a76",
-          }
+                uri = "https://static.rust-lang.org/dist/rustc-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "993cb26cee9525b1553d82b8fc2b6ddffd50a0a561cd896e3daa3a9f8ae65949",
+              }
         },
         {
           dest = "local2",
-          src = {
-            # uri = "https://static.rust-lang.org/dist/cargo-1.84.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "0356fa019a7ee60fe6eec2f94c7d68e01b1a7710437bb6cf3422b42c2870d822",
+          src =
+            if (!p190) then
+              {
 
-            # uri = "https://static.rust-lang.org/dist/cargo-1.85.0-x86_64-unknown-linux-musl.tar.xz",
-            # sha256sum = "097bf46bb15bf8af3e33f7720fd14d6d02bbbf7dddcef926b773a52535c2c8a3",
-
-            uri = "https://static.rust-lang.org/dist/cargo-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "a00f8caf4f22b5e8f5492b70fc9e16fbf5c2f19ab655f79ede3d2d1ba11531c4",
-          }
+                uri = "https://static.rust-lang.org/dist/cargo-1.88.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "a00f8caf4f22b5e8f5492b70fc9e16fbf5c2f19ab655f79ede3d2d1ba11531c4",
+              }
+            else
+              {
+                uri = "https://static.rust-lang.org/dist/cargo-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+                sha256sum = "dddd1ee3da59440d5aa4d149ebb5fbbe0d7252dd94e171d5f2b071d7354f9b3a",
+              }
         },
       ],
-      # patches = [
-      #   {
-      #     sha256sum = "e96ebfd7e040e480d893c3e5ddd0a13e4f403fd1a9794700a70b84820fec0621",
-      #     file = "fc32dd49cb70c4b113353c7a060a875f30b9af04.patch"
-      #   }
-      # ],
+
       separateBuildDir = false,
       isStatic = false,
       isLlvm = false,
@@ -153,25 +162,27 @@
         "DESTDIR=${DEST} ./x.py install",
       ],
 
-      biDrvs = [
-        drvs.pythonFull,
-        # drvs.rsync,
-        drvs.pkgconf,
-        drvs.muslShared,
-        (drvs.clangCc & { priority = 1 }),
-        drvs.llvmFullPic,
-        drvs.libgccSymlinks,
-        drvs.zlibNgPic,
-        drvs.opensslPic,
-        drvs.gcc,
+      biDrvs =
+        [
+          drvs.pythonFull,
+          # drvs.rsync,
+          drvs.pkgconf,
+          drvs.muslShared,
+          (drvs.clangCc & { priority = 1 }),
+          drvs.llvmFullPic,
+          drvs.libgccSymlinks,
+          drvs.zlibNgPic,
+          drvs.opensslPic,
+          drvs.gcc,
 
-        # drvs.gccSymlink,
-        #(drvs.binutils & { priority = 1 }),
-        # drvs.libemptyGcc,
-        # drvs.libempty,
-        (drvs.llvmConfigStatic & { priority = 1 }),
-        (drvs.gnutar & { priority = 1 }),
-      ],
+          # drvs.gccSymlink,
+          #(drvs.binutils & { priority = 1 }),
+          # drvs.libemptyGcc,
+          # drvs.libempty,
+          drvs.llvmConfigStatic & { priority = 1 },
+          drvs.gnutar & { priority = 1 },
+        ]
+        @ (if p190 then [drvs.xz & { priority = 1 }] else []),
       configureFlags =
         let lto = "off"
         # lto = "on"
