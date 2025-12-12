@@ -1,0 +1,63 @@
+{
+  lib,
+  drvs,
+  blocaled | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/lfs-book/blocaled/archive/refs/tags/v0.7.tar.gz",
+      sha256sum = "80271fc44ea6449890c4d0aa4cfd9d8a66191b1a1c5122c0a19990c56f304926",
+    },
+    extraEnv = {
+      PKG_CONFIG = "\"pkg-config --static\""
+    },
+    extraConfigureFlags = [
+      "--with-localeconfig=/etc/blocaled/locale.conf",
+      "--with-keyboardconfig=/etc/blocaled/console",
+      "--with-xkbdconfig=/etc/blocaled/30-keyboard.conf",
+    ],
+    postInstallPhase = [
+      "install -dm0755 ${DEST}/etc/blocaled",
+      "install -dm0755 ${DEST}/usr/bin",
+      "touch ${DEST}/etc/blocaled/locale.conf",
+      "touch ${DEST}/etc/blocaled/console",
+      "touch ${DEST}/etc/blocaled/30-keyboard.conf",
+      "echo LANG=en_US.UTF-8 > ${DEST}/etc/blocaled/locale.conf",
+      "echo '%{import "./localectl.sh" as 'Text}' > ${DEST}/usr/bin/localectl",
+      "chmod +x ${DEST}/usr/bin/localectl",
+    ],
+    biDrvs = [
+      drvs.inih,
+      drvs.scdoc,
+      drvs.linuxHeaders,
+      drvs.expat,
+      drvs.libffi,
+      drvs.libpciaccess,
+      drvs.libxkbcommon,
+      drvs.libdrm,
+      drvs.mtdev,
+      drvs.libevdev,
+      drvs.eudev,
+      drvs.libinput,
+      drvs.glib,
+      drvs.gudev,
+      drvs.pcre2,
+      drvs.zlibNg,
+      drvs.dbus,
+      drvs.duktape,
+      drvs.attr,
+      drvs.acl,
+      drvs.libcap,
+      drvs.gettext,
+      # drvs.perl,
+      drvs.libxslt,
+      drvs.docbookXslNons,
+      drvs.docbookXml,
+      drvs.elogindWithPolkit,
+      drvs.libpam,
+      drvs.polkit,
+      drvs.libdaemon,
+      drvs.bash,
+      drvs.bashSh & { priority = 1 },
+      drvs.pythonFull,
+    ]
+  }
+}
