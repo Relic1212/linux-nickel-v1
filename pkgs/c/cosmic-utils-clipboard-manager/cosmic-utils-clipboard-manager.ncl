@@ -105,7 +105,7 @@ directory = "vendor"
     _CargoFetcher
     & {
       singleSource = cosmicUtilsClipboardManager1.singleSource,
-      outputSha256sum = "4e34855e27db67c68a1710cf3ce8cb4641d9a1d3681b24e9e905f05137972860",
+      outputSha256sum = "38cf40d3d7fa95f263d98f5506c0f565724991f76203025a9c18a439bbf11084",
     },
 
   cosmicUtilsClipboardManager | lib.CargoPackage = {
