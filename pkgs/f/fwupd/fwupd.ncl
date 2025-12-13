@@ -18,13 +18,16 @@
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lassuan",
-        "-ldrm_amdgpu"
+        "-ldrm_amdgpu",
+        "-ldl_factory",
       ],
     },
-    pythonProvider =
-      drvs.pythonDynamic,
+    pythonProvider = drvs.pythonDynamic,
+
+    muslProvider = drvs.muslBothRenamedDl,
 
     biDrvs = [
+      drvs.libdlFactory,
       drvs.acl,
       drvs.attr,
       drvs.bash,
@@ -39,7 +42,7 @@
       drvs.eudev,
       drvs.expat,
       drvs.gettext,
-      drvs.glib,
+      drvs.glibPatched,
       drvs.gmp,
       drvs.gnutls,
       drvs.gobjectDynamic,
@@ -76,7 +79,6 @@
       drvs.linuxHeaders,
       drvs.lvm2,
       drvs.mtdev,
-      drvs.muslShared,
       drvs.ncurses,
       drvs.nettleGmp,
       drvs.openssl,
