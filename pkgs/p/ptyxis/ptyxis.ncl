@@ -10,16 +10,16 @@
       sha256sum = "ee2985a293ff7699d6b627ec6d5f2989a135c4e90cee34566e07c9199d9098b7"
     },
 
-    extraFiles = [
-      {
-        file = "ptyxis_symbols.c",
-        sha256sum = "31072beaf3def78cfbc1bf373989539e9852278bd6d4c57bb90a0a1cdd5077b2"
-      },
-    ],
+    # extraFiles = [
+    #   {
+    #     file = "ptyxis_symbols.c",
+    #     sha256sum = "78302c16ed72566747e5c3afb8f049f4a2deaba1c34848eada6819da5e7e3e22"
+    #   },
+    # ],
 
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "-ldl_factory",
+        # "-ldl_factory",
         "$(pkg-config --static --libs egl)",
         # "/tmp/workdir/src/symbols.o",
       ],
@@ -27,7 +27,7 @@
     extraMesonArgs = [
       "-Dgeneric=terminal",
       # m%"-Dc_link_args="-lc++ -static --static -ldl_factory $(pkg-config --libs --static gtk4) /tmp/workdir/src/symbols.o""%,
-      m%"-Dc_link_args="-lc++ -static --static -ldl_factory $(pkg-config --static --libs egl)""%,
+      m%"-Dc_link_args="-lc++ -static --static $(pkg-config --static --libs egl)""%,
     ],
 
     preConfigurePhase = [
@@ -36,7 +36,9 @@
       m%"
       sed -i 's@ W_EXITCODE (exit_status, term_sig)@((exit_status) << 8 | (term_sig))@g' ${SRC}/src/ptyxis-application.c
       "%,
-      "${CC} ${CFLAGS} -c /tmp/workdir/files/ptyxis_symbols.c -o ${SRC}/symbols.o",
+      "echo '%{import "ptyxis_dlopen.c" as 'Text}' > ${SRC}/ptyxis_symbols.c",
+      "echo '%{import "constructor.c" as 'Text}' >> ${SRC}/ptyxis_symbols.c",
+      "${CC} ${CFLAGS} -c ${SRC}/ptyxis_symbols.c -o ${SRC}/symbols.o",
       m%"sed -i "s@c_args: ptyxis_c_args,@c_args: ptyxis_c_args,\n  link_args: '/tmp/workdir/src/symbols.o', @g" ${SRC}/src/meson.build"%,
     ],
     # buildPhase = [
@@ -48,9 +50,9 @@
 
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
-    muslProvider = drvs.muslBothRenamedDl,
+    muslProvider = drvs.muslBothWeakDl,
     biDrvs = [
-      drvs.libdlFactoryBig,
+      # drvs.libdlFactoryBig,
 
       #drvs.harfbuzz,
       drvs.atSpi2Core,
