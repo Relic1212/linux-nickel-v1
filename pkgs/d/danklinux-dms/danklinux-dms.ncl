@@ -1,17 +1,9 @@
 let s = {
-  # uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.2.2.tar.gz",
-  # sha256sum = "ce8f339b8dbe3774bfa397d5e0007f14776b0c0efd09b8d1d845157f75c33dbf",
 
-  # uri = "https://github.com/AvengeMedia/danklinux/archive/3c468ff5332748aa84852a05bdabcf703d956f7c.tar.gz",
-  # sha256sum = "6ec725aaa93f5b8442fdeef8a139617aa408a648eafc89db3337f6277c915919",
-
-  # uri = "https://github.com/AvengeMedia/danklinux/archive/refs/tags/v0.4.1.tar.gz",
-  # sha256sum = "ff2d9c426651945e3444b9ec65b7c4212ca5c8523efdbd88f1ae5c1de67d6bff",
-
-  # uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v0.5.2.tar.gz",
-  # sha256sum = "fbee73ece21b037a187e310f0c39eba4a4d3b08d29213b3a430cb07482030cd9",
-  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v0.6.2.tar.gz",
-  sha256sum = "a9f78299d560f3e361fd32757b2ccf869036a9f7e4ae33462368284e8f90fa78"
+  # uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.0.2.tar.gz",
+  # sha256sum = "3cb952f15417487484137b010751efa997602a1f535605f472acd47d3d783161",
+  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/d3f5b8f32ed175627969f839c5363e3bf525d0b8.tar.gz",
+  sha256sum = "35b643c546d5e7635a5b1c4969170341cd44f427711b1f3f3f48e2c0ad396156"
 }
 in
 
@@ -38,11 +30,9 @@ in
       "install -m0755 ${BUILDDIR}/%{outputFile} ${DEST}/%{outputFile}"
     ],
     outputFile = "source.tar",
-    # outputSha256sum = "81acc3aae11a61be8c19b4bed9d8f478798bd74e5615929598f7328d02ceef22",
-    # outputSha256sum = "295aa1a69c07a42227c660b9906ea20f2a95db03a615664bcc518015ef8d6116",
 
-    # outputSha256sum = "ea86c62610cf63ae559997939eb3d130c4f0065f34361c2d8724619f25347491",
-    outputSha256sum = "bc3e984282fdfcbfb2b6bea55759dc4e1f2ddb7492ff203feda926da181f9e98",
+    # outputSha256sum = "ce1fe457b9fa70302d2497006bbe1ba98d0274a9dd5abf421f825e38ab1da952",
+    outputSha256sum = "0cb0326ee345944b935305201905cee81a8761e59bd1c05f031a46703d094d8d",
 
     biDrvs = [
       drvs.go_1_24,
