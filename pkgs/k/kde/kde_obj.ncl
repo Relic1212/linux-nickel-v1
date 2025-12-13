@@ -5,7 +5,7 @@
     enableCcache = false,
 
     buildPhase = [
-      m%"echo '%{import "./kde_obj_full.cpp" as 'Text }' > kde_obj.cpp"%,
+      m%"echo '%{import "./kde_obj.cpp" as 'Text }' > kde_obj.cpp"%,
       "clang++ --verbose -c -O2 kde_obj.cpp -o kde_obj.o",
     ],
 

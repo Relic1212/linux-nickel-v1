@@ -2,7 +2,7 @@
   lib,
   drvs,
   _plasma_sources,
-  kwin | lib.CmakePackage = {
+  kwin | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz",
@@ -168,83 +168,80 @@
       "-DKWIN_BUILD_RUNNERS" = true,
 
       "-DBUILD_TESTING" = false,
-
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client expat glib-2.0 gmodule-2.0 libevdev mtdev)\""
     },
     preConfigurePhase =
-      let prePatch = (
-        [
-          m%"sed -i 's|IdleTime|IdleTime\n\tArchive|g' ${SRC}/CMakeLists.txt"%,
-          m%"sed -i 's|IdleTime|IdleTime\n\tArchive\nKIO\nNotifications|g' ${SRC}/CMakeLists.txt"%,
-          m%"sed -i 's|#include <private/qtx11extras_p.h>||g' ${SRC}/src/helpers/killer/killer.cpp"%,
-          m%"sed -i 's|add_subdirectory(killer)||g' ${SRC}/src/helpers/CMakeLists.txt"%,
-          m%"sed -i 's|kwin SHARED|kwin STATIC|g' ${SRC}/src/CMakeLists.txt"%,
-          m%"sed -i 's|epoxy::epoxy|EGL::EGL|g' ${SRC}/src/CMakeLists.txt"%,
-          m%"sed -i 's|install(TARGETS kwin EXPORT KWinTargets|install(TARGETS kwin WaylandProtocols_xml EXPORT KWinTargets|g' ${SRC}/src/CMakeLists.txt"%,
-          m%"sed -i 's| MODULE | STATIC |g' ${SRC}/src/kcms/common/CMakeLists.txt"%,
-          m%"sed -i 's| SHARED | STATIC |g' ${SRC}/src/kcms/common/CMakeLists.txt"%,
-
-          # m%"sed -i 's|KF6::Svg|KF6::Archive\n\tKF6::svg|g' ${SRC}/src/kcms/screenedges/CMakeLists.txt"%,
-
-          # m%"sed -i 's|KF6::Svg|KF6::Archive\n\tKF6::svg|g' ${SRC}/src/plugins/screenedge/CMakeLists.txt"%,
-        ]
-        @ (
-          let files = [
-            # "src/CMakeLists.txt",
-            "src/scene/surfaceitem.cpp",
-            "src/core/outputbackend.h",
-            "src/opengl/gltexture.h",
-            "src/utils/drm_format_helper.h",
-            "src/opengl/eglcontext.h",
-            "src/opengl/egldisplay.h",
-            "src/opengl/egl_context_attribute_builder.cpp",
-            "src/opengl/eglimagetexture.cpp",
-            "src/opengl/eglnativefence.h",
-            "src/opengl/gllut3D.h",
-            "src/opengl/glvertexbuffer_p.h",
-            "src/opengl/gllut.h",
-            "src/opengl/glvertexbuffer.h",
-            "src/opengl/gltexture_p.h",
-            "src/opengl/eglswapchain.h",
-            "src/opengl/glrendertimequery.h",
-            "src/backends/drm/drm_egl_layer.h",
-            "src/opengl/eglbackend.h",
-            "src/opengl/glframebuffer.h",
-            "src/opengl/glplatform.cpp",
-            "src/opengl/eglutils_p.h",
-            "src/opengl/glshader.h",
-            "src/backends/drm/drm_gpu.h",
-            "src/backends/drm/drm_virtual_egl_layer.h",
-            "src/scripting/windowthumbnailitem.h",
-            "src/plugins/colorpicker/colorpicker.cpp",
-            "src/plugins/qpa/integration.h",
-            "src/plugins/qpa/eglplatformcontext.h",
-            "src/plugins/qpa/eglhelpers.h",
-            "src/plugins/qpa/window.cpp",
-            "src/plugins/qpa/offscreensurface.h",
-          ]
-          in
-          std.array.map
-            (fun s =>
-              (
-                std.string.join
-                  "\n"
-                  [
-                    m%"sed -i 's|#include <epoxy/gl.h>|#include <GL/gl.h>\n#include <GL/glext.h>|g' ${SRC}/%{s}"%,
-                    m%"sed -i 's|#include <epoxy/egl.h>|#include <EGL/egl.h>\n#include <EGL/eglext.h>|g' ${SRC}/%{s}"%,
-                    # "sed -i 's|epoxy/egl.h|EGL/egl.h|g' ${SRC}/%{s}",
-                    #  "sed -i 's|epoxy/glext.h|GL/glext.h|g' ${SRC}/%{s}",
-                  ]
-              )
-            )
-            files
+      let s =
+        (
+          std.string.join
+            m%"\n"%
+            [
+              "#include <QtCore/QtPlugin>",
+              "#include <QtQml/qqmlextensionplugin.h>",
+              "Q_IMPORT_PLUGIN(DmaBufServerBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(DmaBufServerBufferPlugin)",
+              "Q_IMPORT_PLUGIN(DrmEglServerBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(DrmEglServerBufferPlugin)",
+              "Q_IMPORT_PLUGIN(KWaylandPlugin)",
+              "Q_IMPORT_PLUGIN(Plugin)",
+              "Q_IMPORT_PLUGIN(PluginFactory)",
+              "Q_IMPORT_PLUGIN(Poller)",
+              "Q_IMPORT_PLUGIN(QWaylandAdwaitaDecorationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandBradientDecorationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandDmabufClientBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandEglClientBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandEglClientBufferPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandEglStreamClientBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandFullScreenShellV1IntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandIviShellIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandLayerShellIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandQtShellIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandWlShellIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QWaylandXdgShellIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(QmlFolderListModelPlugin)",
+              "Q_IMPORT_PLUGIN(QmlShapesPlugin)",
+              "Q_IMPORT_PLUGIN(QtLabsPlatformPlugin)",
+              "Q_IMPORT_PLUGIN(QtQmlWorkerScriptPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuick2Plugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2BasicStyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2BasicStylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2FluentWinUI3StyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2FluentWinUI3StylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2FusionStyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2FusionStylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2ImagineStyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2ImagineStylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2ImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2MaterialStyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2MaterialStylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2Plugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2UniversalStyleImplPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickControls2UniversalStylePlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickDialogsPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickEffectsPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickLayoutsPlugin)",
+              "Q_IMPORT_PLUGIN(QtQuickTemplates2Plugin)",
+              "Q_IMPORT_PLUGIN(QtQuick_WindowPlugin)",
+              "Q_IMPORT_PLUGIN(ShmServerBufferIntegrationPlugin)",
+              "Q_IMPORT_PLUGIN(ShmServerBufferPlugin)",
+              "Q_IMPORT_PLUGIN(WaylandBackend)",
+              "Q_IMPORT_QML_PLUGIN(QWaylandCompositorPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtQmlCorePlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtQmlLabsModelsPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtQmlModelsPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtQmlPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_IviApplicationPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_PresentationTimePlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_QtShellPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_WlShellPlugin)",
+              "Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_XdgShellPlugin)",
+              "Q_IMPORT_QML_PLUGIN(org_kde_layershellPlugin)",
+            ]
         )
-      )
+        ++ m%"\n"%
       in
       [
-        # let old = "ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate",
-        #     new = "ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::Modulate" in
-        # m%"sed -i 's@%{old}@%{new}@g' ${SRC}/src/opengl/eglcontext.cpp"%
+        m%"sed -i 's@Q_DECLARE_METATYPE(KSharedConfigPtr)@%{s}Q_DECLARE_METATYPE(KSharedConfigPtr)@g' ${SRC}/src/main.cpp"%
       ],
     patches = [
       # https://github.com/celestiamobile/celestia-web/blob/b278e8111a6090bdb023235a086203664d8cb336/patches/gles.patch#L124

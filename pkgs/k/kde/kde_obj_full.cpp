@@ -1,150 +1,172 @@
 #include <QtCore/QtPlugin>
 #include <QtQml/qqmlextensionplugin.h>
 
-Q_IMPORT_PLUGIN(ActivityEngineFactory)
-Q_IMPORT_PLUGIN(AppsEngineFactory)
-Q_IMPORT_PLUGIN(BreezeDecoFactory)
-Q_IMPORT_PLUGIN(DBusHelperProxy)
-Q_IMPORT_PLUGIN(DWDIonFactory)
-Q_IMPORT_PLUGIN(DmaBufServerBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(DmaBufServerBufferPlugin)
-Q_IMPORT_PLUGIN(DrmEglServerBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(DrmEglServerBufferPlugin)
-Q_IMPORT_PLUGIN(EnvCanadaIonFactory)
-Q_IMPORT_PLUGIN(Fake)
-Q_IMPORT_PLUGIN(HunspellClient)
-Q_IMPORT_PLUGIN(IIOSensorProxySensorPlugin)
-Q_IMPORT_PLUGIN(KIconEnginePlugin)
-Q_IMPORT_PLUGIN(KWaylandPlugin)
-Q_IMPORT_PLUGIN(KateFactory)
-Q_IMPORT_PLUGIN(NOAAIonFactory)
-Q_IMPORT_PLUGIN(PluginFactory)
-Q_IMPORT_PLUGIN(Plugin)
-Q_IMPORT_PLUGIN(Poller)
-Q_IMPORT_PLUGIN(QComposePlatformInputContextPlugin)
-Q_IMPORT_PLUGIN(QEvdevKeyboardPlugin)
-Q_IMPORT_PLUGIN(QEvdevMousePlugin)
-Q_IMPORT_PLUGIN(QEvdevTabletPlugin)
-Q_IMPORT_PLUGIN(QEvdevTouchScreenPlugin)
-Q_IMPORT_PLUGIN(QFFmpegMediaPlugin)
-Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryGeoclue2)
-Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryNmea)
-Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryPoll)
-Q_IMPORT_PLUGIN(QGeoServiceProviderFactoryItemsOverlay)
-Q_IMPORT_PLUGIN(QGeoServiceProviderFactoryOsm)
-Q_IMPORT_PLUGIN(QGifPlugin)
-Q_IMPORT_PLUGIN(QGlibNetworkInformationBackendFactory)
-Q_IMPORT_PLUGIN(QICOPlugin)
-Q_IMPORT_PLUGIN(QIbusPlatformInputContextPlugin)
-Q_IMPORT_PLUGIN(QJpegPlugin)
-Q_IMPORT_PLUGIN(QLibInputPlugin)
-Q_IMPORT_PLUGIN(QNetworkManagerNetworkInformationBackendFactory)
-Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
-Q_IMPORT_PLUGIN(QSvgIconPlugin)
-Q_IMPORT_PLUGIN(QSvgPlugin)
-Q_IMPORT_PLUGIN(QTextToSpeechMockPlugin)
-Q_IMPORT_PLUGIN(QTlsBackendCertOnly)
-Q_IMPORT_PLUGIN(QTlsBackendOpenSSL)
-Q_IMPORT_PLUGIN(QTuioTouchPlugin)
-Q_IMPORT_PLUGIN(QWaylandAdwaitaDecorationPlugin)
-Q_IMPORT_PLUGIN(QWaylandBradientDecorationPlugin)
-Q_IMPORT_PLUGIN(QWaylandDmabufClientBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandEglClientBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandEglClientBufferPlugin)
-Q_IMPORT_PLUGIN(QWaylandEglStreamClientBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandFullScreenShellV1IntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandIviShellIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandQtShellIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandWlShellIntegrationPlugin)
-Q_IMPORT_PLUGIN(QWaylandXdgShellIntegrationPlugin)
-Q_IMPORT_PLUGIN(QXdgDesktopPortalThemePlugin)
-Q_IMPORT_PLUGIN(QmlLintQdsPlugin)
-Q_IMPORT_PLUGIN(QmlLintQuickPlugin)
-Q_IMPORT_PLUGIN(SensorFacePackageFactory)
-Q_IMPORT_PLUGIN(ShmServerBufferIntegrationPlugin)
-Q_IMPORT_PLUGIN(ShmServerBufferPlugin)
-Q_IMPORT_PLUGIN(StylePlugin)
-Q_IMPORT_PLUGIN(UKMETIonFactory)
-Q_IMPORT_PLUGIN(WaylandBackend)
-Q_IMPORT_PLUGIN(WetterComIonFactory)
-Q_IMPORT_PLUGIN(genericSensorPlugin)
-
-
-Q_IMPORT_QML_PLUGIN(KirigamiPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_configPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_delegatesPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_dialogsPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_layouts_privatePlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_layoutsPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_platformPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_primitivesPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_private_polyfillPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_privatePlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_kirigami_templatesPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_faces_privatePlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_facesPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_formatterPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_processPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_sensorsPlugin)
-Q_IMPORT_QML_PLUGIN(org_kde_layershellPlugin)
-
-
-
-Q_IMPORT_QML_PLUGIN(QMultimediaQuickModule)
-Q_IMPORT_QML_PLUGIN(QQmlLocalStoragePlugin)
-Q_IMPORT_QML_PLUGIN(QWaylandCompositorPlugin)
-Q_IMPORT_QML_PLUGIN(QWaylandTextureSharingExtensionPlugin)
-Q_IMPORT_QML_PLUGIN(QmlFolderListModelPlugin)
-Q_IMPORT_QML_PLUGIN(QmlSettingsPlugin)
-Q_IMPORT_QML_PLUGIN(QmlShapesPlugin)
-Q_IMPORT_QML_PLUGIN(QmlWavefrontMeshPlugin)
-Q_IMPORT_QML_PLUGIN(QtLabsAnimationPlugin)
-Q_IMPORT_QML_PLUGIN(QtLabsPlatformPlugin)
-Q_IMPORT_QML_PLUGIN(QtLocationDeclarativeModule)
-Q_IMPORT_QML_PLUGIN(QtNetworkPlugin)
-Q_IMPORT_QML_PLUGIN(QtPositioningDeclarativeModule)
-Q_IMPORT_QML_PLUGIN(QtQmlCorePlugin)
-Q_IMPORT_QML_PLUGIN(QtQmlLabsModelsPlugin)
-Q_IMPORT_QML_PLUGIN(QtQmlModelsPlugin)
-Q_IMPORT_QML_PLUGIN(QtQmlPlugin)
-Q_IMPORT_QML_PLUGIN(QtQmlWorkerScriptPlugin)
-Q_IMPORT_QML_PLUGIN(QtQmlXmlListModelPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuick2ParticlesPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuick2Plugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2BasicStyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2BasicStylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2FluentWinUI3StyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2FluentWinUI3StylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2FusionStyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2FusionStylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2ImagineStyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2ImagineStylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2ImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2MaterialStyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2MaterialStylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2Plugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2UniversalStyleImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickControls2UniversalStylePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickDialogs2QuickImplPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickDialogsPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickEffectsPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickLayoutsPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickShapesDesignHelpersPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickSharedImagePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickTemplates2Plugin)
-Q_IMPORT_QML_PLUGIN(QtQuickVectorImageHelpersPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuickVectorImagePlugin)
-Q_IMPORT_QML_PLUGIN(QtQuick_WindowPlugin)
-Q_IMPORT_QML_PLUGIN(QtQuick_toolingPlugin)
-Q_IMPORT_QML_PLUGIN(QtSensorsPlugin)
-Q_IMPORT_QML_PLUGIN(QtTestPlugin)
-Q_IMPORT_QML_PLUGIN(QtTextToSpeechPlugin)
-Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_IviApplicationPlugin)
-Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_PresentationTimePlugin)
-Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_QtShellPlugin)
-Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_WlShellPlugin)
-Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_XdgShellPlugin)
-Q_IMPORT_QML_PLUGIN(Qt_labs_assetdownloaderPlugin)
-Q_IMPORT_QML_PLUGIN(Qt_labs_synchronizerPlugin)
-Q_IMPORT_QML_PLUGIN(Qt_test_controlsPlugin)
+Q_IMPORT_PLUGIN(ActivityEngineFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_activities.a
+Q_IMPORT_PLUGIN(AppsEngineFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_apps.a
+Q_IMPORT_PLUGIN(BreezeDecoFactory);		// (T) usr/lib/qt6/plugins/org.kde.kdecoration3/liborg.kde.breeze.a
+Q_IMPORT_PLUGIN(DBusHelperProxy);		// (T) usr/lib/qt6/plugins/kf6/kauth/helper/kauth_helper_plugin.a
+Q_IMPORT_PLUGIN(DWDIonFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_dwd.a
+Q_IMPORT_PLUGIN(DmaBufServerBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-dmabuf-server-buffer.a
+Q_IMPORT_PLUGIN(DmaBufServerBufferPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-client/libdmabuf-server.a
+Q_IMPORT_PLUGIN(DrmEglServerBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-drm-egl-server-buffer.a
+Q_IMPORT_PLUGIN(DrmEglServerBufferPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-client/libdrm-egl-server.a
+Q_IMPORT_PLUGIN(EnvCanadaIonFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_envcan.a
+Q_IMPORT_PLUGIN(Fake);		// (T) usr/lib/qt6/plugins/kf6/kscreen/KSC_Fake.a
+Q_IMPORT_PLUGIN(HunspellClient);		// (T) usr/lib/qt6/plugins/kf6/sonnet/libsonnet_hunspell.a
+Q_IMPORT_PLUGIN(IIOSensorProxySensorPlugin);		// (T) usr/lib/qt6/plugins/sensors/libqtsensors_iio-sensor-proxy.a
+// Q_IMPORT_PLUGIN(KIconEnginePlugin);		// (T) usr/lib/libKF6IconThemes.a
+Q_IMPORT_PLUGIN(KIconEnginePlugin);		// (T) usr/lib/qt6/plugins/kiconthemes6/iconengines/libKIconEnginePlugin.a
+Q_IMPORT_PLUGIN(KWaylandPlugin);		// (T) usr/lib/qt6/plugins/kf6/kwindowsystem/libKF6WindowSystemKWaylandPlugin.a
+Q_IMPORT_PLUGIN(KateFactory);		// (T) usr/lib/qt6/plugins/kf6/parts/libkatepart.a
+Q_IMPORT_PLUGIN(NOAAIonFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_noaa.a
+Q_IMPORT_PLUGIN(Plugin);		// (T) usr/lib/qt6/plugins/kf6/kirigami/platform/libKirigamiPlasmaStyle.a
+Q_IMPORT_PLUGIN(PluginFactory);		// (T) usr/lib/qt6/plugins/ksysguard/process/libksysguard_plugin_gpu.a
+Q_IMPORT_PLUGIN(Poller);		// (T) usr/lib/qt6/plugins/kf6/org.kde.kidletime.platforms/libKF6IdleTimeWaylandPlugin.a
+Q_IMPORT_PLUGIN(QComposePlatformInputContextPlugin);		// (T) usr/lib/qt6/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.a
+Q_IMPORT_PLUGIN(QEglFSEmulatorIntegrationPlugin);		// (T) usr/lib/qt6/plugins/egldeviceintegrations/libqeglfs-emu-integration.a
+Q_IMPORT_PLUGIN(QEvdevKeyboardPlugin);		// (T) usr/lib/qt6/plugins/generic/libqevdevkeyboardplugin.a
+Q_IMPORT_PLUGIN(QEvdevMousePlugin);		// (T) usr/lib/qt6/plugins/generic/libqevdevmouseplugin.a
+Q_IMPORT_PLUGIN(QEvdevTabletPlugin);		// (T) usr/lib/qt6/plugins/generic/libqevdevtabletplugin.a
+Q_IMPORT_PLUGIN(QEvdevTouchScreenPlugin);		// (T) usr/lib/qt6/plugins/generic/libqevdevtouchplugin.a
+Q_IMPORT_PLUGIN(QFFmpegMediaPlugin);		// (T) usr/lib/qt6/plugins/multimedia/libffmpegmediaplugin.a
+Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryGeoclue2);		// (T) usr/lib/qt6/plugins/position/libqtposition_geoclue2.a
+Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryNmea);		// (T) usr/lib/qt6/plugins/position/libqtposition_nmea.a
+Q_IMPORT_PLUGIN(QGeoPositionInfoSourceFactoryPoll);		// (T) usr/lib/qt6/plugins/position/libqtposition_positionpoll.a
+Q_IMPORT_PLUGIN(QGifPlugin);		// (T) usr/lib/qt6/plugins/imageformats/libqgif.a
+Q_IMPORT_PLUGIN(QGlibNetworkInformationBackendFactory);		// (T) usr/lib/qt6/plugins/networkinformation/libqglib.a
+Q_IMPORT_PLUGIN(QICOPlugin);		// (T) usr/lib/qt6/plugins/imageformats/libqico.a
+Q_IMPORT_PLUGIN(QIbusPlatformInputContextPlugin);		// (T) usr/lib/qt6/plugins/platforminputcontexts/libibusplatforminputcontextplugin.a
+Q_IMPORT_PLUGIN(QJpegPlugin);		// (T) usr/lib/qt6/plugins/imageformats/libqjpeg.a
+Q_IMPORT_PLUGIN(QLibInputPlugin);		// (T) usr/lib/qt6/plugins/generic/libqlibinputplugin.a
+Q_IMPORT_PLUGIN(QNetworkManagerNetworkInformationBackendFactory);		// (T) usr/lib/qt6/plugins/networkinformation/libqnetworkmanager.a
+Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);		// (T) usr/lib/qt6/plugins/sqldrivers/libqsqlite.a
+Q_IMPORT_PLUGIN(QSvgIconPlugin);		// (T) usr/lib/qt6/plugins/iconengines/libqsvgicon.a
+Q_IMPORT_PLUGIN(QSvgPlugin);		// (T) usr/lib/qt6/plugins/imageformats/libqsvg.a
+Q_IMPORT_PLUGIN(QTextToSpeechMockPlugin);		// (T) usr/lib/qt6/plugins/texttospeech/libqtexttospeech_mock.a
+Q_IMPORT_PLUGIN(QTlsBackendCertOnly);		// (T) usr/lib/qt6/plugins/tls/libqcertonlybackend.a
+Q_IMPORT_PLUGIN(QTlsBackendOpenSSL);		// (T) usr/lib/qt6/plugins/tls/libqopensslbackend.a
+Q_IMPORT_PLUGIN(QTuioTouchPlugin);		// (T) usr/lib/qt6/plugins/generic/libqtuiotouchplugin.a
+Q_IMPORT_PLUGIN(QWaylandAdwaitaDecorationPlugin);		// (T) usr/lib/qt6/plugins/wayland-decoration-client/libadwaita.a
+Q_IMPORT_PLUGIN(QWaylandBradientDecorationPlugin);		// (T) usr/lib/qt6/plugins/wayland-decoration-client/libbradient.a
+Q_IMPORT_PLUGIN(QWaylandDmabufClientBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-linux-dmabuf-unstable-v1.a
+Q_IMPORT_PLUGIN(QWaylandEglClientBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-egl.a
+Q_IMPORT_PLUGIN(QWaylandEglClientBufferPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.a
+Q_IMPORT_PLUGIN(QWaylandEglStreamClientBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-eglstream-controller.a
+Q_IMPORT_PLUGIN(QWaylandFullScreenShellV1IntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-shell-integration/libfullscreen-shell-v1.a
+Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin);		// (T) usr/lib/qt6/plugins/platforms/libqwayland.a
+Q_IMPORT_PLUGIN(QWaylandIviShellIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-shell-integration/libivi-shell.a
+Q_IMPORT_PLUGIN(QWaylandLayerShellIntegrationPlugin);		// (T) usr/lib/liblayer-shell.a
+Q_IMPORT_PLUGIN(QWaylandQtShellIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-shell-integration/libqt-shell.a
+Q_IMPORT_PLUGIN(QWaylandWlShellIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-shell-integration/libwl-shell-plugin.a
+Q_IMPORT_PLUGIN(QWaylandXdgShellIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-shell-integration/libxdg-shell.a
+Q_IMPORT_PLUGIN(QXdgDesktopPortalThemePlugin);		// (T) usr/lib/qt6/plugins/platformthemes/libqxdgdesktopportal.a
+Q_IMPORT_PLUGIN(SensorFacePackageFactory);		// (T) usr/lib/qt6/plugins/kf6/packagestructure/libksysguard_sensorface.a
+Q_IMPORT_PLUGIN(ShmServerBufferIntegrationPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-shm-emulation-server.a
+Q_IMPORT_PLUGIN(ShmServerBufferPlugin);		// (T) usr/lib/qt6/plugins/wayland-graphics-integration-client/libshm-emulation-server.a
+Q_IMPORT_PLUGIN(StylePlugin);		// (T) usr/lib/qt6/plugins/styles/libbreeze6.a
+Q_IMPORT_PLUGIN(UKMETIonFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_bbcukmet.a
+Q_IMPORT_PLUGIN(WaylandBackend);		// (T) usr/lib/qt6/plugins/kf6/kscreen/KSC_KWayland.a
+Q_IMPORT_PLUGIN(WetterComIonFactory);		// (T) usr/lib/qt6/plugins/plasma5support/dataengine/libplasma_engine_wettercom.a
+Q_IMPORT_PLUGIN(genericSensorPlugin);		// (T) usr/lib/qt6/plugins/sensors/libqtsensors_generic.a
+Q_IMPORT_QML_PLUGIN(CoreBindingsPlugin);		// (T) usr/lib/libcorebindingsplugin.a
+Q_IMPORT_QML_PLUGIN(EffectKitExtensionPlugin);		// (T) usr/lib/libeffectsplugin.a
+Q_IMPORT_QML_PLUGIN(KCoreAddonsPlugin);		// (T) usr/lib/libkcoreaddonsplugin.a
+Q_IMPORT_QML_PLUGIN(KGuiAddonsPlugin);		// (T) usr/lib/libkguiaddonsqml.a
+Q_IMPORT_QML_PLUGIN(KHolidaysDeclarativePlugin);		// (T) usr/lib/libkholidaysdeclarativeplugin.a
+Q_IMPORT_QML_PLUGIN(KI18nLocaleDataQmlPlugin);		// (T) usr/lib/libki18nlocaledataqmlplugin.a
+Q_IMPORT_QML_PLUGIN(KirigamiPlugin);		// (T) usr/lib/libKirigamiplugin.a
+Q_IMPORT_QML_PLUGIN(QGeoServiceProviderFactoryItemsOverlay);		// (T) usr/lib/qt6/plugins/geoservices/libqtgeoservices_itemsoverlay.a
+Q_IMPORT_QML_PLUGIN(QGeoServiceProviderFactoryOsm);		// (T) usr/lib/qt6/plugins/geoservices/libqtgeoservices_osm.a
+Q_IMPORT_QML_PLUGIN(QMultimediaQuickModule);		// (T) usr/lib/qt6/qml/QtMultimedia/libquickmultimediaplugin.a
+Q_IMPORT_QML_PLUGIN(QQmlLocalStoragePlugin);		// (T) usr/lib/qt6/qml/QtQuick/LocalStorage/libqmllocalstorageplugin.a
+Q_IMPORT_QML_PLUGIN(QWaylandCompositorPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/libqwaylandcompositorplugin.a
+Q_IMPORT_QML_PLUGIN(QWaylandTextureSharingExtensionPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/TextureSharingExtension/libwaylandtexturesharingextensionplugin.a
+Q_IMPORT_QML_PLUGIN(QmlFolderListModelPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/folderlistmodel/libqmlfolderlistmodelplugin.a
+Q_IMPORT_QML_PLUGIN(QmlPlugins);		// (T) usr/lib/libnewstuffqmlplugin.a
+Q_IMPORT_QML_PLUGIN(QmlSettingsPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/settings/libqmlsettingsplugin.a
+Q_IMPORT_QML_PLUGIN(QmlShapesPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Shapes/libqmlshapesplugin.a
+Q_IMPORT_QML_PLUGIN(QmlWavefrontMeshPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/wavefrontmesh/libqmlwavefrontmeshplugin.a
+Q_IMPORT_QML_PLUGIN(QtLabsAnimationPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/animation/liblabsanimationplugin.a
+Q_IMPORT_QML_PLUGIN(QtLabsPlatformPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/platform/liblabsplatformplugin.a
+Q_IMPORT_QML_PLUGIN(QtLocationDeclarativeModule);		// (T) usr/lib/qt6/qml/QtLocation/libdeclarative_locationplugin.a
+Q_IMPORT_QML_PLUGIN(QtNetworkPlugin);		// (T) usr/lib/qt6/qml/QtNetwork/libqmlnetworkplugin.a
+Q_IMPORT_QML_PLUGIN(QtPositioningDeclarativeModule);		// (T) usr/lib/qt6/qml/QtPositioning/libpositioningquickplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlCorePlugin);		// (T) usr/lib/qt6/qml/QtCore/libqtqmlcoreplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlLabsModelsPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/qmlmodels/liblabsmodelsplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlModelsPlugin);		// (T) usr/lib/qt6/qml/QtQml/Models/libmodelsplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlPlugin);		// (T) usr/lib/qt6/qml/QtQml/libqmlplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlWorkerScriptPlugin);		// (T) usr/lib/qt6/qml/QtQml/WorkerScript/libworkerscriptplugin.a
+Q_IMPORT_QML_PLUGIN(QtQmlXmlListModelPlugin);		// (T) usr/lib/qt6/qml/QtQml/XmlListModel/libqmlxmllistmodelplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuick2ParticlesPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Particles/libparticlesplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuick2Plugin);		// (T) usr/lib/qt6/qml/QtQuick/libqtquick2plugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2BasicStyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Basic/impl/libqtquickcontrols2basicstyleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2BasicStylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Basic/libqtquickcontrols2basicstyleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2FluentWinUI3StyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/FluentWinUI3/impl/libqtquickcontrols2fluentwinui3styleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2FluentWinUI3StylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/FluentWinUI3/libqtquickcontrols2fluentwinui3styleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2FusionStyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Fusion/impl/libqtquickcontrols2fusionstyleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2FusionStylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Fusion/libqtquickcontrols2fusionstyleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2ImagineStyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Imagine/impl/libqtquickcontrols2imaginestyleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2ImagineStylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Imagine/libqtquickcontrols2imaginestyleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2ImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/impl/libqtquickcontrols2implplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2MaterialStyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Material/impl/libqtquickcontrols2materialstyleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2MaterialStylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Material/libqtquickcontrols2materialstyleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2Plugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/libqtquickcontrols2plugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2UniversalStyleImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Universal/impl/libqtquickcontrols2universalstyleimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickControls2UniversalStylePlugin);		// (T) usr/lib/qt6/qml/QtQuick/Controls/Universal/libqtquickcontrols2universalstyleplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickDialogs2QuickImplPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Dialogs/quickimpl/libqtquickdialogs2quickimplplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickDialogsPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Dialogs/libqtquickdialogsplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickEffectsPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Effects/libeffectsplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickLayoutsPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Layouts/libqquicklayoutsplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickSharedImagePlugin);		// (T) usr/lib/qt6/qml/Qt/labs/sharedimage/libsharedimageplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickTemplates2Plugin);		// (T) usr/lib/qt6/qml/QtQuick/Templates/libqtquicktemplates2plugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickVectorImageHelpersPlugin);		// (T) usr/lib/qt6/qml/QtQuick/VectorImage/Helpers/libqquickvectorimagehelpersplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuickVectorImagePlugin);		// (T) usr/lib/qt6/qml/QtQuick/VectorImage/libqquickvectorimageplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuick_WindowPlugin);		// (T) usr/lib/qt6/qml/QtQuick/Window/libquickwindowplugin.a
+Q_IMPORT_QML_PLUGIN(QtQuick_toolingPlugin);		// (T) usr/lib/qt6/qml/QtQuick/tooling/libquicktoolingplugin.a
+Q_IMPORT_QML_PLUGIN(QtSensorsPlugin);		// (T) usr/lib/qt6/qml/QtSensors/libsensorsquickplugin.a
+Q_IMPORT_QML_PLUGIN(QtTestPlugin);		// (T) usr/lib/qt6/qml/QtTest/libquicktestplugin.a
+Q_IMPORT_QML_PLUGIN(QtTextToSpeechPlugin);		// (T) usr/lib/qt6/qml/QtTextToSpeech/libtexttospeechqmlplugin.a
+Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_IviApplicationPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/IviApplication/libwaylandcompositoriviapplicationplugin.a
+Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_PresentationTimePlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/PresentationTime/libwaylandcompositorpresentationtimeplugin.a
+Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_QtShellPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/QtShell/libwaylandcompositorqtshellplugin.a
+Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_WlShellPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/WlShell/libwaylandcompositorwlshellplugin.a
+Q_IMPORT_QML_PLUGIN(QtWayland_Compositor_XdgShellPlugin);		// (T) usr/lib/qt6/qml/QtWayland/Compositor/XdgShell/libwaylandcompositorxdgshellplugin.a
+Q_IMPORT_QML_PLUGIN(Qt_labs_assetdownloaderPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/assetdownloader/libqmlassetdownloaderplugin.a
+Q_IMPORT_QML_PLUGIN(Qt_labs_synchronizerPlugin);		// (T) usr/lib/qt6/qml/Qt/labs/synchronizer/liblabssynchronizerplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_activitiesPlugin);		// (T) usr/lib/libplasmaactivitiesextensionplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_configPlugin);		// (T) usr/lib/libKF6ConfigQmlplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_draganddropPlugin);		// (T) usr/lib/libdraganddropplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_graphicaleffectsPlugin);		// (T) usr/lib/libgraphicaleffects.a
+Q_IMPORT_QML_PLUGIN(org_kde_iconthemesPlugin);		// (T) usr/lib/libiconthemesplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kcmutilsPlugin);		// (T) usr/lib/libkcmutilsqmlplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kcmutils_privatePlugin);		// (T) usr/lib/libkcmutilsprivateqmlplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_delegatesPlugin);		// (T) usr/lib/libKirigamiDelegatesplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_dialogsPlugin);		// (T) usr/lib/libKirigamiDialogsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_layoutsPlugin);		// (T) usr/lib/libKirigamiLayoutsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_layouts_privatePlugin);		// (T) usr/lib/libKirigamiLayoutsPrivateplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_platformPlugin);		// (T) usr/lib/libKirigamiPlatformplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_primitivesPlugin);		// (T) usr/lib/libKirigamiPrimitivesplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_privatePlugin);		// (T) usr/lib/libKirigamiPrivateplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_private_polyfillPlugin);		// (T) usr/lib/libKirigamiPolyfillplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kirigami_templatesPlugin);		// (T) usr/lib/libKirigamiTemplatesplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kitemmodelsPlugin);		// (T) usr/lib/libitemmodelsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kquickcontrolsPlugin);		// (T) usr/lib/libkquickcontrols.a
+Q_IMPORT_QML_PLUGIN(org_kde_kquickcontrolsaddonsPlugin);		// (T) usr/lib/libkquickcontrolsaddonsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_facesPlugin);		// (T) usr/lib/libSensorFacesplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_faces_privatePlugin);		// (T) usr/lib/libSensorFacesPrivate.a
+Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_formatterPlugin);		// (T) usr/lib/libFormatterplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_processPlugin);		// (T) usr/lib/libprocesscoreplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_ksysguard_sensorsPlugin);		// (T) usr/lib/libSensorsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_kwindowsystemPlugin);		// (T) usr/lib/libKWindowSystem.a
+Q_IMPORT_QML_PLUGIN(org_kde_layershellPlugin);		// (T) usr/lib/libLayerShellQtQml.a
+Q_IMPORT_QML_PLUGIN(org_kde_newstuff_privatePlugin);		// (T) usr/lib/libnewstuffqmlpluginprivate.a
+Q_IMPORT_QML_PLUGIN(org_kde_notificationPlugin);		// (T) usr/lib/libknotificationqmlplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_plasma_componentsPlugin);		// (T) usr/lib/liborg_kde_plasmacomponents3.a
+Q_IMPORT_QML_PLUGIN(org_kde_plasma_configurationPlugin);		// (T) usr/lib/libplasmaconfigplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_plasma_extrasPlugin);		// (T) usr/lib/libplasmaextracomponentsplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_plasma_plasma5supportPlugin);		// (T) usr/lib/libplasma5supportplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_plasma_plasmoidPlugin);		// (T) usr/lib/libplasmoidplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_prisonPlugin);		// (T) usr/lib/libprisonquickplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_private_kquickcontrolsPlugin);		// (T) usr/lib/libkquickcontrolsprivateplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_sonnetPlugin);		// (T) usr/lib/libsonnetquickplugin.a
+Q_IMPORT_QML_PLUGIN(org_kde_syntaxhighlightingPlugin);		// (T) usr/lib/libkquicksyntaxhighlightingplugin.a
