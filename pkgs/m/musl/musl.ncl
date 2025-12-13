@@ -123,6 +123,23 @@
         "objcopy --globalize-symbol stub_dladdr libc.a",
       ]
     },
+  muslBothWeakDl =
+    muslBoth
+    & {
+      debug = true,
+      postInstallPhase = [
+        "cd ${DEST}/usr/lib",
+        "objcopy -W dlopen libc.a",
+        # "objcopy --redefine-sym=dlopen=dlopen_libc libc.a",
+        "objcopy -W dlsym libc.a",
+        # "objcopy --redefine-sym=dlsym=dlsym_libc libc.a",
+        # "objcopy --redefine-sym=dladdr=dladdr_libc libc.a",
+        "objcopy -W dladdr libc.a",
+        "objcopy --globalize-symbol stub_dlopen libc.a",
+        "objcopy --globalize-symbol stub_dlsym libc.a",
+        "objcopy --globalize-symbol stub_dladdr libc.a",
+      ]
+    },
   muslDebug =
     _muslBase
     & {
