@@ -64,7 +64,8 @@ let _services = (
         [
           "dbusd",
           # "dhcpcd",
-          "iwd",
+          # "iwd",
+          "networkmanager",
           "make-shared-root",
           "mount-others",
           "earlyoom",
@@ -147,11 +148,12 @@ let _services = (
     },
     earlyoom = {
       type = "process",
-      command = "/usr/bin/earlyoom",
+      command = "/usr/bin/earlyoom -r 300 -n",
       logfile = "/var/log/earlyoom.log",
       "waits-for" = [
         "zram-init",
-        "varrw"
+        "varrw",
+        "dbusd",
       ],
     },
     filesystems = {
@@ -179,7 +181,7 @@ let _services = (
 
     "greetd-apply-perms" = {
       type = "scripted",
-      command = "chown -R greeter:greeter /var/lib/greeter",
+      command = "/usr/bin/chown -R greeter:greeter /var/lib/greeter",
       "depends-on" = ["varrw"],
     },
 
