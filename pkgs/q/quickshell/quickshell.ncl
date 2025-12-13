@@ -239,8 +239,8 @@
         # crash =true,
       },
       singleSource | priority 1 = {
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/d24e8e9736287d01ee73ef9d573d2bc316a62d5c.tar.gz",
-        sha256sum = "9ea4da34e98928e00f3460722563bdc609310b15a4454d31a65ce2fd7a12e0e9",
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/26531fc46ef17e9365b03770edd3fb9206fcb460.tar.gz",
+        sha256sum = "5b8de5f0fa77641bf25cadbe7368f524a6a409b5d7067261c8871e490bbeaec7",
       },
     }
 }
