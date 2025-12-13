@@ -1,42 +1,28 @@
 diff --git a/src/libwayland-shim.c b/src/libwayland-shim.c
-index 8aebfa9..29f303b 100644
+index 8aebfa9..4b61ab5 100644
 --- a/src/libwayland-shim.c
 +++ b/src/libwayland-shim.c
-@@ -23,17 +23,24 @@ struct request_hook {
- };
+@@ -24,16 +24,16 @@ struct request_hook {
  
  static bool has_initialized = false;
-+static struct wl_proxy * real_wl_proxy_marshal_array_flags(struct wl_proxy *proxy, uint32_t opcode,
-+                         const struct wl_interface *interface,
-+                         uint32_t version,
-+                         uint32_t flags,
-+                         union wl_argument *args);
  
 -static struct wl_proxy* (*real_wl_proxy_marshal_array_flags)(
--    struct wl_proxy* proxy,
--    uint32_t opcode,
--    const struct wl_interface* created_interface,
--    uint32_t created_version,
--    uint32_t flags,
--    union wl_argument* args
++extern struct wl_proxy* real_wl_proxy_marshal_array_flags(
+     struct wl_proxy* proxy,
+     uint32_t opcode,
+     const struct wl_interface* created_interface,
+     uint32_t created_version,
+     uint32_t flags,
+     union wl_argument* args
 -) = NULL;
-+void real_wl_proxy_destroy(struct wl_proxy *proxy);
-+
-+// static struct wl_proxy* (*real_wl_proxy_marshal_array_flags)(
-+//     struct wl_proxy* proxy,
-+//     uint32_t opcode,
-+//     const struct wl_interface* created_interface,
-+//     uint32_t created_version,
-+//     uint32_t flags,
-+//     union wl_argument* args
-+// ) ;
++);
  
 -static void (*real_wl_proxy_destroy)(struct wl_proxy* proxy) = NULL;
-+// static void (*real_wl_proxy_destroy)(struct wl_proxy* proxy) = NULL;
++extern void real_wl_proxy_destroy(struct wl_proxy* proxy);
  
  #define MAX_REQUEST_HOOKS 100
  static int request_hook_count = 0;
-@@ -46,16 +53,16 @@ bool libwayland_shim_has_initialized() {
+@@ -46,16 +46,16 @@ bool libwayland_shim_has_initialized() {
  static void libwayland_shim_init() {
      if (has_initialized) return;
  
@@ -61,3 +47,19 @@ index 8aebfa9..29f303b 100644
  
      has_initialized = true;
  }
+diff --git a/src/libwayland-shim.h b/src/libwayland-shim.h
+index 01c3c52..1d01361 100644
+--- a/src/libwayland-shim.h
++++ b/src/libwayland-shim.h
+@@ -17,7 +17,10 @@ typedef bool (*libwayland_shim_request_handler_func_t)(
+     union wl_argument* args,
+     struct wl_proxy** ret_proxy);
+ 
+-// Function type for handling the destruction of client proxies
++
++// typedef wl_proxy_destroy WL_PROXY_DESTROY;
++// typedef wl_proxy_marshal_array_flags WL_PROXY_MARSHAL_ARRAY_FLAGS
++    // Function type for handling the destruction of client proxies
+ typedef void (*libwayland_shim_destroy_handler_func_t)(void* data, struct wl_proxy* proxy);
+ 
+ // Detect if library has correctly initialized. This should happen automatically when something connects to a Wayland

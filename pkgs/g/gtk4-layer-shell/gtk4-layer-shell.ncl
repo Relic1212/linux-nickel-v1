@@ -2,19 +2,15 @@
   lib,
   drvs,
   gtk4LayerShell | lib.MesonPackage = {
+    debug = true,
     singleSource = {
-      #uri = "https://github.com/wmww/gtk4-layer-shell/archive/refs/tags/v1.1.0.tar.gz",
-      #sha256sum = "98284281260a5eef5b4f63a55f16c4bf6a788a1020a6db037ecb0f71fa336988",
 
-      # uri = "https://github.com/wmww/gtk4-layer-shell/archive/refs/tags/v1.0.4.tar.gz",
-      # sha256sum = "7fe327dc3740e4b6f5edfd855e23f84b1ac1ec6854b731047b95df7feb46498b",
-
-      uri = "https://github.com/wmww/gtk4-layer-shell/archive/refs/tags/v1.2.0.tar.gz",
-      sha256sum = "4e04711fec80afbcd0a1e6e39c07ae263d2c3400181791b7826f3e5317b33567",
+      uri = "https://github.com/wmww/gtk4-layer-shell/archive/refs/tags/v1.3.0.tar.gz",
+      sha256sum = "1ebb01ab14e98afd1727f68f64981c37bd23305b1f131f5667c02b94cf593192",
     },
     patches = [
       {
-        sha256sum = "9953f2bd6a4ff5043fb5a10953bc2cfce60adb2e02f7a361b4a24603bc66fe87",
+        sha256sum = "adecb4a1bca7411305d591ce9dcf24f6dc258b454d72efbfa9b29eab37f7f6a5",
         file = "gtk4-layer-shell.patch"
       }
     ],
@@ -85,7 +81,7 @@
       #   in
       #   std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libgtk4-layer-shell.a") symbols) @
       [
-        "llvm-ar dv ${DEST}/usr/lib/libgtk4-layer-shell.a stolen-from-libwayland.c.o",
+        # "llvm-ar dv ${DEST}/usr/lib/libgtk4-layer-shell.a stolen-from-libwayland.c.o",
       ]
   },
 
