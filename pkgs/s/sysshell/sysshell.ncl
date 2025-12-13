@@ -3,18 +3,21 @@
   drvs,
   sysboard | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/System64fumo/sysboard/archive/d7788339878447dba5ecc1d4cc92cdbea78785eb.tar.gz",
-      sha256sum = "478fc2713be68b4580ff6315988d50f92719356553932d37b56bc24f31f34e68"
+      uri = "https://github.com/System64fumo/sysboard/archive/1a032fb4dd76f3f5496955d293eab2ea90f7fc15.tar.gz",
+      sha256sum = "9ef2bb3b75a32de9315cb77235aab695c40118fe7a1aba73e9181b7c96ecaf60"
     },
     debug = true,
     patches = [
       {
-        sha256sum = "b718f851bbb620315a345daa491f3b00eb3b7d616d0793bb44b5294ca322b316",
+        sha256sum = "f1d4eab0ac152799b1b3dc6b0e52f36688411819b2e45bc7ed2c12b9770f3f35",
         file = "sysboard.patch"
       }
     ],
     buildEnv.EXTRA_LDFLAGS = [
       "-Wl,--verbose",
+      "-ldl_factory",
+      "$(pkg-config --static --libs egl)",
+      "${SRC}/symbols.o",
     ],
     buildEnv.EXTRA_CFLAGS = ["--verbose"],
 
@@ -40,6 +43,9 @@
       m%"sed -i 's|-Os -s|-O0 -g|g' ${SRC}/Makefile"%,
       m%"sed -i 's|-Os|-O0|g' ${SRC}/Makefile"%,
       m%"sed -i 's|-O1|-O0|g' ${SRC}/Makefile"%,
+      "echo '%{import "./sysboard_symbols.c" as 'Text}' > ${SRC}/symbols.c",
+      "${CC} ${CFLAGS} -c ${SRC}/symbols.c -o ${SRC}/symbols.o",
+
       #   #"sed -i 's@-fno-exceptions@@g' ${SRC}/Makefile",
       #   "sed -i 's@pkg-config@pkg-config --static@g' ${SRC}/Makefile",
       #   "sed -i 's@-shared@-static@g' ${SRC}/Makefile",
@@ -47,7 +53,9 @@
       #   "sed -i 's@CXXFLAGS += -Os -s -Wall -flto=auto -fno-exceptions -fPIC@#CXXFLAGS += -Os -s -Wall -flto=auto -fno-exceptions -fPIC@g' ${SRC}/Makefile",
       #   "sed -i 's@libsysboard.so@ libsysboard.a@g' ${SRC}/Makefile",
     ],
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
+      drvs.libdlFactory,
       drvs.atSpi2Core,
       drvs.cairo,
       drvs.cairoGobject,
@@ -80,7 +88,7 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.mesa2,
-      drvs.muslShared,
+      # drvs.muslShared,
       drvs.ncurses,
       drvs.pango,
       drvs.pangomm_2_48,

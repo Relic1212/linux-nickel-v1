@@ -1,22 +1,21 @@
 diff --git a/Makefile b/Makefile
-index 962228c..3da5d80 100644
+index 962228c..da4d37a 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1,6 +1,6 @@
+@@ -1,5 +1,5 @@
  BINS = sysboard
- LIBS = libsysboard.so
--PKGS = gtkmm-4.0 gtk4-layer-shell-0
-+PKGS = gtk4-layer-shell-0 gtkmm-4.0
+-LIBS = libsysboard.so
++LIBS = libsysboard.a
+ PKGS = gtkmm-4.0 gtk4-layer-shell-0
  SRCS = $(wildcard src/*.cpp)
  
- PREFIX ?= /usr/local
 @@ -9,11 +9,11 @@ LIBDIR ?= $(PREFIX)/lib
  DATADIR ?= $(PREFIX)/share
  BUILDDIR = build
  
 -CXXFLAGS += -Os -s -Wall -flto=auto -fno-exceptions -fPIC
 -LDFLAGS += -Wl,-O1,--no-as-needed,-z,now,-z,pack-relative-relocs
-+CXXFLAGS += -Os -s -Wall -flto=auto
++CXXFLAGS += -Os -s -Wall -flto=auto -fno-exceptions
 +LDFLAGS += -Wl,-O1,--no-as-needed,-z,now,-z,pack-relative-relocs -lgtk4-layer-shell
  
 -CXXFLAGS += $(shell pkg-config --cflags $(PKGS))
@@ -26,23 +25,21 @@ index 962228c..3da5d80 100644
  
  OBJS = $(patsubst src/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
  
-@@ -32,21 +32,21 @@ endef
+@@ -30,7 +30,7 @@ define progress
+ 	@printf "[$(JOBS_DONE)/$(shell echo $(JOB_COUNT) | wc -w)] %s %s\n" $(1) $(2)
+ endef
  
- all: $(BINS) $(LIBS)
+-all: $(BINS) $(LIBS)
++all: $(BINS)
  
--install: all
-+install: $(BINS)
+ install: all
  	@echo "Installing..."
- 	@install -D -t $(DESTDIR)$(BINDIR) $(BUILDDIR)/$(BINS)
--	@install -D -t $(DESTDIR)$(LIBDIR) $(BUILDDIR)/$(LIBS)
- 	@install -D -t $(DESTDIR)$(DATADIR)/sys64/board config.conf style.css
- 
- clean:
+@@ -42,11 +42,12 @@ clean:
  	@echo "Cleaning up"
  	@rm -rf $(BUILDDIR) $(BINS) $(LIBS) $(PROTO_HDRS) $(PROTO_SRCS) src/git_info.hpp
  
 -$(BINS): src/git_info.hpp $(BUILDDIR)/main.o $(BUILDDIR)/config_parser.o
-+$(BINS): $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o src/git_info.hpp
++$(BINS): src/git_info.hpp $(BUILDDIR)/main.o $(BUILDDIR)/config_parser.o $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o
  	$(call progress, Linking $@)
  	@$(CXX) -o $(BUILDDIR)/$@ \
 -	$(BUILDDIR)/main.o \
@@ -53,34 +50,29 @@ index 962228c..3da5d80 100644
  	$(CXXFLAGS) \
  	$(LDFLAGS) -lwayland-client
  
-@@ -58,7 +58,7 @@ $(LIBS): $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o
+@@ -57,8 +58,8 @@ $(LIBS): $(PROTO_HDRS) $(PROTO_OBJS) $(OBJS) $(BUILDDIR)/os-compatibility.o
+ 	$(PROTO_OBJS) \
  	$(BUILDDIR)/os-compatibility.o \
  	$(CXXFLAGS) \
- 	$(LDFLAGS) \
+-	$(LDFLAGS) \
 -	-shared
++	$(LDFLAGS)
 +	
  
  $(BUILDDIR)/%.o: src/%.cpp
  	@mkdir -p $(dir $@)
 diff --git a/src/main.cpp b/src/main.cpp
-index b6bc5ba..27a5882 100644
+index 11eb280..99ed917 100644
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -1,4 +1,5 @@
- #include "main.hpp"
-+#include "window.hpp"
- #include "config_parser.hpp"
- #include "git_info.hpp"
- 
-@@ -7,24 +8,24 @@
+@@ -7,24 +7,7 @@
  #include <dlfcn.h>
  
  void handle_signal(int signum) {
 -	sysboard_handle_signal_ptr(window, signum);
-+	sysboard_signal(window, signum);
- }
- 
- void load_libsysboard() {
+-}
+-
+-void load_libsysboard() {
 -	void* handle = dlopen("libsysboard.so", RTLD_LAZY);
 -	if (!handle) {
 -		std::fprintf(stderr, "Cannot open library: %s\n", dlerror());
@@ -95,29 +87,68 @@ index b6bc5ba..27a5882 100644
 -		dlclose(handle);
 -		exit(1);
 -	}
-+	// void* handle = dlopen("libsysboard.so", RTLD_LAZY);
-+	// if (!handle) {
-+	// 	std::fprintf(stderr, "Cannot open library: %s\n", dlerror());
-+	// 	exit(1);
-+	// }
-+
-+	// sysboard_create_ptr = (sysboard_create_func)dlsym(handle, "sysboard_create");
-+	// sysboard_handle_signal_ptr = (sysboard_handle_signal_func)dlsym(handle, "sysboard_signal");
-+
-+	// if (!sysboard_create_ptr || !sysboard_handle_signal_ptr) {
-+	// 	std::fprintf(stderr, "Cannot load symbols: %s\n", dlerror());
-+	// 	// dlclose(handle);
-+	// 	exit(1);
-+	// }
++	sysboard_signal(window, signum);
  }
  
  int main(int argc, char *argv[]) {
-@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
+@@ -107,8 +90,8 @@ int main(int argc, char *argv[]) {
+ 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("funky.sys64.sysboard");
  	app->hold();
  
- 	load_libsysboard();
+-	load_libsysboard();
 -	window = sysboard_create_ptr(config);
++	// load_libsysboard();
 +	window = sysboard_create(config);
  	(void)window; // This is to avoid the unused variable warning
  
  	// Catch signals
+diff --git a/src/main.hpp b/src/main.hpp
+index e0c768b..5281190 100644
+--- a/src/main.hpp
++++ b/src/main.hpp
+@@ -5,8 +5,8 @@
+ class sysboard;
+ sysboard* window;
+ 
+-typedef sysboard* (*sysboard_create_func)(const std::map<std::string, std::map<std::string, std::string>>&);
+-sysboard_create_func sysboard_create_ptr;
++typedef sysboard* sysboard_create_func(const std::map<std::string, std::map<std::string, std::string>>&);
++extern sysboard_create_func sysboard_create;
+ 
+-typedef void (*sysboard_handle_signal_func)(sysboard*, int);
+-sysboard_handle_signal_func sysboard_handle_signal_ptr;
++typedef void sysboard_handle_signal_func(sysboard*, int);
++extern sysboard_handle_signal_func sysboard_signal;
+diff --git a/src/window.cpp b/src/window.cpp
+index 5b3e8bf..43b20bb 100644
+--- a/src/window.cpp
++++ b/src/window.cpp
+@@ -76,11 +76,11 @@ void sysboard::handle_signal(const int &signum, const bool& manual) {
+ 	}, 250);
+ }
+ 
+-extern "C" {
++// extern "C" {
+ 	sysboard* sysboard_create(const std::map<std::string, std::map<std::string, std::string>>& cfg) {
+ 		return new sysboard(cfg);
+ 	}
+ 	void sysboard_signal(sysboard* window, int signal) {
+ 		window->handle_signal(signal, true);
+ 	}
+-}
++// }
+diff --git a/src/window.hpp b/src/window.hpp
+index b683433..d426cbe 100644
+--- a/src/window.hpp
++++ b/src/window.hpp
+@@ -35,8 +35,8 @@ class sysboard : public Gtk::Window {
+ 		void initialize_protos();
+ };
+ 
+-extern "C" {
++// extern "C" {
+ 	sysboard *sysboard_create(const std::map<std::string, std::map<std::string, std::string>>&);
+ 	void sysboard_signal(sysboard*, int);
+-}
++// }
+ 
