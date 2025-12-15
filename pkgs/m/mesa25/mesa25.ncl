@@ -203,4 +203,4 @@
     }
 }
 & (import "mesa25glx.ncl")
-& (import "mesa25full.ncl")
+& (import "vulkan/mesa25full.ncl")
