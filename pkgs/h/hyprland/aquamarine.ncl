@@ -6,16 +6,8 @@
     let _p | lib.CmakePackage = {
       generator = "Ninja",
       singleSource = {
-        #uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.5.0.tar.gz",
-        #sha256sum = "30ced616ce5c2f1b83a0c4807637589157af5ba98e7956f0e6168d5724f5b62c",
 
-        #uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.7.2.tar.gz",
-        #sha256sum = "822ce38345bc4c1b95966c79ee72ff18d753aa923c83e9aa64e9d82eebf55a38"
-
-        # uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.9.2.tar.gz",
-        # sha256sum = "ffcaa394ad12920ee50e4a7872e4e27d35426b03fadd21de92578d7ff4908f46",
-
-        uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.9.5.tar.gz",
+        uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.10.0.tar.gz",
         sha256sum = "657e4752542872549a556d9facb8a525276b4edd5ca197818835904768aaad40",
       },
       llvmProvider = drvs.llvmFull,
