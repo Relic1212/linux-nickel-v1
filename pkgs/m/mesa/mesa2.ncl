@@ -203,17 +203,17 @@
     ],
   },
 
-  mesaOpengl | lib.MesonPackage =
-    _mesa2426
-    & {
+  # mesaOpengl | lib.MesonPackage =
+  #   _mesa2426
+  #   & {
 
-      extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" _mesa2426.extraMesonArgs,
+  #     extraMesonArgs | priority 1 = lib.functions.replaceArrayElem "-Dopengl=false" "-Dopengl=true" _mesa2426.extraMesonArgs,
 
-      postInstallPhase = [
-        "cd ${DEST}/usr/lib/pkgconfig",
-        "ln -s egl.pc opengl.pc",
-      ]
-    },
+  #     postInstallPhase = [
+  #       "cd ${DEST}/usr/lib/pkgconfig",
+  #       "ln -s egl.pc opengl.pc",
+  #     ]
+  #   },
 
   mesaGlx2426 | lib.MesonPackage =
     _mesa2426
