@@ -45,6 +45,9 @@
         #   "-Dintel-clc=enabled",
         "-Dllvm=enabled",
         "-Dunversion-libgallium=true",
+        "-Dradv-build-id=eacebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+        "-Dradeonsi-build-id=facebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+        "-Damd-use-llvm=false",
       ],
 
       patches | priority 1 =
@@ -84,5 +87,15 @@
           drvs.libxf86vm,
           drvs.libxrandr,
         ]
+    },
+  mesaGlxEpoxy =
+    mesaGlx
+    & {
+      postInstallPhase | priority 1 =
+        let syms = (let s = import "libgl.syms" as 'Text in std.string.split "\n" s) in
+        std.array.map
+          (fun s => "objcopy --redefine-sym %{s}=libGL__%{s} ${DEST}/usr/lib/libGL.a"
+          )
+          syms
     }
 }
