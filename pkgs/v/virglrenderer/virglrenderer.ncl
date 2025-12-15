@@ -6,6 +6,20 @@
       uri = "https://gitlab.freedesktop.org/virgl/virglrenderer/-/archive/1.2.0/virglrenderer-1.2.0.tar.bz2",
       sha256sum = "f4f52db11297b52b35c8c2d5bf5e21b7997b52f8bfad99ea2b1c155997cff4ad"
     },
+    extraMesonArgs = [
+      "-Dplatforms=egl",
+      # "-Dvideo=true",
+    ],
+
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-Wl,--error-limit=0",
+      ],
+    },
+
+    preConfigurePhase = [
+      m%"sed -i "s@subdir('vtest')@@" ${SRC}/meson.build"%,
+    ],
 
     postInstallPhase =
       let syms = [
@@ -69,15 +83,15 @@
       #   drvs.flex,
       #   drvs.linuxHeaders,
       #   drvs.llvmConfigStatic,
-      #   drvs.spirvTools,
-      #   drvs.spirvLlvmTranslator,
+      drvs.spirvTools,
+      drvs.spirvLlvmTranslator,
       #   drvs.wayland,
       #   drvs.waylandProtocols,
       #   drvs.mesa2,
       drvs.expat,
       drvs.jsonC,
       drvs.pcre2,
-      drvs.mesa2,
+      drvs.mesaGlxEpoxy,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libelf,
@@ -105,6 +119,28 @@
       drvs.linuxHeaders,
       drvs.libepoxy,
       drvs.pyyaml,
+      drvs.libxcursor,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.libxcb,
+      drvs.xcbProto,
+      drvs.libxau,
+      drvs.libx11,
+      drvs.libxrender,
+      drvs.libxfixes,
+      drvs.xcbRenderutil,
+      drvs.libxfont2,
+      drvs.libfontenc,
+      drvs.libxcvt,
+      drvs.libxshmfence,
+      # drvs.xwayland,
+      drvs.libxkbfile,
+      drvs.xcbUtilWm,
+      drvs.xcbUtilErrors,
+      drvs.libxext,
+      drvs.libxf86vm,
+      drvs.libxrandr,
     ],
   }
 }
