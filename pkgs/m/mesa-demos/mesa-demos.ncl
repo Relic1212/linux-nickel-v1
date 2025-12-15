@@ -18,9 +18,14 @@
     },
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "-lc++"
+        "-lc++",
+        "${SRC}/dlopen.o",
       ],
     },
+    preConfigurePhase = [
+      "echo '%{import "dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+    ],
     baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
 
     extraMesonArgs =
@@ -35,6 +40,8 @@
           "-Dglut=disabled",
         ],
 
+    llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothWeakDl,
     biDrvs =
       [
         drvs.libelf,
@@ -53,7 +60,6 @@
         drvs.m4,
         drvs.git,
         drvs.pyyaml,
-        drvs.llvmFull,
         drvs.llvmConfigStatic,
         drvs.spirvTools,
         drvs.spirvLlvmTranslator,
