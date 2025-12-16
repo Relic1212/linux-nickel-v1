@@ -11,53 +11,11 @@
       sourceInputs = [
         {
           src = {
-            # uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.47.2/source-v0.47.2.tar.gz",
-            # sha256sum = "e7f4447c9e24149cf2fd57057410bc90cb3c4ecaa35b6ec2a60a9d44d2fb2feb"
-
-            # uri = "https://github.com/hyprwm/Hyprland/releases/download/v0.50.1/source-v0.50.1.tar.gz",
-            # sha256sum = "2e7280e08d9b0460159bdfcdebdf6c532a79843a6a1e8417f78c15f6293fc956",
-
-            # uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.51.1.tar.gz",
-            # sha256sum = "ebcdde9b3cec53dc1841cb221f0d3e26c3086f7c59416bf85243ec700a4a7f68",
-
-            # uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.52.0.tar.gz",
-            # sha256sum = "8f1f9051a48356dc6e0fb127ca29f991b758bae28c66ba6b0cdf0c99efcc1751",
 
             uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.52.2.tar.gz",
             sha256sum = "5588ba57539f47d52091135628bdab6533a2b0e9c6d46f507af7391d44015f9f",
           },
-          # src = {
-          #   uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.45.2.tar.gz",
-          #   sha256sum = "ad54556ed694e00dc7b433a3cc916c8f5b9633f0b290d2d6f48f2bcdf2886d28",
-          # },
         },
-        # {
-        #   dest = "subprojects/hyprland-protocols",
-        #   src = {
-        #     uri = "https://github.com/hyprwm/hyprland-protocols/archive/c7c3f4cd0faed21fc90ba6bd06fe4f3e0e057ea8.zip",
-        #     sha256sum = "4d38ee1b5a64c9e3ac4eb8820b3a2283a1f29e50c1b5b15cf28142ce980f10b0"
-        #   }
-        # },
-        # {
-        #   dest = "subprojects/tracy",
-        #   src = {
-        #     uri = "https://github.com/wolfpld/tracy/archive/37aff70dfa50cf6307b3fee6074d627dc2929143.zip",
-        #     sha256sum = "22a7180fe790194af3db3c796a4c239da7c8b9bd98f680811598b911ef9d23da"
-        #   }
-        # },
-        # {
-        #   dest = "subprojects/udis86",
-        #   src = {
-        #     uri = "https://github.com/canihavesomecoffee/udis86/archive/5336633af70f3917760a6d441ff02d93477b0c86.zip",
-        #     sha256sum = "91c06980bd6abce1cd071196e3af655599ca2fcfd62328f06fcd915ed2645671",
-        #   }
-        # }
-      ],
-      patches = [
-        #{
-        #  file = "no-duplicate-protocols.patch",
-        #  sha256sum = "814246ec7f6933ed47bdcf223e6607ca51b36a9fd738487a7a4b969f13086133"
-        #}
       ],
       llvmProvider = drvs.llvmFull,
 
@@ -155,35 +113,15 @@
         m%"
         sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build
         "%,
-        #   # m%"
-        #   # sed -i "s@server_protos,@@g" ${SRC}/src/meson.build
-        #   # "%,
-        #   m%"
-        #   sed -i \
-        #     's@link_with: lib_server_protos,@@g' \
-        #     ${SRC}/protocols/meson.build
-        #   "%,
-        #   m%"
-        #   sed -i \
-        #     's@sources: wl_protocols + wayland_protocol,@sources: wayland_protocol,@g' \
-        #     ${SRC}/protocols/meson.build
-        #   "%,
       ],
-      #generator = "Ninja",
-      #cmakeExtraArgsRecord = {
-      #  "-DNO_SYSTEMD" = true,
-      #  "-DNO_XWAYLAND" = true,
-      #  "-DLEGACY_RENDERER" = true,
-      #  "-DUSE_TRACY" = false,
-      #  "-DNO_HYPRPM" = true,
-      #},
-      #preConfigurePhase = [
-      #  m%"
-      #    sed -i \
-      #      's@OpenGL::GL@OpenGL::GLES2@g' \
-      #      ${SRC}/CMakeLists.txt
-      #    "%,
-      #],
+
+      postInstallPhase = [
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/Renderer.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
+      ],
+
       buildEnv = {
         EXTRA_LDFLAGS =
           [
@@ -196,23 +134,26 @@
             "-ldisplay-info"
           ]
           @ (if distro.pam then ["-lcap"] else []),
-        # EXTRA_LDFLAGS = [ "-l:libwayland-client.a" ],
-        #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
-        #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
-        #EXTRA_CPPFLAGS=["-DXDG_POSITIONER_INTERFACE","-DXDG_SURFACE_INTERFACE","-DHYPRWAYLAND_SCANNER_NO_INTERFACES"],
-        #EXTRA_CXXFLAGS=EXTRA_CPPFLAGS,
       }
     },
+
+  # hyprlandLibs | lib.MesonPackage =
+  #   hyprland
+  #   & {
+  #     postInstallPhase | priority 1 =
+  #       hyprland.postInstallPhase
+  #       @ [
+  #         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/Renderer.hpp"%,
+  #         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
+  #         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
+  #         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
+  #       ]
+  #   },
 
   hyprwaylandScanner | lib.CmakePackage = {
     generator = "Ninja",
 
     singleSource = {
-      # uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/500c81a9e1a76760371049a8d99e008ea77aa59e.zip",
-      # sha256sum = "8408af601bfc784500ba033b77a27e3d863a54d5e911ec39f3d84f1e67565937"
-
-      #uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/refs/tags/v0.4.4.tar.gz",
-      #sha256sum = "ac73f626019f8d819ff79a5fca06ce4768ce8a3bded6f48c404445f3afaa25ac",
 
       uri = "https://github.com/hyprwm/hyprwayland-scanner/archive/refs/tags/v0.4.5.tar.gz",
       sha256sum = "2125d279eea106e3e6c8dc9fa15181c75d67467b5352d24e2a07903b10abad62"

@@ -38,7 +38,7 @@
       extraMesonArgs | priority 1 = [
         "-Dxwayland=enabled",
         "-Dtracy_enable=false",
-        "-Dhyprpm=disabled",
+        "-Dhyprpm=enabled",
         # "-Dlegacy_renderer=enabled",
       ],
     }
