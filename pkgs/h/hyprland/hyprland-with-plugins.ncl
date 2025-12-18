@@ -25,6 +25,7 @@
         [
           "echo '%{ import "hyprland_dlopen.c" as 'Text }' > ${SRC}/dlopen.c",
           "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+          m%"sed -i "s@'-lxtra-dispatchers'@'-lxtra-dispatchers', '-lHyprspace'@g" ${SRC}/src/meson.build"%,
         ]
         @ hyprland.preConfigurePhase,
       muslProvider = drvs.muslBothWeakDl,
@@ -32,6 +33,7 @@
         hyprland.biDrvs
         @ [
           drvs.hyprlandPlugins,
+          drvs.hyprlandHyprspace,
         ],
     }
 }
