@@ -176,7 +176,7 @@ class builder:
                         raise DependencyException("Previous failure")
 
                 self.build(h=bi_drv_drv_hash, pkg_drvs=pkg_drvs, pkg_names=pkg_names,
-                           pkghash2sysroothash=pkghash2sysroothash, keep_going=keep_going)
+                           pkghash2sysroothash=pkghash2sysroothash, keep_going=keep_going, delete_tmpfs_build_on_success=delete_tmpfs_build_on_success)
             except subprocess.CalledProcessError as e:
                 failed = True
                 bi_drv_name = pkg_names[bi_drv_drv_hash]
@@ -313,7 +313,10 @@ class builder:
 
         rwpaths_tmp = ["src", "build"]
 
-        tmp_workdir = f"/tmp/build-{h}"
+        tmpdir = os.environ.get("TMPDIR")
+        if tmpdir is None:
+            tmpdir = "/tmp"
+        tmp_workdir = os.path.join(tmpdir, f"build-{h}")
         # subprocess.run(["rm","-rf",tmp_workdir],check=True)
 
         tmpfs_build = True
@@ -356,6 +359,8 @@ class builder:
             else:
                 sysroot = dirpaths.get_basedir() + "/" + sysroot_drv_hash + \
                     "-sysroot" + "/sysroot/"
+                subprocess.run(
+                    ["ln", "-s", os.path.realpath(sysroot), f"{workdir}/sysroot.link"], check=True)
 
             # os.environ.clear()
 
@@ -459,9 +464,19 @@ class builder:
                 print(f"Failed to build {name}")
                 raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
         if deterministic_fetcher:
-            # computed = hashes.compute_file_or_dir_sha256sum(workdir + "/out/destdir/" + output_file)
-            # with open(f"pkgs/c/{name.replace("-sources","")}/src.sha256sum","w") as f:
-            #     f.write(computed)
+
+            if name.startswith("cosmic"):
+                try:
+                    check_deterministic_output(
+                        workdir + "/out/destdir",
+                        output_file,
+                        output_sha256sum
+                    )
+                except:
+                    computed = hashes.compute_file_or_dir_sha256sum(
+                        workdir + "/out/destdir/" + output_file)
+                    with open(f"pkgs/c/{name.replace("-sources", "")}/src.sha256sum", "w") as f:
+                        f.write(computed)
 
             check_deterministic_output(
                 workdir + "/out/destdir",

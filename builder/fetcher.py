@@ -34,7 +34,7 @@ def fetch_by_drv(drv: dict):
     sha256sum = drv['sha256sum']
     fetch_method = drv['fetchMethod']
 
-    if uri.startswith("http") or uri.startswith("git://"):
+    if uri.startswith("http") or uri.startswith("git://") or (fetch_method == "git"):
         t = "online"
     elif os.path.exists(uri):
         t = "local"
