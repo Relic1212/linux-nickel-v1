@@ -4,10 +4,12 @@ import os
 import subprocess
 import json
 import hashlib
-import sys
+import timeit
+import datetime
+import argparse
+
 from builder import build_in_bubblewrap
 
-import argparse
 
 KNOWN_SLOW = ["base-image", "base-image-small"]
 
@@ -22,9 +24,13 @@ def nickel_to_json(fp, args=None):
     if args == None:
         args = []
 
+    t1 = timeit.default_timer()
     c = subprocess.run(
         ["nickel", "export", fp, "--format", "json"] + args, check=False, capture_output=True
     )
+    t2 = timeit.default_timer()
+    buildtime = datetime.timedelta(seconds=t2-t1)
+    print(f"evaluation took {buildtime}")
 
     if c.returncode != 0:
         print(c.stderr.decode())
@@ -78,7 +84,7 @@ def get_graph(drvs=None):
     import graphviz
 
     if drvs is None:
-        drvs = get_drvs()
+        drvs = get_drvs(pn="")
     hbn = drvs["hashByName"]
     dbh = drvs["drvByHash"]
     g = graphviz.Digraph()
@@ -113,10 +119,11 @@ def reverse_dict(d: dict[str, str]) -> dict[str, str]:
 def build_all(drvs):
     failed = []
     s = []
+    b = build_in_bubblewrap.builder()
     for k in drvs["hashByName"].keys():
         pn_hash = drvs["hashByName"][k]
         try:
-            build_in_bubblewrap.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(
+            b.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(
                 drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"])
             s.append(k)
         except KeyboardInterrupt as e:
@@ -226,8 +233,8 @@ def test():
     else:
         pn_key = ""
 
-    if pn == "all":
-        pn = "base-image"
+    # if pn == "all":
+    #     pn = "base-image"
     drvs = get_drvs(pn_key)
     # with open("test/0813.json") as f : drvs = json.load(f)
     if pn == "all":
