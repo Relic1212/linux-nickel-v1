@@ -40,9 +40,11 @@
       #   "-Dintel-clc=enabled",
       # "-Dllvm=enabled",
       "-Dunversion-libgallium=true",
+      "-Dradv-build-id=eacebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+      "-Dradeonsi-build-id=facebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+      "-Damd-use-llvm=false",
 
       # "-Dllvm=disabled",
-      # "-Damd-use-llvm=false",
       # "-Dmesa-clc=disabled",
     ],
 
@@ -53,8 +55,10 @@
       # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.6/mesa-mesa-25.2.6.tar.bz2",
       # sha256sum = "a33d8400c0f4ee729c1b7224834a84415681c842dbd36e2431fade180440d0a5",
 
-      uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.0/mesa-mesa-25.3.0.tar.bz2",
-      sha256sum = "f30228a63cf567225ffea42464d87fdc2026e1f5c55f5cc7de69b2531688e1ce",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.0/mesa-mesa-25.3.0.tar.bz2",
+      # sha256sum = "f30228a63cf567225ffea42464d87fdc2026e1f5c55f5cc7de69b2531688e1ce",
+      uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
+      sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
     },
 
     extraEnv = {
