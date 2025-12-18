@@ -16,7 +16,7 @@
           uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.44.0-vendor.tar.xz",
           sha256sum = "73f7f060ef95261f189d0a55b77b2b5c2c3b2b6b01502f8ec8a4071204b01af3"
         },
-        dest = "vendor-new",
+        dest = "vendor",
       }
     ],
     llvmProvider = drvs.llvmFull,
@@ -106,15 +106,15 @@
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",
-      "export CGO_ENABLED=0",
+      "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
-      "rm -rf vendor",
-      "mv vendor-new/vendor vendor",
+      # "rm -rf vendor",
+      # "mv vendor-new/vendor vendor",
       m%"sed -i "s@pkg_config('gl'@pkg_config('egl'@g" ${SRC}/setup.py"%,
       m%"sed -i "s@'x11 wayland'@'wayland'@g" ${SRC}/setup.py"%,
       m%"sed -i "s@ldflags.append('-shared')@ldflags.append('-static')@g" ${SRC}/setup.py"%,
-      m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
+      # m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
       # m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
       m%"sed -i "s@ans.cflags.append('-fPIC')@@g" ${SRC}/glfw/glfw.py"%,
     ],
@@ -122,8 +122,8 @@
     buildPhase = [
       # "python setup.py linux-package",
       #"python setup.py build-static-binaries",
-      #"python setup.py build-launcher",
-      "python setup.py linux-package --skip-building-kitten --ignore-compiler-warnings",
+      "python setup.py build-launcher",
+      # "python setup.py linux-package --skip-building-kitten --ignore-compiler-warnings",
     ],
     installPhase = [],
   }

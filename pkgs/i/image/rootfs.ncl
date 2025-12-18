@@ -3,67 +3,84 @@
   _rootfs | lib.Package = {
     buildInChroot = false,
     utilsProviders = [],
-    installPhase = [
-      "echo 'copying the rootfs'",
+    installPhase =
+      [
+        "echo 'copying the rootfs'",
 
-      # "cp -a /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
-      "mkdir /tmp/workdir/out/destdir/rootfs",
-      m%"
+        # "cp -a /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs",
+        "mkdir /tmp/workdir/out/destdir/rootfs",
+        m%"
         for d in $(ls /tmp/workdir/sysroot);do
           echo "copying ${d}"
           cp -a /tmp/workdir/sysroot/${d} /tmp/workdir/out/destdir/rootfs
         done
         "%,
-      # m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"%,
-      "echo 'removing useless stuff'",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/pkgconfig",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
-      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
-      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
-      # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/objects-Release",
-      "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/gdb",
-      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.a'); do rm -rf $d; done",
-      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.prl'); do rm -rf $d; done",
-      "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -empty); do rm -rf $d; done",
-      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/bash-completion",
-      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/emacs",
-      "rm -rf  tmp/workdir/out/destdir/rootfs/usr/share/common-lisp",
+        # m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs /tmp/workdir/sysroot /tmp/workdir/out/destdir/rootfs"%,
+        "echo 'removing useless stuff'",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/pkgconfig",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/pkgconfig",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.a",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.la",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/*.prl",
+        # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/systemd",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/ossl-modules",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/kernel",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/gdb",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/emacs",
+        "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/common-lisp",
+      ]
+      @ (
+        if (true) then
+          [
+            # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/bin",
+            # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/plugins",
+            # "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/libexec",
+            "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/objects-Release",
+            "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.a'); do rm -rf $d; done",
+            "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -name '*.prl'); do rm -rf $d; done",
+            "for d in $(find /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/ -empty); do rm -rf $d; done",
+          ]
+        else
+          []
+      )
+      @ (
+        if (true) then
+          [
 
-      # bash files 
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
+            # bash files 
+            "rm -rf /tmp/workdir/out/destdir/rootfs/usr/share/bash-completion",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
+            "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
+          ]
+        else
+          []
+      )
+      @ [
 
-      # perl
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
-      "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
+        # perl
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
 
-      # to mount a tmpfs here for debugging
-      "mkdir -p tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/"
+        # to mount a tmpfs here for debugging
+        "mkdir -p /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/"
 
-      # "echo 'stripping binaries'",
-      # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
-    ],
+        # "echo 'stripping binaries'",
+        # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",
+      ],
   },
 
   _rootfs2 | lib.Package = {
@@ -172,7 +189,10 @@
 
       [
         "echo 'copying rootfs to chroot dir'",
-        "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
+        "mkdir /tmp/workdir/out/destdir/rootfs",
+        m%"rsync -a --no-compress --no-o --no-g --perms --acls --xattrs --exclude=/usr/include --exclude=/usr/lib/*.a /rootfs/ /tmp/workdir/out/destdir/rootfs/"%,
+
+        # "cp -r /rootfs /tmp/workdir/out/destdir/rootfs",
         "echo 'removing useless stuff'",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/include",
         "rm -rf /tmp/workdir/out/destdir/rootfs/usr/lib/cmake",
@@ -207,27 +227,29 @@
         "rm -rf  tmp/workdir/out/destdir/rootfs/usr/lib/bash",
 
         # bash files 
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/yad-settings",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/try_swap_workspace",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/scratchpad",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rsync-ssl",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rofi-theme-selector",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/rofi-sensible-terminal",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/hdrop",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/grimblast",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/tzselect",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/pa-info",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/alsaconf",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/alsa-info.sh",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub_all",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/e2scrub",
 
         # perl
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
-        "rm -f tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/c_rehash",
+        "rm -f /tmp/workdir/out/destdir/rootfs/usr/bin/git-cvsserver",
 
         # to mount a tmpfs here for debugging
-        "mkdir -p tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/",
+        "mkdir -p /tmp/workdir/out/destdir/rootfs/usr/lib/qt6/qml/",
+
+        # "echo GTK_IM_MODULE=simple >> /tmp/workdir/out/destdir/rootfs/etc/environment",
 
         # "echo 'stripping binaries'",
         # "find /tmp/workdir/out/destdir/rootfs/usr/bin -type f |xargs strip > /dev/null ||echo true ",

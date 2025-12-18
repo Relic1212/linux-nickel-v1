@@ -1,0 +1,11 @@
+{
+  lib,
+  drvs,
+  sdl | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/libsdl-org/SDL/archive/refs/tags/release-3.2.28.tar.gz",
+      sha256sum = "5c908f07a93087037d3319bc5d820ba8df14ac98bdbdf24af9084ef460ce01b1"
+    }
+  }
+}
