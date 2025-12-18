@@ -1,0 +1,20 @@
+diff --git a/src/meson.build b/src/meson.build
+index 03cfcd9..714784a 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -47,6 +47,15 @@ executable(
+     dependency('pango'),
+     dependency('pangocairo'),
+     dependency('uuid'),
++  ],
++   link_args: [
++    '-lborders-plus-plus',
++    '-lhyprbars',
++    '-lhyprexpo',
++    '-lhyprfocus',
++    '-lhyprscrolling',
++    '-lxtra-dispatchers',
++    '/tmp/workdir/src/dlopen.o',
+   ],
+   install: true,
+ )

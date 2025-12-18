@@ -6,6 +6,12 @@
       uri = "https://github.com/hyprwm/hyprland-plugins/archive/refs/tags/v0.52.0.tar.gz",
       sha256sum = "5101bf5b4fa5048f186e613c1e11c309fa3f8c14d68cf94c01a08a7745746c97"
     },
+    patches = [
+      {
+        file = "hyprland-plugins.patch",
+        sha256sum = "3cf0ffc0fb8a3a826fd354f24001c2c2efbac44bd7cb4b62d92be79650c0cd92"
+      },
+    ],
 
     options = {
       glx = false,
@@ -19,7 +25,15 @@
         # "hyprtrails",
         # "hyprwinwrap",
         "xtra-dispatchers",
-      ]
+      ],
+      # libs = [
+      #   "libborders-plus-plus",
+      #   "libhyprbars",
+      #   "libhyprexpo",
+      #   "libhyprfocus",
+      #   "libhyprscrolling",
+      #   "libxtra-dispatchers",
+      # ]
     },
 
     preConfigurePhase =
@@ -85,6 +99,20 @@
           )
           options.plugins
       ),
+    postInstallPhase =
+      std.array.flatten (
+        std.array.map
+          (fun s =>
+            let prefix = std.string.replace "-" "_" s in
+            [
+              "objcopy --redefine-sym pluginAPIVersion=%{prefix}_pluginAPIVersion ${DEST}/usr/lib/lib%{s}.a",
+              "objcopy --redefine-sym pluginExit=%{prefix}_pluginExit ${DEST}/usr/lib/lib%{s}.a",
+              "objcopy --redefine-sym pluginInit=%{prefix}_pluginInit ${DEST}/usr/lib/lib%{s}.a",
+            ]
+          )
+          options.plugins
+      ),
+
     llvmProvider = drvs.llvmFull,
 
     biDrvs =

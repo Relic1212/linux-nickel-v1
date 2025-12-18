@@ -495,4 +495,5 @@
 }
 & (import "../hyprland-qtutils/hyprland-qtutils.ncl")
 & (import "./hyprland-x11.ncl")
+& (import "./hyprland-with-plugins.ncl")
 & (import "./aquamarine.ncl")
