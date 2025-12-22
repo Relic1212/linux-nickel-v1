@@ -1,11 +1,11 @@
 {
   lib,
   drvs,
-  sdl | lib.CmakePackage = {
+  sdl2 | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/libsdl-org/SDL/archive/refs/tags/release-3.2.28.tar.gz",
-      sha256sum = "5c908f07a93087037d3319bc5d820ba8df14ac98bdbdf24af9084ef460ce01b1"
+      uri = "https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.32.10.tar.gz",
+      sha256sum = "03f9d7c191a837525c9cda6406af2f2e48be02b5e7eb03d949cc9f1e9ca41c8b"
     },
 
     cmakeExtraArgsRecord = {
@@ -59,30 +59,5 @@
     propagatedBuildInputs = [
       drvs.seatd,
     ]
-    # biDrvs = [
-    #   drvs.libelf,
-    #   drvs.libdrm,
-    #   drvs.zlibNg,
-    #   drvs.pythonMako,
-    #   drvs.pythonPackaging,
-    #   drvs.pythonMarkupsafe,
-    #   drvs.libpciaccess,
-    #   drvs.libffi,
-    #   drvs.bison,
-    #   drvs.flex,
-    #   drvs.linuxHeaders,
-    #   drvs.m4,
-    #   drvs.git,
-    #   drvs.pyyaml,
-    #   drvs.llvmConfigStatic,
-    #   drvs.spirvTools,
-    #   drvs.spirvHeaders,
-    #   drvs.spirvLlvmTranslator,
-    #   # drvs.spirvTools_glslang,
-    #   # drvs.glslang,
-    #   drvs.wayland,
-    #   drvs.waylandProtocols,
-    #   drvs.mesa2,
-    # ],
   }
 }
