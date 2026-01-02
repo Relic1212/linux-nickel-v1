@@ -28,7 +28,7 @@
           uri = "https://github.com/ogios/pulse-binding-rust/archive/cdfc0cba51b03dc756f547bd214e1014c226af67.tar.gz",
           sha256sum = "0926ac4430775e6e4daff488aa1b875ccbc1f249bad9b0ec1bbae408363a1696"
         },
-        dest = "vendor/pulse-binding-rust"
+        dest = "vendor-pulse-binding-rust"
       },
       {
         src = {
@@ -41,49 +41,54 @@
 
     crates = lib.functions.filterCrates (import "way-edges-crates.json"),
 
+    extraEnv.EXTRA_RUSTFLAGS = [
+      "--cfg tokio_unstable"
+    ],
+
     configurePhase = [
       m%"
-            echo "
-            [source.crates-io]
-            replace-with = \"vendored-sources\"
-            
+      echo "
 
+      
+      [source.\"git+https://github.com/ogios/freedesktop-icons?branch=use#807964d45063d6911a58595d733aa1fbf2197874\"]
+      branch = \"use\"
+      git = \"https://github.com/ogios/freedesktop-icons\"
+      replace-with = \"vendored-sources\"
 
-            [source.\"git+https://github.com/ogios/freedesktop-icons?branch=use#807964d45063d6911a58595d733aa1fbf2197874\"]
-            branch = \"use\"
-            git = \"https://github.com/ogios/freedesktop-icons\"
-            replace-with = \"vendored-sources\"
+      [source.\"git+https://git.sr.ht/~zethra/linicon-theme?branch=main#ae30a81cad23bb3b77a4c836baec39946eab862d\"]
+      branch = \"main\"
+      git = \"https://git.sr.ht/~zethra/linicon-theme\"
+      replace-with = \"vendored-sources\"
 
-            [source.\"git+https://git.sr.ht/~zethra/linicon-theme?branch=main#ae30a81cad23bb3b77a4c836baec39946eab862d\"]
-            branch = \"main\"
-            git = \"https://git.sr.ht/~zethra/linicon-theme\"
-            replace-with = \"vendored-sources\"
+      [source.\"git+https://github.com/ogios/pulse-binding-rust.git?branch=tokio-bindings#cdfc0cba51b03dc756f547bd214e1014c226af67\"]
+      branch = \"tokio-bindings\"
+      git = \"https://github.com/ogios/pulse-binding-rust.git\"
+      replace-with = \"vendored-sources\"
 
-            [source.\"git+https://github.com/ogios/pulse-binding-rust.git?branch=tokio-bindings#cdfc0cba51b03dc756f547bd214e1014c226af67\"]
-            branch = \"tokio-bindings\"
-            git = \"https://github.com/ogios/pulse-binding-rust.git\"
-            replace-with = \"vendored-sources\"
+      [source.\"git+https://github.com/Smithay/client-toolkit.git#9882c58bd1a84a23fb263a01a4f78b9f75d35e41\"]
+      git = \"https://github.com/Smithay/client-toolkit.git\"
+      replace-with = \"vendored-sources\"
 
-            [source.\"git+https://github.com/Smithay/client-toolkit.git#9882c58bd1a84a23fb263a01a4f78b9f75d35e41\"]
-            git = \"https://github.com/Smithay/client-toolkit.git\"
-            replace-with = \"vendored-sources\"
+      " >> ${SRC}/.cargo/config.toml
+      "%,
+      "(cd vendor-pulse-binding-rust && cargo package --exclude-lockfile --no-verify)",
+      "cp vendor-*/target/package/*.crate vendor/",
+      "(cd vendor/ && for f in $(ls *.crate); do mv ${f} ${f}.tar.gz; tar xf ${f}.tar.gz; done)",
+      m%"(cd vendor && for d in $(ls); do if [ -d ${d} ];then if [ ! -e ${d}/.cargo-checksum.json ];then echo '{"files":{},"package":null}' > ${d}/.cargo-checksum.json;fi;fi;done)"%,
+    ],
 
-
-            [source.vendored-sources]
-            directory = \"vendor\"
-
-            " > ${SRC}/.cargo/config.toml
-            "%,
-      "cp -r vendor/pulse-binding-rust/libpulse-binding vendor/libpulse-binding",
-      "cp -r vendor/pulse-binding-rust/libpulse-sys vendor/libpulse-sys",
-      "cp -r vendor/pulse-binding-rust/libpulse-tokio vendor/libpulse-tokio",
-      m%"
-        for d in $(ls vendor); do 
-            if [ ! -f vendor/${d}/.cargo-checksum.json ]; then 
-                cp vendor/log-0.4.27/.cargo-checksum.json vendor/${d}/.cargo-checksum.json
-            fi
-        done
-        "%
+    biDrvs = [
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.libffi,
+      drvs.libxkbcommon,
+      drvs.pixman,
+      drvs.zlibNg,
+      drvs.freetype,
+      drvs.fontconfig,
+      drvs.libpng,
+      drvs.expat,
+      drvs.cairo,
     ],
   }
 }
