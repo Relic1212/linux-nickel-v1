@@ -1,0 +1,14 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 03de150..19b27f9 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -43,3 +43,9 @@ lto = "thin"
+ codegen-units = 1
+ panic = "abort"
+ strip = "symbols"
++
++
++
++[patch.crates-io]
++libpulse-binding = { git = "https://github.com/ogios/pulse-binding-rust.git", branch = "tokio-bindings" }
++libpulse-tokio = { git = "https://github.com/ogios/pulse-binding-rust.git", branch = "tokio-bindings" }
