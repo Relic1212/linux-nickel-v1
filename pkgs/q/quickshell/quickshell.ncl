@@ -84,8 +84,6 @@
     # ],
     patches = [
       {
-        # sha256sum = "d973b39e5dbb76067839362df5a7159857279017f3d061d8bc3f357fec3bfdf3",
-        # file = "fix-quickshell2.patch",
 
         sha256sum = "feb151bab65843bf172a0c0e838d9aa7ab385e477f7d8bdf008fe00c8e4de662",
         file = "fix-quickshell3.patch",
@@ -117,7 +115,6 @@
         drvs.qtshadertools,
         drvs.qtwayland,
         drvs.qtsvg,
-        drvs.mesa2,
         # drvs.pkgconf,
         drvs.libelf,
         drvs.libdrm,
@@ -197,9 +194,15 @@
             drvs.xcbUtilErrors,
             drvs.xcbUtilImage,
             drvs.xcbUtilKeysyms,
+            drvs.mesa2,
+            # drvs.mesaGlx,
+            # drvs.libxext,
+            # drvs.libxf86vm,
+            # drvs.libxrandr,
           ]
         else
           [
+            drvs.mesa2,
             drvs.libxkbcommon,
             drvs.qtbase,
           ]
