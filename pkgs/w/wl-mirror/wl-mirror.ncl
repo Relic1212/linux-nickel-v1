@@ -37,6 +37,7 @@
       drvs.scdoc,
       drvs.wlrProtocols,
       drvs.libdecor,
+      drvs.dbus,
       drvs.pixman,
       drvs.freetype,
       drvs.fontconfig,
