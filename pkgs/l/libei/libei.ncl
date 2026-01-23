@@ -15,7 +15,8 @@
         src = {
           uri = "https://github.com/nemequ/munit/archive/fbbdf1467eb0d04a6ee465def2e529e4c87f2118.tar.gz",
           sha256sum = "d0c8bf80b9804d4df5301bd428702352fe7e14f84f22027c3a2c084a0d9f69a7"
-        }
+        },
+        dest = "subprojects/munit"
       },
     ],
     biDrvs = [
