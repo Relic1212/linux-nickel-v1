@@ -12,7 +12,7 @@
     enableCcache = false,
     installPhase = [
       "install -d -m0755 ${DEST}/usr/lib/udev/rules.d/",
-      "install -m0755 51-android.rules ${DEST}/usr/lib/udev/rules.d/",
+      "install -m0644 51-android.rules ${DEST}/usr/lib/udev/rules.d/",
       "sed -i 's@adbusers@plugdev@g' ${DEST}/usr/lib/udev/rules.d/51-android.rules",
     ]
   }
