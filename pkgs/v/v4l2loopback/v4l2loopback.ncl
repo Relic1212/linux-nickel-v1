@@ -4,8 +4,8 @@
   linuxWithBuild,
   v4l2loopback | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/umlaeute/v4l2loopback/archive/refs/tags/v0.13.2.tar.gz",
-      sha256sum = "1e57e1e382d7451aa2a88d63cc9f146eab1f425b90e76104d4c3d73127e34771"
+      uri = "https://github.com/umlaeute/v4l2loopback/archive/refs/tags/v0.15.3.tar.gz",
+      sha256sum = "2758ea287da8dd34a0421c0dd50094a0342d22414e1bbccbbe92f41bbaa26b2d"
     },
     options = { version = linuxWithBuild.options.version },
     biDrvs = [
@@ -13,6 +13,7 @@
       drvs.linuxWithBuild,
       (drvs.kmod & { priority = 1 }),
       drvs.rsync,
+      drvs.zstd,
     ],
     extraMakeArgs = [
       "KERNELRELEASE=%{options.version}-standard",
