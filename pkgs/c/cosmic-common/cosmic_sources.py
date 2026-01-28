@@ -2,6 +2,36 @@ import hashlib
 # import requests
 import urllib.request
 
+PKG_NAMES = [
+    "cosmic-applets",
+    "cosmic-applibrary",
+    "cosmic-bg",
+    "cosmic-comp",
+    "cosmic-edit",
+    "cosmic-files",
+    "cosmic-greeter",
+    "cosmic-icons",
+    "cosmic-idle",
+    "cosmic-initial-setup",
+    "cosmic-launcher",
+    "cosmic-notifications",
+    "cosmic-osd",
+    "cosmic-panel",
+    "cosmic-randr",
+    "cosmic-screenshot",
+    "cosmic-session",
+    "cosmic-settings-daemon",
+    "cosmic-settings",
+    "cosmic-store",
+    "cosmic-term",
+    "cosmic-wallpapers",
+    "cosmic-workspaces-epoch",
+    "xdg-desktop-portal-cosmic",
+    "cosmic-player",
+    "cosmic-player",
+]
+
+RELEASE_TAG = "epoch-1.0.3"
 
 def fetch(url):
 
@@ -31,7 +61,8 @@ def fetch(url):
 with open("src.txt") as f:
     urls = [l.strip() for l in f.readlines()]
 
-for url in urls:
+for pkg_name in PKG_NAMES:
+    url = f"https://github.com/pop-os/{pkg_name}/archive/refs/tags/{RELEASE_TAG}.tar.gz"
     try:
         print(f"# fetching url: {url}")
         r = fetch(url)
@@ -39,9 +70,9 @@ for url in urls:
         c = r.read()
         h = hashlib.sha256(c).hexdigest()
         # print("#", r.status_code)
-        s = (
-            f"\"{url}\" = \"" + h + "\","
-        )
+        # s = "\"{pkg_name}\" = {" + f"\"{url}\" = \"" + h + "\"," + "},"
+        s = '"%s" = { uri = "%s",\nsha256sum = "%s", \n},\n' % ( pkg_name, url, h )
+
         print(s)
         with open("_cosmic_sources.ncl", "a") as f:
             f.write(s + "\n")

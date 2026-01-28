@@ -1,6 +1,8 @@
 {
   lib,
   drvs,
+    _cosmicSrcs,
+
   cosmicIcons | lib.Package = {
     singleSource = {
       uri = "https://github.com/pop-os/cosmic-icons/archive/refs/tags/epoch-1.0.0.tar.gz",

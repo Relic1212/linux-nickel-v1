@@ -2,14 +2,12 @@
   lib,
   drvs,
   _CargoFetcher,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
   cosmicTermSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-      singleSource = {
-        uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.0.0.tar.gz",
-        sha256sum = _cosmicSrcSha256sums."%{uri}", #"9bff7b2b9dd5e0200d955c0a4ef966e3c2f19aa8dc574dbfcda7ed9aae313ece"
-      },
+           singleSource = _cosmicSrcs."cosmic-term",
+
       outputSha256sum = (import "src.sha256sum" as 'Text), # "cba881ee68370c682f4082d33cfdfa73dbcfd9d9fbdffa6f38377d8a3984f502"
     },
 }

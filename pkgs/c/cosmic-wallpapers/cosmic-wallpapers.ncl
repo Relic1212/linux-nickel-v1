@@ -1,12 +1,10 @@
 {
   lib,
   drvs,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
   cosmicWallpapers | lib.MakePackage = {
-    singleSource = {
-      uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.0.0.tar.gz",
-      sha256sum = _cosmicSrcSha256sums."%{uri}",
-    },
+         singleSource = _cosmicSrcs."cosmic-wallpapers",
+
     extraMakeArgs = [
       "prefix=/usr"
     ],

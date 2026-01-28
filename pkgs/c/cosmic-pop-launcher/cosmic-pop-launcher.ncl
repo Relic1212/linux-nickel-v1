@@ -2,7 +2,7 @@
   lib,
   drvs,
   _CargoFetcher,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
   cosmicPopLauncherSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {

@@ -2,14 +2,14 @@
   lib,
   drvs,
   _CargoFetcher,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
+    _cosmicSrcs,
+
   cosmicBgSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-      singleSource = {
-        uri = "https://github.com/pop-os/cosmic-bg/archive/refs/tags/epoch-1.0.0.tar.gz",
-        sha256sum = _cosmicSrcSha256sums."%{uri}", #"9a514472379412635a1d75325c9bb03313ed170634b841c75a65f73de62d0b1d"
-      },
+            singleSource = _cosmicSrcs."cosmic-bg",
+
       outputSha256sum = (import "src.sha256sum" as 'Text), # "0ff1275ce810d127c2d73cb10d13063173252aa97c0867bc4900c5e9be81791f"
     },
 }

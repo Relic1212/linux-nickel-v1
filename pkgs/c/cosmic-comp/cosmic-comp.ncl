@@ -3,14 +3,14 @@
   drvs,
   distro,
   cosmicComp | lib.CargoPackage = {
-    sourceInputs = [
-      {
-        src = {
-          uri = "https://github.com/pop-os/cosmic-comp/commit/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch",
-          sha256sum = "370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835"
-        }
-      },
-    ],
+    # sourceInputs = [
+    #   {
+    #     src = {
+    #       uri = "https://github.com/pop-os/cosmic-comp/commit/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch",
+    #       sha256sum = "370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835"
+    #     }
+    #   },
+    # ],
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -23,7 +23,7 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
-      "(cd ${SRC} && patch -p1 < ../packed/370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch)",
+      # "(cd ${SRC} && patch -p1 < ../packed/370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch)",
     ],
 
     extraEnv = {
@@ -201,12 +201,12 @@
 & {
   lib,
   drvs,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
+    _cosmicSrcs,
+
   cosmicCompSources | lib.DeterministicFetcher = {
-    singleSource = {
-      uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0.tar.gz",
-      sha256sum = _cosmicSrcSha256sums."%{uri}",
-    },
+          singleSource = _cosmicSrcs."cosmic-comp",
+
     extraEnv = {
       HOME = "/tmp/home"
     },
@@ -274,5 +274,5 @@
     ]
   }
 }
-& ({ _cosmicSrcSha256sums = import "../cosmic-common/_cosmic_sources.ncl" }
+& ({ _cosmicSrcs = import "../cosmic-common/_cosmic_sources.ncl" }
 )

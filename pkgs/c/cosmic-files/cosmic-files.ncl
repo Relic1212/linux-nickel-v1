@@ -2,14 +2,14 @@
   lib,
   drvs,
   _CargoFetcher,
-  _cosmicSrcSha256sums,
+  _cosmicSrcs,
+    _cosmicSrcs,
+
   cosmicFilesSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-      singleSource = {
-        uri = "https://github.com/pop-os/cosmic-files/archive/refs/tags/epoch-1.0.0.tar.gz",
-        sha256sum = _cosmicSrcSha256sums."%{uri}", #"7651949001e13cfc93c51ccb806812600e8afe9dba0bad65248bf1eabf7c1e21"
-      },
+            singleSource = _cosmicSrcs."cosmic-files",
+
       outputSha256sum = (import "src.sha256sum" as 'Text), # "85ad78cf0fdc54f92431c17b78f80008f6c7a09d737d1cd5cd66dc3269efd78a"
     },
 }
@@ -38,6 +38,8 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+
+      "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
     ],
 
     extraEnv = {
