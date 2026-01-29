@@ -3,11 +3,16 @@
   drvs,
   sbase | lib.MakePackage = {
     singleSource = {
+      fetchMethod = "git",
       uri = "git://git.suckless.org/sbase",
-      sha256sum = "cf1e0643396391213056ebae2f5c25611fc20ea4"
+      sha256sum = "b343ded0be4defafb709945117d79dab4e70a242"
     },
     extraMakeInstallArgs = [
       "PREFIX=/usr"
+    ],
+    biDrvs = [
+      drvs.bison,
+      drvs.m4,
     ]
   }
 }
@@ -16,8 +21,9 @@
   drvs,
   ubase | lib.MakePackage = {
     singleSource = {
+      fetchMethod = "git",
       uri = "git://git.suckless.org/ubase",
-      sha256sum = "a570a80ed1606bed43118cb148fc83c3ac22b5c1"
+      sha256sum = "e8249b49ca3e02032dece5e0cdac3d236667a6d9"
     },
     extraMakeArgs = [
       "CC=\"${CC}\"",
