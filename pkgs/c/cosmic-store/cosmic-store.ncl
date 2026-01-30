@@ -6,7 +6,7 @@
   cosmicStoreSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-           singleSource = _cosmicSrcs."cosmic-store",
+      singleSource = _cosmicSrcs."cosmic-store",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "62ba42991eb3a9ca990d19ccc127d07c342796c871dc85a4a93717d0a0a7cecd"
     },

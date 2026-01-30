@@ -3,12 +3,12 @@
   drvs,
   _CargoFetcher,
   _cosmicSrcs,
-    _cosmicSrcs,
+  _cosmicSrcs,
 
   cosmicLauncherSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-            singleSource = _cosmicSrcs."cosmic-launcher",
+      singleSource = _cosmicSrcs."cosmic-launcher",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "54b56f6fab70618bac30baf0a37bdb943914a74ff87df9973fe43caa2c786a30"
     },

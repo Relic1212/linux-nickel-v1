@@ -6,7 +6,7 @@
   cosmicSessionSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-           singleSource = _cosmicSrcs."cosmic-session",
+      singleSource = _cosmicSrcs."cosmic-session",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "97d29b368657b5d2bd4a3634d9914780a55721e8e5ce95e227b6432d9ccd8337"
     },

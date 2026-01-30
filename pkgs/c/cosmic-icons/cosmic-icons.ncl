@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-    _cosmicSrcs,
+  _cosmicSrcs,
 
   cosmicIcons | lib.Package = {
     singleSource = {

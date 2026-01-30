@@ -6,7 +6,7 @@
   cosmicScreenshotSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-            singleSource = _cosmicSrcs."cosmic-screenshot",
+      singleSource = _cosmicSrcs."cosmic-screenshot",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "a913e0027c866c6a89979b725b1fbdfc13cec1e81b74058c14fd59634d1f8659"
     },

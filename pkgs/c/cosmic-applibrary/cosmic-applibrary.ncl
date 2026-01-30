@@ -3,7 +3,7 @@
   drvs,
   _CargoFetcher,
   _cosmicSrcs,
-    _cosmicSrcs,
+  _cosmicSrcs,
 
   cosmicApplibrarySources | lib.DeterministicFetcher =
     _CargoFetcher

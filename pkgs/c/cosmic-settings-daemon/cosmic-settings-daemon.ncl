@@ -6,7 +6,7 @@
   cosmicSettingsDaemonSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-            singleSource = _cosmicSrcs."cosmic-settings-daemon",
+      singleSource = _cosmicSrcs."cosmic-settings-daemon",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "a8f8d82b769cd78cebc059564967f33354a731f9ea4a57d02e2b004d6ab172bb"
     },

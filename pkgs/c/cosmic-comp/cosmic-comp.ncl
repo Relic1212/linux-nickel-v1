@@ -202,10 +202,10 @@
   lib,
   drvs,
   _cosmicSrcs,
-    _cosmicSrcs,
+  _cosmicSrcs,
 
   cosmicCompSources | lib.DeterministicFetcher = {
-          singleSource = _cosmicSrcs."cosmic-comp",
+    singleSource = _cosmicSrcs."cosmic-comp",
 
     extraEnv = {
       HOME = "/tmp/home"

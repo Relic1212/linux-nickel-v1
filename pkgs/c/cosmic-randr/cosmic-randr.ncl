@@ -6,7 +6,7 @@
   cosmicRandrSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-            singleSource = _cosmicSrcs."cosmic-randr",
+      singleSource = _cosmicSrcs."cosmic-randr",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "81b1e418d3a4ca233429c21e83a53a9df88e72a1b840f39a9fb4d6ed34d61b9a"
     },

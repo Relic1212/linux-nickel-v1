@@ -6,7 +6,7 @@
   cosmicWorkspacesEpochSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-            singleSource = _cosmicSrcs."cosmic-workspaces-epoch",
+      singleSource = _cosmicSrcs."cosmic-workspaces-epoch",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "7764781d37716ee884da5f2bc2d3b96506118f04d6541a76379cdd75b88bb819"
     },

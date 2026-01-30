@@ -3,7 +3,7 @@
   drvs,
   _cosmicSrcs,
   cosmicWallpapers | lib.MakePackage = {
-         singleSource = _cosmicSrcs."cosmic-wallpapers",
+    singleSource = _cosmicSrcs."cosmic-wallpapers",
 
     extraMakeArgs = [
       "prefix=/usr"
