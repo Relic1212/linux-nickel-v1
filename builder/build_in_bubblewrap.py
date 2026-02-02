@@ -56,6 +56,15 @@ def drv_to_workdir(drv: dict) -> str:
     return workdir
 
 
+def get_full_src_path(h):
+    src_dir = dirpaths.get_basedir() + "/" + h + "-src/packed/"
+    cont = os.listdir(src_dir)
+    if len(cont) != 1:
+        raise Exception(f"{src_dir} does not contain exactly one item")
+    src_p = src_dir + "/" + cont[0]
+    return src_p
+
+
 def copy_src(h, dest):
     src_dir = dirpaths.get_basedir() + "/" + h + "-src/packed/"
     cont = os.listdir(src_dir)
@@ -263,16 +272,37 @@ class builder:
             sysroot_utils.build_sysroot(
                 sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
 
+        bwrap_src_args = []
         for si_drv in drv["sourceInputDrvs"]:
             dest = si_drv["dest"]
             si_h = si_drv["src"]
             full_dest = workdir + f"/packed/{si_h}"
+            full_dest_append = ""
             if dest != "":
-                full_dest += f"/{dest}"
+                full_dest_append = f"/{dest}"
+            full_dest += full_dest_append
             # should not exist as workdir was deleted and si_h is unique
             os.makedirs(full_dest)
+
             si = pkg_drvs[si_h]
-            copy_src(h=si_h, dest=full_dest)
+            if not sandboxed:
+                copy_src(h=si_h, dest=full_dest)
+            else:
+                # full_src_path = get_full_src_path(si_h)
+                # src_basename = os.path.basename(full_src_path)
+                src_dir = dirpaths.get_basedir() + "/" + si_h + "-src/packed/"
+                # if os.path.isdir(full_src_path):
+                #     os.makedirs(os.path.join (full_dest, src_basename))
+                # else:
+                #     with open(os.path.join (full_dest, src_basename),"w") as f:
+                #         pass
+                bwrap_src_args += [
+                    "--ro-bind",
+                    src_dir,
+                    os.path.join("/tmp/workdir/packed/", si_h) +
+                    full_dest_append,
+
+                ]
 
         patch_drvs = drv["patchDrvs"]
         for pd in patch_drvs:
@@ -310,6 +340,8 @@ class builder:
         for ropath in ropaths:
             args += ["--ro-bind", f"{workdir}/{ropath}",
                      f"/tmp/workdir/{ropath}"]
+
+        args += bwrap_src_args
 
         rwpaths_tmp = ["src", "build"]
 
