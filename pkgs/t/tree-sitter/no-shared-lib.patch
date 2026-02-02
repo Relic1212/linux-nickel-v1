@@ -1,0 +1,29 @@
+diff --git a/Makefile b/Makefile
+index 831933c0..5fe74e09 100644
+--- a/Makefile
++++ b/Makefile
+@@ -52,7 +52,7 @@ ifneq ($(filter $(shell uname),FreeBSD NetBSD DragonFly),)
+ endif
+ endif
+ 
+-all: libtree-sitter.a libtree-sitter.$(SOEXT) tree-sitter.pc
++all: libtree-sitter.a tree-sitter.pc
+ 
+ libtree-sitter.a: $(OBJ)
+ 	$(AR) $(ARFLAGS) $@ $^
+@@ -87,15 +87,6 @@ install: all
+ 	install -m644 lib/include/tree_sitter/api.h '$(DESTDIR)$(INCLUDEDIR)'/tree_sitter/api.h
+ 	install -m644 tree-sitter.pc '$(DESTDIR)$(PCLIBDIR)'/tree-sitter.pc
+ 	install -m644 libtree-sitter.a '$(DESTDIR)$(LIBDIR)'/libtree-sitter.a
+-ifneq ($(findstring mingw32,$(MACHINE)),)
+-	install -d '$(DESTDIR)$(BINDIR)'
+-	install -m755 libtree-sitter.dll '$(DESTDIR)$(BINDIR)'/libtree-sitter.dll
+-	install -m755 libtree-sitter.dll.a '$(DESTDIR)$(LIBDIR)'/libtree-sitter.dll.a
+-else
+-	install -m755 libtree-sitter.$(SOEXT) '$(DESTDIR)$(LIBDIR)'/libtree-sitter.$(SOEXTVER)
+-	cd '$(DESTDIR)$(LIBDIR)' && ln -sf libtree-sitter.$(SOEXTVER) libtree-sitter.$(SOEXTVER_MAJOR)
+-	cd '$(DESTDIR)$(LIBDIR)' && ln -sf libtree-sitter.$(SOEXTVER_MAJOR) libtree-sitter.$(SOEXT)
+-endif
+ 
+ uninstall:
+ 	$(RM) '$(DESTDIR)$(LIBDIR)'/libtree-sitter.a \
