@@ -37,6 +37,7 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      # "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
 
       # "patch -p1 < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch",
     ]
