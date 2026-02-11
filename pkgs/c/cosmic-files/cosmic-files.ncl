@@ -39,6 +39,8 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
+      # "(cd vendor && patch -p1 compio-driver/src/sys/unix_op.rs < /tmp/workdir/files/compio-driver-669.patch)",
+      # "(cd vendor && patch -p1 compio-driver/src/sys/iour/op.rs < /tmp/workdir/files/compio-driver-669.patch)",
     ],
 
     extraEnv = {
@@ -52,8 +54,14 @@
       {
         sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
         file = "cosmic-osd-xkb.patch",
-      }
+      },
     ],
+    # extraFiles = [
+    #    {
+    #     sha256sum = "920286b13acde8db1fd66b3e4e926d7a157eed027833eca51c3a2e24e91f7f0f",
+    #     file =  "compio-driver-669.patch",
+    #   },
+    # ],
     target,
     buildPhase = [
       "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
@@ -147,6 +155,7 @@
       drvs.zstd,
       drvs.pipewire,
       drvs.libstdcppCompat,
+      # drvs.gnupatch & {priority = 1},
     ],
   },
 }

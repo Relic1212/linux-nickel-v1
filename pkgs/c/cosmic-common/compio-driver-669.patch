@@ -102,32 +102,6 @@ Date: Mon, 9 Feb 2026 18:02:25 +0800
 Subject: [PATCH 04/11] feat: add `native-tls-vendored` feature
 
 ---
- compio/Cargo.toml     | 4 ++++
- 3 files changed, 6 insertions(+)
-
-
-diff --git a/compio/Cargo.toml b/compio/Cargo.toml
-index 0568ea87..b69bfd1d 100644
---- a/compio/Cargo.toml
-+++ b/compio/Cargo.toml
-@@ -79,6 +79,10 @@ time = ["compio-runtime/time", "runtime"]
- dispatcher = ["dep:compio-dispatcher", "runtime"]
- tls = ["dep:compio-tls"]
- native-tls = ["tls", "compio-tls/native-tls", "compio-ws?/native-tls"]
-+native-tls-vendored = [
-+    "compio-tls/native-tls-vendored",
-+    "compio-ws?/native-tls-vendored",
-+]
- rustls = ["tls", "compio-tls/rustls", "compio-ws?/rustls"]
- ring = ["tls", "compio-tls/ring", "compio-quic?/ring", "compio-ws?/ring"]
- process = ["dep:compio-process"]
-
-From ea440e65eae4f718c689de5d76a7c2797e3e631b Mon Sep 17 00:00:00 2001
-From: Yuyi Wang <Strawberry_Str@hotmail.com>
-Date: Mon, 9 Feb 2026 18:07:49 +0800
-Subject: [PATCH 05/11] fix(driver,iour): statx_mask
-
----
  compio-driver/src/sys/unix_op.rs | 23 ++++++++---------------
  1 file changed, 8 insertions(+), 15 deletions(-)
 

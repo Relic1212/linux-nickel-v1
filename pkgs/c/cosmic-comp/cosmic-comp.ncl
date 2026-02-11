@@ -172,6 +172,7 @@
       drvs.seatd,
       drvs.elogindWithPolkit,
       drvs.libcap,
+      drvs.gnupatch & { priority = 1 },
     ],
 
     # propagatedBuildInputs = [
@@ -274,5 +275,5 @@
     ]
   }
 }
-& ({ _cosmicSrcs = import "../cosmic-common/_cosmic_sources.ncl" }
+& ({ _cosmicSrcs = (import "../cosmic-common/_cosmic_sources.ncl") & (import "../cosmic-common/_cosmic_sources_override.ncl") }
 )
