@@ -1,0 +1,418 @@
+From 6b602ef47ed1c7ba2a04011d7b04b84377a183a4 Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Mon, 9 Feb 2026 16:55:55 +0800
+Subject: [PATCH 01/11] fix(driver,iour): call stat for musl
+
+---
+ compio-driver/src/sys/iour/op.rs | 19 +++++++++++++++++++
+ compio-driver/src/sys/unix_op.rs | 24 ++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
+
+diff --git a/compio-driver/src/sys/iour/op.rs b/compio-driver/src/sys/iour/op.rs
+index c077ecd5..ab66a0ae 100644
+--- a/compio-driver/src/sys/iour/op.rs
++++ b/compio-driver/src/sys/iour/op.rs
+@@ -132,6 +132,7 @@ unsafe impl<S: AsFd> OpCode for FileStat<S> {
+         .into()
+     }
+ 
++    #[cfg(gnulinux)]
+     fn call_blocking(self: Pin<&mut Self>) -> io::Result<usize> {
+         let this = self.project();
+         static EMPTY_NAME: &[u8] = b"\0";
+@@ -144,6 +145,15 @@ unsafe impl<S: AsFd> OpCode for FileStat<S> {
+         ))?;
+         Ok(res as _)
+     }
++
++    #[cfg(not(gnulinux))]
++    fn call_blocking(self: Pin<&mut Self>) -> io::Result<usize> {
++        let this = self.project();
++        let mut stat = unsafe { std::mem::zeroed() };
++        let res = syscall!(libc::fstat(this.fd.as_fd().as_raw_fd(), &mut stat))?;
++        *this.stat = stat_to_statx(stat);
++        Ok(res as _)
++    }
+ }
+ 
+ impl<S> IntoInner for FileStat<S> {
+@@ -189,6 +199,7 @@ unsafe impl OpCode for PathStat {
+         .into()
+     }
+ 
++    #[cfg(gnulinux)]
+     fn call_blocking(mut self: Pin<&mut Self>) -> io::Result<usize> {
+         let mut flags = libc::AT_EMPTY_PATH;
+         if !self.follow_symlink {
+@@ -203,6 +214,14 @@ unsafe impl OpCode for PathStat {
+         ))?;
+         Ok(res as _)
+     }
++
++    #[cfg(not(gnulinux))]
++    fn call_blocking(mut self: Pin<&mut Self>) -> io::Result<usize> {
++        let mut stat = unsafe { std::mem::zeroed() };
++        let res = syscall!(libc::stat(self.path.as_ptr(), &mut stat))?;
++        self.stat = stat_to_statx(stat);
++        Ok(res as _)
++    }
+ }
+ 
+ impl IntoInner for PathStat {
+diff --git a/compio-driver/src/sys/unix_op.rs b/compio-driver/src/sys/unix_op.rs
+index 5da6b3dd..d4b85650 100644
+--- a/compio-driver/src/sys/unix_op.rs
++++ b/compio-driver/src/sys/unix_op.rs
+@@ -167,6 +167,30 @@ pub(crate) const fn statx_to_stat(statx: Statx) -> Stat {
+     stat
+ }
+ 
++#[cfg(all(target_os = "linux", not(target_env = "gnu")))]
++pub(crate) const fn stat_to_statx(stat: Stat) -> Statx {
++    let mut statx: Statx = unsafe { std::mem::zeroed() };
++    statx.stx_dev_major = libc::major(stat.st_dev as _) as _;
++    statx.stx_dev_minor = libc::minor(stat.st_dev as _) as _;
++    statx.stx_ino = stat.st_ino as _;
++    statx.stx_nlink = stat.st_nlink as _;
++    statx.stx_mode = stat.st_mode as _;
++    statx.stx_uid = stat.st_uid as _;
++    statx.stx_gid = stat.st_gid as _;
++    statx.stx_rdev_major = libc::major(stat.st_rdev as _) as _;
++    statx.stx_rdev_minor = libc::minor(stat.st_rdev as _) as _;
++    statx.stx_size = stat.st_size as _;
++    statx.stx_blksize = stat.st_blksize as _;
++    statx.stx_blocks = stat.st_blocks as _;
++    statx.stx_atime.tv_sec = stat.st_atime as _;
++    statx.stx_atime.tv_nsec = stat.st_atime_nsec as _;
++    statx.stx_mtime.tv_sec = stat.st_mtime as _;
++    statx.stx_mtime.tv_nsec = stat.st_mtime_nsec as _;
++    statx.stx_btime.tv_sec = stat.st_ctime as _;
++    statx.stx_btime.tv_nsec = stat.st_ctime_nsec as _;
++    statx
++}
++
+ pin_project! {
+     /// Read a file at specified position into vectored buffer.
+     pub struct ReadVectoredAt<T: IoVectoredBufMut, S> {
+
+
+From 79c236bc80a42a0405cb0c30847b6a169dd934ef Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Mon, 9 Feb 2026 18:02:25 +0800
+Subject: [PATCH 04/11] feat: add `native-tls-vendored` feature
+
+---
+ compio/Cargo.toml     | 4 ++++
+ 3 files changed, 6 insertions(+)
+
+
+diff --git a/compio/Cargo.toml b/compio/Cargo.toml
+index 0568ea87..b69bfd1d 100644
+--- a/compio/Cargo.toml
++++ b/compio/Cargo.toml
+@@ -79,6 +79,10 @@ time = ["compio-runtime/time", "runtime"]
+ dispatcher = ["dep:compio-dispatcher", "runtime"]
+ tls = ["dep:compio-tls"]
+ native-tls = ["tls", "compio-tls/native-tls", "compio-ws?/native-tls"]
++native-tls-vendored = [
++    "compio-tls/native-tls-vendored",
++    "compio-ws?/native-tls-vendored",
++]
+ rustls = ["tls", "compio-tls/rustls", "compio-ws?/rustls"]
+ ring = ["tls", "compio-tls/ring", "compio-quic?/ring", "compio-ws?/ring"]
+ process = ["dep:compio-process"]
+
+From ea440e65eae4f718c689de5d76a7c2797e3e631b Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Mon, 9 Feb 2026 18:07:49 +0800
+Subject: [PATCH 05/11] fix(driver,iour): statx_mask
+
+---
+ compio-driver/src/sys/unix_op.rs | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/compio-driver/src/sys/unix_op.rs b/compio-driver/src/sys/unix_op.rs
+index d4b85650..919bae36 100644
+--- a/compio-driver/src/sys/unix_op.rs
++++ b/compio-driver/src/sys/unix_op.rs
+@@ -126,23 +126,16 @@ pub(crate) struct Statx {
+     __statx_pad3: [u64; 12],
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(gnulinux)]
+ pub(crate) const fn statx_mask() -> u32 {
+     // Set mask to ensure all known fields are filled
+-    libc::STATX_TYPE
+-        | libc::STATX_MODE
+-        | libc::STATX_NLINK
+-        | libc::STATX_UID
+-        | libc::STATX_GID
+-        | libc::STATX_ATIME
+-        | libc::STATX_MTIME
+-        | libc::STATX_CTIME
+-        | libc::STATX_INO
+-        | libc::STATX_SIZE
+-        | libc::STATX_BLOCKS
+-        | libc::STATX_BTIME
+-        | libc::STATX_MNT_ID
+-        | libc::STATX_DIOALIGN
++    libc::STATX_ALL | libc::STATX_MNT_ID | libc::STATX_DIOALIGN
++}
++
++#[cfg(not(gnulinux))]
++pub(crate) const fn statx_mask() -> u32 {
++    // The same as above
++    0x3FFF
+ }
+ 
+ #[cfg(target_os = "linux")]
+
+From 7a80fec9ac25476c3fd888e5efac777524c2a2e7 Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Mon, 9 Feb 2026 18:17:24 +0800
+Subject: [PATCH 06/11] fix(bench): monoio only supports gnu
+
+---
+ compio/Cargo.toml     |  2 +-
+ compio/benches/fs.rs  | 24 ++++++++++++------------
+ compio/benches/net.rs | 14 +++++++-------
+ 3 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/compio/Cargo.toml b/compio/Cargo.toml
+index b69bfd1d..569c4599 100644
+--- a/compio/Cargo.toml
++++ b/compio/Cargo.toml
+@@ -60,7 +60,7 @@ windows-sys = { workspace = true, features = ["Win32_Storage_FileSystem"] }
+ nix = { workspace = true, features = ["fs"] }
+ libc = { workspace = true }
+ 
+-[target.'cfg(target_os = "linux")'.dev-dependencies]
++[target.'cfg(all(target_os = "linux", target_env = "gnu"))'.dev-dependencies]
+ monoio = { version = "0.2.2", default-features = false, features = ["iouring"] }
+ 
+ [features]
+diff --git a/compio/benches/fs.rs b/compio/benches/fs.rs
+index 7b4cd58c..3aa00428 100644
+--- a/compio/benches/fs.rs
++++ b/compio/benches/fs.rs
+@@ -13,9 +13,9 @@ use rand::{Rng, RngCore, rng};
+ use tempfile::NamedTempFile;
+ use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ mod monoio_wrap;
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ use monoio_wrap::MonoioRuntime;
+ 
+ criterion_group!(fs, read, write);
+@@ -104,7 +104,7 @@ fn read_compio_join(b: &mut Bencher, (path, offsets): &(&Path, &[u64])) {
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn read_monoio(b: &mut Bencher, (path, offsets): &(&Path, &[u64])) {
+     let runtime = MonoioRuntime::new();
+     b.to_async(&runtime).iter_custom(|iter| async move {
+@@ -179,7 +179,7 @@ fn read_all_compio(b: &mut Bencher, (path, len): &(&Path, u64)) {
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn read_all_monoio(b: &mut Bencher, (path, len): &(&Path, u64)) {
+     let runtime = MonoioRuntime::new();
+     b.to_async(&runtime).iter_custom(|iter| async move {
+@@ -229,7 +229,7 @@ fn read(c: &mut Criterion) {
+         &(&path, &offsets),
+         read_compio_join,
+     );
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_with_input::<_, _, (&Path, &[u64])>("monoio", &(&path, &offsets), read_monoio);
+ 
+     group.finish();
+@@ -242,7 +242,7 @@ fn read(c: &mut Criterion) {
+     group.bench_with_input::<_, _, (&Path, u64)>("std", &(&path, TOTAL_SIZE), read_all_std);
+     group.bench_with_input::<_, _, (&Path, u64)>("tokio", &(&path, TOTAL_SIZE), read_all_tokio);
+     group.bench_with_input::<_, _, (&Path, u64)>("compio", &(&path, TOTAL_SIZE), read_all_compio);
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_with_input::<_, _, (&Path, u64)>("monoio", &(&path, TOTAL_SIZE), read_all_monoio);
+ 
+     group.finish();
+@@ -343,7 +343,7 @@ fn write_compio_join(b: &mut Bencher, (path, offsets, content): &(&Path, &[u64],
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn write_monoio(b: &mut Bencher, (path, offsets, content): &(&Path, &[u64], &[u8])) {
+     let runtime = MonoioRuntime::new();
+     let content = content.to_vec();
+@@ -369,7 +369,7 @@ fn write_monoio(b: &mut Bencher, (path, offsets, content): &(&Path, &[u64], &[u8
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn write_monoio_join(b: &mut Bencher, (path, offsets, content): &(&Path, &[u64], &[u8])) {
+     let runtime = MonoioRuntime::new();
+     let content = content.to_vec();
+@@ -477,7 +477,7 @@ fn write_all_compio(b: &mut Bencher, (path, content): &(&Path, &[u8])) {
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn write_all_monoio(b: &mut Bencher, (path, content): &(&Path, &[u8])) {
+     let runtime = MonoioRuntime::new();
+     let content = content.to_vec();
+@@ -563,13 +563,13 @@ fn write(c: &mut Criterion) {
+         &(&path, &offsets, &single_content),
+         write_compio_join,
+     );
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_with_input::<_, _, (&Path, &[u64], &[u8])>(
+         "monoio",
+         &(&path, &offsets, &single_content),
+         write_monoio,
+     );
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_with_input::<_, _, (&Path, &[u64], &[u8])>(
+         "monoio-join",
+         &(&path, &offsets, &single_content),
+@@ -584,7 +584,7 @@ fn write(c: &mut Criterion) {
+     group.bench_with_input::<_, _, (&Path, &[u8])>("std", &(&path, &content), write_all_std);
+     group.bench_with_input::<_, _, (&Path, &[u8])>("tokio", &(&path, &content), write_all_tokio);
+     group.bench_with_input::<_, _, (&Path, &[u8])>("compio", &(&path, &content), write_all_compio);
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_with_input::<_, _, (&Path, &[u8])>("monoio", &(&path, &content), write_all_monoio);
+ 
+     group.finish()
+diff --git a/compio/benches/net.rs b/compio/benches/net.rs
+index 68b47cbc..69c09d56 100644
+--- a/compio/benches/net.rs
++++ b/compio/benches/net.rs
+@@ -3,9 +3,9 @@ use std::{net::Ipv4Addr, rc::Rc, time::Instant};
+ use criterion::{Bencher, Criterion, Throughput, criterion_group, criterion_main};
+ use rand::{RngCore, rng};
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ mod monoio_wrap;
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ use monoio_wrap::MonoioRuntime;
+ 
+ criterion_group!(net, echo);
+@@ -62,7 +62,7 @@ where
+     futures_util::join!(client, server);
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ async fn echo_monoio_impl<T, R>(mut tx: T, mut rx: R, mut content: Box<[u8; BUFFER_SIZE]>)
+ where
+     T: monoio::io::AsyncReadRent + monoio::io::AsyncWriteRent,
+@@ -135,7 +135,7 @@ fn echo_compio_tcp(b: &mut Bencher, content: Rc<[u8; BUFFER_SIZE]>) {
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn echo_monoio_tcp(b: &mut Bencher, content: &[u8; BUFFER_SIZE]) {
+     use monoio::net::{TcpListener, TcpStream};
+ 
+@@ -256,7 +256,7 @@ fn echo_compio_unix(b: &mut Bencher, content: Rc<[u8; BUFFER_SIZE]>) {
+     })
+ }
+ 
+-#[cfg(target_os = "linux")]
++#[cfg(all(target_os = "linux", target_env = "gnu"))]
+ fn echo_monoio_unix(b: &mut Bencher, content: &[u8; BUFFER_SIZE]) {
+     use monoio::net::{UnixListener, UnixStream};
+ 
+@@ -295,7 +295,7 @@ fn echo(c: &mut Criterion) {
+ 
+     group.bench_function("tokio-tcp", |b| echo_tokio_tcp(b, &content));
+     group.bench_function("compio-tcp", |b| echo_compio_tcp(b, content.clone()));
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_function("monoio-tcp", |b| echo_monoio_tcp(b, &content));
+ 
+     #[cfg(windows)]
+@@ -308,7 +308,7 @@ fn echo(c: &mut Criterion) {
+     #[cfg(unix)]
+     group.bench_function("tokio-unix", |b| echo_tokio_unix(b, &content));
+     group.bench_function("compio-unix", |b| echo_compio_unix(b, content.clone()));
+-    #[cfg(target_os = "linux")]
++    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+     group.bench_function("monoio-unix", |b| echo_monoio_unix(b, &content));
+ 
+     group.finish();
+
+From 2726ab72c652e7c4f6064fcbb1813c0b67c3c13f Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Tue, 10 Feb 2026 18:41:49 +0800
+Subject: [PATCH 08/11] fix(driver,iour): fallback of PathStat
+
+---
+ compio-driver/src/sys/iour/op.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/compio-driver/src/sys/iour/op.rs b/compio-driver/src/sys/iour/op.rs
+index ab66a0ae..8b5d1d15 100644
+--- a/compio-driver/src/sys/iour/op.rs
++++ b/compio-driver/src/sys/iour/op.rs
+@@ -218,7 +218,11 @@ unsafe impl OpCode for PathStat {
+     #[cfg(not(gnulinux))]
+     fn call_blocking(mut self: Pin<&mut Self>) -> io::Result<usize> {
+         let mut stat = unsafe { std::mem::zeroed() };
+-        let res = syscall!(libc::stat(self.path.as_ptr(), &mut stat))?;
++        let res = if self.follow_symlink {
++            syscall!(libc::stat(self.path.as_ptr(), &mut stat))?
++        } else {
++            syscall!(libc::lstat(self.path.as_ptr(), &mut stat))?
++        };
+         self.stat = stat_to_statx(stat);
+         Ok(res as _)
+     }
+
+From bd10fc265af5aaf2a7540e8836184a5c3c1fe8cb Mon Sep 17 00:00:00 2001
+From: Yuyi Wang <Strawberry_Str@hotmail.com>
+Date: Tue, 10 Feb 2026 18:45:28 +0800
+Subject: [PATCH 10/11] fix(driver): statx_mask for linux only
+
+---
+ compio-driver/src/sys/unix_op.rs | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/compio-driver/src/sys/unix_op.rs b/compio-driver/src/sys/unix_op.rs
+index 919bae36..494fea8c 100644
+--- a/compio-driver/src/sys/unix_op.rs
++++ b/compio-driver/src/sys/unix_op.rs
+@@ -126,15 +126,10 @@ pub(crate) struct Statx {
+     __statx_pad3: [u64; 12],
+ }
+ 
+-#[cfg(gnulinux)]
++#[cfg(target_os = "linux")]
+ pub(crate) const fn statx_mask() -> u32 {
+     // Set mask to ensure all known fields are filled
+-    libc::STATX_ALL | libc::STATX_MNT_ID | libc::STATX_DIOALIGN
+-}
+-
+-#[cfg(not(gnulinux))]
+-pub(crate) const fn statx_mask() -> u32 {
+-    // The same as above
++    // libc::STATX_ALL | libc::STATX_MNT_ID | libc::STATX_DIOALIGN
+     0x3FFF
+ }
+ 
