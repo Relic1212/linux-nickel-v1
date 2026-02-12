@@ -13,8 +13,8 @@
       #     file = "vulkan-tools.patch"
       #   },
       {
-        sha256sum = "328ed7e7f747f5cd3a7d4b2f7b91db7b942852f30913133f8d547fe13faf369e",
-        file = "vulkan-tools-dl-2.patch"
+        sha256sum = "335ab8b216f63d5aca4692fb24cdb896c11709003458fb47cedc3566d6a85a31",
+        file = "vulkan-tools-dl.patch"
       }
     ],
     debug = true,
@@ -39,6 +39,7 @@
         "-Wl,-u,radv_EnumerateInstanceVersion",
         # "-Wl,-u,radv_CreateDebugReportCallbackEXT",
         "-Wl,-u,vk_common_CreateDebugReportCallbackEXT",
+        "-Wl,-u,vk_common_GetPhysicalDeviceProperties2",
         ##
         "-Wl,-u,vkGetInstanceProcAddr",
         "-Wl,-u,vkEnumerateInstanceExtensionProperties",
