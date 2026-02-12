@@ -1,0 +1,249 @@
+diff --git a/vulkaninfo/vulkaninfo_functions.h b/vulkaninfo/vulkaninfo_functions.h
+index 87e93f51..e471349b 100644
+--- a/vulkaninfo/vulkaninfo_functions.h
++++ b/vulkaninfo/vulkaninfo_functions.h
+@@ -40,27 +40,27 @@
+ void* vulkan_library;
+ 
+ // Global Functions
+-PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+-PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+-PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
+-PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
+-PFN_vkCreateInstance vkCreateInstance;
++extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
++extern PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
++extern PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
++extern PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
++extern PFN_vkCreateInstance vkCreateInstance;
+ 
+ // Per-platform Instance functions
+ #if defined(VK_USE_PLATFORM_WIN32_KHR)
+ PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+ #endif
+ #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
++extern PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+ #endif
+ #if defined(VK_USE_PLATFORM_ANDROID_KHR)
+ PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
+ #endif
+ #if defined(VK_USE_PLATFORM_XLIB_KHR)
+-PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
++extern PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+ #endif
+ #if defined(VK_USE_PLATFORM_XCB_KHR)
+-PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
++extern PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
+ #endif
+ #if defined(VK_USE_PLATFORM_METAL_EXT)
+ PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
+@@ -79,46 +79,46 @@ PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
+ #endif
+ // Instance functions
+ PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
+-PFN_vkCreateDevice vkCreateDevice;
++extern PFN_vkCreateDevice vkCreateDevice;
+ PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
+-PFN_vkDestroyInstance vkDestroyInstance;
+-PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+-PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
+-PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
+-PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
+-PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
+-PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
+-PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
+-PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+-PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
+-PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
+-PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
+-PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
+-PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
++extern PFN_vkDestroyInstance vkDestroyInstance;
++extern PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
++extern PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
++extern PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
++extern PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
++extern PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
++extern PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
++extern PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
++extern PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
++extern PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
++extern PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
++extern PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
++extern PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
++extern PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
++extern PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
++extern PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
++extern PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
+ PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR;
+-PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR;
++extern PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR;
++extern PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR;
+ PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR;
+ PFN_vkEnumeratePhysicalDeviceGroupsKHR vkEnumeratePhysicalDeviceGroupsKHR;
+-PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
+-PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
++extern PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
++extern PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
+ PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+ PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
+ PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+ PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
+-PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
++extern PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+ PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXT;
+ PFN_vkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXT;
+ PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
+ 
+ // Device functions
+-PFN_vkCreateImage vkCreateImage;
+-PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+-PFN_vkDestroyImage vkDestroyImage;
+-PFN_vkDestroyDevice vkDestroyDevice;
++extern PFN_vkCreateImage vkCreateImage;
++extern PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
++extern PFN_vkDestroyImage vkDestroyImage;
++extern PFN_vkDestroyDevice vkDestroyDevice;
+ 
+ #define LOAD_INSTANCE_FUNCTION(instance, function) function = (PFN_##function)vkGetInstanceProcAddr(instance, #function)
+ 
+@@ -128,7 +128,7 @@ static VkResult load_vulkan_library() {
+     HMODULE library = LoadLibraryA("vulkan-1.dll");
+     if (library == NULL) return VK_ERROR_INITIALIZATION_FAILED;
+ 
+-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)(void (*)(void))GetProcAddress(library, "vkGetInstanceProcAddr");
++//    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)(void (*)(void))GetProcAddress(library, "vkGetInstanceProcAddr");
+ #elif defined(__APPLE__)
+     void* library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
+     if (library == NULL) {
+@@ -144,23 +144,23 @@ static VkResult load_vulkan_library() {
+         return VK_ERROR_INITIALIZATION_FAILED;
+     }
+ 
+-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
++//    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+ #else  // Assume everything else supports dlopen
+     void* library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
+     if (library == NULL) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
+     if (library == NULL) {
+         return VK_ERROR_INITIALIZATION_FAILED;
+     }
+-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
++//    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(library, "vkGetInstanceProcAddr");
+ #endif
+     if (vkGetInstanceProcAddr == NULL) {
+         return VK_ERROR_INITIALIZATION_FAILED;
+     }
+     vulkan_library = library;
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceVersion);
+-    LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
++//    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceExtensionProperties);
++//    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceLayerProperties);
++//    LOAD_INSTANCE_FUNCTION(NULL, vkEnumerateInstanceVersion);
++//    LOAD_INSTANCE_FUNCTION(NULL, vkCreateInstance);
+ 
+     return VK_SUCCESS;
+ }
+@@ -181,16 +181,16 @@ static void load_vulkan_instance_functions(VkInstance instance) {
+     LOAD_INSTANCE_FUNCTION(instance, vkCreateWin32SurfaceKHR);
+ #endif
+ #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkCreateWaylandSurfaceKHR);
+ #endif
+ #if defined(VK_USE_PLATFORM_ANDROID_KHR)
+     LOAD_INSTANCE_FUNCTION(instance, vkCreateAndroidSurfaceKHR);
+ #endif
+ #if defined(VK_USE_PLATFORM_XLIB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkCreateXlibSurfaceKHR);
+ #endif
+ #if defined(VK_USE_PLATFORM_XCB_KHR)
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkCreateXcbSurfaceKHR);
+ #endif
+ #if defined(VK_USE_PLATFORM_METAL_EXT)
+     LOAD_INSTANCE_FUNCTION(instance, vkCreateMetalSurfaceEXT);
+@@ -209,46 +209,47 @@ static void load_vulkan_instance_functions(VkInstance instance) {
+ #endif
+ 
+     LOAD_INSTANCE_FUNCTION(instance, vkCreateDebugReportCallbackEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
++//    LOAD_INSTANCE_FUNCTION(instance, vkCreateDevice);
+     LOAD_INSTANCE_FUNCTION(instance, vkDestroyDebugReportCallbackEXT);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkDestroyInstance);
++//    LOAD_INSTANCE_FUNCTION(instance, vkDestroySurfaceKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkEnumerateDeviceExtensionProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayModePropertiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneCapabilitiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetDisplayPlaneSupportedDisplaysKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPlanePropertiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceDisplayPropertiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormats2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2KHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceFormats2KHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2KHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceVideoFormatPropertiesKHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDeviceGroupsKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceGroupPresentCapabilitiesKHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceImageFormatProperties);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetDeviceGroupPresentCapabilitiesKHR);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceImageFormatProperties);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceProperties2KHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceMemoryProperties2KHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFeatures2KHR);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceQueueFamilyProperties2KHR);
+-    LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
++//    LOAD_INSTANCE_FUNCTION(instance, vkEnumeratePhysicalDevices);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceSurfaceCapabilities2EXT);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceToolPropertiesEXT);
+     LOAD_INSTANCE_FUNCTION(instance, vkGetPhysicalDeviceFormatProperties2KHR);
+ 
+-    // Load device functions using vkGetInstanceProcAddr, vulkaninfo doesn't care about the extra indirection it causes
+-    LOAD_INSTANCE_FUNCTION(instance, vkCreateImage);
+-    LOAD_INSTANCE_FUNCTION(instance, vkGetImageMemoryRequirements);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyImage);
+-    LOAD_INSTANCE_FUNCTION(instance, vkDestroyDevice);
++//    // Load device functions using vkGetInstanceProcAddr, vulkaninfo doesn't care about the extra indirection it causes
++//    LOAD_INSTANCE_FUNCTION(instance, vkCreateImage);
++//    LOAD_INSTANCE_FUNCTION(instance, vkGetImageMemoryRequirements);
++//    LOAD_INSTANCE_FUNCTION(instance, vkDestroyImage);
++//    LOAD_INSTANCE_FUNCTION(instance, vkDestroyDevice);
+ }
+ 
+ #undef LOAD_INSTANCE_FUNCTION
++

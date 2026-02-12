@@ -6,8 +6,10 @@
     singleSource = {
       # uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.318.tar.gz",
       # sha256sum = "b0e9488ab13d1fa946d50d7905fa71ea0536151db846ae4d3b485f869639efcb",
-      uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.334.tar.gz",
-      sha256sum = "c2020c76f24c8f1139fe76f06d4d15bad615895de4ec32f9034cb321514824dd",
+      # uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.334.tar.gz",
+      # sha256sum = "c2020c76f24c8f1139fe76f06d4d15bad615895de4ec32f9034cb321514824dd",
+      uri = "https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/tags/v1.4.343.tar.gz",
+      sha256sum = "42d78c1b7c70e52f12055a2bc91a33a4ca22f16dd6d76c7caee6ade096200002",
     },
 
     patches = [

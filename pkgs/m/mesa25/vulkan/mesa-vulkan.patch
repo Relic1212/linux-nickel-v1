@@ -1,8 +1,8 @@
 diff --git a/src/vulkan/wsi/wsi_common.c b/src/vulkan/wsi/wsi_common.c
-index f78e4baa22a..c0067f1ae97 100644
+index 372c02bc4d3..a1b2bb34952 100644
 --- a/src/vulkan/wsi/wsi_common.c
 +++ b/src/vulkan/wsi/wsi_common.c
-@@ -105,7 +105,9 @@ wsi_device_init(struct wsi_device *wsi,
+@@ -106,7 +106,9 @@ wsi_device_init(struct wsi_device *wsi,
        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
        .pNext = &wsi->pci_bus_info,
     };

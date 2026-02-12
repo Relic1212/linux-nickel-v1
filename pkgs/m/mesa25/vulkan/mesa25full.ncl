@@ -5,6 +5,10 @@
   mesaFull =
     mesa2
     & {
+      singleSource | priority 1 = {
+        uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
+        sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72"
+      },
 
       extraMesonArgs | priority 1 = [
         "-Dgles1=disabled",
@@ -57,7 +61,17 @@
       },
 
       patches | priority 1 =
-        mesa2.patches
+        [
+          {
+            sha256sum = "0e84a42748ef7b8af159047e647907de17e107ad4e39557bafdc877a329257a4",
+            file = "mesa-26.0.0.patch",
+          },
+          {
+            file = "mesa-26.0.0-no-virgl-cache.patch",
+
+            sha256sum = "9af9263c2590fc092f2f8c96cf3ce08591b241423be121ed14980882b9479893"
+          },
+        ]
         @ [
           {
             sha256sum = "f224c21164f80f9766df0ba2531b11c6da43a6d61178e1e5e55da90cd2c6858c",
@@ -65,7 +79,7 @@
           },
           {
             file = "mesa-vulkan.patch",
-            sha256sum = "2d2a8bee17e092637f11ae3761ae730feb090df994226b59e361ab88573fccc0",
+            sha256sum = "d235a0d32a2c12ebbd9174ad4b8f2957f1f563ee494b3c2d949e7b4bfef76244",
           }
         ],
       preConfigurePhase | priority 1 =
@@ -91,6 +105,8 @@
           # m%"sed -i "s|'hidden'|'default'|g" ${SRC}/src/amd/vulkan/meson.build"%,
           # m%"sed -i "s|GetPhysicalDeviceProperties2|GetPhysicalDeviceProperties|g" ${SRC}/src/vulkan/wsi/wsi_common.c"%,
           # m%"sed -i 's|&pdp2|\&\(pdp2.properties\)|g' ${SRC}/src/vulkan/wsi/wsi_common.c"%,
+
+          m%"sed -i "s@hidden@default@g" ${SRC}/src/amd/vulkan/meson.build"%,
         ],
 
       # buildEnv = {
@@ -125,6 +141,12 @@
             @ (std.array.map (fun sym => "llvm-objcopy --redefine-sym %{sym}=virtio__%{sym} ${DEST}/usr/lib/libvulkan_virtio.a") syms)
           )
         )
+        @ [
+          # m%"for symbol in $(llvm-nm ${DEST}/usr/lib/libvulkan_radeon.a |grep "w radv_"|rev | cut -d ' ' -f1|rev); do"%,
+          # m%"  echo "globalizing: ${symbol}""%,
+          # "  objcopy --globalize-symbol ${symbol} ${DEST}/usr/lib/libvulkan_radeon.a",
+          # "done"
+        ]
         @ (
           if options.renamedDl then
             [
@@ -151,49 +173,48 @@
         ),
       llvmProvider | priority 1 = drvs.llvmFull,
       biDrvs | priority 1 = [
-        drvs.libelf,
-        drvs.libdrmDebug,
-        drvs.zlibNg,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.libffi,
         drvs.bison,
         drvs.flex,
-        drvs.linuxHeaders,
-        drvs.m4,
         drvs.git,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvToolsDebug,
         drvs.glslangDebug,
+        drvs.libdrmDebug,
+        drvs.libelf,
+        drvs.libffi,
+        drvs.libfontenc,
+        drvs.libpciaccess,
+        drvs.libx11,
+        drvs.libxau,
+        drvs.libxcb,
+        drvs.libxcursor,
+        drvs.libxcvt,
+        drvs.libxext,
+        drvs.libxf86vm,
+        drvs.libxfixes,
+        drvs.libxfont2,
+        drvs.libxkbfile,
+        drvs.libxrandr,
+        drvs.libxrender,
+        drvs.libxshmfence,
+        drvs.linuxHeaders,
+        drvs.llvmConfigStatic,
+        drvs.m4,
+        drvs.openssl,
+        drvs.pythonMako,
+        drvs.pythonMarkupsafe,
+        drvs.pythonPackaging,
+        drvs.pyyaml,
         drvs.spirvLlvmTranslatorDebug,
+        drvs.spirvToolsDebug,
         drvs.wayland,
         drvs.waylandProtocols,
-        drvs.libxcursor,
+        drvs.xcbProto,
+        drvs.xcbRenderutil,
+        drvs.xcbUtilErrors,
+        drvs.xcbUtilWm,
         drvs.xorgMacros,
         drvs.xorgproto,
         drvs.xtrans,
-        drvs.libxcb,
-        drvs.xcbProto,
-        drvs.libxau,
-        drvs.libx11,
-        drvs.libxrender,
-        drvs.libxfixes,
-        drvs.xcbRenderutil,
-        drvs.libxfont2,
-        drvs.libfontenc,
-        drvs.libxcvt,
-        drvs.libxshmfence,
-        # drvs.xwayland,
-        drvs.libxkbfile,
-        drvs.openssl,
-        drvs.xcbUtilWm,
-        drvs.xcbUtilErrors,
-        drvs.libxext,
-        drvs.libxf86vm,
-        drvs.libxrandr,
+        drvs.zlibNg,
         drvs.zstd,
       ]
     },
@@ -201,7 +222,21 @@
     mesaFull
     & {
       options.renamedDl = false,
-    }
+
+      preConfigurePhase | priority 2 =
+        mesaFull.preConfigurePhase
+        @ [
+          # m%"sed -i 's|VK_ENTRY_WEAK VK_ENTRY_HIDDEN||g' ${SRC}/src/vulkan/util/vk_entrypoints_gen.py"%,
+          # m%"sed -i 's|VK_ENTRY_WEAK VK_ENTRY_HIDDEN|VK_ENTRY_HIDDEN|g' ${SRC}/src/vulkan/util/vk_entrypoints_gen.py"%,
+          # m%"sed -i 's|VK_ENTRY_WEAK VK_ENTRY_HIDDEN|VK_ENTRY_WEAK|g' ${SRC}/src/vulkan/util/vk_entrypoints_gen.py"%,
+          # m%"sed -i 's@VK_ENTRY_WEAK VK_ENTRY_HIDDEN@__attribute__((weak))@g' ${SRC}/src/vulkan/util/vk_entrypoints_gen.py"%,
+        ],
+
+      # postInstallPhase | priority 1 =  [
+      #   "objcopy --globalize-symbol wsi_EnumerateInstanceVersion ${DEST}/usr/lib/libvulkan_radeon.a",
+      #   "objcopy --globalize-symbol vk_common_EnumerateInstanceVersion ${DEST}/usr/lib/libvulkan_radeon.a",
+      # ]
+    },
 }
 & (import "glslang.ncl")
 & (import "libdl-vulkan.ncl")

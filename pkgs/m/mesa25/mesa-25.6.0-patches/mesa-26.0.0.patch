@@ -1,0 +1,783 @@
+diff --git a/meson.build b/meson.build
+index 185f5c854a6..36ac24296c3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -26,7 +26,7 @@ elif host_machine.system() == 'windows'
+   libname_suffix = 'dll'
+ else
+   libname_prefix = 'lib'
+-  libname_suffix = 'so'
++  libname_suffix = 'a'
+ endif
+ 
+ cc = meson.get_compiler('c')
+diff --git a/src/amd/drm-shim/meson.build b/src/amd/drm-shim/meson.build
+index c324846501d..df84d29f4fc 100644
+--- a/src/amd/drm-shim/meson.build
++++ b/src/amd/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright © 2021 Emma Anholt
+ # SPDX-License-Identifier: MIT
+ 
+-libradeon_noop_drm_shim = shared_library(
++libradeon_noop_drm_shim = library(
+   'radeon_noop_drm_shim',
+   'radeon_noop_drm_shim.c',
+   include_directories: [inc_include, inc_src, inc_amd],
+@@ -10,7 +10,7 @@ libradeon_noop_drm_shim = shared_library(
+   install : true,
+ )
+ 
+-libamdgpu_noop_drm_shim = shared_library(
++libamdgpu_noop_drm_shim = library(
+   'amdgpu_noop_drm_shim',
+   ['amdgpu_noop_drm_shim.c', 'amdgpu_devices.c'],
+   include_directories: [inc_include, inc_src, inc_amd],
+diff --git a/src/amd/vulkan/meson.build b/src/amd/vulkan/meson.build
+index 3696bad244c..ac5cd0dd318 100644
+--- a/src/amd/vulkan/meson.build
++++ b/src/amd/vulkan/meson.build
+@@ -243,7 +243,7 @@ if radv_build_id != ''
+   radv_flags += '-DRADV_BUILD_ID_OVERRIDE="' + radv_build_id + '"'
+ endif
+ 
+-libvulkan_radeon = shared_library(
++libvulkan_radeon = library(
+   'vulkan_radeon',
+   [libradv_files, radv_entrypoints, sha1_h, radix_sort_spv, bvh_spv, radv_annotate_layer],
+   vs_module_defs : vulkan_api_def,
+diff --git a/src/android_stub/meson.build b/src/android_stub/meson.build
+index 6097ae8ef07..195e6474a5f 100644
+--- a/src/android_stub/meson.build
++++ b/src/android_stub/meson.build
+@@ -7,7 +7,7 @@ if with_android_stub
+   endif
+ 
+   foreach lib : lib_names
+-    stub_libs += shared_library(
++    stub_libs += library(
+       lib,
+       files(lib + '_stub.cpp'),
+       include_directories : inc_include,
+diff --git a/src/asahi/drm-shim/meson.build b/src/asahi/drm-shim/meson.build
+index cfc2541604f..bc7274ad8ac 100644
+--- a/src/asahi/drm-shim/meson.build
++++ b/src/asahi/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright 2019 Broadcom
+ # SPDX-License-Identifier: MIT
+ 
+-libasahi_noop_drm_shim = shared_library(
++libasahi_noop_drm_shim = library(
+   'asahi_noop_drm_shim',
+   'asahi_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/asahi/lib/meson.build b/src/asahi/lib/meson.build
+index e50a70eff51..5e5d506247b 100644
+--- a/src/asahi/lib/meson.build
++++ b/src/asahi/lib/meson.build
+@@ -37,7 +37,7 @@ libasahi_decode = static_library(
+   build_by_default : false,
+ )
+ 
+-libasahi_decode_shared = shared_library(
++libasahi_decode_shared = library(
+   'asahi_decode',
+   [libasahi_decode_files, agx_pack],
+   dependencies : [dep_valgrind, idep_mesautil],
+@@ -88,7 +88,7 @@ if with_tests
+ endif
+ 
+ if dep_iokit.found()
+-  libasahi_wrap = shared_library(
++  libasahi_wrap = library(
+     'wrap',
+     'wrap.c',
+     include_directories : [inc_src, inc_asahi],
+diff --git a/src/asahi/vulkan/meson.build b/src/asahi/vulkan/meson.build
+index 7c7e2eb1d0d..dc9f82056d9 100644
+--- a/src/asahi/vulkan/meson.build
++++ b/src/asahi/vulkan/meson.build
+@@ -94,7 +94,7 @@ libhk = static_library(
+   gnu_symbol_visibility : 'hidden',
+ )
+ 
+-libvulkan_asahi = shared_library(
++libvulkan_asahi = library(
+   'vulkan_asahi',
+   link_whole : [libhk],
+   link_args: [ld_args_build_id],
+diff --git a/src/broadcom/drm-shim/meson.build b/src/broadcom/drm-shim/meson.build
+index f9914e189ca..767f2b48ff1 100644
+--- a/src/broadcom/drm-shim/meson.build
++++ b/src/broadcom/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright © 2019 Broadcom
+ # SPDX-License-Identifier: MIT
+ 
+-libvc4_noop_drm_shim = shared_library(
++libvc4_noop_drm_shim = library(
+   'vc4_noop_drm_shim',
+   'vc4_noop.c',
+   include_directories: [inc_include, inc_src],
+@@ -10,7 +10,7 @@ libvc4_noop_drm_shim = shared_library(
+   install : true,
+ )
+ 
+-libv3d_noop_drm_shim = shared_library(
++libv3d_noop_drm_shim = library(
+   'v3d_noop_drm_shim',
+   'v3d_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/broadcom/vulkan/meson.build b/src/broadcom/vulkan/meson.build
+index 66bf07cc63d..5b8c22640fd 100644
+--- a/src/broadcom/vulkan/meson.build
++++ b/src/broadcom/vulkan/meson.build
+@@ -90,7 +90,7 @@ foreach ver : v3d_versions
+ )
+ endforeach
+ 
+-libvulkan_broadcom = shared_library(
++libvulkan_broadcom = library(
+   'vulkan_broadcom',
+   [libv3dv_files, v3dv_entrypoints, sha1_h],
+   include_directories : [
+diff --git a/src/egl/meson.build b/src/egl/meson.build
+index f9b0e348ad4..355194d0375 100644
+--- a/src/egl/meson.build
++++ b/src/egl/meson.build
+@@ -200,7 +200,7 @@ egl_def = custom_target(
+   command : gen_vs_module_defs_normal_command,
+ )
+ 
+-libegl = shared_library(
++libegl = library(
+   egl_lib_name,
+   files_egl,
+   c_args : [
+diff --git a/src/etnaviv/drm-shim/meson.build b/src/etnaviv/drm-shim/meson.build
+index d5d5d2fa7f9..50377185fe1 100644
+--- a/src/etnaviv/drm-shim/meson.build
++++ b/src/etnaviv/drm-shim/meson.build
+@@ -2,7 +2,7 @@
+ # Copyright (c) 2019 Zodiac Inflight Innovations
+ # SPDX-License-Identifier: MIT
+ 
+-libetnaviv_noop_drm_shim = shared_library(
++libetnaviv_noop_drm_shim = library(
+   'etnaviv_noop_drm_shim',
+   'etnaviv_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/freedreno/drm-shim/meson.build b/src/freedreno/drm-shim/meson.build
+index d7292e9b99c..657c5b2fa3b 100644
+--- a/src/freedreno/drm-shim/meson.build
++++ b/src/freedreno/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright © 2019 Google LLC
+ # SPDX-License-Identifier: MIT
+ 
+-libfreedreno_noop_drm_shim = shared_library(
++libfreedreno_noop_drm_shim = library(
+   'freedreno_noop_drm_shim',
+   'freedreno_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/freedreno/vulkan/meson.build b/src/freedreno/vulkan/meson.build
+index b529488c09a..51ac86f980a 100644
+--- a/src/freedreno/vulkan/meson.build
++++ b/src/freedreno/vulkan/meson.build
+@@ -175,7 +175,7 @@ tu_cpp_args += cpp.get_supported_arguments([
+   '-Wno-write-strings',
+ ])
+ 
+-libvulkan_freedreno = shared_library(
++libvulkan_freedreno = library(
+   'vulkan_freedreno',
+   [libtu_files, tu_entrypoints, tu_tracepoints, freedreno_xml_header_files, sha1_h, u_format_pack_h, bvh_spv],
+   include_directories : libtu_includes,
+diff --git a/src/gallium/drivers/lima/drm-shim/meson.build b/src/gallium/drivers/lima/drm-shim/meson.build
+index 87e280fb0d7..a9cbac2f397 100644
+--- a/src/gallium/drivers/lima/drm-shim/meson.build
++++ b/src/gallium/drivers/lima/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright (C) 2021 Icecream95
+ # SPDX-License-Identifier: MIT
+ 
+-liblima_noop_drm_shim = shared_library(
++liblima_noop_drm_shim = library(
+   'lima_noop_drm_shim',
+   'lima_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/gallium/targets/d3d10umd/meson.build b/src/gallium/targets/d3d10umd/meson.build
+index ab1cf053620..c25e6680323 100644
+--- a/src/gallium/targets/d3d10umd/meson.build
++++ b/src/gallium/targets/d3d10umd/meson.build
+@@ -10,7 +10,7 @@ libgallium_d3d10_def = custom_target(
+ )
+ 
+ gallium_d3d10_name = get_option('gallium-d3d10-dll-name')
+-libgallium_d3d10 = shared_library(
++libgallium_d3d10 = library(
+   gallium_d3d10_name,
+   ['d3d10_gdi.c'],
+   vs_module_defs : libgallium_d3d10_def,
+diff --git a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson.build
+index 134d7e4adf8..fd8913615f6 100644
+--- a/src/gallium/targets/dri/meson.build
++++ b/src/gallium/targets/dri/meson.build
+@@ -37,7 +37,7 @@ else
+   libgallium_name = 'gallium-@0@'.format(meson.project_version())
+ endif
+ 
+-libgallium_dri = shared_library(
++libgallium_dri = library(
+   libgallium_name,
+   files('dri_target.c'),
+   include_directories : [
+diff --git a/src/gallium/targets/dril/meson.build b/src/gallium/targets/dril/meson.build
+index 62a816f44a6..1352b2f7e52 100644
+--- a/src/gallium/targets/dril/meson.build
++++ b/src/gallium/targets/dril/meson.build
+@@ -39,7 +39,7 @@ if with_ld_dynamic_list
+   dril_link_depends += files('../dri.dyn')
+ endif
+ 
+-dril_dri = shared_library(
++dril_dri = library(
+   'dril_dri',
+   files('dril_target.c'),
+   include_directories : [
+diff --git a/src/gallium/targets/lavapipe/meson.build b/src/gallium/targets/lavapipe/meson.build
+index 41de1e5a0f1..4355a235856 100644
+--- a/src/gallium/targets/lavapipe/meson.build
++++ b/src/gallium/targets/lavapipe/meson.build
+@@ -1,6 +1,6 @@
+ 
+ 
+-libvulkan_lvp = shared_library(
++libvulkan_lvp = library(
+   'vulkan_lvp',
+   [ 'lavapipe_target.c' ],
+   vs_module_defs : vulkan_api_def,
+diff --git a/src/gallium/targets/libgl-gdi/meson.build b/src/gallium/targets/libgl-gdi/meson.build
+index b65a7c4d8a1..3883959412a 100644
+--- a/src/gallium/targets/libgl-gdi/meson.build
++++ b/src/gallium/targets/libgl-gdi/meson.build
+@@ -10,7 +10,7 @@ opengl32_def = custom_target(
+   command : gen_vs_module_defs_normal_command,
+ )
+ 
+-libopengl32 = shared_library(
++libopengl32 = library(
+   'opengl32',
+   ['stw_wgl.c'],
+   vs_module_defs : opengl32_def,
+diff --git a/src/gallium/targets/libgl-xlib/meson.build b/src/gallium/targets/libgl-xlib/meson.build
+index 4c953e22a48..9b85e16f2c8 100644
+--- a/src/gallium/targets/libgl-xlib/meson.build
++++ b/src/gallium/targets/libgl-xlib/meson.build
+@@ -13,7 +13,7 @@ if with_ld_version_script
+   gallium_xlib_link_depends += files('libgl-xlib.sym')
+ endif
+ 
+-libgl = shared_library(
++libgl = library(
+   'GL',
+   files('xlib.c'),
+   include_directories : [
+diff --git a/src/gallium/targets/mediafoundation/meson.build b/src/gallium/targets/mediafoundation/meson.build
+index 8e47cead7de..aa20fc590fd 100644
+--- a/src/gallium/targets/mediafoundation/meson.build
++++ b/src/gallium/targets/mediafoundation/meson.build
+@@ -85,7 +85,7 @@ foreach codec : mft_codecs
+   )
+   rc_target = winmod.compile_resources(rc_file)
+   
+-  libmediafoundation_gallium = shared_library(
++  libmediafoundation_gallium = library(
+     gallium_mf_name,
+     'target.c',
+     'dllmain.cpp',
+diff --git a/src/gallium/targets/rusticl/meson.build b/src/gallium/targets/rusticl/meson.build
+index 2b214adbbf5..349d1e32153 100644
+--- a/src/gallium/targets/rusticl/meson.build
++++ b/src/gallium/targets/rusticl/meson.build
+@@ -11,7 +11,7 @@ if with_ld_version_script
+   rusticl_ld_depends += files('rusticl.sym')
+ endif
+ 
+-librusticl = shared_library(
++librusticl = library(
+   'RusticlOpenCL',
+   'rusticl_target.c',
+   gnu_symbol_visibility : 'hidden',
+diff --git a/src/gallium/targets/teflon/meson.build b/src/gallium/targets/teflon/meson.build
+index 6a4d1aa7f84..b5543552489 100644
+--- a/src/gallium/targets/teflon/meson.build
++++ b/src/gallium/targets/teflon/meson.build
+@@ -1,4 +1,4 @@
+-libteflon = shared_library(
++libteflon = library(
+   'teflon',
+   [ 'teflon_target.c' ],
+   include_directories : [ inc_src, inc_util, inc_include, inc_gallium, inc_gallium_aux, inc_gallium_winsys, inc_gallium_drivers ],
+@@ -17,7 +17,7 @@ libteflon = shared_library(
+ )
+ 
+ if with_tests
+-  tensorflow_lite = shared_library(
++  tensorflow_lite = library(
+     'tensorflow-lite',
+     [ 'tflite-stub.c' ],
+     include_directories : [ inc_include ],
+diff --git a/src/gallium/targets/va/meson.build b/src/gallium/targets/va/meson.build
+index 23e6035e359..92c856f0309 100644
+--- a/src/gallium/targets/va/meson.build
++++ b/src/gallium/targets/va/meson.build
+@@ -49,7 +49,7 @@ if host_machine.system() == 'windows'
+     command : gen_vs_module_defs_normal_command,
+   )
+ 
+-  libva_gallium = shared_library(
++  libva_gallium = library(
+     'vaon12_drv_video',
+     'va_target.c',
+     link_args : [va_link_args, ld_args_gc_sections, ld_args_build_id],
+@@ -66,7 +66,7 @@ if host_machine.system() == 'windows'
+     name_prefix : '',  # otherwise mingw will create libvaon12_drv_video.dll
+   )
+ else
+-  libva_gallium = shared_library(
++  libva_gallium = library(
+     'gallium_drv_video',
+     'va_target.c',
+     gnu_symbol_visibility : 'hidden',
+diff --git a/src/gallium/targets/wgl/meson.build b/src/gallium/targets/wgl/meson.build
+index 3a194b323d6..e31f035bbf5 100644
+--- a/src/gallium/targets/wgl/meson.build
++++ b/src/gallium/targets/wgl/meson.build
+@@ -11,7 +11,7 @@ wgl_def = custom_target(
+ )
+ 
+ gallium_wgl_name = get_option('gallium-wgl-dll-name')
+-libgallium_wgl = shared_library(
++libgallium_wgl = library(
+   gallium_wgl_name,
+   ['wgl.c'],
+   vs_module_defs : wgl_def,
+diff --git a/src/gbm/backends/dri/meson.build b/src/gbm/backends/dri/meson.build
+index 5c33a3a907e..4875a4c06ed 100644
+--- a/src/gbm/backends/dri/meson.build
++++ b/src/gbm/backends/dri/meson.build
+@@ -12,7 +12,7 @@ if with_platform_wayland
+   endif
+ endif
+ 
+-shared_library(
++library(
+   'dri_gbm',
+   files('gbm_dri.c', 'gbm_driint.h'),
+   include_directories : [inc_gallium, incs_gbm_dri, inc_loader, inc_st_dri, inc_gallium_aux],
+diff --git a/src/gbm/main/backend.c b/src/gbm/main/backend.c
+index f49c86f0984..153ecb5fd7f 100644
+--- a/src/gbm/main/backend.c
++++ b/src/gbm/main/backend.c
+@@ -39,6 +39,7 @@
+ 
+ #include "loader.h"
+ #include "backend.h"
++#include "../backends/dri/gbm_dri.c"
+ 
+ #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
+ #define VER_MIN(a, b) ((a) < (b) ? (a) : (b))
+@@ -109,25 +110,29 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
+ static struct gbm_device *
+ load_backend_by_name(const char *name, int fd, bool warn_on_fail)
+ {
+-   void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
+-                                      backend_search_path_vars,
+-                                      DEFAULT_BACKENDS_PATH,
+-                                      warn_on_fail);
++   // void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
++   //                                    backend_search_path_vars,
++   //                                    DEFAULT_BACKENDS_PATH,
++   //                                    warn_on_fail);
+ 
+-   if (!lib)
+-      return NULL;
++   // if (!lib)
++   //    return NULL;
++
++   void *lib = NULL;
+ 
+    struct gbm_device *dev = NULL;
+    struct gbm_backend_desc *backend_desc;
+    const struct gbm_backend *gbm_backend;
+-   GBM_GET_BACKEND_PROC_PTR get_backend;
++   // GBM_GET_BACKEND_PROC_PTR get_backend;
+ 
+-   get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
++   // // get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
+ 
+-   if (!get_backend)
+-      goto fail;
++   // get_backend = gbmint_get_backend;
++
++   // if (!get_backend)
++   //    goto fail;
+ 
+-   gbm_backend = get_backend(&gbm_core);
++   gbm_backend = gbmint_get_backend(&gbm_core);
+    backend_desc = create_backend_desc(name, gbm_backend, lib);
+ 
+    if (!backend_desc)
+diff --git a/src/gbm/meson.build b/src/gbm/meson.build
+index fbfdfb20f26..381dac03119 100644
+--- a/src/gbm/meson.build
++++ b/src/gbm/meson.build
+@@ -9,6 +9,8 @@ files_gbm = files(
+   'main/gbm.c',
+   'main/gbm.h',
+   'main/gbmint.h',
++  'backends/dri/gbm_dri.c',
++  'backends/dri/gbm_driint.h',
+ )
+ args_gbm = [
+   '-DDEFAULT_BACKENDS_PATH="@0@"'.format(gbm_backends_path),
+@@ -21,14 +23,28 @@ if with_platform_android and get_option('platform-sdk-version') >= 30
+   libgbm_name = 'gbm_mesa'
+ endif
+ 
+-libgbm = shared_library(
++deps_libgbm_dri = []
++flags_libgbm_dri = []
++
++# TODO: fix includes to delete this
++incs_libgbm_dri = [inc_mesa]
++
++if with_platform_wayland
++  deps_libgbm_dri += dep_wayland_server
++  if with_wayland_bind_display
++    flags_libgbm_dri += ['-DHAVE_BIND_WL_DISPLAY']
++    incs_libgbm_dri += inc_wayland_drm
++  endif
++endif
++
++libgbm = library(
+   libgbm_name,
+   files_gbm,
+-  include_directories : incs_gbm,
+-  c_args : [args_gbm],
++  include_directories : [inc_gallium, incs_gbm, inc_loader, inc_st_dri, inc_gallium_aux, incs_libgbm_dri],
++  c_args : [args_gbm, flags_libgbm_dri],
+   link_args : [ld_args_gc_sections],
+-  link_with : [libloader],
+-  dependencies : [dep_libdrm, idep_xmlconfig],
++  link_with : [libloader,libgallium_dri],
++  dependencies : [dep_libdrm, idep_xmlconfig, deps_libgbm_dri,idep_mesautil],
+   gnu_symbol_visibility : 'hidden',
+   version : '1.0.0',
+   install : true,
+diff --git a/src/gfxstream/guest/vulkan/meson.build b/src/gfxstream/guest/vulkan/meson.build
+index f7c99ea2b61..8a3432465cf 100644
+--- a/src/gfxstream/guest/vulkan/meson.build
++++ b/src/gfxstream/guest/vulkan/meson.build
+@@ -27,7 +27,7 @@ if with_platform_android or with_gfxstream_emulated_android
+     files_vulkan_gfxstream += files_lib_vulkan_enc_android
+ endif
+ 
+-lib_vulkan_gfxstream = shared_library(
++lib_vulkan_gfxstream = library(
+     'vulkan_gfxstream',
+     files_vulkan_gfxstream,
+     cpp_args: gfxstream_guest_args + gfxstream_vk_wsi_args,
+diff --git a/src/glx/meson.build b/src/glx/meson.build
+index 28313f83a78..2f633420ffd 100644
+--- a/src/glx/meson.build
++++ b/src/glx/meson.build
+@@ -120,7 +120,7 @@ libglx = static_library(
+ # Other than that, we don't need it.
+ libgl_link = with_glvnd ? [] : [libglapi_bridge]
+ 
+-libgl = shared_library(
++libgl = library(
+   gl_lib_name,
+   [],
+   link_whole : [libglx, libgl_link],
+diff --git a/src/imagination/vulkan/meson.build b/src/imagination/vulkan/meson.build
+index 6d79234ec17..e97b557e94b 100644
+--- a/src/imagination/vulkan/meson.build
++++ b/src/imagination/vulkan/meson.build
+@@ -157,7 +157,7 @@ foreach arch : ['rogue']
+ endforeach
+ 
+ 
+-libvulkan_powervr_mesa = shared_library(
++libvulkan_powervr_mesa = library(
+   'vulkan_powervr_mesa',
+   [pvr_files, pvr_entrypoints, u_format_pack_h],
+   include_directories : [
+diff --git a/src/intel/nullhw-layer/meson.build b/src/intel/nullhw-layer/meson.build
+index 46462c239a0..64b893a1995 100644
+--- a/src/intel/nullhw-layer/meson.build
++++ b/src/intel/nullhw-layer/meson.build
+@@ -5,7 +5,7 @@ vklayer_intel_nullhw_files = files(
+   'intel_nullhw.c',
+ )
+ 
+-vklayer_intel_nullhw = shared_library(
++vklayer_intel_nullhw = library(
+   'VkLayer_INTEL_nullhw',
+   vklayer_intel_nullhw_files,
+   c_args : [no_override_init_args],
+diff --git a/src/intel/tools/meson.build b/src/intel/tools/meson.build
+index 4557e345d84..4c22fa9a419 100644
+--- a/src/intel/tools/meson.build
++++ b/src/intel/tools/meson.build
+@@ -142,7 +142,7 @@ configure_file(
+   configuration : sanitize_data
+ )
+ 
+-libintel_sanitize_gpu = shared_library(
++libintel_sanitize_gpu = library(
+   'intel_sanitize_gpu',
+   files('intel_sanitize_gpu.c'),
+   dependencies : [idep_mesautil, dep_dl, dep_thread, idep_intel_dev,
+@@ -162,7 +162,7 @@ configure_file(
+   install : true
+ )
+ 
+-libintel_dump_gpu = shared_library(
++libintel_dump_gpu = library(
+   'intel_dump_gpu',
+   files(
+     'intel_context.h', 'gfx8_context.h', 'gfx10_context.h', 'intel_aub.h',
+@@ -185,7 +185,7 @@ if with_tools.contains('drm-shim')
+     install : true
+   )
+ 
+-  libintel_stub_gpu = shared_library(
++  libintel_stub_gpu = library(
+     'intel_noop_drm_shim',
+     ['intel_noop_drm_shim.c', intel_dev_serialize_src],
+     include_directories: [inc_include, inc_src, inc_intel],
+diff --git a/src/intel/vulkan/meson.build b/src/intel/vulkan/meson.build
+index 7e5e7714494..a4b69753dff 100644
+--- a/src/intel/vulkan/meson.build
++++ b/src/intel/vulkan/meson.build
+@@ -259,7 +259,7 @@ libanv_common = static_library(
+ idep_libvulkan_intel_decoder = (with_mesa_ndebug ?
+   idep_intel_decoder_stub_brw : idep_intel_decoder_brw)
+ 
+-libvulkan_intel = shared_library(
++libvulkan_intel = library(
+   'vulkan_intel',
+   [files('anv_gem.c'), anv_entrypoints[0], bvh_spv],
+   include_directories : [
+diff --git a/src/intel/vulkan_hasvk/meson.build b/src/intel/vulkan_hasvk/meson.build
+index 2e34cd66a7f..28cd9519431 100644
+--- a/src/intel/vulkan_hasvk/meson.build
++++ b/src/intel/vulkan_hasvk/meson.build
+@@ -170,7 +170,7 @@ libanv_hasvk_common = static_library(
+   dependencies : anv_deps,
+ )
+ 
+-libvulkan_intel_hasvk = shared_library(
++libvulkan_intel_hasvk = library(
+   'vulkan_intel_hasvk',
+   [files('anv_gem.c'), anv_hasvk_entrypoints[0]],
+   include_directories : [
+diff --git a/src/mesa/glapi/es1api/meson.build b/src/mesa/glapi/es1api/meson.build
+index 3ae36ff12aa..04f2dd66f21 100644
+--- a/src/mesa/glapi/es1api/meson.build
++++ b/src/mesa/glapi/es1api/meson.build
+@@ -22,7 +22,7 @@ gles1_def = custom_target(
+   command : gen_vs_module_defs_normal_command,
+ )
+ 
+-libglesv1_cm = shared_library(
++libglesv1_cm = library(
+   'GLESv1_CM' + get_option('gles-lib-suffix'),
+   ['libgles1_public.c', es1_glapi_mapi_tmp_h],
+   vs_module_defs : gles1_def,
+diff --git a/src/mesa/glapi/es2api/meson.build b/src/mesa/glapi/es2api/meson.build
+index be999c1ab3b..d9558910468 100644
+--- a/src/mesa/glapi/es2api/meson.build
++++ b/src/mesa/glapi/es2api/meson.build
+@@ -22,7 +22,7 @@ gles2_def = custom_target(
+   command : gen_vs_module_defs_normal_command,
+ )
+ 
+-libgles2 = shared_library(
++libgles2 = library(
+   'GLESv2' + get_option('gles-lib-suffix'),
+   ['libgles2_public.c', es2_glapi_mapi_tmp_h],
+   vs_module_defs : gles2_def,
+diff --git a/src/microsoft/clc/meson.build b/src/microsoft/clc/meson.build
+index 4a1e9e343be..39746610bbc 100644
+--- a/src/microsoft/clc/meson.build
++++ b/src/microsoft/clc/meson.build
+@@ -6,7 +6,7 @@ files_libclc_compiler = files(
+   'clc_nir.c',
+ )
+ 
+-libclc_compiler = shared_library(
++libclc_compiler = library(
+   'clon12compiler',
+   [files_libclc_compiler, sha1_h],
+   vs_module_defs : 'clon12compiler.def',
+diff --git a/src/microsoft/vulkan/meson.build b/src/microsoft/vulkan/meson.build
+index b3136e927e2..a573579cce4 100644
+--- a/src/microsoft/vulkan/meson.build
++++ b/src/microsoft/vulkan/meson.build
+@@ -59,7 +59,7 @@ if cc.get_argument_syntax() != 'msvc'
+   dzn_cpp_flags = cpp.get_supported_arguments(['-Wno-error=unused-value'])
+ endif
+ 
+-libvulkan_dzn = shared_library(
++libvulkan_dzn = library(
+   'vulkan_dzn',
+   [libdzn_files, dzn_entrypoints, sha1_h],
+   vs_module_defs : vulkan_api_def,
+diff --git a/src/nouveau/drm-shim/meson.build b/src/nouveau/drm-shim/meson.build
+index a6b2ea72bbd..5c24d772895 100644
+--- a/src/nouveau/drm-shim/meson.build
++++ b/src/nouveau/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright © 2021 Ilia Mirkin
+ # SPDX-License-Identifier: MIT
+ 
+-libnouveau_noop_drm_shim = shared_library(
++libnouveau_noop_drm_shim = library(
+   'nouveau_noop_drm_shim',
+   'nouveau_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/nouveau/vulkan/meson.build b/src/nouveau/vulkan/meson.build
+index 9ecfa1308a6..729801b1271 100644
+--- a/src/nouveau/vulkan/meson.build
++++ b/src/nouveau/vulkan/meson.build
+@@ -151,7 +151,7 @@ libnvk = static_library(
+   gnu_symbol_visibility : 'hidden',
+ )
+ 
+-libvulkan_nouveau = shared_library(
++libvulkan_nouveau = library(
+   'vulkan_nouveau',
+   link_whole : [libnvk],
+   link_args: [ld_args_build_id, ld_args_bsymbolic, ld_args_gc_sections],
+diff --git a/src/panfrost/drm-shim/meson.build b/src/panfrost/drm-shim/meson.build
+index 2d842794bb0..f42778ce41d 100644
+--- a/src/panfrost/drm-shim/meson.build
++++ b/src/panfrost/drm-shim/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright (C) 2021 Icecream95
+ # SPDX-License-Identifier: MIT
+ 
+-libpanfrost_noop_drm_shim = shared_library(
++libpanfrost_noop_drm_shim = library(
+   'panfrost_noop_drm_shim',
+   'panfrost_noop.c',
+   include_directories: [inc_include, inc_src],
+diff --git a/src/panfrost/vulkan/meson.build b/src/panfrost/vulkan/meson.build
+index 1c66e9c4dfc..eecc975fb4a 100644
+--- a/src/panfrost/vulkan/meson.build
++++ b/src/panfrost/vulkan/meson.build
+@@ -186,7 +186,7 @@ if with_platform_android
+   libpanvk_files += files('panvk_android.c')
+ endif
+ 
+-libvulkan_panfrost = shared_library(
++libvulkan_panfrost = library(
+   'vulkan_panfrost',
+   [libpanvk_files, panvk_entrypoints, panvk_tracepoints],
+   include_directories : [
+diff --git a/src/tool/dlclose-skip/meson.build b/src/tool/dlclose-skip/meson.build
+index 90de7c2d666..e894b153bc5 100644
+--- a/src/tool/dlclose-skip/meson.build
++++ b/src/tool/dlclose-skip/meson.build
+@@ -1,7 +1,7 @@
+ # Copyright © 2021 Google LLC
+ # SPDX-License-Identifier: MIT
+ 
+-shared_library('dlclose-skip',
++library('dlclose-skip',
+   'dlclose-skip.c',
+   install : true,
+ )
+diff --git a/src/tool/pps/meson.build b/src/tool/pps/meson.build
+index 68e96abfe19..d83c2b77526 100644
+--- a/src/tool/pps/meson.build
++++ b/src/tool/pps/meson.build
+@@ -46,7 +46,7 @@ executable(
+ )
+ 
+ if with_platform_android
+-  shared_library(
++  library(
+     'gpudataproducer',
+     sources: producer_sources,
+     include_directories: [include_pps, inc_src],
+diff --git a/src/virtio/vulkan/meson.build b/src/virtio/vulkan/meson.build
+index 00b787a172c..d9d6d086ebe 100644
+--- a/src/virtio/vulkan/meson.build
++++ b/src/virtio/vulkan/meson.build
+@@ -135,7 +135,7 @@ if with_platform_android
+   vn_deps += [dep_android, idep_u_gralloc]
+ endif
+ 
+-libvulkan_virtio = shared_library(
++libvulkan_virtio = library(
+   'vulkan_virtio',
+   [libvn_files, vn_entrypoints, sha1_h],
+   include_directories : vn_incs,
+diff --git a/src/vulkan/device-select-layer/meson.build b/src/vulkan/device-select-layer/meson.build
+index 331a9587ef2..ce8b2cd4b0c 100644
+--- a/src/vulkan/device-select-layer/meson.build
++++ b/src/vulkan/device-select-layer/meson.build
+@@ -24,7 +24,7 @@ if with_platform_wayland
+    vklayer_deps += dep_wayland_client
+ endif
+ 
+-vklayer_mesa_device_select = shared_library(
++vklayer_mesa_device_select = library(
+   'VkLayer_MESA_device_select',
+   vklayer_files,
+   c_args : [no_override_init_args, vklayer_flags],
+diff --git a/src/vulkan/overlay-layer/meson.build b/src/vulkan/overlay-layer/meson.build
+index 1f612afe2e8..6f79f6c1532 100644
+--- a/src/vulkan/overlay-layer/meson.build
++++ b/src/vulkan/overlay-layer/meson.build
+@@ -25,7 +25,7 @@ vklayer_files = files(
+   'overlay_params.c',
+ )
+ 
+-vklayer_mesa_overlay = shared_library(
++vklayer_mesa_overlay = library(
+   'VkLayer_MESA_overlay',
+   vklayer_files, overlay_spv, sha1_h,
+   c_args : no_override_init_args + cc.get_supported_arguments('-Wno-error=stringop-overflow'),
+diff --git a/src/vulkan/screenshot-layer/meson.build b/src/vulkan/screenshot-layer/meson.build
+index 8efa0cc7935..ea8096fcab0 100644
+--- a/src/vulkan/screenshot-layer/meson.build
++++ b/src/vulkan/screenshot-layer/meson.build
+@@ -23,7 +23,7 @@ vklayer_files = files(
+   'screenshot_params.c',
+ )
+ 
+-vklayer_mesa_screenshot = shared_library(
++vklayer_mesa_screenshot = library(
+   'VkLayer_MESA_screenshot',
+   vklayer_files, sha1_h,
+   c_args : [no_override_init_args],
+diff --git a/src/vulkan/vram-report-limit-layer/meson.build b/src/vulkan/vram-report-limit-layer/meson.build
+index 0d402033b7a..9feca1564ea 100644
+--- a/src/vulkan/vram-report-limit-layer/meson.build
++++ b/src/vulkan/vram-report-limit-layer/meson.build
+@@ -23,7 +23,7 @@ vklayer_files = files(
+   'vram_report_limit_layer.c',
+ )
+ 
+-vklayer_mesa_vram_report_limit = shared_library(
++vklayer_mesa_vram_report_limit = library(
+   'VkLayer_MESA_vram_report_limit',
+   vklayer_files,
+   c_args : no_override_init_args,
