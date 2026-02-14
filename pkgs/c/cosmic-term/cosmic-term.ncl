@@ -9,6 +9,9 @@
       singleSource = _cosmicSrcs."cosmic-term",
 
       outputSha256sum = (import "src.sha256sum" as 'Text), # "cba881ee68370c682f4082d33cfdfa73dbcfd9d9fbdffa6f38377d8a3984f502"
+      preConfigurePhase = [
+        "cargo update -p compio-driver --precise 0.11.2",
+      ]
     },
 }
 & {

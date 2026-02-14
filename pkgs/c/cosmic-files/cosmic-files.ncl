@@ -10,7 +10,12 @@
     & {
       singleSource = _cosmicSrcs."cosmic-files",
 
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "85ad78cf0fdc54f92431c17b78f80008f6c7a09d737d1cd5cd66dc3269efd78a"
+      outputSha256sum = (import "src.sha256sum" as 'Text),
+
+      # outputSha256sum = "59281d8e3c353395b6c596ebbac20790b6446631c0710af94781b7695c2e09a3",
+      preConfigurePhase = [
+        "cargo update -p compio-driver --precise 0.11.2",
+      ]
     },
 }
 & {
@@ -38,7 +43,7 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-      "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
+      # "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
       # "(cd vendor && patch -p1 compio-driver/src/sys/unix_op.rs < /tmp/workdir/files/compio-driver-669.patch)",
       # "(cd vendor && patch -p1 compio-driver/src/sys/iour/op.rs < /tmp/workdir/files/compio-driver-669.patch)",
     ],

@@ -25,12 +25,17 @@
       "   echo \"fetching for ${d}\"",
       "  (cd ${d} && mkdir -p .cargo)",
       "  (cd ${d} && cargo vendor --locked ./vendor >> .cargo/config.toml)",
+      "break",
       " fi",
       "done",
-      # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
-      m%"find .. -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
       "rm -rf .git",
-      "tar --mtime='2015-10-21 00:00Z' -cf - . > ../../build/%{outputFile}",
+
+      # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
+      m%"find .. -exec touch --no-dereference --date="@1302044400" {} +"%,
+      # "rm -rf .git",
+      # "tar --sort=name --format=ustar --mtime='2015-10-21 00:00Z' -cf ../../build/%{outputFile} .",
+      # "bsdtar c -m --no-same-permissions -o -f ../../build/%{outputFile} $(find . | sort)",
+      "find . -print0 | sort -z | bsdtar --null -T - --format=pax --mtime='2015-10-21 00:00Z' -cf ../../build/%{outputFile} .",
       "cd .."
     ],
     installPhase = [
@@ -46,9 +51,11 @@
       drvs.gitFull,
       drvs.caCertificates,
       # drsv.findutils & {priority = 1},
-      drvs.gnutar & { priority = 1 },
+      # drvs.gnutar & { priority = 1 },
+      drvs.libarchive & { priority = -1 },
     ],
   },
+
   cosmicEpoch | lib.CargoPackage = {
     unpackPhase = [
       "cd /tmp/workdir/src",
