@@ -24,7 +24,7 @@
       drvs.libpng,
       drvs.expat,
       drvs.hyprlang,
-      drvs.hyprUtils,
+      drvs.hyprutils,
       drvs.tomlplusplus,
 
       # drvs.librsvg,

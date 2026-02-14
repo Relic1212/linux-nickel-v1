@@ -58,7 +58,7 @@
         drvs.hwdata,
         drvs.linuxHeaders,
         drvs.hyprwaylandScanner,
-        drvs.hyprUtils,
+        drvs.hyprutils,
         drvs.hyprlang,
         drvs.hyprcursor,
         #  drvs.cmake,

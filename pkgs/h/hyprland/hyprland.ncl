@@ -3,28 +3,74 @@
   drvs,
   distro,
   hyprland
-    | lib.MesonPackage
+    | lib.CmakePackage
     = {
-      options = {
-        glx | default = false,
-      },
+      generator = "Ninja",
+
       sourceInputs = [
         {
           src = {
 
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.52.2.tar.gz",
-            sha256sum = "5588ba57539f47d52091135628bdab6533a2b0e9c6d46f507af7391d44015f9f",
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.53.3.tar.gz",
+            sha256sum = "1fc38b1fd87d57a0025c035bb0e4f951fa5c3313c10f8974337336c086c4b3a2",
           },
         },
       ],
+      options = {
+        glx | default = false,
+      },
+
+      # extraMesonArgs = [
+      #   "-Dxwayland=disabled",
+      #   "-Dtracy_enable=false",
+      #   # "-Dhyprpm=disabled",
+      #   "-Dhyprpm=enabled",
+
+      #   # "-Dlegacy_renderer=enabled",
+      # ],
+      cmakeExtraArgsRecord = {
+        "-DNO_XWAYLAND" = true,
+        "-DUSE_TRACY" = false,
+        "-DNO_HYPRPM" = true,
+      },
+      preConfigurePhase = [
+        # m%"sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build"%,
+        m%"sed -i "s|OpenGL::GL ||g" ${SRC}/CMakeLists.txt"%,
+      ],
+
+      postInstallPhase = [
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/Renderer.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
+      ],
+
+      buildEnv = {
+        EXTRA_LDFLAGS =
+          [
+            "$(pkg-config --libs --static libseat)",
+            "$(pkg-config --libs --static libjpeg)",
+            "$(pkg-config --libs --static libwebp)",
+            "$(pkg-config --libs --static libmagic)",
+            "$(pkg-config --static --libs wayland-client)",
+            "$(pkg-config --static --libs xcursor)",
+            "-ltomlplusplus",
+            "-lzip",
+            "-ldisplay-info",
+            "-lffi",
+          ]
+          @ (if distro.pam then ["-lcap"] else []),
+      },
       llvmProvider = drvs.llvmFull,
 
       biDrvs =
         [
+          drvs.hyprwire,
+          drvs.muparser,
           drvs.expat,
           drvs.jsonC,
           drvs.pcre2,
-          drvs.wayland,
+          drvs.waylandWeaksyms2,
           drvs.waylandProtocols,
           drvs.libelf,
           drvs.libpciaccess,
@@ -49,10 +95,9 @@
           drvs.hwdata,
           drvs.linuxHeaders,
           drvs.hyprwaylandScanner,
-          drvs.hyprUtils,
+          drvs.hyprutils,
           drvs.hyprlang,
           drvs.hyprcursor,
-          #  drvs.cmake,
           drvs.tomlplusplus,
           drvs.utilLinux,
           ###############################################################
@@ -77,7 +122,6 @@
           drvs.libzip,
           drvs.spirvTools,
           drvs.glaze,
-          drvs.cmake,
           drvs.libjpegTurboStatic,
           drvs.libspng,
           drvs.libwebp,
@@ -99,42 +143,6 @@
       propagatedBuildInputs = [
         drvs.seatd,
       ],
-
-      extraMesonArgs = [
-        "-Dxwayland=disabled",
-        "-Dtracy_enable=false",
-        # "-Dhyprpm=disabled",
-        "-Dhyprpm=enabled",
-
-        # "-Dlegacy_renderer=enabled",
-      ],
-
-      preConfigurePhase = [
-        m%"
-        sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build
-        "%,
-      ],
-
-      postInstallPhase = [
-        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/Renderer.hpp"%,
-        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
-        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
-        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
-      ],
-
-      buildEnv = {
-        EXTRA_LDFLAGS =
-          [
-            "$(pkg-config --libs --static libseat)",
-            "$(pkg-config --libs --static libjpeg)",
-            "$(pkg-config --libs --static libwebp)",
-            "$(pkg-config --libs --static libmagic)",
-            "-ltomlplusplus",
-            "-lzip",
-            "-ldisplay-info"
-          ]
-          @ (if distro.pam then ["-lcap"] else []),
-      }
     },
 }
 & (import "../hyprland-qtutils/hyprland-qtutils.ncl")

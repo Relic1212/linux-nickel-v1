@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  hyprUtils | lib.CmakePackage = {
+  hyprutils | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
 

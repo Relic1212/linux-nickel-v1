@@ -33,7 +33,7 @@
       drvs.linuxHeaders,
       drvs.hyprwaylandScanner,
       drvs.aquamarine,
-      drvs.hyprUtils,
+      drvs.hyprutils,
       drvs.hyprlang,
       drvs.hyprcursor,
       drvs.libjpegTurboStatic,

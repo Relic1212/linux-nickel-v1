@@ -8,7 +8,7 @@
       singleSource = {
 
         uri = "https://github.com/hyprwm/aquamarine/archive/refs/tags/v0.10.0.tar.gz",
-        sha256sum = "657e4752542872549a556d9facb8a525276b4edd5ca197818835904768aaad40",
+        sha256sum = "0ec80c86dd94d7f2836aac9ed415b9170109bd77048de791d837ee729f1ad76a",
       },
       llvmProvider = drvs.llvmFull,
       options = {
@@ -44,7 +44,7 @@
           drvs.hwdata,
           drvs.linuxHeaders,
           drvs.hyprwaylandScanner,
-          drvs.hyprUtils,
+          drvs.hyprutils,
           drvs.libzip,
           drvs.spirvTools,
         ]
@@ -97,6 +97,7 @@
           's@aquamarine SHARED@aquamarine STATIC@g' \
           ${SRC}/CMakeLists.txt
         "%,
+        m%"sed -i 's@private:@@g' ${SRC}/include/aquamarine/backend/Backend.hpp"%,
       ],
       postInstallPhase = [
         # fix duplicate symbols wit hyprland

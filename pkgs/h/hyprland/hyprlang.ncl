@@ -9,7 +9,7 @@
       sha256sum = "e8d54af895ec04fe99553c68d1255dceddb43723ada4a134acdd46bfe1dbf924",
     },
     biDrvs = [
-      drvs.hyprUtils,
+      drvs.hyprutils,
     ],
     preConfigurePhase = [
       m%"
