@@ -71,7 +71,7 @@
       "sed -i 's@main ()@main (void)@g' ${SRC}/configure",
       "sed -i 's@#include <gdk/gdkx.h>@@g' ${SRC}/src/pulsecore/proplist-util.c",
 
-      #  "sed -i 's@#ifdef DISABLE_LIBTOOL_PRELOAD@#if 1@g' ${SRC}/src/daemon/main.c",
+      # "sed -i 's@#ifdef DISABLE_LIBTOOL_PRELOAD@#if 1@g' ${SRC}/src/daemon/main.c",
       "sed -i 's@#ifdef PA_BIND_NOW@#if 0@g' ${SRC}/src/daemon/ltdl-bind-now.c",
     ],
     extraConfigureFlags = [
