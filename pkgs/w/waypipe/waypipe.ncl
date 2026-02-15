@@ -23,28 +23,36 @@
       ],
     },
 
-    configurePhase = [
-      "cd ${BUILDDIR}",
-      m%"meson setup --prefix=/usr \
-        --buildtype=release \
-        --bindir=bin \
-        --sbindir=bin \
-        --datadir=share \
-        --libdir=lib \
-        --libexecdir=libexec \
-        --includedir=include \
-        --mandir=share/man \
-        --infodir=share/info \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
-        --sharedstatedir=/com \
-        --wrap-mode=nodownload \
-        --prefer-static \
-        -Dbuild_c=true \
-        -Dwerror=false \
-        -Ddefault_library=static . ${SRC}
+    configurePhase =
+      let args = [
+        "--prefix=/usr",
+        "--buildtype=release",
+        "--bindir=bin",
+        "--sbindir=bin",
+        "--datadir=share",
+        "--libdir=lib",
+        "--libexecdir=libexec",
+        "--includedir=include",
+        "--mandir=share/man",
+        "--infodir=share/info",
+        "--sysconfdir=/etc",
+        "--localstatedir=/var",
+        "--sharedstatedir=/com",
+        "--wrap-mode=nodownload",
+        "--prefer-static",
+        "-Ddefault_library=static",
+        "-Dwerror=false",
+        "-Dbuild_c=true",
+        "-Dman-pages=enabled",
+        # "-Dwith_gbm=enabled",
+        # "-Dwith_dmabuf=enabled",
+      ]
+      in
+      [
+        "cd ${BUILDDIR}",
+        m%"meson setup %{std.string.join lib.constants.buildFlagSep args} . ${SRC}
       "%,
-    ],
+      ],
     buildPhase = [
       "meson compile",
     ],
@@ -80,6 +88,7 @@
       drvs.pythonFull,
       drvs.musl & { priority = 1 },
       drvs.samurai,
+      drvs.scdoc,
     ],
   }
 }
