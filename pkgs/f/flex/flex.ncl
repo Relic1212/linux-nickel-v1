@@ -68,5 +68,12 @@
         # drvs.m4,
         # drvs.busybox,
       ]
-    }
+    },
+  flexLex | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/bin",
+      "cd ${DEST}/usr/bin",
+      "ln -s flex lex",
+    ]
+  }
 }
