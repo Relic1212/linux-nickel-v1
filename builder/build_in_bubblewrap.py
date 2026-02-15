@@ -122,7 +122,7 @@ def check_deterministic_output(output_path: str, filename: str, sha256sum: str):
     computed = hashes.compute_file_or_dir_sha256sum(output_filepath)
     print("verifying", output_filepath)
     if computed != sha256sum:
-        print(f"ERROR: {computed}!={sha256sum}")
+        print(f"ERROR: expected:{sha256sum}, got:{computed}")
         raise Exception(f"Wrong sha256sum for {output_filepath}")
 
 
