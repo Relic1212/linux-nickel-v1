@@ -3,10 +3,13 @@
   drvs,
   openssh | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.9p2.tar.gz",
-      sha256sum = "91aadb603e08cc285eddf965e1199d02585fa94d994d6cae5b41e1721e215673"
+      uri = "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.2p1.tar.gz",
+      sha256sum = "ccc42c0419937959263fa1dbd16dafc18c56b984c03562d2937ce56a60f798b2"
     },
     separateBuildDir = false,
+    extraConfigureFlags = [
+      "--with-mantype=man",
+    ],
     biDrvs = [
       drvs.openssl,
       drvs.linuxHeaders,
