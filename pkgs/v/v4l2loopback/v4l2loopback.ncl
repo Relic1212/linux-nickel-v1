@@ -39,17 +39,18 @@
   lib,
   drvs,
   linux,
+  linuxFedora,
   linuxWithBuild | lib.MakePackage =
-    linux
+    linuxFedora
     & {
       biDrvs | priority 1 =
-        linux.biDrvs
+        linuxFedora.biDrvs
         @ [
           drvs.rsync
         ],
       options,
       postInstallPhase | priority 1 =
-        linux.postInstallPhase
+        linuxFedora.postInstallPhase
         @ [
           "rm ${DEST}/usr/lib/modules/%{options.version}-standard/build",
           "mkdir ${DEST}/usr/lib/modules/%{options.version}-standard/build",
