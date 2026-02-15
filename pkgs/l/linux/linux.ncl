@@ -218,6 +218,14 @@ in
       uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.tar.xz",
       sha256sum = "9106a4605da9e31ff17659d958782b815f9591ab308d03b0ee21aad6c7dced4b",
     },
+    "6.18.8" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.8.tar.xz",
+      sha256sum = "37f0c5d5c242c1d604e87d48f08795e861a5a85f725b4ca11d0a538f12ff8cff",
+    },
+    "6.19.0" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.19.tar.xz",
+      sha256sum = "303079a8250b8f381f82b03f90463d12ac98d4f6b149b761ea75af1323521357",
+    },
   },
   linuxHeaders,
   libModulesDirectory | lib.Package = {
@@ -250,9 +258,11 @@ in
       singleSource = _linuxSources."%{options.version}",
 
       options = {
-        #  version = linuxHeaders.options.version ,
+        # version = linuxHeaders.options.version ,
         # version = "6.17.6",
-        version = "6.18.0",
+        # version = "6.18.0",
+        # version = "6.18.8",
+        version = "6.19.0",
         compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
