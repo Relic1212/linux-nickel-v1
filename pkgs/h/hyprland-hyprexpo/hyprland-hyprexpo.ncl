@@ -3,13 +3,13 @@
   drvs,
   hyprlandHyprspace | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/KZDKM/Hyprspace/archive/0467be86b18cfc324fab04afbd40fe9ef80f7fa9.tar.gz",
-      sha256sum = "673de5cab331db143f0705f680bdbee67e644c08ce10320171184a17b62a511c"
+      uri = "https://github.com/KZDKM/Hyprspace/archive/bcd969224ffeb6266c6618c192949461135eef38.tar.gz",
+      sha256sum = "8ef0d738ba4ff83876a6a7e7b70fc0a08e2693f0602124c4063462a7567f14eb"
     },
     patches = [
       {
         file = "hyprland-hyprexpo.patch",
-        sha256sum = "3cc6b776092cc20041b56841a75200ec300cd3db4421bdb0955fcecb821a2bcb"
+        sha256sum = "41ae567a3cb3433efb551cee2c335c6da0cd3113e238db98123aaaae3e7643d7"
       },
     ],
     options = {

@@ -64,13 +64,13 @@ index f6557e2..d3509b3 100644
 -    auto funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderWindow");
 -    pRenderWindow = funcSearch[0].address;
 +    // auto funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderWindow");
-+    pRenderWindow = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerI7CWindowEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb");
++    pRenderWindow = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View7CWindowEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb");
  
      // CHyprRenderer::renderLayer
 -    funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderLayer");
 -    pRenderLayer = funcSearch[0].address;
 +    // funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderLayer");
-+    pRenderLayer = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerI13CLayerSurfaceEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEEbb");
++    pRenderLayer = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View13CLayerSurfaceEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEbb");
  
      registerMonitors();
      g_pAddMonitorHook = HyprlandAPI::registerCallbackDynamic(pHandle, "monitorAdded", [&] (void* thisptr, SCallbackInfo& info, std::any data) { registerMonitors(); });

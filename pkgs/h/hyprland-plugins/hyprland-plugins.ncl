@@ -3,8 +3,8 @@
   drvs,
   hyprlandPlugins | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/hyprwm/hyprland-plugins/archive/refs/tags/v0.52.0.tar.gz",
-      sha256sum = "5101bf5b4fa5048f186e613c1e11c309fa3f8c14d68cf94c01a08a7745746c97"
+      uri = "https://github.com/hyprwm/hyprland-plugins/archive/refs/tags/v0.53.0.tar.gz",
+      sha256sum = "23c90d35fe81f5f15192704769cda2cf4f349a294d9aa347627dc223f30c6358"
     },
     patches = [
       {

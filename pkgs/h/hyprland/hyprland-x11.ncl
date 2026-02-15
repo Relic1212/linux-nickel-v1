@@ -2,7 +2,7 @@
   lib,
   drvs,
   hyprland,
-  hyprlandX11 | lib.MesonPackage = (
+  hyprlandX11 | lib.CmakePackage = (
     hyprland
     & {
       options = {
@@ -35,12 +35,18 @@
             ]
         ),
 
-      extraMesonArgs | priority 1 = [
-        "-Dxwayland=enabled",
-        "-Dtracy_enable=false",
-        "-Dhyprpm=enabled",
-        # "-Dlegacy_renderer=enabled",
-      ],
+      # extraMesonArgs | priority 1 = [
+      #   "-Dxwayland=enabled",
+      #   "-Dtracy_enable=false",
+      #   "-Dhyprpm=enabled",
+      #   # "-Dlegacy_renderer=enabled",
+      # ],
+
+      cmakeExtraArgsRecord = {
+        "-DNO_XWAYLAND" | priority 1 = false,
+        # "-DUSE_TRACY" = false,
+        # "-DNO_HYPRPM" = true,
+      },
     }
   )
 }
