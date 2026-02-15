@@ -42,7 +42,7 @@ in
       drvs.basefiles,
     ]
   },
-  danklinuxDms | lib.Package = {
+  danklinuxDms | lib.MakePackage = {
 
     separateBuildDir = false,
     configurePhase = [
@@ -51,27 +51,34 @@ in
       #   "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
-    ],
-
-    buildPhase = [
       "tar xf /source.tar",
-      "cd core/cmd/dms",
-      #   "go build -trimpath -ldflags \"-s -w -X main.Version=0.0.5\"",
-      m%"go build -ldflags "-linkmode 'external' -extldflags '-static'" "%,
     ],
 
-    installPhase = [
-      "install -dm0755 ${DEST}/usr/bin",
-      "(cd ${SRC}/core/cmd/dms && install -m0755 dms ${DEST}/usr/bin)",
+    extraMakeInstallArgs = [
+      "PREFIX=${DEST}/usr"
     ],
+
+    # buildPhase = [
+    #   "tar xf /source.tar",
+    #   "cd core/cmd/dms",
+    #   #   "go build -trimpath -ldflags \"-s -w -X main.Version=0.0.5\"",
+    #   m%"go build -ldflags "-linkmode 'external' -extldflags '-static'" "%,
+    # ],
+
+    # installPhase = [
+    #   "install -dm0755 ${DEST}/usr/bin",
+    #   "(cd ${SRC}/core/cmd/dms && install -m0755 dms ${DEST}/usr/bin)",
+    # ],
 
     enableCcache = false,
     biDrvs = [
       drvs.danklinuxDmsSource,
       drvs.go_1_24,
-      drvs.llvm,
-      drvs.musl,
+      # drvs.llvm,
+      # drvs.musl,
       drvs.basefiles,
+      drvs.fish,
+      drvs.zsh,
     ]
   }
 }
