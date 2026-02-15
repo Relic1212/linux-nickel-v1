@@ -272,6 +272,16 @@
         drvs.muslShared,
       ]
     },
+  pythonDynamicCurses =
+    pythonDynamic
+    & {
+      biDrvs | priority 3 =
+        pythonDynamic.biDrvs
+        @ [
+          drvs.ncursesPic,
+          # drvs.readlinePic,
+        ]
+    },
 
   pythonDynamicPic =
     pythonDynamic
