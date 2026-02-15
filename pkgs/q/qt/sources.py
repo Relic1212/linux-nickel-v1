@@ -9,7 +9,7 @@ names = [
 ]
 
 
-version = "6.10.1"
+version = "6.10.2"
 d = {}
 for name in names:
     url =  f"https://download.qt.io/archive/qt/6.10/{version}/submodules/{name}-everywhere-src-{version}.tar.xz"
