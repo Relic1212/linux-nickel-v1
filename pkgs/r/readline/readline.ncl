@@ -43,5 +43,14 @@
     biDrvs = [
       drvs.ncurses,
     ]
-  }
+  },
+  readlinePic =
+    readline
+    & {
+      buildEnv = {
+        EXTRA_CFLAGS = ["-fPIC"],
+        EXTRA_CXXFLAGS = ["-fPIC"],
+        EXTRA_LDFLAGS = ["-fPIC"],
+      }
+    }
 }
