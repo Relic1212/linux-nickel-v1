@@ -20,7 +20,10 @@
     singleSource = {
       uri = "https://github.com/google/zopfli/archive/ccf9f0588d4a4509cb1040310ec122243e670ee6.zip",
       sha256sum = "d1bc572f62aebe5d7bb6d5cac6ec5be2562de6d75f9116887eeeb52c3fcf3cdf"
-    }
+    },
+    cmakeExtraArgsRecord = {
+      "-DCMAKE_POLICY_VERSION_MINIMUM" = "3.5"
+    },
   }
 }
 & {
