@@ -38,34 +38,6 @@
 & {
   lib,
   drvs,
-  "9base" | lib.MakePackage = {
-    singleSource = {
-      uri = "git://git.suckless.org/9base",
-      sha256sum = "63916da7bd6d73d9a405ce83fc4ca34845667cce"
-    },
-    buildEnv = {
-      EXTRA_CFLAGS = [
-        "-I./lib9",
-        "-isystem./lib9"
-      ]
-    },
-    extraMakeArgs = [
-      "CC=\"${CC}\"",
-      "CFLAGS=\"${CFLAGS}\"",
-      "LDFLAGS=\"${LDFLAGS}\"",
-      # "CPPFLAGS=\"{CPPFLAGS}\"",
-    ],
-    extraMakeInstallArgs = [
-      "PREFIX=/usr"
-    ],
-    biDrvs = [
-      drvs.linuxHeaders,
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
   st | lib.MakePackage = {
     singleSource = {
       uri = "git://git.suckless.org/st",
