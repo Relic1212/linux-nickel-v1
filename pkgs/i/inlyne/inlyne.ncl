@@ -1,13 +1,13 @@
 {
   lib,
   drvs,
-  infyne | lib.CargoPackage = {
+  inlyne | lib.CargoPackage = {
     singleSource = {
       uri = "https://github.com/Inlyne-Project/inlyne/archive/refs/tags/v0.5.0.tar.gz",
       sha256sum = "0473d154469c4f078029c2fdb58dca19b8d415633934773c41930536b54e71e0"
     },
 
-    crates = lib.functions.filterCrates (import "infyne-crates.json"),
+    crates = lib.functions.filterCrates (import "inlyne-crates.json"),
 
     configurePhase = [
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
