@@ -105,7 +105,6 @@
           # m%"sed -i "s|'hidden'|'default'|g" ${SRC}/src/amd/vulkan/meson.build"%,
           # m%"sed -i "s|GetPhysicalDeviceProperties2|GetPhysicalDeviceProperties|g" ${SRC}/src/vulkan/wsi/wsi_common.c"%,
           # m%"sed -i 's|&pdp2|\&\(pdp2.properties\)|g' ${SRC}/src/vulkan/wsi/wsi_common.c"%,
-
           m%"sed -i "s@hidden@default@g" ${SRC}/src/amd/vulkan/meson.build"%,
         ],
 

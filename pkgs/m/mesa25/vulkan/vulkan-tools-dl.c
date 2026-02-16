@@ -44,6 +44,7 @@ const char* lib__usr_lib_libvulkan_radeon_so = "lib__usr_lib_libvulkan_radeon_so
 const char* lib_libVkLayer_MESA_device_select_so = "lib_libVkLayer_MESA_device_select_so";
 const char* lib_libVkLayer_MESA_overlay_so = "lib_libVkLayer_MESA_overlay_so";
 const char* lib_libvulkan_so_1 = "lib_libvulkan_so_1";
+const char* lib_libwayland_client_so_0_libwayland_client_so = "lib_libwayland_client_so_0_libwayland_client_so";
 
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
@@ -51,6 +52,8 @@ void* dlopen(const char *path, int mode) {
 	if (strcmp( path, "libVkLayer_MESA_device_select.so" ) == 0) { dbg_print("(dlopen) found library libVkLayer_MESA_device_select.so (handle=%p)\n", &lib_libVkLayer_MESA_device_select_so); return &lib_libVkLayer_MESA_device_select_so; }
 	if (strcmp( path, "libVkLayer_MESA_overlay.so" ) == 0) { dbg_print("(dlopen) found library libVkLayer_MESA_overlay.so (handle=%p)\n", &lib_libVkLayer_MESA_overlay_so); return &lib_libVkLayer_MESA_overlay_so; }
 	if (strcmp( path, "libvulkan.so.1" ) == 0) { dbg_print("(dlopen) found library libvulkan.so.1 (handle=%p)\n", &lib_libvulkan_so_1); return &lib_libvulkan_so_1; }
+	if (strcmp( path, "libwayland-client.so.0" ) == 0) { dbg_print("(dlopen) found library libwayland-client.so.0 (handle=%p)\n", &lib_libwayland_client_so_0_libwayland_client_so); return &lib_libwayland_client_so_0_libwayland_client_so; }
+	if (strcmp( path, "libwayland-client.so" ) == 0) { dbg_print("(dlopen) found library libwayland-client.so (handle=%p)\n", &lib_libwayland_client_so_0_libwayland_client_so); return &lib_libwayland_client_so_0_libwayland_client_so; }
 	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 
@@ -1932,6 +1935,23 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(wsi_swapchain_instance_gpa, )
 		DLSYM(wsi_unsupported_instance_extension, )
 		DLSYM(wsi_unwrap_icd_surface, )
+	}
+	if (handle == &lib_libwayland_client_so_0_libwayland_client_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(wl_display_connect, )
+		DLSYM(wl_display_flush, )
+		DLSYM(wl_display_dispatch, )
+		DLSYM(wl_display_prepare_read, )
+		DLSYM(wl_display_dispatch_pending, )
+		DLSYM(wl_display_read_events, )
+		DLSYM(wl_proxy_marshal, )
+		DLSYM(wl_proxy_marshal_constructor, )
+		DLSYM(wl_proxy_marshal_constructor_versioned, )
+		DLSYM(wl_proxy_marshal_flags, )
+		DLSYM(wl_proxy_get_version, )
+		DLSYM(wl_proxy_add_listener, )
+		DLSYM(wl_proxy_destroy, )
+		DLSYM(wl_display_roundtrip, )
+		DLSYM(wl_display_disconnect, )
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);	return stub_dlsym(handle, symbol);
 }
