@@ -1,0 +1,86 @@
+diff --git a/src/unix/linux_like/linux/musl/b32/mod.rs b/src/unix/linux_like/linux/musl/b32/mod.rs
+index ac76d3c..335b312 100644
+--- a/src/unix/linux_like/linux/musl/b32/mod.rs
++++ b/src/unix/linux_like/linux/musl/b32/mod.rs
+@@ -14,12 +14,30 @@ s! {
+     pub struct sigset_t {
+         __val: [c_ulong; 32],
+     }
++    
++    pub struct semid_ds {
++        pub sem_perm: crate::ipc_perm,
++        pub sem_otime: crate::time_t,
++        pub sem_ctime: crate::time_t,
++        #[cfg(target_endian = "little")]
++        pub sem_nsems: crate::c_ushort,
++        #[cfg(target_endian = "little")]
++        __sem_nsems_pad: crate::c_char,
++        #[cfg(target_endian = "big")]
++        __sem_nsems_pad: crate::c_char,
++        #[cfg(target_endian = "big")]
++        pub sem_nsems: crate::c_ushort,
++        __unused3: crate::c_long,
++        __unused4: crate::c_long,
++    }
++
+ 
+     pub struct sem_t {
+         __val: [c_int; 4],
+     }
+ }
+ 
++
+ pub const __SIZEOF_PTHREAD_RWLOCK_T: usize = 32;
+ pub const __SIZEOF_PTHREAD_MUTEX_T: usize = 24;
+ pub const __SIZEOF_PTHREAD_BARRIER_T: usize = 20;
+diff --git a/src/unix/linux_like/linux/musl/b64/mod.rs b/src/unix/linux_like/linux/musl/b64/mod.rs
+index 6365dbe..e8225a4 100644
+--- a/src/unix/linux_like/linux/musl/b64/mod.rs
++++ b/src/unix/linux_like/linux/musl/b64/mod.rs
+@@ -34,6 +34,22 @@ s! {
+         __pad2: Padding<c_ulong>,
+     }
+ 
++    pub struct semid_ds {
++        pub sem_perm: crate::ipc_perm,
++        pub sem_otime: crate::time_t,
++        pub sem_ctime: crate::time_t,
++        #[cfg(target_endian = "little")]
++        pub sem_nsems: crate::c_ushort,
++        #[cfg(target_endian = "little")]
++        __sem_nsems_pad: crate::c_char,
++        #[cfg(target_endian = "big")]
++        __sem_nsems_pad: crate::c_char,
++        #[cfg(target_endian = "big")]
++        pub sem_nsems: crate::c_ushort,
++        __unused3: crate::c_long,
++        __unused4: crate::c_long,
++    }
++
+     pub struct msqid_ds {
+         pub msg_perm: crate::ipc_perm,
+         pub msg_stime: crate::time_t,
+diff --git a/src/unix/linux_like/linux/musl/mod.rs b/src/unix/linux_like/linux/musl/mod.rs
+index e3f58b4..57c57f7 100644
+--- a/src/unix/linux_like/linux/musl/mod.rs
++++ b/src/unix/linux_like/linux/musl/mod.rs
+@@ -289,6 +289,19 @@ s! {
+         pub ch_addralign: crate::Elf32_Word,
+     }
+ 
++    pub struct seminfo {
++        pub semmap: c_int,
++        pub semmni: c_int,
++        pub semmns: c_int,
++        pub semmnu: c_int,
++        pub semmsl: c_int,
++        pub semopm: c_int,
++        pub semume: c_int,
++        pub semusz: c_int,
++        pub semvmx: c_int,
++        pub semaem: c_int,
++    }
++
+     pub struct timex {
+         pub modes: c_uint,
+         pub offset: c_long,
