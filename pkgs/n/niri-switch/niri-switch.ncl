@@ -2,12 +2,12 @@
   lib,
   drvs,
 
-  niriSwitchDaemon | lib.CargoPackage = {
+  niriSwitch | lib.CargoPackage = {
     singleSource = {
       uri = "https://github.com/Kiki-Bouba-Team/niri-switch/archive/refs/tags/v0.2.1.tar.gz",
       sha256sum = "83e51588fc3e6251d7f58fd986dfa6e63e89cc29be54eaf50cd484f3cb50259e"
     },
-    crates = lib.functions.filterCrates (import "./niri-switch-daemon-crates.json"),
+    crates = lib.functions.filterCrates (import "./niri-switch-crates.json"),
 
     extraEnv = {
       RUSTC_BOOTSTRAP = "1",
