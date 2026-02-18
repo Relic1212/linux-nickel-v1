@@ -81,7 +81,7 @@
       #   in
       #   std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libgtk4-layer-shell.a") symbols) @
       [
-        # "llvm-ar dv ${DEST}/usr/lib/libgtk4-layer-shell.a stolen-from-libwayland.c.o",
+        "llvm-ar dv ${DEST}/usr/lib/libgtk4-layer-shell.a stolen-from-libwayland.c.o",
       ]
   },
 
