@@ -1,0 +1,131 @@
+{
+  lib,
+  drvs,
+  _CargoFetcher,
+  _cosmicSrcs,
+
+  cosmicOskSources | lib.DeterministicFetcher =
+    _CargoFetcher
+    & {
+      singleSource = {
+        uri = "https://github.com/pop-os/cosmic-osk/archive/eee4d0472c815bad010492c16f4358fca9a47e5f.tar.gz",
+        sha256sum = "e65326222752eec16a9bceacf0591798dbc05b2f70442aa0ee9ac2128f66a373"
+      },
+
+      outputSha256sum = (import "src.sha256sum" as 'Text),
+    },
+}
+& {
+  lib,
+  drvs,
+  cosmicOsk | lib.CargoPackage = {
+
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+      ],
+    },
+
+    unpackPhase = [
+      "cd /tmp/workdir/src",
+      "tar xf /sources.tar",
+    ],
+    preConfigurePhase = [
+      "export CARGO_HOME=${SRC}/.cargo",
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
+      m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
+      #   m%"sed -i 's@"pulse",@@g' ${SRC}/vendor/cosmic-settings-subscriptions/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
+      "echo '%{import "cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+    ],
+
+    utilsProviders,
+    baseBuildinputPackages =
+      [
+        drvs.rust,
+        drvs.muslBothRenamedDl,
+        drvs.pkgconf,
+        llvmProvider,
+        drvs.clangCc,
+      ]
+      @ (if enableSccache then [drvs.sccache] else [])
+      @ utilsProviders,
+    llvmProvider = drvs.llvmFull,
+
+    enableSccache = true,
+    biDrvs = [
+      drvs.cosmicOskSources,
+      drvs.alsaLibs,
+      drvs.atSpi2Core,
+      drvs.bluez,
+      drvs.cairo,
+      drvs.cairoGobjectEmpty,
+      drvs.dbus,
+      drvs.eudev,
+      drvs.expat,
+      drvs.fdkAac,
+      drvs.ffmpeg,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.fribidi,
+      drvs.gdkPixbufFull,
+      drvs.glib,
+      drvs.gperf,
+      drvs.gtk3,
+      drvs.harfbuzz,
+      drvs.hwdata,
+      drvs.jansson,
+      drvs.jsonC,
+      drvs.kmod,
+      drvs.ldacbt,
+      drvs.libdisplayinfo,
+      drvs.libdlEgl,
+      drvs.libdrm,
+      drvs.libelf,
+      drvs.libepoxy,
+      drvs.libevdev,
+      drvs.libffi,
+      drvs.libfreeaptx,
+      drvs.libinput,
+      drvs.libjpegTurbo,
+      drvs.libopus,
+      drvs.libpciaccess,
+      drvs.libpng,
+      drvs.libsndfile,
+      drvs.libusb,
+      drvs.libxkbcommon,
+      drvs.libyaml,
+      drvs.linuxHeaders,
+      drvs.llvmConfigStatic,
+      drvs.lua,
+      drvs.m4,
+      drvs.mesaExp,
+      drvs.mtdev,
+      drvs.ncurses,
+      drvs.openssl,
+      drvs.pango,
+      drvs.pcre2,
+      drvs.pixman,
+      drvs.readline,
+      drvs.sbc,
+      drvs.seatd,
+      drvs.spirvLlvmTranslator,
+      drvs.spirvTools,
+      drvs.utilLinux,
+      drvs.wayland,
+      drvs.waylandProtocols,
+      drvs.xz,
+      drvs.zlibNg,
+      drvs.zstd,
+      drvs.pipewire,
+      drvs.libstdcppCompat,
+    ],
+  },
+}
