@@ -1,0 +1,1 @@
+sed -i "s@let libs@println!(\"cargo:rustc-link-lib=static=/tmp/workdir/src/dlopen.o\");\nlet libs@" vendor/libspa-sys/build.rs
