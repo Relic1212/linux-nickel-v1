@@ -31,7 +31,9 @@
       drvs.libpciaccess,
       drvs.libelf,
       drvs.mesa2,
+      drvs.spirvTools,
       drvs.ffmpeg,
+      drvs.openssl,
     ],
     extraMesonArgs = [
       # "-Ddefault_audio_backend=''",
