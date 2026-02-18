@@ -138,7 +138,7 @@ class builder:
         if len(self.failed_builds) > 0:
             print("The following failed to build", self.failed_builds)
 
-    def build(self, h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict, keep_going: bool = False, prev_failed=None, delete_tmpfs_build_on_success=True) -> None:
+    def build(self, h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict, keep_going: bool = False, prev_failed=None, delete_tmpfs_build_on_success=True, delete_tmpfs_build_on_fail=False) -> None:
 
         # h=hash
         # drv_s=pkgs[hash]
@@ -192,11 +192,11 @@ class builder:
                 failed_names.append(bi_drv_name)
                 self.failed_builds.append(bi_drv_drv_hash)
                 print(f"failed to build {bi_drv_name} (for {name})")
-                try:
-                    with open(dirpaths.get_basedir() + "/failed.txt", "a", encoding="utf-8") as f:
-                        f.write(bi_drv_name + "\n")
-                except:
-                    print("failed to write fail status")
+                # try:
+                #     with open(dirpaths.get_basedir() + "/failed.txt", "a", encoding="utf-8") as f:
+                #         f.write(bi_drv_name + "\n")
+                # except:
+                #     print("failed to write fail status")
                 if not keep_going:
                     raise e
             except DependencyException as e:
@@ -494,6 +494,20 @@ class builder:
             if status != 0:
                 print("env =", senv)
                 print(f"Failed to build {name}")
+                try:
+                    with open(dirpaths.get_basedir() + "/failed.txt", "a", encoding="utf-8") as f:
+                        f.write(name + "\n")
+                except:
+                    print("failed to write fail status")
+                if delete_tmpfs_build_on_fail:
+                    for d in [tmp_workdir]:
+                        print(f"removing {d}")
+                        try:
+                            print()
+                            subprocess.run(["rm", "-rf", d], check=True)
+                        except subprocess.CalledProcessError:
+                            # go, permission and tihngs
+                            print(f"warning: failed to delete {d}")
                 raise subprocess.CalledProcessError(status, cmd=bwrap_wrap)
         if deterministic_fetcher:
 
