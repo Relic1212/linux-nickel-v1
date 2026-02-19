@@ -57,25 +57,36 @@
 
       # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.0/mesa-mesa-25.3.0.tar.bz2",
       # sha256sum = "f30228a63cf567225ffea42464d87fdc2026e1f5c55f5cc7de69b2531688e1ce",
-      uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
-      sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
+      # sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
+
+      uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
+      sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72"
     },
 
     extraEnv = {
       PATH = "/usr/libexec:${PATH}"
     },
+    # patches = [
+    #   {
+    #     sha256sum = "9f8f56eaf204a3e4832ba1c898e473fe3f55d0ea5d9157a47739879e16f25dae",
+    #     file = "mesa-25.3.0.patch",
+    #   },
+    #   {
+    #     file = "mesa-no-virgl-cache.patch",
+    #     sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
+    #   },
+    # ],
+
     patches = [
-      # {
-      #   sha256sum = "a6b7e687652f1776e8aad6f04d2b0f613c939745581f6bd3013710cb4640ea6f",
-      #   file = "mesa2521.patch"
-      # },
       {
-        sha256sum = "9f8f56eaf204a3e4832ba1c898e473fe3f55d0ea5d9157a47739879e16f25dae",
-        file = "mesa-25.3.0.patch",
+        sha256sum = "0e84a42748ef7b8af159047e647907de17e107ad4e39557bafdc877a329257a4",
+        file = "mesa-26.0.0.patch",
       },
       {
-        file = "mesa-no-virgl-cache.patch",
-        sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
+        file = "mesa-26.0.0-no-virgl-cache.patch",
+
+        sha256sum = "9af9263c2590fc092f2f8c96cf3ce08591b241423be121ed14980882b9479893"
       },
     ],
     preConfigurePhase = [

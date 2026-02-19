@@ -223,9 +223,6 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "u_rwlock_rdunlock") == 0) { extern void* u_rwlock_rdunlock; return &u_rwlock_rdunlock; }
 		if (strcmp(symbol, "u_rwlock_wrlock") == 0) { extern void* u_rwlock_wrlock; return &u_rwlock_wrlock; }
 		if (strcmp(symbol, "u_rwlock_wrunlock") == 0) { extern void* u_rwlock_wrunlock; return &u_rwlock_wrunlock; }
-		if (strcmp(symbol, "SHA1Final") == 0) { extern void* SHA1Final; return &SHA1Final; }
-		if (strcmp(symbol, "SHA1Init") == 0) { extern void* SHA1Init; return &SHA1Init; }
-		if (strcmp(symbol, "SHA1Update") == 0) { extern void* SHA1Update; return &SHA1Update; }
 		if (strcmp(symbol, "gc_alloc_size") == 0) { extern void* gc_alloc_size; return &gc_alloc_size; }
 		if (strcmp(symbol, "gc_context") == 0) { extern void* gc_context; return &gc_context; }
 		if (strcmp(symbol, "gc_free") == 0) { extern void* gc_free; return &gc_free; }
