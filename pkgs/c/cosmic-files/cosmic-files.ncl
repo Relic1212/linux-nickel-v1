@@ -13,9 +13,9 @@
       outputSha256sum = (import "src.sha256sum" as 'Text),
 
       # outputSha256sum = "59281d8e3c353395b6c596ebbac20790b6446631c0710af94781b7695c2e09a3",
-      preConfigurePhase = [
-        "cargo update -p compio-driver --precise 0.11.2",
-      ]
+      # preConfigurePhase = [
+      #   "cargo update -p compio-driver --precise 0.11.2",
+      # ]
     },
 }
 & {

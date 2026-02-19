@@ -273,6 +273,46 @@
       # drsv.findutils & {priority = 1},
       # drsv.gnutar & {priority = 1},
     ]
+  },
+
+  _CargoCacher | lib.DeterministicFetcher = {
+
+    extraEnv = {
+      HOME = "/tmp/workdir/src/home"
+    },
+    separateBuildDir = false,
+    buildPhase = [
+      "mkdir -p $HOME",
+      "mkdir -p .cargo",
+      # "cargo vendor --locked >> .cargo/config.toml",
+      "cargo fetch --locked",
+      # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
+      m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
+      # m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
+      # "rm -rf ./home/.cargo/git/checkouts/*/*/.git",
+      # "rm -rf ./home/.cargo/git/checkouts/*/*/*/.git"
+      "for d in $(find ./home -name '.git' -type d); do rm -rf $d; done",
+      "rm -f ./home/.cargo/.global-cache",
+      # "tar cf - . > ../build/%{outputFile}",
+      "tar --sort=name --format=ustar --mtime='2015-10-21 00:00Z' -cf ../build/%{outputFile} .",
+    ],
+    installPhase = [
+      "cp ../build/%{outputFile} ${DEST}",
+    ],
+    # outputSha256sum = (import "src.sha256sum" as 'Text), # "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
+    # outputSha256sum = (import "src.sha256sum" as 'Text), # "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
+
+    outputFile = "sources.tar",
+
+    biDrvs = [
+      drvs.emptyResolvConf,
+      drvs.muslShared,
+      drvs.rust,
+      drvs.gitFull,
+      drvs.caCertificates,
+      # drsv.findutils & {priority = 1},
+      drvs.gnutar & { priority = 1 },
+    ]
   }
 }
 & ({ _cosmicSrcs = (import "../cosmic-common/_cosmic_sources.ncl") & (import "../cosmic-common/_cosmic_sources_override.ncl") }

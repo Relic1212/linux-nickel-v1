@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  cosmicEpochSources | lib.DeterministicFetcher = {
+  _cosmicEpochSources | lib.DeterministicFetcher = {
     # singleSource = {
     #   fetchMethod = "git",
     #   uri = "https://github.com/pop-os/cosmic-epoch.git",
@@ -56,7 +56,7 @@
     ],
   },
 
-  cosmicEpoch | lib.CargoPackage = {
+  _cosmicEpoch | lib.CargoPackage = {
     unpackPhase = [
       "cd /tmp/workdir/src",
       "tar xf /sources.tar",
@@ -130,7 +130,7 @@
     ],
     enableSccache = false,
     biDrvs = [
-      drvs.cosmicEpochSources,
+      # drvs.cosmicEpochSources,
       drvs.just,
       drvs.gnumake,
       drvs.pythonFull,
