@@ -18,6 +18,7 @@
       drvs.autoconfArchive,
       drvs.libtraceevent,
       drvs.libtracefs,
+      drvs.pciutils,
     ],
     configureScript,
     configureFlags,
