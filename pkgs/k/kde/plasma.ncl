@@ -309,28 +309,53 @@
   kscreen =
     _plasma
     & {
+      cmakeExtraArgsRecord = {
+        "-DWITH_X11" = false,
+      },
+      preConfigurePhase = [
+        (
+          lib.functions.cmakePrependLines
+            "find_package(LayerShellQt)"
+            [
+              # "find_package(Qt6WaylandClient COMPONENTS Private)",
+              # "find_package(Qt6WaylandClient REQUIRED COMPONENTS Private)",
+              # "find_package(Qt6WaylandClientPrivate)",
+              "find_package(Qt6WaylandClientPrivate REQUIRED)",
+              "find_package(PkgConfig)",
+              "pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)",
+              "find_package(PlasmaActivities REQUIRED)",
+            ]
+        )
+        ++ " ${SRC}/CMakeLists.txt",
+        m%"sed -i "s|DBusAddons|DBusAddons\n\tNotifications\n\tKIO|g" ${SRC}/CMakeLists.txt"%,
+        "cd ${SRC}",
+        m%"patch -p1 << 'EOF'%{import "kscreen-nox11.patch" as 'Text}EOF"%,
+        "cd ${BUILDDIR}",
+      ],
+      # biDrvs | force = [],
       biDrvs =
         _plasma.biDrvs
         @ [
-          drvs.solid,
-          drvs.kholidays,
-          drvs.kunitconversion,
-          drvs.utilLinuxWeak,
-          drvs.libcanberra,
-          drvs.kbookmarks,
-          drvs.kcompletion,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-          drvs.bzip2,
-          drvs.breezeIcons,
-          drvs.plasmaActivities,
           drvs.acl,
           drvs.attr,
+          drvs.breezeIcons,
+          drvs.bzip2,
+          drvs.kbookmarks,
+          drvs.kcompletion,
           drvs.kconfigwidgets,
+          drvs.kholidays,
+          drvs.kitemviews,
+          drvs.kjobwidgets,
+          drvs.kunitconversion,
           drvs.kxmlgui,
-          drvs.libxcb,
+          drvs.layerShellQt,
+          drvs.libcanberra,
           drvs.libkscreen,
           drvs.libplasma,
+          drvs.libxcb,
+          drvs.plasmaActivities,
+          drvs.solid,
+          drvs.utilLinuxWeak,
         ]
     },
   libksysguard =
@@ -480,22 +505,22 @@
       biDrvs =
         _plasma.biDrvs
         @ [
-          drvs.solid,
-          drvs.kholidays,
-          drvs.kunitconversion,
-          drvs.utilLinuxWeak,
-          drvs.libcanberra,
-          drvs.kbookmarks,
-          drvs.kcompletion,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-          drvs.bzip2,
-          drvs.breezeIcons,
-          drvs.plasmaActivities,
-          drvs.acl,
-          drvs.attr,
-          drvs.kconfigwidgets,
-          drvs.kxmlgui,
+          # drvs.solid,
+          # drvs.kholidays,
+          # drvs.kunitconversion,
+          # drvs.utilLinuxWeak,
+          # drvs.libcanberra,
+          # drvs.kbookmarks,
+          # drvs.kcompletion,
+          # drvs.kitemviews,
+          # drvs.kjobwidgets,
+          # drvs.bzip2,
+          # drvs.breezeIcons,
+          # drvs.plasmaActivities,
+          # drvs.acl,
+          # drvs.attr,
+          # drvs.kconfigwidgets,
+          # drvs.kxmlgui,
           drvs.libxcb,
         ]
     },
