@@ -8,12 +8,12 @@
     },
     configureScript = "${SRC}/src/configure",
     preConfigurePhase = [
-        "sed -i 's|krb5_keyblock master_keyblock|extern krb5_keyblock master_keyblock|g' ${SRC}/src/kadmin/dbutil/kdb5_util.c",
-        # "sed -i 's@		tests @@g' ${SRC}/src/Makefile.in",
-        # "rm -rf ${SRC}/src/tests"
+      "sed -i 's|krb5_keyblock master_keyblock|extern krb5_keyblock master_keyblock|g' ${SRC}/src/kadmin/dbutil/kdb5_util.c",
+      # "sed -i 's@		tests @@g' ${SRC}/src/Makefile.in",
+      # "rm -rf ${SRC}/src/tests"
     ],
     preBuildPhase = [
-        "rm -rf ${BUILDDIR}/tests",
+      "rm -rf ${BUILDDIR}/tests",
     ],
     biDrvs = [
       drvs.perl,
