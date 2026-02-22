@@ -21,12 +21,16 @@
     extraMakeInstallArgs = [
       "PREFIX=/usr",
       "SBINDIR=/usr/bin",
-    ]
+    ],
+    postInstallPhase = [
+      "rm -f ${DEST}/usr/lib/libsensors.so",
+      "rm -f ${DEST}/usr/lib/libsensors.so.*",
+    ],
   },
   lmSensorsSensors | lib.MakePackage =
     lmSensors
     & {
-      postInstallPhase = [
+      postInstallPhase | priority 1 = [
         "rm ${DEST}/usr/lib -rf",
         "rm ${DEST}/usr/bin/sensors-conf-convert",
         "rm ${DEST}/usr/bin/sensors-detect",
