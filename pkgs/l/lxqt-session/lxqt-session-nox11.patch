@@ -1,0 +1,143 @@
+diff --git a/lxqt-session/src/lxqtmodman.cpp b/lxqt-session/src/lxqtmodman.cpp
+index f7af733..72a0635 100644
+--- a/lxqt-session/src/lxqtmodman.cpp
++++ b/lxqt-session/src/lxqtmodman.cpp
+@@ -48,7 +48,6 @@
+ #include "log.h"
+ 
+ #include <KWindowSystem>
+-#include <NETWM>
+ 
+ #define MAX_CRASHES_PER_APP 5
+ 
+@@ -194,12 +193,7 @@ void LXQtModuleManager::startWm(LXQt::Settings *settings)
+ {
+     // if the WM is active do not run WM.
+     // all window managers must set their name according to the spec
+-    if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-        if (!QString::fromUtf8(NETRootInfo(x11NativeInterface->connection(), NET::SupportingWMCheck).wmName()).isEmpty())
+-        {
+-            return;
+-        }
+-    }
++ 
+ 
+     if (mWindowManager.isEmpty())
+     {
+@@ -222,13 +216,7 @@ void LXQtModuleManager::startWm(LXQt::Settings *settings)
+     QEventLoop waitLoop;
+     auto checker = [&waitLoop] {
+         // all window managers must set their name according to the spec
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-            if (!QString::fromUtf8(NETRootInfo(x11NativeInterface->connection(), NET::SupportingWMCheck).wmName()).isEmpty())
+-            {
+-                qCDebug(SESSION) << "Window Manager started";
+-                waitLoop.exit();
+-            }
+-        }
++
+     };
+     QTimer t;
+     connect(&t, &QTimer::timeout, this, checker);
+diff --git a/lxqt-session/src/numlock.cpp b/lxqt-session/src/numlock.cpp
+index 3672120..ebe20f0 100644
+--- a/lxqt-session/src/numlock.cpp
++++ b/lxqt-session/src/numlock.cpp
+@@ -79,10 +79,6 @@ void enableNumlock()
+ {
+     // this currently only works for X11
+     if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-            if (Display* dpy = x11NativeInterface->display()) {
+-                xkb_set_on(dpy);
+-            }
+-        }
++       
+     }
+ }
+diff --git a/lxqt-session/src/sessionapplication.cpp b/lxqt-session/src/sessionapplication.cpp
+index 50c5da3..8448ce2 100644
+--- a/lxqt-session/src/sessionapplication.cpp
++++ b/lxqt-session/src/sessionapplication.cpp
+@@ -209,21 +209,7 @@ void SessionApplication::loadKeyboardSettings(LXQt::Settings& settings)
+     /* Keyboard settings */
+     unsigned int delay = 0;
+     unsigned int interval = 0;
+-    if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-        if (Display* dpy = x11NativeInterface->display()) {
+-            if(XkbGetAutoRepeatRate(dpy, XkbUseCoreKbd, (unsigned int*) &delay, (unsigned int*) &interval))
+-            {
+-                delay = settings.value(QSL("delay"), delay).toUInt();
+-                interval = settings.value(QSL("interval"), interval).toUInt();
+-                XkbSetAutoRepeatRate(dpy, XkbUseCoreKbd, delay, interval);
+-            }
+-
+-            // turn on/off keyboard beep
+-            bool beep = settings.value(QSL("beep")).toBool();
+-            values.bell_percent = beep ? -1 : 0;
+-            XChangeKeyboardControl(dpy, KBBellPercent, &values);
+-        }
+-    }
++   
+ 
+     // turn on numlock as needed
+     if(settings.value(QSL("numlock")).toBool())
+@@ -266,11 +252,7 @@ void SessionApplication::loadMouseSettings(LXQt::Settings& settings)
+     int accel_factor = settings.value(QSL("accel_factor")).toInt();
+     int accel_threshold = settings.value(QSL("accel_threshold")).toInt();
+     if(accel_factor || accel_threshold) {
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-            if (Display* dpy = x11NativeInterface->display()) {
+-                XChangePointerControl(dpy, accel_factor != 0, accel_threshold != 0, accel_factor, 10, accel_threshold);
+-            }
+-        }
++       
+     }
+ 
+     // left handed mouse?
+@@ -328,44 +310,7 @@ void SessionApplication::setLeftHandedMouse(bool mouse_left_handed)
+     int i = 0;
+     int idx_1 = 0, idx_3 = 1;
+ 
+-    if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-        if (Display* dpy = x11NativeInterface->display()) {
+-            buttons = (unsigned char*)malloc(DEFAULT_PTR_MAP_SIZE);
+-            if (!buttons)
+-            {
+-                return;
+-            }
+-            n_buttons = XGetPointerMapping(dpy, buttons, DEFAULT_PTR_MAP_SIZE);
+-            if (n_buttons > DEFAULT_PTR_MAP_SIZE)
+-            {
+-                more_buttons = (unsigned char*)realloc(buttons, n_buttons);
+-                if (!more_buttons)
+-                {
+-                    free(buttons);
+-                    return;
+-                }
+-                buttons = more_buttons;
+-                n_buttons = XGetPointerMapping(dpy, buttons, n_buttons);
+-            }
+-
+-            for (i = 0; i < n_buttons; i++)
+-            {
+-                if (buttons[i] == 1)
+-                    idx_1 = i;
+-                else if (buttons[i] == ((n_buttons < 3) ? 2 : 3))
+-                    idx_3 = i;
+-            }
+-
+-            if ((mouse_left_handed && idx_1 < idx_3) ||
+-                (!mouse_left_handed && idx_1 > idx_3))
+-            {
+-                buttons[idx_1] = ((n_buttons < 3) ? 2 : 3);
+-                buttons[idx_3] = 1;
+-                XSetPointerMapping(dpy, buttons, n_buttons);
+-            }
+-            free(buttons);
+-        }
+-    }
++    
+ }
+ 
+ bool SessionApplication::updateDBusEnvironment()

@@ -1,0 +1,205 @@
+
+index 72925e0f..d50090bb 100644
+--- a/liblxqt-config-cursor/crtheme.cpp
++++ b/liblxqt-config-cursor/crtheme.cpp
+@@ -188,14 +188,7 @@ unsigned long XCursorThemeData::loadCursorHandle(const QString &name, int size)
+     // Create the cursor
+ 
+     unsigned long handle = 0;
+-    if(QGuiApplication::platformName() == QStringLiteral("xcb"))
+-    {
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-        {
+-            if (Display *dpy = x11NativeInterface->display())
+-                handle = (unsigned long)XcursorImagesLoadCursor(dpy, images);
+-        }
+-    }
++    
+     XcursorImagesDestroy(images);
+     //setCursorName(cursor, name);
+     return handle;
+@@ -230,18 +223,7 @@ bool haveXfixes()
+     bool result = false;
+     int event_base, error_base;
+ 
+-    if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-    {
+-        if (Display *dpy = x11NativeInterface->display())
+-        {
+-            if (XFixesQueryExtension(dpy, &event_base, &error_base))
+-            {
+-                int major, minor;
+-                XFixesQueryVersion(dpy, &major, &minor);
+-                result = (major >= 2);
+-            }
+-        }
+-    }
++    
+     return result;
+ }
+ 
+@@ -256,11 +238,7 @@ bool applyTheme(const XCursorThemeData &theme, int cursorSize)
+         if (!haveXfixes()) return false;
+ 
+         // Sets default cursor size
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-        {
+-            if (Display *dpy = x11NativeInterface->display())
+-                XcursorSetDefaultSize(dpy, cursorSize);
+-        }
++        
+     }
+     // Set up the proper launch environment for newly started apps
+     //k8:!!!:KToolInvocation::klauncher()->setLaunchEnv("XCURSOR_THEME", themeName);
+@@ -289,14 +267,7 @@ bool applyTheme(const XCursorThemeData &theme, int cursorSize)
+     for (const QString &name : std::as_const(names))
+     {
+         Cursor cursor = (Cursor)theme.loadCursorHandle(name);
+-        if(isX11)
+-        {
+-            if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-            {
+-                if (Display *dpy = x11NativeInterface->display())
+-                    XFixesChangeCursorByName(dpy, cursor, QFile::encodeName(name).constData());
+-            }
+-        }
++        
+         // FIXME: do we need to free the cursor?
+     }
+     return true;
+@@ -322,10 +293,6 @@ QString getCurrentTheme()
+             return name;
+     }
+     // X11 cursor theme
+-    if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-    {
+-        if (Display *dpy = x11NativeInterface->display())
+-            return QString::fromUtf8(XcursorGetTheme(dpy));
+-    }
++    
+     return QString();
+ }
+diff --git a/liblxqt-config-cursor/previewwidget.cpp b/liblxqt-config-cursor/previewwidget.cpp
+index b4d7fb95..4ebc3d2f 100644
+--- a/liblxqt-config-cursor/previewwidget.cpp
++++ b/liblxqt-config-cursor/previewwidget.cpp
+@@ -131,12 +131,7 @@ PreviewWidget::~PreviewWidget()
+ void PreviewWidget::setCursorHandle(xcb_cursor_t cursorHandle)
+ {
+     WId wid = nativeParentWidget()->windowHandle()->winId();
+-    if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-            xcb_change_window_attributes(x11NativeInterface->connection(), wid, XCB_CW_CURSOR, &cursorHandle);
+-            xcb_flush(x11NativeInterface->connection());
+-        }
+-    }
++    
+ }
+ 
+ 
+diff --git a/liblxqt-config-cursor/xcr/xcrimg.cpp b/liblxqt-config-cursor/xcr/xcrimg.cpp
+index 6a95e665..96e52464 100644
+--- a/liblxqt-config-cursor/xcr/xcrimg.cpp
++++ b/liblxqt-config-cursor/xcr/xcrimg.cpp
+@@ -265,10 +265,7 @@ int getDefaultCursorSize()
+ {
+     int size = 24; // Default size
+     if(QGuiApplication::platformName() == QStringLiteral("xcb")) {
+-        if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-            if (Display* dpy = x11NativeInterface->display())
+-                size = XcursorGetDefaultSize(dpy);
+-        }
++        
+     }
+     else {
+         // Wayland: get default cursor size
+diff --git a/lxqt-config-input/keyboardconfig.cpp b/lxqt-config-input/keyboardconfig.cpp
+index 758ada6f..da4b865c 100644
+--- a/lxqt-config-input/keyboardconfig.cpp
++++ b/lxqt-config-input/keyboardconfig.cpp
+@@ -98,8 +98,6 @@ void KeyboardConfig::applyConfig()
+   bool acceptSetting = false;
+ 
+   Display* dpy = nullptr;
+-  if (auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>())
+-    dpy = x11NativeInterface->display();
+ 
+   /* apply keyboard values */
+   if(delay != ui.keyboardDelay->value() || interval != ui.keyboardInterval->value())
+@@ -173,11 +171,7 @@ void KeyboardConfig::reset() {
+   beep = oldBeep;
+   numlock = oldNumlock;
+   flashTime = oldFlashTime;
+-  if(auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-    if(Display* dpy = x11NativeInterface->display()) {
+-      XkbSetAutoRepeatRate(dpy, XkbUseCoreKbd, delay, interval);
+-    }
+-  }
++  
+   /* FIXME: beep? */
+ 
+   initControls();
+diff --git a/lxqt-config-input/mouseconfig.cpp b/lxqt-config-input/mouseconfig.cpp
+index b2aa35a2..f378426e 100644
+--- a/lxqt-config-input/mouseconfig.cpp
++++ b/lxqt-config-input/mouseconfig.cpp
+@@ -97,43 +97,10 @@ void MouseConfig::setLeftHandedMouse() {
+   if(!buttons) {
+     return;
+   }
+-  auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
+-  if(!x11NativeInterface) {
+-    free(buttons);
+-    return;
+-  }
+-  Display* dpy = x11NativeInterface->display();
+-  if(!dpy) {
++
+     free(buttons);
+     return;
+-  }
+-
+-  n_buttons = XGetPointerMapping(dpy, buttons, DEFAULT_PTR_MAP_SIZE);
+-
+-  if(n_buttons > DEFAULT_PTR_MAP_SIZE) {
+-    more_buttons = (unsigned char*)realloc(buttons, n_buttons);
+-    if(!more_buttons) {
+-      free(buttons);
+-      return;
+-    }
+-    buttons = more_buttons;
+-    n_buttons = XGetPointerMapping(dpy, buttons, n_buttons);
+-  }
+-
+-  for(i = 0; i < n_buttons; i++) {
+-    if(buttons[i] == 1)
+-      idx_1 = i;
+-    else if(buttons[i] == ((n_buttons < 3) ? 2 : 3))
+-      idx_3 = i;
+-  }
+-
+-  if((leftHanded && idx_1 < idx_3) ||
+-      (!leftHanded && idx_1 > idx_3)) {
+-    buttons[idx_1] = ((n_buttons < 3) ? 2 : 3);
+-    buttons[idx_3] = 1;
+-    XSetPointerMapping(dpy, buttons, n_buttons);
+-  }
+-  free(buttons);
++  
+ }
+ 
+ void MouseConfig::applyConfig()
+@@ -208,12 +175,7 @@ void MouseConfig::reset() {
+   singleClick = oldSingleClick;
+   doubleClickInterval = oldDoubleClickInterval;
+   wheelScrollLines = oldWheelScrollLines;
+-  if(auto x11NativeInterface = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-    if(Display* dpy = x11NativeInterface->display()) {
+-      XChangePointerControl(dpy, True, True,
+-                            accel, 10, threshold);
+-    }
+-  }
++ 
+   setLeftHandedMouse();
+ 
+   initControls();

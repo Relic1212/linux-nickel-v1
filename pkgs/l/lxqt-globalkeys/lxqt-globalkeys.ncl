@@ -1,0 +1,50 @@
+{
+  lib,
+  drvs,
+  lxqtGlobalkeys | lib.LxqtPackage = {
+    singleSource = {
+      uri = "https://github.com/lxqt/lxqt-globalkeys/archive/refs/tags/2.3.0.tar.gz",
+      sha256sum = "5fa0fa718fda8ab6ab8411874516b8f2c757bb9d57c44bb286f2337f43b23247",
+    },
+    preConfigurePhase = [
+      m%"sed -i 's|SHARED|STATIC|g' ${SRC}/ui/CMakeLists.txt"%,
+      m%"sed -i 's|SHARED|STATIC|g' ${SRC}/client/CMakeLists.txt"%,
+    ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "$(pkg-config --static --libs xcb)",
+        "$(pkg-config --static --libs xcb-shm)",
+        "$(pkg-config --static --libs x11-xcb)",
+        "$(pkg-config --static --libs glib-2.0)",
+        "$(pkg-config --static --libs expat)",
+      ],
+    },
+    biDrvs = [
+      drvs.acl,
+      drvs.attr,
+      drvs.duktape,
+      drvs.elogindWithPolkit,
+      drvs.kwindowsystem,
+      drvs.libcap,
+      drvs.libpamFinalUdev,
+      drvs.libqtxdg,
+      drvs.libx11,
+      drvs.libxau,
+      drvs.libxcb,
+      drvs.libxext,
+      drvs.libxfixes,
+      drvs.libxrender,
+      drvs.libxss,
+      drvs.lxqtBuildTools,
+      drvs.plasmaWaylandProtocols,
+      drvs.polkit,
+      drvs.polkitQt6,
+      drvs.xcbProto,
+      drvs.xorgMacros,
+      drvs.xorgproto,
+      drvs.xtrans,
+      drvs.liblxqt,
+      drvs.perl,
+    ],
+  }
+}
