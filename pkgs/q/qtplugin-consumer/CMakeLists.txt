@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
-find_package(Qt6 REQUIRED COMPONENTS Core WaylandClient Gui)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    WaylandClient
+    Gui
+    WaylandCompositor
+)
 # find_package(Libinput REQUIRED)
 
 add_library(qtbase_obj OBJECT qtbase.cpp)
@@ -10,6 +15,7 @@ target_link_libraries(qtbase_bin PUBLIC
     Qt6::WaylandClient
     Qt6::Gui
     Qt6::Core
+    Qt6::WaylandCompositor
     # Libinput::Libinput
 )
 
@@ -48,6 +54,18 @@ qt_import_plugins(qtbase_bin INCLUDE
     Qt6::QWaylandXdgShellIntegrationPlugin
     Qt6::QXdgDesktopPortalThemePlugin
     Qt6::ShmServerBufferPlugin
+
+
+
+    Qt6::QWaylandIviShellIntegrationPlugin
+    Qt6::QWaylandQtShellIntegrationPlugin
+    Qt6::QWaylandAdwaitaDecorationPlugin
+    Qt6::DrmEglServerBufferIntegrationPlugin
+    Qt6::QWaylandDmabufClientBufferIntegrationPlugin
+    Qt6::ShmServerBufferIntegrationPlugin
+    Qt6::DmaBufServerBufferIntegrationPlugin
+    Qt6::QWaylandEglStreamClientBufferIntegrationPlugin
+    Qt6::QWaylandEglClientBufferIntegrationPlugin
 )
 
 install(TARGETS qtbase_obj DESTINATION lib)
