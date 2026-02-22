@@ -3,8 +3,8 @@
   drvs,
   bluez | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://www.kernel.org/pub/linux/bluetooth/bluez-5.83.tar.xz",
-      sha256sum = "108522d909d220581399bfec93daab62035539ceef3dda3e79970785c63bd24c"
+      uri = "https://www.kernel.org/pub/linux/bluetooth/bluez-5.86.tar.xz",
+      sha256sum = "99f144540c6070591e4c53bcb977eb42664c62b7b36cb35a29cf72ded339621d"
     },
     biDrvs = [
       drvs.dbus,
@@ -42,6 +42,7 @@
       "--disable-cups",
       "--enable-manpages",
       "--enable-library",
+      "--enable-deprecated",
     ],
     preConfigurePhase = [
       # m%"sed -i 's@MAX_INPUT@_POSIX_MAX_INPUT@g' ${SRC}/src/shared/util.c"%,
