@@ -7,7 +7,7 @@ find_package(Qt6 REQUIRED COMPONENTS
 )
 # find_package(Libinput REQUIRED)
 
-add_library(qtbase_obj OBJECT qtbase.cpp)
+add_library(qtbase_obj STATIC qtbase.cpp)
 
 add_executable(qtbase_bin main.cpp)
 
@@ -68,5 +68,10 @@ qt_import_plugins(qtbase_bin INCLUDE
     Qt6::QWaylandEglClientBufferIntegrationPlugin
 )
 
-install(TARGETS qtbase_obj DESTINATION lib)
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
+install(TARGETS qtbase_obj EXPORT PluginConsumer)
+install(EXPORT PluginConsumer DESTINATION lib NAMESPACE PluginConsumer::)
 install(TARGETS qtbase_bin DESTINATION bin)
+# configure_package_config_file()
