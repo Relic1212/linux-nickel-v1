@@ -15,11 +15,19 @@
       "cat << 'EOF' > ${SRC}/main.cpp\n%{import "main.cpp" as 'Text}\nEOF",
       "cat << 'EOF' > ${SRC}/CMakeLists.txt\n%{import "CMakeLists.txt" as 'Text}\nEOF",
     ],
+    
     biDrvs = [
       # drvs.qtbase,
       # drvs.qtdeclarative,
       drvs.libevdev,
       drvs.mtdev,
+    ]
+  },
+  qtpluginConsumerCmake | lib.Package = {
+    installPhase = [
+
+      "install -dm0755 ${DEST}/usr/lib/cmake",
+      "cat << 'EOF' > ${DEST}/usr/lib/cmake/AddStaticQtPlugins.cmake\n%{import "./AddStaticQtPlugins.cmake" as 'Text}\nEOF",
     ]
   }
 }
