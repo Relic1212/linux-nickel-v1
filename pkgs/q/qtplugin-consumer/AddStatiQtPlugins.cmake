@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
 
 function(ADD_STATIC_QT_PLUGINS BINARY_NAME)
 
@@ -71,9 +70,3 @@ function(ADD_STATIC_QT_PLUGINS BINARY_NAME)
     )
 
 endfunction()
-
-
-add_executable(testplugin main.cpp)
-add_static_qt_plugins(testplugin)
-
-install(TARGETS testplugin DESTINATION bin)

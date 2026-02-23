@@ -36,7 +36,7 @@ Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
 // Q_IMPORT_PLUGIN(QTlsBackendOpenSSLPlugin)
 // Q_IMPORT_PLUGIN(QTlsBackendCertOnlyPlugin)
 
-
+#ifdef WITH_QTWAYLAND
 Q_IMPORT_PLUGIN(QWaylandIviShellIntegrationPlugin)
 Q_IMPORT_PLUGIN(QWaylandQtShellIntegrationPlugin)
 Q_IMPORT_PLUGIN(QWaylandAdwaitaDecorationPlugin)
@@ -46,3 +46,9 @@ Q_IMPORT_PLUGIN(ShmServerBufferIntegrationPlugin)
 Q_IMPORT_PLUGIN(DmaBufServerBufferIntegrationPlugin)
 Q_IMPORT_PLUGIN(QWaylandEglStreamClientBufferIntegrationPlugin)
 Q_IMPORT_PLUGIN(QWaylandEglClientBufferIntegrationPlugin)
+#endif
+
+#ifdef WITH_QTSVG
+Q_IMPORT_PLUGIN(QSvgIconPlugin)
+Q_IMPORT_PLUGIN(QSvgPlugin)
+#endif

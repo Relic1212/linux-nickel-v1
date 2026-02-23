@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
+
+option(WITH_QTWAYLAND "Qtwayland support" ON)
+option(WITH_QTSVQ "Qtwayland support" ON)
+
 find_package(Qt6 REQUIRED COMPONENTS
     Core
     WaylandClient
@@ -6,22 +10,37 @@ find_package(Qt6 REQUIRED COMPONENTS
     WaylandCompositor
 )
 # find_package(Libinput REQUIRED)
+find_package(PkgConfig)
+pkg_check_modules(LIBINPUT_LIB libinput REQUIRED IMPORTED_TARGET)
+pkg_check_modules(GMODULE_LIB gmodule-2.0 REQUIRED IMPORTED_TARGET)
+pkg_check_modules(EXPAT_LIB expat REQUIRED IMPORTED_TARGET)
 
 add_library(qtbase_obj STATIC qtbase.cpp)
 
 add_executable(qtbase_bin main.cpp)
 
-target_link_libraries(qtbase_bin PUBLIC
+if(WITH_QTWAYLAND)
+    add_compile_definitions(qtbase_bin -DWITH_QTWAYLAND)
+endif(WITH_QTWAYLAND)
+
+if(WITH_QTSVQ)
+    add_compile_definitions(qtbase_bin -DWITH_QTSVQ)
+endif(WITH_QTSVQ)
+
+
+target_link_libraries(qtbase_bin
     Qt6::WaylandClient
     Qt6::Gui
     Qt6::Core
     Qt6::WaylandCompositor
-    # Libinput::Libinput
+    PkgConfig::LIBINPUT_LIB
+    PkgConfig::GMODULE_LIB
+    PkgConfig::EXPAT_LIB
 )
 
-target_link_libraries(qtbase_bin PUBLIC qtbase_obj)
+target_link_libraries(qtbase_bin qtbase_obj)
 
-target_link_options(qtbase_bin PUBLIC -Wl,--error-limit=0)
+# target_link_options(qtbase_bin PUBLIC -Wl,--error-limit=0)
 
 qt_import_plugins(qtbase_bin INCLUDE
     Qt6::DmaBufServerBufferPlugin
@@ -66,12 +85,19 @@ qt_import_plugins(qtbase_bin INCLUDE
     Qt6::DmaBufServerBufferIntegrationPlugin
     Qt6::QWaylandEglStreamClientBufferIntegrationPlugin
     Qt6::QWaylandEglClientBufferIntegrationPlugin
+
+    Qt6::QSvgIconPlugin
+    Qt6::QSvgPlugin
 )
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
 install(TARGETS qtbase_obj EXPORT PluginConsumer)
-install(EXPORT PluginConsumer DESTINATION lib NAMESPACE PluginConsumer::)
+install(EXPORT PluginConsumer 
+    FILE PluginConsumer.cmake 
+    DESTINATION lib 
+    NAMESPACE PluginConsumer::
+)
 install(TARGETS qtbase_bin DESTINATION bin)
 # configure_package_config_file()
