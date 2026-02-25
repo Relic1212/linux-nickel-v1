@@ -1,0 +1,41 @@
+
+index 00dfb32..04184eb 100644
+--- a/src/notification.cpp
++++ b/src/notification.cpp
+@@ -33,8 +33,6 @@
+ #include <QDebug>
+ #include <XdgIcon>
+ #include <KWindowSystem>
+-#include <KF6/KWindowSystem/KX11Extras>
+-#include <KF6/KWindowSystem/KWindowInfo>
+ #include <QEnterEvent>
+ #include <QMouseEvent>
+ #include <QPushButton>
+@@ -343,26 +341,7 @@ void Notification::mouseReleaseEvent(QMouseEvent * event)
+         return;
+     }
+ 
+-    const auto ids = KX11Extras::stackingOrder();
+-    for (const WId &i : ids)
+-    {
+-        KWindowInfo info = KWindowInfo(i, NET::WMName | NET::WMVisibleName);
+-        appName = info.name();
+-        windowTitle = info.visibleName();
+-        // qDebug() << "    " << i << "APPNAME" << appName << "TITLE" << windowTitle;
+-        if (appName.isEmpty())
+-        {
+-            QWidget::mouseReleaseEvent(event);
+-            return;
+-        }
+-        if (appName == appLabel->text() || windowTitle == appLabel->text())
+-        {
+-            if (auto w = QWidget::find(i))
+-                 w->raise();
+-            closeButton_clicked();
+-            return;
+-        }
+-    }
++    
+ }
+ 
+ NotificationTimer::NotificationTimer(QObject *parent)

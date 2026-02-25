@@ -15,7 +15,12 @@
       "cat << 'EOF' > ${SRC}/main.cpp\n%{import "main.cpp" as 'Text}\nEOF",
       "cat << 'EOF' > ${SRC}/CMakeLists.txt\n%{import "CMakeLists.txt" as 'Text}\nEOF",
     ],
-    
+
+    postInstallPhase = [
+      "install -dm0755 ${DEST}/usr/lib/cmake",
+      "cat << 'EOF' > ${DEST}/usr/lib/cmake/AddStaticQtPlugins.cmake\n%{import "./AddStaticQtPlugins.cmake" as 'Text}\nEOF",
+    ],
+
     biDrvs = [
       # drvs.qtbase,
       # drvs.qtdeclarative,
@@ -23,12 +28,12 @@
       drvs.mtdev,
     ]
   },
-  qtpluginConsumerCmake | lib.Package = {
-    installPhase = [
+  # qtpluginConsumerCmake | lib.Package = {
+  #   installPhase = [
 
-      "install -dm0755 ${DEST}/usr/lib/cmake",
-      "cat << 'EOF' > ${DEST}/usr/lib/cmake/AddStaticQtPlugins.cmake\n%{import "./AddStaticQtPlugins.cmake" as 'Text}\nEOF",
-    ]
-  }
+  #     "install -dm0755 ${DEST}/usr/lib/cmake",
+  #     "cat << 'EOF' > ${DEST}/usr/lib/cmake/AddStaticQtPlugins.cmake\n%{import "./AddStaticQtPlugins.cmake" as 'Text}\nEOF",
+  #   ]
+  # }
 }
 & (import "user/_qtplugin-consumer-user.ncl")

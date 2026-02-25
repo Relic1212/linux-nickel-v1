@@ -1,0 +1,129 @@
+
+index da8a1d9..d7aaab7 100644
+--- a/dialog.cpp
++++ b/dialog.cpp
+@@ -55,7 +55,6 @@
+ #include <QScrollBar>
+ 
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ 
+ #include <LayerShellQt/Shell>
+ #include <LayerShellQt/Window>
+@@ -287,11 +286,7 @@ void Dialog::showEvent(QShowEvent *event)
+             }
+         }
+     }
+-    else if (QGuiApplication::platformName() == QSL("xcb"))
+-    {
+-        connect(KX11Extras::self(), &KX11Extras::activeWindowChanged, this, &Dialog::onActiveWindowChanged);
+-        connect(KX11Extras::self(), &KX11Extras::currentDesktopChanged, this, &Dialog::onCurrentDesktopChanged);
+-    }
++    
+     QDialog::showEvent(event);
+ }
+ 
+@@ -302,11 +297,7 @@ void Dialog::showEvent(QShowEvent *event)
+ void Dialog::hideEvent(QHideEvent *event)
+ {
+     QDialog::hideEvent(event);
+-    if (QGuiApplication::platformName() == QSL("xcb"))
+-    {
+-        disconnect(KX11Extras::self(), &KX11Extras::currentDesktopChanged, this, &Dialog::onCurrentDesktopChanged);
+-        disconnect(KX11Extras::self(), &KX11Extras::activeWindowChanged, this, &Dialog::onActiveWindowChanged);
+-    }
++    
+ }
+ 
+ 
+@@ -455,25 +446,7 @@ bool Dialog::listKeyPressEvent(QKeyEvent *event)
+  ************************************************/
+ void Dialog::showHide()
+ {
+-    if (QGuiApplication::platformName() != QSL("xcb"))
+-    {
+-        return;
+-    }
+-
+-    // Using KWindowSystem to detect the active window since
+-    // QWidget::isActiveWindow is not working reliably.
+-    if (isVisible() && (KX11Extras::activeWindow() == winId()))
+-    {
+-        hide();
+-    }
+-    else
+-    {
+-        realign();
+-        show();
+-        KX11Extras::forceActiveWindow(winId());
+-        ui->commandEd->setFocus();
+-        ui->commandEd->selectAll();
+-    }
++    return;
+ }
+ 
+ 
+@@ -483,26 +456,7 @@ void Dialog::showHide()
+  // Called only on X11.
+ void Dialog::realign()
+ {
+-    QRect desktop;
+-
+-    int screenNumber = mMonitor;
+-    const auto screens = QGuiApplication::screens();
+-    if (mMonitor < 0 || mMonitor > screens.size() - 1) {
+-        const auto screen = QGuiApplication::screenAt(QCursor::pos());
+-        screenNumber = screen ? screens.indexOf(screen) : 0;
+-    }
+-
+-    desktop = screens.at(screenNumber)->availableGeometry().intersected(KX11Extras::workArea(screenNumber));
+ 
+-    QRect rect = this->geometry();
+-    rect.moveCenter(desktop.center());
+-
+-    if (mShowOnTop)
+-        rect.moveTop(desktop.top() + qMin(mTopMargin, desktop.height() - ui->panel->sizeHint().height()));
+-    else
+-        rect.moveTop(desktop.center().y() - ui->panel->sizeHint().height());
+-
+-    setGeometry(rect);
+ }
+ 
+ 
+@@ -579,17 +533,7 @@ void Dialog::shortcutChanged(const QString &/*oldShortcut*/, const QString &newS
+ // Called only on X11.
+ void Dialog::onActiveWindowChanged(WId id)
+ {
+-    if (isVisible() && 0 != id && id != winId())
+-    {
+-        if (mDesktopChanged)
+-        {
+-            mDesktopChanged = false;
+-            KX11Extras::forceActiveWindow(winId());
+-        } else
+-        {
+-            hide();
+-        }
+-    }
++    
+ }
+ 
+ 
+@@ -599,16 +543,7 @@ void Dialog::onActiveWindowChanged(WId id)
+ // Called only on X11.
+ void Dialog::onCurrentDesktopChanged(int screen)
+ {
+-    if (isVisible())
+-    {
+-        KX11Extras::setOnDesktop(winId(), screen);
+-        KX11Extras::forceActiveWindow(winId());
+-        //Note: workaround for changing desktop while runner is shown
+-        // The KWindowSystem::forceActiveWindow may fail to correctly activate runner if there
+-        // are any other windows on the new desktop (probably because of the sequence while WM
+-        // changes the virtual desktop (change desktop and activate any of the windows on it))
+-        mDesktopChanged = true;
+-    }
++    
+ }
+ 
+ 

@@ -1,0 +1,212 @@
+
+index 21fdf06..0b9d742 100644
+--- a/src/applaunchcontext.cpp
++++ b/src/applaunchcontext.cpp
+@@ -20,7 +20,6 @@
+ 
+ #include "applaunchcontext.h"
+ #include <QApplication>
+-#include <X11/Xlib.h>
+ 
+ typedef struct _FmAppLaunchContext {
+   GAppLaunchContext parent;
+@@ -29,13 +28,7 @@ typedef struct _FmAppLaunchContext {
+ G_DEFINE_TYPE(FmAppLaunchContext, fm_app_launch_context, G_TYPE_APP_LAUNCH_CONTEXT)
+ 
+ static char* fm_app_launch_context_get_display(GAppLaunchContext * /*context*/, GAppInfo * /*info*/, GList * /*files*/) {
+-  if(auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-    Display* dpy = x11NativeInterface->display();
+-    if(dpy) {
+-      char* xstr = DisplayString(dpy);
+-      return g_strdup(xstr);
+-    }
+-  }
++
+   return nullptr;
+ }
+ 
+diff --git a/src/xdndworkaround.cpp b/src/xdndworkaround.cpp
+index df6364f..cc36cad 100644
+--- a/src/xdndworkaround.cpp
++++ b/src/xdndworkaround.cpp
+@@ -43,41 +43,9 @@ XdndWorkaround::XdndWorkaround() {
+     if(qApp->platformName() != QStringLiteral("xcb")) {
+         return;
+     }
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(!x11NativeInterface) {
++    
+         return;
+-    }
+-
+-    // we need to filter all X11 events
+-    qApp->installNativeEventFilter(this);
+-
+-    lastDrag_ = nullptr;
+-    xinput2Enabled_ = false;
+-    xinputOpCode_ = 0;
+-    xinputEventBase_ = 0;
+-    xinputErrorBase_ = 0;
+-
+-    // initialize xinput2 since newer versions of Qt5 uses it.
+-    static char xi_name[] = "XInputExtension";
+-    xcb_connection_t* conn = x11NativeInterface->connection();
+-    xcb_query_extension_cookie_t cookie = xcb_query_extension(conn, strlen(xi_name), xi_name);
+-    xcb_generic_error_t* err = nullptr;
+-    xcb_query_extension_reply_t* reply = xcb_query_extension_reply(conn, cookie, &err);
+-    if(err == nullptr) {
+-        xinput2Enabled_ = true;
+-        if(reply != nullptr) {
+-            xinputOpCode_ = reply->major_opcode;
+-            xinputEventBase_ = reply->first_event;
+-            xinputErrorBase_ = reply->first_error;
+-        }
+-        // qDebug() << "xinput: " << m_xi2Enabled << m_xiOpCode << m_xiEventBase;
+-    }
+-    else {
+-        free(err);
+-    }
+-    if(reply != nullptr) {
+-        free(reply);
+-    }
++    
+ }
+ 
+ XdndWorkaround::~XdndWorkaround() {
+@@ -114,74 +82,27 @@ bool XdndWorkaround::nativeEventFilter(const QByteArray& eventType, void* messag
+ // static
+ QByteArray XdndWorkaround::atomName(xcb_atom_t atom) {
+     QByteArray name;
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(x11NativeInterface) {
+-        xcb_connection_t* conn = x11NativeInterface->connection();
+-        xcb_get_atom_name_cookie_t cookie = xcb_get_atom_name(conn, atom);
+-        xcb_get_atom_name_reply_t* reply = xcb_get_atom_name_reply(conn, cookie, nullptr);
+-        if(reply != nullptr) {
+-            int len = xcb_get_atom_name_name_length(reply);
+-            if(len > 0) {
+-                name.append(xcb_get_atom_name_name(reply), len);
+-            }
+-            free(reply);
+-        }
+-    }
++    
+     return name;
+ }
+ 
+ // static
+ xcb_atom_t XdndWorkaround::internAtom(const char* name, int len) {
+     xcb_atom_t atom = 0;
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(x11NativeInterface) {
+-        if(len == -1) {
+-            len = strlen(name);
+-        }
+-        xcb_connection_t* conn = x11NativeInterface->connection();
+-        xcb_intern_atom_cookie_t cookie = xcb_intern_atom(conn, false, len, name);
+-        xcb_generic_error_t* err = nullptr;
+-        xcb_intern_atom_reply_t* reply = xcb_intern_atom_reply(conn, cookie, &err);
+-        if(reply != nullptr) {
+-            atom = reply->atom;
+-            free(reply);
+-        }
+-        if(err != nullptr) {
+-            free(err);
+-        }
+-    }
++    
+     return atom;
+ }
+ 
+ // static
+ QByteArray XdndWorkaround::windowProperty(xcb_window_t window, xcb_atom_t propAtom, xcb_atom_t typeAtom, int len) {
+     QByteArray data;
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(x11NativeInterface) {
+-        xcb_connection_t* conn = x11NativeInterface->connection();
+-        xcb_get_property_cookie_t cookie = xcb_get_property(conn, false, window, propAtom, typeAtom, 0, len);
+-        xcb_generic_error_t* err = nullptr;
+-        xcb_get_property_reply_t* reply = xcb_get_property_reply(conn, cookie, &err);
+-        if(reply != nullptr) {
+-            len = xcb_get_property_value_length(reply);
+-            const char* buf = (const char*)xcb_get_property_value(reply);
+-            data.append(buf, len);
+-            free(reply);
+-        }
+-        if(err != nullptr) {
+-            free(err);
+-        }
+-    }
++    
+     return data;
+ }
+ 
+ // static
+ void XdndWorkaround::setWindowProperty(xcb_window_t window, xcb_atom_t propAtom, xcb_atom_t typeAtom, void* data, int len, int format) {
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(x11NativeInterface) {
+-        xcb_connection_t* conn = x11NativeInterface->connection();
+-        xcb_change_property(conn, XCB_PROP_MODE_REPLACE, window, propAtom, typeAtom, format, len, data);
+-    }
++    
+ }
+ 
+ 
+@@ -233,57 +154,7 @@ bool XdndWorkaround::selectionNotify(xcb_selection_notify_event_t* event) {
+ 
+ 
+ bool XdndWorkaround::selectionRequest(xcb_selection_request_event_t* event) {
+-    auto x11NativeInterface = qApp->nativeInterface<QNativeInterface::QX11Application>();
+-    if(!x11NativeInterface) {
+-        return false;
+-    }
+-    xcb_connection_t* conn = x11NativeInterface->connection();
+-    if(event->property == XCB_ATOM_PRIMARY || event->property == XCB_ATOM_SECONDARY) {
+-        return false;    // we only touch selection requests related to XDnd
+-    }
+-    QByteArray prop_name = atomName(event->property);
+-    if(prop_name == "CLIPBOARD") {
+-        return false;    // we do not touch clipboard, either
+-    }
+ 
+-    xcb_atom_t atomFormat = event->target;
+-    QByteArray type_name = atomName(atomFormat);
+-    // qDebug() << "selection request" << prop_name << type_name;
+-    // We only want to handle text/x-moz-url and text/uri-list
+-    if(type_name == "text/x-moz-url" || type_name.startsWith("text/uri-list")) {
+-        QDragManager* mgr = QDragManager::self();
+-        QDrag* drag = mgr->object();
+-        if(drag == nullptr) {
+-            drag = lastDrag_;
+-        }
+-        QMimeData* mime = drag ? drag->mimeData() : nullptr;
+-        if(mime != nullptr && mime->hasUrls()) {
+-            QByteArray data;
+-            const QList<QUrl> uris = mime->urls();
+-            if(type_name == "text/x-moz-url") {
+-                QString mozurl = uris.at(0).toString(QUrl::FullyEncoded);
+-                data.append((const char*)mozurl.utf16(), mozurl.length() * 2);
+-            }
+-            else { // text/uri-list
+-                for(const QUrl& uri : uris) {
+-                    data.append(uri.toString(QUrl::FullyEncoded).toUtf8());
+-                    data.append("\r\n");
+-                }
+-            }
+-            xcb_change_property(conn, XCB_PROP_MODE_REPLACE, event->requestor, event->property,
+-                                atomFormat, 8, data.size(), (const void*)data.constData());
+-            xcb_selection_notify_event_t notify;
+-            notify.response_type = XCB_SELECTION_NOTIFY;
+-            notify.requestor = event->requestor;
+-            notify.selection = event->selection;
+-            notify.time = event->time;
+-            notify.property = event->property;
+-            notify.target = atomFormat;
+-            xcb_window_t proxy_target = event->requestor;
+-            xcb_send_event(conn, false, proxy_target, XCB_EVENT_MASK_NO_EVENT, (const char*)&notify);
+-            return true; // stop Qt 5 from touching the event
+-        }
+-    }
+     return false; // let Qt handle this
+ }
+ 

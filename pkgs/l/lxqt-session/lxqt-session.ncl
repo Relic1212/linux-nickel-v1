@@ -1,4 +1,4 @@
-let qtImportHeaders = import "qt_imports.cpp" as 'Text in
+let qtImportHeaders = import "qt_headers.cpp" as 'Text in
 {
   lib,
   drvs,
@@ -22,70 +22,16 @@ let qtImportHeaders = import "qt_imports.cpp" as 'Text in
     cmakeExtraArgsRecord = {
       # "-DCMAKE_PREFIX_PATH" = "\"/usr/lib/cmake/Qt6WaylandCompositor:/usr/lib/cmake/Qt6WaylandClient\"",
     },
-    preConfigurePhase =
-      let qtplugins = [
-        # "QWaylandDmabufClientBufferIntegrationPlugin",
-        # "QWaylandEglClientBufferIntegrationPlugin",
-        # "QWaylandEglStreamClientBufferIntegrationPlugin",
-        "QWaylandXdgShellIntegrationPlugin",
-        "QWaylandIntegrationPlugin",
-      ]
-      in
-      [
-        "echo '%{qtImportHeaders}' > ${SRC}/plugins.cpp",
-        "echo '%{import "qt_wayland_obj.cpp" as 'Text }' >> ${SRC}/plugins.cpp",
-        "clang++ --verbose -c -O2 ${SRC}/plugins.cpp -o ${SRC}/plugins.o",
-        # (
-        #   let linkStr =
-        #     std.string.join
-        #       m%"\n"%
-        #       (
-        #         [
-        #           "/tmp/workdir/src/plugins.o",
-        #         ]
-        #         # @ (
-        #         #   std.array.map
-        #         #     (fun s => "Qt6::" ++ s
-        #         #     )
-        #         #     qtplugins
-        #         # )
-        #       )
-        #   in
-        #   m%"sed -i "s@KF6::WindowSystem@KF6::WindowSystem\n%{linkStr}@g" ${SRC}/lxqt-session/CMakeLists.txt"%
-        # ),
-        # (
-        #   let finds = (std.array.map (fun s => "find_package(Qt6%{s} REQUIRED)" ++ m%"\n"%)) qtplugins in
-
-        #   m%"sed -i "s@add_executable@%{std.string.join "" finds }add_executable@g" ${SRC}/lxqt-session/CMakeLists.txt"%
-        # ),
-        # (
-        #   m%"sed -i "s@target_link_libraries(lxqt-session@"% ++
-        #   ###
-        #   "qt_import_plugins(quickshell INCLUDE"
-        #   ++ m%"\n"% ++
-        #   ###
-        #   (
-        #     let qimports =
-        #       ""
-        #       ++ (
-        #         std.string.join
-        #           ""
-        #           (
-        #             std.array.map (fun s => m%"Qt6::%{s}\n"%) qtplugins
-        #           )
-        #       )
-        #     in qimports
-        #   ) ++
-        #   ###
-        #   m%"\n)\n"%
-        #   ###
-        #   ++ m%"target_link_libraries(lxqt-session@g" ${SRC}/lxqt-session/CMakeLists.txt"%
-        # ),
-        "head -n 61 ${SRC}/lxqt-session/CMakeLists.txt > new",
-        "echo '%{import "plugins.cmake" as 'Text}' >> new",
-        "tail -n 35 ${SRC}/lxqt-session/CMakeLists.txt >> new",
-        "mv new ${SRC}/lxqt-session/CMakeLists.txt",
-      ],
+    preConfigurePhase = [
+      # "echo '%{qtImportHeaders}' > ${SRC}/plugins.cpp",
+      # "echo '%{import "qt_wayland_obj.cpp" as 'Text }' >> ${SRC}/plugins.cpp",
+      # "clang++ --verbose -c -O2 ${SRC}/plugins.cpp -o ${SRC}/plugins.o",
+      # "head -n 61 ${SRC}/lxqt-session/CMakeLists.txt > new",
+      # "echo '%{import "plugins.cmake" as 'Text}' >> new",
+      # "tail -n 35 ${SRC}/lxqt-session/CMakeLists.txt >> new",
+      # "mv new ${SRC}/lxqt-session/CMakeLists.txt",
+      m%"printf "include(/usr/lib/cmake/AddStaticQtPlugins.cmake)\nadd_static_qt_plugins(lxqt-session)\n" >> ${SRC}/lxqt-session/CMakeLists.txt"%,
+    ],
     biDrvs = [
       drvs.acl,
       drvs.attr,
@@ -116,6 +62,9 @@ let qtImportHeaders = import "qt_imports.cpp" as 'Text in
       drvs.xdgUserDirs,
       drvs.procps,
       drvs.perl,
+      drvs.qtpluginConsumer,
+      drvs.libevdev,
+      drvs.mtdev,
     ]
   }
 }

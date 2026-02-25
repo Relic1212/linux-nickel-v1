@@ -26,9 +26,11 @@ target_link_libraries(lxqt-session
 )
 qt_import_plugins(lxqt-session INCLUDE 
     Qt6::QWaylandIntegrationPlugin
+    Qt6::QWaylandQtShellIntegrationPlugin
     Qt6::QWaylandXdgShellIntegrationPlugin
     Qt6::QWaylandBradientDecorationPlugin
     Qt6::Qt6QSvgIconPlugin
     Qt6::Qt6QSvgPlugin
+    Qt6::QXdgDesktopPortalThemePlugin
 )
 qt_import_qml_plugins(lxqt-session)

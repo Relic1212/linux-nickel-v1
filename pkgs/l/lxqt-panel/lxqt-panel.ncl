@@ -1,4 +1,4 @@
-let qtImportHeaders = import "../lxqt-session/qt_imports.cpp" as 'Text in
+let qtImportHeaders = import "../lxqt-session/qt_headers.cpp" as 'Text in
 
 {
   lib,
@@ -30,13 +30,16 @@ let qtImportHeaders = import "../lxqt-session/qt_imports.cpp" as 'Text in
       "-DTRAY_PLUGIN" = false,
     },
     preConfigurePhase = [
-      "echo '%{qtImportHeaders}' > ${SRC}/plugins.cpp",
-      "echo '%{import "qt_wayland_obj.cpp" as 'Text }' >> ${SRC}/plugins.cpp",
-      "clang++ --verbose -c -O2 ${SRC}/plugins.cpp -o ${SRC}/plugins.o",
-      "head -n 103 ${SRC}/panel/CMakeLists.txt > new",
-      "echo '%{import "plugins.cmake" as 'Text}' >> new",
-      "tail -n 20 ${SRC}/panel/CMakeLists.txt >> new",
-      "mv new ${SRC}/panel/CMakeLists.txt",
+      # "echo '%{qtImportHeaders}' > ${SRC}/plugins.cpp",
+      # "echo '%{import "qt_wayland_obj.cpp" as 'Text }' >> ${SRC}/plugins.cpp",
+      # "clang++ --verbose -c -O2 ${SRC}/plugins.cpp -o ${SRC}/plugins.o",
+      # "head -n 103 ${SRC}/panel/CMakeLists.txt > new",
+      # "echo '%{import "plugins.cmake" as 'Text}' >> new",
+      # "tail -n 20 ${SRC}/panel/CMakeLists.txt >> new",
+      # "mv new ${SRC}/panel/CMakeLists.txt",
+      ##################
+      m%"printf "include(/usr/lib/cmake/AddStaticQtPlugins.cmake)\nadd_static_qt_plugins(lxqt-panel)\n" >> ${SRC}/panel/CMakeLists.txt"%,
+
       ##################
       "cp /usr/share/ECM/find-modules/FindLibMount.cmake ${SRC}/cmake",
       "cp /usr/share/ECM/find-modules/FindUDev.cmake ${SRC}/cmake",
@@ -99,6 +102,9 @@ let qtImportHeaders = import "../lxqt-session/qt_imports.cpp" as 'Text in
       drvs.xcbUtilWm,
       drvs.libxtst,
       drvs.libxi,
+      drvs.qtpluginConsumer,
+      drvs.libevdev,
+      drvs.mtdev,
     ]
   }
 }

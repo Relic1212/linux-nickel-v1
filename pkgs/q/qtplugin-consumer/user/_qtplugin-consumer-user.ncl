@@ -14,7 +14,6 @@
       "cat << 'EOF' > ${SRC}/CMakeLists.txt\n%{import "CMakeLists.txt" as 'Text}\nEOF",
       # "mkdir ${SRC}/cmake",
       # "cat << 'EOF' > ${SRC}/cmake/AddStaticQtPlugins.cmake\n%{import "../AddStaticQtPlugins.cmake" as 'Text}\nEOF",
-
     ],
     biDrvs = [
       # drvs.qtbase,
@@ -22,7 +21,7 @@
       drvs.libevdev,
       drvs.mtdev,
       drvs.qtpluginConsumer,
-      drvs.qtpluginConsumerCmake,
+      # drvs.qtpluginConsumerCmake,
     ]
   }
 }
