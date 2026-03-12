@@ -20,6 +20,76 @@
       "cd /tmp/workdir/src",
       "tar xf /sources.tar",
     ],
+
+    extraEnv = {
+      # cosmic-epoch alpha
+      VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
+      VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
+      EXTRA_RUSTFLAGS =
+        let toArg = (fun s =>
+          "-C link-arg=-l%{s}"
+        )
+        in
+        [
+          # m%"$(for l in $(pkg-config --libs --static gstreamer-full-1.0);do printf " -C link-arg=$l ";done)"%,
+          "-C link-arg=-lgstreamer-full-1.0",
+          "-C link-arg=-lgstcodecs-1.0",
+          "-C link-arg=-lgstbasecamerabinsrc-1.0",
+          (toArg "gsturidownloader-1.0"),
+          (toArg "gstadaptivedemux-1.0"),
+          "-C link-arg=-lc++",
+          m%"$(find /usr/lib/gstreamer-1.0 -type f -name '*.a' | xargs printf "-C link-arg=%s ")"%,
+          # m%"$(for l in $(pkg-config --libs --static gstreamer-base-1.0);do printf " -C link-arg=$l ";done)"%,
+          # m%"$(for l in $(pkg-config --libs --static gstreamer-1.0);do printf " -C link-arg=$l ";done)"%,
+          # m%"$(for l in $(pkg-config --libs --static gstreamer-rtp-1.0);do printf " -C link-arg=$l ";done)"%,
+          # m%"$(for l in $(pkg-config --libs --static gstreamer-codecparsers-1.0);do printf " -C link-arg=$l ";done)"%,
+          "-C link-arg=/tmp/workdir/src/dlopen.o",
+          m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+        ]
+        @ (
+          std.array.map
+            (fun s =>
+              m%"$(for l in $(pkg-config --libs --static %{s});do printf " -C link-arg=$l ";done)"%
+            )
+            [
+              "gst-editing-services-1.0",
+              "gstreamer-1.0",
+              "gstreamer-allocators-1.0",
+              "gstreamer-analytics-1.0",
+              "gstreamer-app-1.0",
+              "gstreamer-audio-1.0",
+              "gstreamer-bad-audio-1.0",
+              "gstreamer-base-1.0",
+              "gstreamer-check-1.0",
+              "gstreamer-codecparsers-1.0",
+              "gstreamer-controller-1.0",
+              "gstreamer-cuda-1.0",
+              "gstreamer-fft-1.0",
+              "gstreamer-full-1.0",
+              "gstreamer-hip-1.0",
+              "gstreamer-insertbin-1.0",
+              "gstreamer-mpegts-1.0",
+              "gstreamer-mse-1.0",
+              "gstreamer-net-1.0",
+              "gstreamer-pbutils-1.0",
+              "gstreamer-photography-1.0",
+              "gstreamer-play-1.0",
+              "gstreamer-player-1.0",
+              "gstreamer-plugins-bad-1.0",
+              "gstreamer-plugins-base-1.0",
+              "gstreamer-riff-1.0",
+              "gstreamer-rtp-1.0",
+              "gstreamer-rtsp-1.0",
+              "gstreamer-rtsp-server-1.0",
+              "gstreamer-sctp-1.0",
+              "gstreamer-sdp-1.0",
+              "gstreamer-tag-1.0",
+              "gstreamer-transcoder-1.0",
+              "gstreamer-video-1.0",
+              "gstreamer-webrtc-1.0",
+            ]
+        ),
+    },
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
@@ -36,18 +106,16 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
 
-    extraEnv = {
-      EXTRA_RUSTFLAGS = [],
-      # cosmic-epoch alpha
-      VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
-      VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
-    },
-
     target,
+
     buildPhase = [
-      "just build-release --offline --target x86_64-unknown-linux-musl --verbose",
+      m%"echo RUSTFLAGS=\"${RUSTFLAGS}\""%,
+      "just build-release --offline --target x86_64-unknown-linux-musl",
       "echo 'Done building'",
     ],
 
@@ -60,7 +128,7 @@
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothRenamedDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,
@@ -91,6 +159,7 @@
       drvs.glib,
       drvs.gperf,
       drvs.gtk3,
+      drvs.gstreamer,
       drvs.harfbuzz,
       drvs.hwdata,
       drvs.jansson,
