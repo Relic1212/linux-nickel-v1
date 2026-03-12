@@ -78,8 +78,8 @@
     gtk4
     & {
       singleSource | priority 1 = {
-        uri = "https://download.gnome.org/sources/gtk/4.21/gtk-4.21.1.tar.xz",
-        sha256sum = "a6a899276ccbb97ff257731d93474de689e9a4f62a63071b5bff4feeae8b895c",
+        uri = "https://download.gnome.org/sources/gtk/4.21/gtk-4.21.5.tar.xz",
+        sha256sum = "653da0d556a11a3e7b7d36d6efbc9b1647cb25b8e81f40ec940bd08789e2481c",
       },
       biDrvs | priority 1 =
         gtk4.biDrvs
