@@ -15,7 +15,7 @@
     ],
     buildEnv.EXTRA_LDFLAGS = [
       "-Wl,--verbose",
-      "-ldl_factory",
+      # "-ldl_factory",
       "$(pkg-config --static --libs egl)",
       "${SRC}/symbols.o",
     ],
@@ -55,7 +55,6 @@
     ],
     muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
-      drvs.libdlFactory,
       drvs.atSpi2Core,
       drvs.cairo,
       drvs.cairoGobject,
