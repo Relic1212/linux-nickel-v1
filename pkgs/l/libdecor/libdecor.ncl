@@ -18,13 +18,16 @@
     },
 
     extraMesonArgs = [
-      "-Dgtk=disabled",
-      "-Ddbus=disabled",
+      "-Dgtk=enabled",
+      "-Ddbus=enabled",
       "-Ddemo=false",
     ],
     preConfigurePhase = [
-      m%"sed -i "s@subdir('plugins')@@g" ${SRC}/src/meson.build"%,
+      # m%"sed -i "s@subdir('plugins')@@g" ${SRC}/src/meson.build"%,
       m%"sed -i "s@shared_library@library@g" ${SRC}/src/meson.build"%,
+      m%"sed -i "s@shared_module@library@g" ${SRC}/src/plugins/gtk/meson.build"%,
+      m%"sed -i "s@shared_module@library@g" ${SRC}/src/plugins/dummy/meson.build"%,
+      m%"sed -i "s@shared_module@library@g" ${SRC}/src/plugins/cairo/meson.build"%,
     ],
 
     biDrvs =
@@ -39,8 +42,6 @@
         drvs.libffi,
         drvs.bison,
         drvs.flex,
-        # drvs.wayland,
-        # drvs.waylandProtocols,
         drvs.linuxHeaders,
         drvs.m4,
         drvs.git,
@@ -62,6 +63,20 @@
         drvs.pcre2,
         drvs.harfbuzz,
         drvs.pango,
+        drvs.gperf,
+        drvs.libxkbcommon,
+        drvs.ncurses,
+        drvs.glibDynamic,
+        # drvs.muslShared,
+        drvs.hwdata,
+        drvs.gobjectDynamic,
+        drvs.cairoGobject,
+        drvs.fribidi,
+        drvs.gdkPixbufFull,
+        drvs.libjpegTurbo,
+        drvs.libepoxy,
+        drvs.atSpi2Core,
+        drvs.gtk3,
       ]
       @ (
         if options.glx then
