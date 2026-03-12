@@ -7,12 +7,18 @@
       sha256sum = "ee8971d7a912bffb318b55d71c2e27a36c6b007fa53dbc808cced2d685046007",
     },
     crates = lib.functions.filterCrates (import "vibepanel-crates.json"),
-    extraEnv.EXTRA_RUSTFLAGS = [
-      m%"$(for l in $(pkg-config --libs --static libpulse);do printf " -C link-arg=$l ";done)"%,
-      "-C link-arg=-ldbus-1",
-    ],
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        "-C link-arg=-lc++",
+        m%"$(for l in $(pkg-config --libs --static libpulse egl glesv2);do printf " -C link-arg=$l ";done)"%,
+        "-C link-arg=-ldbus-1",
+      ],
+    },
     configurePhase = [
       m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys*/build.rs"%,
+      "echo '%{import "vibepanel_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
 
     llvmProvider = drvs.llvmFull,
@@ -43,7 +49,7 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.mesa2,
-      drvs.musl & { priority = 2 },
+      drvs.muslBothRenamedDl & { priority = 2 },
       drvs.ncurses,
       drvs.pango,
       drvs.pcre2,
