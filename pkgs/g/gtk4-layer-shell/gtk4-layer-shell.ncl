@@ -108,8 +108,8 @@
         drvs.zlibNg,
       ]
       @ [
-        drvs.gtk4_21,
-        drvs.librsvg,
+        drvs.gtk4,
+        # drvs.librsvg,
         drvs.libxml2,
         drvs.sharedMimeInfo,
       ],

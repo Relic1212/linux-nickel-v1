@@ -3,11 +3,11 @@
   drvs,
   libadwaita | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/libadwaita/-/archive/1.7.6/libadwaita-1.7.6.tar.gz",
-      sha256sum = "8112df4e98dcfd249c0a38bcb7100212cb8e69ac53371fc8e875200752a360df",
+      # uri = "https://gitlab.gnome.org/GNOME/libadwaita/-/archive/1.7.6/libadwaita-1.7.6.tar.gz",
+      # sha256sum = "8112df4e98dcfd249c0a38bcb7100212cb8e69ac53371fc8e875200752a360df",
 
-      # uri = "https://gitlab.gnome.org/GNOME/libadwaita/-/archive/1.8.1/libadwaita-1.8.1.tar.bz2",
-      # sha256sum = "56fa5cbaaf6cdcfab69bd09bde50fbd04bf6d81ee22569e45ae76abf14634d22",
+      uri = "https://gitlab.gnome.org/GNOME/libadwaita/-/archive/1.8.1/libadwaita-1.8.1.tar.bz2",
+      sha256sum = "56fa5cbaaf6cdcfab69bd09bde50fbd04bf6d81ee22569e45ae76abf14634d22",
     },
     patches = [
       {
@@ -164,7 +164,8 @@
       },
       patches | priority 1 = [],
       options = {
-        gtk = [drvs.gtk4_21, drvs.librsvg, drvs.glibNoExportDynamic, ]
+        # gtk = [drvs.gtk4_21, drvs.librsvg, drvs.glibNoExportDynamic, ]
+        gtk = [drvs.gtk4, drvs.glibNoExportDynamic, ]
       }
     },
 

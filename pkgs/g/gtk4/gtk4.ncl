@@ -11,8 +11,11 @@
       # uri = "https://download.gnome.org/sources/gtk/4.19/gtk-4.19.4.tar.xz",
       # sha256sum = "9397f0f5135808a52052082318531c5e90a9b5377a280c2d4c439c1328f93070",
 
-      uri = "https://download.gnome.org/sources/gtk/4.19/gtk-4.19.1.tar.xz",
-      sha256sum = "7e793899bc2a47fdf52b149b9262f5398a2dd1252cfe58536e3dbfb78848d4eb",
+      # uri = "https://download.gnome.org/sources/gtk/4.19/gtk-4.19.1.tar.xz",
+      # sha256sum = "7e793899bc2a47fdf52b149b9262f5398a2dd1252cfe58536e3dbfb78848d4eb",
+
+      uri = "https://download.gnome.org/sources/gtk/4.22/gtk-4.22.0.tar.xz",
+      sha256sum = "ed3932469d3d891df53451f2cd28380af7673f736aa443bb3dda7adb40994f1e",
     },
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -53,6 +56,8 @@
       drvs.libtiff,
       drvs.graphene,
       drvs.harfbuzzFull,
+      drvs.libxml2,
+      drvs.sharedMimeInfo,
     ],
 
     extraMesonArgs = [
@@ -85,8 +90,8 @@
         gtk4.biDrvs
         @ [
           drvs.librsvg,
-          drvs.libxml2,
-          drvs.sharedMimeInfo,
+          # drvs.libxml2,
+          # drvs.sharedMimeInfo,
         ],
     }
 }

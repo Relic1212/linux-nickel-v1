@@ -5,8 +5,11 @@
     singleSource = {
       #uri = "https://gitlab.gnome.org/GNOME/gtkmm/-/archive/4.16.0/gtkmm-4.16.0.tar.gz",
       #sha256sum = "a5e5fa6abab2b57a5c9e2b48741b117b54c3a87e60597aef57a075ae649e3704",
-      uri = "https://download.gnome.org/sources/gtkmm/4.16/gtkmm-4.16.0.tar.xz",
-      sha256sum = "3b23fd3abf8fb223b00e9983b6010af2db80e38c89ab6994b8b6230aa85d60f9",
+      # uri = "https://download.gnome.org/sources/gtkmm/4.16/gtkmm-4.16.0.tar.xz",
+      # sha256sum = "3b23fd3abf8fb223b00e9983b6010af2db80e38c89ab6994b8b6230aa85d60f9",
+
+      uri = "https://download.gnome.org/sources/gtkmm/4.22/gtkmm-4.22.0.tar.xz",
+      sha256sum = "2e8a21b4b0725f620e33aaee0cd343ed121b533275b632896619b1c89e96de67",
     },
 
     llvmProvider = drvs.llvmFull,
