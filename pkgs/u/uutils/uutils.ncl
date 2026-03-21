@@ -11,8 +11,8 @@
       nonCrateSourceInputs = [
         {
           src = {
-            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.6.0.tar.gz",
-            sha256sum = "f751b8209ec05ae304941a727e42a668dcc45674986252f44d195ed43ccfad2f"
+            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.7.0.tar.gz",
+            sha256sum = "dc56a3c4632742357d170d60a7dcecb9693de710daeaafa3ad925750b1905522"
           }
         }
       ],
@@ -25,7 +25,7 @@
         progs = std.string-split " " "arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes"
       },
       releaseFlags = [
-        "--profile release-fast",
+        "--profile release",
       ],
       extraCargoFlags = [
         "--features \"feat_os_unix_musl feat_acl\"",
@@ -68,7 +68,7 @@
       #       ],
       installPhase = [
         "install -d -m0755 ${DEST}/usr/bin",
-        "install -m0755 target/%{target}/release-fast/coreutils ${DEST}/usr/bin",
+        "install -m0755 target/%{target}/release/coreutils ${DEST}/usr/bin",
       ],
 
       #   std.array.map (fun m => "%{m} DESTDIR=${DEST} install") buildPhase
