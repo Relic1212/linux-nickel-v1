@@ -132,6 +132,54 @@ def build_sysroot(drv_hash, build_inputs, uses_ccache):
 
 #     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
 
+def buildintput_hardlink(bi_dest, sysroot,  bi_drv_subdir_dest):
+    drv_paths = bubblewrap.get_paths_from_sysroot(bi_dest)
+    sysroot_dirs = drv_paths['dirs']
+    sysroot_files = drv_paths['files']
+    # all the dirs so the symlinks will work
+    for bi_drv_dir in sysroot_dirs:
+        dst = sysroot + bi_drv_subdir_dest + bi_drv_dir
+
+        dir_source = bi_dest + bi_drv_dir
+
+        if not os.path.islink(dir_source):  # it's a real dir
+            if os.path.isdir(dst):
+                continue
+            # maybe it is better to reverse order anf just skip if it exists
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.remove(dst)
+            os.makedirs(dst)
+        else:  # it's a symlink
+            # TODO: is there a risk that the parent directory does not exist?
+            subprocess.run(["cp",
+                            #  "--no-dereference", gnu alias for -P
+                            "-P", dir_source, dst], check=True)
+
+    for sd in sysroot_files:
+        link_source = bi_dest + sd
+        link_target = sysroot + bi_drv_subdir_dest + sd
+        if os.path.exists(link_target) or os.path.islink(link_target):
+            # print(f"removing {link_target} to link")
+            subprocess.run(["rm", "-rf", link_target], check=True)
+
+        # print(f"linking {link_source} to {link_target}")
+
+        # different implementations. Don't know what to do
+        if not (os.path.islink(link_source)):
+            try:
+                subprocess.run(
+                    ["ln", "-P", link_source, link_target], check=True)
+            except subprocess.CalledProcessError:
+                print("Warning: your ln does not support -P")
+                subprocess.run(
+                    ["ln", "-n", link_source, link_target], check=True)
+            except subprocess.CalledProcessError:
+                print("Warning: your ln supports neither -P nor -n")
+                subprocess.run(["ln", link_source, link_target], check=True)
+        else:
+            # no point in creating hard links to symlinks
+            subprocess.run(["cp", "-a", link_source, link_target], check=True)
+
 
 def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
@@ -156,52 +204,7 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
         bi_dest = bi_workdir + "/out/destdir"
         if not os.path.isfile(bi_workdir + "/0.txt"):
             raise Exception(f"dependency in {bi_dest} not built!")
-
-        drv_paths = bubblewrap.get_paths_from_sysroot(bi_dest)
-        sysroot_dirs = drv_paths['dirs']
-        sysroot_files = drv_paths['files']
-        # all the dirs so the symlinks will work
-        for bi_drv_dir in sysroot_dirs:
-            dst = sysroot + bi_drv_subdir_dest + bi_drv_dir
-
-            dir_source = bi_dest + bi_drv_dir
-
-            if not os.path.islink(dir_source):  # it's a real dir
-                if os.path.isdir(dst):
-                    continue
-                # maybe it is better to reverse order anf just skip if it exists
-                if os.path.exists(dst) or os.path.islink(dst):
-                    os.remove(dst)
-                os.makedirs(dst)
-            else:  # it's a symlink
-                # TODO: is there a risk that the parent directory does not exist?
-                subprocess.run(["cp",
-                                #  "--no-dereference", gnu alias for -P
-                               "-P", dir_source, dst], check=True)
-
-        for sd in sysroot_files:
-            link_source = bi_dest + sd
-            link_target = sysroot + bi_drv_subdir_dest + sd
-            if os.path.exists(link_target) or os.path.islink(link_target):
-                # print(f"removing {link_target} to link")
-                subprocess.run(["rm", "-rf", link_target], check=True)
-
-            # print(f"linking {link_source} to {link_target}")
-
-            # different implementations. Don't know what to do
-            if not (os.path.islink(link_source)):
-                try:
-                    subprocess.run(["ln", "-P", link_source, link_target], check=True)
-                except subprocess.CalledProcessError:
-                    print("Warning: your ln does not support -P")
-                    subprocess.run(["ln", "-n", link_source, link_target], check=True)
-                except subprocess.CalledProcessError:
-                    print("Warning: your ln supports neither -P nor -n")
-                    subprocess.run(["ln", link_source, link_target], check=True)
-            else:
-                # no point in creating hard links to symlinks
-                subprocess.run(["cp", "-a", link_source, link_target], check=True)
-
+        buildintput_hardlink(bi_dest, sysroot, bi_drv_subdir_dest)
 
     ropaths = ["packed", "files", "patches", "build.sh"]
     rwpaths = ["src", "build", "out"]
