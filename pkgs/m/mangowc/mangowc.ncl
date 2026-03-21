@@ -3,8 +3,11 @@
   drvs,
   mangowc | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/DreamMaoMao/mangowc/archive/refs/tags/0.10.5.tar.gz",
-      sha256sum = "2658454c120cc2d88d25bd105e58337204a84f9e1d418b41ff02983d1354e9ef",
+      # uri = "https://github.com/DreamMaoMao/mangowc/archive/refs/tags/0.10.5.tar.gz",
+      # sha256sum = "2658454c120cc2d88d25bd105e58337204a84f9e1d418b41ff02983d1354e9ef",
+
+      uri = "https://github.com/mangowm/mango/archive/refs/tags/0.12.7.tar.gz",
+      sha256sum = "35bbe111ae27763350b567b2d67e750517d788ec4b4163074267cc564e64642e",
     },
 
     # sourceInputs = [
@@ -29,8 +32,8 @@
 
     patches = [
       {
-        sha256sum = "0444ff3fafab5db5d3e1026744d820b8afe44ab0bd307e8cb3305113e7d4a692",
-        file = "mangowc-chvt.patch"
+        sha256sum = "1d64a3b2a814a2c8a1988c2d05c17962f18921448e530dca38a530d38191ebbb",
+        file = "mangowc-chvt-2.patch"
       }
     ],
     buildEnv = {
