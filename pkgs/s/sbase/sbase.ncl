@@ -5,7 +5,7 @@
     singleSource = {
       fetchMethod = "git",
       uri = "git://git.suckless.org/sbase",
-      sha256sum = "b343ded0be4defafb709945117d79dab4e70a242"
+      sha256sum = "8b842c789c63b376f054d65163d7c7cc279e147c"
     },
     extraMakeInstallArgs = [
       "PREFIX=/usr"
