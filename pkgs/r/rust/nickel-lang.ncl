@@ -10,8 +10,8 @@
     {
       singleSource = {
 
-        uri = "https://github.com/tweag/nickel/archive/refs/tags/1.15.1.tar.gz",
-        sha256sum = "93528c7b763f082767f4f6069b74f72345880ee6f5175f85ea8297d96d8797c3",
+        uri = "https://github.com/nickel-lang/nickel/archive/refs/tags/1.16.0.tar.gz",
+        sha256sum = "32a449ebc4d463dd193eb8ce8aced5324655188095e709a9c0addb7b3ceeaec3",
       },
       crates = _crates,
 
