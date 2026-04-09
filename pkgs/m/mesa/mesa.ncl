@@ -13,6 +13,7 @@
       #   "-Ddri3=disabled",
       "-Dopengl=true",
       "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
+      # "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris,nouveau",
       "-Dplatforms='wayland'",
       "-Dcpp_rtti=false",
       #   "-Dshared-glapi=enabled",
@@ -60,8 +61,11 @@
       # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
       # sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
 
-      uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
-      sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72"
+      # uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
+      # sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72",
+
+      uri = "https://archive.mesa3d.org/mesa-26.0.4.tar.xz",
+      sha256sum = "6d91541e086f29bb003602d2c81070f2be4c0693a90b181ca91e46fa3953fe78",
     },
 
     extraEnv = {
