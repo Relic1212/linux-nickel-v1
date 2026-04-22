@@ -30,6 +30,10 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      #
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
     extraEnv = {
 
@@ -38,12 +42,12 @@
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
     },
 
-    patches = [
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+    #     file = "cosmic-osd-xkb.patch",
+    #   }
+    # ],
     target,
 
     extraEnv.EXTRA_RUSTFLAGS =
@@ -55,6 +59,9 @@
         "-C link-arg=-llz4",
         "-C link-arg=-lzstd",
         "-C link-arg=-llzma",
+        #
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
       ]
       @ (
         std.array.map
@@ -71,14 +78,14 @@
     ],
 
     postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     utilsProviders,
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothRenamedDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,

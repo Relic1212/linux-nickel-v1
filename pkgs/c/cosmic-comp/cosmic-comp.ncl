@@ -14,7 +14,7 @@
 
     unpackPhase = [
       "cd /tmp/workdir/src",
-      "tar xvf /cosmic-comp-sources.tar",
+      "tar xf /cosmic-comp-sources.tar",
     ],
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
@@ -86,7 +86,7 @@
       "make TARGET=%{target}/release DESTDIR=$DEST install",
     ],
     postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     utilsProviders,

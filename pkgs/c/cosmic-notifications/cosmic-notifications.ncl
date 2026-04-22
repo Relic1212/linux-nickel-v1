@@ -22,6 +22,12 @@
       "cd /tmp/workdir/src",
       "tar xf /sources.tar",
     ],
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+      ],
+    },
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
@@ -33,13 +39,17 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      #
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
-    patches = [
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+    #     file = "cosmic-osd-xkb.patch",
+    #   }
+    # ],
     release,
 
     target,
@@ -55,14 +65,14 @@
       ],
 
     postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     utilsProviders,
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothRenamedDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,

@@ -1,0 +1,116 @@
+diff --git a/vendor/xkbcommon-dl/src/lib.rs b/vendor/xkbcommon-dl/src/lib.rs
+index 12fd13b5..f60e9fb0 100644
+--- a/vendor/xkbcommon-dl/src/lib.rs
++++ b/vendor/xkbcommon-dl/src/lib.rs
+@@ -11,7 +11,7 @@ pub use xkeysym::key as keysyms;
+ use std::os::raw::{c_char, c_int, c_uint, c_void};
+ 
+ use bitflags::bitflags;
+-use dlib::dlopen_external_library;
++use dlib::external_library;
+ use log::info;
+ use once_cell::sync::OnceCell;
+ 
+@@ -185,7 +185,7 @@ bitflags!(
+     }
+ );
+ 
+-dlopen_external_library!(XkbCommon,
++external_library!(XkbCommon, "xkbcommon",
+ functions:
+     fn xkb_keysym_get_name(xkb_keysym_t, *mut c_char, usize) -> c_int,
+     fn xkb_keysym_from_name(*const c_char, xkb_keysym_flags) -> xkb_keysym_t,
+@@ -281,7 +281,7 @@ functions:
+ );
+ 
+ // Compose and dead-keys support module
+-dlopen_external_library!(XkbCommonCompose,
++external_library!(XkbCommonCompose, "xkbcommon",
+ functions:
+     fn xkb_compose_table_new_from_locale(
+         *mut xkb_context,
+@@ -301,39 +301,39 @@ functions:
+     fn xkb_compose_state_get_one_sym(*mut xkb_compose_state) -> xkb_keysym_t,
+ );
+ 
+-pub fn xkbcommon_handle() -> &'static XkbCommon {
+-    xkbcommon_option().expect("Library libxkbcommon.so could not be loaded.")
+-}
+-
+-pub fn xkbcommon_option() -> Option<&'static XkbCommon> {
+-    static XKBCOMMON_OPTION: OnceCell<Option<XkbCommon>> = OnceCell::new();
+-    XKBCOMMON_OPTION
+-        .get_or_init(|| {
+-            open_with_sonames(
+-                &["libxkbcommon.so.0", "libxkbcommon.so"],
+-                None,
+-                |name| unsafe { XkbCommon::open(name) },
+-            )
+-        })
+-        .as_ref()
+-}
+-
+-pub fn xkbcommon_compose_handle() -> &'static XkbCommonCompose {
+-    xkbcommon_compose_option().expect("Could not load compose module from libxkbcommon.so.")
+-}
+-
+-pub fn xkbcommon_compose_option() -> Option<&'static XkbCommonCompose> {
+-    static XKBCOMMON_COMPOSE_OPTION: OnceCell<Option<XkbCommonCompose>> = OnceCell::new();
+-    XKBCOMMON_COMPOSE_OPTION
+-        .get_or_init(|| {
+-            open_with_sonames(
+-                &["libxkbcommon.so.0", "libxkbcommon.so"],
+-                Some("compose"),
+-                |name| unsafe { XkbCommonCompose::open(name) },
+-            )
+-        })
+-        .as_ref()
+-}
++// pub fn xkbcommon_handle() -> &'static XkbCommon {
++//     xkbcommon_option().expect("Library libxkbcommon.so could not be loaded.")
++// }
++
++// pub fn xkbcommon_option() -> Option<&'static XkbCommon> {
++//     static XKBCOMMON_OPTION: OnceCell<Option<XkbCommon>> = OnceCell::new();
++//     XKBCOMMON_OPTION
++//         .get_or_init(|| {
++//             open_with_sonames(
++//                 &["libxkbcommon.so.0", "libxkbcommon.so"],
++//                 None,
++//                 |name| unsafe { XkbCommon::open(name) },
++//             )
++//         })
++//         .as_ref()
++// }
++
++// pub fn xkbcommon_compose_handle() -> &'static XkbCommonCompose {
++//     xkbcommon_compose_option().expect("Could not load compose module from libxkbcommon.so.")
++// }
++
++// pub fn xkbcommon_compose_option() -> Option<&'static XkbCommonCompose> {
++//     static XKBCOMMON_COMPOSE_OPTION: OnceCell<Option<XkbCommonCompose>> = OnceCell::new();
++//     XKBCOMMON_COMPOSE_OPTION
++//         .get_or_init(|| {
++//             open_with_sonames(
++//                 &["libxkbcommon.so.0", "libxkbcommon.so"],
++//                 Some("compose"),
++//                 |name| unsafe { XkbCommonCompose::open(name) },
++//             )
++//         })
++//         .as_ref()
++// }
+ 
+ fn open_with_sonames<T, F>(names: &[&str], module: Option<&str>, open: F) -> Option<T>
+ where
+diff --git a/vendor/xkbcommon-dl/src/x11.rs b/vendor/xkbcommon-dl/src/x11.rs
+index 45346d4d..99eff34b 100644
+--- a/vendor/xkbcommon-dl/src/x11.rs
++++ b/vendor/xkbcommon-dl/src/x11.rs
+@@ -5,6 +5,7 @@ use once_cell::sync::OnceCell;
+ pub type xcb_connection_t = c_void;
+ 
+ use super::*;
++use dlib::dlopen_external_library;
+ 
+ pub const XKB_X11_MIN_MAJOR_XKB_VERSION: u16 = 1;
+ pub const XKB_X11_MIN_MINOR_XKB_VERSION: u16 = 0;

@@ -36,6 +36,10 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      #
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
 
     extraEnv = {
@@ -48,6 +52,10 @@
           "-C link-arg=-lc++",
           "-C link-arg=-L/usr/lib/clang/21/lib/linux",
           "-C link-arg=-lclang_rt.builtins-x86_64",
+
+          #
+          "-C link-arg=/tmp/workdir/src/dlopen.o",
+          m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
         ]
         @ (if distro.pam then ["-C link-arg=-lcap"] else [])
         @ (
@@ -76,25 +84,25 @@
       ],
 
     postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     patches = [
       #   {
       #     sha256sum = "e40264ed9187c4c202bdf521537f5828e97e01d51b57ce2c48d4dd96965929fb",
       #     file =  "cosmic-settings-no-pulse.patch"
-      #   }
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
+      #   },
+      # {
+      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+      #   file = "cosmic-osd-xkb.patch",
+      # },
     ],
 
     utilsProviders,
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothWeakDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,

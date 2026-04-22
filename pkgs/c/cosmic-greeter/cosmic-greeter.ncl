@@ -50,6 +50,10 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       # m%"sed -i 's@default-features@#default-features@g' ${SRC}/vendor/pam-sys/Cargo.toml"%,
       m%"sed -i 's@default-features = false@default-features = false\nfeatures = \[ \"static\" \]@g' ${SRC}/vendor/pam-sys/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
 
       # m%"sed -i 's@\[\"libloading\"\]@false@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
     ],
@@ -57,13 +61,17 @@
       # cosmic-epoch alpha
       VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
-      EXTRA_RUSTFLAGS = ["-C link-arg=-lcap"],
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=-lcap",
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+      ],
     },
     patches = [
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
+      # {
+      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+      #   file = "cosmic-osd-xkb.patch",
+      # }
     ],
     release,
 
@@ -71,13 +79,13 @@
     cargoFlags,
 
     extraCargoFlags = [
-      "--verbose",
+      # "--verbose",
       "--no-default-features",
       "--features logind,upower"
     ],
     buildPhase = [
       # "just build-release %{std.string.join " " cargoFlags }",     
-      "just build-release --offline --target x86_64-unknown-linux-musl --verbose --no-default-features --features logind,upower",
+      "just build-release --offline --target x86_64-unknown-linux-musl --no-default-features --features logind,upower",
       "echo 'Done building'",
     ],
 
@@ -89,14 +97,14 @@
       ],
 
     postInstallPhase = [
-      "cargo tree --target=x86_64-unknown-linux-musl -e features > features_manifest.txt",
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     utilsProviders,
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothWeakDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,
