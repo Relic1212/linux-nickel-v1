@@ -41,9 +41,11 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
-      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      #
+      # m%"sed -i 's@"dynamic"@@g' ${SRC}/vendor/wgpu-hal/Cargo.toml"%, # DynamicInstance
+      #
+      "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
-      # "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
 
       # "patch -p1 < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch",
     ]
@@ -70,7 +72,8 @@
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
-        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+        "-C link-arg=-lc++",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
 
