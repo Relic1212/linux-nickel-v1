@@ -6,18 +6,34 @@
       Package
       & {
         separateBuildDir = false,
+        zigBaseArgs | default = [
+          "--prefix /usr"
+        ],
+        extraEnv = {
+          "HOME" = "${SRC}/home",
+        },
+        zigArgs | default = [],
+        zigFinalArgs | default = zigBaseArgs @ zigArgs,
+        buildPhase = [
+          "mkdir -p {HOME}",
+          m%"DESTDIR="${DEST}" zig build %{std.string.join " " zigFinalArgs} install"%
+        ],
         utilsProviders,
-        baseUtilsProviders =
+        zigProvider | default = drvs.zig,
+        enableCcache,
+        llvmProvider,
+        # llvmProvider | default = drvs.llvmFull,
+        baseBuildinputPackages =
           utilsProviders
           @ [
-            drvs.zig,
+            zigProvider,
             # drvs.llvmAllTargets,
-            drvs.llvmFull,
+            llvmProvider,
             drvs.musl,
             # drvs.linuxHeaders,
-            drvs.ccacheBin,
             drvs.pkgconfMeson,
-          ],
+          ]
+          @ (if enableCcache then [drvs.ccacheBin] else []),
       }
   },
   lib,
