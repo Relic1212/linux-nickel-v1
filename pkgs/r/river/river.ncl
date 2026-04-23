@@ -1,7 +1,7 @@
 {
   lib,
   drvs,
-  river | lib.Package = {
+  river | lib.ZigPackage = {
     singleSource = {
       uri = "https://codeberg.org/river/river/releases/download/v0.4.2/river-0.4.2.tar.gz",
       sha256sum = "f1878c2468ed607163d0b362f7d1056271f1729c38a8178c58f904c2c73ce2d3",
@@ -39,7 +39,6 @@
         dest = "home/.cache/zig/p/xkbcommon-0.4.0-VDqIe0i2AgDRsok2GpMFYJ8SVhQS10_PI2M_CnHXsJJZ"
       },
     ],
-    separateBuildDir = false,
 
     buildEnv = {
       EXTRA_CPPFLAGS = [
@@ -49,8 +48,18 @@
         "$(pkg-config --libs --static wlroots-0.20)",
       ],
     },
+    zigArgs = [
 
-    buildPhase =
+      # "-Dtarget=x86_64-linux-musl",
+      # "--sysroot /",
+      # "--search-prefix /",
+      "--verbose",
+      # "--verbose-cc",
+      "--verbose-link",
+      # "--prefix /usr"
+    ],
+
+    preConfigurePhase =
       let repl = "river.root_module.omit_frame_pointer = omit_frame_pointer;" in
       [
         # m%"sed -i "s@%{repl}@%{repl}\nriver.root_module.addArgs\(\&.\{\"-Wl,--allow-mutiple-definitions\"\}\);@g" ${SRC}/build.zig"%,
@@ -66,36 +75,36 @@
           m%"sed -i "s@%{old}@%{new}\n%{old}@g" ${SRC}/build.zig"%
         ),
         # "mkdir home",
-        "export HOME=$(pwd)/home",
+        # "export HOME=$(pwd)/home",
         "zig build -h",
         # m%"DESTDIR="${DEST}" zig build --prefix /usr install"%
-        (
-          let args =
-            std.string.join
-              " "
-              [
-                # "-Dtarget=x86_64-linux-musl",
-                # "--sysroot /",
-                # "--search-prefix /",
-                "--verbose",
-                # "--verbose-cc",
-                "--verbose-link",
-                "--prefix /usr"
-              ]
-          in
-          m%"DESTDIR="${DEST}" zig build %{args} install"%
-        ),
+        # (
+        #   let args =
+        #     std.string.join
+        #       " "
+        #       [
+        #         # "-Dtarget=x86_64-linux-musl",
+        #         # "--sysroot /",
+        #         # "--search-prefix /",
+        #         "--verbose",
+        #         # "--verbose-cc",
+        #         "--verbose-link",
+        #         "--prefix /usr"
+        #       ]
+        #   in
+        #   m%"DESTDIR="${DEST}" zig build %{args} install"%
+        # ),
       ],
-
+    llvmProvider = drvs.llvmFull,
     biDrvs =
       [
-        drvs.zig,
-        # drvs.llvmAllTargets,
-        drvs.llvmFull,
-        drvs.musl,
-        # drvs.linuxHeaders,
-        drvs.ccacheBin,
-        drvs.pkgconfMeson,
+        # drvs.zig,
+        # # drvs.llvmAllTargets,
+        # drvs.llvmFull,
+        # drvs.musl,
+        # # drvs.linuxHeaders,
+        # drvs.ccacheBin,
+        # drvs.pkgconfMeson,
       ]
       @ [
         drvs.expat,
