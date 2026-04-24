@@ -8,66 +8,34 @@
 
       sourceInputs = [
         {
-          src =
-            if (!p190) then
-              {
+          src = {
 
-                uri = "https://static.rust-lang.org/dist/rustc-1.89.0-src.tar.xz",
-                sha256sum = "0b9d55610d8270e06c44f459d1e2b7918a5e673809c592abed9b9c600e33d95a",
-              }
-            else
-              {
-
-                uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.91.1-src.tar.xz",
-                sha256sum | priority 1 = "66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab",
-              },
+            uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.91.1-src.tar.xz",
+            sha256sum | priority 1 = "66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab",
+          },
         },
         {
           dest = "local",
-          src =
-            if (!p190) then
-              {
+          src = {
 
-                uri = "https://static.rust-lang.org/dist/rust-std-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "0c42b63c18a6343851e0f27aeb5cff73146c86fc95bc4e2bf51b726c4311249e",
-              }
-            else
-              {
-
-                uri = "https://static.rust-lang.org/dist/rust-std-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "38490d575786f4688e83b357baeb022d8dde0ace2cb8c1357e060c76644fc56a",
-              }
+            uri = "https://static.rust-lang.org/dist/rust-std-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "38490d575786f4688e83b357baeb022d8dde0ace2cb8c1357e060c76644fc56a",
+          }
         },
         {
           dest = "local1",
-          src =
-            if (!p190) then
-              {
+          src = {
 
-                uri = "https://static.rust-lang.org/dist/rustc-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "58c2003a5e1c3f03e0b3b59677866d212b19d2d74473f63e52f60244fc062a76",
-              }
-            else
-              {
-
-                uri = "https://static.rust-lang.org/dist/rustc-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "993cb26cee9525b1553d82b8fc2b6ddffd50a0a561cd896e3daa3a9f8ae65949",
-              }
+            uri = "https://static.rust-lang.org/dist/rustc-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "993cb26cee9525b1553d82b8fc2b6ddffd50a0a561cd896e3daa3a9f8ae65949",
+          }
         },
         {
           dest = "local2",
-          src =
-            if (!p190) then
-              {
-
-                uri = "https://static.rust-lang.org/dist/cargo-1.88.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "a00f8caf4f22b5e8f5492b70fc9e16fbf5c2f19ab655f79ede3d2d1ba11531c4",
-              }
-            else
-              {
-                uri = "https://static.rust-lang.org/dist/cargo-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "dddd1ee3da59440d5aa4d149ebb5fbbe0d7252dd94e171d5f2b071d7354f9b3a",
-              }
+          src = {
+            uri = "https://static.rust-lang.org/dist/cargo-1.90.0-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "dddd1ee3da59440d5aa4d149ebb5fbbe0d7252dd94e171d5f2b071d7354f9b3a",
+          }
         },
       ],
 
