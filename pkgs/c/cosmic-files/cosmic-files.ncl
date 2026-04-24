@@ -45,7 +45,7 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
-      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       # "export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1",
       # "(cd vendor && patch -p1 compio-driver/src/sys/unix_op.rs < /tmp/workdir/files/compio-driver-669.patch)",
@@ -58,7 +58,8 @@
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
-        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+        "-lc++",
+          m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
 
