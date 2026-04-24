@@ -1,7 +1,7 @@
 let s = {
 
-  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.4.3.tar.gz",
-  sha256sum = "2be47d1192fd0b6212ab224a5a1c2a83d08ec5374fbbf307721d6e455eb9895d",
+  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.4.4.tar.gz",
+  sha256sum = "9a23a717eef088da3d25b355d4f13feff7499bbafe5e93c9fa379ee15e962709",
 }
 in
 
@@ -32,7 +32,7 @@ in
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "38b5e49195949c7ffe87c0f3fd0cab15bac868d9797a928ff9ec915cf08937a1",
+    outputSha256sum = "67820a2903038063f994493e801ccf9a3539a2a2da44a65847d22db7361a32a5",
 
     biDrvs = [
       drvs.go_1_24,
