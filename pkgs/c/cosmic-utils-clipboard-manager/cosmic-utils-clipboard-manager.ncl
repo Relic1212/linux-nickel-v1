@@ -1,112 +1,18 @@
 {
   lib,
   drvs,
-  cosmicUtilsClipboardManager1 | lib.CargoPackage = {
+  _cosmicUtilsClipboardManager | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/cosmic-utils/clipboard-manager/archive/f74b562a09e88e8d20ee0b9c5ab8cade8e4edbdb.tar.gz",
-      sha256sum = "56879774d884410c8075051d52d8e0c92c54139976a37c68c795696664b4f0cb"
+      uri = "https://github.com/cosmic-utils/clipboard-manager/archive/d473e8f09e8bc2289a76707898063a13714c79dc.tar.gz",
+      sha256sum = "f5fb03d958a9d45ae7ccf3c45456b32528a6e366d0b5fc25afe34a11f775292f"
     },
-    crates = lib.functions.filterCrates (import "cosmic-utils-clipboard-manager-crates.json"),
-    nonCrateSourceInputs = [{ src = singleSource }, ] @ (import "src.ncl"),
-    # Updating git repository `https://github.com/pop-os/libcosmic`
-    # Updating git submodule `https://github.com/pop-os/iced.git`
-    # Updating git repository `https://github.com/pop-os/cosmic-protocols`
-    # Updating git repository `https://github.com/pop-os/cosmic-panel`
-    # Updating git repository `https://github.com/pop-os/dbus-settings-bindings`
-    # Updating git repository `https://github.com/pop-os/freedesktop-icons`
-    # Updating git repository `https://github.com/jackpot51/rust-atomicwrites`
-    # Updating git repository `https://github.com/pop-os/window_clipboard.git`
-    # Updating git repository `https://github.com/pop-os/cosmic-text.git`
-    # Updating git repository `https://github.com/pop-os/softbuffer`
-    # Updating git repository `https://github.com/pop-os/winit.git`
-    # Updating git repository `https://github.com/pop-os/smithay-clipboard`
-    # Updating git repository `https://github.com/wash2/accesskit`
-    # Updating git repository `https://github.com/pop-os/glyphon.git`
-
-    configurePhase = [
-      m%"echo '
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/jackpot51/rust-atomicwrites"]
-git = "https://github.com/jackpot51/rust-atomicwrites"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/cosmic-panel"]
-git = "https://github.com/pop-os/cosmic-panel"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/cosmic-protocols?rev=d0e95be"]
-git = "https://github.com/pop-os/cosmic-protocols"
-rev = "d0e95be"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/cosmic-text.git"]
-git = "https://github.com/pop-os/cosmic-text.git"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/dbus-settings-bindings"]
-git = "https://github.com/pop-os/dbus-settings-bindings"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/freedesktop-icons"]
-git = "https://github.com/pop-os/freedesktop-icons"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/glyphon.git?tag=iced-0.14-dev"]
-git = "https://github.com/pop-os/glyphon.git"
-tag = "iced-0.14-dev"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/libcosmic"]
-git = "https://github.com/pop-os/libcosmic"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/smithay-clipboard?tag=pop-dnd-5"]
-git = "https://github.com/pop-os/smithay-clipboard"
-tag = "pop-dnd-5"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/softbuffer?tag=cosmic-4.0"]
-git = "https://github.com/pop-os/softbuffer"
-tag = "cosmic-4.0"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/window_clipboard.git?tag=pop-0.13-2"]
-git = "https://github.com/pop-os/window_clipboard.git"
-tag = "pop-0.13-2"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/pop-os/winit.git?tag=iced-xdg-surface-0.13-rc"]
-git = "https://github.com/pop-os/winit.git"
-tag = "iced-xdg-surface-0.13-rc"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/wash2/accesskit?tag=iced-xdg-surface-0.13-rc"]
-git = "https://github.com/wash2/accesskit"
-tag = "iced-xdg-surface-0.13-rc"
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"      
-      ' > .cargo/config.toml"%,
-      "(cd vendor-accesskit/common && cargo package --exclude-lockfile -p accesskit --no-verify)",
-      # "cp -r vendor-accesskit/common vendor/accesskit",
-      "mkdir vendor/accesskit",
-      "cp -r vendor-accesskit/target/package/accesskit-0.16.0.crate vendor/accesskit/accesskit.tar.gz",
-      "(cd vendor/accesskit && tar xf accesskit.tar.gz)",
-      m%"(cd vendor && for d in $(ls); do if [ -d ${d} ];then if [ ! -e ${d}/.cargo-checksum.json ];then echo '{"files":{},"package":null}' > ${d}/.cargo-checksum.json;fi;fi;done)"%,
-
-      # "(cd vendor-dbus-settings-bindings/common && cargo package --exclude-lockfile -p --no-verify)",
-    ]
   },
   _CargoFetcher,
   cosmicUtilsClipboardManagerSrc | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-      singleSource = cosmicUtilsClipboardManager1.singleSource,
-      # outputSha256sum = "38cf40d3d7fa95f263d98f5506c0f565724991f76203025a9c18a439bbf11084",
-      outputSha256sum = "2e076355d608bf420b448c5b9f59779b6a16c4f72511ef904bd35fa9a0f3b09c",
+      singleSource = _cosmicUtilsClipboardManager.singleSource,
+      outputSha256sum = "0fa6e24827daa32d654783a1ab993abf26885d5467f82aaa5cf8460b4b3fb546",
     },
 
   cosmicUtilsClipboardManager | lib.CargoPackage = {
@@ -114,12 +20,19 @@ directory = "vendor"
       "cd /tmp/workdir/src",
       "tar xf /sources.tar",
     ],
-    patches = [
-      {
-        sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-        file = "cosmic-osd-xkb.patch",
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
+    #     file = "cosmic-osd-xkb.patch",
+    #   }
+    # ],
+
+    extraEnv = {
+      EXTRA_RUSTFLAGS = [
+        "-C link-arg=/tmp/workdir/src/dlopen.o",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+      ],
+    },
 
     preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
@@ -131,6 +44,9 @@ directory = "vendor"
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
     postInstallPhase =
       let appid = "io.github.cosmic_utils.cosmic-ext-applet-clipboard-manager" in
@@ -146,6 +62,7 @@ directory = "vendor"
         "echo MANIFEST:",
         "cargo tree  --target x86_64-unknown-linux-musl -e features",
       ],
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
       drvs.cosmicUtilsClipboardManagerSrc,
       drvs.wayland,
