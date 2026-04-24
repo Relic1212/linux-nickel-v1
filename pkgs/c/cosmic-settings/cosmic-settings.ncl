@@ -3,12 +3,23 @@
   drvs,
   _CargoFetcher,
   _cosmicSrcs,
+  cosmicSettingsGitSources | lib.DeterministicFetcher =
+    _CargoFetcher
+    & {
+
+      singleSource = {
+        uri = "https://github.com/pop-os/cosmic-settings/archive/78644a32e3741f8f80e9b8ce65c3550c85f9c1f8.tar.gz",
+        sha256sum = "83769b4399a27bdcc49dfb348d6e5d39be902583d0f2fb6df3f3c4ac2747fd96"
+      },
+
+      outputSha256sum = "9578855ab1e7a230e7677e4fa49ba06529f45de00dabb0ee0a5791c21b665ea5",
+    },
   cosmicSettingsSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
       singleSource = _cosmicSrcs."cosmic-settings",
 
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "4f25a13405a019d470e37910fb9710110076c0df7ef1d331d6e224efbe413ead"
+      outputSha256sum = (import "src.sha256sum" as 'Text),
     },
 }
 & {
@@ -117,7 +128,8 @@
     biDrvs = [
       (drvs.findutils & { priority = 1 }),
       drvs.just,
-      drvs.cosmicSettingsSources,
+      # drvs.cosmicSettingsSources,
+      drvs.cosmicSettingsGitSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,
