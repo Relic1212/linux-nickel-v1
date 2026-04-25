@@ -30,11 +30,11 @@
     },
 
     preConfigurePhase = [
-      "echo '%{import "../../v/vibepanel/vibepanel_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "echo '%{import "../../g/gtk4-layer-shell/gtk4_layer_shell_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "echo '%{import "wayland_weak.c" as 'Text}' >> ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
-      "mv ${SRC}/src/stolen-from-libwayland.c ${SRC}/stolen",
-      "touch ${SRC}/src/stolen-from-libwayland.c",
+      # "mv ${SRC}/src/stolen-from-libwayland.c ${SRC}/stolen",
+      # "touch ${SRC}/src/stolen-from-libwayland.c",
     ],
     postInstallPhase =
       (
@@ -119,29 +119,38 @@
   waylandGtk4LayerShell =
     wayland
     & {
-      postInstallPhase | priority 1 =
-        wayland.postInstallPhase
-        @ (
-          let symbols = [
-            "wl_proxy_destroy",
-            "wl_proxy_marshal_array_flags",
-          ]
-          in
-          std.array.map (fun x => "objcopy --redefine-sym %{x}=real_%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
-        )
-        @ (
-          let symbols = [
-            # "wl_proxy_add_dispatcher",
-            # "wl_proxy_marshal_array_constructor",
-            # "wl_proxy_marshal_array_constructor_versioned",
-            # "wl_proxy_marshal_flags",
-            # "wl_proxy_marshal",
-            # "wl_proxy_marshal_constructor",
-            # "wl_proxy_marshal_constructor_versioned",
-            # "wl_proxy_marshal_array",
-          ]
-          in
-          std.array.map (fun x => "objcopy --redefine-sym %{x}=libwayland__%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
-        )
+
+      patches = [
+        { file = "wayland.patch", sha256sum = "1d20e0b26c948704aee46ad42d15bb11a34a6c6fee9af1932b9af9ba7012fec0" },
+      ],
+      extraMesonArgs | priority 1 =
+        wayland.extraMesonArgs
+        @ [
+          "-Dtests=false",
+        ],
+      # postInstallPhase | priority 1 =
+      #   wayland.postInstallPhase
+      #   @ (
+      #     let symbols = [
+      #       "wl_proxy_destroy",
+      #       "wl_proxy_marshal_array_flags",
+      #     ]
+      #     in
+      #     std.array.map (fun x => "objcopy --redefine-sym %{x}=libwayland_%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
+      #   )
+      #   @ (
+      #     let symbols = [
+      #       # "wl_proxy_add_dispatcher",
+      #       # "wl_proxy_marshal_array_constructor",
+      #       # "wl_proxy_marshal_array_constructor_versioned",
+      #       # "wl_proxy_marshal_flags",
+      #       # "wl_proxy_marshal",
+      #       # "wl_proxy_marshal_constructor",
+      #       # "wl_proxy_marshal_constructor_versioned",
+      #       # "wl_proxy_marshal_array",
+      #     ]
+      #     in
+      #     std.array.map (fun x => "objcopy --redefine-sym %{x}=libwayland__%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
+      #   )
     }
 }

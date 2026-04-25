@@ -1,0 +1,49 @@
+diff --git a/src/wayland-client-core.h b/src/wayland-client-core.h
+index 970e625..3becbc0 100644
+--- a/src/wayland-client-core.h
++++ b/src/wayland-client-core.h
+@@ -135,6 +135,13 @@ wl_proxy_marshal_flags(struct wl_proxy *proxy, uint32_t opcode,
+ 		       uint32_t version,
+ 		       uint32_t flags, ...);
+ 
++struct wl_proxy *
++libwayland_wl_proxy_marshal_array_flags(struct wl_proxy *proxy, uint32_t opcode,
++			     const struct wl_interface *interface,
++			     uint32_t version,
++			     uint32_t flags,
++			     union wl_argument *args);
++
+ struct wl_proxy *
+ wl_proxy_marshal_array_flags(struct wl_proxy *proxy, uint32_t opcode,
+ 			     const struct wl_interface *interface,
+@@ -184,6 +191,8 @@ wl_proxy_marshal_array_constructor_versioned(struct wl_proxy *proxy,
+ 					     const struct wl_interface *interface,
+ 					     uint32_t version);
+ 
++void
++libwayland_wl_proxy_destroy(struct wl_proxy *proxy);
+ void
+ wl_proxy_destroy(struct wl_proxy *proxy);
+ 
+diff --git a/src/wayland-client.c b/src/wayland-client.c
+index 2464e7b..a70681c 100644
+--- a/src/wayland-client.c
++++ b/src/wayland-client.c
+@@ -615,7 +615,7 @@ wl_proxy_destroy_caller_locks(struct wl_proxy *proxy)
+  * \memberof wl_proxy
+  */
+ WL_EXPORT void
+-wl_proxy_destroy(struct wl_proxy *proxy)
++libwayland_wl_proxy_destroy(struct wl_proxy *proxy)
+ {
+ 	struct wl_display *display = proxy->display;
+ 
+@@ -894,7 +894,7 @@ wl_proxy_marshal_flags(struct wl_proxy *proxy, uint32_t opcode,
+  * \memberof wl_proxy
+  */
+ WL_EXPORT struct wl_proxy *
+-wl_proxy_marshal_array_flags(struct wl_proxy *proxy, uint32_t opcode,
++libwayland_wl_proxy_marshal_array_flags(struct wl_proxy *proxy, uint32_t opcode,
+ 			     const struct wl_interface *interface, uint32_t version,
+ 			     uint32_t flags, union wl_argument *args)
+ {
