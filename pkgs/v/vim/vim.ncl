@@ -3,8 +3,8 @@
   drvs,
   vim | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://github.com/vim/vim/archive/refs/tags/v9.1.0882.tar.gz",
-      sha256sum = "1afe43512380c3d278f8b627fde76bae6a3791a0e9cf7864551cc2843b525f0b"
+      uri = "https://www.vim.org/downloads/vim-9.2.tar.bz2",
+      sha256sum = "3481983a2b36e71b7f887bf8590e9a4b50c820826c7bedb95155d0ca71fe385d"
     },
     separateBuildDir = false,
     biDrvs = [
