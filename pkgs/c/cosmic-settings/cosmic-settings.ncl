@@ -12,7 +12,7 @@
         sha256sum = "83769b4399a27bdcc49dfb348d6e5d39be902583d0f2fb6df3f3c4ac2747fd96"
       },
 
-      outputSha256sum = "9578855ab1e7a230e7677e4fa49ba06529f45de00dabb0ee0a5791c21b665ea5",
+      outputSha256sum = "4be0be2867bfbe25eed3ab5e9a608db35c46ca81ecc1feb483a2b401be6f98a8",
     },
   cosmicSettingsSources | lib.DeterministicFetcher =
     _CargoFetcher

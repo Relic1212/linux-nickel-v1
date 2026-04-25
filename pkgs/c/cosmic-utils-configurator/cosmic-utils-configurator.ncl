@@ -16,7 +16,7 @@
       "cd /tmp/workdir/src",
       "tar xf /sources.tar",
     ],
-     preConfigurePhase = [
+    preConfigurePhase = [
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
@@ -28,30 +28,22 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
       #
-
-
       m%"sed -i 's@"testing",@@g' ${SRC}/Cargo.toml"%,
 
       # "export RUSTC_BOOTSTRAP=1",
-      
       "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+    ],
+    extraEnv = {
 
-    ]
- 
-    ,extraEnv = {
-
- 
       EXTRA_RUSTFLAGS = [
         "-C link-arg=-lc",
-
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         "-C link-arg=-lc++",
         m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
 
-   
     target,
     # buildPhase = [
     #   "just args=\" --target %{target}\" build-vendored "
@@ -81,8 +73,7 @@
 
     enableSccache = true,
     biDrvs = [
-            drvs.cosmicUtilsConfiguratorSources,
-
+      drvs.cosmicUtilsConfiguratorSources,
       (drvs.findutils & { priority = 1 }), # xargs -d
       drvs.just,
       # drvs.alsaLibs,
@@ -149,7 +140,6 @@
       drvs.zstd,
       # drvs.pipewire,
       drvs.libstdcppCompat,
-   
     ]
   }
 }
