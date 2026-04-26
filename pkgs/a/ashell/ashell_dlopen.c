@@ -40,16 +40,71 @@ extern int stub_dladdr(const void *handle, Dl_info *info);
 
 const char* main_program_handle = "main_program";
 
+const char* lib_libEGL_so_1_libEGL_so = "lib_libEGL_so_1_libEGL_so";
 const char* lib_libxkbcommon_so_0_libxkbcommon_so = "lib_libxkbcommon_so_0_libxkbcommon_so";
+const char* lib_libwayland_client_so_0_libwayland_client_so = "lib_libwayland_client_so_0_libwayland_client_so";
+const char* lib_libwayland_egl_so_1_libwayland_egl_so = "lib_libwayland_egl_so_1_libwayland_egl_so";
 
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
+	if (strcmp( path, "libEGL.so.1" ) == 0) { dbg_print("(dlopen) found library libEGL.so.1 (handle=%p)\n", &lib_libEGL_so_1_libEGL_so); return &lib_libEGL_so_1_libEGL_so; }
+	if (strcmp( path, "libEGL.so" ) == 0) { dbg_print("(dlopen) found library libEGL.so (handle=%p)\n", &lib_libEGL_so_1_libEGL_so); return &lib_libEGL_so_1_libEGL_so; }
 	if (strcmp( path, "libxkbcommon.so.0" ) == 0) { dbg_print("(dlopen) found library libxkbcommon.so.0 (handle=%p)\n", &lib_libxkbcommon_so_0_libxkbcommon_so); return &lib_libxkbcommon_so_0_libxkbcommon_so; }
 	if (strcmp( path, "libxkbcommon.so" ) == 0) { dbg_print("(dlopen) found library libxkbcommon.so (handle=%p)\n", &lib_libxkbcommon_so_0_libxkbcommon_so); return &lib_libxkbcommon_so_0_libxkbcommon_so; }
+	if (strcmp( path, "libwayland-client.so.0" ) == 0) { dbg_print("(dlopen) found library libwayland-client.so.0 (handle=%p)\n", &lib_libwayland_client_so_0_libwayland_client_so); return &lib_libwayland_client_so_0_libwayland_client_so; }
+	if (strcmp( path, "libwayland-client.so" ) == 0) { dbg_print("(dlopen) found library libwayland-client.so (handle=%p)\n", &lib_libwayland_client_so_0_libwayland_client_so); return &lib_libwayland_client_so_0_libwayland_client_so; }
+	if (strcmp( path, "libwayland-egl.so.1" ) == 0) { dbg_print("(dlopen) found library libwayland-egl.so.1 (handle=%p)\n", &lib_libwayland_egl_so_1_libwayland_egl_so); return &lib_libwayland_egl_so_1_libwayland_egl_so; }
+	if (strcmp( path, "libwayland-egl.so" ) == 0) { dbg_print("(dlopen) found library libwayland-egl.so (handle=%p)\n", &lib_libwayland_egl_so_1_libwayland_egl_so); return &lib_libwayland_egl_so_1_libwayland_egl_so; }
 	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 
 void* dlsym(void *__restrict handle, const char *__restrict symbol) {
+	if (handle == &lib_libEGL_so_1_libEGL_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(eglBindAPI, )
+		DLSYM(eglBindTexImage, )
+		DLSYM(eglChooseConfig, )
+		DLSYM(eglClientWaitSync, )
+		DLSYM(eglCopyBuffers, )
+		DLSYM(eglCreateContext, )
+		DLSYM(eglCreateImage, )
+		DLSYM(eglCreatePbufferFromClientBuffer, )
+		DLSYM(eglCreatePbufferSurface, )
+		DLSYM(eglCreatePixmapSurface, )
+		DLSYM(eglCreatePlatformPixmapSurface, )
+		DLSYM(eglCreatePlatformWindowSurface, )
+		DLSYM(eglCreateSync, )
+		DLSYM(eglCreateWindowSurface, )
+		DLSYM(eglDestroyContext, )
+		DLSYM(eglDestroyImage, )
+		DLSYM(eglDestroySurface, )
+		DLSYM(eglDestroySync, )
+		DLSYM(eglGetConfigAttrib, )
+		DLSYM(eglGetConfigs, )
+		DLSYM(eglGetCurrentContext, )
+		DLSYM(eglGetCurrentDisplay, )
+		DLSYM(eglGetCurrentSurface, )
+		DLSYM(eglGetDisplay, )
+		DLSYM(eglGetError, )
+		DLSYM(eglGetPlatformDisplay, )
+		DLSYM(eglGetProcAddress, )
+		DLSYM(eglGetSyncAttrib, )
+		DLSYM(eglInitialize, )
+		DLSYM(eglMakeCurrent, )
+		DLSYM(eglQueryAPI, )
+		DLSYM(eglQueryContext, )
+		DLSYM(eglQueryString, )
+		DLSYM(eglQuerySurface, )
+		DLSYM(eglReleaseTexImage, )
+		DLSYM(eglReleaseThread, )
+		DLSYM(eglSurfaceAttrib, )
+		DLSYM(eglSwapBuffers, )
+		DLSYM(eglSwapInterval, )
+		DLSYM(eglTerminate, )
+		DLSYM(eglWaitClient, )
+		DLSYM(eglWaitGL, )
+		DLSYM(eglWaitNative, )
+		DLSYM(eglWaitSync, )
+	}
 	if (handle == &lib_libxkbcommon_so_0_libxkbcommon_so || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(xkb_compose_state_feed, )
 		DLSYM(xkb_compose_state_get_compose_table, )
@@ -195,6 +250,16 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(xkb_state_update_key, )
 		DLSYM(xkb_state_update_latched_locked, )
 		DLSYM(xkb_state_update_mask, )
+	}
+	if (handle == &lib_libwayland_client_so_0_libwayland_client_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(wl_display_connect, )
+		DLSYM(wl_display_disconnect, )
+	}
+	if (handle == &lib_libwayland_egl_so_1_libwayland_egl_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(wl_egl_window_create, )
+		DLSYM(wl_egl_window_resize, )
+		DLSYM(wl_egl_window_destroy, )
+		DLSYM(wl_egl_window_get_attached_size, )
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);	return stub_dlsym(handle, symbol);
 }
