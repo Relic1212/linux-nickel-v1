@@ -21,8 +21,11 @@
       # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
       EXTRA_RUSTFLAGS =
         [
+
           # "-C link-arg=-L/usr/lib",
           "-C link-arg=-Wl,--push-state,--no-as-needed",
+          "-C link-arg=/tmp/workdir/src/dlopen.o",
+
           # "-C link-arg=-lEGL",
           # "-C link-arg=-lwayland-client",
           # "-C link-arg=-Wl,--pop-state",
@@ -67,64 +70,35 @@
     ],
     nonCrateSourceInputs = [
       {
-        # src = {
-        #   uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.05.1.tar.gz",
-        #   sha256sum = "2df192fa85adbb0eabcfddbd8aa812c3d3329a582a7e62212ea9fcddafa79b00",
-        # }
 
         src = {
-          # uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.08.tar.gz",
-          # sha256sum = "69f8227d621ee6389bcd5368a250c189e672d02528472dc5ef0e3eccf80cf0b8",
-          uri = "https://github.com/YaLTeR/niri/archive/refs/tags/v25.11.tar.gz",
-          sha256sum = "9a9a58dbe12e065776cc80424f22c89489f2662e881152ceae46e68bb8677d8c",
+
+          uri = "https://github.com/niri-wm/niri/archive/refs/tags/v26.04.tar.gz",
+          sha256sum = "134c602d8e0d53413a52d6cd58f9ce7e79a07d03288ee0a51ba1abd5db1b1ad9",
         }
       },
       {
         dest = "vendor",
-        # src = {
-        #   uri = "https://github.com/YaLTeR/niri/releases/download/v25.05.1/niri-25.05.1-vendored-dependencies.tar.xz",
-        #   sha256sum = "4c2b2b3fc8340c02f3ba2581b50847f1d9e0fab986bebf53aaf045fa54b9a3c2"
-        # },
 
         src = {
-          # uri = "https://github.com/YaLTeR/niri/releases/download/v25.08/niri-25.08-vendored-dependencies.tar.xz",
-          # sha256sum = "5a0a36b1a52985a60d5d6864c2ef7df2b0f5f9fea2a775662e7777cf536277bd",
 
-          uri = "https://github.com/YaLTeR/niri/releases/download/v25.11/niri-25.11-vendored-dependencies.tar.xz",
-          sha256sum = "c0af02de767654a8bc5cd72f9721e60e4a7b1e2abf0e52119fd7f947373026cc",
+          uri = "https://github.com/niri-wm/niri/releases/download/v26.04/niri-26.04-vendored-dependencies.tar.xz",
+          sha256sum = "407c525cd78710e72455c48741756857ca47dc32910a42f82cd40992a34beed6",
         }
-
-        # src = {
-        #   uri = "https://github.com/rust-windowing/winit/archive/58402b58cf660e236e825b36287a8fc2abfb1f5d.tar.gz",
-        #   sha256sum = "f53ca2163ab21fe746b4697c18438453b2563e3dc94358a259abd78c047af567",
-        # },
-        # dest = "vendor-winit",
       },
     ],
 
     patches = [
-      {
-        sha256sum = "22aa848609c9ce793c080fe5b0ecaac790b7bf2bbc92c4d51796c6493de5bce6",
-        file = "niri.patch",
-      },
-      {
-        sha256sum = "11634f1609a70cd9168c0ae918f7becfb0f45c462ce4af78287d56c864708f58",
-        file = "no-dl.patch",
-      },
-      {
-        file = "static-gl.patch",
-        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
-      },
-      {
-        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
-        file = "ffi.patch"
-      },
       # {
-      #   sha256sum = "a18cbc37f29f7789f7c2cb95d7abf8dab5381c044944181a97b4ae1e0daeba7b",
-      #   file = "no-winit.patch"
+      #   sha256sum = "11634f1609a70cd9168c0ae918f7becfb0f45c462ce4af78287d56c864708f58",
+      #   file = "no-dl.patch",
+      # },
+      # {
+      #   sha256sum = "d8cb860ebd9aa63b3b9318f03c7021b73950c70a502d8fc02d4faea2e602f3ed",
+      #   file = "ffi.patch"
       # },
       {
-        sha256sum = "b97a8743a685a803bcfdb04807931fe5b7b7ebaa209e04d764a83eaf2c9203ea",
+        sha256sum = "57f51f86fe9a3e653626d567d5b050dd213e85c32bbda39fb0aca22cf0ac88b5",
         file = "niri-25.11-no-winit.patch"
       }
     ],
@@ -137,29 +111,28 @@
     ],
 
     configurePhase = [
+      "mkdir /tmp/home",
+      "export HOME=/tmp/home",
+      "echo '%{import "../../n/niri/niri_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
 
       # checksum removal from Alpine
       #m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       #m%"sed -i 's@"x11",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"
-            echo "
-            [source.crates-io]
-            replace-with = \"vendored-sources\"
-            
-            [source.\"git+https://github.com/Smithay/smithay.git\"]
-            git = \"https://github.com/Smithay/smithay.git\"
-            replace-with = \"vendored-sources\"
+      echo '
+      [source.crates-io]
+      replace-with = "vendored-sources"
 
-            [source.\"git+https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"]
-            git = \"https://gitlab.freedesktop.org/pipewire/pipewire-rs.git\"
-            replace-with = \"vendored-sources\"
+      [source."git+https://github.com/Smithay/smithay.git?rev=ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef"]
+      git = "https://github.com/Smithay/smithay.git"
+      rev = "ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef"
+      replace-with = "vendored-sources"
 
-
-            [source.vendored-sources]
-            directory = \"vendor\"
-
-            " > ${SRC}/.cargo/config.toml
-            "%,
+      [source.vendored-sources]
+      directory = "vendor"
+      ' > ${SRC}/.cargo/config.toml
+      "%,
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/smithay/.cargo-checksum.json"%,
       # sct
       # m%"
@@ -218,25 +191,37 @@
       "rm -rf ${SRC}/src/backend/winit.rs",
       "rm -rf ${SRC}/vendor/winit*",
       m%"sed -i 's@"backend_winit",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
+      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/smithay/Cargo.toml"%,
+      #
+      # m%"sed -i 's@GlobalGenerator@StaticGenerator@g' ${SRC}/vendor/smithay/build.rs"%,
+      # m%"sed -i 's@StructGenerator@StaticStructGenerator@g' ${SRC}/vendor/smithay/build.rs"%,
+      #
+
+      # m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      # m%"sed -i 's@"x11-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       # m%"sed -i 's@"renderer_multi",@@g' ${SRC}/Cargo.toml"%,
       # m%"sed -i 's@"renderer_pixman",@@g' ${SRC}/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
+
+      #
+
+      #
     ],
 
     installPhase = [
       "install -d -m0755 ${DEST}/usr/bin",
       "install -d -m0755 ${DEST}/usr/share/wayland-sessions",
       "install -d -m0755 ${DEST}/usr/share/xdg-desktop-portal",
-      "install -d -m0755 ${DEST}/usr/lib/dinit.d",
+      "install -d -m0755 ${DEST}/usr/lib/dinit.d/user",
       "install -m0755 ${SRC}/target/x86_64-unknown-linux-musl/release/niri ${DEST}/usr/bin",
       "install -m0755 ${SRC}/resources/niri-session ${DEST}/usr/bin",
       "install -m0755 ${SRC}/resources/niri.desktop ${DEST}/usr/share/wayland-sessions",
       "install -m0755 ${SRC}/resources/niri-portals.conf ${DEST}/usr/share/xdg-desktop-portal",
-      "install -m0755 ${SRC}/resources/dinit/niri ${DEST}/usr/lib/dinit.d",
-      "install -m0755 ${SRC}/resources/dinit/niri-shutdown ${DEST}/usr/lib/dinit.d",
+      "install -m0755 ${SRC}/resources/dinit/niri ${DEST}/usr/lib/dinit.d/user",
+      "install -m0755 ${SRC}/resources/dinit/niri.target ${DEST}/usr/lib/dinit.d/user",
     ],
 
     # release = false,
@@ -245,7 +230,7 @@
     baseBuildinputPackages =
       [
         drvs.rust,
-        drvs.muslBoth,
+        drvs.muslBothWeakDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,
