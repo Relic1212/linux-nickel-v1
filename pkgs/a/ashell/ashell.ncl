@@ -6,17 +6,19 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.7.0.tar.gz",
-        sha256sum = "ea73d22b729ec2c4bb6af1cfce4cb597e8c9c6d657776d3d5575d4e3868925b6",
+        uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.8.0.tar.gz",
+        sha256sum = "6880aeeb775772678acecddad9a84c5e3e24b6b748202e386bc8ea2845effb36",
       },
-      outputSha256sum = "511df02a6139c57feee4c83c037d74eaaa4732fc586bfb0d768061f27b2fcebd"
+      outputSha256sum = "022f0a770d5a3db8313212c51d3ce1628bc61c0088b22afc7ae3d1a708bd2338"
     },
   ashell | lib.CargoPackage = {
 
     buildEnv = {
       EXTRA_LDFLAGS = [
         "/tmp/workdir/src/dlopen.o",
-        # "-l:libdl_ashell.a"
+        # "-l:libdl_ashell.a",
+        "-lc++",
+        "$(pkg-config --libs --static xkbcommon libpulse egl wayland-client wayland-egl)",
       ]
     },
 
@@ -26,10 +28,13 @@
 
         # "-C link-arg=-l:libdl_ashell",
         "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
-        m%"$(for l in $(pkg-config --libs --static xkbcommon libpulse);do printf " -C link-arg=$l ";done)"%,
+        "-C link-arg=-lc++",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon libpulse egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
     preConfigurePhase = [
+      "mkdir /tmp/home",
+      "export HOME=/tmp/home",
       "tar xf /sources.tar",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
@@ -54,6 +59,7 @@
       # "ranlib libdl_ashell.a",
 
       # (import "add-link.sh" as 'Text),
+      "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
     llvmProvider = drvs.llvmFull,
