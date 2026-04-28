@@ -152,7 +152,8 @@ in
             maybeDups
           else
             std.array.dedup maybeDups,
-        propagatedBuildInputs | default = [],
+        pDrvs | default = [],
+        propagatedBuildInputs | default = pDrvs,
         indirectDeps | default =
           let depKeyNames = std.array.map (fun v => v.keyName) (propagatedBuildInputs) in
           let depPkgs = std.array.map (fun k => pkgs."%{k}") depKeyNames in
