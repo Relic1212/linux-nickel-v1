@@ -7,11 +7,13 @@
       sha256sum = "d15ebab765d793e2e96db090f0e172d127859d78ca6f6391d7eafecfd894bbc0",
     },
     biDrvs = [
+      drvs.caCertificates,
+    ],
+    propagatedBuildInputs = [
       drvs.openssl,
       drvs.libpsl,
       drvs.perl,
       drvs.zlibNg,
-      drvs.caCertificates,
     ],
     extraConfigureFlags = [
       "--with-openssl",
