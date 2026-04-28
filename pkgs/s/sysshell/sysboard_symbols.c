@@ -2696,8 +2696,8 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(glWaitSync, )
 	}
 	if (handle == &lib_ || handle == NULL || handle == &main_program_handle || handle == RTLD_NEXT) { 
-		DLSYM(wl_proxy_destroy, real_)
-		DLSYM(wl_proxy_marshal_array_flags, real_)
+		DLSYM(wl_proxy_destroy, libwayland_)
+		DLSYM(wl_proxy_marshal_array_flags, libwayland_)
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);	return stub_dlsym(handle, symbol);
 }
