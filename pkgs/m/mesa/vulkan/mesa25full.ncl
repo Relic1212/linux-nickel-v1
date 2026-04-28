@@ -215,7 +215,8 @@
         drvs.xtrans,
         drvs.zlibNg,
         drvs.zstd,
-      ]
+      ],
+      propagatedBuildInputs | priority 1 = [],
     },
   mesaFullDl =
     mesaFull
