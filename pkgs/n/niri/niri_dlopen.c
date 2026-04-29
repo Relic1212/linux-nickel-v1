@@ -53,89 +53,168 @@ void* dlopen(const char *path, int mode) {
 
 void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 	if (handle == &lib_libEGL_so_1_libEGL_so || handle == NULL || handle == &main_program_handle) { 
-		DLSYM(eglBindAPI, )
-		DLSYM(eglBindTexImage, )
-		DLSYM(eglBindWaylandDisplayWL, )
-		DLSYM(eglChooseConfig, )
-		DLSYM(eglClientWaitSync, )
-		DLSYM(eglClientWaitSyncKHR, )
-		DLSYM(eglCopyBuffers, )
-		DLSYM(eglCreateContext, )
-		DLSYM(eglCreateImage, )
-		DLSYM(eglCreateImageKHR, )
-		DLSYM(eglCreatePbufferFromClientBuffer, )
-		DLSYM(eglCreatePbufferSurface, )
-		DLSYM(eglCreatePixmapSurface, )
-		DLSYM(eglCreatePlatformPixmapSurface, )
-		DLSYM(eglCreatePlatformPixmapSurfaceEXT, )
-		DLSYM(eglCreatePlatformWindowSurface, )
-		DLSYM(eglCreatePlatformWindowSurfaceEXT, )
-		DLSYM(eglCreateSync, )
-		DLSYM(eglCreateSync64KHR, )
-		DLSYM(eglCreateSyncKHR, )
-		DLSYM(eglCreateWaylandBufferFromImageWL, )
-		DLSYM(eglCreateWindowSurface, )
-		DLSYM(eglDebugMessageControlKHR, )
-		DLSYM(eglDestroyContext, )
-		DLSYM(eglDestroyImage, )
-		DLSYM(eglDestroyImageKHR, )
-		DLSYM(eglDestroySurface, )
-		DLSYM(eglDestroySync, )
-		DLSYM(eglDestroySyncKHR, )
-		DLSYM(eglDupNativeFenceFDANDROID, )
-		DLSYM(eglExportDMABUFImageMESA, )
-		DLSYM(eglExportDMABUFImageQueryMESA, )
-		DLSYM(eglGetConfigAttrib, )
-		DLSYM(eglGetConfigs, )
-		DLSYM(eglGetCurrentContext, )
-		DLSYM(eglGetCurrentDisplay, )
-		DLSYM(eglGetCurrentSurface, )
-		DLSYM(eglGetDisplay, )
-		DLSYM(eglGetDisplayDriverConfig, )
-		DLSYM(eglGetDisplayDriverName, )
-		DLSYM(eglGetError, )
-		DLSYM(eglGetMscRateANGLE, )
-		DLSYM(eglGetPlatformDisplay, )
-		DLSYM(eglGetPlatformDisplayEXT, )
-		DLSYM(eglGetProcAddress, )
-		DLSYM(eglGetSyncAttrib, )
-		DLSYM(eglGetSyncAttribKHR, )
-		DLSYM(eglGetSyncValuesCHROMIUM, )
-		DLSYM(eglInitialize, )
-		DLSYM(eglLabelObjectKHR, )
-		DLSYM(eglMakeCurrent, )
-		DLSYM(eglQueryAPI, )
-		DLSYM(eglQueryContext, )
-		DLSYM(eglQueryDebugKHR, )
-		DLSYM(eglQueryDeviceAttribEXT, )
-		DLSYM(eglQueryDeviceBinaryEXT, )
-		DLSYM(eglQueryDeviceStringEXT, )
-		DLSYM(eglQueryDevicesEXT, )
-		DLSYM(eglQueryDisplayAttribEXT, )
-		DLSYM(eglQueryDmaBufFormatsEXT, )
-		DLSYM(eglQueryDmaBufModifiersEXT, )
-		DLSYM(eglQueryString, )
-		DLSYM(eglQuerySupportedCompressionRatesEXT, )
-		DLSYM(eglQuerySurface, )
-		DLSYM(eglQueryWaylandBufferWL, )
-		DLSYM(eglReleaseTexImage, )
-		DLSYM(eglReleaseThread, )
-		DLSYM(eglSetBlobCacheFuncsANDROID, )
-		DLSYM(eglSetDamageRegionKHR, )
-		DLSYM(eglSignalSyncKHR, )
-		DLSYM(eglSurfaceAttrib, )
-		DLSYM(eglSwapBuffers, )
-		DLSYM(eglSwapBuffersWithDamageEXT, )
-		DLSYM(eglSwapBuffersWithDamageKHR, )
-		DLSYM(eglSwapInterval, )
-		DLSYM(eglTerminate, )
-		DLSYM(eglUnbindWaylandDisplayWL, )
-		DLSYM(eglWaitClient, )
-		DLSYM(eglWaitGL, )
-		DLSYM(eglWaitNative, )
-		DLSYM(eglWaitSync, )
-		DLSYM(eglWaitSyncKHR, )
-		DLSYM(eglPrintConfigDebug, )
+		// DLSYM(eglBindAPI, )
+		// DLSYM(eglBindTexImage, )
+		// DLSYM(eglBindWaylandDisplayWL, )
+		// DLSYM(eglChooseConfig, )
+		// DLSYM(eglClientWaitSync, )
+		// DLSYM(eglClientWaitSyncKHR, )
+		// DLSYM(eglCopyBuffers, )
+		// DLSYM(eglCreateContext, )
+		// DLSYM(eglCreateImage, )
+		// DLSYM(eglCreateImageKHR, )
+		// DLSYM(eglCreatePbufferFromClientBuffer, )
+		// DLSYM(eglCreatePbufferSurface, )
+		// DLSYM(eglCreatePixmapSurface, )
+		// DLSYM(eglCreatePlatformPixmapSurface, )
+		// DLSYM(eglCreatePlatformPixmapSurfaceEXT, )
+		// DLSYM(eglCreatePlatformWindowSurface, )
+		// DLSYM(eglCreatePlatformWindowSurfaceEXT, )
+		// DLSYM(eglCreateSync, )
+		// DLSYM(eglCreateSync64KHR, )
+		// DLSYM(eglCreateSyncKHR, )
+		// DLSYM(eglCreateWaylandBufferFromImageWL, )
+		// DLSYM(eglCreateWindowSurface, )
+		// DLSYM(eglDebugMessageControlKHR, )
+		// DLSYM(eglDestroyContext, )
+		// DLSYM(eglDestroyImage, )
+		// DLSYM(eglDestroyImageKHR, )
+		// DLSYM(eglDestroySurface, )
+		// DLSYM(eglDestroySync, )
+		// DLSYM(eglDestroySyncKHR, )
+		// DLSYM(eglDupNativeFenceFDANDROID, )
+		// DLSYM(eglExportDMABUFImageMESA, )
+		// DLSYM(eglExportDMABUFImageQueryMESA, )
+		// DLSYM(eglGetConfigAttrib, )
+		// DLSYM(eglGetConfigs, )
+		// DLSYM(eglGetCurrentContext, )
+		// DLSYM(eglGetCurrentDisplay, )
+		// DLSYM(eglGetCurrentSurface, )
+		// DLSYM(eglGetDisplay, )
+		// DLSYM(eglGetDisplayDriverConfig, )
+		// DLSYM(eglGetDisplayDriverName, )
+		// DLSYM(eglGetError, )
+		// DLSYM(eglGetMscRateANGLE, )
+		// DLSYM(eglGetPlatformDisplay, )
+		// DLSYM(eglGetPlatformDisplayEXT, )
+		// DLSYM(eglGetProcAddress, )
+		// DLSYM(eglGetSyncAttrib, )
+		// DLSYM(eglGetSyncAttribKHR, )
+		// DLSYM(eglGetSyncValuesCHROMIUM, )
+		// DLSYM(eglInitialize, )
+		// DLSYM(eglLabelObjectKHR, )
+		// DLSYM(eglMakeCurrent, )
+		// DLSYM(eglQueryAPI, )
+		// DLSYM(eglQueryContext, )
+		// DLSYM(eglQueryDebugKHR, )
+		// DLSYM(eglQueryDeviceAttribEXT, )
+		// DLSYM(eglQueryDeviceBinaryEXT, )
+		// DLSYM(eglQueryDeviceStringEXT, )
+		// DLSYM(eglQueryDevicesEXT, )
+		// DLSYM(eglQueryDisplayAttribEXT, )
+		// DLSYM(eglQueryDmaBufFormatsEXT, )
+		// DLSYM(eglQueryDmaBufModifiersEXT, )
+		// DLSYM(eglQueryString, )
+		// DLSYM(eglQuerySupportedCompressionRatesEXT, )
+		// DLSYM(eglQuerySurface, )
+		// DLSYM(eglQueryWaylandBufferWL, )
+		// DLSYM(eglReleaseTexImage, )
+		// DLSYM(eglReleaseThread, )
+		// DLSYM(eglSetBlobCacheFuncsANDROID, )
+		// DLSYM(eglSetDamageRegionKHR, )
+		// DLSYM(eglSignalSyncKHR, )
+		// DLSYM(eglSurfaceAttrib, )
+		// DLSYM(eglSwapBuffers, )
+		// DLSYM(eglSwapBuffersWithDamageEXT, )
+		// DLSYM(eglSwapBuffersWithDamageKHR, )
+		// DLSYM(eglSwapInterval, )
+		// DLSYM(eglTerminate, )
+		// DLSYM(eglUnbindWaylandDisplayWL, )
+		// DLSYM(eglWaitClient, )
+		// DLSYM(eglWaitGL, )
+		// DLSYM(eglWaitNative, )
+		// DLSYM(eglWaitSync, )
+		// DLSYM(eglWaitSyncKHR, )
+		// DLSYM(eglPrintConfigDebug, )
+
+// things from egl_bindings.rs
+#if 1 
+		DLSYM(eglBindAPI, );
+		DLSYM(eglBindTexImage, );
+		DLSYM(eglChooseConfig, );
+		DLSYM(eglClientWaitSync, );
+		DLSYM(eglClientWaitSyncKHR, );
+		DLSYM(eglCopyBuffers, );
+		DLSYM(eglCreateContext, );
+		DLSYM(eglCreateImage, );
+		DLSYM(eglCreateImageKHR, );
+		DLSYM(eglCreatePbufferFromClientBuffer, );
+		DLSYM(eglCreatePbufferSurface, );
+		DLSYM(eglCreatePixmapSurface, );
+		DLSYM(eglCreatePlatformPixmapSurface, );
+		DLSYM(eglCreatePlatformPixmapSurfaceEXT, );
+		DLSYM(eglCreatePlatformWindowSurface, );
+		DLSYM(eglCreatePlatformWindowSurfaceEXT, );
+		// DLSYM(eglCreateStreamKHR, );
+		// DLSYM(eglCreateStreamProducerSurfaceKHR, );
+		DLSYM(eglCreateSync, );
+		DLSYM(eglCreateSyncKHR, );
+		DLSYM(eglCreateWindowSurface, );
+		DLSYM(eglDestroyContext, );
+		DLSYM(eglDestroyImage, );
+		DLSYM(eglDestroyImageKHR, );
+		// DLSYM(eglDestroyStreamKHR, );
+		DLSYM(eglDestroySurface, );
+		DLSYM(eglDestroySync, );
+		DLSYM(eglDestroySyncKHR, );
+		DLSYM(eglDupNativeFenceFDANDROID, );
+		DLSYM(eglExportDMABUFImageMESA, );
+		DLSYM(eglExportDMABUFImageQueryMESA, );
+		DLSYM(eglGetConfigAttrib, );
+		DLSYM(eglGetConfigs, );
+		DLSYM(eglGetCurrentContext, );
+		DLSYM(eglGetCurrentDisplay, );
+		DLSYM(eglGetCurrentSurface, );
+		DLSYM(eglGetDisplay, );
+		DLSYM(eglGetError, );
+		DLSYM(eglGetPlatformDisplay, );
+		DLSYM(eglGetPlatformDisplayEXT, );
+		DLSYM(eglGetProcAddress, );
+		DLSYM(eglGetSyncAttrib, );
+		DLSYM(eglGetSyncAttribKHR, );
+		DLSYM(eglInitialize, );
+		DLSYM(eglMakeCurrent, );
+		DLSYM(eglQueryAPI, );
+		DLSYM(eglQueryContext, );
+		DLSYM(eglQueryDeviceAttribEXT, );
+		DLSYM(eglQueryDeviceStringEXT, );
+		DLSYM(eglQueryDevicesEXT, );
+		DLSYM(eglQueryDisplayAttribEXT, );
+		DLSYM(eglQueryDmaBufFormatsEXT, );
+		DLSYM(eglQueryDmaBufModifiersEXT, );
+		// DLSYM(eglQueryStreamKHR, );
+		// DLSYM(eglQueryStreamu64KHR, );
+		DLSYM(eglQueryString, );
+		DLSYM(eglQuerySurface, );
+		DLSYM(eglReleaseTexImage, );
+		DLSYM(eglReleaseThread, );
+		// DLSYM(eglStreamAttribKHR, );
+		DLSYM(eglSurfaceAttrib, );
+		DLSYM(eglSwapBuffers, );
+		DLSYM(eglSwapBuffersWithDamageEXT, );
+		DLSYM(eglSwapBuffersWithDamageKHR, );
+		DLSYM(eglSwapInterval, );
+		DLSYM(eglTerminate, );
+		DLSYM(eglWaitClient, );
+		DLSYM(eglWaitGL, );
+		DLSYM(eglWaitNative, );
+		DLSYM(eglWaitSync, );
+#endif
+        DLSYM(eglDebugMessageControlKHR, );
+        DLSYM(eglBindWaylandDisplayWL, );
+        DLSYM(eglUnbindWaylandDisplayWL, );
+        DLSYM(eglQueryWaylandBufferWL, );
+
 	}
 	if (handle == &lib_libwayland_server_so_0 || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(wl_display_set_default_max_buffer_size, )
