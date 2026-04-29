@@ -5,14 +5,14 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/nwg-piotr/nwg-drawer/archive/refs/tags/v0.7.4.tar.gz",
-          sha256sum = "0caa9f3a5efbd7492ce57fc6952e7f78e2d6ee71d4a430aeb0aa7535abecdab5",
+          uri = "https://github.com/nwg-piotr/nwg-drawer/archive/refs/tags/v0.7.5.tar.gz",
+          sha256sum = "af6bfbee17ab4dec300545c83c89a25e09b5f63e7ce06fa8627e0a04cf11d6e8",
         }
       },
       {
         src = {
-          uri = "https://slackware.lngn.net/pub/source/nwg-drawer/nwg-drawer-vendor-0.7.4.tar.xz",
-          sha256sum = "bf5934538e44ace20f8255ab1251546c7bb99bfce1963c8dd812c76257af5446"
+          uri = "https://slackware.lngn.net/pub/source/nwg-drawer/nwg-drawer-vendor-0.7.5.tar.xz",
+          sha256sum = "404a6f45f1e918c134f52b216150ba5656fab815ccf2374ddff75a9347818f2f"
         },
         dest = "vendor",
       }
@@ -76,8 +76,9 @@
       drvs.gdkPixbufFull,
       drvs.gettext,
       # drvs.glib,
-      drvs.glibDynamic,
-      drvs.go_1_24,
+      # drvs.glibDynamic,
+      drvs.glibPatched,
+      drvs.go_1_26,
       drvs.gobjectDynamic,
       drvs.gperf,
       drvs.gtk3X11,
