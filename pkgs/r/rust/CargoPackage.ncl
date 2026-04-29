@@ -47,11 +47,12 @@
         singleSource,
         buildEnv,
         target = (if buildEnv.TARGET == null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
+        linkSelfContained | default = "yes",
         extraEnv = {
           STATIC_RUSTFLAGS | default =
             [
               "-C target-feature=+crt-static",
-              "-C link-self-contained=yes",
+              "-C link-self-contained=%{linkSelfContained}",
               "-C link-arg=-static",
               "-C link-arg=--static"
             ]
