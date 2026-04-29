@@ -52,28 +52,35 @@
         "-Ddefault_library=both",
         "-Dcairo=disabled",
       ],
-      preConfigurePhase | priority 1 =
-        pango.preConfigurePhase
-        @ [
-          m%"sed -i "s|subdir('utils')||g" ${SRC}/meson.build"%,
-        ],
+      buildEnv = {
+        _isStatic = false,
+      },
+      extraEnv = {
+        GI_SCANNER_DEBUG = "save-temps",
+      },
+      # preConfigurePhase | priority 1 =
+      #   pango.preConfigurePhase
+      #   @ [
+      #     m%"sed -i "s|subdir('utils')||g" ${SRC}/meson.build"%,
+      #   ],
       isStatic = false,
       pythonProvider = drvs.pythonDynamic,
       biDrvs | priority 1 = [
-        drvs.glibDynamic2 & { priority = -1 },
+        # drvs.glibDynamic2 & { priority = -1 },
+        drvs.glibGobjectDynamic & { priority = -2 },
         # drvs.glibPatched,
         drvs.pcre2,
         drvs.libffi,
         drvs.freetype,
         drvs.fontconfig,
         drvs.zlibNg,
-        drvs.harfbuzzGobject,
-        drvs.cairo,
+        drvs.harfbuzzGobjectDynamic,
+        drvs.cairoGobject,
         drvs.pixman,
         drvs.libpng,
         drvs.expat,
         drvs.fribidi,
-        drvs.gobjectDynamicData,
+        drvs.gobjectDynamicCairo,
         drvs.muslShared & { priority = -1 },
         drvs.pythonSetuptools,
         drvs.ldd,

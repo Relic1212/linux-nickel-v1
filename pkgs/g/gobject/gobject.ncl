@@ -6,6 +6,9 @@
       uri = "https://download.gnome.org/sources/gobject-introspection/1.86/gobject-introspection-1.86.0.tar.xz",
       sha256sum = "920d1a3fcedeadc32acff95c2e203b319039dd4b4a08dd1a2dfd283d19c0b9ae",
     },
+    options = {
+      libpng | default = drvs.libpng,
+    },
     pythonProvider = drvs.pythonDynamic,
     biDrvs = [
       drvs.pythonSetuptools,
@@ -22,7 +25,7 @@
       drvs.pixman,
       drvs.freetype,
       drvs.fontconfig,
-      drvs.libpng,
+      options.libpng,
       drvs.expat,
       drvs.muslShared,
       drvs.binutils,
@@ -52,30 +55,55 @@
       buildEnv = {
         _isStatic | force = false
       },
-      biDrvs | priority 1 = [
-        drvs.binutils,
-        drvs.bison,
-        drvs.cairo,
-        drvs.expat,
-        drvs.flex,
-        drvs.fontconfig,
-        drvs.freetype,
-        drvs.glibDynamic,
-        drvs.lddObjdump,
-        drvs.libffi,
-        drvs.libpng,
-        drvs.libtool,
-        drvs.m4,
-        drvs.muslShared,
-        drvs.pcre2,
-        drvs.pixman,
-        drvs.pythonSetuptools,
-        drvs.zlibNgPic,
-      ],
+      options = {
+        cairo | default = drvs.cairo,
+        extraBiDrvs | default = []
+      },
+      biDrvs | priority 1 =
+        [
+          drvs.binutils,
+          drvs.bison,
+          options.cairo,
+          drvs.expat,
+          drvs.flex,
+          drvs.fontconfig,
+          drvs.freetype,
+          drvs.glibDynamic,
+          drvs.lddObjdump,
+          drvs.libffi,
+          options.libpng,
+          drvs.libtool,
+          drvs.m4,
+          drvs.muslShared,
+          drvs.pcre2,
+          drvs.pixman,
+          drvs.pythonSetuptools,
+          drvs.zlibNgPic,
+        ]
+        @ options.extraBiDrvs,
       extraMesonArgs = [
         "--prefer-static",
         "-Ddefault_library=static",
         "-Dbuild_introspection_data=false",
+      ]
+    },
+
+  gobjectDynamicCairo | lib.MesonPackage =
+    gobjectDynamic
+    & {
+      options = {
+        cairo = drvs.cairoGobject,
+        libpng = drvs.libpngPic,
+        extraBiDrvs = [
+          (drvs.glibDynamic2 & { priority = -1 }),
+        ]
+      },
+
+      preConfigurePhase | priority 1 = [],
+      extraMesonArgs | priority 1 = [
+        "--prefer-static",
+        "-Ddefault_library=static",
+        "-Dbuild_introspection_data=true",
       ]
     },
 
@@ -186,7 +214,8 @@
         drvs.fontconfig,
         drvs.libpng,
         drvs.expat,
-        #  (drvs.glib & { priority = -2 }),
+        drvs.glibDynamic2,
+        # (drvs.glib & { priority = -2 }),
         drvs.pythonSetuptools,
         drvs.ldd,
         # drvs.glibDynamic,
@@ -201,6 +230,11 @@
       },
       # postInstallPhase | priority 1 = [],
       extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=static", "-Dintrospection=enabled"],
+    },
+  glibGobjectDynamic =
+    glibGobject
+    & {
+      extraMesonArgs | priority 2 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "-Ddefault_library=shared", "-Dintrospection=enabled"],
     }
 }
 & {

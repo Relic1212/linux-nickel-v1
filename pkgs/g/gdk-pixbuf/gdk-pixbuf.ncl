@@ -59,6 +59,39 @@
       "-Djpeg=enabled",
       "-Dpng=enabled",
     ]
+  },
+
+  gdkPixbufIntrospection | lib.MesonPackage = {
+    singleSource = gdkPixbufFull.singleSource,
+    buildEnv = gdkPixbufFull.buildEnv & { _isStatic = false },
+
+    muslProvider = drvs.muslBoth,
+    pythonProvider = drvs.pythonDynamic,
+
+    extraMesonArgs = [
+      "-Dgio_sniffing=false",
+      "-Dinstalled_tests=false",
+      "-Dtests=false",
+      "-Dman=false",
+      "-Dintrospection=enabled",
+      "-Dgtk_doc=false",
+      "-Dbuiltin_loaders=png,jpeg,gif",
+      "-Djpeg=enabled",
+      "-Dpng=enabled",
+    ],
+
+    biDrvs = [
+      drvs.glibGobject,
+      #drvs.muslShared,
+      drvs.pcre2,
+      drvs.libffi,
+      drvs.zlibNg,
+      drvs.libpng,
+      drvs.libjpegTurbo,
+      drvs.gobjectDynamic,
+      drvs.pythonSetuptools,
+      drvs.ldd,
+    ],
   }
 }
 & {
