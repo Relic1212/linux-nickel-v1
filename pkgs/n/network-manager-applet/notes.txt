@@ -1,0 +1,70 @@
+the constructor fixes the following issue:
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: Unable to load resource for composite template for type 'NMAWsLeap': The resource at “/org/gnome/libnma/nma-ws-leap.ui” does not exist
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_child_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_child_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_child_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_child_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_child_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.941: gtk_widget_class_bind_template_callback_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.942: gtk_widget_class_bind_template_callback_full: assertion 'widget_class->priv->template != NULL' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.942: gtk_widget_init_template: assertion 'template != NULL' failed
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.942: g_object_get_data: assertion 'G_IS_OBJECT (object)' failed
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.942: g_object_set_data_full: assertion 'G_IS_OBJECT (object)' failed
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.943: invalid (NULL) pointer instance
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.943: g_signal_connect_data: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.943: invalid (NULL) pointer instance
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.943: g_signal_connect_data: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+
+
+(nm-connection-editor:29768): Gtk-CRITICAL **: 13:49:57.943: gtk_entry_set_icon_activatable: assertion 'GTK_IS_ENTRY (entry)' failed
+
+
+
+(nm-connection-editor:29768): GLib-GObject-CRITICAL **: 13:49:57.943: g_object_get_data: assertion 'G_IS_OBJECT (object)' failed
+
+fish: Job 1, './linux-nickel-v1/build/tmp/net…' terminated by signal SIGSEGV (Address boundary error)
