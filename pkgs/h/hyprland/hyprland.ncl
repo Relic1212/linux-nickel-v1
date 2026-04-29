@@ -11,8 +11,8 @@
         {
           src = {
 
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.53.3.tar.gz",
-            sha256sum = "1fc38b1fd87d57a0025c035bb0e4f951fa5c3313c10f8974337336c086c4b3a2",
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.54.3.tar.gz",
+            sha256sum = "4bc4b870e7c7529006c6c3782695e446df915851b941f9866adfe9f8c4ed445b",
           },
         },
       ],

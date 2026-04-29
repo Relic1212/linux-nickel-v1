@@ -3,8 +3,10 @@
   drvs,
   hyprlandPlugins | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/hyprwm/hyprland-plugins/archive/refs/tags/v0.53.0.tar.gz",
-      sha256sum = "23c90d35fe81f5f15192704769cda2cf4f349a294d9aa347627dc223f30c6358"
+      # uri = "https://github.com/hyprwm/hyprland-plugins/archive/refs/tags/v0.53.0.tar.gz",
+      # sha256sum = "23c90d35fe81f5f15192704769cda2cf4f349a294d9aa347627dc223f30c6358",
+      uri = "https://github.com/hyprwm/hyprland-plugins/archive/b85a56b9531013c79f2f3846fd6ee2ff014b8960.tar.gz",
+      sha256sum = "e683637b728ebca18251be029962b787bdd69989e882a5a7964dfb26e325a94b"
     },
     patches = [
       {
@@ -21,7 +23,7 @@
         "hyprbars",
         "hyprexpo",
         "hyprfocus",
-        "hyprscrolling",
+        # "hyprscrolling", # https://github.com/hyprwm/hyprland-plugins/issues/637
         # "hyprtrails",
         # "hyprwinwrap",
         "xtra-dispatchers",

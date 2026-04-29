@@ -3,8 +3,8 @@
   drvs,
   hyprlandHyprspace | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/KZDKM/Hyprspace/archive/bcd969224ffeb6266c6618c192949461135eef38.tar.gz",
-      sha256sum = "8ef0d738ba4ff83876a6a7e7b70fc0a08e2693f0602124c4063462a7567f14eb"
+      uri = "https://github.com/KZDKM/Hyprspace/archive/12ddde04f8584bf7de3151e6169918e0dda9f822.tar.gz",
+      sha256sum = "2f26b5417c8faa5fbd21ed9d91d06207cae2ad83210b9e6c00989c26ed42b49b"
     },
     patches = [
       {

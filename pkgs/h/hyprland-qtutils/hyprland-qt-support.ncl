@@ -81,7 +81,7 @@
     cmakeExtraArgsRecord = {
       #"-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
       "-DINSTALL_QML_PREFIX" = "/usr/lib/qt6/qml",
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
     },
   }
 }
