@@ -9,15 +9,13 @@
     },
 
     buildEnv = {
-        EXTRA_LDFLAGS = [
+      EXTRA_LDFLAGS = [
         "/tmp/workdir/src/dlopen.o",
         "$(pkg-config --libs --static libdrm libdrm_amdgpu)",
-        ],
+      ],
     },
 
     preConfigurePhase = [
-
-
       "echo '%{import "nvtop_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
