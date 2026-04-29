@@ -43,6 +43,7 @@
       m%"sed -i 's|-Os -s|-O0 -g|g' ${SRC}/Makefile"%,
       m%"sed -i 's|-Os|-O0|g' ${SRC}/Makefile"%,
       m%"sed -i 's|-O1|-O0|g' ${SRC}/Makefile"%,
+      m%"sed -i 's|@install -D -t $(DESTDIR)$(LIBDIR) $(BUILDDIR)/$(LIBS)||g' ${SRC}/Makefile"%,
       "echo '%{import "./sysboard_symbols.c" as 'Text}' > ${SRC}/symbols.c",
       "${CC} ${CFLAGS} -c ${SRC}/symbols.c -o ${SRC}/symbols.o",
 
