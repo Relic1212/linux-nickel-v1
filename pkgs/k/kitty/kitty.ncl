@@ -5,22 +5,140 @@
     # https://github.com/gentoo/gentoo/blob/master/x11-terms/kitty/kitty-0.42.2-r1.ebuild
     singleSource = {
 
-      uri = "https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.44.0.tar.gz",
-      sha256sum = "26099d1324cf6bad6faf58ff894521266ee5d59fda0175c3baffbaa67a336c36",
+      uri = "https://github.com/kovidgoyal/kitty/archive/refs/tags/v0.46.2.tar.gz",
+      sha256sum = "25ca6725da2b09d574e571cad44292adaa278d154a89221207bdb598884c133e",
     },
 
     sourceInputs = [
       { src = singleSource },
       {
         src = {
-          uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.44.0-vendor.tar.xz",
-          sha256sum = "73f7f060ef95261f189d0a55b77b2b5c2c3b2b6b01502f8ec8a4071204b01af3"
+          uri = "https://dev.gentoo.org/~ionen/distfiles/kitty-0.46.2-vendor.tar.xz",
+          sha256sum = "c88f52fee79ab1ed9e40164c8dcfb6116148743300c2229fb8e3357942d99f33"
         },
-        dest = "vendor",
+        dest = "vendor-new",
       }
     ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-Wl,--verbose",
+        "-Wl,--allow-multiple-definition",
+        # "/tmp/workdir/src/main_obj.o",
+        # "/tmp/workdir/src/dlopen.o",
+        # "-L/usr/lib/python3.12/libpython",
+        # "-lexpat",
+        "$(pkg-config --libs --static xrender xau xfixes libffi libmpdec zlib openssl ncurses panel readline history bz2)",
+        "$(pkg-config --libs --static harfbuzz)",
+        "$(pkg-config --libs --static cairo)",
+        "$(pkg-config --libs --static libpng)",
+        "$(pkg-config --libs --static lcms2)",
+        "$(pkg-config --libs --static dbus-1)",
+        "$(pkg-config --libs --static xkbcommon)",
+        "$(pkg-config --libs --static wayland-client)",
+        "$(pkg-config --libs --static wayland-cursor)",
+        "$(pkg-config --libs --static wayland-egl)",
+        "$(pkg-config --libs --static x11-xcb)",
+        "$(pkg-config --libs --static xcursor)",
+        "$(pkg-config --libs --static xkbcommon-x11)",
+        "-lc++",
+        "$(pkg-config --libs --static egl)",
+        "/usr/lib/python3.12/libpython/libHacl_Hash_SHA2.a",
+        "/tmp/workdir/src/libexpat.a",
+        "-Wl,--error-limit=0",
+      ]
+    },
+
+    separateBuildDir = false,
+    configurePhase =
+      let
+        fast_obj = "'build/fast_data_types-3rdparty-base64-lib-arch-avx-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-avx2-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-avx512-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-generic-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-neon32-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-neon64-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-sse41-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-sse42-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-arch-ssse3-codec.c.o', 'build/fast_data_types-3rdparty-base64-lib-codec_choose.c.o', 'build/fast_data_types-3rdparty-base64-lib-lib.c.o', 'build/fast_data_types-3rdparty-base64-lib-tables-tables.c.o', 'build/fast_data_types-3rdparty-ringbuf-ringbuf.c.o', 'build/fast_data_types-kitty-animation.c.o', 'build/fast_data_types-kitty-char-props.c.o', 'build/fast_data_types-kitty-charsets.c.o', 'build/fast_data_types-kitty-child-monitor.c.o', 'build/fast_data_types-kitty-child.c.o', 'build/fast_data_types-kitty-cleanup.c.o', 'build/fast_data_types-kitty-colors.c.o', 'build/fast_data_types-kitty-crypto.c.o', 'build/fast_data_types-kitty-cursor.c.o', 'build/fast_data_types-kitty-cursor_trail.c.o', 'build/fast_data_types-kitty-data-types.c.o', 'build/fast_data_types-kitty-decorations.c.o', 'build/fast_data_types-kitty-desktop.c.o', 'build/fast_data_types-kitty-disk-cache.c.o', 'build/fast_data_types-kitty-fast-file-copy.c.o', 'build/fast_data_types-kitty-font-names.c.o', 'build/fast_data_types-kitty-fontconfig.c.o', 'build/fast_data_types-kitty-fonts.c.o', 'build/fast_data_types-kitty-freetype.c.o', 'build/fast_data_types-kitty-freetype_render_ui_text.c.o', 'build/fast_data_types-kitty-gl-wrapper.c.o', 'build/fast_data_types-kitty-gl.c.o', 'build/fast_data_types-kitty-glfw-wrapper.c.o', 'build/fast_data_types-kitty-glfw.c.o', 'build/fast_data_types-kitty-glyph-cache.c.o', 'build/fast_data_types-kitty-graphics.c.o', 'build/fast_data_types-kitty-history.c.o', 'build/fast_data_types-kitty-hyperlink.c.o', 'build/fast_data_types-kitty-key_encoding.c.o', 'build/fast_data_types-kitty-keys.c.o', 'build/fast_data_types-kitty-kittens.c.o', 'build/fast_data_types-kitty-line-buf.c.o', 'build/fast_data_types-kitty-line.c.o', 'build/fast_data_types-kitty-logging.c.o', 'build/fast_data_types-kitty-loop-utils.c.o', 'build/fast_data_types-kitty-monotonic.c.o', 'build/fast_data_types-kitty-mouse.c.o', 'build/fast_data_types-kitty-png-reader.c.o', 'build/fast_data_types-kitty-resize.c.o', 'build/fast_data_types-kitty-rowcolumn-diacritics.c.o', 'build/fast_data_types-kitty-screen.c.o', 'build/fast_data_types-kitty-shaders.c.o', 'build/fast_data_types-kitty-shlex.c.o', 'build/fast_data_types-kitty-simd-string-128.c.o', 'build/fast_data_types-kitty-simd-string-256.c.o', 'build/fast_data_types-kitty-simd-string.c.o', 'build/fast_data_types-kitty-state.c.o', 'build/fast_data_types-kitty-systemd.c.o', 'build/fast_data_types-kitty-text-cache.c.o', 'build/fast_data_types-kitty-utmp.c.o', 'build/fast_data_types-kitty-vt-parser-dump.c.o', 'build/fast_data_types-kitty-vt-parser.c.o', 'build/fast_data_types-kitty-wcswidth.c.o', 'build/fast_data_types-kitty-window_logo.c.o',",
+        wayland_obj = "'build/glfw-wayland-glfw-backend_utils.c.o', 'build/glfw-wayland-glfw-context.c.o', 'build/glfw-wayland-glfw-dbus_glfw.c.o', 'build/glfw-wayland-glfw-egl_context.c.o', 'build/glfw-wayland-glfw-ibus_glfw.c.o', 'build/glfw-wayland-glfw-init.c.o', 'build/glfw-wayland-glfw-input.c.o', 'build/glfw-wayland-glfw-linux_desktop_settings.c.o', 'build/glfw-wayland-glfw-linux_joystick.c.o', 'build/glfw-wayland-glfw-linux_notify.c.o', 'build/glfw-wayland-glfw-momentum-scroll.c.o', 'build/glfw-wayland-glfw-monitor.c.o', 'build/glfw-wayland-glfw-monotonic.c.o', 'build/glfw-wayland-glfw-osmesa_context.c.o', 'build/glfw-wayland-glfw-posix_thread.c.o', 'build/glfw-wayland-glfw-vulkan.c.o', 'build/glfw-wayland-glfw-wayland-cursor-shape-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-ext-background-effect-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-fractional-scale-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-idle-inhibit-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-keyboard-shortcuts-inhibit-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-kwin-blur-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-pointer-constraints-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-primary-selection-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-relative-pointer-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-single-pixel-buffer-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-tablet-unstable-v2-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-text-input-unstable-v3-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-viewporter-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-wlr-layer-shell-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-activation-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-decoration-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-shell-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-system-bell-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-drag-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-icon-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-tag-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-window.c.o', 'build/glfw-wayland-glfw-wl_client_side_decorations.c.o', 'build/glfw-wayland-glfw-wl_cursors.c.o', 'build/glfw-wayland-glfw-wl_init.c.o', 'build/glfw-wayland-glfw-wl_monitor.c.o', 'build/glfw-wayland-glfw-wl_text_input.c.o', 'build/glfw-wayland-glfw-wl_window.c.o', 'build/glfw-wayland-glfw-xkb_glfw.c.o',",
+        glfw_obj = "'build/glfw-wayland-glfw-backend_utils.c.o', 'build/glfw-wayland-glfw-context.c.o', 'build/glfw-wayland-glfw-dbus_glfw.c.o', 'build/glfw-wayland-glfw-egl_context.c.o', 'build/glfw-wayland-glfw-ibus_glfw.c.o', 'build/glfw-wayland-glfw-init.c.o', 'build/glfw-wayland-glfw-input.c.o', 'build/glfw-wayland-glfw-linux_desktop_settings.c.o', 'build/glfw-wayland-glfw-linux_joystick.c.o', 'build/glfw-wayland-glfw-linux_notify.c.o', 'build/glfw-wayland-glfw-momentum-scroll.c.o', 'build/glfw-wayland-glfw-monitor.c.o', 'build/glfw-wayland-glfw-monotonic.c.o', 'build/glfw-wayland-glfw-osmesa_context.c.o', 'build/glfw-wayland-glfw-posix_thread.c.o', 'build/glfw-wayland-glfw-vulkan.c.o', 'build/glfw-wayland-glfw-wayland-cursor-shape-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-ext-background-effect-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-fractional-scale-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-idle-inhibit-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-keyboard-shortcuts-inhibit-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-kwin-blur-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-pointer-constraints-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-primary-selection-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-relative-pointer-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-single-pixel-buffer-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-tablet-unstable-v2-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-text-input-unstable-v3-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-viewporter-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-wlr-layer-shell-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-activation-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-decoration-unstable-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-shell-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-system-bell-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-drag-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-icon-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-wayland-xdg-toplevel-tag-v1-client-protocol.c.o', 'build/glfw-wayland-glfw-window.c.o', 'build/glfw-wayland-glfw-wl_client_side_decorations.c.o', 'build/glfw-wayland-glfw-wl_cursors.c.o', 'build/glfw-wayland-glfw-wl_init.c.o', 'build/glfw-wayland-glfw-wl_monitor.c.o', 'build/glfw-wayland-glfw-wl_text_input.c.o', 'build/glfw-wayland-glfw-wl_window.c.o', 'build/glfw-wayland-glfw-xkb_glfw.c.o', 'build/glfw-x11-glfw-backend_utils.c.o', 'build/glfw-x11-glfw-context.c.o', 'build/glfw-x11-glfw-dbus_glfw.c.o', 'build/glfw-x11-glfw-egl_context.c.o', 'build/glfw-x11-glfw-glx_context.c.o', 'build/glfw-x11-glfw-ibus_glfw.c.o', 'build/glfw-x11-glfw-init.c.o', 'build/glfw-x11-glfw-input.c.o', 'build/glfw-x11-glfw-linux_desktop_settings.c.o', 'build/glfw-x11-glfw-linux_joystick.c.o', 'build/glfw-x11-glfw-linux_notify.c.o', 'build/glfw-x11-glfw-momentum-scroll.c.o', 'build/glfw-x11-glfw-monitor.c.o', 'build/glfw-x11-glfw-monotonic.c.o', 'build/glfw-x11-glfw-osmesa_context.c.o', 'build/glfw-x11-glfw-posix_thread.c.o', 'build/glfw-x11-glfw-vulkan.c.o', 'build/glfw-x11-glfw-window.c.o', 'build/glfw-x11-glfw-x11_init.c.o', 'build/glfw-x11-glfw-x11_monitor.c.o', 'build/glfw-x11-glfw-x11_window.c.o', 'build/glfw-x11-glfw-xkb_glfw.c.o',"
+      in
+      [
+        "export GOROOT=/usr/lib/go",
+        "export GOMODCACHE=${SRC}/vendor",
+        "export CGO_ENABLED=0",
+        "mkdir /tmp/home",
+        "export HOME=/tmp/home",
+        "export DL_DEBUG=1",
+        # "rm -rf vendor",
+        "mv vendor-new/vendor vendor",
+        m%"sed -i "s@pkg_config('gl'@pkg_config('egl'@g" ${SRC}/setup.py"%,
+        # m%"sed -i "s@'x11 wayland'@'wayland'@g" ${SRC}/setup.py"%,
+        # m%"sed -i "s@ldflags.append('-shared')@ldflags.append('-static')@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@ldflags.append('-shared')@@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@binary_data_flags + ld_flags@binary_data_flags + \[ \"-extldflags '-static'\", \] + ld_flags@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@compilation_database.add_command(desc, cmd, partial(newer, real_dest,@subprocess.run(\['touch', real_dest\]) # compilation_database.add_command(desc, cmd, partial(newer, real_dest,@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@ldflags + objects + libs@ldflags + \[ '-Wl,-u,glfwGetMonitorUserPointer', \] + objects + \[ %{fast_obj} %{glfw_obj} '/tmp/workdir/src/dlopen.o', \] + libs@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@skip_docs = False@skip_docs = True@g" ${SRC}/setup.py"%,
+        m%"sed -i "s@not os.path.exists('docs/_build/html')@False@g" ${SRC}/setup.py"%,
+
+        # m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
+        # m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
+        # m%"sed -i "s@ans.cflags.append('-fPIC')@@g" ${SRC}/glfw/glfw.py"%,
+        # "echo '%{import "main.c" as 'Text}' > main_obj.c",
+        # "${CC} ${CFLAGS} -c main_obj.c -o main_obj.o",
+        "echo '%{import "kitty_dlopen.c" as 'Text}' > dlopen.c",
+        "echo '%{import "kitty_weak.c" as 'Text}' >> dlopen.c",
+        "${CC} ${CFLAGS} -Werror -c dlopen.c -o dlopen.o",
+        "mv dlopen.c dlopen.c.tmp",
+        "cp /usr/lib/python3.12/libpython/libexpat.a .",
+        "objcopy -W _INTERNAL_trim_to_complete_utf8_characters libexpat.a",
+        "objcopy -W g_reparseDeferralEnabledDefault libexpat.a",
+      ]
+      @ (
+        std.array.map
+          (fun s => "sed -i 's@global_state@global_kitty_state@g' ${SRC}/%{s}"
+          )
+          [
+            "kittens/pager/main.go",
+            "kitty/state.h",
+            "kitty/state.c",
+            "kitty/boss.py",
+            "kitty/shaders.c",
+            "kitty/screen.c",
+            "kitty/graphics.c",
+            "kitty/core_text.m",
+            "kitty/glfw.c",
+            "kitty/gl.c",
+            "kitty/colors.c",
+            "kitty/png-reader.c",
+            "kitty/child-monitor.c",
+            "kitty/freetype.c",
+            "kitty/fontconfig.c",
+            "kitty/mouse.c",
+            "kitty/fonts.c",
+            "kitty/keys.c",
+          ]
+      ),
+
+    buildPhase =
+      let args = "--verbose --debug --update-check-interval=0" in
+      [
+        # "go build -v -ldflags '-X github.com/kovidgoyal/kitty.VCSRevision=' -o /tmp/workdir/src/kitten /tmp/workdir/src/tools/cmd",
+
+        # "python setup.py linux-package %{args} --skip-building-kitten",
+        "python setup.py linux-package %{args}",
+        # "python setup.py build-static-binaries %{args}",
+        # "python setup.py build-launcher",
+        # "python setup.py linux-package --skip-building-kitten --ignore-compiler-warnings",
+      ],
+    installPhase = [
+      "cp -r linux-package ${DEST}/usr",
+    ],
     llvmProvider = drvs.llvmFull,
+    # muslProvider = drvs.muslBothRenamedDl,
+    muslProvider = drvs.muslBothWeakDl,
     biDrvs = [
+      # drvs.pythonSphinx,
+      # drvs.pythonBabel,
+      # drvs.pythonJinja2,
+      # drvs.pythonPygments,
+      # drvs.pythonSnowballstemmer,
+      # drvs.docutils,
+      # drvs.pythonPackaging,
+      # drvs.pythonMarkupsafe,
       drvs.expat,
       drvs.jsonC,
       drvs.pcre2,
@@ -75,9 +193,10 @@
       drvs.libxkbfile,
       drvs.openssl,
       drvs.xcbUtilWm,
-      drvs.go_1_24,
+      drvs.go_1_26,
       drvs.findutils,
-      drvs.pythonDynamicPic,
+      # drvs.pythonDynamicPicBz2,
+      drvs.pythonInteractive,
       drvs.muslShared,
       # drvs.pythonFull,
       drvs.pythonSetuptools,
@@ -95,36 +214,13 @@
       drvs.xxhash,
       drvs.dbus,
       drvs.ncurses,
+      drvs.readline,
+      drvs.bzip2,
       drvs.symbolsNerdFont,
       drvs.simde,
       drvs.mpdecimal,
       drvs.libxinerama,
       drvs.libxi,
     ],
-
-    separateBuildDir = false,
-    configurePhase = [
-      "export GOROOT=/usr/lib/go",
-      "export GOMODCACHE=${SRC}/go-mod",
-      "export CGO_ENABLED=1",
-      "mkdir /tmp/home",
-      "export HOME=/tmp/home",
-      # "rm -rf vendor",
-      # "mv vendor-new/vendor vendor",
-      m%"sed -i "s@pkg_config('gl'@pkg_config('egl'@g" ${SRC}/setup.py"%,
-      m%"sed -i "s@'x11 wayland'@'wayland'@g" ${SRC}/setup.py"%,
-      m%"sed -i "s@ldflags.append('-shared')@ldflags.append('-static')@g" ${SRC}/setup.py"%,
-      # m%"sed -i "s@LINKFORSHARED@STUPID_PLACEHOLDER_FOR_LINKFORSHARED_random@g" ${SRC}/setup.py"%,
-      # m%"sed -i 's@for kitten, sources, all_headers, dest, includes, libraries in @return\n    for kitten, sources, all_headers, dest, includes, libraries in @g' ${SRC}/setup.py"%,
-      m%"sed -i "s@ans.cflags.append('-fPIC')@@g" ${SRC}/glfw/glfw.py"%,
-    ],
-
-    buildPhase = [
-      # "python setup.py linux-package",
-      #"python setup.py build-static-binaries",
-      "python setup.py build-launcher",
-      # "python setup.py linux-package --skip-building-kitten --ignore-compiler-warnings",
-    ],
-    installPhase = [],
   }
 }
