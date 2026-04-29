@@ -46,6 +46,17 @@
       drvs.glib,
     ]
   },
+  harfbuzzGobjectDynamic =
+    harfbuzzGobject
+    & {
+      extraMesonArgs | priority 1 = [
+        "-Dfreetype=enabled",
+        "-Dcairo=enabled",
+        "-Dglib=enabled",
+        "-Dintrospection=enabled",
+        "-Ddefault_library=shared",
+      ],
+    },
   harfbuzzGobject | lib.MesonPackage = {
     singleSource = harfbuzz.singleSource,
     extraMesonArgs = [
