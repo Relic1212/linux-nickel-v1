@@ -54,7 +54,7 @@
       drvs.eudev,
       drvs.gmobile,
       drvs.gudev,
-      drvs.vala,
+      # drvs.vala,
       drvs.libpsl,
       drvs.libxml2,
       drvs.jsonGlib,
