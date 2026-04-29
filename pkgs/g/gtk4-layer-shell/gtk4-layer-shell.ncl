@@ -15,18 +15,9 @@
     #   }
     # ],
 
-    options = {
-      full | default = false,
-      introspection | default = full,
-      vala | default = full,
-      iDeps | default = [],
-      valaDeps | default = [],
-      extraDeps | default = valaDeps @ iDeps,
-    },
-
     extraMesonArgs = [
-      "-Dintrospection=%{options.introspection}",
-      "-Dvapi=%{options.vala}",
+      "-Dintrospection=false",
+      "-Dvapi=false",
       "-Dexamples=true",
     ],
     buildEnv = {
@@ -89,7 +80,7 @@
         drvs.readline,
         drvs.spirvLlvmTranslator,
         drvs.spirvTools,
-        drvs.vala,
+        # drvs.vala,
         drvs.waylandGtk4LayerShell,
         drvs.waylandProtocols,
         drvs.zlibNg,
@@ -99,16 +90,80 @@
         # drvs.librsvg,
         drvs.libxml2,
         drvs.sharedMimeInfo,
-      ]
-      @ options.extraDeps,
+      ],
   },
-  gtk4LayerShellFull =
-    gtk4LayerShell
-    & {
-      options = {
-        introspection = true,
-      }
+  gtk4LayerShellIntrospection | lib.MesonPackage = {
+    singleSource = gtk4LayerShell.singleSource,
+
+    buildEnv = {
+      _isStatic = false,
+      EXTRA_LDFLAGS = [
+        "-Wl,--allow-multiple-definition",
+      ],
     },
+
+    extraMesonArgs = [
+      "-Dintrospection=true",
+      "-Dvapi=true",
+      "-Dexamples=false",
+    ],
+
+    llvmProvider = drvs.llvmFull,
+    pythonProvider = drvs.pythonDynamic,
+
+    biDrvs | priority 1 = [
+      drvs.muslShared,
+      drvs.ldd,
+      # drvs.pango, #??
+      drvs.atSpi2Core,
+      drvs.cairo,
+      drvs.cairoGobject,
+      drvs.expat,
+      drvs.fontconfig,
+      drvs.freetype,
+      drvs.fribidi,
+      drvs.gdkPixbufIntrospection,
+      #drvs.glibGobject & { priority = -1 },
+      #drvs.glibDynamic,
+      drvs.glibGobjectDynamic,
+      drvs.gobjectDynamicCairo2,
+      drvs.gperf,
+      drvs.grapheneIntrospection,
+      # drvs.gtk4,
+      drvs.harfbuzzFull,
+      drvs.harfbuzzGobjectDynamic & { priority = -1 },
+      drvs.hwdata,
+      drvs.libdrm,
+      drvs.libelf,
+      drvs.libepoxy,
+      drvs.libffi,
+      drvs.libjpegTurbo,
+      drvs.libpciaccess,
+      drvs.libpng,
+      drvs.libtiff,
+      drvs.libxkbcommon,
+      drvs.linuxHeaders,
+      drvs.llvmConfigStatic,
+      drvs.mesa2,
+      # drvs.muslShared,
+      drvs.ncurses,
+      drvs.pangoGobject,
+      drvs.pcre2,
+      drvs.pixman,
+      drvs.pythonSetuptools,
+      drvs.readline,
+      drvs.spirvLlvmTranslator,
+      drvs.spirvTools,
+      drvs.vala,
+      drvs.waylandGtk4LayerShell,
+      drvs.waylandProtocols,
+      drvs.zlibNg,
+      drvs.gtk4Introspection,
+      # drvs.librsvg,
+      drvs.libxml2,
+      drvs.sharedMimeInfo,
+    ]
+  },
 
   wayland,
   waylandGtk4LayerShell =
