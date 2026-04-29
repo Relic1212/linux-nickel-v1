@@ -12,7 +12,6 @@
       drvs.libffi,
       drvs.zlibNg,
       drvs.glib,
-      drvs.vala,
       drvs.libcanberra,
       drvs.libogg,
       drvs.libvorbis,
