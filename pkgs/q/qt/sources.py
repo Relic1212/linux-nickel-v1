@@ -9,10 +9,10 @@ names = [
 ]
 
 
-version = "6.10.2"
+version = "6.11.0"
 d = {}
 for name in names:
-    url =  f"https://download.qt.io/archive/qt/6.10/{version}/submodules/{name}-everywhere-src-{version}.tar.xz"
+    url =  f"https://download.qt.io/archive/qt/6.11/{version}/submodules/{name}-everywhere-src-{version}.tar.xz"
     r = urllib.request.urlopen(url)
     print(r.status==200)
     data = r.read()
