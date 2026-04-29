@@ -19,8 +19,8 @@
   drvs,
   harec | lib.MakePackage = {
     singleSource = {
-      uri = "https://git.sr.ht/~sircmpwn/harec/archive/0.24.2.tar.gz",
-      sha256sum = "88b3961b236fbfe3a0dfb46bb954741fa5c031bbda6d07fbc238c98f0abb41a2"
+      uri = "https://git.sr.ht/~sircmpwn/harec/archive/0.26.0.tar.gz",
+      sha256sum = "5581bc16dcf22969c7d33b0f2a9535ba37d4cf1bb39dec252e98ff2781175629"
     },
     biDrvs = [
       drvs.qbe,
@@ -42,8 +42,8 @@
   drvs,
   hare | lib.MakePackage = {
     singleSource = {
-      uri = "https://git.sr.ht/~sircmpwn/hare/archive/0.24.2.tar.gz",
-      sha256sum = "afba69fd537a63442da53d115d9b50f525918159b395843ede2a5473323e0776"
+      uri = "https://git.sr.ht/~sircmpwn/hare/archive/0.26.0.tar.gz",
+      sha256sum = "525ee699bdbade390eb1e35525ab9b5b3032c5f42cddce49d9176bbdc9172d04"
     },
     # llvmProvider =drvs.llvmFull,
     biDrvs = [
@@ -110,8 +110,8 @@
   drvs,
   hareEv | lib.MakePackage = {
     singleSource = {
-      uri = "https://git.sr.ht/~sircmpwn/hare-ev/archive/7f80dcbeb09f4dd743cdccfb2cfed10bfdeb07ab.tar.gz",
-      sha256sum = "1e87369fe4645dc801974fe748beeb40ce23daa7ee2da9f5262783da88ed9d98"
+      uri = "https://git.sr.ht/~sircmpwn/hare-ev/archive/0.26.0.0.tar.gz",
+      sha256sum = "6be334cdcbd180fd714810e1a86f6c3fabf799973948bd415271dc4a1a2b5a6a",
     },
     isLlvm = false,
 
