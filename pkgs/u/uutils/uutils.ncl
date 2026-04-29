@@ -60,6 +60,8 @@
         " >> ${SRC}/.cargo/config.toml
         "%,
         "export CARGO_HOME=${SRC}/.cargo",
+
+        # m%"sed -i 's@"feat_require_unix_musl",@"feat_require_unix_musl", "stdbuf",@g' ${SRC}/Cargo.toml"%,
       ],
       target,
 
