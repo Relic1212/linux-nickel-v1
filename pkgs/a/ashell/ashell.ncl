@@ -6,10 +6,12 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.8.0.tar.gz",
-        sha256sum = "6880aeeb775772678acecddad9a84c5e3e24b6b748202e386bc8ea2845effb36",
+        uri = "https://github.com/MalpenZibo/ashell/archive/c7b15dad7638e0989d52d363c842a624b352c76f.tar.gz",
+        sha256sum = "cfd9a9f16c75d4ef5740260ae9a14d2998006651281f140613f12bdd43a55957",
       },
-      outputSha256sum = "022f0a770d5a3db8313212c51d3ce1628bc61c0088b22afc7ae3d1a708bd2338"
+      # outputSha256sum = "022f0a770d5a3db8313212c51d3ce1628bc61c0088b22afc7ae3d1a708bd2338",
+
+      outputSha256sum = "bf0c205377d2959fc6f386dc831080a9f79555acbe40095cff33f8d93d2b4239",
     },
   ashell | lib.CargoPackage = {
 
@@ -43,12 +45,16 @@
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
       m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
-      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+
+      #####
+      # m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      # m%"sed -i 's@"x11-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      # m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
+      # m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
       ######
-      m%"sed -i 's@"x11-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
+      m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+
       ######
-      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/accesskit_winit/Cargo.toml"%,
-      m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/iced_winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
