@@ -106,6 +106,11 @@
       ]
       @ options.gtk,
   },
+  libadwaitaFixedSyms | lib.MesonPackage =
+    libadwaita
+    & {
+      preConfigurePhase = libadwaitaShared.preConfigurePhase,
+    },
 
   libadwaitaShared | lib.MesonPackage =
     libadwaita
