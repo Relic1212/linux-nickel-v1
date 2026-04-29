@@ -5,7 +5,7 @@
   kwin | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz",
+      uri = "https://download.kde.org/stable/plasma/6.6.4/kwin-6.6.4.tar.xz",
       # sha256sum = "decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7"
       sha256sum = _plasma_sources."%{uri}",
     },

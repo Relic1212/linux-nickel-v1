@@ -27,12 +27,12 @@ def fetch(url):
 
 
 fn = "plasma_urls.txt"
-fn = "urls"
+# fn = "kf_urls.txt"
 
 if fn == "plasma_urls.txt":
     fn_out = "_plasma_sources.ncl"
 else:
-    fn_out = "_sources.ncl"
+    fn_out = "_kf_sources.ncl"
 with open(fn, "r") as f:
     urls = [l.strip() for l in f.readlines()]
 

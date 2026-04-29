@@ -4,8 +4,8 @@
   kwallet | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.20.0/kwallet-v6.20.0.tar.gz",
-      sha256sum = "1e1f1015f40de030546606a6c085116a13b4fd85660e96badd7de929ff9a30e5"
+      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.25.0/kwallet-v6.25.0.tar.gz",
+      sha256sum = "888460985802d53a8ed2d6aa928bc00077a53250907b8c910f6ca9fa0ce89cb5"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -134,8 +134,8 @@
   ecm | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.20.0/extra-cmake-modules-v6.20.0.tar.gz",
-      sha256sum = "ff1127407baaf72ed4ac16f98797fb051bcb26199178f271c0bd42d325a9ff74"
+      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.25.0/extra-cmake-modules-v6.25.0.tar.gz",
+      sha256sum = "be730435025418267d63bee15bf7b5ad4d3afd2b475b6683965f868bb1dc26d1"
     },
     llvmProvider = drvs.llvmFull,
 

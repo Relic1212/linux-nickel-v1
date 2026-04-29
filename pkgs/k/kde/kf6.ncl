@@ -1,12 +1,12 @@
 {
   lib,
   drvs,
-  _kf_sources = import "_sources.ncl",
+  _kf_sources = import "_kf_sources.ncl",
   _kf | lib.QtPackage = {
     name,
     singleSource | priority -999 = {
       # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
-      uri = "https://download.kde.org/stable/frameworks/6.20/%{name}-6.20.0.tar.xz",
+      uri = "https://download.kde.org/stable/frameworks/6.25/%{name}-6.25.0.tar.xz",
       sha256sum = _kf_sources."%{uri}",
     },
 
@@ -16,7 +16,7 @@
     # 
 
     options = {
-      version = "6.20",
+      version = "6.25",
 
       waylandSyms = false,
       xkbcommonX11 | default = false,
@@ -1742,8 +1742,8 @@
     _kf
     & {
       singleSource = {
-        uri = "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.19.0.tar.xz",
-        sha256sum = "45679fe7a63c414f2c81793a62528fae6ccee584b6965719d7f9fc6dd48ba846"
+        uri = "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.20.0.tar.xz",
+        sha256sum = "9818bb1462211ce5982e670abf0d964eb11fe1d0c02a1c26084db30695a79d6a"
       },
       biDrvs =
         _kf.biDrvs
@@ -1792,3 +1792,4 @@
   }
 }
 & (import "./kde_obj.ncl")
+& (import "./kf_tier1.ncl")

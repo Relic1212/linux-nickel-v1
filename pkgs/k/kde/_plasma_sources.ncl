@@ -1,37 +1,18 @@
-# {
-
-#   "https://download.kde.org/stable/plasma/6.5.0/kdecoration-6.5.0.tar.xz" = "f9ae194fe51fa646d2c8653efad5362a0ad9253e3c28b70e8e42a9c0328b9c1b",
-#   "https://download.kde.org/stable/plasma/6.5.0/kwayland-6.5.0.tar.xz" = "60b7ec95636d9ec4d16d80bc21611c2c3d525514ad0a23f033a206a53c4b27c1",
-#   "https://download.kde.org/stable/plasma/6.5.0/plasma-activities-6.5.0.tar.xz" = "0db872bc56aa84d22fe65b19c5b364cc14f44a40401eaaafbf8da27a04b8883f",
-#   "https://download.kde.org/stable/plasma/6.5.0/libplasma-6.5.0.tar.xz" = "bc9f814944731297e17d93d08f1390506c5d9ad55f5a847e0ae50796837b6ce8",
-#   "https://download.kde.org/stable/plasma/6.5.0/breeze-6.5.0.tar.xz" = "49af5bc271227028df70b22149fe6fcfb15b6d4b8e6f3eb329decde3ae4df369",
-#   "https://download.kde.org/stable/plasma/6.5.0/kwin-6.5.0.tar.xz" = "e0eaa67980266fe27fe32d15c9f18f8206776919f81d4e1a889d34c5f65cf982",
-#   "https://download.kde.org/stable/plasma/6.5.0/kglobalacceld-6.5.0.tar.xz" = "5dcb2d42781529208ecbf4d2eb231f9aec29efd12c2d24ec9f8a6904ac6f75d5",
-#   "https://download.kde.org/stable/plasma/6.5.0/knighttime-6.5.0.tar.xz" = "ac7af168a01ca19bfc71c849d758723dd81c1f1cfe4c7b3c8a36021ad5d1baaf",
-# }
 {
-  "https://download.kde.org/stable/plasma/6.5.2/kdecoration-6.5.2.tar.xz" = "2963dc44ff2b1cc7ea44cbb3800d35c4d0bcead783728179afda504cc0611576",
-  "https://download.kde.org/stable/plasma/6.5.2/kwayland-6.5.2.tar.xz" = "aa63e3753e241f3955eb806ae91af1f3963e42ec731f2b8a2330119b65cb557a",
-  "https://download.kde.org/stable/plasma/6.5.2/plasma-activities-6.5.2.tar.xz" = "39783d324f3c03404521b49264d34135756d00bcead46177a4b989f8bea7449a",
-  "https://download.kde.org/stable/plasma/6.5.2/libplasma-6.5.2.tar.xz" = "194fcfd972b7c0882e88528603d8aef69aa0a5ef199730bf5b1e33022f21e6e1",
-  "https://download.kde.org/stable/plasma/6.5.2/breeze-6.5.2.tar.xz" = "907b5f058aca913ec8353799df7d9ce0c88dcda2d1bcbbf4a539f8886cf07a8b",
-  "https://download.kde.org/stable/plasma/6.5.2/kwin-6.5.2.tar.xz" = "3be0d569fe342daddee859bab6aefda32d7056b601e84038e8af92593f140774",
-  "https://download.kde.org/stable/plasma/6.5.2/kglobalacceld-6.5.2.tar.xz" = "8954c7b754e22affd7f79ef4061f5ae0c71798f7bc5531eac8c778936ba4f5f6",
-  "https://download.kde.org/stable/plasma/6.5.2/knighttime-6.5.2.tar.xz" = "cffccfa45bb3014e5e027ddaa9f9549c8840847a0653942cec42114bc5cf9f0d",
-
-  "https://download.kde.org/stable/plasma/6.5.2/plasma-workspace-6.5.2.tar.xz" = "8bf7fa53b33e27448e2b151f5fc086cecc5d7f5163c4a9d8f13875e5676e0ba6",
-
-  "https://download.kde.org/stable/plasma/6.5.2/plasma5support-6.5.2.tar.xz" = "811551c98c4bf042b791e2635a900fe76aaf2b0dc71b54dec80f9c387f74b8ef",
-
-  "https://download.kde.org/stable/plasma/6.5.2/plasma-activities-stats-6.5.2.tar.xz" = "b9a65b164ed7a3012118e0891670ca5e8287b2cb8f42f562dc7f649852f49000",
-
-  "https://download.kde.org/stable/plasma/6.5.2/kscreen-6.5.2.tar.xz" = "9c814fd42f9730196fc0c9e6230a85bfc8004c0e5732b04879d35db4d7b9c468",
-
-  "https://download.kde.org/stable/plasma/6.5.2/libkscreen-6.5.2.tar.xz" = "28099754348a7d3af74d79b443d7fde8e6a2b32c6e5491b520180d65d1e1ba61",
-
-  "https://download.kde.org/stable/plasma/6.5.2/layer-shell-qt-6.5.2.tar.xz" = "4530bb88e3fb2b6358ba8169a0c83922d9dbc33210f8d8d2b7d0479dd449633d",
-
-  "https://download.kde.org/stable/plasma/6.5.2/kscreenlocker-6.5.2.tar.xz" = "d009894a88964a0c44370ddd5a83b7a95e64f6aad2f47b26fef7cc881d0d04b6",
-
-  "https://download.kde.org/stable/plasma/6.5.2/libksysguard-6.5.2.tar.xz" = "4d23a22871ca947cf6fcba21e3bc4d1abd16aabb2f721199dfa34fd33f8945fb",
+  "https://download.kde.org/stable/plasma/6.6.4/kdecoration-6.6.4.tar.xz" = "20d9424a018fabbf62987bc138741068ae2384f3128a61f23d906ff4f42a5505",
+  "https://download.kde.org/stable/plasma/6.6.4/kwayland-6.6.4.tar.xz" = "75c4ad6743647b4a9737fddae2eddb7b0857afbef362e6b96465ccfb17c85f87",
+  "https://download.kde.org/stable/plasma/6.6.4/plasma-activities-6.6.4.tar.xz" = "a1973821797c703177d51e698f8abfd8294796a9396316440b14dca958bb57e5",
+  "https://download.kde.org/stable/plasma/6.6.4/libplasma-6.6.4.tar.xz" = "cc7dfd90b4caba4b2b4da1eb5d6c7aaa20b72b9770f511cbc433eadcc5b8e483",
+  "https://download.kde.org/stable/plasma/6.6.4/breeze-6.6.4.tar.xz" = "15ec98c5bdae5cb762c162a2aae87605531e20cf80a7ebeaa36e8d694018ffda",
+  "https://download.kde.org/stable/plasma/6.6.4/kwin-6.6.4.tar.xz" = "3f9439760580a977d018daf4b35b62e5a1700def7b21c8dfbfc789d21378d7ad",
+  "https://download.kde.org/stable/plasma/6.6.4/kglobalacceld-6.6.4.tar.xz" = "c0a7ebc420c11206ffc0bea1cc4b51654fc2d235b07ccb3c5f0ae9713049d12c",
+  "https://download.kde.org/stable/plasma/6.6.4/knighttime-6.6.4.tar.xz" = "96d43cedad1f1d4819a7c7418a4eb8ed26cc20b47a17ada865ffb0f25722ee7b",
+  "https://download.kde.org/stable/plasma/6.6.4/plasma-workspace-6.6.4.tar.xz" = "c68a70f33b3f638eccccd51f842491cc45abc6f143f5cae4a14b180b94a83ea2",
+  "https://download.kde.org/stable/plasma/6.6.4/plasma5support-6.6.4.tar.xz" = "30b4c1f17b8ef29e4ff519748690cc2545bbb61d71b3bc91b1ddeee981f94fd8",
+  "https://download.kde.org/stable/plasma/6.6.4/plasma-activities-stats-6.6.4.tar.xz" = "8b1a6a93afee6876d5050d874927912f32e52c60ff3c67bcded477f4f7c9cd45",
+  "https://download.kde.org/stable/plasma/6.6.4/kscreen-6.6.4.tar.xz" = "2f123691ac25da7f5166894ebaddda9615ddbaf949ebbb6c9829196b0615c250",
+  "https://download.kde.org/stable/plasma/6.6.4/libkscreen-6.6.4.tar.xz" = "18f8cf65fcc788a7188d72a17d6e0f107e044e07623d5c012d063d901d67b59d",
+  "https://download.kde.org/stable/plasma/6.6.4/layer-shell-qt-6.6.4.tar.xz" = "731af7a222bc1a1e87fd993060ed8fa515b4b38cbc294063b700ec87451e013f",
+  "https://download.kde.org/stable/plasma/6.6.4/kscreenlocker-6.6.4.tar.xz" = "c549524a20b697968cbb74b7a5eb3d4ebd8e1a23f29673e55a25b5b685b092b0",
+  "https://download.kde.org/stable/plasma/6.6.4/libksysguard-6.6.4.tar.xz" = "9dd0a5a8d3f12d65351fab8c132365dd65f0f9976d6831598ce30ebbfa291a89",
 }
