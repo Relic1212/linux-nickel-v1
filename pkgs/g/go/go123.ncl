@@ -1,6 +1,72 @@
 {
   lib,
   drvs,
+  go_1_26 | lib.Package = {
+    singleSource = {
+      uri = "https://go.dev/dl/go1.26.1.src.tar.gz",
+      sha256sum = "3172293d04b209dc1144698e7ba13f0477f6ba8c5ffd0be66c20fdbc9785dfbb",
+    },
+    configurePhase = [
+      "export HOME=/tmp",
+      "export CC=\"${CC} -static --static \"",
+      "export DESTDIR=${DEST}",
+      "cd ${SRC}",
+      "cd src",
+      "export GOROOT_FINAL=/usr/lib/go",
+      "cp -r /usr/lib/go /tmp/go",
+      "export GOROOT_BOOTSTRAP=/tmp/go",
+      "env CGO_ENABLED=0 ./make.bash",
+      "cd ..",
+    ],
+    installPhase = [
+      "install -d -m 0755 ${DEST}/usr",
+      "install -d -m 0755 ${DEST}/usr/bin",
+      "install -d -m 0755 ${DEST}/usr/lib/go",
+      "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
+      "cp -r ${SRC}/* ${DEST}/usr/lib/go",
+    ],
+    biDrvs = [
+      drvs.go_1_25,
+      drvs.bash,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  go_1_25 | lib.Package = {
+    singleSource = {
+      uri = "https://go.dev/dl/go1.25.9.src.tar.gz",
+      sha256sum = "0ec9ef8ebcea097aac37decae9f09a7218b451cd96be7d6ed513d8e4bcf909cf",
+    },
+    configurePhase = [
+      "export HOME=/tmp",
+      "export CC=\"${CC} -static --static \"",
+      "export DESTDIR=${DEST}",
+      "cd ${SRC}",
+      "cd src",
+      "export GOROOT_FINAL=/usr/lib/go",
+      "cp -r /usr/lib/go /tmp/go",
+      "export GOROOT_BOOTSTRAP=/tmp/go",
+      "env CGO_ENABLED=0 ./make.bash",
+      "cd ..",
+    ],
+    installPhase = [
+      "install -d -m 0755 ${DEST}/usr",
+      "install -d -m 0755 ${DEST}/usr/bin",
+      "install -d -m 0755 ${DEST}/usr/lib/go",
+      "install  -m 0755 ${SRC}/bin/* ${DEST}/usr/bin/",
+      "cp -r ${SRC}/* ${DEST}/usr/lib/go",
+    ],
+    biDrvs = [
+      drvs.go_1_23,
+      drvs.bash,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
   go_1_24 | lib.Package = {
     singleSource = {
       uri = "https://go.dev/dl/go1.24.5.src.tar.gz",
