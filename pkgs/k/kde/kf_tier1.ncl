@@ -6,8 +6,12 @@ in
 let d = {
   _kCommon = {
     tier1names = std.record.filter (fun k v => v == 1) tiers |> std.record.fields,
+    tier2names = std.record.filter (fun k v => v == 2) tiers |> std.record.fields,
+    tier3names = std.record.filter (fun k v => v == 3) tiers |> std.record.fields,
 
     tier1sources = (std.array.map (fun p => srcData."%{p}" & { dest = p }) tier1names),
+    tier2sources = (std.array.map (fun p => srcData."%{p}" & { dest = p }) tier2names),
+    tier3sources = (std.array.map (fun p => srcData."%{p}" & { dest = p }) tier3names),
   },
   lib,
   drvs,
@@ -143,6 +147,7 @@ let d = {
       "-DWITH_MULTIMEDIA" = false,
     },
   },
+
   kftier1 | lib.QtPackage =
     _kfBase
     & {
@@ -177,11 +182,12 @@ EOF
           "sed -i 's@MODULE@STATIC@g' ${SRC}/kwindowsystem/src/platforms/wayland/CMakeLists.txt",
           # -kwindowsystem
         ],
+      cmakeArgs,
       configurePhase = [
         "for d in $(ls); do ",
         "echo \"building $d\"",
         "cd $d",
-        "cmake -B build -S . %{std.string.join " " _kfBase.cmakeArgs }",
+        "cmake -B build -S . %{std.string.join " " cmakeArgs }",
         "cmake --build build",
         "DESTDIR=${DEST} cmake --install build",
         "cd ..",
@@ -191,6 +197,46 @@ EOF
       installPhase = [
         # "cat F",
       ],
+    },
+
+  kftier2 | lib.QtPackage =
+    _kfBase
+    & {
+      sourceInputs = _kCommon.tier2sources,
+      separateBuildDir = false,
+      preConfigurePhase = [
+
+        # kauth
+        "sed -i 's@ MODULE @ @g' ${SRC}/kauth/src/CMakeLists.txt",
+        # -kauth
+
+        # kpackage
+        m%"sed -i 's@NOT BUILD_SHARED_LIBS@FALSE@g' ${SRC}/kpackage/src/kpackage/CMakeLists.txt"%, # it really is kpackage/src/kpackage
+        # -kpackage
+      ],
+      cmakeExtraArgsRecord,
+      cmakeArgs,
+      configurePhase = [
+        "for d in $(ls); do ",
+        "echo \"building $d\"",
+        "cd $d",
+        "cmake -B build -S . %{std.string.join " " cmakeArgs }",
+        "cmake --build build",
+        "DESTDIR=${DEST} cmake --install build",
+        "cd ..",
+        "done",
+      ],
+      buildPhase = [],
+      installPhase = [],
+      biDrvs | priority 1 =
+        _kfBase.biDrvs
+        @ [
+          drvs.kftier1,
+          drvs.libcanberra,
+          drvs.libogg,
+          drvs.libtool,
+          drvs.libvorbis,
+        ]
     }
 }
 in
