@@ -63,6 +63,7 @@
       [
         drvs.rust,
         drvs.muslBothRenamedDl,
+        drvs.rustLibcSymlink & { priority = 1 },
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,
@@ -108,7 +109,7 @@
       drvs.libffi,
       # drvs.libfreeaptx,
       drvs.libinput,
-      drvs.libjpegTurbo,
+      drvs.libjpegTurboStatic,
       # drvs.libopus,
       drvs.libpciaccess,
       drvs.libpng,
@@ -140,6 +141,13 @@
       drvs.zstd,
       # drvs.pipewire,
       drvs.libstdcppCompat,
+    ]
+  },
+  rustLibcSymlink | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/lib/rustlib/x86_64-unknown-linux-musl/lib/self-contained/",
+      "cd ${DEST}/usr/lib/rustlib/x86_64-unknown-linux-musl/lib/self-contained/",
+      "ln -s /usr/lib/libc.a libc.a",
     ]
   }
 }
