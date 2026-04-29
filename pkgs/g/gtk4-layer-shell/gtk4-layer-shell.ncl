@@ -15,9 +15,18 @@
     #   }
     # ],
 
+    options = {
+      full | default = false,
+      introspection | default = full,
+      vala | default = full,
+      iDeps | default = [],
+      valaDeps | default = [],
+      extraDeps | default = valaDeps @ iDeps,
+    },
+
     extraMesonArgs = [
-      "-Dintrospection=false",
-      "-Dvapi=false",
+      "-Dintrospection=%{options.introspection}",
+      "-Dvapi=%{options.vala}",
       "-Dexamples=true",
     ],
     buildEnv = {
@@ -33,32 +42,10 @@
       "echo '%{import "../../g/gtk4-layer-shell/gtk4_layer_shell_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "echo '%{import "wayland_weak.c" as 'Text}' >> ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      m%"sed -i "s@'stolen-from-libwayland.c',@@g" ${SRC}/src/meson.build"%
       # "mv ${SRC}/src/stolen-from-libwayland.c ${SRC}/stolen",
       # "touch ${SRC}/src/stolen-from-libwayland.c",
     ],
-    postInstallPhase =
-      (
-        let symbols = [
-          "wl_proxy_add_dispatcher",
-          "wl_proxy_marshal_array_constructor",
-          "wl_proxy_marshal_array_constructor_versioned",
-          "wl_proxy_marshal_flags",
-          "wl_proxy_marshal",
-          "wl_proxy_marshal_constructor",
-          "wl_proxy_marshal_constructor_versioned",
-          "wl_proxy_marshal_array",
-        ]
-        in
-        ##########
-        []
-        #############
-        # std.array.map (fun x => "objcopy -W " ++ x ++ " ${DEST}/usr/lib/libgtk4-layer-shell.a") symbols
-
-        #########
-      )
-      @ [
-        # "llvm-ar dv ${DEST}/usr/lib/libgtk4-layer-shell.a stolen-from-libwayland.c.o",
-      ],
 
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
@@ -112,8 +99,16 @@
         # drvs.librsvg,
         drvs.libxml2,
         drvs.sharedMimeInfo,
-      ],
+      ]
+      @ options.extraDeps,
   },
+  gtk4LayerShellFull =
+    gtk4LayerShell
+    & {
+      options = {
+        introspection = true,
+      }
+    },
 
   wayland,
   waylandGtk4LayerShell =
@@ -128,29 +123,5 @@
         @ [
           "-Dtests=false",
         ],
-      # postInstallPhase | priority 1 =
-      #   wayland.postInstallPhase
-      #   @ (
-      #     let symbols = [
-      #       "wl_proxy_destroy",
-      #       "wl_proxy_marshal_array_flags",
-      #     ]
-      #     in
-      #     std.array.map (fun x => "objcopy --redefine-sym %{x}=libwayland_%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
-      #   )
-      #   @ (
-      #     let symbols = [
-      #       # "wl_proxy_add_dispatcher",
-      #       # "wl_proxy_marshal_array_constructor",
-      #       # "wl_proxy_marshal_array_constructor_versioned",
-      #       # "wl_proxy_marshal_flags",
-      #       # "wl_proxy_marshal",
-      #       # "wl_proxy_marshal_constructor",
-      #       # "wl_proxy_marshal_constructor_versioned",
-      #       # "wl_proxy_marshal_array",
-      #     ]
-      #     in
-      #     std.array.map (fun x => "objcopy --redefine-sym %{x}=libwayland__%{x} ${DEST}/usr/lib/libwayland-client.a") symbols
-      #   )
     }
 }
