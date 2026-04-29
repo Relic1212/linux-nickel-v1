@@ -20,6 +20,7 @@
     },
     configurePhase = [
       "echo '%{import "../../i/ironbar/ironbar_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "echo '%{import "../../p/ptyxis/constructor.c" as 'Text}' >> ${SRC}/ptyxis_symbols.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
