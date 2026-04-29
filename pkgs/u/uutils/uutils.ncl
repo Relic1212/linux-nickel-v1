@@ -8,14 +8,13 @@
     in
 
     {
-      nonCrateSourceInputs = [
+      singleSource =
         {
           src = {
-            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.7.0.tar.gz",
-            sha256sum = "dc56a3c4632742357d170d60a7dcecb9693de710daeaafa3ad925750b1905522"
+            uri = "https://github.com/uutils/coreutils/archive/refs/tags/0.8.0.tar.gz",
+            sha256sum = "03f765fd23e9cc66f8789edc6928644d8eae5e5a7962d83795739d0a8a85eaef"
           }
-        }
-      ],
+        }.src,
 
       separateBuildDir = false,
       crates = _crates,
