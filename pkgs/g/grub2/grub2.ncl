@@ -4,8 +4,8 @@
   unifont,
   grub2 | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://ftp.gnu.org/gnu/grub/grub-2.12.tar.xz",
-      sha256sum = "f3c97391f7c4eaa677a78e090c7e97e6dc47b16f655f04683ebd37bef7fe0faa"
+      uri = "https://ftp.gnu.org/gnu/grub/grub-2.14.tar.xz",
+      sha256sum = "bc8d3c73535b8838d8c8e2654d73edc4e6ae8c8acdb45d5df5dc9a1547446d43"
     },
     sourceInputs = [
       {
