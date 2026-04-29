@@ -222,6 +222,7 @@
         _xxtestfuzz _xxtestfuzz/_xxtestfuzz.c _xxtestfuzz/fuzzer.c
         _testbuffer _testbuffer.c
         _ctypes
+        _bz2 _bz2module.c
         *disabled*
         _testinternalcapi _testinternalcapi.c
         nis nismodule.c
@@ -234,7 +235,6 @@
         _tkinter
         _sqlite3
         _testclinic
-        _bz2 _bz2module.c
         " > ./Modules/Setup.local"%
             ]
           else
@@ -244,6 +244,8 @@
       installPhase =
         lib.AutotoolsPackage.installPhase
         @ [
+          "install -dm0755 ${DEST}/usr/lib/python3.12/libpython",
+          "for f in $(find ${SRC}/Modules -name '*.a'); do  install -m0755 ${f} ${DEST}/usr/lib/python3.12/libpython;done",
           "cd $DEST/usr/bin",
           "ln -s python3 python",
         ],
@@ -255,6 +257,7 @@
         drvs.openssl,
         drvs.ncurses,
         drvs.readline,
+        drvs.bzip2,
       ]
     },
 
@@ -291,5 +294,14 @@
         "export CXXFLAGS=\"${CXXFLAGS} -fPIC\"",
         "export LDFLAGS=\"${LDFLAGS} -fPIC\"",
       ]
+    },
+  pythonDynamicPicBz2 =
+    pythonDynamicPic
+    & {
+      biDrvs | priority 2 =
+        pythonDynamicPic.biDrvs
+        @ [
+          drvs.bzip2,
+        ]
     }
 }
