@@ -55,7 +55,7 @@ void* dlopen(const char *path, int mode) {
 
 void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 	if (handle == &lib_libgtk_4_so || handle == NULL || handle == &main_program_handle) { 
-#ifdef FULL
+// #ifdef FULL
 		DLSYM(gtk_check_button_get_type, )
 		DLSYM(gtk_custom_filter_get_type, )
 		DLSYM(gtk_entry_get_type, )
@@ -75,7 +75,7 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(gtk_stack_page_get_type, )
 		DLSYM(gtk_string_sorter_get_type, )
 		DLSYM(gtk_toggle_button_get_type, )
-#endif // FULL
+// #endif // FULL
 	}
 	if (handle == &lib_libEGL_so_1 || handle == NULL || handle == &main_program_handle) { 
 #if 1
