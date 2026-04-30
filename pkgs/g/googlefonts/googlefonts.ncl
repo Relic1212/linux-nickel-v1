@@ -6,6 +6,9 @@
       uri = "https://github.com/googlefonts/noto-emoji/archive/refs/tags/v2.047.tar.gz",
       sha256sum = "2cfaf5a427eb26334cdb30d98e4a0c005b660504a339249dc54373e566f09b50"
     },
+    preConfigurePhase = [
+      "sed -i 's|MISSING_VENV = fail||g' ${SRC}/Makefile",
+    ],
     biDrvs = [
       drvs.pythonFull,
       drvs.zopfli,
