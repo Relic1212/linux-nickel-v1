@@ -91,23 +91,27 @@ in
           let _ec = enableCcache in
           let _sbi = symlinkBuldInputs in
           let df = deterministicFetcher, of = outputFile, oss = outputSha256sum in
-          drvUtils.pkgToHash (
-          # std.record.freeze
-          {
-            name = _name,
-            buildInputsValidated = _bs,
-            sourceInputs = _sis,
-            patches = _pds,
-            extraFiles = _efs,
-            scriptContent = _sc,
-            buildInChroot = _bic,
-            enableCcache = _ec,
-            symlinkBuldInputs = _sbi,
-            deterministicFetcher = df,
-            outputFile = of,
-            outputSha256sum = oss
-          }
-          ),
+          let h_final =
+            drvUtils.pkgToHash (
+            # std.record.freeze
+            {
+              name = _name,
+              buildInputsValidated = _bs,
+              sourceInputs = _sis,
+              patches = _pds,
+              extraFiles = _efs,
+              scriptContent = _sc,
+              buildInChroot = _bic,
+              enableCcache = _ec,
+              symlinkBuldInputs = _sbi,
+              deterministicFetcher = df,
+              outputFile = of,
+              outputSha256sum = oss
+            }
+            )
+          in
+          #std.trace "name=%{_name}, drvHash=%{h_final}" 
+          h_final,
         options | default = {},
         deterministicFetcher | Bool | default = false,
         outputFile | String | default = "",
@@ -255,7 +259,7 @@ in
         preInstallPhase | Array String | default = [],
         installPhase | Array String | default = [],
         postInstallPhase | Array String | default = [],
-        phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
         cdBuildPhase | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
         separateBuildDir | Bool | default = true,
@@ -267,6 +271,8 @@ in
         patchDir | String | default = "%{name}/patches",
         filesDir | String | default = "%{name}/files",
         patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
+        eofPatches | Array { patch | String, subdir | String | default = "" } | default = [],
+        eofPatchPhase = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 <<EOF\n%{eofPatch.patch}\nEOF)") eofPatches,
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
 
         enableParallel | Bool | default = true,
