@@ -3,8 +3,12 @@
   drvs,
   vala | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://download.gnome.org/sources/vala/0.56/vala-0.56.17.tar.xz",
-      sha256sum = "26100c4e4ef0049c619275f140d97cf565883d00c7543c82bcce5a426934ed6a"
+      # uri = "https://download.gnome.org/sources/vala/0.56/vala-0.56.17.tar.xz",
+      # sha256sum = "26100c4e4ef0049c619275f140d97cf565883d00c7543c82bcce5a426934ed6a",
+      # uri = "https://gitlab.gnome.org/GNOME/vala/-/archive/0.56.19/vala-0.56.19.tar.bz2",
+      # sha256sum = "69240bbf64c38f366cc31d40f038e694f9254c60ed32b8aed086e8686ba78016"
+      uri = "https://download.gnome.org/sources/vala/0.56/vala-0.56.19.tar.xz",
+      sha256sum = "5ad7cbbfcc0de61b403d6797c9ef60455bfbebd8e162aec33b5b0b097adfb9d5",
     },
 
     biDrvs = [
