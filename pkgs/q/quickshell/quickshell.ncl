@@ -48,16 +48,19 @@
       x11 | default = true,
       crash | default = true,
       polkit | default = true,
+      vulkan | default = false,
     },
     cmakeExtraArgsRecord = {
       # "-DINSTALL_QML_PREFIX" = "/lib/qt6/qml",
       "-DINSTALL_QML_PREFIX" = "/usr/lib/qt6/qml",
 
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -lglapi -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
+      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
 
       "-DCRASH_REPORTER" = options.crash,
+      "-DCRASH_HANDLER" = options.crash,
       "-DX11" = options.x11,
       "-DSERVICE_PAM" = distro.pam,
+      "-DSCREENCOPY" = options.vulkan,
       "-DSERVICE_MPRIS" = true,
       "-DSERVICE_PIPEWIRE" = true,
       "-DBLUETOOTH" = true,
@@ -185,6 +188,14 @@
         drvs.pulseaudio17,
       ]
       @ (
+        if options.vulkan then
+          [
+            #  drvs.vulkanHeaders,
+          ]
+        else
+          []
+      )
+      @ (
         if options.x11 then
           [
             drvs.qtbaseX11,
@@ -239,11 +250,16 @@
       options = {
         polkit = true,
         x11 = true,
-        # crash =true,
+        crash = false,
+        vulkan = true,
       },
       singleSource | priority 1 = {
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/dacfa9de829ac7cb173825f593236bf2c21f637e.tar.gz",
-        sha256sum = "0d4fa95458cbc8e29da96b38e4007d31840405f6912170cd7dccd9e5319b05eb",
+        # uri = "https://github.com/quickshell-mirror/quickshell/archive/a849a88893c71d409aecef0b999e6cc3d9b50034.tar.gz",
+        # sha256sum = "dae43a0c303306c0a3981296064d6c7319ce9e6285e3f714d7a10b22353e3463",  
+
+        # latest without vulkan:
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
+        sha256sum = "dac6768b33e51d2930061ed789d603dd5eea0dd0a6255800b9b96afe517b4fa5",
       },
     }
 }
