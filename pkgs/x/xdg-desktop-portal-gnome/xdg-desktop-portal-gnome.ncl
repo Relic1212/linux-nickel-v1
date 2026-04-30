@@ -151,7 +151,7 @@
       drvs.spirvLlvmTranslator,
       drvs.spirvTools,
       drvs.utilLinux,
-      drvs.vala,
+      # drvs.vala,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.xdgDbusProxy,
