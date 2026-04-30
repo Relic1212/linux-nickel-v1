@@ -126,7 +126,6 @@
       drvs.spirvLlvmTranslator,
       drvs.spirvTools,
       drvs.utilLinux,
-      drvs.vala,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.xkeyboardConfig,
