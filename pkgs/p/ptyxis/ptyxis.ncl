@@ -6,8 +6,10 @@
       # uri = "https://gitlab.gnome.org/chergert/ptyxis/-/archive/48.5/ptyxis-48.5.tar.gz",
       # sha256sum = "59346391e52f6f9d55f37bdb903b450053c2c67b06f77215092d3742bd715ff7",
 
-      uri = "https://gitlab.gnome.org/chergert/ptyxis/-/archive/49.2/ptyxis-49.2.tar.bz2",
-      sha256sum = "ee2985a293ff7699d6b627ec6d5f2989a135c4e90cee34566e07c9199d9098b7"
+      # uri = "https://gitlab.gnome.org/chergert/ptyxis/-/archive/49.2/ptyxis-49.2.tar.bz2",
+      # sha256sum = "ee2985a293ff7699d6b627ec6d5f2989a135c4e90cee34566e07c9199d9098b7".
+      uri = "https://gitlab.gnome.org/chergert/ptyxis/-/archive/50.1/ptyxis-50.1.tar.bz2",
+      sha256sum = "d8e6e7518b270c09a912a38a7053c92b55cdd6081a5c573af0d3d7c05b258c24",
     },
 
     # extraFiles = [
