@@ -12,5 +12,23 @@
       drvs.zlibNg,
       drvs.glib,
     ],
+  },
+  grapheneIntrospection | lib.MesonPackage = {
+    singleSource = graphene.singleSource,
+    extraMesonArgs = [
+      "-Dintrospection=enabled",
+    ],
+    pythonProvider = drvs.pythonDynamic,
+    buildEnv._isStatic = false,
+    biDrvs = [
+      drvs.pcre2,
+      drvs.libffi,
+      drvs.zlibNg,
+      drvs.glibGobject,
+      drvs.gobjectDynamic,
+      drvs.pythonSetuptools,
+      drvs.muslShared & { priority = -1 },
+      drvs.ldd,
+    ],
   }
 }

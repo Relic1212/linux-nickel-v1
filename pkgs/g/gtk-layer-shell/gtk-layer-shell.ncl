@@ -101,7 +101,7 @@
       drvs.spirvTools,
       drvs.spirvLlvmTranslator,
       drvs.gtk3,
-      drvs.vala,
+      # drvs.vala,
       drvs.pythonSetuptools,
     ],
     extraMesonArgs = [

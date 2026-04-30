@@ -65,8 +65,15 @@
         if options.introspection then
           [
             drvs.pythonSetuptools,
-            drvs.glibGobject & { priority = -1 },
+            # drvs.gobjectDynamicCairo2 & { priority = 1 },
+            # drvs.gobjectDynamic & {priority = -2 },
+            drvs.glibGobject & { priority = -2 },
+            drvs.pangoGobject & { priority = -1 },
+            drvs.harfbuzzGobjectDynamic & { priority = -1 },
             drvs.gdkPixbufIntrospection & { priority = -1 },
+            drvs.grapheneIntrospection & { priority = -1 },
+            drvs.glibGobjectDynamic & { priority = -1 },
+            drvs.ldd,
           ]
         else
           []
@@ -74,7 +81,7 @@
 
     options = {
       introspection | default = false,
-      gobjectProvider | default = if introspection then drvs.gobjectDynamicCairo else drvs.gobjectDynamic,
+      gobjectProvider | default = if introspection then drvs.gobjectDynamicCairo2 else drvs.gobjectDynamic,
     },
 
     extraMesonArgs = [
@@ -98,7 +105,14 @@
   gtk4Introspection =
     gtk4
     & {
+      buildEnv._isStatic = false,
       options.introspection = true,
       pythonProvider = drvs.pythonDynamic,
+    },
+  gtk4IntrospectionDynamic =
+    gtk4Introspection
+    & {
+      buildEnv._isStatic = false,
+      isStatic = false,
     }
 }

@@ -106,6 +106,16 @@
         "-Dbuild_introspection_data=true",
       ]
     },
+  gobjectDynamicCairo2 | lib.MesonPackage =
+    gobjectDynamicCairo
+    & {
+      # try to fix including g_type_init
+      extraMesonArgs | priority 2 = [
+        # "--prefer-static",
+        "-Ddefault_library=both",
+        "-Dbuild_introspection_data=true",
+      ]
+    },
 
   gobjectDynamicData =
     gobjectDynamic

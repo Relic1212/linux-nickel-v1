@@ -50,7 +50,7 @@
         "-Dfontconfig:tests=disabled",
         # "--prefer-static",
         "-Ddefault_library=both",
-        "-Dcairo=disabled",
+        "-Dcairo=enabled",
       ],
       buildEnv = {
         _isStatic = false,
@@ -80,7 +80,8 @@
         drvs.libpng,
         drvs.expat,
         drvs.fribidi,
-        drvs.gobjectDynamicCairo,
+        # drvs.gobjectDynamicCairo,
+        drvs.gobjectDynamicCairo2,
         drvs.muslShared & { priority = -1 },
         drvs.pythonSetuptools,
         drvs.ldd,

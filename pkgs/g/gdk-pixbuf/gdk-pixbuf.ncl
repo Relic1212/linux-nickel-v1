@@ -61,6 +61,11 @@
     ]
   },
 
+  gdkPixbufIntrospectionDynamic =
+    gdkPixbufIntrospection
+    & {
+      isStatic = false,
+    },
   gdkPixbufIntrospection | lib.MesonPackage = {
     singleSource = gdkPixbufFull.singleSource,
     buildEnv = gdkPixbufFull.buildEnv & { _isStatic = false },
