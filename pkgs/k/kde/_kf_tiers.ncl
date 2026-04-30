@@ -1,11 +1,11 @@
 # https://api.kde.org/
 {
   attica = 1,
-  breeze-icons = -1,
+  breeze-icons = 3, #??
   karchive = 1,
   kauth = 2,
   kbookmarks = 3,
-  kcmutils = 3,
+  # kcmutils = 3,
   kcodecs = 1,
   kcolorscheme = 2,
   kcompletion = 2,
@@ -21,9 +21,9 @@
   kguiaddons = 1,
   kholidays = 1,
   ki18n = 1,
-  kiconthemes = 3,
+  # kiconthemes = 3,
   kidletime = 1,
-  kio = 3,
+  # kio = 3,
   kirigami = 1,
   kitemmodels = 1,
   kitemviews = 1,

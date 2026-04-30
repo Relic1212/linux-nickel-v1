@@ -27,8 +27,9 @@ let d = {
 
       waylandSyms = false,
       xkbcommonX11 | default = false,
+      extraInputs | default = [],
     },
-
+    options.pythonProvider | default = drvs.pythonFull,
     biDrvs | priority -2 =
       [
         drvs.pixman,
@@ -114,7 +115,7 @@ let d = {
         drvs.plasmaWaylandProtocols,
         drvs.gperf,
         drvs.isoCodes,
-        drvs.pythonFull,
+        options.pythonProvider,
         drvs.gettext,
         drvs.libqrencode,
         drvs.libdmtx,
@@ -122,7 +123,8 @@ let d = {
         drvs.utilLinux,
         drvs.hunspell,
         drvs.perl,
-      ],
+      ]
+      @ options.extraInputs,
     buildEnv =
       let common_flags = ["-DQT_STATICPLUGIN"] in
       {
@@ -237,6 +239,39 @@ EOF
           drvs.libtool,
           drvs.libvorbis,
         ]
+    },
+
+  kftier3 | lib.QtPackage =
+    _kfBase
+    & {
+      sourceInputs = _kCommon.tier3sources,
+      separateBuildDir = false,
+      preConfigurePhase = [],
+      cmakeExtraArgsRecord,
+      cmakeArgs,
+      configurePhase = [
+        "for d in $(ls); do ",
+        "echo \"building $d\"",
+        "cd $d",
+        "cmake -B build -S . %{std.string.join " " cmakeArgs }",
+        "cmake --build build",
+        "DESTDIR=${DEST} cmake --install build",
+        "cd ..",
+        "done",
+      ],
+      buildPhase = [],
+      installPhase = [],
+      options.pythonProvider = drvs.pythonDynamic,
+      options.extraInputs = [
+        drvs.kftier1,
+        drvs.kftier2,
+        drvs.libcanberra,
+        drvs.libogg,
+        drvs.libtool,
+        drvs.libvorbis,
+        drvs.pythonLxml,
+        drvs.muslShared & { priority = -1 },
+      ]
     }
 }
 in
