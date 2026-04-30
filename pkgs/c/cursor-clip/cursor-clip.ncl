@@ -71,7 +71,6 @@
       drvs.readline,
       drvs.spirvLlvmTranslator,
       drvs.spirvTools,
-      drvs.vala,
       drvs.waylandGtk4LayerShell,
       drvs.waylandProtocols,
       drvs.zlibNg,
