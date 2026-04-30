@@ -272,7 +272,7 @@ in
         filesDir | String | default = "%{name}/files",
         patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
         eofPatches | Array { patch | String, subdir | String | default = "" } | default = [],
-        eofPatchPhase = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 <<EOF\n%{eofPatch.patch}\nEOF)") eofPatches,
+        eofPatchPhase = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 << 'EOF'\n%{eofPatch.patch}\nEOF\n)") eofPatches,
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
 
         enableParallel | Bool | default = true,
