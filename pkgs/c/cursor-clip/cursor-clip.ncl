@@ -7,6 +7,8 @@
       sha256sum = "97f485a5a53cb6918c2ccb1111a0259f0fce72332b4671f8afab648b32d72381",
     },
     extraEnv = {
+      # PKGCONFIG = "\"pkg-config --static\"",
+
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         # "-C link-arg=-no-pie",
@@ -18,12 +20,32 @@
         m%"$(for l in $(pkg-config --libs --static xkbcommon libpulse egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
+
+    sccacheSetupPhase | priority 1 = [
+      "export SCCACHE_DIR=/tmp/sccache", # set in conf instead
+      "export SCCACHE_MAX_SIZE=100G", # set in conf instead
+      # "export SCCACHE_CONF=/tmp/sccache/config",
+      "export RUSTC_WRAPPER=/usr/bin/sccache",
+      # "export SCCACHE_ERROR_LOG=${SRC}/sccache_log.txt",
+      #  "export SCCACHE_LOG=debug",
+      #  "export SCCACHE_START_SERVER=1",
+      #  "export SCCACHE_NO_DAEMON=1",
+      #  "mkdir -p /tmp/home/.config/sccache/",
+      #  "touch /tmp/home/.config/sccache/config",
+      #  "export HOME=/tmp/home",
+      "sccache --stop-server || echo 'sccache server not running'",
+      "echo sccache setup done",
+    ],
+    extraCargoFlags = [
+      # "--verbose",
+    ],
     configurePhase = [
       "echo '%{import "../../i/ironbar/ironbar_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
-      "echo '%{import "../../p/ptyxis/constructor.c" as 'Text}' >> ${SRC}/ptyxis_symbols.c",
+      "echo '%{import "constructor.c" as 'Text}' >> ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
+    # debug = true,
     crates = lib.functions.filterCrates (import "cursor-clip-crates.json"),
     muslProvider = drvs.muslBothRenamedDl,
     llvmProvider = drvs.llvmFull,
@@ -40,6 +62,7 @@
       drvs.fribidi,
       drvs.gdkPixbufFull,
       drvs.glibPatched,
+      # drvs.glibNoExportDynamic,
       drvs.glibmm_2_82,
       drvs.gobjectDynamic,
       drvs.gperf,
@@ -110,7 +133,6 @@
       drvs.libbsd,
       drvs.libcanberra,
       drvs.libgtop,
-      drvs.libjpegTurbo,
       drvs.libmd,
       drvs.libogg,
       drvs.libportal,
