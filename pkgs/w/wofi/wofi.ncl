@@ -3,10 +3,26 @@
   drvs,
   wofi | lib.MesonPackage = {
     singleSource = {
-      uri = "https://hg.sr.ht/~scoopta/wofi/archive/v1.5.1.tar.gz",
-      sha256sum = "d432d8f2c3f1d66716dc29e9fea7bb52cd319377c7faddf326491a9e92c188cb"
+      uri = "https://hg.sr.ht/~scoopta/wofi/archive/v1.5.3.tar.gz",
+      sha256sum = "6216dc14d93cdb6170f89c1ca3aaacdeaa44862fbc9be947d614be266a9c49f6"
     },
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        # "/tmp/workdir/src/dlopen.o",
+      ],
+    },
+    preConfigurePhase = [
+      lib.functions.writeFile "${SRC}/src/dlopen.c" (import "wofi_dlopen.c" as 'Text),
+      # "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      m%"sed -i "s@'src/main.c'@'src/main.c','src/dlopen.c'@g" ${SRC}/meson.build"%,
+    ],
+    extraMesonArgs = [
+      "-Denable_drun=true",
+      "-Denable_run=true",
+      "-Denable_dmenu=true",
+    ],
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothWeakDl,
 
     biDrvs = [
       #drvs.cairo,
