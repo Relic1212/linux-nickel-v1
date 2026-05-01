@@ -65,6 +65,7 @@ let _services = (
           "dbusd",
           # "dhcpcd",
           # "iwd",
+          #  "i2c-dev",
           "networkmanager",
           "make-shared-root",
           "mount-others",
@@ -94,6 +95,13 @@ let _services = (
       command = "/usr/bin/modprobe cfg80211",
       # command = "/usr/bin/modprobe -a cfg80211 iwlmvm",
       #
+      restart = false,
+      "depends-on" = ["early-filesystems"],
+    },
+
+    "i2c-dev" = {
+      type = "scripted",
+      command = "/usr/bin/modprobe i2c-dev",
       restart = false,
       "depends-on" = ["early-filesystems"],
     },
@@ -200,7 +208,7 @@ let _services = (
       "depends-on" = [
         "dbusd",
         "cfg80211",
-        " hostname",
+        "hostname",
         "udevd"
       ],
       "waits-for" = ["udev-settle"],
@@ -227,6 +235,7 @@ let _services = (
         [
           # "udevd",
           "syslogd",
+          "i2c-dev",
           "loadkeys",
           "create-x11-socket",
         ]
