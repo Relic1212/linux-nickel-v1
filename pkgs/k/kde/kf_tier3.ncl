@@ -94,6 +94,11 @@
           "$(pkg-config --static --libs libavdevice)",
           "$(pkg-config --static --libs libpulse)",
         ],
+      cmakeExtraArgsRecord = {
+        # "-DCMAKE_PREFIX_PATH" = "\"/;/tmp/workdir/out/destdir;/usr;/tmp/workdir/out/destdir/usr\"",
+        "-DENABLE_KAUTH" = false,
+        "-DBUILD_INDEXER_SERVICE" = false, # baloo
+      },
       preConfigurePhase = [
         # kiconthemes
         "sed -i 's@ MODULE @ @g' ${SRC}/kiconthemes/src/CMakeLists.txt",
@@ -120,11 +125,29 @@
         m%"sed -i 's|accessibleInterfaceFactory|__kde_ktexteditor__accessibleInterfaceFactory|g' ${SRC}/ktexteditor/src/view/kateviewaccessible.h"%,
         m%"sed -i 's| MODULE| STATIC|g' ${SRC}/ktexteditor/src/part/CMakeLists.txt"%,
         # -ktexteditor
+
+        # kfilemetadata
+        m%"for f in $(find ${SRC}/kfilemetadata -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+        # -kfilemetadata
+
+        # baloo
+        # m%"sed -i 's|install(TARGETS KF6Baloo EXPORT KF6BalooTargets|install(TARGETS KF6Baloo BalooDBusMainInterface EXPORT KF6BalooTargets|g' ${SRC}/baloo/src/lib/CMakeLists.txt"%,
+        # m%"sed -i 's|install(TARGETS KF6BalooEngine EXPORT KF6BalooTargets|install(TARGETS KF6BalooEngine KF6BalooCodecs EXPORT KF6BalooTargets|g' ${SRC}/baloo/src/engine/CMakeLists.txt"%,
+        m%"
+        cat >>${SRC}/baloo/src/dbus/CMakeLists.txt << 'EOF'
+        install(TARGETS BalooDBusMainInterface EXPORT KF6BalooTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+        EOF
+        "%,
+        m%"
+        cat >>${SRC}/baloo/src/codecs/CMakeLists.txt << 'EOF'
+        install(TARGETS KF6BalooCodecs EXPORT KF6BalooTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+        EOF
+        "%,
+        # m%"for f in $(find ${SRC}/baloo/src/kioworkers -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%, # skip BUILD_KINOTIFY instead
+        "sed -i 's@${Inotify_FOUND}@false@g' ${SRC}/baloo/CMakeLists.txt",
+        # -baloo
       ],
-      cmakeExtraArgsRecord = {
-        # "-DCMAKE_PREFIX_PATH" = "\"/;/tmp/workdir/out/destdir;/usr;/tmp/workdir/out/destdir/usr\"",
-        "-DENABLE_KAUTH" = false,
-      },
+
       cmakeArgs,
       eofPatches = [
         # {
@@ -186,6 +209,7 @@
         drvs.qca,
         drvs.libsecret,
         drvs.libassuan,
+        drvs.lmdb,
       ]
     }
 }

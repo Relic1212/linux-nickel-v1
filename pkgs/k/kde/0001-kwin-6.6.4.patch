@@ -1,0 +1,186 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1141784b07..e6f78f4674 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,6 +102,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+     GuiAddons
+     I18n
+     IdleTime
++    Archive
++    Holidays
++    KIO
++    Notifications
+     Package
+     Service
+     Svg
+@@ -193,13 +197,14 @@ set_package_properties(EGL PROPERTIES
+     PURPOSE "Required to build KWin with EGL support"
+ )
+ 
+-find_package(epoxy 1.3)
+-set_package_properties(epoxy PROPERTIES
+-    DESCRIPTION "libepoxy"
+-    URL "https://github.com/anholt/libepoxy"
+-    TYPE REQUIRED
+-    PURPOSE "OpenGL dispatch library"
+-)
++# find_package(epoxy 1.3)
++# set_package_properties(epoxy PROPERTIES
++#     DESCRIPTION "libepoxy"
++#     URL "https://github.com/anholt/libepoxy"
++#     TYPE REQUIRED
++#     PURPOSE "OpenGL dispatch library"
++# )
++
+ 
+ find_package(Wayland 1.24)
+ set_package_properties(Wayland PROPERTIES
+@@ -378,6 +383,8 @@ if(KWIN_BUILD_GLOBALSHORTCUTS)
+     find_package(KGlobalAccelD REQUIRED)
+ endif()
+ 
++pkg_check_modules(egl REQUIRED IMPORTED_TARGET egl)
++
+ pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info>=0.2.0)
+ add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
+ 
+@@ -499,11 +506,11 @@ add_subdirectory(data)
+ add_subdirectory(kconf_update)
+ add_subdirectory(src)
+ 
+-if (BUILD_TESTING)
+-    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
+-        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+-    endif()
++if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
++    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
++endif()
+ 
++if (BUILD_TESTING)
+     add_subdirectory(autotests)
+     add_subdirectory(tests)
+ endif()
+diff --git a/KWinConfig.cmake.in b/KWinConfig.cmake.in
+index 84c878a581..5cbc51522a 100644
+--- a/KWinConfig.cmake.in
++++ b/KWinConfig.cmake.in
+@@ -13,7 +13,7 @@ find_dependency(KF6Config "@KF6_MIN_VERSION@")
+ find_dependency(KF6CoreAddons "@KF6_MIN_VERSION@")
+ find_dependency(KF6WindowSystem "@KF6_MIN_VERSION@")
+ find_dependency(Wayland REQUIRED Server)
+-find_dependency(epoxy)
++# find_dependency(epoxy)
+ find_dependency(Libdrm)
+ 
+ @PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 376a47328e..124d244f33 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -16,7 +16,7 @@ if (KWIN_BUILD_KCMS)
+     add_subdirectory(kcms)
+ endif()
+ 
+-add_library(kwin SHARED)
++add_library(kwin STATIC)
+ target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
+ set_target_properties(kwin PROPERTIES
+    VERSION ${PROJECT_VERSION}
+@@ -227,7 +227,7 @@ target_link_libraries(kwin
+         KF6::ConfigCore
+         KF6::CoreAddons
+         KF6::WindowSystem
+-        epoxy::epoxy
++        EGL::EGL
+         Libdrm::Libdrm
+ 
+     PRIVATE
+@@ -252,7 +252,10 @@ target_link_libraries(kwin
+         UDev::UDev
+         XKB::XKB
+         EGL::EGL
+-        epoxy::epoxy
++        # EGL
++        # GLESv2::GLESv2
++        PkgConfig::egl
++        # epoxy::epoxy
+ 
+         Threads::Threads
+         lcms2::lcms2
+@@ -363,7 +366,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
+ 
+ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
+ 
+-install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
++install(TARGETS kwin WaylandProtocols_xml EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+ 
+ ecm_qt_declare_logging_category(kwin
+     HEADER outputconfiglogging.h
+@@ -404,6 +407,10 @@ target_link_libraries(kwin_wayland
+     KWinQpaPlugin
+     KF6WindowSystemKWinPlugin
+     KF6IdleTimeKWinPlugin
++    EGL
++    PkgConfig::egl
++    "/usr/lib/libgallium_dri.a"
++    "/usr/lib/libEGL.a"
+ )
+ 
+ if (TARGET KF6GlobalAccelKWinPlugin)
+diff --git a/src/helpers/CMakeLists.txt b/src/helpers/CMakeLists.txt
+index 3a570186af..e858df3f9a 100644
+--- a/src/helpers/CMakeLists.txt
++++ b/src/helpers/CMakeLists.txt
+@@ -1,3 +1,3 @@
+-add_subdirectory(killer)
++# add_subdirectory(killer)
+ add_subdirectory(wayland_wrapper)
+ add_subdirectory(kwindowprop)
+diff --git a/src/kcms/common/CMakeLists.txt b/src/kcms/common/CMakeLists.txt
+index a252660b57..43e7ec8894 100644
+--- a/src/kcms/common/CMakeLists.txt
++++ b/src/kcms/common/CMakeLists.txt
+@@ -9,7 +9,7 @@ qt_add_dbus_interface(kcmkwincommon_SRC
+     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
+ )
+ 
+-add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
++add_library(kcmkwincommon STATIC ${kcmkwincommon_SRC})
+ 
+ target_link_libraries(kcmkwincommon
+     Qt::Core
+@@ -31,7 +31,7 @@ install(TARGETS kcmkwincommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELI
+ 
+ set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp)
+ qt_add_dbus_interface(kcm_kwin4_genericscripted_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
+-add_library(kcm_kwin4_genericscripted MODULE ${kcm_kwin4_genericscripted_SRCS})
++add_library(kcm_kwin4_genericscripted STATIC ${kcm_kwin4_genericscripted_SRCS})
+ target_link_libraries(kcm_kwin4_genericscripted
+     KF6::KCMUtils #KCModule
+     KF6::I18n
+diff --git a/src/main.cpp b/src/main.cpp
+index bb58445e2b..edfeee5c48 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -70,6 +70,11 @@
+ 
+ Q_DECLARE_METATYPE(KSharedConfigPtr)
+ 
++static void kwin_resources_init()
++{
++    Q_INIT_RESOURCE(resources);
++}
++
+ namespace KWin
+ {
+ 
+@@ -103,6 +108,9 @@ void Application::setConfigLock(bool lock)
+ 
+ void Application::start()
+ {
++    
++    kwin_resources_init;
++
+     // Prevent KWin from synchronously autostarting kactivitymanagerd
+     // Indeed, kactivitymanagerd being a QApplication it will depend
+     // on KWin startup... this is unsatisfactory dependency wise,

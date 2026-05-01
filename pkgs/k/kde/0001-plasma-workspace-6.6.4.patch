@@ -1,0 +1,676 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index daf1599..3d279b2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,9 +51,17 @@ if(PipeWire_FOUND)
+ endif()
+ option(BUILD_CAMERAINDICATOR "Build the camera indicator Plasma applet" ${BUILD_CAMERAINDICATOR_DEFAULT})
+ 
++pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)
++pkg_check_modules(GLIB2 glib-2.0 REQUIRED IMPORTED_TARGET)
++pkg_check_modules(POLKIT_GOBJECT polkit-gobject-1 REQUIRED IMPORTED_TARGET)
++pkg_check_modules(GOBJECT gobject-2.0 REQUIRED IMPORTED_TARGET)
++
+ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+                     Concurrent DBus Location Network Positioning Quick QuickWidgets
+-                    ShaderTools Sql Svg Widgets)
++                    ShaderTools Sql Svg Widgets TextToSpeech)
++
++find_package(QRencode)
++
+ 
+ if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
+     find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+diff --git a/applets/kicker/dashboardwindow.cpp b/applets/kicker/dashboardwindow.cpp
+index fb25b93..3671d0c 100644
+--- a/applets/kicker/dashboardwindow.cpp
++++ b/applets/kicker/dashboardwindow.cpp
+@@ -12,7 +12,6 @@
+ 
+ #include <KWindowEffects>
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ 
+ #include <PlasmaQuick/PlasmaShellWaylandIntegration>
+ 
+@@ -117,9 +116,7 @@ void DashboardWindow::toggle()
+         close();
+     } else {
+         showFullScreen();
+-        if (KWindowSystem::isPlatformX11()) {
+-            KX11Extras::forceActiveWindow(winId());
+-        }
++
+     }
+ }
+ 
+@@ -129,9 +126,7 @@ bool DashboardWindow::event(QEvent *event)
+         const QPlatformSurfaceEvent *pSEvent = static_cast<QPlatformSurfaceEvent *>(event);
+ 
+         if (pSEvent->surfaceEventType() == QPlatformSurfaceEvent::SurfaceCreated) {
+-            if (KWindowSystem::isPlatformX11()) {
+-                KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
+-            }
++      
+         }
+     } else if (event->type() == QEvent::Show) {
+         updateTheme();
+@@ -143,10 +138,7 @@ bool DashboardWindow::event(QEvent *event)
+         if (m_mainItem) {
+             m_mainItem->setVisible(false);
+         }
+-    } else if (event->type() == QEvent::FocusOut && KWindowSystem::isPlatformX11() && isVisible()) {
+-        KX11Extras::forceActiveWindow(winId());
+-    }
+-
++    } 
+     return QQuickWindow::event(event);
+ }
+ 
+diff --git a/applets/kicker/windowsystem.cpp b/applets/kicker/windowsystem.cpp
+index a805f4e..beb3369 100644
+--- a/applets/kicker/windowsystem.cpp
++++ b/applets/kicker/windowsystem.cpp
+@@ -9,7 +9,6 @@
+ #include <QQuickItem>
+ 
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ 
+ WindowSystem::WindowSystem(QObject *parent)
+     : QObject(parent)
+@@ -31,8 +30,7 @@ bool WindowSystem::eventFilter(QObject *watched, QEvent *event)
+ void WindowSystem::forceActive(QQuickItem *item)
+ {
+     if (item) {
+-        if (auto window = item->window(); KWindowSystem::isPlatformX11() && window) {
+-            KX11Extras::forceActiveWindow(window->winId());
++        if (auto window = item->window();false && window) {
+         }
+     }
+ }
+diff --git a/applets/notifications/notificationapplet.cpp b/applets/notifications/notificationapplet.cpp
+index 1dffc64..665ab34 100644
+--- a/applets/notifications/notificationapplet.cpp
++++ b/applets/notifications/notificationapplet.cpp
+@@ -12,7 +12,7 @@
+ #include <QQuickWindow>
+ #include <QScreen>
+ 
+-#include <KX11Extras>
++
+ 
+ #include <Plasma/Containment>
+ #include <PlasmaQuick/AppletQuickItem>
+@@ -95,9 +95,7 @@ bool NotificationApplet::isPrimaryScreen(const QRect &rect) const
+ 
+ void NotificationApplet::forceActivateWindow(QWindow *window)
+ {
+-    if (window && window->winId()) {
+-        KX11Extras::forceActiveWindow(window->winId());
+-    }
++
+ }
+ 
+ K_PLUGIN_CLASS_WITH_JSON(NotificationApplet, "metadata.json")
+diff --git a/applets/notifications/notificationwindow.cpp b/applets/notifications/notificationwindow.cpp
+index a0f0ccc..5763710 100644
+--- a/applets/notifications/notificationwindow.cpp
++++ b/applets/notifications/notificationwindow.cpp
+@@ -6,7 +6,6 @@
+ #include "notificationwindow.h"
+ 
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ #include <PlasmaQuick/PlasmaShellWaylandIntegration>
+ 
+ NotificationWindow::NotificationWindow()
+@@ -15,10 +14,7 @@ NotificationWindow::NotificationWindow()
+     PlasmaShellWaylandIntegration::get(this)->setRole(QtWayland::org_kde_plasma_surface::role_notification);
+     PlasmaShellWaylandIntegration::get(this)->setTakesFocus(false);
+ 
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::setOnAllDesktops(winId(), true);
+-        KX11Extras::setType(winId(), NET::Notification);
+-    }
++
+ }
+ 
+ NotificationWindow::~NotificationWindow() = default;
+@@ -56,9 +52,6 @@ void NotificationWindow::setIsCritical(bool critical)
+     auto role = critical ? QtWayland::org_kde_plasma_surface::role_criticalnotification : QtWayland::org_kde_plasma_surface::role_notification;
+     PlasmaShellWaylandIntegration::get(this)->setRole(role);
+ 
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::setType(winId(), critical ? NET::CriticalNotification : NET::Notification);
+-    }
+ 
+     Q_EMIT isCriticalChanged();
+ }
+diff --git a/appmenu/menuimporter.cpp b/appmenu/menuimporter.cpp
+index 87d8d8c..b2e0ef1 100644
+--- a/appmenu/menuimporter.cpp
++++ b/appmenu/menuimporter.cpp
+@@ -13,7 +13,7 @@
+ #include <QDBusMessage>
+ #include <QDBusServiceWatcher>
+ 
+-#include <KWindowInfo>
++
+ #include <KWindowSystem>
+ 
+ static constexpr QLatin1StringView DBUS_SERVICE("com.canonical.AppMenu.Registrar");
+@@ -50,17 +50,6 @@ void MenuImporter::RegisterWindow(WId id, const QDBusObjectPath &path)
+     if (path.path().isEmpty()) // prevent bad dbusmenu usage
+         return;
+ 
+-    if (KWindowSystem::isPlatformX11()) {
+-        KWindowInfo info(id, NET::WMWindowType, NET::WM2WindowClass);
+-        NET::WindowTypes mask = NET::AllTypesMask;
+-        auto type = info.windowType(mask);
+-
+-        // Menu can try to register, right click in gimp for example
+-        if (type != NET::Unknown && (type & (NET::Menu | NET::DropdownMenu | NET::PopupMenu))) {
+-            return;
+-        }
+-        m_windowClasses.insert(id, QString::fromLocal8Bit(info.windowClassClass()));
+-    }
+ 
+     QString service = message().service();
+ 
+diff --git a/components/batterycontrol/CMakeLists.txt b/components/batterycontrol/CMakeLists.txt
+index 84744a6..726bc4e 100644
+--- a/components/batterycontrol/CMakeLists.txt
++++ b/components/batterycontrol/CMakeLists.txt
+@@ -16,7 +16,7 @@ ecm_qt_declare_logging_category(batterycontrol_SRCS
+         DESCRIPTION "Battery List Model" EXPORT "COMPONENTS::BATTERYCONTROL"
+ )
+ 
+-add_library(batterycontrol SHARED ${batterycontrol_SRCS})
++add_library(batterycontrol STATIC ${batterycontrol_SRCS})
+ 
+ generate_export_header(batterycontrol)
+ 
+diff --git a/kcms/kfontinst/lib/CMakeLists.txt b/kcms/kfontinst/lib/CMakeLists.txt
+index 1f5cf13..9a961c6 100644
+--- a/kcms/kfontinst/lib/CMakeLists.txt
++++ b/kcms/kfontinst/lib/CMakeLists.txt
+@@ -3,7 +3,7 @@ set(kfontinstui_LIB_SRCS FcEngine.cpp )
+ 
+ configure_file(config-paths.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-paths.h)
+ 
+-add_library(kfontinst SHARED ${kfontinst_LIB_SRCS})
++add_library(kfontinst STATIC ${kfontinst_LIB_SRCS})
+ target_link_libraries(kfontinst
+     PUBLIC
+     KF6::I18n
+@@ -19,7 +19,7 @@ set_target_properties(kfontinst PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION
+ 
+ generate_export_header(kfontinst)
+ 
+-add_library(kfontinstui SHARED ${kfontinstui_LIB_SRCS})
++add_library(kfontinstui STATIC ${kfontinstui_LIB_SRCS})
+ target_link_libraries(kfontinstui KF6::KIOCore KF6::KIOWidgets X11::X11 X11::Xft kfontinst Qt::GuiPrivate)
+ set_target_properties(kfontinstui PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
+ install(TARGETS kfontinst kfontinstui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+diff --git a/kcms/kfontinst/viewpart/CMakeLists.txt b/kcms/kfontinst/viewpart/CMakeLists.txt
+index 22393a0..f777d63 100644
+--- a/kcms/kfontinst/viewpart/CMakeLists.txt
++++ b/kcms/kfontinst/viewpart/CMakeLists.txt
+@@ -6,7 +6,7 @@ include_directories(
+ 
+ set(kfontviewpart_PART_SRCS ${libkfontinstview_SRCS} ${libkfontinstdbusiface_SRCS} FontViewPart.cpp )
+ 
+-add_library(kfontviewpart MODULE ${kfontviewpart_PART_SRCS})
++add_library(kfontviewpart STATIC ${kfontviewpart_PART_SRCS})
+ 
+ target_link_libraries(kfontviewpart KF6::Archive KF6::Parts KF6::XmlGui KF6::WindowSystem kfontinstui kfontinst )
+ 
+diff --git a/klipper/CMakeLists.txt b/klipper/CMakeLists.txt
+index c1950fc..d13bb11 100644
+--- a/klipper/CMakeLists.txt
++++ b/klipper/CMakeLists.txt
+@@ -24,7 +24,7 @@ configure_file(config-klipper.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-klipper
+ 
+ kconfig_add_kcfg_files(libklipper_common_SRCS klippersettings.kcfgc)
+ 
+-add_library(klipper SHARED ${libklipper_common_SRCS})
++add_library(klipper STATIC ${libklipper_common_SRCS})
+ generate_export_header(klipper)
+ target_link_libraries(klipper
+     Qt::Concurrent
+diff --git a/klipper/klipperpopup.cpp b/klipper/klipperpopup.cpp
+index 86d4750..36bd93c 100644
+--- a/klipper/klipperpopup.cpp
++++ b/klipper/klipperpopup.cpp
+@@ -18,7 +18,6 @@
+ #include <KWayland/Client/plasmashell.h>
+ #include <KWayland/Client/surface.h>
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ #include <algorithm>
+ 
+ #include "historymodel.h"
+@@ -103,28 +102,16 @@ void KlipperPopup::resizePopup()
+ 
+ void KlipperPopup::showEvent(QShowEvent *event)
+ {
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::setOnAllDesktops(winId(), true);
+-    }
++
+     PlasmaWindow::showEvent(event); // NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher
+     requestActivate();
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::forceActiveWindow(winId());
+-    }
++
+ }
+ 
+ void KlipperPopup::positionOnScreen()
+ {
+     const QList<QScreen *> screens = QGuiApplication::screens();
+-    if (KWindowSystem::isPlatformX11()) {
+-        auto screenIt = std::ranges::find_if(screens, [](QScreen *screen) {
+-            return screen->geometry().contains(QCursor::pos(screen));
+-        });
+-        QScreen *const shownOnScreen = screenIt != screens.cend() ? *screenIt : QGuiApplication::primaryScreen();
+-        setPosition(QCursor::pos(shownOnScreen));
+-        setScreen(shownOnScreen);
+-        KX11Extras::setOnDesktop(winId(), KX11Extras::currentDesktop());
+-    } else if (m_plasmashell && KWindowSystem::isPlatformWayland()) {
++    if (m_plasmashell && KWindowSystem::isPlatformWayland()) {
+         auto surface = KWayland::Client::Surface::fromWindow(this);
+         auto plasmaSurface = m_plasmashell->createSurface(surface, this);
+         plasmaSurface->openUnderCursor();
+diff --git a/klipper/urlgrabber.cpp b/klipper/urlgrabber.cpp
+index d893baa..9b86ae5 100644
+--- a/klipper/urlgrabber.cpp
++++ b/klipper/urlgrabber.cpp
+@@ -5,7 +5,7 @@
+ */
+ #include "urlgrabber.h"
+ 
+-#include <netwm.h>
++
+ 
+ #include "klipper_debug.h"
+ #include <QFile>
+diff --git a/krunner/view.cpp b/krunner/view.cpp
+index 19cc8bb..44ea752 100644
+--- a/krunner/view.cpp
++++ b/krunner/view.cpp
+@@ -23,7 +23,6 @@
+ #include <KService>
+ #include <KWindowEffects>
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ 
+ #include <LayerShellQt/Window>
+ #include <algorithm>
+@@ -153,14 +152,10 @@ void View::loadConfig()
+ 
+ void View::showEvent(QShowEvent *event)
+ {
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::setOnAllDesktops(winId(), true);
+-    }
++
+     QQuickWindow::showEvent(event);
+     requestActivate();
+-    if (KWindowSystem::isPlatformX11()) {
+-        KX11Extras::forceActiveWindow(winId());
+-    }
++
+ }
+ 
+ void View::positionOnScreen()
+@@ -197,24 +192,11 @@ void View::positionOnScreen()
+         } else {
+             layerWindow->setWantsToBeOnActiveScreen(true);
+         }
+-    } else if (KWindowSystem::isPlatformX11()) {
+-        m_x11Positioner->setAnchors(Qt::TopEdge);
+-        m_x11Positioner->setMargins(margins());
+-        if (m_floating) {
+-            KX11Extras::setOnDesktop(winId(), KX11Extras::currentDesktop());
+-        } else {
+-            KX11Extras::setOnAllDesktops(winId(), true);
+-        }
+-        KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager);
+     }
+ }
+ 
+ void View::toggleDisplay()
+ {
+-    if (isVisible() && !QGuiApplication::focusWindow() && KWindowSystem::isPlatformX11()) {
+-        KX11Extras::forceActiveWindow(winId());
+-        return;
+-    }
+     if (isVisible()) {
+         setVisible(false);
+     } else {
+diff --git a/ksmserver/legacy.cpp b/ksmserver/legacy.cpp
+index ea913a9..c8c0c1b 100644
+--- a/ksmserver/legacy.cpp
++++ b/ksmserver/legacy.cpp
+@@ -30,7 +30,6 @@
+ #include <unistd.h>
+ 
+ #include <KSharedConfig>
+-#include <KX11Extras>
+ #include <kconfig.h>
+ #include <kconfiggroup.h>
+ #include <kshell.h>
+diff --git a/libkmpris/CMakeLists.txt b/libkmpris/CMakeLists.txt
+index 1253740..005593a 100644
+--- a/libkmpris/CMakeLists.txt
++++ b/libkmpris/CMakeLists.txt
+@@ -27,7 +27,7 @@ qt_add_dbus_interface(libkmpris_SRCS dbus/org.freedesktop.DBus.Properties.xml db
+ qt_add_dbus_interface(libkmpris_SRCS dbus/org.mpris.MediaPlayer2.Player.xml mprisplayer)
+ qt_add_dbus_interface(libkmpris_SRCS dbus/org.mpris.MediaPlayer2.xml mprisroot)
+ 
+-add_library(kmpris SHARED ${libkmpris_SRCS})
++add_library(kmpris STATIC ${libkmpris_SRCS})
+ generate_export_header(kmpris)
+ target_include_directories(kmpris PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+ target_link_libraries(kmpris
+diff --git a/libnotificationmanager/CMakeLists.txt b/libnotificationmanager/CMakeLists.txt
+index 0121827..3506560 100644
+--- a/libnotificationmanager/CMakeLists.txt
++++ b/libnotificationmanager/CMakeLists.txt
+@@ -102,7 +102,7 @@ set_target_properties(notificationmanager PROPERTIES
+ ecm_add_qml_module(notificationmanager URI org.kde.notificationmanager GENERATE_PLUGIN_SOURCE)
+ ecm_finalize_qml_module(notificationmanager)
+ 
+-install(TARGETS notificationmanager EXPORT notificationmanagerLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
++install(TARGETS notificationmanager notificationmanager_resources_1 EXPORT notificationmanagerLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+ 
+ install(FILES
+     server.h
+diff --git a/libnotificationmanager/server.cpp b/libnotificationmanager/server.cpp
+index 6549095..c70e5f9 100644
+--- a/libnotificationmanager/server.cpp
++++ b/libnotificationmanager/server.cpp
+@@ -13,7 +13,6 @@
+ 
+ #include "debug.h"
+ 
+-#include <KStartupInfo>
+ #include <KWaylandExtras>
+ #include <KWindowSystem>
+ #include <QDebug>
+@@ -85,16 +84,6 @@ void Server::invokeAction(uint notificationId,
+                 Q_EMIT d->CloseNotification(notificationId);
+             }
+         });
+-    } else {
+-        KStartupInfoId startupId;
+-        startupId.initId();
+-
+-        Q_EMIT d->ActivationToken(notificationId, QString::fromUtf8(startupId.id()));
+-
+-        Q_EMIT d->ActionInvoked(notificationId, actionName);
+-        if (behavior & Notifications::Close) {
+-            Q_EMIT d->CloseNotification(notificationId);
+-        }
+     }
+ }
+ 
+diff --git a/libtaskmanager/CMakeLists.txt b/libtaskmanager/CMakeLists.txt
+index b50d24f..816213b 100644
+--- a/libtaskmanager/CMakeLists.txt
++++ b/libtaskmanager/CMakeLists.txt
+@@ -110,7 +110,7 @@ ecm_qt_declare_logging_category(taskmanager
+     EXPORT PLASMAWORKSPACE
+ )
+ 
+-install(TARGETS taskmanager EXPORT libtaskmanagerLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
++install(TARGETS taskmanager taskmanager_resources_1 EXPORT libtaskmanagerLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+ 
+ install(FILES
+     abstracttasksmodel.h
+diff --git a/libtaskmanager/virtualdesktopinfo.cpp b/libtaskmanager/virtualdesktopinfo.cpp
+index 60c5f5a..2c79933 100644
+--- a/libtaskmanager/virtualdesktopinfo.cpp
++++ b/libtaskmanager/virtualdesktopinfo.cpp
+@@ -9,7 +9,7 @@
+ 
+ #include <KLocalizedString>
+ #include <KWindowSystem>
+-#include <KX11Extras>
++
+ 
+ #include <qwayland-org-kde-plasma-virtual-desktop.h>
+ 
+@@ -31,7 +31,7 @@ namespace X11Info
+ {
+ [[nodiscard]] inline auto connection()
+ {
+-    return qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->connection();
++    return nullptr;
+ }
+ }
+ 
+diff --git a/logout-greeter/shutdowndlg.cpp b/logout-greeter/shutdowndlg.cpp
+index 74c5147..2ff1e97 100644
+--- a/logout-greeter/shutdowndlg.cpp
++++ b/logout-greeter/shutdowndlg.cpp
+@@ -32,15 +32,12 @@
+ #include <KUser>
+ #include <KWindowEffects>
+ #include <KWindowSystem>
+-#include <KX11Extras>
+ #include <LayerShellQt/Window>
+ 
+ #include <cstdio>
+-#include <netwm.h>
+ 
+ #include <X11/Xatom.h>
+ #include <X11/Xutil.h>
+-#include <fixx11h.h>
+ 
+ #include <debug.h>
+ 
+@@ -91,28 +88,7 @@ KSMShutdownDlg::KSMShutdownDlg(QWindow *parent, KWorkSpace::ShutdownType sdtype,
+ 
+     setResizeMode(PlasmaQuick::QuickViewSharedEngine::SizeRootObjectToView);
+ 
+-    // Qt doesn't set this on unmanaged windows
+-    // FIXME: or does it?
+-    if (KWindowSystem::isPlatformX11()) {
+-        constexpr auto role = std::string_view("logoutdialog");
+-        constexpr std::size_t roleLength = role.length();
+-
+-        auto x11App = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
+-        XChangeProperty(x11App->display(),
+-                        winId(),
+-                        XInternAtom(x11App->display(), "WM_WINDOW_ROLE", False),
+-                        XA_STRING,
+-                        8,
+-                        PropModeReplace,
+-                        reinterpret_cast<const unsigned char *>(role.data()),
+-                        roleLength);
+-
+-        XClassHint classHint;
+-        classHint.res_name = const_cast<char *>("ksmserver-logout-greeter");
+-        classHint.res_class = const_cast<char *>("ksmserver-logout-greeter");
+-        XSetClassHint(x11App->display(), winId(), &classHint);
+-        KX11Extras::setState(winId(), NET::SkipTaskbar | NET::SkipPager | NET::SkipSwitcher);
+-    }
++    
+ 
+     // QQuickView *windowContainer = QQuickView::createWindowContainer(m_view, this);
+     // windowContainer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+@@ -294,12 +270,7 @@ void KSMShutdownDlg::resizeEvent(QResizeEvent *e)
+ {
+     QuickViewSharedEngine::resizeEvent(e);
+ 
+-    if (KX11Extras::compositingActive()) {
+-        // TODO: reenable window mask when we are without composite?
+-        //        clearMask();
+-    } else {
+-        //        setMask(m_view->mask());
+-    }
++    
+ }
+ 
+ void KSMShutdownDlg::slotLogout()
+diff --git a/shell/desktopview.cpp b/shell/desktopview.cpp
+index cae0ef2..e9bb563 100644
+--- a/shell/desktopview.cpp
++++ b/shell/desktopview.cpp
+@@ -22,9 +22,9 @@
+ #include <PlasmaQuick/AppletQuickItem>
+ 
+ #include <KAuthorized>
+-#include <KStartupInfo>
++
+ #include <KWaylandExtras>
+-#include <KX11Extras>
++
+ #include <klocalizedstring.h>
+ #include <kwindowsystem.h>
+ #include <plasmaactivities/controller.h>
+@@ -52,9 +52,6 @@ DesktopView::DesktopView(Plasma::Corona *corona, QScreen *targetScreen)
+         m_layerWindow->setScope(QStringLiteral("desktop"));
+         m_layerWindow->setCloseOnDismissed(false);
+         m_layerWindow->setActivateOnShow(false);
+-    } else {
+-        KX11Extras::setType(winId(), NET::Desktop);
+-        KX11Extras::setState(winId(), NET::KeepBelow);
+     }
+ 
+     if (targetScreen) {
+@@ -491,9 +488,7 @@ void DesktopView::showConfigurationInterface(Plasma::Applet *applet)
+         } else {
+             m_configView->show();
+             auto window = qobject_cast<QWindow *>(m_configView);
+-            if (window && qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-                KStartupInfo::setNewStartupId(window, qgetenv("DESKTOP_STARTUP_ID"));
+-            }
++
+             m_configView->requestActivate();
+             return;
+         }
+@@ -534,9 +529,7 @@ void DesktopView::showConfigurationInterface(Plasma::Applet *applet)
+     });
+ 
+     auto window = qobject_cast<QWindow *>(m_configView);
+-    if (window && qGuiApp->nativeInterface<QNativeInterface::QX11Application>()) {
+-        KStartupInfo::setNewStartupId(window, qgetenv("DESKTOP_STARTUP_ID"));
+-    }
++
+     m_configView->requestActivate();
+ }
+ 
+diff --git a/shell/panelview.cpp b/shell/panelview.cpp
+index 152226b..deb9f92 100644
+--- a/shell/panelview.cpp
++++ b/shell/panelview.cpp
+@@ -29,7 +29,7 @@
+ #include <QScreen>
+ 
+ #include <KLocalizedString>
+-#include <KX11Extras>
++
+ #include <kwindowsystem.h>
+ 
+ #include <Plasma/Containment>
+@@ -1461,27 +1461,7 @@ void PanelView::updateMask()
+                                                  mask);
+     }
+ 
+-    if (!KWindowSystem::isPlatformX11() || KX11Extras::compositingActive()) {
+-        const QRect bounding = mask.boundingRect();
+-        // Always go to screen edge, to preserve fitts law
+-        switch (containment()->location()) {
+-        case Plasma::Types::LeftEdge:
+-            screenPanelRect.setRight(bounding.right());
+-            break;
+-        case Plasma::Types::TopEdge:
+-            screenPanelRect.setBottom(bounding.bottom());
+-            break;
+-        case Plasma::Types::RightEdge:
+-            screenPanelRect.setLeft(bounding.left());
+-            break;
+-        case Plasma::Types::BottomEdge:
+-            screenPanelRect.setTop(bounding.top());
+-            break;
+-        default:
+-            break;
+-        }
+-        setMask(screenPanelRect);
+-    } else {
++    {
+         setMask(mask);
+     }
+ }
+@@ -1787,9 +1767,7 @@ void PanelView::refreshStatus(Plasma::Types::ItemStatus status)
+     if (status == Plasma::Types::NeedsAttentionStatus) {
+         showTemporarily();
+         setFlags(flags() | Qt::WindowDoesNotAcceptFocus);
+-        if (KWindowSystem::isPlatformX11()) {
+-            KX11Extras::setState(winId(), NET::SkipSwitcher | NET::KeepAbove);
+-        }
++
+         if (m_layerWindow) {
+             m_layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
+             requestUpdate();
+@@ -1797,9 +1775,7 @@ void PanelView::refreshStatus(Plasma::Types::ItemStatus status)
+     } else if (status == Plasma::Types::AcceptingInputStatus) {
+         m_corona->savePreviousWindow();
+         setFlags(flags() & ~Qt::WindowDoesNotAcceptFocus);
+-        if (KWindowSystem::isPlatformX11()) {
+-            KX11Extras::forceActiveWindow(winId());
+-        } else {
++        {
+             showTemporarily();
+         }
+ 
+@@ -1823,9 +1799,7 @@ void PanelView::refreshStatus(Plasma::Types::ItemStatus status)
+ 
+         restoreAutoHide();
+         setFlags(flags() | Qt::WindowDoesNotAcceptFocus);
+-        if (KWindowSystem::isPlatformX11()) {
+-            KX11Extras::setState(winId(), NET::SkipSwitcher | NET::KeepAbove);
+-        }
++
+         if (m_layerWindow) {
+             m_layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
+             requestUpdate();
+diff --git a/shell/shellcorona.cpp b/shell/shellcorona.cpp
+index 6fffcd8..0572df4 100644
+--- a/shell/shellcorona.cpp
++++ b/shell/shellcorona.cpp
+@@ -34,7 +34,7 @@
+ #include <KPackage/PackageLoader>
+ #include <KSycoca>
+ #include <KWindowSystem>
+-#include <KX11Extras>
++
+ 
+ #include <Plasma/Plasma>
+ #include <Plasma/PluginLoader>
+diff --git a/soliduiserver/soliduiserver.cpp b/soliduiserver/soliduiserver.cpp
+index f991db3..8c291fa 100644
+--- a/soliduiserver/soliduiserver.cpp
++++ b/soliduiserver/soliduiserver.cpp
+@@ -18,7 +18,6 @@
+ 
+ #include <KLocalizedString>
+ #include <KPluginFactory>
+-#include <KUserTimestamp>
+ 
+ #include <kpassworddialog.h>
+ #include <kwallet.h>
+@@ -156,9 +155,6 @@ void SolidUiServer::reparentDialog(QWidget *dialog, WId wId, const QString &appI
+     }
+ #endif
+ 
+-    // allow dialog activation even if it interrupts, better than trying hacks
+-    // with keeping the dialog on top or on all desktops
+-    KUserTimestamp::updateUserTimestamp();
+ }
+ 
+ #include "soliduiserver.moc"

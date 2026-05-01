@@ -1,6 +1,7 @@
 {
   "https://download.kde.org/stable/frameworks/6.25/attica-6.25.0.tar.xz" = "fa39cc74cd34ffd4beb906099a5f42e4180432b5839a75a4b251c0ae2fb01ab1",
   "https://download.kde.org/stable/frameworks/6.25/breeze-icons-6.25.0.tar.xz" = "2188492d83ead80cae83cbb0db80cac0b55388ea2e3e02d436354b6ca2559d0c",
+  "https://download.kde.org/stable/frameworks/6.25/baloo-6.25.0.tar.xz" = "d7746f5742d96f85c11b64a1aae8a6af1f20e55b815f81da8a4e6c3c5172a2d9",
   "https://download.kde.org/stable/frameworks/6.25/karchive-6.25.0.tar.xz" = "123a268352ab63d548ba5e3c3e8fbf1d737025e4c5189821cf10e3328ab4de15",
   "https://download.kde.org/stable/frameworks/6.25/kauth-6.25.0.tar.xz" = "e1a9b20a1b8718a0a0ead943e6ae999692fe7efe6b5bd513fdb5ba1849e4bdf0",
   "https://download.kde.org/stable/frameworks/6.25/kbookmarks-6.25.0.tar.xz" = "5c4a8c1f8499f6ff1cdd035b56f6fe321244913b1894a8c6001c3acf082c5bd6",
@@ -20,6 +21,7 @@
   "https://download.kde.org/stable/frameworks/6.25/kguiaddons-6.25.0.tar.xz" = "38850963cb91978d08e781d81b147c7b66f78f4204ad820631e42ab1ef5ef76b",
   "https://download.kde.org/stable/frameworks/6.25/kholidays-6.25.0.tar.xz" = "13c345422f802bd157aaea18b2ccb5270eb5e3de44915bcce70f1a4234e1497b",
   "https://download.kde.org/stable/frameworks/6.25/ki18n-6.25.0.tar.xz" = "7fbac8bc88f5cb1af00f6a667381c4bcebba6f417dc6a3c7eef8bded6c9161de",
+  "https://download.kde.org/stable/frameworks/6.25/kfilemetadata-6.25.0.tar.xz" = "78b3516ab3038fec122f86c1370f4c7d8857ddea9e907263242affae1dd1f738",
   "https://download.kde.org/stable/frameworks/6.25/kiconthemes-6.25.0.tar.xz" = "f68f0d810a53ec589fbbc0b05d3754e2bd26e0b7c3ceb3938698b08702ae10d5",
   "https://download.kde.org/stable/frameworks/6.25/kidletime-6.25.0.tar.xz" = "64e83d46a15b444017c6341e479e229bbd6cbb8320ef1359773737cee89dd7ca",
   "https://download.kde.org/stable/frameworks/6.25/kio-6.25.0.tar.xz" = "bf71b2227016df6566665cead6cb468726d7cc708059e812daee7ea54f405378",
@@ -40,6 +42,7 @@
   "https://download.kde.org/stable/frameworks/6.25/ktexteditor-6.25.0.tar.xz" = "77e815edcdf572397f5eb750d7232b366f6cc6274bb34246ab88f2f2179733b4",
   "https://download.kde.org/stable/frameworks/6.25/ktextwidgets-6.25.0.tar.xz" = "adb35bb19fb27e89b999645f8f9d650d1de3e8ed9bb686120705fdcd1cb0f3de",
   "https://download.kde.org/stable/frameworks/6.25/kunitconversion-6.25.0.tar.xz" = "369ef042de797ea647994c524cc43915b514850026cfddb4b24bc78bdfc3dcc8",
+  "https://download.kde.org/stable/frameworks/6.25/kuserfeedback-6.25.0.tar.xz" = "4ce9fd672bed20ce646cd175522d207e0fe753fe42c5cf773c087927c0f30fe3",
   "https://download.kde.org/stable/frameworks/6.25/kwidgetsaddons-6.25.0.tar.xz" = "8a9f9cde4427ffec37a0501d337aadae3de39736674f571ff8a13d17d1e6c938",
   "https://download.kde.org/stable/frameworks/6.25/kwallet-6.25.0.tar.xz" = "6fe7c8f4c556db4861f0046dfe179c31e7891fb6ecdcfa33692d252bf23d3b11",
   "https://download.kde.org/stable/frameworks/6.25/kwindowsystem-6.25.0.tar.xz" = "b51448a7669efa18190ab7fa8d6f5e0f77d8f9879cf457dadb4629b245a02434",

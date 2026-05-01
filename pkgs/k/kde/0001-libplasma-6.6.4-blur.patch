@@ -1,0 +1,17 @@
+diff --git a/src/plasma/private/blureffectwatcher.cpp b/src/plasma/private/blureffectwatcher.cpp
+index bb985fae4..3083249b1 100644
+--- a/src/plasma/private/blureffectwatcher.cpp
++++ b/src/plasma/private/blureffectwatcher.cpp
+@@ -137,6 +137,12 @@ bool BlurEffectWatcher::fetchEffectActive() const
+     return false;
+ }
+ #endif
++bool BlurEffectWatcher::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
++{
++ 
++    return false;
++}
++
+ 
+ bool BlurEffectWatcher::isEffectActive() const
+ {

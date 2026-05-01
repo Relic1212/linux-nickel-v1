@@ -1,6 +1,8 @@
 # https://api.kde.org/
 {
   attica = 1,
+  baloo = "3b",
+  kfilemetadata = "3b",
   breeze-icons = 3, #??
   karchive = 1,
   kauth = 2,
@@ -41,6 +43,7 @@
   ktexteditor = "3b",
   ktextwidgets = 3,
   kunitconversion = 2,
+  kuserfeedback = 1,
   kwallet = 3,
   kwidgetsaddons = 1,
   kwindowsystem = 1,

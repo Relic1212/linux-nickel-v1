@@ -1,9 +1,11 @@
 https://download.kde.org/stable/frameworks/6.25/attica-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/breeze-icons-6.25.0.tar.xz
+https://download.kde.org/stable/frameworks/6.25/baloo-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/karchive-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kauth-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kbookmarks-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kcmutils-6.25.0.tar.xz
+https://download.kde.org/stable/frameworks/6.25/kfilemetadata-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kcodecs-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kcolorscheme-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kcompletion-6.25.0.tar.xz
@@ -39,6 +41,7 @@ https://download.kde.org/stable/frameworks/6.25/ksvg-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/ktexteditor-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/ktextwidgets-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kunitconversion-6.25.0.tar.xz
+https://download.kde.org/stable/frameworks/6.25/kuserfeedback-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kwidgetsaddons-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kwindowsystem-6.25.0.tar.xz
 https://download.kde.org/stable/frameworks/6.25/kxmlgui-6.25.0.tar.xz

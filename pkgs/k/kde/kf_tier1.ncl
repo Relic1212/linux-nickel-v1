@@ -25,6 +25,8 @@ in
       "kparts",
       "ktexteditor",
       "kcmutils",
+      "kfilemetadata",
+      "baloo",
     ]
   },
   lib,
@@ -217,3 +219,4 @@ EOF
 }
 & (import "kf_tier2.ncl")
 & (import "kf_tier3.ncl")
+& (import "plasma_common.ncl")
