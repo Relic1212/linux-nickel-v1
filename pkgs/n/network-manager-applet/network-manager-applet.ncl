@@ -2,6 +2,27 @@
   lib,
   drvs,
   distro,
+  networkmanager,
+  networkmanagerP11Kit =
+    networkmanager
+    & {
+      postInstallPhase | priority 1 =
+        networkmanager.postInstallPhase
+        @ [
+          "objcopy --redefine-sym memdup=memdup_libnm ${DEST}/usr/lib/libnm.a",
+        ],
+    },
+  gcr,
+  gcrGnutls =
+    gcr
+    & {
+      postInstallPhase | priority 1 =
+        gcr.postInstallPhase
+        @ [
+          "objcopy --redefine-sym pkix_asn1_tab=pkix_asn1_tab_gcr ${DEST}/usr/lib/libgcr-base-3.a",
+        ],
+    },
+
   networkManagerApplet | lib.MesonPackage = {
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/network-manager-applet/-/archive/1.36.0/network-manager-applet-1.36.0.tar.bz2",
@@ -33,12 +54,16 @@
       "echo '%{import "nm_constructor.c" as 'Text}' > ${SRC}/constructor.c",
       "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       "${CC} ${CFLAGS} -Werror -c ${SRC}/constructor.c -o ${SRC}/constructor.o",
+      m%"sed -i "s@subdir('src/tests')@# subdir('src/tests')@g" ${SRC}/meson.build"%,
     ],
 
     muslProvider = drvs.muslBothRenamedDl,
 
     biDrvs =
       [
+        drvs.gcrGnutls,
+        drvs.p11Kit,
+        drvs.gnupg2,
         drvs.jansson,
         drvs.atSpi2Core,
         drvs.bash,
@@ -101,7 +126,8 @@
         # drvs.muslShared,
         drvs.ncurses,
         drvs.nettleGmp,
-        drvs.networkmanager,
+        # drvs.networkmanager,
+        drvs.networkmanagerP11Kit,
         drvs.newt,
         drvs.nftables,
         drvs.openresolv,

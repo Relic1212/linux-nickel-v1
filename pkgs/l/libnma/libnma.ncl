@@ -15,7 +15,7 @@
     extraMesonArgs = [
       "-Dmobile_broadband_provider_info=false",
       "-Dlibnma_gtk4=true",
-      "-Dgcr=false",
+      "-Dgcr=true",
       "-Dintrospection=false",
       "-Dvapi=false",
       "-Dgtk_doc=false",
@@ -23,9 +23,13 @@
     preConfigurePhase = [
       "echo > ${SRC}/shared/nm-utils/nm-shared-utils.c",
       "sed -i 's@shared_library@library@g' ${SRC}/src/meson.build",
+      m%"sed -i "s@subdir('tests')@# subdir('tests')@g" ${SRC}/src/meson.build"%,
     ],
     biDrvs =
       [
+        drvs.gcr,
+        drvs.p11Kit,
+        drvs.gnupg2,
         drvs.atSpi2Core,
         drvs.bash,
         drvs.cairo,
