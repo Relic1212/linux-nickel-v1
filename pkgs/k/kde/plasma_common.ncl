@@ -326,17 +326,21 @@ in
           patch = import "0001-kwin-6.6.4.patch" as 'Text,
           subdir = "/kwin",
         },
-        {
-          patch = import "0001-plasma-workspace-6.6.4.patch" as 'Text,
-          subdir = "/plasma-workspace"
-        },
+      
       ]@(if options.prepPs then [
         {
-          patch = import "0002-plasma-workspace-plugins.patch" as 'Text,
+          patch = import "0001-plasma-workspace-6.6.4-full.patch" as 'Text,
           subdir = "/plasma-workspace"
           
         }
-      ] else []),
+      ] else [
+
+  {
+          patch = import "0001-plasma-workspace-6.6.4.patch" as 'Text,
+          subdir = "/plasma-workspace"
+        },
+
+      ]),
       preConfigurePhase = [
         # kdecoration
         "sed -i 's@ SHARED@@g' ${SRC}/kdecoration/src/private/CMakeLists.txt",
@@ -412,28 +416,32 @@ in
         # -plasma5support
 
         # plasma-workspace
-        "sed -i 's@ecm_optional_add_subdirectory(xembed-sni-proxy)@# ecm_optional_add_subdirectory(xembed-sni-proxy)@g' ${SRC}/plasma-workspace/CMakeLists.txt",
-        m%"sed -i "s@find_package(QRencode)@find_package(QRencode)\nfind_package(X11)\nfind_package(Dmtx)\nfind_package(ZXing CONFIG)@g" ${SRC}/plasma-workspace/CMakeLists.txt"%,
         # m%"cat >${SRC}/plasma-workspace/CMakeLists.txt << 'EOF'
         # "%
 
-        ] @ ( if (! options.prepPs) then [] else [# "sed -i 's|  SOURCES | STATIC SOURCES |g' ${SRC}/plasma-workspace/shell/packageplugins/CMakeLists.txt" # not needed w build_shared_libs=off
+        ] @ ( if (! options.prepPs) then [
+
+        "sed -i 's@ecm_optional_add_subdirectory(xembed-sni-proxy)@# ecm_optional_add_subdirectory(xembed-sni-proxy)@g' ${SRC}/plasma-workspace/CMakeLists.txt",
+        m%"sed -i "s@find_package(QRencode)@find_package(QRencode)\nfind_package(X11)\nfind_package(Dmtx)\nfind_package(ZXing CONFIG)@g" ${SRC}/plasma-workspace/CMakeLists.txt"%,
+
+
+        ] else [# "sed -i 's|  SOURCES | STATIC SOURCES |g' ${SRC}/plasma-workspace/shell/packageplugins/CMakeLists.txt" # not needed w build_shared_libs=off
         
-        "sed -i 's|add_subdirectory(packageplugins)|# add_subdirectory(packageplugins)|g' ${SRC}/plasma-workspace/shell/CMakeLists.txt",
-        m%"sed -i "s@install(TARGETS plasmashell@%{ 
-          std.string.join ""
-          [
-             m%"add_subdirectory(packageplugins)\n"%,
-             # m%"kcoreaddons_target_static_plugins(plasma_layouttemplate NAMESPACE \"kf6/packagestructure\")\n"%,
-             # m%"kcoreaddons_target_static_plugins(plasma_lookandfeel NAMESPACE \"kf6/packagestructure\")\n"%,
-             # m%"kcoreaddons_target_static_plugins(wallpaper_images NAMESPACE \"kf6/packagestructure\")\n"%,
-            #  m%"kcoreaddons_target_static_plugins(plasmashell LINK_OPTION PRIVATE NAMESPACE kf6/packagestructure)\n"%,
-            #  m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tTARGETS plasma_lookandfeel\n)\n"%,
-             m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tNAMESPACE "kf6/packagestructure"\n)\n"%,
-             m%"install(TARGETS plasmashell"%
-           ]
+        # "sed -i 's|add_subdirectory(packageplugins)|# add_subdirectory(packageplugins)|g' ${SRC}/plasma-workspace/shell/CMakeLists.txt",
+        # m%"sed -i "s@install(TARGETS plasmashell@%{ 
+        #   std.string.join ""
+        #   [
+        #      m%"add_subdirectory(packageplugins)\n"%,
+        #      # m%"kcoreaddons_target_static_plugins(plasma_layouttemplate NAMESPACE \"kf6/packagestructure\")\n"%,
+        #      # m%"kcoreaddons_target_static_plugins(plasma_lookandfeel NAMESPACE \"kf6/packagestructure\")\n"%,
+        #      # m%"kcoreaddons_target_static_plugins(wallpaper_images NAMESPACE \"kf6/packagestructure\")\n"%,
+        #     #  m%"kcoreaddons_target_static_plugins(plasmashell LINK_OPTION PRIVATE NAMESPACE kf6/packagestructure)\n"%,
+        #     #  m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tTARGETS plasma_lookandfeel\n)\n"%,
+        #      m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tNAMESPACE "kf6/packagestructure"\n)\n"%,
+        #      m%"install(TARGETS plasmashell"%
+        #    ]
           
-          }@g" ${SRC}/plasma-workspace/shell/CMakeLists.txt"%
+        #   }@g" ${SRC}/plasma-workspace/shell/CMakeLists.txt"%
         # -plasma-workspace
       ]),
       cmakeExtraArgsRecord = {},
