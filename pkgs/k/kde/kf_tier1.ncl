@@ -182,6 +182,13 @@ EOF
         in
         [
           # genCmake,
+
+          # kconreaddons
+          # https://github.com/KDE/kcoreaddons/commit/c71bbde7b820a15c5c13d44f5fae9b5c41ac990a
+          "sed -i 's|ARGS_LINK_OPTION AND ARGS_NAMESPACE|ARGS_TARGETS AND ARGS_NAMESPACE|g' ${SRC}/kcoreaddons/KF6CoreAddonsMacros.cmake",
+          "sed -i 's|return()|# return()|g' ${SRC}/kcoreaddons/KF6CoreAddonsMacros.cmake",
+          # -kcoreaddons
+
           # kidlteime
           "sed -i 's@add_subdirectory(examples)@#add_subdirectory(examples)@g' ${SRC}/kidletime/CMakeLists.txt",
           m%"

@@ -1,0 +1,36 @@
+diff --git a/shell/main.cpp b/shell/main.cpp
+index 7f55101a09..8d6f23c8c1 100644
+--- a/shell/main.cpp
++++ b/shell/main.cpp
+@@ -34,6 +34,9 @@
+ #include <KLocalizedString>
+ #include <KSignalHandler>
+ 
++#include <QPluginLoader>
++#include <QJsonDocument>
++
+ #include <csignal>
+ 
+ #if __has_include(<malloc.h>)
+@@ -57,7 +60,7 @@ static void setupMalloc()
+     mallopt(M_TRIM_THRESHOLD, 5 * pagesize);
+ }
+ #endif
+-
++Q_IMPORT_PLUGIN(plasma_lookandfeel_factory)
+ int main(int argc, char *argv[])
+ {
+ #if __has_include(<malloc.h>) && defined(__GLIBC__)
+@@ -114,6 +117,12 @@ int main(int argc, char *argv[])
+ 
+     bool replace = false;
+ 
++
++    for (const QStaticPlugin &p: QPluginLoader::staticPlugins()){
++        auto meta = p.metaData();
++        qDebug().noquote() << QJsonDocument(meta).toJson();
++    }
++
+     ShellCorona corona;
+     {
+         QCommandLineParser cliOptions;
