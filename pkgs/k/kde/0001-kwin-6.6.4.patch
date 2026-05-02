@@ -179,7 +179,7 @@ index bb58445e2b..edfeee5c48 100644
  void Application::start()
  {
 +    
-+    kwin_resources_init;
++    kwin_resources_init();
 +
      // Prevent KWin from synchronously autostarting kactivitymanagerd
      // Indeed, kactivitymanagerd being a QApplication it will depend
