@@ -12,21 +12,17 @@
       #     sha256sum = "94adcd41e39f05f362a39f6002665ccf40961797fd20ed8f7580eee516346000",
       #     file = "vulkan-tools.patch"
       #   },
-      {
-        sha256sum = "335ab8b216f63d5aca4692fb24cdb896c11709003458fb47cedc3566d6a85a31",
-        file = "vulkan-tools-dl.patch"
-      },
-      {
-        sha256sum = "99032d2bcbf2261a2ef10972addb5ab4e6fe75698567da63db97261376531b1d",
-        file = "vulkan-tools-cube.patch",
-      },
+      # {
+      #   sha256sum = "335ab8b216f63d5aca4692fb24cdb896c11709003458fb47cedc3566d6a85a31",
+      #   file = "vulkan-tools-dl.patch"
+      # },
+      # {
+      #   sha256sum = "99032d2bcbf2261a2ef10972addb5ab4e6fe75698567da63db97261376531b1d",
+      #   file = "vulkan-tools-cube.patch",
+      # },
     ],
-    debug = true,
-    preConfigurePhase = [
-      m%"sed -i 's|MODULE|STATIC|g' ${SRC}/icd/CMakeLists.txt"%,
-      "echo '%{ import "vulkan-tools-dl.c" as 'Text }' > ${SRC}/dlopen.c",
-      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
-    ],
+  
+
     buildEnv = {
       # EXTRA_CPPFLAGS = [
       #   "-DVK_ONLY_EXPORTED_PROTOTYPES",
@@ -276,9 +272,13 @@
     cmakeExtraArgsRecord = {
       "-DBUILD_CUBE" = true,
     },
+       preConfigurePhase = [
+      m%"sed -i 's|MODULE|STATIC|g' ${SRC}/icd/CMakeLists.txt"%,
+      "echo '%{ import "vulkan-tools-dl.c" as 'Text }' > ${SRC}/dlopen.c",
+      "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+    ],
     llvmProvider | priority 1 = drvs.llvmFullDebug,
     muslProvider = drvs.muslBothRenamedDl,
-    debug = true,
 
     biDrvs = [
       drvs.gnupatch & { priority = 1 },

@@ -77,10 +77,10 @@
             sha256sum = "f224c21164f80f9766df0ba2531b11c6da43a6d61178e1e5e55da90cd2c6858c",
             file = "mesa-glx-no-dups.patch"
           },
-          {
-            file = "mesa-vulkan.patch",
-            sha256sum = "d235a0d32a2c12ebbd9174ad4b8f2957f1f563ee494b3c2d949e7b4bfef76244",
-          }
+          # {
+          #   file = "mesa-vulkan.patch",
+          #   sha256sum = "d235a0d32a2c12ebbd9174ad4b8f2957f1f563ee494b3c2d949e7b4bfef76244",
+          # }
         ],
       preConfigurePhase | priority 1 =
         mesa2.preConfigurePhase

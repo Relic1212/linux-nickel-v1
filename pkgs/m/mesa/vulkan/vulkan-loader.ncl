@@ -53,20 +53,29 @@
     debug = true,
     options = {
       renameDl | default = true,
+      prefixSymbols | default = []
     },
 
-    postInstallPhase = (
-      if options.renameDl then
-        [
-          # "llvm-objcopy -W loader_platform_open_library ${DEST}/usr/lib/libvulkan.a",
-          # "llvm-objcopy -W loader_platform_get_proc_address ${DEST}/usr/lib/libvulkan.a",
-          "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan.a",
-          "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan.a",
-          "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan.a",
-        ]
-      else
-        []
-    ),
+    postInstallPhase =
+      (
+        if options.renameDl then
+          [
+            # "llvm-objcopy -W loader_platform_open_library ${DEST}/usr/lib/libvulkan.a",
+            # "llvm-objcopy -W loader_platform_get_proc_address ${DEST}/usr/lib/libvulkan.a",
+            "llvm-objcopy --redefine-sym dlopen=dlopen_vulkan ${DEST}/usr/lib/libvulkan.a",
+            "llvm-objcopy --redefine-sym dlsym=dlsym_vulkan ${DEST}/usr/lib/libvulkan.a",
+            "llvm-objcopy --redefine-sym dladdr=dladdr_vulkan ${DEST}/usr/lib/libvulkan.a",
+          ]
+        else
+          []
+      )
+      @ (
+        std.array.map
+          (fun s =>
+            "llvm-objcopy --redefine-sym %{s}=libvulkan_%{s} ${DEST}/usr/lib/libvulkan.a"
+          )
+          options.prefixSymbols
+      ),
     llvmProvider | priority 1 = drvs.llvmFullDebug,
 
     biDrvs = [
@@ -125,6 +134,110 @@
     & {
 
       options.renameDl = false,
+      options.prefixSymbols =
+        [
+          "vkCreateXcbSurfaceKHR",
+          "vkCreateXlibSurfaceKHR",
+          "vkCreateWaylandSurfaceKHR",
+          "vkGetPhysicalDeviceProperties",
+          "vkCreateDevice",
+          "vkDestroyDevice",
+          "vkGetDeviceGroupPresentCapabilitiesKHR",
+          "vkEnumerateDeviceExtensionProperties",
+          "vkGetPhysicalDeviceImageFormatProperties",
+          "vkCreateImage",
+          "vkGetImageMemoryRequirements",
+          "vkDestroyImage",
+          "vkGetPhysicalDeviceFormatProperties",
+          "vkGetPhysicalDeviceSurfaceCapabilities2KHR",
+          "vkGetDisplayPlaneSupportedDisplaysKHR",
+          "vkGetPhysicalDeviceDisplayPlanePropertiesKHR",
+          "vkGetDisplayPlaneCapabilitiesKHR",
+          "vkGetDisplayModePropertiesKHR",
+          "vkGetPhysicalDeviceDisplayPropertiesKHR",
+          "vkGetPhysicalDeviceSurfaceSupportKHR",
+          "vkEnumerateInstanceVersion",
+          "vkCreateInstance",
+          "vkEnumeratePhysicalDevices",
+          "vkGetPhysicalDeviceMemoryProperties",
+          "vkGetPhysicalDeviceFeatures",
+          "vkGetPhysicalDeviceQueueFamilyProperties",
+          "vkGetPhysicalDeviceSurfacePresentModesKHR",
+          "vkGetPhysicalDeviceSurfaceFormats2KHR",
+          "vkGetPhysicalDeviceSurfaceFormatsKHR",
+          "vkGetPhysicalDeviceSurfaceCapabilitiesKHR",
+          "vkDestroySurfaceKHR",
+          "vkDestroyInstance",
+          "vkGetInstanceProcAddr",
+          "vkEnumerateInstanceExtensionProperties",
+          "vkEnumerateInstanceLayerProperties",
+          "vkCreateDisplayPlaneSurfaceKHR",
+        ]
+        @ [
+          "vkResetCommandBuffer",
+          "vkBeginCommandBuffer",
+          "vkCmdPipelineBarrier",
+          "vkEndCommandBuffer",
+          "vkCreateBuffer",
+          "vkGetBufferMemoryRequirements",
+          "vkAllocateMemory",
+          "vkMapMemory",
+          "vkBindBufferMemory",
+          "vkGetDeviceProcAddr",
+          "vkAcquireNextImageKHR",
+          "vkAllocateCommandBuffers",
+          "vkAllocateDescriptorSets",
+          "vkBindImageMemory",
+          "vkCmdBeginRenderPass",
+          "vkCmdBindDescriptorSets",
+          "vkCmdBindPipeline",
+          "vkCmdCopyBufferToImage",
+          "vkCmdDraw",
+          "vkCmdEndRenderPass",
+          "vkCmdSetScissor",
+          "vkCmdSetViewport",
+          "vkCreateCommandPool",
+          "vkCreateDescriptorPool",
+          "vkCreateDescriptorSetLayout",
+          "vkCreateFence",
+          "vkCreateFramebuffer",
+          "vkCreateGraphicsPipelines",
+          "vkCreateImageView",
+          "vkCreatePipelineCache",
+          "vkCreatePipelineLayout",
+          "vkCreateRenderPass",
+          "vkCreateSampler",
+          "vkCreateSemaphore",
+          "vkCreateShaderModule",
+          "vkCreateSwapchainKHR",
+          "vkDestroyBuffer",
+          "vkDestroyCommandPool",
+          "vkDestroyDescriptorPool",
+          "vkDestroyDescriptorSetLayout",
+          "vkDestroyFence",
+          "vkDestroyFramebuffer",
+          "vkDestroyImageView",
+          "vkDestroyPipeline",
+          "vkDestroyPipelineCache",
+          "vkDestroyPipelineLayout",
+          "vkDestroyRenderPass",
+          "vkDestroySampler",
+          "vkDestroySemaphore",
+          "vkDestroyShaderModule",
+          "vkDestroySwapchainKHR",
+          "vkDeviceWaitIdle",
+          "vkFreeCommandBuffers",
+          "vkFreeMemory",
+          "vkGetDeviceQueue",
+          "vkGetImageSubresourceLayout",
+          "vkGetSwapchainImagesKHR",
+          "vkQueuePresentKHR",
+          "vkQueueSubmit",
+          "vkResetFences",
+          "vkUnmapMemory",
+          "vkUpdateDescriptorSets",
+          "vkWaitForFences",
+        ],
       cmakeExtraArgsRecord = {
         "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
         "-DBUILD_WSI_XCB_SUPPORT" | priority 1 = true,
