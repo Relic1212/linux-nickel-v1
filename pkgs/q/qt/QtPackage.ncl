@@ -7,6 +7,7 @@
       & {
         name,
         srcName | default = name,
+        # debug | force = true,
         qtSources,
         # singleSource | priority -1000 = {
         #   uri = "https://download.qt.io/archive/qt/6.10/%{qtSources.version}/submodules/%{srcName}-everywhere-src-%{qtSources.version}.tar.xz",
@@ -16,7 +17,7 @@
 
         cmakeExtraArgsRecord = {
 
-          "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
+          # "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\"",
 
           "-DQT_QPA_DEFAULT_PLATFORM" = "wayland",
 
@@ -35,14 +36,32 @@
         },
 
         generator = "Ninja",
+        options = {
+          x11flags | default = true,
+        },
 
         buildEnv = {
-          BASE_LDFLAGS = [
-            # "-lc++",
-            # "-lglapi",
-            # "-ldrm",
-            "$(pkg-config --libs --static gbm glesv2 dri egl)",
-          ],
+          BASE_LDFLAGS =
+            [
+              # "-lc++",
+              # "-lglapi",
+              # "-ldrm",
+              "$(pkg-config --libs --static gbm glesv2 dri egl)",
+            ]
+            @ (
+              if options.x11flags then
+                [
+
+                  # "$(pkg-config --static --libs libudev)",
+                  # "$(pkg-config --static --libs libevdev)",
+                  "$(pkg-config --static --libs xcb)",
+                  "$(pkg-config --static --libs xcb-shm)",
+                  "$(pkg-config --static --libs x11-xcb)",
+                  "$(pkg-config --static --libs xau)",
+                ]
+              else
+                []
+            ),
         }
       }
   }

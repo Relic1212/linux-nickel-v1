@@ -1,0 +1,42 @@
+diff --git a/src/wayland/CMakeLists.txt b/src/wayland/CMakeLists.txt
+index cf84713..bdb2bd3 100644
+--- a/src/wayland/CMakeLists.txt
++++ b/src/wayland/CMakeLists.txt
+@@ -74,7 +74,6 @@ endfunction()
+ # -----
+ 
+ qt_add_library(quickshell-wayland STATIC
+-	wl_proxy_safe_deref.cpp
+ 	platformmenu.cpp
+ 	popupanchor.cpp
+ 	xdgshell.cpp
+@@ -82,9 +81,6 @@ qt_add_library(quickshell-wayland STATIC
+ 	output_tracking.cpp
+ )
+ 
+-# required for wl_proxy_safe_deref
+-target_link_libraries(quickshell-wayland PRIVATE ${CMAKE_DL_LIBS})
+-target_link_options(quickshell PRIVATE "LINKER:--export-dynamic-symbol=wl_proxy_get_listener")
+ 
+ # required to make sure the constructor is linked
+ add_library(quickshell-wayland-init OBJECT init.cpp)
+diff --git a/src/wayland/init.cpp b/src/wayland/init.cpp
+index 579e42a..09c17f5 100644
+--- a/src/wayland/init.cpp
++++ b/src/wayland/init.cpp
+@@ -10,7 +10,6 @@
+ #include "wlr_layershell/wlr_layershell.hpp"
+ #endif
+ 
+-void installWlProxySafeDeref(); // NOLINT(misc-use-internal-linkage)
+ void installPlatformMenuHook(); // NOLINT(misc-use-internal-linkage)
+ void installPopupPositioner();  // NOLINT(misc-use-internal-linkage)
+ 
+@@ -33,7 +32,6 @@ class WaylandPlugin: public QsEnginePlugin {
+ 		return isWayland;
+ 	}
+ 
+-	void preinit() override { installWlProxySafeDeref(); }
+ 
+ 	void init() override {
+ 		installPlatformMenuHook();

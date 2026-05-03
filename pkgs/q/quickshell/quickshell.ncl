@@ -38,6 +38,15 @@
           else
             []
         )
+        @ (
+          if options.vulkan then
+            [
+              "$(pkg-config --libs --static libpipewire-0.3)",
+              "/tmp/workdir/src/dlopen.o",
+            ]
+          else
+            []
+        )
     },
     preConfigurePhase = [
       m%"sed -i 's@#include <bits/types/sigset_t.h>@@g' ${SRC}/src/crash/handler.cpp"%,
@@ -190,7 +199,7 @@
       @ (
         if options.vulkan then
           [
-            #  drvs.vulkanHeaders,
+            drvs.vulkanHeaders,
           ]
         else
           []
@@ -198,7 +207,6 @@
       @ (
         if options.x11 then
           [
-            drvs.qtbaseX11,
             drvs.libxkbcommonX11,
             drvs.xcbUtil,
             drvs.xcbUtilCursor,
@@ -211,6 +219,16 @@
             # drvs.libxf86vm,
             # drvs.libxrandr,
           ]
+          @ (
+            if options.vulkan then
+              [
+                drvs.qtbaseVulkan,
+              ]
+            else
+              [
+                drvs.qtbaseX11,
+              ]
+          )
         else
           [
             drvs.mesa2,
@@ -229,13 +247,15 @@
       @ (
         if options.crash then
           [
-            drvs.breakpad,
+            # drvs.breakpad,
+            drvs.cpptrace,
+            drvs.libdwarf,
           ]
         else
           []
       ),
     allowDubplicateBuldInputs = true,
-    propagatedBuildInputs = [
+    pDrvs = [
       drvs.pipewire,
     ],
   }
@@ -247,19 +267,65 @@
   quickshellGit =
     quickshell
     & {
+      patches | priority 1 = [],
+      eofPatches = [
+        {
+          patch = import "fix-quickshell.patch" as 'Text,
+        },
+        {
+          patch = import "quickshell-no-wayland-dlsym.patch" as 'Text,
+        },
+      ],
+      preConfigurePhase | priority 1 = [
+        lib.functions.writeFile "${SRC}/dlopen.c" (import "quickshell_dlopen.c" as 'Text),
+        "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      ],
+      debug = true,
+      muslProvider = drvs.muslBothRenamedDl,
       options = {
         polkit = true,
         x11 = true,
-        crash = false,
+        crash = (true),
         vulkan = true,
       },
+
+      biDrvs | priority 1 = [
+        drvs.cpptrace,
+        drvs.libdwarf,
+        drvs.polkit,
+        drvs.jemalloc,
+        # drvs.qtmultimedia,
+      ],
+
+      pDrvs | priority 1 = [
+        drvs.qtmultimedia,
+        drvs.qt5compat,
+        drvs.bluez,
+        drvs.sbc,
+        drvs.libusb,
+        drvs.ffmpeg,
+        drvs.jansson,
+        # drvs.libfreeaptx,
+        drvs.fdkAac,
+        drvs.ldacbt,
+        # 
+        drvs.libyaml,
+        drvs.libsndfile,
+        drvs.libopus,
+        drvs.lua,
+        drvs.alsaLibs,
+        drvs.pulseaudio17,
+        drvs.cli11,
+        drvs.zstd,
+      ],
+
       singleSource | priority 1 = {
-        # uri = "https://github.com/quickshell-mirror/quickshell/archive/a849a88893c71d409aecef0b999e6cc3d9b50034.tar.gz",
-        # sha256sum = "dae43a0c303306c0a3981296064d6c7319ce9e6285e3f714d7a10b22353e3463",  
+        uri = "https://github.com/quickshell-mirror/quickshell/archive/8db8ca1fecfcce8def1f9265fa1742baa0e0c271.tar.gz",
+        sha256sum = "80d68bd65d247a0818c8b6544a341c5d04be8d11bff4f1e6a9f00c0f828c290a",
 
         # latest without vulkan:
-        uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
-        sha256sum = "dac6768b33e51d2930061ed789d603dd5eea0dd0a6255800b9b96afe517b4fa5",
+        # uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
+        # sha256sum = "dac6768b33e51d2930061ed789d603dd5eea0dd0a6255800b9b96afe517b4fa5",
       },
     }
 }

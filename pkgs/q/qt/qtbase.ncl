@@ -49,30 +49,31 @@ in
     generator = "Ninja",
 
     llvmProvider = drvs.llvmFull,
+    allowDubplicateBuldInputs = true,
 
-    biDrvs =
+    pDrvs =
       [
         drvs.mesa2,
         # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.zlibNg,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.libffi,
-        drvs.bison,
-        drvs.flex,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.linuxHeaders,
-        drvs.m4,
-        drvs.git,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
+        # drvs.libelf,
+        # drvs.libdrm,
+        # drvs.zlibNg,
+        # drvs.pythonMako,
+        # drvs.pythonPackaging,
+        # drvs.pythonMarkupsafe,
+        # drvs.libpciaccess,
+        # drvs.libffi,
+        # drvs.bison,
+        # drvs.flex,
+        # drvs.wayland,
+        # drvs.waylandProtocols,
+        # drvs.linuxHeaders,
+        # drvs.m4,
+        # drvs.git,
+        # drvs.pyyaml,
+        # drvs.llvmConfigStatic,
+        # drvs.spirvTools,
+        # drvs.spirvLlvmTranslator,
         ###
 
         ###
@@ -125,6 +126,7 @@ in
             drvs.libxkbcommon,
           ]
       )
+      @ (if options.vulkan then [drvs.vulkanHeaders] else [])
       @ [
         # drvs.cmake,
         # drvs.samurai,
@@ -137,6 +139,7 @@ in
     ],
     options = {
       x11 | default = false,
+      vulkan | default = false,
     },
     cmakeExtraArgsRecord =
       qtbaseCmakeExtraArgsRecorf
@@ -183,10 +186,24 @@ in
           "$(pkg-config --static --libs xau)",
         ]
       }
+    },
+  qtbaseVulkan | lib.QtPackage =
+    qtbaseX11
+    & {
+      options.x11flags = false,
+
+      options.vulkan = true,
+
+      cmakeExtraArgsRecord = {
+        "-DFEATURE_vulkan" = true,
+      },
     }
 }
 & {
   lib,
+  lib = {
+    MesonPackage,
+  },
   drvs,
   dbus,
   dbusForQt | lib.MesonPackage = (
