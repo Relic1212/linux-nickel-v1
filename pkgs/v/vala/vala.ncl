@@ -27,12 +27,45 @@
       drvs.graphviz,
     ]
   },
-  valaDoc =
+  valaDoc1 =
     vala
     & {
+      buildEnv.EXTRA_LDFLAGS = [
+        "/tmp/workdir/src/dlopen.o",
+        "/tmp/workdir/src/weak.o",
+      ],
       extraConfigureFlags = [
         "--enable-valadoc",
       ],
+      preConfigurePhase = [
+        lib.functions.writeFile "${SRC}/dlopen.c" (import "vala_dlopen.c" as 'Text),
+        lib.functions.writeFile "${SRC}/weak.c" (import "vala_weak.c" as 'Text),
+        "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+        "${CC} ${CFLAGS} -c ${SRC}/weak.c -o ${SRC}/weak.o",
+      ],
+      postInstallPhase = [
+        "touch ${DEST}/usr/lib/valadoc-0.56/doclets/html/libdoclet.so",
+      ],
+      muslProvider = drvs.muslBothRenamedDl,
+    },
+  valaDoc =
+    valaDoc1
+    & {
+      buildEnv.EXTRA_LDFLAGS | priority 1 = [
+        "$(pkg-config --libs --static valadoc-0.56)",
+        "/usr/lib/vala-0.56/libvalaccodegen.a",
+        "-lltdl",
+        "-lxdot",
+        "-lpathplan",
+        "/tmp/workdir/src/dlopen.o",
+        # "/tmp/workdir/src/weak.o",
+        "/usr/lib/valadoc-0.56/doclets/html/libdoclet.a",
+      ],
+      biDrvs | priority 1 =
+        valaDoc1.biDrvs
+        @ [
+          drvs.valaDoc1,
+        ]
     },
   valaShared | lib.AutomakePackage = {
     singleSource = vala.singleSource,
