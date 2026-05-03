@@ -10,5 +10,16 @@
     configurePhase = [
       "meson setup %{std.string.join "\\\n\t" mesonArgs} . ${SRC}/build/meson"
     ],
+  },
+  zstdCmake | lib.CmakePackage = {
+    singleSource = zstd.singleSource,
+    generator = "Ninja",
+    cmakeExtraArgsRecord = {
+      "-DZSTD_BUILD_SHARED" = false,
+      "-DZSTD_BUILD_STATIC" = true,
+    },
+    preConfigurePhase = [
+      "export SRC=${SRC}/build/cmake",
+    ]
   }
 }
