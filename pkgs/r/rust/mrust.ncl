@@ -165,7 +165,13 @@
     ],
     enableCcache = false,
   },
-
+  libemptyAtomic | lib.Package = {
+    installPhase = [
+      "install -d -m0755 ${DEST}/usr/lib",
+      "cd ${DEST}/usr/lib",
+      "ln -s libempty.a libatomic.a",
+    ]
+  },
   libemptyGcc | lib.Package = {
     installPhase = [
       "install -d -m0755 ${DEST}/usr/lib",
