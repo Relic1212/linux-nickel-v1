@@ -25,7 +25,9 @@
 
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static expat gtk+-3.0 epoxy xi)"
+        "$(pkg-config --libs --static expat gtk+-3.0 epoxy xi)",
+        "-L/tmp/workdir/src/dlopen_lib",
+        "-ldlopen",
       ]
     },
 
@@ -36,6 +38,14 @@
     # 
 
     separateBuildDir = false,
+    preConfigurePhase = [
+      lib.functions.writeFile "dlopen.c" (import "nwg_look_dlopen.c" as 'Text),
+      "${CC} ${CFLAGS} -Werror -c dlopen.c -o dlopen.o",
+      "mkdir dlopen_lib",
+      "${AR} rcs dlopen_lib/libdlopen.a dlopen.o",
+      "${RANLIB} dlopen_lib/libdlopen.a",
+      "rm dlopen.c",
+    ],
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",
@@ -54,10 +64,12 @@
     # https://mt165.co.uk/blog/static-link-go/
     buildPhase = [
       m%"go build -ldflags "-linkmode 'external' -extldflags '-static'"  -v -o bin/nwg-look ."%,
+      # m%"go build -ldflags "-extldflags '-static'"  -v -o bin/nwg-look ."%,
     ],
     # installPhase = [],
 
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
 
     biDrvs = [
 
@@ -77,7 +89,8 @@
       drvs.gettext,
       drvs.glib,
       drvs.glibDynamic,
-      drvs.go_1_24,
+      # drvs.go_1_24,
+      drvs.go_1_26,
       drvs.gobjectDynamic,
       drvs.gperf,
       drvs.gtk3X11,
