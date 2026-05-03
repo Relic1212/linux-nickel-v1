@@ -3,8 +3,8 @@
   drvs,
   tlp | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/linrunner/TLP/archive/refs/tags/1.8.0.tar.gz",
-      sha256sum = "65515f7652064a1be2940c031e045b762924bb1dbd94f5e58e3b765113cf5210"
+      uri = "https://github.com/linrunner/TLP/archive/refs/tags/1.10.0.tar.gz",
+      sha256sum = "902d9be64746e0d9b9c879b963b2b90a2d3edd265ee192db76d692c5a962a3ff"
     },
     extraMakeArgs = [
       "TLP_SBIN=/usr/bin",
