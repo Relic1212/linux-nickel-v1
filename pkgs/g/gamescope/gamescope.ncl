@@ -16,8 +16,11 @@
             # uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.14.5.tar.gz",
             # sha256sum = "2a27905b0f19184d284dbc7aed3687901fb28af1859ef69cee3c46443be58811",
 
-            uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.17.tar.gz",
-            sha256sum = "315d30faa7cc73b15f58d4169fba669da978fbddf707e87a85e79d83eb15d530",
+            # uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.17.tar.gz",
+            # sha256sum = "315d30faa7cc73b15f58d4169fba669da978fbddf707e87a85e79d83eb15d530",
+
+            uri = "https://github.com/ValveSoftware/gamescope/archive/refs/tags/3.16.19.tar.gz",
+            sha256sum = "a128a732091bccf9f609ee415e83644bbc9a9006c52dd5a6850a146585c57a41"
           }
         },
         {
@@ -92,22 +95,37 @@
           },
           dest = "thirdparty/SPIRV-Headers",
         },
-        {
-          src = {
-            uri = "https://raw.githubusercontent.com/AerynOS/recipes/0c0b66498ea61920e31cfb082d5a457fe5fae341/g/gamescope/pkg/ftbfs-libc%2B%2B.patch",
-            sha256sum = "367e498532f1333ede2828d0519686f9d6e3c1cc3ebf7fc8eae100359c85e2f8"
-          }
-        }
+        # {
+        #   src = {
+        #     uri = "https://raw.githubusercontent.com/AerynOS/recipes/0c0b66498ea61920e31cfb082d5a457fe5fae341/g/gamescope/pkg/ftbfs-libc%2B%2B.patch",
+        #     sha256sum = "367e498532f1333ede2828d0519686f9d6e3c1cc3ebf7fc8eae100359c85e2f8"
+        #   }
+        # },
+        # {
+        #   src = {
+        #     uri = "https://raw.githubusercontent.com/chimera-linux/cports/c973902753f00b05cd264a7d0d74b9a4c9cda153/user/gamescope/patches/mtx-cpp-20.patch",
+        #     sha256sum = "f25821e0b0842cbe40bec5b971b5bcb1fa3061855e69b77600cd10c8b1b37631"
+        #   }
+        # },
+        # {
+        #   # https://github.com/ValveSoftware/gamescope/pull/1335/commits/5c2ad3f14d54ad1f4566103ecd4d8bb0bdb5c15b
+        #   src = {
+        #     uri = "https://github.com/ValveSoftware/gamescope/commit/5c2ad3f14d54ad1f4566103ecd4d8bb0bdb5c15b.patch",
+        #     sha256sum = "335f9c5469757cd1502e9614de5f2fbfa7a3a49fb9376a902c6d283c67443de8"
+        #   }
+        # },
       ],
       patches = [
-        {
-          file = "gamescope.patch",
-          sha256sum = "fa53b50a85f56993eada4abfe7912039d130ccfda67c78dba36d00b57f24ba35",
-        },
+        #   {
+        #     file = "gamescope.patch",
+        #     sha256sum = "fa53b50a85f56993eada4abfe7912039d130ccfda67c78dba36d00b57f24ba35",
+        #   },
+        { file = "chimera-mutex.patch", sha256sum = "c1b123f58ec209227d463ebc83034f4d5a9ab3a3bdc27d5feb8991bec1cde5b1" },
       ],
       buildEnv.EXTRA_LDFLAGS = [
         "-lc++",
-        "-ldl_vulkan",
+        # "-ldl_vulkan",
+        "/usr/lib/gamescope_dlopen.o",
         "-lvulkan",
         "-l:libVkLayer_MESA_device_select.a",
         "-Wl,-u,vk_common_GetPhysicalDeviceProperties2",
@@ -123,20 +141,25 @@
         "$(pkg-config --libs --static vulkan_radeon)",
       ],
       preConfigurePhase = [
-        "(cd ${SRC} && patch -p1 < ftbfs-libc++.patch)",
+        # "(cd ${SRC} && patch -p1 < ftbfs-libc++.patch)",
+        # "(cd ${SRC} && patch -p1 < mtx-cpp-20.patch)",
+        # "(cd ${SRC} && patch -p1 < 5c2ad3f14d54ad1f4566103ecd4d8bb0bdb5c15b.patch)",
         "(cd ${SRC}/subprojects && cp packagefiles/glm/meson.build glm/)",
         "(cd ${SRC}/subprojects && cp packagefiles/stb/meson.build stb/)",
         m%"sed -i "s|subdir('test')||g" ${SRC}/subprojects/libliftoff/meson.build"%,
         m%"sed -i 's|shared_library|library|g' ${SRC}/layer/meson.build"%,
       ],
 
-      # extraMesonArgs = [
-      # "-Dwlroots:backends=drm,libinput",
-      # "-Dwlroots:color-management=enabled",
-      # "-Dwlroots:renderers=gles2,vulkan",
-      # ],
+      extraMesonArgs = [
+        "-Dwlroots:backends=drm,libinput,x11",
+        # "-Dwlroots:color-management=enabled",
+        "-Dwlroots:renderers=gles2,vulkan",
+        "-Ddrm_backend=enabled",
+        "-Dsdl2_backend=enabled",
+        "-Dinput_emulation=enabled",
+      ],
 
-      llvmProvider = drvs.llvmFull,
+      llvmProvider = drvs.llvmFullDebug,
       muslProvider = drvs.muslBothRenamedDl,
       debug = true,
 
@@ -224,9 +247,28 @@
         drvs.libdecor,
         drvs.glslang,
         drvs.luajit,
-        drvs.libdl_vulkan,
+        # drvs.libdl_vulkan,
+        drvs.gamescopeDlopen,
         drvs.zstd,
         drvs.libxrandr,
+        drvs.libei,
+        drvs.sdl2Debug,
       ]
     },
+
+  gamescopeDlopen | lib.Package = {
+    enableCcache = false,
+    buildPhase = [
+      m%"echo '%{import "gamescope_dlopen_2.c" as 'Text}' > gamescope_dlopen.c"%,
+      "${CC} ${CFLAGS} -c gamescope_dlopen.c -o gamescope_dlopen.o",
+    ],
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/lib",
+      "install -m0755 gamescope_dlopen.o ${DEST}/usr/lib",
+    ],
+    biDrvs = [
+      drvs.musl,
+      drvs.llvm,
+    ]
+  }
 }
