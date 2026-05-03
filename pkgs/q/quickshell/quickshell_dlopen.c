@@ -50,7 +50,41 @@ void* dlopen(const char *path, int mode) {
 
 void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 	if (handle == &lib_libpipewire_0_3_so_0 || handle == NULL || handle == &main_program_handle) { 
+		dbg_print("(dlsym) looking in library libpipewire-0.3.so.0 (address=%p)\n", handle);
 		DLSYM(spa_log_topic_enum, )
+		DLSYM(pw_init, )
+		DLSYM(pw_deinit, )
+		DLSYM(pw_check_library_version, )
+		DLSYM(pw_context_new, )
+		DLSYM(pw_context_destroy, )
+		DLSYM(pw_context_connect, )
+		DLSYM(pw_context_connect_fd, );
+		DLSYM(pw_core_disconnect, );
+		DLSYM(pw_thread_loop_new, );
+		DLSYM(pw_thread_loop_destroy, );
+		DLSYM(pw_thread_loop_get_loop, );
+		DLSYM(pw_thread_loop_start, );
+		DLSYM(pw_thread_loop_stop, );
+		DLSYM(pw_thread_loop_lock, );
+		DLSYM(pw_thread_loop_unlock, );
+		DLSYM(pw_thread_loop_timed_wait, );
+		DLSYM(pw_thread_loop_signal, );
+		DLSYM(pw_thread_loop_in_thread, );
+		DLSYM(pw_properties_new_dict, );
+		DLSYM(pw_properties_free, );
+		DLSYM(pw_stream_new, );
+		DLSYM(pw_stream_new_simple, );
+		DLSYM(pw_stream_destroy, );
+		DLSYM(pw_stream_add_listener, );
+		DLSYM(pw_stream_connect, );
+		DLSYM(pw_stream_disconnect, );
+		DLSYM(pw_stream_set_active, );
+		DLSYM(pw_stream_dequeue_buffer, );
+		DLSYM(pw_stream_queue_buffer, );
+		DLSYM(pw_stream_get_time_n, );
+		DLSYM(pw_proxy_destroy, );
+		DLSYM(pw_get_library_version, );
+
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);	return stub_dlsym(handle, symbol);
 }

@@ -22,8 +22,10 @@
           "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat) -pthread",
           "$(pkg-config --static --libs libavdevice)",
           "$(pkg-config --static --libs libpulse)",
+          "$(pkg-config --libs --static xrender)",
           "-lQt6MultimediaQuick",
           "/usr/lib/qt6/qml/QtMultimedia/libquickmultimediaplugin.a",
+          "-Wl,--error-limit=0",
         ]
         @ (
           if options.x11 then
@@ -269,15 +271,18 @@
     & {
       patches | priority 1 = [],
       eofPatches = [
-        {
-          patch = import "fix-quickshell.patch" as 'Text,
-        },
+        # {
+        #   patch = import "fix-quickshell.patch" as 'Text,
+        # },
         {
           patch = import "quickshell-no-wayland-dlsym.patch" as 'Text,
         },
       ],
       preConfigurePhase | priority 1 = [
         lib.functions.writeFile "${SRC}/dlopen.c" (import "quickshell_dlopen.c" as 'Text),
+        lib.functions.writeFile "${SRC}/src/gen.cpp" (import "gen.cpp" as 'Text),
+        "sed -i 's|quickshell main.cpp|quickshell main.cpp gen.cpp|g' ${SRC}/src/CMakeLists.txt",
+        "cat >>${SRC}/CMakeLists.txt << 'EOF'\n%{import "link.cmake" as 'Text}\nEOF\n",
         "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       ],
       debug = true,
