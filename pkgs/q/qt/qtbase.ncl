@@ -47,6 +47,22 @@ in
   drvs,
   qtbase | lib.QtPackage = {
     generator = "Ninja",
+    eofPatches = [
+      # # https://github.com/freebsd/freebsd-ports/blob/bf2ebb58b5b8dfac676aeaeb6f287df0cc016462/devel/qt6-base/files/patch-src_plugins_platforms_wayland_qwaylandshellsurface__p.h
+      {
+        patch = import "qtbase-public-nativeResource.patch" as 'Text
+      },
+    ],
+    buildEnv = {
+      # https://forums.gentoo.org/viewtopic.php?p=8880545
+      # _optFlag | priority 1 = "-O%{options.optlevel}",
+    },
+
+    preConfigurePhase = [
+      # "echo 'forced rebuild'",
+      m%"sed -i 's@\/bin\/pwd@\/usr\/bin\/pwd@g' ${SRC}/configure"%,
+      # "sed -i 's|O2|O%{options.optlevel}|g' ${SRC}/cmake/QtCompilerOptimization.cmake",
+    ],
 
     llvmProvider = drvs.llvmFull,
     allowDubplicateBuldInputs = true,
@@ -133,19 +149,20 @@ in
         # drvs.pkgconf,
       ],
 
-    preConfigurePhase = [
-      # "echo 'forced rebuild'",
-      m%"sed -i 's@\/bin\/pwd@\/usr\/bin\/pwd@g' ${SRC}/configure"%,
-    ],
     options = {
       x11 | default = false,
       vulkan | default = false,
+      # optlevel | default = "0",
     },
     cmakeExtraArgsRecord =
       qtbaseCmakeExtraArgsRecorf
       & (
         if options.x11 then
+          let releaseFlags = "\"-DNDEBUG -O%{options.optlevel}\"" in
           {
+            # "-DCMAKE_ASM_FLAGS_RELEASE" = releaseFlags,
+            # "-DCMAKE_CXX_FLAGS_RELEASE" = releaseFlags,
+            # "-DCMAKE_C_FLAGS_RELEASE" = releaseFlags,
             "-DFEATURE_xcb" = true,
             "-DFEATURE_xkbcommon_x11" = true,
             "-DFEATURE_system_xcb_input" = true,

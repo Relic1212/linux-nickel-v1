@@ -86,7 +86,10 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(pw_get_library_version, );
 
 	}
-	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);	return stub_dlsym(handle, symbol);
+	else if (strcmp(symbol, "spa_log_topic_enum") == 0){
+		DLSYM(spa_log_topic_enum, );
+	}
+	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s(address=%p)\n", symbol, handle);	return stub_dlsym(handle, symbol);
 }
 
 

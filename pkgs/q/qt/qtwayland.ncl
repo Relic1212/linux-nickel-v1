@@ -7,11 +7,6 @@
     #   uri = "https://github.com/qt/qtwayland/archive/refs/tags/v6.9.1.tar.gz",
     #   sha256sum = "735bced5fc1ab11e3c3b6cc3ca321f148d2fe80675a2a27b41ddbd372ca4e6ea"
     # },
-    llvmProvider = drvs.llvmFull,
-
-    pDrvs = [
-      drvs.qtdeclarative,
-    ],
 
     # buildEnv = {
     #   EXTRA_LDFLAGS = [
@@ -38,9 +33,10 @@
       "-DQT_DEBUG_FIND_PACKAGE" = "ON",
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl)\""
     },
+    llvmProvider = drvs.llvmFull,
 
-    preConfigurePhase = [
-      "sed -i 's@QUIET @@g' ${SRC}/CMakeLists.txt"
+    pDrvs = [
+      drvs.qtdeclarative,
     ],
   }
 }

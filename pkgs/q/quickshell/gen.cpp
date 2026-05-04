@@ -74,11 +74,11 @@ Q_IMPORT_QML_PLUGIN(QWaylandIntegrationPlugin)		// /usr/lib/qt6/plugins/platform
 // Q_IMPORT_QML_PLUGIN(QWaylandEglClientBufferIntegrationPlugin)		// /usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-egl.a:main.cpp.o:
 // Q_IMPORT_QML_PLUGIN(ShmServerBufferIntegrationPlugin)		// /usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-shm-emulation-server.a:main.cpp.o:
 // Q_IMPORT_QML_PLUGIN(QWaylandEglStreamClientBufferIntegrationPlugin)		// /usr/lib/qt6/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-eglstream-controller.a:main.cpp.o:
-// Q_IMPORT_QML_PLUGIN(QSvgPlugin)		// /usr/lib/qt6/plugins/imageformats/libqsvg.a:main.cpp.o:
-// Q_IMPORT_QML_PLUGIN(QJpegPlugin)		// /usr/lib/qt6/plugins/imageformats/libqjpeg.a:main.cpp.o:
-// Q_IMPORT_QML_PLUGIN(QGifPlugin)		// /usr/lib/qt6/plugins/imageformats/libqgif.a:main.cpp.o:
-// Q_IMPORT_QML_PLUGIN(QICOPlugin)		// /usr/lib/qt6/plugins/imageformats/libqico.a:main.cpp.o:
-// Q_IMPORT_QML_PLUGIN(QSvgIconPlugin)		// /usr/lib/qt6/plugins/iconengines/libqsvgicon.a:main.cpp.o:
+Q_IMPORT_QML_PLUGIN(QSvgPlugin)		// /usr/lib/qt6/plugins/imageformats/libqsvg.a:main.cpp.o:
+Q_IMPORT_QML_PLUGIN(QJpegPlugin)		// /usr/lib/qt6/plugins/imageformats/libqjpeg.a:main.cpp.o:
+Q_IMPORT_QML_PLUGIN(QGifPlugin)		// /usr/lib/qt6/plugins/imageformats/libqgif.a:main.cpp.o:
+Q_IMPORT_QML_PLUGIN(QICOPlugin)		// /usr/lib/qt6/plugins/imageformats/libqico.a:main.cpp.o:
+Q_IMPORT_QML_PLUGIN(QSvgIconPlugin)		// /usr/lib/qt6/plugins/iconengines/libqsvgicon.a:main.cpp.o:
 // Q_IMPORT_QML_PLUGIN(QGlibNetworkInformationBackendFactory)		// /usr/lib/qt6/plugins/networkinformation/libqglib.a:qglibnetworkinformationbackend.cpp.o:
 // Q_IMPORT_QML_PLUGIN(QNetworkManagerNetworkInformationBackendFactory)		// /usr/lib/qt6/plugins/networkinformation/libqnetworkmanager.a:qnetworkmanagernetworkinformationbackend.cpp.o:
 // Q_IMPORT_QML_PLUGIN(QConnManNetworkInformationBackendFactory)		// /usr/lib/qt6/plugins/networkinformation/libqconnman.a:qconnmannetworkinformationbackend.cpp.o:

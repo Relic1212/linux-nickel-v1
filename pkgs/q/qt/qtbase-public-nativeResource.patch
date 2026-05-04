@@ -1,0 +1,25 @@
+diff --git a/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h b/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
+index cb81ed6aeda..63f7c1b6fd3 100644
+--- a/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
++++ b/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
+@@ -68,7 +68,7 @@ public:
+ 
+     void setSizeHints();
+ 
+-    void *nativeResource(const QByteArray &resource);
++    void *nativeResource(const QByteArray &resource) override;
+ 
+     std::any surfaceRole() const override;
+ 
+diff --git a/src/plugins/platforms/wayland/qwaylandshellsurface_p.h b/src/plugins/platforms/wayland/qwaylandshellsurface_p.h
+index fbb8b9fb951..4ad2804a44e 100644
+--- a/src/plugins/platforms/wayland/qwaylandshellsurface_p.h
++++ b/src/plugins/platforms/wayland/qwaylandshellsurface_p.h
+@@ -85,6 +85,7 @@ public:
+     QPlatformWindow *platformWindow();
+     struct wl_surface *wlSurface();
+ 
++    virtual void* nativeResource(const QByteArray&) { return nullptr; }
+     virtual std::any surfaceRole() const { return std::any(); };
+ 
+     virtual void attachPopup(QWaylandShellSurface *popup) { Q_UNUSED(popup); }
