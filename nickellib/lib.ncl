@@ -57,7 +57,7 @@ in
         hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
         allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
         isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
-        writeFile = (fun path content => "cat >%{path} << 'EOF'" ++ "\n" ++ content ++ "\nEOF\n" ),
+        writeFile = (fun path content => "cat >%{path} << 'EOF'" ++ "\n" ++ content ++ "\nEOF\n"),
       },
       nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
@@ -146,17 +146,24 @@ in
         # with changing configurations, propageted could cause a lot of issues.
         allowDubplicateBuldInputs | Bool | default = false,
 
+        neverInclude | default = [],
+
         buildInputs | not_exported | default =
-          let maybeDups =
-            baseBuildinputPackages
-            @ biDrvs
-            @ propagatedBuildInputs
-            @ indirectDeps
-          in
-          if (!allowDubplicateBuldInputs) then
-            maybeDups
-          else
-            std.array.dedup maybeDups,
+          # filter out things common with neverInclude by keyName
+          std.array.filter
+            (fun biDrv => !(std.array.elem biDrv.keyName (std.array.map (fun inc => inc.keyName) neverInclude)))
+            (
+              let maybeDups =
+                baseBuildinputPackages
+                @ biDrvs
+                @ propagatedBuildInputs
+                @ indirectDeps
+              in
+              if (!allowDubplicateBuldInputs) then
+                maybeDups
+              else
+                std.array.dedup maybeDups
+            ),
         pDrvs | default = [],
         propagatedBuildInputs | default = pDrvs,
         indirectDeps | default =
