@@ -265,30 +265,28 @@ in
             dest = "plasma-workspace/cmake",
           }
         ],
-        options = {
-          dirs | default =       [
-      "kdecoration",
-      "breeze",
-      "kglobalacceld",
-      "knighttime",
-      "libkscreen",
-      "plasma-activities",
-      "libplasma",
-      "layer-shell-qt",
-      "kscreen",
-      "kscreenlocker",
-      "kwayland",
-      # "kwin",
-      "libksysguard",
-      "plasma-activities-stats",
-      "plasma5support",
-      "kwin",
-      # "plasma-workspace",
-    ],
-    prepPs | default = false,
-
-
-        },
+      options = {
+        dirs | default = [
+          "kdecoration",
+          "breeze",
+          "kglobalacceld",
+          "knighttime",
+          "libkscreen",
+          "plasma-activities",
+          "libplasma",
+          "layer-shell-qt",
+          "kscreen",
+          "kscreenlocker",
+          "kwayland",
+          # "kwin",
+          "libksysguard",
+          "plasma-activities-stats",
+          "plasma5support",
+          "kwin",
+          # "plasma-workspace",
+        ],
+        prepPs | default = false,
+      },
 
       separateBuildDir = false,
       buildEnv.EXTRA_LDFLAGS | priority 1 =
@@ -301,149 +299,156 @@ in
           # "$(pkg-config --static --libs pam)",
         ],
 
-      eofPatches = [
-        {
-          patch = import "0001-libkscreen-6.6.4.patch" as 'Text,
-          subdir = "/libkscreen"
-        },
-        {
-          patch = import "0001-libplasma-6.6.4.patch" as 'Text,
-          subdir = "/libplasma",
-        },
-        {
-          patch = import "0001-libplasma-6.6.4-blur.patch" as 'Text,
-          subdir = "/libplasma",
-        },
-        {
-          patch = import "kscreen-nox11.patch" as 'Text,
-          subdir = "/kscreen"
-        },
-        {
-          patch = import "0001-kscreenlocker2.patch" as 'Text,
-          subdir = "/kscreenlocker"
-        },
-        {
-          patch = import "0001-kwin-6.6.4.patch" as 'Text,
-          subdir = "/kwin",
-        },
-      
-      ]@(if options.prepPs then [
-        {
-          patch = import "0001-plasma-workspace-6.6.4-full.patch" as 'Text,
-          subdir = "/plasma-workspace"
-          
-        }
-      ] else [
-
-  {
-          patch = import "0001-plasma-workspace-6.6.4.patch" as 'Text,
-          subdir = "/plasma-workspace"
-        },
-
-      ]),
-      preConfigurePhase = [
-        # kdecoration
-        "sed -i 's@ SHARED@@g' ${SRC}/kdecoration/src/private/CMakeLists.txt",
-        "sed -i 's@ SHARED@@g' ${SRC}/kdecoration/src/CMakeLists.txt",
-        # -kdecoration
-
-        # breeze
-        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/breeze/kdecoration/CMakeLists.txt"%,
-        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/breeze/kstyle/CMakeLists.txt"%,
-        # -breeze
-        # kglobalacceld
-        m%"sed -i 's|find_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|find_package(KF6Notifications ${KF6_MIN_VERSION} REQUIRED)\nfind_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|g' ${SRC}/kglobalacceld/CMakeLists.txt"%,
-        # -kglobalacceld
-
-        # libkscreen
-        m%"for f in $(find ${SRC}/libkscreen -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
-        m%"for f in $(find ${SRC}/libkscreen -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
-        # -libkscreen
-
-        # plasma-activities
-        m%"sed -i 's|qt_add_dbus_interface|qt6_add_dbus_interface|g' ${SRC}/plasma-activities/src/lib/CMakeLists.txt"%,
-        # -plasma-activities
-
-        # libplasma
-        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/src/plasmaquick/CMakeLists.txt"%,
-        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/templates/plasma6-wallpaper-with-qml-extension/plugin/CMakeLists.txt"%,
-        m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/PlasmaMacros.cmake"%,
-        m%"sed -i 's|MODULE|STATIC|g' ${SRC}/libplasma/src/declarativeimports/kirigamiplasmastyle/CMakeLists.txt"%,
-        # -libplasma
-
-        # layer-shell-qt
-        m%"for f in $(find ${SRC}/layer-shell-qt -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
-        m%"for f in $(find ${SRC}/layer-shell-qt -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
-        # -layer-shell-qt
-
-        # kscreen
-        (
-          lib.functions.cmakePrependLines
-            "find_package(LayerShellQt)"
+      eofPatches =
+        [
+          {
+            patch = import "0001-libkscreen-6.6.4.patch" as 'Text,
+            subdir = "/libkscreen"
+          },
+          {
+            patch = import "0001-libplasma-6.6.4.patch" as 'Text,
+            subdir = "/libplasma",
+          },
+          {
+            patch = import "0001-libplasma-6.6.4-blur.patch" as 'Text,
+            subdir = "/libplasma",
+          },
+          {
+            patch = import "kscreen-nox11.patch" as 'Text,
+            subdir = "/kscreen"
+          },
+          {
+            patch = import "0001-kscreenlocker2.patch" as 'Text,
+            subdir = "/kscreenlocker"
+          },
+          {
+            patch = import "0001-kwin-6.6.4.patch" as 'Text,
+            subdir = "/kwin",
+          },
+        ]
+        @ (
+          if options.prepPs then
             [
-              # "find_package(Qt6WaylandClient COMPONENTS Private)",
-              # "find_package(Qt6WaylandClient REQUIRED COMPONENTS Private)",
-              # "find_package(Qt6WaylandClientPrivate)",
-              "find_package(Qt6WaylandClientPrivate REQUIRED)",
-              "find_package(PkgConfig)",
-              "pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)",
-              "find_package(PlasmaActivities REQUIRED)",
+              {
+                patch = import "0001-plasma-workspace-6.6.4-full.patch" as 'Text,
+                subdir = "/plasma-workspace"
+              }
             ]
-        )
-        ++ " ${SRC}/kscreen/CMakeLists.txt",
-        m%"sed -i "s|DBusAddons|DBusAddons\n\tNotifications\n\tKIO|g" ${SRC}/kscreen/CMakeLists.txt"%,
-        # -kscreen
+          else
+            [
+              {
+                patch = import "0001-plasma-workspace-6.6.4.patch" as 'Text,
+                subdir = "/plasma-workspace"
+              },
+            ]
+        ),
+      preConfigurePhase =
+        [
+          # kdecoration
+          "sed -i 's@ SHARED@@g' ${SRC}/kdecoration/src/private/CMakeLists.txt",
+          "sed -i 's@ SHARED@@g' ${SRC}/kdecoration/src/CMakeLists.txt",
+          # -kdecoration
 
-        # kscreenlocker
-        m%"sed -i 's|CONFIG REQUIRED COMPONENTS DBus Widgets Quick Test|CONFIG REQUIRED COMPONENTS DBus Widgets Quick Test WaylandClientPrivate|g' ${SRC}/kscreenlocker/CMakeLists.txt"%,
-        # -kscreenlocker
+          # breeze
+          m%"sed -i 's|MODULE|STATIC|g' ${SRC}/breeze/kdecoration/CMakeLists.txt"%,
+          m%"sed -i 's|MODULE|STATIC|g' ${SRC}/breeze/kstyle/CMakeLists.txt"%,
+          # -breeze
+          # kglobalacceld
+          m%"sed -i 's|find_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|find_package(KF6Notifications ${KF6_MIN_VERSION} REQUIRED)\nfind_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|g' ${SRC}/kglobalacceld/CMakeLists.txt"%,
+          # -kglobalacceld
 
-        # kwin
-        # "sed -i 's|find_dependency(epoxy)|# find_dependency(epoxy)|g' ${SRC}/kwin/KWinConfig.cmake.in",
-        # "sed -i 's|epoxy::epoxy||g' ${SRC}/kwin/src/CMakeLists.txt",
-        # -kwin
+          # libkscreen
+          m%"for f in $(find ${SRC}/libkscreen -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+          m%"for f in $(find ${SRC}/libkscreen -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+          # -libkscreen
 
-        # libksysguard
-        m%"sed -i 's|install(EXPORT libksysguardLibraryTargets|install(TARGETS dbusinterface Formatter_resources_1 processcore_resources_1 SensorFaces_resources_1 SensorFaces_resources_2 Sensors_resources_1 EXPORT libksysguardLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})\ninstall(EXPORT libksysguardLibraryTargets|g' ${SRC}/libksysguard/CMakeLists.txt"%,
-        m%"for f in $(find ${SRC}/libksysguard -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
-        # -libksysguard 
+          # plasma-activities
+          m%"sed -i 's|qt_add_dbus_interface|qt6_add_dbus_interface|g' ${SRC}/plasma-activities/src/lib/CMakeLists.txt"%,
+          # -plasma-activities
 
-        # plasma5support
-        m%"sed -i 's| SHARED| STATIC|g' ${SRC}/plasma5support/src/dataengines/weather/ions/CMakeLists.txt"%,
-        m%"for f in $(find ${SRC}/plasma5support -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
-        m%"sed -i "s|IdleTime|Auth\nIdleTime|g" ${SRC}/plasma5support/CMakeLists.txt"%,
+          # libplasma
+          m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/src/plasmaquick/CMakeLists.txt"%,
+          m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/templates/plasma6-wallpaper-with-qml-extension/plugin/CMakeLists.txt"%,
+          m%"sed -i 's|SHARED|STATIC|g' ${SRC}/libplasma/PlasmaMacros.cmake"%,
+          m%"sed -i 's|MODULE|STATIC|g' ${SRC}/libplasma/src/declarativeimports/kirigamiplasmastyle/CMakeLists.txt"%,
+          # -libplasma
 
-        # -plasma5support
+          # layer-shell-qt
+          m%"for f in $(find ${SRC}/layer-shell-qt -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
+          m%"for f in $(find ${SRC}/layer-shell-qt -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+          # -layer-shell-qt
 
-        # plasma-workspace
-        # m%"cat >${SRC}/plasma-workspace/CMakeLists.txt << 'EOF'
-        # "%
+          # kscreen
+          (
+            lib.functions.cmakePrependLines
+              "find_package(LayerShellQt)"
+              [
+                # "find_package(Qt6WaylandClient COMPONENTS Private)",
+                # "find_package(Qt6WaylandClient REQUIRED COMPONENTS Private)",
+                # "find_package(Qt6WaylandClientPrivate)",
+                "find_package(Qt6WaylandClientPrivate REQUIRED)",
+                "find_package(PkgConfig)",
+                "pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)",
+                "find_package(PlasmaActivities REQUIRED)",
+              ]
+          )
+          ++ " ${SRC}/kscreen/CMakeLists.txt",
+          m%"sed -i "s|DBusAddons|DBusAddons\n\tNotifications\n\tKIO|g" ${SRC}/kscreen/CMakeLists.txt"%,
+          # -kscreen
 
-        ] @ ( if (! options.prepPs) then [
+          # kscreenlocker
+          m%"sed -i 's|CONFIG REQUIRED COMPONENTS DBus Widgets Quick Test|CONFIG REQUIRED COMPONENTS DBus Widgets Quick Test WaylandClientPrivate|g' ${SRC}/kscreenlocker/CMakeLists.txt"%,
+          # -kscreenlocker
 
-        "sed -i 's@ecm_optional_add_subdirectory(xembed-sni-proxy)@# ecm_optional_add_subdirectory(xembed-sni-proxy)@g' ${SRC}/plasma-workspace/CMakeLists.txt",
-        m%"sed -i "s@find_package(QRencode)@find_package(QRencode)\nfind_package(X11)\nfind_package(Dmtx)\nfind_package(ZXing CONFIG)@g" ${SRC}/plasma-workspace/CMakeLists.txt"%,
+          # kwin
+          # "sed -i 's|find_dependency(epoxy)|# find_dependency(epoxy)|g' ${SRC}/kwin/KWinConfig.cmake.in",
+          # "sed -i 's|epoxy::epoxy||g' ${SRC}/kwin/src/CMakeLists.txt",
+          # -kwin
 
+          # libksysguard
+          m%"sed -i 's|install(EXPORT libksysguardLibraryTargets|install(TARGETS dbusinterface Formatter_resources_1 processcore_resources_1 SensorFaces_resources_1 SensorFaces_resources_2 Sensors_resources_1 EXPORT libksysguardLibraryTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})\ninstall(EXPORT libksysguardLibraryTargets|g' ${SRC}/libksysguard/CMakeLists.txt"%,
+          m%"for f in $(find ${SRC}/libksysguard -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+          # -libksysguard 
 
-        ] else [# "sed -i 's|  SOURCES | STATIC SOURCES |g' ${SRC}/plasma-workspace/shell/packageplugins/CMakeLists.txt" # not needed w build_shared_libs=off
-        
-        # "sed -i 's|add_subdirectory(packageplugins)|# add_subdirectory(packageplugins)|g' ${SRC}/plasma-workspace/shell/CMakeLists.txt",
-        # m%"sed -i "s@install(TARGETS plasmashell@%{ 
-        #   std.string.join ""
-        #   [
-        #      m%"add_subdirectory(packageplugins)\n"%,
-        #      # m%"kcoreaddons_target_static_plugins(plasma_layouttemplate NAMESPACE \"kf6/packagestructure\")\n"%,
-        #      # m%"kcoreaddons_target_static_plugins(plasma_lookandfeel NAMESPACE \"kf6/packagestructure\")\n"%,
-        #      # m%"kcoreaddons_target_static_plugins(wallpaper_images NAMESPACE \"kf6/packagestructure\")\n"%,
-        #     #  m%"kcoreaddons_target_static_plugins(plasmashell LINK_OPTION PRIVATE NAMESPACE kf6/packagestructure)\n"%,
-        #     #  m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tTARGETS plasma_lookandfeel\n)\n"%,
-        #      m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tNAMESPACE "kf6/packagestructure"\n)\n"%,
-        #      m%"install(TARGETS plasmashell"%
-        #    ]
-          
-        #   }@g" ${SRC}/plasma-workspace/shell/CMakeLists.txt"%
-        # -plasma-workspace
-      ]),
+          # plasma5support
+          m%"sed -i 's| SHARED| STATIC|g' ${SRC}/plasma5support/src/dataengines/weather/ions/CMakeLists.txt"%,
+          m%"for f in $(find ${SRC}/plasma5support -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
+          m%"sed -i "s|IdleTime|Auth\nIdleTime|g" ${SRC}/plasma5support/CMakeLists.txt"%,
+
+          # -plasma5support
+
+          # plasma-workspace
+          # m%"cat >${SRC}/plasma-workspace/CMakeLists.txt << 'EOF'
+          # "%
+        ]
+        @ (
+          if (!options.prepPs) then
+            [
+              "sed -i 's@ecm_optional_add_subdirectory(xembed-sni-proxy)@# ecm_optional_add_subdirectory(xembed-sni-proxy)@g' ${SRC}/plasma-workspace/CMakeLists.txt",
+              m%"sed -i "s@find_package(QRencode)@find_package(QRencode)\nfind_package(X11)\nfind_package(Dmtx)\nfind_package(ZXing CONFIG)@g" ${SRC}/plasma-workspace/CMakeLists.txt"%,
+            ]
+          else
+            [
+              # "sed -i 's|  SOURCES | STATIC SOURCES |g' ${SRC}/plasma-workspace/shell/packageplugins/CMakeLists.txt" # not needed w build_shared_libs=off
+
+              # "sed -i 's|add_subdirectory(packageplugins)|# add_subdirectory(packageplugins)|g' ${SRC}/plasma-workspace/shell/CMakeLists.txt",
+              # m%"sed -i "s@install(TARGETS plasmashell@%{ 
+              #   std.string.join ""
+              #   [
+              #      m%"add_subdirectory(packageplugins)\n"%,
+              #      # m%"kcoreaddons_target_static_plugins(plasma_layouttemplate NAMESPACE \"kf6/packagestructure\")\n"%,
+              #      # m%"kcoreaddons_target_static_plugins(plasma_lookandfeel NAMESPACE \"kf6/packagestructure\")\n"%,
+              #      # m%"kcoreaddons_target_static_plugins(wallpaper_images NAMESPACE \"kf6/packagestructure\")\n"%,
+              #     #  m%"kcoreaddons_target_static_plugins(plasmashell LINK_OPTION PRIVATE NAMESPACE kf6/packagestructure)\n"%,
+              #     #  m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tTARGETS plasma_lookandfeel\n)\n"%,
+              #      m%"kcoreaddons_target_static_plugins(plasmashell\n\tLINK_OPTION PRIVATE\n\tNAMESPACE "kf6/packagestructure"\n)\n"%,
+              #      m%"install(TARGETS plasmashell"%
+              #    ]
+
+              #   }@g" ${SRC}/plasma-workspace/shell/CMakeLists.txt"%
+              # -plasma-workspace
+            ]
+        ),
       cmakeExtraArgsRecord = {},
       cmakeArgs,
       configurePhase =
@@ -496,13 +501,14 @@ in
     ]
   },
 
-  plasmaCommon2 = plasmaCommon & {
-    options.dirs = [
-      "plasma-workspace"
-    ],
+  plasmaCommon2 =
+    plasmaCommon
+    & {
+      options.dirs = [
+        "plasma-workspace"
+      ],
 
-    options.prepPs = true,
-    biDrvs | priority 1 = plasmaCommon.biDrvs @ [drvs.plasmaCommon]
-    
-  }
+      options.prepPs = true,
+      biDrvs | priority 1 = plasmaCommon.biDrvs @ [drvs.plasmaCommon]
+    }
 }

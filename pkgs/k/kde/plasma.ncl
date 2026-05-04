@@ -495,9 +495,10 @@
         ]
     },
 
-  layerShellQt =
+  layerShellQtPlasma =
     _plasma
     & {
+      singleSource.uri = "https://download.kde.org/stable/plasma/6.6.4/layer-shell-qt-6.6.4.tar.xz",
       preConfigurePhase = [
         m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
         m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,

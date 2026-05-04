@@ -560,13 +560,14 @@ index 74c5147f90..2ff1e971bf 100644
  
  void KSMShutdownDlg::slotLogout()
 diff --git a/shell/CMakeLists.txt b/shell/CMakeLists.txt
-index b91c7e014b..cc02bacfc3 100644
+index b91c7e014b..d295d78bc5 100644
 --- a/shell/CMakeLists.txt
 +++ b/shell/CMakeLists.txt
-@@ -65,6 +65,15 @@ endif()
+@@ -65,7 +65,19 @@ endif()
  kconfig_add_kcfg_files(plasma_shell_SRCS ../kcms/colors/colorssettings.kcfgc GENERATE_MOC)
  
  add_executable(plasmashell)
+-
 +add_subdirectory(packageplugins)
 +kcoreaddons_target_static_plugins(plasmashell
 +	LINK_OPTION PUBLIC
@@ -576,10 +577,14 @@ index b91c7e014b..cc02bacfc3 100644
 +# 	LINK_OPTION PUBLIC
 +# 	TARGETS plasma_lookandfeel
 +# )
- 
++qt_import_plugins(plasmashell INCLUDE 
++    Qt6::QWaylandIntegrationPlugin
++    Qt6::QWaylandXdgShellIntegrationPlugin
++)
  ecm_add_qml_module(plasmashell
      URI "org.kde.plasma.shell"
-@@ -159,6 +168,9 @@ endif()
+     GENERATE_PLUGIN_SOURCE
+@@ -159,6 +171,9 @@ endif()
  
  configure_file(org.kde.plasmashell.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.plasmashell.desktop @ONLY)
  
@@ -589,7 +594,7 @@ index b91c7e014b..cc02bacfc3 100644
  install(TARGETS plasmashell ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.plasmashell.desktop DESTINATION ${KDE_INSTALL_APPDIR})
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.plasmashell.desktop DESTINATION ${KDE_INSTALL_AUTOSTARTDIR})
-@@ -166,7 +178,6 @@ install( FILES dbus/org.kde.PlasmaShell.xml DESTINATION ${KDE_INSTALL_DBUSINTERF
+@@ -166,7 +181,6 @@ install( FILES dbus/org.kde.PlasmaShell.xml DESTINATION ${KDE_INSTALL_DBUSINTERF
  
  ecm_install_configured_files(INPUT plasma-plasmashell.service.in @ONLY DESTINATION  ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
  
@@ -646,7 +651,7 @@ index cae0ef21f2..e9bb563533 100644
  }
  
 diff --git a/shell/main.cpp b/shell/main.cpp
-index 7f55101a09..c87b7b5acf 100644
+index 7f55101a09..23a570e3cf 100644
 --- a/shell/main.cpp
 +++ b/shell/main.cpp
 @@ -34,6 +34,9 @@
@@ -659,10 +664,12 @@ index 7f55101a09..c87b7b5acf 100644
  #include <csignal>
  
  #if __has_include(<malloc.h>)
-@@ -57,6 +60,30 @@ static void setupMalloc()
+@@ -57,6 +60,32 @@ static void setupMalloc()
      mallopt(M_TRIM_THRESHOLD, 5 * pagesize);
  }
  #endif
++Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin);
++Q_IMPORT_PLUGIN(QWaylandXdgShellIntegrationPlugin);
 +// Q_IMPORT_PLUGIN(plasma_lookandfeel_factory)
 +// Q_IMPORT_PLUGIN(plasma_shell_factory)
 +// BEGIN copied
@@ -690,7 +697,7 @@ index 7f55101a09..c87b7b5acf 100644
  
  int main(int argc, char *argv[])
  {
-@@ -114,6 +141,12 @@ int main(int argc, char *argv[])
+@@ -114,6 +143,12 @@ int main(int argc, char *argv[])
  
      bool replace = false;
  
@@ -779,7 +786,7 @@ index 152226b93f..deb9f92c9f 100644
              m_layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
              requestUpdate();
 diff --git a/shell/shellcorona.cpp b/shell/shellcorona.cpp
-index 6fffcd8dad..0572df4142 100644
+index 6fffcd8dad..5dbe5751eb 100644
 --- a/shell/shellcorona.cpp
 +++ b/shell/shellcorona.cpp
 @@ -34,7 +34,7 @@
@@ -791,6 +798,15 @@ index 6fffcd8dad..0572df4142 100644
  
  #include <Plasma/Plasma>
  #include <Plasma/PluginLoader>
+@@ -338,7 +338,7 @@ void ShellCorona::setShell(const QString &shell)
+     }
+ 
+     m_shell = shell;
+-    KPackage::Package package = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/Shell"));
++    KPackage::Package package = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/Shell"), QStringLiteral("org.kde.plasmashell"));
+     package.setPath(shell);
+     package.setAllowExternalPaths(true);
+     setKPackage(package);
 diff --git a/shell/shellcorona.h b/shell/shellcorona.h
 index a60ebfbfc3..a95075853c 100644
 --- a/shell/shellcorona.h
