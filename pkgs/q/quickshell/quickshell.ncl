@@ -103,20 +103,6 @@
     pDrvs = [
       drvs.qtmultimedia,
       drvs.qt5compat,
-      # drvs.bluez,
-      # drvs.sbc,
-      # drvs.libusb,
-      # drvs.ffmpeg,
-      # drvs.jansson,
-      # drvs.libfreeaptx,
-      # drvs.fdkAac,
-      # drvs.ldacbt,
-      # 
-      # drvs.libyaml,
-      # drvs.libsndfile,
-      # drvs.libopus,
-      # drvs.lua,
-      # drvs.alsaLibs,
       drvs.pulseaudio17,
       drvs.cli11,
       drvs.zstd,
@@ -142,41 +128,18 @@
         # sha256sum = "704154f67079393a193f45eef9b296b775bb8b8a329835e10e97236875c7a0e6"
       },
       # debug = true,
+      eofPatches | priority 1 =
+        quickshell.eofPatches
+        @ [
+          {
+            patch = import "quickshell-fix-xdg_popup.patch" as 'Text
+          },
+        ],
 
       muslProvider | priority 1 = drvs.muslBothRenamedDlRelease,
-      llvmProvider | priority 1 = drvs.llvmFullTypeinfo,
-      # neverInclude = [drvs.qtbaseVulkan],
-      # biDrvs | priority 1 = quickshell.biDrvs @ [drvs.qtbaseDebug]
-      # eofPatches | priority 1 =
-      #   quickshell.eofPatches
-      #   @ [
-      #     {
-      #       patch = import "quickshell-fix-xdg_popup.patch" as 'Text
-      #     },
-      #   ],
-      # buildEnv.EXTRA_LDFLAGS | priority 1 =
-      #   quickshell.buildEnv.EXTRA_LDFLAGS
-      #   @ [
-      #     "-lLayerShellQtQml",
-      #   ],
-      # preConfigurePhase | priority 1 = [
-      #   lib.functions.writeFile "${SRC}/dlopen.c" (import "quickshell_dlopen.c" as 'Text),
-      #   lib.functions.writeFile "${SRC}/src/gen.cpp" (import "noctalia_gen.cpp" as 'Text),
-      #   "sed -i 's|quickshell main.cpp|quickshell main.cpp gen.cpp|g' ${SRC}/src/CMakeLists.txt",
-      #   m%"sed -i "s@add_subdirectory(src)@%{
-      #     m%"find_package(PkgConfig REQUIRED)\n"% ++
-      #     m%"pkg_check_modules(XKBCOMMON REQUIRED IMPORTED_TARGET xkbcommon)\n"% ++
-      #     m%"find_package(LayerShellQt REQUIRED)\n"%
-      #   }add_subdirectory(src)@g" ${SRC}/CMakeLists.txt"%,
-      #   "cat >>${SRC}/CMakeLists.txt << 'EOF'\n%{import "noctalia_link.cmake" as 'Text}\nEOF\n",
-      #   "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
-      # ],
-
-      # biDrvs | priority 1 =
-      #   quickshell.biDrvs
-      #   @ [
-      #     drvs.layerShellQt,
-      #   ],
+      # llvmProvider | priority 1 = drvs.llvmFullTypeinfo,
+      neverInclude = [drvs.qtbaseVulkan],
+      biDrvs | priority 1 = quickshell.biDrvs @ [drvs.qtbaseDebug],
     },
 
   llvmFull,
@@ -185,7 +148,7 @@
     qtbaseVulkan
     & {
       # debug = true,
-            buildEnv._optFlag | priority 1 = "-O0",
+      buildEnv._optFlag | priority 1 = "-O0",
 
       options.optlevel = "0",
       preConfigurePhase | priority 1 = [],

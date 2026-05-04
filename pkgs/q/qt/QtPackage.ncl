@@ -63,7 +63,7 @@
                 []
             ),
         },
-        llvmProvider | force = drvs.llvmFullTypeinfo,
+        # llvmProvider | force = drvs.llvmFullTypeinfo,
       },
   }
 }
