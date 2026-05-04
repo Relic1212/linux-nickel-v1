@@ -123,6 +123,11 @@
         "objcopy --globalize-symbol stub_dladdr libc.a",
       ]
     },
+  muslBothRenamedDlRelease =
+    muslBothRenamedDl
+    & {
+      debug | priority 1 = false,
+    },
   muslBothWeakDl =
     muslBoth
     & {
