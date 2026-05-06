@@ -261,6 +261,24 @@
       ]
     },
 
+  pythonDl | lib.AutotoolsPackage =
+    pythonInteractive
+    & {
+      neverInclude = [
+        drvs.musl
+      ],
+      biDrvs | priority 1 = pythonInteractive.biDrvs @ [drvs.muslBothRenamedDlRelease],
+      preConfigurePhase | priority 1 = [
+        lib.functions.writeFile "${SRC}/dlopen.c" (import "python_dlopen.c" as 'Text),
+        "clang -O2 -Werror -c ${SRC}/dlopen.c -o ${BUILDDIR}/dlopen.o",
+        "ar rcs ${BUILDDIR}/libdlopen.a ${BUILDDIR}/dlopen.o",
+        "ranlib ${BUILDDIR}/libdlopen.a",
+        # "export LDFLAGS=\"${LDFLAGS} ${BUILDDIR}/dlopen.o\"",
+        "export LDFLAGS=\"${LDFLAGS} ${BUILDDIR}/libdlopen.a\"",
+        # "export LDFLAGS=\"${LDFLAGS} -Wl,--allow-multiple-definition=dlopen\"",
+      ],
+    },
+
   pythonDynamic =
     pythonFull
     & {
