@@ -122,26 +122,20 @@ index b6237a5b9..ce449c430 100644
      return std::nullopt;
    }
 diff --git a/src/time/time_format.cpp b/src/time/time_format.cpp
-index 2d8f99261..785ccb194 100644
+index 2d8f99261..2250854b2 100644
 --- a/src/time/time_format.cpp
 +++ b/src/time/time_format.cpp
-@@ -137,12 +137,13 @@ std::string formatLocalTime(const char* fmt) {
+@@ -137,7 +137,12 @@ std::string formatLocalTime(const char* fmt) {
      return *compat;
    }
  
 -  const auto local = current_zone()->to_local(now);
--  try {
--    return std::vformat(std::locale(""), fmt, std::make_format_args(local));
--  } catch (...) {
--    return fmt;
--  }
 +  // const auto local = current_zone()->to_local(now);
-+  // try {
-+  //   return std::vformat(std::locale(""), fmt, std::make_format_args(local));
-+  // } catch (...) {
-+  //   return fmt;
-+  // }
-+  return fmt;
- }
- 
- std::string formatCurrentDate() {
++  std::tm date;
++  time_t tn;
++  tn = std::chrono::system_clock::to_time_t(now);
++  localtime_r(&tn, &date);
++  const auto local = std::chrono::system_clock::from_time_t(timegm(&date));
+   try {
+     return std::vformat(std::locale(""), fmt, std::make_format_args(local));
+   } catch (...) {

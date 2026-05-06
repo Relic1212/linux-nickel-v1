@@ -14,37 +14,39 @@
         patch = import "noctalia-full.patch" as 'Text
       },
     ],
-    separateBuildDir = false,
+    # separateBuildDir = false,
     # allowDubplicateBuldInputs = true,
     # enableParallel = false,
-    mesonArgs,
-    configurePhase = [
-      "meson setup %{std.string.join lib.constants.buildFlagSep mesonArgs} build ."
+    # preConfigurePhase = [
+    # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
+    # ],
+    # mesonArgs,
+    # configurePhase = [
+    #   "meson setup %{std.string.join lib.constants.buildFlagSep mesonArgs} build ."
+    # ],
+    preBuildPhase = [
+      "ninja cursor-shape-v1-client-protocol.h",
+      "ninja dwl-ipc-unstable-v2-client-protocol.h",
+      "ninja ext-background-effect-v1-client-protocol.h",
+      "ninja ext-data-control-v1-client-protocol.h",
+      "ninja ext-idle-notify-v1-client-protocol.h",
+      "ninja ext-session-lock-v1-client-protocol.h",
+      "ninja ext-workspace-v1-client-protocol.h",
+      "ninja fractional-scale-v1-client-protocol.h",
+      "ninja hyprland-focus-grab-v1-client-protocol.h",
+      "ninja idle-inhibit-unstable-v1-client-protocol.h",
+      "ninja viewporter-client-protocol.h",
+      "ninja virtual-keyboard-unstable-v1-client-protocol.h",
+      "ninja wlr-data-control-unstable-v1-client-protocol.h",
+      "ninja wlr-foreign-toplevel-management-unstable-v1-client-protocol.h",
+      "ninja wlr-layer-shell-unstable-v1-client-protocol.h",
+      "ninja xdg-activation-v1-client-protocol.h",
+      "ninja xdg-output-unstable-v1-client-protocol.h",
+      "ninja xdg-shell-client-protocol.h",
     ],
-    buildPhase = [
-      "ninja -C build cursor-shape-v1-client-protocol.h",
-      "ninja -C build dwl-ipc-unstable-v2-client-protocol.h",
-      "ninja -C build ext-background-effect-v1-client-protocol.h",
-      "ninja -C build ext-data-control-v1-client-protocol.h",
-      "ninja -C build ext-idle-notify-v1-client-protocol.h",
-      "ninja -C build ext-session-lock-v1-client-protocol.h",
-      "ninja -C build ext-workspace-v1-client-protocol.h",
-      "ninja -C build fractional-scale-v1-client-protocol.h",
-      "ninja -C build hyprland-focus-grab-v1-client-protocol.h",
-      "ninja -C build idle-inhibit-unstable-v1-client-protocol.h",
-      "ninja -C build viewporter-client-protocol.h",
-      "ninja -C build virtual-keyboard-unstable-v1-client-protocol.h",
-      "ninja -C build wlr-data-control-unstable-v1-client-protocol.h",
-      "ninja -C build wlr-foreign-toplevel-management-unstable-v1-client-protocol.h",
-      "ninja -C build wlr-layer-shell-unstable-v1-client-protocol.h",
-      "ninja -C build xdg-activation-v1-client-protocol.h",
-      "ninja -C build xdg-output-unstable-v1-client-protocol.h",
-      "ninja -C build xdg-shell-client-protocol.h",
-      "meson compile -C build",
-    ],
-    installPhase = [
-      "meson install -C build --destdir ${DEST}"
-    ],
+    # installPhase = [
+    #   "meson install --destdir ${DEST}"
+    # ],
 
     llvmProvider = drvs.llvmFull,
     pDrvs = [
@@ -87,10 +89,4 @@
       drvs.libwebp,
     ]
   },
-  bad | lib.Package = {
-    biDrvs = [
-      drvs.xz,
-      drvs.xz,
-    ]
-  }
 }
