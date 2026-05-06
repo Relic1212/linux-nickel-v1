@@ -1,6 +1,8 @@
 import os
 import subprocess
 import hashlib
+import timeit
+import datetime
 try:
     from builder import bubblewrap, hashes, util_functions, dirpaths, fetcher
 except ModuleNotFoundError:
@@ -182,6 +184,8 @@ def buildintput_hardlink(bi_dest, sysroot,  bi_drv_subdir_dest):
 
 
 def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
+    t1 = timeit.default_timer()
+
     sysroot_drvdir = dirpaths.get_basedir() + f"/{drv_hash}-sysroot"
     sysroot = sysroot_drvdir + "/sysroot/"
 
@@ -232,7 +236,9 @@ def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
                 directory = sysroot + "/usr/lib/ccache"
                 senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
                 subprocess.run(cmd, cwd=directory, env=senv, check=True)
-
+    t2 = timeit.default_timer()
+    preptime = datetime.timedelta(seconds=t2-t1)
+    print(f"praparing sysroot took {preptime}")
     subprocess.run(["touch", sysroot_drvdir + "/0.txt"], check=True)
 
 
