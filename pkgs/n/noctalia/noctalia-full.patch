@@ -1,8 +1,8 @@
 diff --git a/src/app/application.cpp b/src/app/application.cpp
-index 479944f89..3d907e196 100644
+index 46a520900..31bc7c57d 100644
 --- a/src/app/application.cpp
 +++ b/src/app/application.cpp
-@@ -276,7 +276,7 @@ void Application::run() {
+@@ -269,7 +269,7 @@ void Application::run() {
    runStartupPhase("telemetry enqueue",
                    [this]() { m_telemetryService.maybeSend(m_configService, m_httpClient, m_wayland); });
  
@@ -10,7 +10,7 @@ index 479944f89..3d907e196 100644
 +  // runStartupPhase("malloc_trim", []() { malloc_trim(0); });
  
    m_trayInitTimer.start(std::chrono::milliseconds(500), [this]() { startTrayService(); });
- 
+   m_polkitInitTimer.start(std::chrono::milliseconds(0), [this]() { syncPolkitAgent(); });
 diff --git a/src/ipc/ipc_client.cpp b/src/ipc/ipc_client.cpp
 index 2bae75f8d..fe3edab81 100644
 --- a/src/ipc/ipc_client.cpp
