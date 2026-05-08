@@ -8,7 +8,7 @@
     },
 
     crates = lib.functions.filterCrates (import "glycin-crates.json" as 'Json),
-
+    enableSccache = false,
     buildPhase =
       let extraMesonArgs = [
         "-Dglycin-loaders=false",
@@ -21,7 +21,7 @@
       in
       let mesonArgs = lib.constants.mesonArgs @ extraMesonArgs in
       [
-        m%"sed -i "s@'--target-dir'@'--verbose','--target=x86_64-unknown-linux-musl', '--target-dir'@g" ${SRC}/libglycin/meson.build"%,
+        m%"sed -i "s@'--target-dir'@'--target=x86_64-unknown-linux-musl', '--target-dir'@g" ${SRC}/libglycin/meson.build"%,
         m%"sed -i "s@rust_target@'x86_64-unknown-linux-musl' / rust_target@g" ${SRC}/libglycin/meson.build"%,
         # m%"sed -i "s@env: cargo_env_module,@# env: cargo_env_module,@g" ${SRC}/libglycin/meson.build"%,
         "sed -i 's|cdylib|staticlib|g' ${SRC}/libglycin/Cargo.toml",
