@@ -32,7 +32,7 @@
               "-lhyprbars",
               "-lhyprexpo",
               "-lhyprfocus",
-              "-lhyprscrolling",
+              # "-lhyprscrolling",
               "-lxtra-dispatchers",
               "-lHyprspace",
               # "-lhyprlang",

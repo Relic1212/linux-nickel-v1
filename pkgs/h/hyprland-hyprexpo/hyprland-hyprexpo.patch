@@ -1,76 +1,45 @@
-diff --git a/meson.build b/meson.build
-index 94a4cbe..80f1c9d 100644
---- a/meson.build
-+++ b/meson.build
-@@ -17,7 +17,7 @@ add_project_arguments([ '-DWLR_USE_UNSTABLE' ], language: 'cpp')
- globber = run_command('find', '.', '-name', '*.cpp', check: true)
- src = globber.stdout().strip().split('\n')
- 
--shared_module(meson.project_name(), src,
-+library(meson.project_name(), src,
-   dependencies: [
-     dependency('hyprland'),
-     dependency('pixman-1'),
-diff --git a/src/Overview.hpp b/src/Overview.hpp
-index c69e47a..05d92c4 100644
---- a/src/Overview.hpp
-+++ b/src/Overview.hpp
-@@ -23,7 +23,7 @@ class CHyprspaceWidget {
-     std::vector<std::tuple<PHLLS, float>> oLayerAlpha;
- 
-     // for click-to-exit
--    std::chrono::system_clock::time_point lastPressedTime = std::chrono::high_resolution_clock::now();
-+    std::chrono::steady_clock::time_point lastPressedTime = std::chrono::high_resolution_clock::now();
- 
-     bool swiping = false;
-     // whether if the panel is active before the current swiping event
 diff --git a/src/Render.cpp b/src/Render.cpp
-index 857cdc1..64cf76a 100644
+index 7fb7403..8189d77 100644
 --- a/src/Render.cpp
 +++ b/src/Render.cpp
-@@ -186,7 +186,13 @@ void CHyprspaceWidget::draw() {
+@@ -150,7 +150,13 @@ void CHyprspaceWidget::draw() {
      // Panel Border
      if (Config::panelBorderWidth > 0) {
          // Border box
 -        CBox borderBox = {widgetBox.x, owner->m_position.y + (Config::onBottom * owner->m_transformedSize.y) + (Config::panelHeight + Config::reservedArea - curYOffset->value() * owner->m_scale) * bottomInvert, owner->m_transformedSize.x, Config::panelBorderWidth};
++        // CBox borderBox = {widgetBox.x, owner->m_position.y + (Config::onBottom * owner->m_transformedSize.y) + (Config::panelHeight + Config::reservedArea - curYOffset->value() * owner->m_scale) * bottomInvert, owner->m_transformedSize.x, Config::panelBorderWidth};
 +        double bbx, bby, bbh, bbw;
 +        bbx = widgetBox.x;
 +        bby = owner->m_position.y + (Config::onBottom * owner->m_transformedSize.y) + (Config::panelHeight + Config::reservedArea - curYOffset->value() * owner->m_scale) * bottomInvert;
 +        bbh = owner->m_transformedSize.x;
 +        bbw = Config::panelBorderWidth;
 +        CBox borderBox = {bbx, bby, bbh, bbw};
-+        // CBox borderBox = {widgetBox.x, owner->m_position.y + (Config::onBottom * owner->m_transformedSize.y) + (Config::panelHeight + Config::reservedArea - curYOffset->value() * owner->m_scale) * bottomInvert, owner->m_transformedSize.x, Config::panelBorderWidth};
          borderBox.y -= owner->m_position.y;
  
          renderRect(borderBox, Config::panelBorderColor);
 diff --git a/src/main.cpp b/src/main.cpp
-index f6557e2..d3509b3 100644
+index 0b48c0b..4e713cd 100644
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -524,7 +524,8 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE inHandle) {
+@@ -517,7 +517,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE inHandle) {
  
  
      // CKeybindManager::mouse (names too generic bruh) (this is a private function btw)
 -    pMouseKeybind = findFunctionBySymbol(pHandle, "mouse", "CKeybindManager::mouse");
-+    // pMouseKeybind = findFunctionBySymbol(pHandle, "mouse", "CKeybindManager::mouse");
-+    pMouseKeybind = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN15CKeybindManager5mouseENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
++    pMouseKeybind =  HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN15CKeybindManager5mouseENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE");
  
-     g_pMouseButtonHook = HyprlandAPI::registerCallbackDynamic(pHandle, "mouseButton", onMouseButton);
-     g_pMouseAxisHook = HyprlandAPI::registerCallbackDynamic(pHandle, "mouseAxis", onMouseAxis);
-@@ -542,12 +543,12 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE inHandle) {
-     g_pSwitchWorkspaceHook = HyprlandAPI::registerCallbackDynamic(pHandle, "workspace", onWorkspaceChange);
+     g_pMouseButtonHook = listenCancellable<IPointer::SButtonEvent>(Event::bus()->m_events.input.mouse.button, onMouseButton);
+     g_pMouseAxisHook = listenCancellable<IPointer::SAxisEvent>(Event::bus()->m_events.input.mouse.axis, onMouseAxis);
+@@ -534,9 +534,9 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE inHandle) {
  
-     // CHyprRenderer::renderWindow
--    auto funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderWindow");
--    pRenderWindow = funcSearch[0].address;
-+    // auto funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderWindow");
+     g_pSwitchWorkspaceHook = Event::bus()->m_events.workspace.active.listen(onWorkspaceChange);
+ 
+-    pRenderWindow = findFunctionBySymbol(pHandle, "renderWindow", "CHyprRenderer::renderWindow");
+-    pRenderLayer = findFunctionBySymbol(pHandle, "renderLayer", "CHyprRenderer::renderLayer");
+-
 +    pRenderWindow = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View7CWindowEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb");
- 
-     // CHyprRenderer::renderLayer
--    funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderLayer");
--    pRenderLayer = funcSearch[0].address;
-+    // funcSearch = HyprlandAPI::findFunctionsByName(pHandle, "renderLayer");
 +    pRenderLayer = HyprlandAPI::getFunctionAddressFromSignature(pHandle, "_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View13CLayerSurfaceEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEbb");
- 
++ 
      registerMonitors();
-     g_pAddMonitorHook = HyprlandAPI::registerCallbackDynamic(pHandle, "monitorAdded", [&] (void* thisptr, SCallbackInfo& info, std::any data) { registerMonitors(); });
+     g_pAddMonitorHook = Event::bus()->m_events.monitor.added.listen([](const PHLMONITOR&) { registerMonitors(); });
+ 

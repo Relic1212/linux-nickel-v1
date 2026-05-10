@@ -6,18 +6,18 @@
       uri = "https://github.com/KZDKM/Hyprspace/archive/12ddde04f8584bf7de3151e6169918e0dda9f822.tar.gz",
       sha256sum = "2f26b5417c8faa5fbd21ed9d91d06207cae2ad83210b9e6c00989c26ed42b49b"
     },
-    patches = [
+    eofPatches = [
       {
-        file = "hyprland-hyprexpo.patch",
-        sha256sum = "41ae567a3cb3433efb551cee2c335c6da0cd3113e238db98123aaaae3e7643d7"
+        patch = import "hyprland-hyprexpo.patch" as 'Text,
       },
     ],
     options = {
       glx | default = false,
     },
-    # preConfigurePhase = [
-    #   "sed -i 's|system_clock|steady_clock|g' ${SRC}/src/Overview.hpp",
-    # ],
+    preConfigurePhase = [
+      "sed -i 's|shared_module|library|g' ${SRC}/meson.build",
+      "sed -i 's|system_clock|steady_clock|g' ${SRC}/src/Overview.hpp",
+    ],
     postInstallPhase =
       let s = "Hyprspace" in
       let prefix = std.string.replace "-" "_" s in

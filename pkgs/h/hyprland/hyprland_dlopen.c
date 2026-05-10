@@ -49,7 +49,7 @@ const char *main_program_handle = "main_program";
 
 const char *lib__usr_lib_libborders_plus_plus_so = "lib__usr_lib_libborders_plus_plus_so";
 const char *lib__usr_lib_libhyprexpo_so = "lib__usr_lib_libhyprexpo_so";
-const char *lib__usr_lib_libhyprscrolling_so = "lib__usr_lib_libhyprscrolling_so";
+// const char *lib__usr_lib_libhyprscrolling_so = "lib__usr_lib_libhyprscrolling_so";
 const char *lib__usr_lib_libhyprbars_so = "lib__usr_lib_libhyprbars_so";
 const char *lib__usr_lib_libxtra_dispatchers_so = "lib__usr_lib_libxtra_dispatchers_so";
 const char *lib__usr_lib_libhyprfocus_so = "lib__usr_lib_libhyprfocus_so";
@@ -71,11 +71,11 @@ void *dlopen(const char *path, int mode)
 		dbg_print("(dlopen) found library /usr/lib/libhyprexpo.so (handle=%p)\n", &lib__usr_lib_libhyprexpo_so);
 		return &lib__usr_lib_libhyprexpo_so;
 	}
-	if (strcmp(path, "/usr/lib/libhyprscrolling.so") == 0)
-	{
-		dbg_print("(dlopen) found library /usr/lib/libhyprscrolling.so (handle=%p)\n", &lib__usr_lib_libhyprscrolling_so);
-		return &lib__usr_lib_libhyprscrolling_so;
-	}
+	// if (strcmp(path, "/usr/lib/libhyprscrolling.so") == 0)
+	// {
+	// 	dbg_print("(dlopen) found library /usr/lib/libhyprscrolling.so (handle=%p)\n", &lib__usr_lib_libhyprscrolling_so);
+	// 	return &lib__usr_lib_libhyprscrolling_so;
+	// }
 	if (strcmp(path, "/usr/lib/libhyprbars.so") == 0)
 	{
 		dbg_print("(dlopen) found library /usr/lib/libhyprbars.so (handle=%p)\n", &lib__usr_lib_libhyprbars_so);
@@ -162,27 +162,27 @@ void *dlsym(void *__restrict handle, const char *__restrict symbol)
 			return &_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE;
 		}
 	}
-	if (handle == &lib__usr_lib_libhyprscrolling_so || handle == NULL || handle == &main_program_handle)
-	{
-		if (strcmp(symbol, "pluginAPIVersion") == 0)
-		{
-			extern void *hyprscrolling_pluginAPIVersion;
-			dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &hyprscrolling_pluginAPIVersion);
-			return &hyprscrolling_pluginAPIVersion;
-		}
-		if (strcmp(symbol, "pluginExit") == 0)
-		{
-			extern void *hyprscrolling_pluginExit;
-			dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &hyprscrolling_pluginExit);
-			return &hyprscrolling_pluginExit;
-		}
-		if (strcmp(symbol, "pluginInit") == 0)
-		{
-			extern void *hyprscrolling_pluginInit;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &hyprscrolling_pluginInit);
-			return &hyprscrolling_pluginInit;
-		}
-	}
+	// if (handle == &lib__usr_lib_libhyprscrolling_so || handle == NULL || handle == &main_program_handle)
+	// {
+	// 	if (strcmp(symbol, "pluginAPIVersion") == 0)
+	// 	{
+	// 		extern void *hyprscrolling_pluginAPIVersion;
+	// 		dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &hyprscrolling_pluginAPIVersion);
+	// 		return &hyprscrolling_pluginAPIVersion;
+	// 	}
+	// 	if (strcmp(symbol, "pluginExit") == 0)
+	// 	{
+	// 		extern void *hyprscrolling_pluginExit;
+	// 		dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &hyprscrolling_pluginExit);
+	// 		return &hyprscrolling_pluginExit;
+	// 	}
+	// 	if (strcmp(symbol, "pluginInit") == 0)
+	// 	{
+	// 		extern void *hyprscrolling_pluginInit;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &hyprscrolling_pluginInit);
+	// 		return &hyprscrolling_pluginInit;
+	// 	}
+	// }
 	if (handle == &lib__usr_lib_libhyprbars_so || handle == NULL || handle == &main_program_handle)
 	{
 		if (strcmp(symbol, "pluginAPIVersion") == 0)
