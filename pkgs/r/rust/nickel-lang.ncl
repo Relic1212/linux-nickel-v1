@@ -17,7 +17,9 @@
 
       extraCargoFlags = [
         "--verbose",
+        "--no-default-features",
       ],
+      linkSelfContained = "no",
 
       biDrvs = [
         drvs.pythonFull,
