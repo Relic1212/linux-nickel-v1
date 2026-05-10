@@ -59,11 +59,8 @@ let drvUtils = {
         buildInputDrvs = (
           std.array.map
             (fun x =>
-              let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in
-              if data.dest == "" then
-                data
-              else
-                data
+              # { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x  }
+              { drvHash = x.drvHash, dest = x.dest }
             )
             (std.array.sort (buildInputCmp) p.buildInputsValidated)
         ),

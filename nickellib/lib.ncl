@@ -86,7 +86,12 @@ in
 
       ShasumArray1 = std.contract.from_predicate (functions.isValidShasumArray),
       ShasumArray = std.contract.from_validator (fun arr => (if (functions.isValidShasumArray arr) then 'Ok else 'Error { message = "hello", notes = "[notes here]" })),
-
+      BuildInput = {
+        drvHash | String,
+        dest | String | default = "",
+        # priority | default = 0,
+        ..
+      },
       # pkgs=import "pkgsRecord.ncl",
       Package = {
         # others
@@ -167,7 +172,7 @@ in
 
         neverInclude | default = [],
 
-        buildInputs | not_exported | default =
+        buildInputs | Array BuildInput | not_exported | default =
           # filter out things common with neverInclude by keyName
           std.array.filter
             (fun biDrv => !(std.array.elem biDrv.keyName (std.array.map (fun inc => inc.keyName) neverInclude)))
