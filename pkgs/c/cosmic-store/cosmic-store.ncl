@@ -32,7 +32,7 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       #
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
-      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
     extraEnv = {
@@ -61,7 +61,8 @@
         "-C link-arg=-llzma",
         #
         "-C link-arg=/tmp/workdir/src/dlopen.o",
-        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+        "-C link-arg=-lc++",
+        m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ]
       @ (
         std.array.map
@@ -93,7 +94,7 @@
       @ (if enableSccache then [drvs.sccache] else [])
       @ utilsProviders,
     llvmProvider,
-    # llvmProvider = drvs.llvmFull,
+    llvmProvider = drvs.llvmFull,
 
     enableSccache = true,
     biDrvs = [
@@ -112,19 +113,19 @@
       drvs.glib,
       drvs.gperf,
       drvs.jansson,
-      drvs.libffi,
+      # drvs.libffi,
       drvs.libusb,
       drvs.libxkbcommon,
-      drvs.libyaml,
-      drvs.linuxHeaders,
+      # drvs.libyaml,
+      # drvs.linuxHeaders,
       drvs.openssl,
       drvs.pcre2,
       drvs.pixman,
       drvs.utilLinux,
-      drvs.wayland,
-      drvs.waylandProtocols,
+      # drvs.wayland,
+      # drvs.waylandProtocols,
       drvs.xz,
-      drvs.zlibNg,
+      # drvs.zlibNg,
       drvs.zstd,
       drvs.libstdcppCompat,
       drvs.flatpak,
@@ -145,5 +146,8 @@
       drvs.bubblewrap,
       drvs.xdgDbusProxy,
     ],
+    pDrvs = [
+      drvs.mesa2,
+    ]
   },
 }
