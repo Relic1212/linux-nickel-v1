@@ -104,6 +104,20 @@
       ]
       @ options.gtk,
   },
+  libadwaitaPostFixed | lib.MesonPackage =
+    libadwaita
+    & {
+      postInstallPhase =
+        std.array.map
+          (fun s => "objcopy --redefine-sym %{s}=libadwaita__%{s} ${DEST}/usr/lib/libadwaita-1.a"
+          )
+          [
+            "_gtk_builder_prefix_error",
+            "_gtk_builder_error_unhandled_tag",
+            "_gtk_builder_check_parent",
+            "_gtk_builder_parser_translate",
+          ],
+    },
   libadwaitaFixedSyms | lib.MesonPackage =
     libadwaita
     & {
