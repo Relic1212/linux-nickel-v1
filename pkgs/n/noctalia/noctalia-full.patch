@@ -1,8 +1,8 @@
 diff --git a/src/app/application.cpp b/src/app/application.cpp
-index aa070bbe8..415d34ed2 100644
+index 845ae8841..8bf65c2b5 100644
 --- a/src/app/application.cpp
 +++ b/src/app/application.cpp
-@@ -269,7 +269,7 @@ void Application::run() {
+@@ -268,7 +268,7 @@ void Application::run() {
    runStartupPhase("telemetry enqueue",
                    [this]() { m_telemetryService.maybeSend(m_configService, m_httpClient, m_wayland); });
  
@@ -11,6 +11,15 @@ index aa070bbe8..415d34ed2 100644
  
    m_trayInitTimer.start(std::chrono::milliseconds(500), [this]() { startTrayService(); });
    m_polkitInitTimer.start(std::chrono::milliseconds(0), [this]() { syncPolkitAgent(); });
+@@ -983,7 +983,7 @@ void Application::initUi() {
+     m_fileDialogPopup.requestLayout();
+   });
+ 
+-  m_configService.addReloadCallback([]() { malloc_trim(0); });
++  // m_configService.addReloadCallback([]() { malloc_trim(0); });
+ 
+   m_timeService.setTickSecondCallback([this]() {
+     m_wallpaper.onSecondTick();
 diff --git a/src/ipc/ipc_client.cpp b/src/ipc/ipc_client.cpp
 index 2bae75f8d..fe3edab81 100644
 --- a/src/ipc/ipc_client.cpp
@@ -121,11 +130,24 @@ index b6237a5b9..ce449c430 100644
      lua_pop(m_T, 1);
      return std::nullopt;
    }
+diff --git a/src/shell/panel/panel_manager.cpp b/src/shell/panel/panel_manager.cpp
+index b2057b606..b434ccdfd 100644
+--- a/src/shell/panel/panel_manager.cpp
++++ b/src/shell/panel/panel_manager.cpp
+@@ -691,7 +691,7 @@ void PanelManager::destroyPanel() {
+     m_platform->stopKeyRepeat();
+   }
+ 
+-  malloc_trim(0);
++  // malloc_trim(0);
+ }
+ 
+ void PanelManager::togglePanel(const std::string& panelId, PanelOpenRequest request) {
 diff --git a/src/time/time_format.cpp b/src/time/time_format.cpp
-index 69a6ab41c..4b7a4cc49 100644
+index d2de59106..d7e858731 100644
 --- a/src/time/time_format.cpp
 +++ b/src/time/time_format.cpp
-@@ -153,7 +153,12 @@ std::string formatLocalTime(const char* fmt) {
+@@ -154,7 +154,12 @@ std::string formatLocalTime(const char* fmt) {
      return *compat;
    }
  

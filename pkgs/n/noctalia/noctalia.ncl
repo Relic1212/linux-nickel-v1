@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/1faa2f98a4de7ebe0725fc960fdb5e55cdb9e8da.tar.gz",
-      sha256sum = "42795f7df07c0005162233ba3a047110df82bfa865ddd94c3025f9a5cf28dc36",
+      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/79113421ba8aafe04046f99d870a9f1a8569b083.tar.gz",
+      sha256sum = "e40c17bbf6733bf20604b22ed53202f18ac50294683e88ff79c49bf55d401f7c",
     },
     eofPatches = [
       #   {
@@ -43,6 +43,7 @@
       "ninja xdg-activation-v1-client-protocol.h",
       "ninja xdg-output-unstable-v1-client-protocol.h",
       "ninja xdg-shell-client-protocol.h",
+      "ninja wlr-gamma-control-unstable-v1-client-protocol.h",
     ],
     # installPhase = [
     #   "meson install --destdir ${DEST}"
@@ -50,6 +51,7 @@
 
     llvmProvider = drvs.llvmFull,
     pDrvs = [
+      drvs.jemalloc,
       drvs.sdbusCpp,
       drvs.mesa2,
       drvs.freetype,
