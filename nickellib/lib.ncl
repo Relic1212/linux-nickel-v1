@@ -256,8 +256,8 @@ in
           @ [
             "export BUILDDIR=/tmp/workdir/build"
           ]
-          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") (functions.getFinalBuildEnv buildEnv)))
-          @ (std.record.values (std.record.map (fun field value => "export %{field}=%{functions.varToExportvar value}\n") extraEnv))
+          @ (std.record.values (std.record.map (fun field value => "%{field}=%{functions.varToExportvar value}\nexport %{field}\n") (functions.getFinalBuildEnv buildEnv)))
+          @ (std.record.values (std.record.map (fun field value => "%{field}=%{functions.varToExportvar value}\nexport %{field}\n") extraEnv))
 
         # @ (functions.createExport "CC" buildEnv)
         ,patchPhase | Array String | default =

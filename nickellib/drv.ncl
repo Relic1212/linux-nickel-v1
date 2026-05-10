@@ -61,7 +61,7 @@ let drvUtils = {
             (fun x =>
               let data = { drvHash = x.drvHash, dest = std.record.get_or "dest" "" x } in
               if data.dest == "" then
-                data.drvHash
+                data
               else
                 data
             )

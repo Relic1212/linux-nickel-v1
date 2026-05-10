@@ -182,7 +182,8 @@ def buildintput_hardlink(bi_dest, sysroot,  bi_drv_subdir_dest):
             # no point in creating hard links to symlinks
             subprocess.run(["cp", "-a", link_source, link_target], check=True)
 
-def build_basepath_directory(basedir:str, uses_ccache:bool,known_compilers:list[str],destdirs:list[str]):
+
+def build_basepath_directory(basedir: str, uses_ccache: bool, known_compilers: list[str], destdirs: list[str]):
     """
     create basepaths (/dev, /tmp, etc) in basedir
     """
@@ -194,40 +195,41 @@ def build_basepath_directory(basedir:str, uses_ccache:bool,known_compilers:list[
 
     # uses_ccache = drv["enableCcache"]
     if uses_ccache:
-        
+
         for compiler in known_compilers:
             cmd = ["ln", "-s", "/usr/bin/ccache", compiler]
             directory = basedir + "/usr/lib/ccache"
-            os.makedirs(directory,exist_ok=True)
+            os.makedirs(directory, exist_ok=True)
             senv = {"PATH": os.getenv("PATH"), "HOME": "/"}
             subprocess.run(cmd, cwd=directory, env=senv, check=True)
 
 
-def prepare_symlink_directory(symlink_directory:str, build_inputs:list, uses_ccache:bool)->list[str]:
+def prepare_symlink_directory(symlink_directory: str, build_inputs: list, uses_ccache: bool) -> list[str]:
     """
     Prepare symlinks in symlink directory for build_inputs. Also create a directory for basepaths such as /dev
     returns bwrap args needed to chroot to a directory with the packages
     """
     pkg_symlink_dirs = []
-    basepath = os.path.join(symlink_directory,"s") # s for sysroot (just any non-number)
+    # s for sysroot (just any non-number)
+    basepath = os.path.join(symlink_directory, "s")
 
-    dests={"":[]}
-    compilers= {
-        
-            "gcc":False,
-            "cc":False,
-            "clang":False,
-            "g++":False,
-            "clang++":False,
-            # "x86_64-pc-linux-musl-c++":,
-            # "x86_64-pc-linux-musl-g++",
-            # "x86_64-pc-linux-musl-gcc",
-            # "x86_64-linux-musl-c++",
-            # "x86_64-linux-musl-g++",
-            # "x86_64-linux-musl-gcc",
-        
+    dests = {"": []}
+    compilers = {
+
+        "gcc": False,
+        "cc": False,
+        "clang": False,
+        "g++": False,
+        "clang++": False,
+        # "x86_64-pc-linux-musl-c++":,
+        # "x86_64-pc-linux-musl-g++",
+        # "x86_64-pc-linux-musl-gcc",
+        # "x86_64-linux-musl-c++",
+        # "x86_64-linux-musl-g++",
+        # "x86_64-linux-musl-gcc",
+
     }
-    for i,bi_drv in enumerate(build_inputs):
+    for i, bi_drv in enumerate(build_inputs):
         if type(bi_drv) is str:
             bi_drv_drv_hash = bi_drv
             bi_drv_subdir_dest = ""
@@ -235,30 +237,30 @@ def prepare_symlink_directory(symlink_directory:str, build_inputs:list, uses_cca
             bi_drv_drv_hash = bi_drv["drvHash"]
             bi_drv_subdir_dest = bi_drv["dest"]
 
-        bi_workdir= dirpaths.get_basedir() + "/" + bi_drv_drv_hash + "-workdir"
+        bi_workdir = dirpaths.get_basedir() + "/" + bi_drv_drv_hash + "-workdir"
         bi_dest_rel = bi_workdir + "/out/destdir"
         bi_dest = os.path.realpath(bi_dest_rel, strict=True)
 
         symlink_subdir = str(i)
-        symlink_package_dir = os.path.join(symlink_directory,symlink_subdir)
+        symlink_package_dir = os.path.join(symlink_directory, symlink_subdir)
         if bi_drv_subdir_dest in dests:
             dests[bi_drv_subdir_dest].append(symlink_subdir)
         else:
-            dests[bi_drv_subdir_dest]=[symlink_subdir]
+            dests[bi_drv_subdir_dest] = [symlink_subdir]
         for compiler in compilers:
-            if not compilers[compiler]: # not yet found:
-                if os.path.exists(os.path.join(bi_dest ,"/usr/bin/", compiler )):
+            if not compilers[compiler]:  # not yet found:
+                if os.path.exists(os.path.join(bi_dest, "/usr/bin/", compiler)):
                     compilers[compiler] = True
 
         os.symlink(bi_dest, symlink_package_dir)
-    dests[""].append("s") # basepaths should be last
+    dests[""].append("s")  # basepaths should be last
 
     args = []
 
-    for dest in dests: # "" key was added first
+    for dest in dests:  # "" key was added first
         linkdirs = dests[dest]
         if len(linkdirs) > 1:
-            overlay_opts="lowerdir=" + ":".join(linkdirs)
+            overlay_opts = "lowerdir=" + ":".join(linkdirs)
             mount_cmd = f"mount -t overlay overlay -o {overlay_opts} ${{TARGET_SYSROOT}}/{dest}"
             # there is something weird about the order
             # for linkdir in linkdirs:
@@ -267,19 +269,14 @@ def prepare_symlink_directory(symlink_directory:str, build_inputs:list, uses_cca
         else:
             mount_cmd = f"mount --bind {linkdirs[0]} ${{TARGET_SYSROOT}}/{dest}"
 
-
-    known_compilers=[]
-    destdirs=list(dests.keys())
+    known_compilers = []
+    destdirs = list(dests.keys())
     for c in compilers:
         if compilers[c]:
             known_compilers.append(c)
-    build_basepath_directory(basepath,uses_ccache,known_compilers,destdirs)
+    build_basepath_directory(basepath, uses_ccache, known_compilers, destdirs)
     return args
 
-
-
-
-    
 
 def build_sysroot_hardlink(drv_hash, build_inputs, uses_ccache):
     t1 = timeit.default_timer()

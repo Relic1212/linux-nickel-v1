@@ -29,7 +29,7 @@
                   drvs.pythonSetuptools,
                 ]
                 # @ (if isLlvm then [drvs.llvm] else [])
-                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ (if enableCcache then [drvs.ccacheBin, drvs.ccacheSymlinks] else [])
               )
             else
               []
@@ -86,7 +86,7 @@
                   drvs.pythonGpep517,
                 ]
                 # @ (if isLlvm then [drvs.llvm] else [])
-                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ (if enableCcache then [drvs.ccacheBin, drvs.ccacheSymlinks] else [])
               )
             else
               []

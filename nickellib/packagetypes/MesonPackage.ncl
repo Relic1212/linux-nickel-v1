@@ -84,7 +84,7 @@
                     []
                 )
                 @ (if isLlvm then llvmProviders else [])
-                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ (if enableCcache then [drvs.ccacheBin, drvs.ccacheSymlinks] else [])
               )
             else
               []

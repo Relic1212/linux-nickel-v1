@@ -19,6 +19,8 @@
                   "NM",
                   "RANLIB",
                   "READELF",
+                  "RUSTFLAGS",
+                  "PKG_CONFIG",
                   "OBJDUMP",
                   "OBJCOPY",
                   "LD",
@@ -190,5 +192,8 @@
     EXTRA_LDFLAGS | nullOrArray | default = null,
 
     SOURCE_DATE_EPOCH | String | default = "\"1302044400\"",
+
+    PKG_CONFIG | nullOrArray | default = ["pkg-config", "--static"],
+    RUSTFLAGS | default = null,
   },
 }

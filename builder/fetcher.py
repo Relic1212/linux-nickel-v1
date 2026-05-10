@@ -61,12 +61,7 @@ def fetch_by_drv(drv: dict):
         # -r?
         carr.append(".")
     bwrap_args = ["--bind", packedwd, "/tmp/workdir/packed"]
-    # bubblewrap.run_in_bwrap_chroot(
-    #     sysroot="/",
-    #     extra_bwrap_args=bwrap_args + [ "--chdir", "/tmp/workdir/packed" ]  + carr,
-    #     network=True,
-    #     env=env,
-    # )
+
     if cmd != "git":
         subprocess.run(carr, cwd=packedwd, env=env, check=True)
     else:

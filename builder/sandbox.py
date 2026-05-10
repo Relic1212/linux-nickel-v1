@@ -31,7 +31,8 @@ def _run_unshared(target):
 
     else:
         # os.unshare(os.CLONE_FILES|os.CLONE_FS|os.CLONE_NEWCGROUP|os.CLONE_NEWIPC|os.CLONE_NEWNET|os.CLONE_NEWNS|os.CLONE_NEWPID|os.CLONE_NEWTIME|os.CLONE_NEWUSER|os.CLONE_NEWUTS|os.CLONE_SIGHAND|os.CLONE_SYSVSEM|os.CLONE_THREAD|os.CLONE_VM)
-        os.unshare(os.CLONE_NEWUSER | os.CLONE_NEWNS | os.CLONE_NEWIPC|os.CLONE_NEWNET)
+        os.unshare(os.CLONE_NEWUSER | os.CLONE_NEWNS |
+                   os.CLONE_NEWIPC | os.CLONE_NEWNET)
         os.eventfd_write(fd, 1)
         os.close(fd)
         os.waitpid(p, 0)
@@ -62,7 +63,7 @@ def run_in_chroot(root: str, target):
     Args:
         root (str): path to rootfs to chroot into
         target (_type_): function to run
-    """    
+    """
     def cmd():
         subprocess.run(
             [
@@ -77,7 +78,8 @@ def run_in_chroot(root: str, target):
             check=True,
         )
         subprocess.run(
-            ["mount", "-t", "tmpfs", "-o", "nodev,nosuid", "none", f"{root}/run"],
+            ["mount", "-t", "tmpfs", "-o",
+                "nodev,nosuid", "none", f"{root}/run"],
             check=True,
         )
         # subprocess.run(['mount','-t','proc','none',f'{root}/proc'],check=True)
@@ -99,8 +101,7 @@ def test():
     """
     def target():
         # subprocess.run(["ls", "-l", "/"],check=True)
-        subprocess.run(["wget","jogg.se"],check=True)
-
+        subprocess.run(["wget", "jogg.se"], check=True)
 
     root = "/data/user/Projects/misc-linux-a2/experiments/nickel/sysroot"
     run_in_chroot(root, target)

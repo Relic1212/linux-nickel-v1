@@ -100,7 +100,7 @@
                   muslProvider,
                 ]
                 @ (if isLlvm then llvmProviders else [])
-                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ (if enableCcache then [drvs.ccacheBin, drvs.ccacheSymlinks] else [])
                 @ (if (generator == "Ninja") then [drvs.samurai] else [])
               )
             else

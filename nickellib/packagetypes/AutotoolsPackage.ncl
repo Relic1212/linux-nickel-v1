@@ -71,7 +71,7 @@
               (
                 [drvs.gnumake, muslProvider]
                 @ (if isLlvm then AutotoolsPackage.llvmProviders else [])
-                @ (if enableCcache then [drvs.ccacheBin] else [])
+                @ (if enableCcache then [drvs.ccacheBin, drvs.ccacheSymlinks] else [])
                 @ [
                   perlProvider,
                   drvs.automake,
