@@ -23,6 +23,8 @@
         mimalloc | default = false,
         progs = std.string-split " " "arch base32 base64 basename basenc cat chgrp chmod chown chroot cksum comm cp csplit cut date dd df dir dircolors dirname du echo env expand expr factor false fmt fold groups hashsum head hostid hostname id install join kill link ln logname ls mkdir mkfifo mknod mktemp more mv nice nl nohup nproc numfmt od paste pathchk pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split stat stty sum sync tac tail tee test timeout touch tr true truncate tsort tty uname unexpand uniq unlink vdir wc whoami yes"
       },
+      linkSelfContained = "no",
+
       releaseFlags = [
         "--profile release",
       ],
@@ -88,7 +90,7 @@
               (drvs.mimalloc & { priority = 1 }),
             ]
           else
-            []
+            [drvs.musl]
         ),
     },
 
