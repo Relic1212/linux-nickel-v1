@@ -51,7 +51,12 @@ in
 
         arrayContainsDups = (fun arr =>
           (
-            (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((std.array.elem elem arrp.a) || arrp.b) })) { a = [], b = false } arr).b
+            (std.array.fold_left (fun arrp elem => ({ a = (arrp.a @ [elem]), b = ((
+              if (std.array.elem elem arrp.a)
+              then 
+              std.trace "elem: %{std.serialize 'Json elem}" true else false
+              
+              ) || arrp.b) })) { a = [], b = false } arr).b
           )
         ),
         hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
