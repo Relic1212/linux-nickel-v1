@@ -1,0 +1,10 @@
+prefix=/usr
+libdir=/usr/lib
+includedir=/usr/include
+
+Name: skia
+Description: skia
+Version: 144
+Requires:
+Libs: -L/usr/lib -lskia
+Cflags: -I/usr/include
