@@ -38,10 +38,21 @@
 & {
   lib,
   drvs,
-  dartSass | lib.AutomakePackage = {
+  dartSass | lib.Package = {
     singleSource = {
       uri = "https://github.com/sass/dart-sass/archive/refs/tags/1.89.2.tar.gz",
       sha256sum = "4a2f78270eef196ecb24d37b0563a7da642463c678666e58f6f2028cb06aeb29"
-    }
+    },
+    preConfigurePhase = [
+      # "cd ${SRC}/pkg/sass-parser",
+      "cd ${SRC}",
+    ],
+    installPhase = [
+      "npm install --global --prefix ${DEST}/usr"
+    ],
+
+    biDrvs = [
+      drvs.nodejs,
+    ]
   }
 }
