@@ -88,8 +88,10 @@
         m%"sed -i 's|find_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|find_package(KF6Notifications ${KF6_MIN_VERSION} REQUIRED)\nfind_package(KF6JobWidgets ${KF6_MIN_VERSION} REQUIRED)|g' ${SRC}/CMakeLists.txt"%,
       ],
       buildEnv.EXTRA_LDFLAGS | priority 1 =
-        _plasma.buildEnv.EXTRA_LDFLAGS
-        @ [
+        # _plasma.buildEnv.
+        # EXTRA_LDFLAGS
+        # @
+        [
           "$(pkg-config --libs --static alsa vorbis vorbisenc vorbisfile)",
         ],
       biDrvs =
@@ -406,8 +408,9 @@
 
       buildEnv = {
         EXTRA_LDFLAGS | priority 1 =
-          _plasma.buildEnv.EXTRA_LDFLAGS
-          @ [
+          # _plasma.buildEnv.EXTRA_LDFLAGS
+          # @
+          [
             "-lcap",
             "-lpam_misc",
           ],
@@ -548,8 +551,9 @@
       },
 
       buildEnv.EXTRA_LDFLAGS | priority 1 =
-        _plasma.buildEnv.EXTRA_LDFLAGS
-        @ [
+        # _plasma.buildEnv.EXTRA_LDFLAGS
+        # @
+        [
           "$(pkg-config --static --libs libavdevice)",
           "$(pkg-config --static --libs libpulse)",
           "$(pkg-config --static --libs xcb)",

@@ -3,6 +3,7 @@
   drvs,
   _kf_sources = import "_kf_sources.ncl",
   _kf | lib.QtPackage = {
+    allowDubplicateBuldInputs = true,
     name,
     singleSource | priority -999 = {
       # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
@@ -10,118 +11,111 @@
       sha256sum = _kf_sources."%{uri}",
     },
 
-    generator = "Ninja",
+    # generator = "Ninja",
 
     llvmProvider = drvs.llvmFull,
-    # 
+    pDrvs | priority -1 = [
+      drvs.qtwayland,
+      drvs.ecm,
+    ],
 
-    options = {
-      version = "6.25",
-
-      waylandSyms = false,
-      xkbcommonX11 | default = false,
-    },
-
-    muslProvider = drvs.muslBothRenamedDl,
-
-    biDrvs | priority -2 =
-      [
-        drvs.libdlFactory,
-        drvs.pixman,
-        drvs.expat,
-        drvs.libffi,
-        drvs.libevdev,
-        drvs.mtdev,
-        drvs.pango,
-        drvs.cairo,
-        drvs.libpng,
-        drvs.freetype,
-        drvs.fontconfig,
-        drvs.zlibNg,
-        # drvs.harfbuzz,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.linuxHeaders,
-        drvs.libjpegTurboStatic,
-        drvs.libspng,
-        drvs.file,
-        drvs.libwebp,
-        drvs.dbusForQt,
-        drvs.qtdeclarative,
-        drvs.qtbase,
-        drvs.qtshadertools,
-        drvs.qtwayland,
-        drvs.qt5compat,
-        drvs.qtTools,
-        drvs.qtsensors,
-        drvs.qtsvg,
-        drvs.mesa2,
-        # drvs.pkgconf,
-        drvs.libelf,
-        drvs.libdrm,
-        drvs.pythonMako,
-        drvs.pythonPackaging,
-        drvs.pythonMarkupsafe,
-        drvs.libpciaccess,
-        drvs.bison,
-        drvs.flex,
-        drvs.harfbuzzFull,
-      ]
-      @ (
-        if options.waylandSyms then
-          [
-            drvs.waylandWeaksyms
-          ]
-        else
-          [
-            drvs.wayland
-          ]
-      )
-      @ [
-        drvs.waylandProtocols,
-        drvs.m4,
-        drvs.pyyaml,
-        drvs.llvmConfigStatic,
-        drvs.spirvTools,
-        drvs.spirvLlvmTranslator,
-        ###
-        drvs.jsonC,
-        drvs.pcre2,
-      ]
-      @ (
-        if options.xkbcommonX11 then
-          [
-            drvs.libxkbcommonX11,
-          ]
-        else
-          [
-            drvs.libxkbcommon,
-          ]
-      )
-      @ [
-        drvs.openssl,
-        drvs.kmod,
-        drvs.zstd,
-        drvs.xz,
-        drvs.eudev,
-        drvs.libinput,
-        drvs.ecm,
-      ],
-    buildEnv =
-      let common_flags = ["-DQT_STATICPLUGIN"] in
-      {
-        EXTRA_CFLAGS = common_flags,
-        EXTRA_CPPFLAGS = common_flags,
-        EXTRA_CXXFLAGS = common_flags,
-
-        BASE_LDFLAGS | priority 1 = [],
-        EXTRA_LDFLAGS = [
-          "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
-          "-ldl_factory",
-        ]
-      },
+    # biDrvs | priority -2 =
+    #   [
+    #     drvs.libdlFactory,
+    #     drvs.pixman,
+    #     drvs.expat,
+    #     drvs.libffi,
+    #     drvs.libevdev,
+    #     drvs.mtdev,
+    #     drvs.pango,
+    #     drvs.cairo,
+    #     drvs.libpng,
+    #     drvs.freetype,
+    #     drvs.fontconfig,
+    #     drvs.zlibNg,
+    #     # drvs.harfbuzz,
+    #     drvs.glib,
+    #     drvs.hwdata,
+    #     drvs.linuxHeaders,
+    #     drvs.libjpegTurboStatic,
+    #     drvs.libspng,
+    #     drvs.file,
+    #     drvs.libwebp,
+    #     drvs.dbusForQt,
+    #     drvs.qtdeclarative,
+    #     drvs.qtbase,
+    #     drvs.qtshadertools,
+    #     drvs.qtwayland,
+    #     drvs.qt5compat,
+    #     drvs.qtTools,
+    #     drvs.qtsensors,
+    #     drvs.qtsvg,
+    #     drvs.mesa2,
+    #     # drvs.pkgconf,
+    #     drvs.libelf,
+    #     drvs.libdrm,
+    #     drvs.pythonMako,
+    #     drvs.pythonPackaging,
+    #     drvs.pythonMarkupsafe,
+    #     drvs.libpciaccess,
+    #     drvs.bison,
+    #     drvs.flex,
+    #     drvs.harfbuzzFull,
+    #   ]
+    #   @ (
+    #     if options.waylandSyms then
+    #       [
+    #         drvs.waylandWeaksyms
+    #       ]
+    #     else
+    #       [
+    #         drvs.wayland
+    #       ]
+    #   )
+    #   @ [
+    #     drvs.waylandProtocols,
+    #     drvs.m4,
+    #     drvs.pyyaml,
+    #     drvs.llvmConfigStatic,
+    #     drvs.spirvTools,
+    #     drvs.spirvLlvmTranslator,
+    #     ###
+    #     drvs.jsonC,
+    #     drvs.pcre2,
+    #   ]
+    #   @ (
+    #     if options.xkbcommonX11 then
+    #       [
+    #         drvs.libxkbcommonX11,
+    #       ]
+    #     else
+    #       [
+    #         drvs.libxkbcommon,
+    #       ]
+    #   )
+    #   @ [
+    #     drvs.openssl,
+    #     drvs.kmod,
+    #     drvs.zstd,
+    #     drvs.xz,
+    #     drvs.eudev,
+    #     drvs.libinput,
+    #     drvs.ecm,
+    #   ],
+    # buildEnv =
+    #   let common_flags = ["-DQT_STATICPLUGIN"] in
+    #   {
+    #     EXTRA_CFLAGS = common_flags,
+    #     EXTRA_CPPFLAGS = common_flags,
+    #     EXTRA_CXXFLAGS = common_flags,
+    # BASE_LDFLAGS | priority 1 = [],
+    # EXTRA_LDFLAGS = [
+    #   "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
+    #   # "-ldl_factory",
+    # ]
+    # },
     cmakeExtraArgsRecord = {
-      "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
+      # "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
 
       #"-DCMAKE_MODULE_LINKER_FLAGS:STRING" = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client)\""
 
@@ -140,6 +134,9 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kconfig-6.16.0.tar.xz",
       #   sha256sum = "ba6cc58f025fef9525bc640f7967b7c09053b592c42368e096d97a94661a3525"
       # },
+      biDrvs = [
+        drvs.qtTools,
+      ]
     },
   kcoreaddons =
     _kf
@@ -148,9 +145,12 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kcoreaddons-6.16.0.tar.xz",
       #   sha256sum = "798a2744c296d13b216eadd7e5d801a6fd6956944a2147ab2830c399930ae2a0"
       # },
-      cmakeExtraArgsRecord = {
-        "-DBUILD_TESTING" = false,
-      }
+      # cmakeExtraArgsRecord = {
+      #   "-DBUILD_TESTING" = false,
+      # }
+      biDrvs = [
+        drvs.qtTools,
+      ]
     },
 
   kglobalaccel =
@@ -161,13 +161,16 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/%{name}-6.16.0.tar.xz",
       #   sha256sum = "6663461a82798b5dccb9f44e91c0c37e12c951f87e295c3ba7f465dac7bd4aa1"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
-        ],
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.kcoreaddons
+      #   ],
+      biDrvs = [
+        drvs.qtTools,
+      ],
       cmakeExtraArgsRecord = {
-        "-DBUILD_TESTING" = false,
+        # "-DBUILD_TESTING" = false,
         "-DWITH_X11" = false,
       }
     },
@@ -226,10 +229,10 @@
       biDrvs =
         _kf.biDrvs
         @ [
-          drvs.kcoreaddons,
+          # drvs.kcoreaddons,
           drvs.plasmaWaylandProtocols,
-          drvs.libxml2,
-          drvs.libxslt,
+          # drvs.libxml2,
+          # drvs.libxslt,
         ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
@@ -311,17 +314,18 @@
       #   sha256sum = "16d1142aacd8514f95cf9bdb44b2a720f3397b5ee68a489a54c86a560af55516"
       # },
       biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.karchive,
-          drvs.kconfig,
-          drvs.kcolorscheme,
-          drvs.kguiaddons,
-          drvs.bzip2,
+        #   _kf.biDrvs
+        [
+          #     drvs.kcoreaddons,
+          #     drvs.karchive,
+          #     drvs.kconfig,
+          #     drvs.kcolorscheme,
+          #     drvs.kguiaddons,
+          #     drvs.bzip2,
           drvs.plasmaWaylandProtocols,
-          drvs.ki18n,
-          drvs.gettext,
+          drvs.qtTools,
+          #     drvs.ki18n,
+          #     drvs.gettext,
         ]
     },
 
@@ -332,6 +336,9 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kdbusaddons-6.16.0.tar.xz",
       #   sha256sum = "3ba1b9628483a38a13b7bce6aac0ae2d6f116f62601930786e254da4dfd5d145"
       # },
+      biDrvs = [
+        drvs.qtTools,
+      ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
       }
@@ -388,16 +395,15 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kwidgetsaddons-6.16.0.tar.xz",
       #   sha256sum = "7663f88052fd8ca947b9fe0bbead04ff228e884f124498a328cc30e9f172915c"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-        ],
+      biDrvs = [
+        drvs.qtTools,
+        # drvs.kcoreaddons,
+        # drvs.kcodecs,
+        # drvs.kconfig,
+        # drvs.kguiaddons,
+        # drvs.ki18n,
+        # drvs.gettext,
+      ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING:BOOL" = "OFF",
         "-DBUILD_DESIGNERPLUGIN:BOOL" = "OFF",
@@ -618,23 +624,26 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/solid-6.16.0.tar.xz",
       #   sha256sum = "00ec609d799335bafb97b6a7d4a5c061ab4a0eb10e4089e8e104942321beb8a0"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kconfigwidgets,
-          drvs.utilLinuxWeak,
-        ],
-      buildEnv = {
-        EXTRA_LDFLAGS | priority 1 = _kf.buildEnv.EXTRA_LDFLAGS @ ["-lblkid"],
-      }
+      buildEnv.EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static expat)",
+        "-lblkid",
+      ],
+      biDrvs = [
+        drvs.flex,
+        drvs.bison,
+        drvs.m4,
+        drvs.qtTools,
+        # drvs.kcoreaddons,
+        # drvs.kcodecs,
+        # drvs.kconfig,
+        # drvs.kguiaddons,
+        # drvs.ki18n,
+        # drvs.gettext,
+        # drvs.karchive,
+        # drvs.bzip2,
+        # drvs.kconfigwidgets,
+        # drvs.utilLinuxWeak,
+      ],
     },
   kcmutils =
     _kf
@@ -755,22 +764,9 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kitemviews-6.16.0.tar.xz",
       #   sha256sum = "c45541d85ec1b06d160b819c03f073cf001a60411f1d45706a611d9eab9214dd"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.kcodecs,
-          drvs.kconfig,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.bzip2,
-          drvs.kservice,
-          drvs.kwidgetsaddons,
-          drvs.kcolorscheme,
-          drvs.kconfigwidgets,
-        ],
+      biDrvs = [
+        drvs.qtTools,
+      ],
 
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
@@ -822,12 +818,18 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/karchive-6.16.0.tar.xz",
       #   sha256sum = "dba18ff2be1d0b57a1812a33de660d4cf7623dcfaa8f9c0d64efde2152409cff"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.bzip2,
-        ]
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.kcoreaddons,
+      #     drvs.bzip2,
+      #   ]
+      biDrvs = [
+        drvs.zstd,
+        drvs.bzip2,
+        drvs.xz,
+        drvs.qtTools,
+      ]
     },
 
   kcodecs =
@@ -837,12 +839,12 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kcodecs-6.16.0.tar.xz",
       #   sha256sum = "d8d23cdc853aa832bf39886c6b673fee87279e258cf01abeb0acfea5f718e595"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.gperf
-        ]
+      biDrvs = [drvs.qtTools, ],
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.kcoreaddons,
+      #     drvs.gperf
+      #   ]
     },
   ki18n =
     _kf
@@ -851,15 +853,15 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/ki18n-6.16.0.tar.xz",
       #   sha256sum = "c52ad10b14365e60c4a219cb66706d114476645297cb2a9f15498747cf4421d7"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.gperf,
-          drvs.isoCodes,
-          drvs.pythonFull,
-          drvs.gettext,
-        ]
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.kcoreaddons,
+      #     drvs.gperf,
+      #     drvs.isoCodes,
+      #     drvs.pythonFull,
+      #     drvs.gettext,
+      #   ]
     },
 
   kguiaddons =
@@ -869,12 +871,12 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/kguiaddons-6.16.0.tar.xz",
       #   sha256sum = "9e1d53a4fbe1eb7ccc10610a1737d9b2560756f89bf650940a74356daa7db2e2"
       # },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons,
-          drvs.plasmaWaylandProtocols,
-        ],
+      buildEnv.EXTRA_LDFLAGS = [
+        "$(pkg-config --libs --static expat)",
+      ],
+      biDrvs = [
+        drvs.plasmaWaylandProtocols,
+      ],
       cmakeExtraArgsRecord = {
         "-DWITH_X11" = false,
       }
@@ -888,26 +890,25 @@
       #   sha256sum = "dc3b5ac5e5eaea5b76af8e85f065ddbce91ff7e3fcc13c6d600ad53bb53b1b31"
       # },
       options.waylandSyms = true,
-      biDrvs =
-        (std.array.filter (fun x => (x.name != "wayland")) _kf.biDrvs)
-        @ [
-          drvs.kcoreaddons,
-          drvs.plasmaWaylandProtocols,
-          drvs.waylandWeaksyms,
-          # drvs.xcbUtilKeysyms,
-          # drvs.libxcursor,
-          # drvs.xorgMacros,
-          # drvs.xorgproto,
-          # drvs.xtrans,
-          # drvs.libxcb,
-          # drvs.xcbProto,
-          # drvs.libxau,
-          # drvs.libx11,
-          # drvs.libxrender,
-          # drvs.libxfixes,
-          # drvs.xcbRenderutil,
-          # drvs.xcbUtilWm,
-        ],
+      biDrvs = [
+        # drvs.kcoreaddons,
+        drvs.qtTools,
+        drvs.plasmaWaylandProtocols,
+        # drvs.waylandWeaksyms,
+        # drvs.xcbUtilKeysyms,
+        # drvs.libxcursor,
+        # drvs.xorgMacros,
+        # drvs.xorgproto,
+        # drvs.xtrans,
+        # drvs.libxcb,
+        # drvs.xcbProto,
+        # drvs.libxau,
+        # drvs.libx11,
+        # drvs.libxrender,
+        # drvs.libxfixes,
+        # drvs.xcbRenderutil,
+        # drvs.xcbUtilWm,
+      ],
       cmakeExtraArgsRecord = {
         "-DKWINDOWSYSTEM_X11" = false,
         "-DKWINDOWSYSTEM_WAYLAND" = true,
@@ -1116,56 +1117,56 @@
   attica =
     _kf
     & {
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.acl,
-          drvs.alsaLibs,
-          drvs.attr,
-          drvs.breezeIcons,
-          drvs.bzip2,
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kbookmarks,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kcompletion,
-          drvs.kconfig,
-          drvs.kconfigwidgets,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kded,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kio,
-          drvs.kirigami,
-          drvs.kitemviews,
-          drvs.kjobwidgets,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kwallet,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.libcanberra,
-          drvs.libogg,
-          drvs.libtool,
-          drvs.libvorbis,
-          drvs.plasmaWaylandProtocols,
-          drvs.solid,
-          drvs.switcherooControl,
-          drvs.utilLinuxWeak,
-          drvs.vala,
-        ]
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.acl,
+      #     drvs.alsaLibs,
+      #     drvs.attr,
+      #     drvs.breezeIcons,
+      #     drvs.bzip2,
+      #     drvs.gettext,
+      #     drvs.karchive,
+      #     drvs.kauth,
+      #     drvs.kbookmarks,
+      #     drvs.kcodecs,
+      #     drvs.kcolorscheme,
+      #     drvs.kcompletion,
+      #     drvs.kconfig,
+      #     drvs.kconfigwidgets,
+      #     drvs.kcoreaddons,
+      #     drvs.kcrash,
+      #     drvs.kdbusaddons,
+      #     drvs.kded,
+      #     drvs.kglobalaccel,
+      #     drvs.kguiaddons,
+      #     drvs.ki18n,
+      #     drvs.kiconthemes,
+      #     drvs.kidletime,
+      #     drvs.kio,
+      #     drvs.kirigami,
+      #     drvs.kitemviews,
+      #     drvs.kjobwidgets,
+      #     drvs.knotifications,
+      #     drvs.kpackage,
+      #     drvs.kservice,
+      #     drvs.ksvg,
+      #     drvs.kwallet,
+      #     drvs.kwidgetsaddons,
+      #     drvs.kwindowsystem,
+      #     drvs.libcanberra,
+      #     drvs.libogg,
+      #     drvs.libtool,
+      #     drvs.libvorbis,
+      #     drvs.plasmaWaylandProtocols,
+      #     drvs.solid,
+      #     drvs.switcherooControl,
+      #     drvs.utilLinuxWeak,
+      #     drvs.vala,
+      #   ]
     },
 
-  kholidays = _kf & {},
+  kholidays = _kf & { biDrvs = [drvs.flex, drvs.bison, drvs.m4, drvs.qtTools, ] },
   breezeIcons =
     _kf
     & {
@@ -1182,7 +1183,7 @@
           drvs.pythonDynamic,
           drvs.pythonLxml,
           drvs.gettext,
-          # drvs.muslShared & { priority = -1 },
+          drvs.muslShared & { priority = -1 },
         ]
     },
 
@@ -1383,7 +1384,14 @@
           drvs.plasmaWaylandProtocols,
         ],
     },
+  kuserfeedback =
+    _kf
+    & {
 
+      biDrvs = [
+        drvs.qtTools,
+      ],
+    },
   syntaxHighlighting =
     _kf
     & {
@@ -1391,35 +1399,40 @@
       cmakeExtraArgsRecord = {
         "-DKSYNTAXHIGHLIGHTING_USE_GUI" = false
       },
-
+      buildEnv = {
+        EXTRA_LDFLAGS = [
+          "$(pkg-config --libs --static gmodule-2.0 expat libpcre2-8)"
+        ],
+      },
       biDrvs =
         _kf.biDrvs
         @ [
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kcmutils,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kconfig,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kio,
-          drvs.kirigami,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.plasmaWaylandProtocols,
+          # drvs.gettext,
+          # drvs.karchive,
+          # drvs.kauth,
+          # drvs.kcmutils,
+          # drvs.kcodecs,
+          # drvs.kcolorscheme,
+          # drvs.kconfig,
+          # drvs.kcoreaddons,
+          # drvs.kcrash,
+          # drvs.kdbusaddons,
+          # drvs.kglobalaccel,
+          # drvs.kguiaddons,
+          # drvs.ki18n,
+          # drvs.kiconthemes,
+          # drvs.kidletime,
+          # drvs.kio,
+          # drvs.kirigami,
+          # drvs.knotifications,
+          # drvs.kpackage,
+          # drvs.kservice,
+          # drvs.ksvg,
+          # drvs.kwidgetsaddons,
+          # drvs.kwindowsystem,
+          # drvs.plasmaWaylandProtocols,
           drvs.perl,
+          drvs.qtTools,
         ],
     },
   ktexteditor =
@@ -1433,8 +1446,9 @@
       },
 
       buildEnv.EXTRA_LDFLAGS | priority 1 =
-        _kf.buildEnv.EXTRA_LDFLAGS
-        @ [
+        # _kf.buildEnv.EXTRA_LDFLAGS
+        # @ 
+        [
           "$(pkg-config --static --libs libavdevice)",
           "$(pkg-config --static --libs libpulse)",
         ],
@@ -1520,34 +1534,34 @@
   kitemmodels =
     _kf
     & {
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kcmutils,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kconfig,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kio,
-          drvs.kirigami,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.plasmaWaylandProtocols,
-        ],
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.gettext,
+      #     drvs.karchive,
+      #     drvs.kauth,
+      #     drvs.kcmutils,
+      #     drvs.kcodecs,
+      #     drvs.kcolorscheme,
+      #     drvs.kconfig,
+      #     drvs.kcoreaddons,
+      #     drvs.kcrash,
+      #     drvs.kdbusaddons,
+      #     drvs.kglobalaccel,
+      #     drvs.kguiaddons,
+      #     drvs.ki18n,
+      #     drvs.kiconthemes,
+      #     drvs.kidletime,
+      #     drvs.kio,
+      #     drvs.kirigami,
+      #     drvs.knotifications,
+      #     drvs.kpackage,
+      #     drvs.kservice,
+      #     drvs.ksvg,
+      #     drvs.kwidgetsaddons,
+      #     drvs.kwindowsystem,
+      #     drvs.plasmaWaylandProtocols,
+      #   ],
     },
   ktextwidgets =
     _kf
@@ -1595,36 +1609,35 @@
         "-DWITH_TEXT_TO_SPEECH" = false,
         "-DBUILD_DESIGNERPLUGIN" = false,
       },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kcmutils,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kconfig,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kio,
-          drvs.kirigami,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.plasmaWaylandProtocols,
-          drvs.kcompletion,
-          drvs.hunspell,
-        ],
+      biDrvs = [
+        drvs.qtTools,
+        # drvs.gettext,
+        # drvs.karchive,
+        # drvs.kauth,
+        # drvs.kcmutils,
+        # drvs.kcodecs,
+        # drvs.kcolorscheme,
+        # drvs.kconfig,
+        # drvs.kcoreaddons,
+        # drvs.kcrash,
+        # drvs.kdbusaddons,
+        # drvs.kglobalaccel,
+        # drvs.kguiaddons,
+        # drvs.ki18n,
+        # drvs.kiconthemes,
+        # drvs.kidletime,
+        # drvs.kio,
+        # drvs.kirigami,
+        # drvs.knotifications,
+        # drvs.kpackage,
+        # drvs.kservice,
+        # drvs.ksvg,
+        # drvs.kwidgetsaddons,
+        # drvs.kwindowsystem,
+        # drvs.plasmaWaylandProtocols,
+        # drvs.kcompletion,
+        drvs.hunspell,
+      ],
     },
 
   prison =
@@ -1636,30 +1649,30 @@
       biDrvs =
         _kf.biDrvs
         @ [
-          drvs.gettext,
-          drvs.karchive,
-          drvs.kauth,
-          drvs.kcmutils,
-          drvs.kcodecs,
-          drvs.kcolorscheme,
-          drvs.kconfig,
-          drvs.kcoreaddons,
-          drvs.kcrash,
-          drvs.kdbusaddons,
-          drvs.kglobalaccel,
-          drvs.kguiaddons,
-          drvs.ki18n,
-          drvs.kiconthemes,
-          drvs.kidletime,
-          drvs.kio,
-          drvs.kirigami,
-          drvs.knotifications,
-          drvs.kpackage,
-          drvs.kservice,
-          drvs.ksvg,
-          drvs.kwidgetsaddons,
-          drvs.kwindowsystem,
-          drvs.plasmaWaylandProtocols,
+          # drvs.gettext,
+          # drvs.karchive,
+          # drvs.kauth,
+          # drvs.kcmutils,
+          # drvs.kcodecs,
+          # drvs.kcolorscheme,
+          # drvs.kconfig,
+          # drvs.kcoreaddons,
+          # drvs.kcrash,
+          # drvs.kdbusaddons,
+          # drvs.kglobalaccel,
+          # drvs.kguiaddons,
+          # drvs.ki18n,
+          # drvs.kiconthemes,
+          # drvs.kidletime,
+          # drvs.kio,
+          # drvs.kirigami,
+          # drvs.knotifications,
+          # drvs.kpackage,
+          # drvs.kservice,
+          # drvs.ksvg,
+          # drvs.kwidgetsaddons,
+          # drvs.kwindowsystem,
+          # drvs.plasmaWaylandProtocols,
           drvs.libqrencode,
         ],
     },
@@ -1745,11 +1758,11 @@
         uri = "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.20.0.tar.xz",
         sha256sum = "9818bb1462211ce5982e670abf0d964eb11fe1d0c02a1c26084db30695a79d6a"
       },
-      biDrvs =
-        _kf.biDrvs
-        @ [
-          drvs.kcoreaddons
-        ],
+      # biDrvs =
+      #   _kf.biDrvs
+      #   @ [
+      #     drvs.kcoreaddons
+      #   ],
     },
 }
 & {

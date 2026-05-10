@@ -16,8 +16,9 @@
       },
 
       buildEnv.EXTRA_LDFLAGS | priority 1 =
-        _plasma.buildEnv.EXTRA_LDFLAGS
-        @ [
+        # _plasma.buildEnv.EXTRA_LDFLAGS
+        # @
+        [
           "$(pkg-config --static --libs libavdevice)",
           "$(pkg-config --static --libs libpulse)",
           # "$(pkg-config --static --libs xcb)",
