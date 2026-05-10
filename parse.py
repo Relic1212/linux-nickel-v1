@@ -11,7 +11,7 @@ import argparse
 from builder import build_in_bubblewrap
 
 
-KNOWN_SLOW = ["base-image", "base-image-small"]
+KNOWN_SLOW = ["base-image", "base-image-small", "plasma-packages"]
 
 
 class GraphNode:
@@ -124,7 +124,7 @@ def build_all(drvs):
         pn_hash = drvs["hashByName"][k]
         try:
             b.build(pn_hash, drvs["drvByHash"], pkg_names=reverse_dict(
-                drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"])
+                drvs["hashByName"]), pkghash2sysroothash=drvs["pkghash2sysroothash"],delete_tmpfs_build_on_fail=True)
             s.append(k)
         except KeyboardInterrupt as e:
             raise e
