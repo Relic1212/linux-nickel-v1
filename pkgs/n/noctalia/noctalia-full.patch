@@ -1,5 +1,5 @@
 diff --git a/src/app/application.cpp b/src/app/application.cpp
-index 46a520900..31bc7c57d 100644
+index aa070bbe8..415d34ed2 100644
 --- a/src/app/application.cpp
 +++ b/src/app/application.cpp
 @@ -269,7 +269,7 @@ void Application::run() {
@@ -122,10 +122,10 @@ index b6237a5b9..ce449c430 100644
      return std::nullopt;
    }
 diff --git a/src/time/time_format.cpp b/src/time/time_format.cpp
-index 2d8f99261..2250854b2 100644
+index 69a6ab41c..4b7a4cc49 100644
 --- a/src/time/time_format.cpp
 +++ b/src/time/time_format.cpp
-@@ -137,7 +137,12 @@ std::string formatLocalTime(const char* fmt) {
+@@ -153,7 +153,12 @@ std::string formatLocalTime(const char* fmt) {
      return *compat;
    }
  
@@ -137,5 +137,5 @@ index 2d8f99261..2250854b2 100644
 +  localtime_r(&tn, &date);
 +  const auto local = std::chrono::system_clock::from_time_t(timegm(&date));
    try {
-     return std::vformat(std::locale(""), fmt, std::make_format_args(local));
+     return std::vformat(std::locale(""), normalizedFmt, std::make_format_args(local));
    } catch (...) {
