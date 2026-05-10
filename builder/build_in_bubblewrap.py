@@ -256,7 +256,7 @@ class builder:
         os.makedirs(f"{workdir}/patches")
         os.makedirs(f"{workdir}/files")
         symlink_build_inputs = drv['symlinkBuldInputs']
-
+        symlink_overlay = False
         if symlink_build_inputs:
             bwrap_bi_drv_args = sysroot_utils.prepare_sysroot_symlink(
                 drv, workdir)
@@ -267,10 +267,11 @@ class builder:
                 sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
 
         else:
+            # symlink_overlay = True
+            # bwrap_bi_drv_args = sysroot_utils.prepare_symlink_directory(workdir + "/sysroot", drv["buildInputDrvs"], uses_ccache)
             bwrap_bi_drv_args = []
-
             sysroot_utils.build_sysroot(
-                sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
+                 sysroot_drv_hash, drv["buildInputDrvs"], uses_ccache)
 
         bwrap_src_args = []
         for si_drv in drv["sourceInputDrvs"]:
@@ -433,6 +434,9 @@ class builder:
             if uses_sccache:
                 args += ["--bind",
                          f"{dirpaths.get_basedir()}/sccache", "/tmp/sccache"]
+                # args += ["--ro-bind",
+                #          f"{dirpaths.get_basedir()}/sccache/config", "/tmp/sccache/config"]
+                
 
         else:  # not sandboxed
             senv = os.environ.copy()
@@ -460,6 +464,15 @@ class builder:
             bwrap_wrap = bubblewrap.get_bwrap_wrap(
                 sysroot=sysroot, sysroot_args=bwrap_bi_drv_args, extra_bwrap_args=args, network=deterministic_fetcher
             )
+            if symlink_overlay:
+                print("pre:",bwrap_wrap)
+                # bwrap_wrap=bwrap_wrap[2:]
+                bwrap_wrap = bwrap_wrap[:3] + bwrap_wrap[6:]
+                print("post:",bwrap_wrap)
+                for i in range(len(bwrap_wrap)):
+                    if bwrap_wrap[i].startswith("./build/"):
+                        bwrap_wrap[i] = "../../../" + bwrap_wrap[i]
+            
             chroot_string = ("#!/bin/sh\n" + ''.join([s+" " for s in bwrap_wrap])[
                 : -1-len("/tmp/workdir/build.sh")] + "sh\n")
 
@@ -468,6 +481,10 @@ class builder:
             subprocess.run(
                 ["chmod", "+x", f"{workdir}/chroot.sh"], check=True)
 
+            if symlink_overlay:
+                subprocess_popen_dir = workdir + "/sysroot"
+            else:
+                subprocess_popen_dir = None
             with subprocess.Popen(
                 args=bwrap_wrap,
                 env=senv,
@@ -475,7 +492,8 @@ class builder:
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,
                 text=True,
-                errors="replace"
+                errors="replace",
+                cwd=subprocess_popen_dir
             ) as proc:
                 try:
                     for line in proc.stdout:
