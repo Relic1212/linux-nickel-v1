@@ -1,8 +1,10 @@
 #!/bin/sh
 rm -rf /tmp/ssh
 mkdir -p /tmp/ssh
-chmod 600 /tmp/ssh
+#chmod 600 /tmp/ssh
 touch /tmp/ssh/unsecure-file
+chmod 600 /tmp/ssh
+
 scp \
 	-o StrictHostKeyChecking=no -o UserKnownHostsFile=/tmp/ssh/known_host \
 	-i /tmp/ssh/unsecure-file \
