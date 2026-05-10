@@ -1,0 +1,594 @@
+[
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/build",
+            "sha256sum": "a41197ca560809f3e4994ce864e06059b505bbd8",
+            "fetchMethod": "git"
+        },
+        "dest": "build"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/buildtools",
+            "sha256sum": "07bca3e6b632fb1f8836a56e931319c557e55d70",
+            "fetchMethod": "git"
+        },
+        "dest": "buildtools"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/testing",
+            "sha256sum": "dec4379de6173d7ec7106c8add9a830dfa6bb822",
+            "fetchMethod": "git"
+        },
+        "dest": "testing"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/EGL-Registry",
+            "sha256sum": "d42c684f61828e3ce18533f1c6893b79980e6acc",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/EGL-Registry/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenCL-CTS",
+            "sha256sum": "b7e7a3eb65d80d6847bd522f66f876fd5f6fe938",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/OpenCL-CTS/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenCL-Docs",
+            "sha256sum": "72e365994f66803b0f5c066120f6885bffeedf9a",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/OpenCL-Docs/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenCL-ICD-Loader",
+            "sha256sum": "634ef470035f3fadf46ee48fa91886f155f788f5",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/OpenCL-ICD-Loader/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenGL-Registry",
+            "sha256sum": "5048bd8682a4483d00ea8de495cd8e59b2c720af",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/OpenGL-Registry/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/Python-Markdown",
+            "sha256sum": "0f4473546172a64636f5d841410c564c0edad625",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/Python-Markdown"
+    },
+    {
+        "src": {
+            "uri": "https://swiftshader.googlesource.com/SwiftShader",
+            "sha256sum": "5aa3ef64770d6065183b9637fc44065ef7e7566b",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/SwiftShader"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/VK-GL-CTS",
+            "sha256sum": "2e03601bd4ee7f8b57215c83fc9f3302aef7c173",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/VK-GL-CTS/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp",
+            "sha256sum": "069077c0ac7b45a71c22eea01bb6c3e13e6047a1",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/abseil-cpp"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/android_build_tools",
+            "sha256sum": "6806b5008448cdb1d9f10d5fc9737774dfc65867",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/android_build_tools"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/android_deps",
+            "sha256sum": "b1593e8c286fb256cca77b8080b69a72bc85926e",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/android_deps"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/android_platform",
+            "sha256sum": "e3919359f2387399042d31401817db4a02d756ec",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/android_platform"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/android_sdk",
+            "sha256sum": "4dc44574065d12f8f5da15c2dd7ebf4c02eaf08a",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/android_sdk"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/ARM-software/astc-encoder",
+            "sha256sum": "573c475389bf51d16a5c3fc8348092e094e50e8f",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/astc-encoder/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/catapult",
+            "sha256sum": "a4432a77891c90f48dda114a16809cfee7010826",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/catapult"
+    },
+    {
+        "src": {
+            "uri": "https://android.googlesource.com/platform/external/cherry",
+            "sha256sum": "eedd8a2f7ae2e06e4cad7a4921c0bc56521703e6",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/cherry"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/clang/tools/clang-format",
+            "sha256sum": "58c72c9ffbc23be0ac9c69439e6b4fbdca81055c",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/clang-format/script"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/google/clspv",
+            "sha256sum": "7c95a0de024989e3fd5b2c833b2c3d273215f1de",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/clspv/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/colorama",
+            "sha256sum": "406153f134db6b5c5391f223be46f9e8a902e6b6",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/colorama/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/google/cpu_features",
+            "sha256sum": "e50843b583ea2f4c35b47364c9d0904b677872c2",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/cpu_features/src"
+    },
+    {
+        "src": {
+            "uri": "https://dawn.googlesource.com/dawn",
+            "sha256sum": "08d8fc519929a69755f14e26b7ac83626f6ffe48",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/dawn"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/tools/depot_tools",
+            "sha256sum": "2b5f71d194c1df175925fa5126ab020bd029d63d",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/depot_tools"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/google/flatbuffers",
+            "sha256sum": "8cb53ccc95dabae66233733017bc4f8668bfb379",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/flatbuffers/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/glmark2/glmark2",
+            "sha256sum": "22c527cb0556f3a1ac4445aaa52cc532760928d5",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/glmark2/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/glslang",
+            "sha256sum": "9a8c5fd1f485736d29ef470d1b6981c5de73a365",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/glslang/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/google/googletest",
+            "sha256sum": "9156d4caac880b513264ecbe0aa4746a3fead3d7",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/googletest/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/ijar",
+            "sha256sum": "94af60a05b33f9acb33477a8d969e48eb1c3029f",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/ijar"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/jinja2",
+            "sha256sum": "c3027d884967773057bf74b957e3fea87e5df4d7",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/jinja2"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/jsoncpp",
+            "sha256sum": "c8c7bf0a11b069b4c6fe5286bc14f028aada2b1f",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/jsoncpp"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxx",
+            "sha256sum": "486c1c4c4b49b3561455d96c9dc0657186bf2977",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libc++/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxxabi",
+            "sha256sum": "9f13c32a7e4180f6854e447e57a0f7306e473184",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libc++abi/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromiumos/third_party/libdrm",
+            "sha256sum": "728dfa9dbeeb013e5a26c24f4372a16eace99c5e",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libdrm/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/deps/libjpeg_turbo",
+            "sha256sum": "d2d3546f9173f5cc0e4378018aa7ccf3a4875cc3",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libjpeg_turbo"
+    },
+    {
+        "src": {
+            "uri": "https://android.googlesource.com/platform/external/libpng",
+            "sha256sum": "8cc222cd3e79fa5190f3aa039a03a4cbea6cfbe7",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libpng/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libunwind",
+            "sha256sum": "f4b329c171f133c4cbad4819773eaf889a9f64cc",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/libunwind/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libc",
+            "sha256sum": "2fb0746206f7c4bcba57c70e8b31e1a46762692c",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/llvm-libc/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project",
+            "sha256sum": "b0fce8ec2e47a045e13a630c71a19c1a2662c8d1",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/llvm/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/markupsafe",
+            "sha256sum": "4256084ae14175d38a3ff7d739dca83ae49ccec6",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/markupsafe"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/Mesa3D/mesa",
+            "sha256sum": "c6286e39ecc6f1ee20de9a830430a50fac51d210",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/mesa/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/mesonbuild/meson",
+            "sha256sum": "28db962cd183a961d9057a5b210d17d38771c9e6",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/meson"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/deps/nasm",
+            "sha256sum": "af5eeeb054bebadfbb79c7bcd100a95e2ad4525f",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/nasm"
+    },
+    {
+        "src": {
+            "uri": "https://android.googlesource.com/platform/external/perfetto",
+            "sha256sum": "40b529923598b739b2892a536a7692eedbed5685",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/perfetto"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/protobuf",
+            "sha256sum": "018046d2ab3f11b3fc19a87ce15c069591bc9bda",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/protobuf"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/Tencent/rapidjson",
+            "sha256sum": "24b5e7a8b27f42fa16b96fc70aade9106cf7102f",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/rapidjson/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/google/re2",
+            "sha256sum": "e7aec5985072c1dbe735add802653ef4b36c231a",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/re2/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/kennethreitz/requests",
+            "sha256sum": "8dd3b26bf59808de24fd654699f592abf6de581e",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/requests/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/rust",
+            "sha256sum": "7eab6f950f6561069f78d5b229b0a88be6737bca",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/rust"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/six",
+            "sha256sum": "98dedb5909b3e39848c6de5122772f5a89abe61a",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/six"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross",
+            "sha256sum": "28184c1e138f18c330256eeb2f56b9f9fbc53921",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/spirv-cross/src"
+    },
+    {
+        "src": {
+            "uri": "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git",
+            "sha256sum": "0a7f626a6ae86284a413d105b47a6fb413bf6c92",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/spirv-headers/src"
+    },
+    {
+        "src": {
+            "uri": "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git",
+            "sha256sum": "91ac969ed599bfd0697a5b88cfae550318a04392",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/spirv-tools/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/vulkan-deps",
+            "sha256sum": "686b39ce6344bfc70f4d4c36da00bc5bfceecd80",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-deps"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers",
+            "sha256sum": "450bd2232225d6c7728a4108055ac2e37cef6475",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-headers/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Loader",
+            "sha256sum": "3bdb32d29f2d96b34e2865dc4a2f2be8eb457e1d",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-loader/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools",
+            "sha256sum": "1343cb3a9ca1a52fc6575f1471cf2b656bf1050a",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-tools/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Utility-Libraries",
+            "sha256sum": "9a3f4105c16bde4e2717eeab0fcc5a49236f7294",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-utility-libraries/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-ValidationLayers",
+            "sha256sum": "417d7abfdbe389cbf3fd1f17cbb95a7ed2e4e242",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan-validation-layers/src"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator",
+            "sha256sum": "e0216a5484c8345f7d792fa16fad77ac63d89a70",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/vulkan_memory_allocator"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/external/anongit.freedesktop.org/git/wayland/wayland",
+            "sha256sum": "678c8681e28739da1fea667ae59118cfc0968497",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/wayland"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/third_party/zlib",
+            "sha256sum": "e00f7038713ff2e751c28a1ac08f0b68bca8567c",
+            "fetchMethod": "git"
+        },
+        "dest": "third_party/zlib"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/android",
+            "sha256sum": "2d9b00d0ba35212a583f8fcf1453a2f3c877af03",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/android"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/clang",
+            "sha256sum": "be193c7ef74114b59488e2d67a518cc1bc584aae",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/clang"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/mb",
+            "sha256sum": "bbf8568e8085152c3b05ef1829fe6216fb198d00",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/mb"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/md_browser",
+            "sha256sum": "b7cfebc8143108734248df4e855a1bff01173f77",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/md_browser"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/memory",
+            "sha256sum": "d500250668368512cf2b0873c7727f034c00ce7a",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/memory"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/perf",
+            "sha256sum": "0d350f248f6aa69eb1d07d42e0384af53237a2d0",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/perf"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/protoc_wrapper",
+            "sha256sum": "3438d4183bfc7c0d6850e8b970204cc8189f0323",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/protoc_wrapper"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/python",
+            "sha256sum": "64dd0e593f8e438764ced983a9f3f96061df748c",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/python"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/rust",
+            "sha256sum": "d1690596df82f4968e4a157034691f18dc8a9d35",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/rust"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/valgrind",
+            "sha256sum": "da34b95fdbf2032df6cda5f3828c2ba421592644",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/valgrind"
+    },
+    {
+        "src": {
+            "uri": "https://chromium.googlesource.com/chromium/src/tools/win",
+            "sha256sum": "24494b071e019a2baea4355d9870ffc5fc0bbafe",
+            "fetchMethod": "git"
+        },
+        "dest": "tools/win"
+    }
+]
