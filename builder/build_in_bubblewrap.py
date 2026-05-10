@@ -496,19 +496,18 @@ class builder:
 
         # def fun(): return buildscript.run_build_scipt(workdir, tmp_workdir, bwrap_wrap,
         #                                               senv, subprocess_popen_dir, name, delete_tmpfs_build_on_fail)
-        print("running crating wrap")
+        # print("running crating wrap")
 
         def wrap():
             for m in mount_commands:
 
-                print(f"running command {m}({type(m)})")
+                # print(f"running command {m}({type(m)})")
                 subprocess.run(m, check=True, cwd=sysroot_link_dir)
-            print(f"running build script")
+            # print(f"running build script")
             buildscript.run_build_scipt(
                 workdir, tmp_workdir, bwrap_wrap, senv, subprocess_popen_dir, name, delete_tmpfs_build_on_fail)
 
-        print("unsharing")
-        namespace.unshare_run(wrap)
+        namespace.unshare_run(wrap, allow_net=deterministic_fetcher)
 
         if deterministic_fetcher:
 

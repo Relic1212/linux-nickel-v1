@@ -27,12 +27,6 @@ def check_deterministic_output(output_path: str, filename: str, sha256sum: str):
         raise Exception(f"Wrong sha256sum for {output_filepath}")
 
 
-def in_ns(mounts, fun):
-    for m in mounts:
-        subprocess.run(m, check=True)
-    fun()
-
-
 def run_build_scipt(workdir, tmp_workdir, bwrap_wrap, senv, subprocess_popen_dir, name, delete_tmpfs_build_on_fail):
     print(f"run_build_script starting for name {name}")
     with open(f"{workdir}/b.log", "a", encoding="utf-8") as f:
