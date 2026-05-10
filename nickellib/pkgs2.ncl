@@ -49,40 +49,16 @@ let getData = (fun pkgs =>
           (std.array.flatten (std.record.values (std.record.map_values (fun p => p.sourceInputs) pkgs)))
       )
     in
-    let sysroots =
-      let r1 =
-        std.record.map
-          (fun k v =>
-            {
-              hash =
-                std.hash
-                  'Sha256
-                  (
-                    std.serialize
-                      'Json
-                      ({ symlinkBuldInputs = v.symlinkBuldInputs, enableCcache = v.enableCcache, buildInputs = std.array.map (fun bi => bi.drvHash) v.buildInputs }
-                      )
-                  ),
-              buildInputs = v.buildInputs,
-              symlinkBuldInputs = v.symlinkBuldInputs,
-              enableCcache = v.enableCcache,
-              drvHash = v.drvHash,
-            }
-          )
-          pkgs
-      in
 
-      {
-        pkghash2sysroothash = std.record.merge_all (std.record.values (std.record.map (fun k v => { "%{v.drvHash}" = v.hash }) r1)),
-      }
-    in
     let data = {
+      pkghash2sysroothash = {},
+
       drvByHash = (std.record.from_array (std.record.values (std.record.map_values (fun x => { field = "%{drvUtils.pkgToHash x}", value = drvUtils.pkgToJson x }) pkgs))) & si_all,
 
       hashByName = std.record.merge_all (std.record.values (std.record.map_values (fun v => { "%{v.name}" = v.drvHash }) pkgs)),
     }
     in
-    sysroots & data
+    data
   )
 )
 in
