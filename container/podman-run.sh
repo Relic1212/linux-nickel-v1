@@ -4,6 +4,9 @@ DIR="$(readlink -f .)"
 EARGS=""
 # EARGS="${EARGS} --userns=keep-id"
 
+podman kill nickel-arch||true
+podman rm nickel-arch||true
+
 
 podman run \
 	$@ \
