@@ -200,7 +200,7 @@
   # /usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so
   # /usr/bin/gtk-builder-tool
   # /usr/bin/gtk-query-im*
-  baseImageSmall =
+  _baseImageSmall =
     _rootfs2
     & {
       enableCcache = false,

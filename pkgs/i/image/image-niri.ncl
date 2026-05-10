@@ -2,7 +2,7 @@
   lib,
   drvs,
   _rootfs2,
-  _niriImage =
+  niriImage =
     _rootfs2
     & {
       enableCcache = false,
@@ -214,7 +214,7 @@
                     # # drvs.hyprlandQtSupport,
                     # # drvs.hyprlandQtutils,
                     # drvs.qt5compat,
-                    drvs.quickshellGit,
+                    drvs.quickshell,
                     drvs.danklinuxDgop,
                     drvs.danklinuxDms,
                     drvs.ddcutil,
