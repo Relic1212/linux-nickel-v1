@@ -6,11 +6,11 @@
       # uri = "https://download.qemu.org/qemu-10.1.0.tar.xz",
       # sha256sum = "e0517349b50ca73ebec2fa85b06050d5c463ca65c738833bd8fc1f15f180be51",
 
-      # uri = "https://download.qemu.org/qemu-10.1.3.tar.xz",
-      # sha256sum = "fbaa7a0d7a9a1deb5695b125916746ec28fe0de6275d4454f3e3bbaf8b339b53",
+      uri = "https://download.qemu.org/qemu-10.1.3.tar.xz",
+      sha256sum = "fbaa7a0d7a9a1deb5695b125916746ec28fe0de6275d4454f3e3bbaf8b339b53",
 
-      uri = "https://download.qemu.org/qemu-7.2.22.tar.xz",
-      sha256sum = "c74b398c1950526686cb7784e23bd8945ef138b0e6541ba0495015aad3ac9532",
+      # uri = "https://download.qemu.org/qemu-7.2.22.tar.xz",
+      # sha256sum = "c74b398c1950526686cb7784e23bd8945ef138b0e6541ba0495015aad3ac9532",
     },
 
     configureFlags = [
@@ -34,7 +34,7 @@
         "${CC} ${CFLAGS} -c ${SRC}/qemu_symbols.c -o ${SRC}/symbols.o",
       ]
       @ (
-        if false then
+        if (true) then
           (
             std.array.map
               (fun s => "sed -i 's|object_property_get_type|qemu_private__object_property_get_type|g' ${SRC}/%{s}"
@@ -186,8 +186,8 @@
         drvs.libxext,
         drvs.libxf86vm,
         drvs.libxrandr,
-        drvs.pythonSetuptools,
-        drvs.basenameCompat,
+        # drvs.pythonSetuptools,
+        # drvs.basenameCompat,
       ],
   }
 }
