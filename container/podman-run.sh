@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-DIR="$(realpath .)"
+DIR="$(readlink -f .)"
 EARGS=""
 # EARGS="${EARGS} --userns=keep-id"
 
