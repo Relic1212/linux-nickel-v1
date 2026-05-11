@@ -236,7 +236,7 @@
       & (
         if isStatic then
           {
-            "-DLLVM_BUILD_STATIC" = "OFF",
+            "-DLLVM_BUILD_STATIC" = "ON",
             "-DLLVM_ENABLE_SHARED_LIBS" = "OFF",
             "-DLLVM_USE_STATIC_ZSTD" = "ON",
             "-DCLANG_LINK_CLANG_DYLIB" = "OFF",

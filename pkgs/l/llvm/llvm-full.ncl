@@ -120,7 +120,7 @@
       "-DLLVM_LIBDIR_SUFFIX" = "",
       "-DLLVM_LINK_LLVM_DYLIB" = "OFF",
       "-DLLVM_PARALLEL_COMPILE_JOBS" = "$(nproc)",
-      "-DLLVM_PARALLEL_LINK_JOBS" = "$(nproc)",
+      "-DLLVM_PARALLEL_LINK_JOBS" = "2", # "$(nproc)",
       "-DLLVM_TARGETS_TO_BUILD" = "'X86;AMDGPU'",
       # "-DLLVM_USE_SPLIT_DWARF" = "ON",
       "-DLLVM_USE_STATIC_ZSTD" = "ON",

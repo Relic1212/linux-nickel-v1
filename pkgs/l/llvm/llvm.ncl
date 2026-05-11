@@ -16,7 +16,7 @@
         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" = true,
         "-DLLVM_ENABLE_RUNTIMES" = "'libcxx;libcxxabi;compiler-rt;libunwind'",
         "-DLLVM_ENABLE_PROJECTS" = "'lld;clang'",
-        "-DLLVM_PARALLEL_LINK_JOBS" = "$(nproc)",
+        "-DLLVM_PARALLEL_LINK_JOBS" = "2", #  "$(nproc)",
         "-DLLVM_PARALLEL_COMPILE_JOBS" = "$(nproc)",
       },
       # installPhase | priority 1
@@ -41,7 +41,7 @@
         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" = true,
         "-DLLVM_ENABLE_RUNTIMES" = "'libcxx;libcxxabi;compiler-rt;libunwind'",
         "-DLLVM_ENABLE_PROJECTS" = "'lld;clang'",
-        "-DLLVM_PARALLEL_LINK_JOBS" = "$(nproc)",
+        "-DLLVM_PARALLEL_LINK_JOBS" = "2", #  "$(nproc)",
         "-DLLVM_PARALLEL_COMPILE_JOBS" = "$(nproc)",
       }
       & _llvmBase.cmakeArgsRecord,
@@ -144,6 +144,7 @@
         drvs.pythonStage3,
       ]
     },
+  busyboxStage3,
   llvm =
     _llvmBaseTarget
     & {
