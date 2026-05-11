@@ -528,9 +528,10 @@
           drvs.libxcb,
         ]
     },
-  plasmaWorkspace =
+  plasmaWorkspace | lib.QtPackage =
     _plasma
     & {
+      allowDubplicateBuldInputs = true,
       singleSource,
       sourceInputs = [
         {
