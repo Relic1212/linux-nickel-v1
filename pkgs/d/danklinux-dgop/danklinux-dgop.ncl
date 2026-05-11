@@ -13,7 +13,7 @@ in
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",
-      #   "export CGO_ENABLED=1",
+      # "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
     ],
@@ -27,7 +27,7 @@ in
       "install -m0755 ../build/%{outputFile} ${DEST}/%{outputFile}"
     ],
     outputFile = "source.tar",
-    outputSha256sum = "04e9ec470aadd3ae271abc8f9b85936a86e44c0c1ec3227cd560e58bfc0db09f",
+    outputSha256sum = "7b2a5a0721a72fad2d7be27fb3bf6424a3b9998e56bd85498255a104f76d1081",
 
     biDrvs = [
       drvs.go_1_24,
@@ -42,7 +42,7 @@ in
     configurePhase = [
       "export GOROOT=/usr/lib/go",
       "export GOMODCACHE=${SRC}/go-mod",
-      #   "export CGO_ENABLED=1",
+      "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
     ],
@@ -62,7 +62,7 @@ in
     enableCcache = false,
     biDrvs = [
       drvs.danklinuxDgopSource,
-      drvs.go_1_24,
+      drvs.go_1_26,
       drvs.llvm,
       drvs.musl,
       drvs.gnumake,
