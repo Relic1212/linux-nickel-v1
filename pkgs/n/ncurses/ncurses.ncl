@@ -4,8 +4,8 @@
   ncurses | lib.AutotoolsPackage = {
     name = "ncurses",
     singleSource = {
-      uri = "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20250301.tgz",
-      sha256sum = "b19934a5ca9e4425c4ad82d7335cec3ab03526d99c9d2cb5ea1c4f9269b31b1c",
+      uri = "https://invisible-island.net/archives/ncurses/ncurses-6.6.tar.gz",
+      sha256sum = "355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11",
     },
     extraConfigureFlags = [
       "--without-ada",
