@@ -105,24 +105,6 @@ def run_and_get_lines(**kwargs):
         raise subprocess.CalledProcessError(status, cmd=p.args)
 
 
-def link_workdir(h, name):
-    workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
-
-    os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
-    subprocess.run(
-        ["rm", "-f", dirpaths.get_basedir() + "/tmp/" + name], check=True
-    )
-    subprocess.run(
-        [
-            "ln",
-            "-s",
-            os.path.realpath(workdir),
-            os.path.realpath(dirpaths.get_basedir()) + "/tmp/" + name,
-        ],
-        check=True,
-    )
-
-
 class DependencyException(Exception):
     pass
 
@@ -130,10 +112,44 @@ class DependencyException(Exception):
 class builder:
     def __init__(self):
         self.failed_builds = []
+        self.linked_hashes = []
 
     def print_failed(self):
         if len(self.failed_builds) > 0:
             print("The following failed to build", self.failed_builds)
+
+    def link_workdir(self, h, name):
+        if h in self.linked_hashes:
+            return
+        workdir = dirpaths.get_basedir() + "/" + h + "-workdir"
+
+        os.makedirs(dirpaths.get_basedir() + "/tmp", exist_ok=True)
+        old = dirpaths.get_basedir() + "/tmp/" + name
+
+        src = os.path.realpath(workdir)
+        tgt = os.path.realpath(dirpaths.get_basedir()) + "/tmp/" + name
+        print(f"(link_workdir) name={name} ({len(self.linked_hashes)})")
+
+        if os.path.realpath(src) == os.path.realpath(tgt):
+            self.linked_hashes.append(h)
+            return
+        print(f"(link_workdir) removing {old}")
+        subprocess.run(
+            ["rm", "-f", tgt], check=True
+        )
+
+        print(f"(link_workdir) linking: ln -s {src} {tgt}")
+
+        subprocess.run(
+            [
+                "ln",
+                "-s",
+                src,
+                tgt,
+            ],
+            check=True,
+        )
+        self.linked_hashes.append(h)
 
     def build(self, h: str, pkg_drvs: dict, pkg_names: dict, pkghash2sysroothash: dict, keep_going: bool = False, prev_failed=None, delete_tmpfs_build_on_success=True, delete_tmpfs_build_on_fail=False) -> None:
 
@@ -147,7 +163,7 @@ class builder:
         workdir = os.path.join(dirpaths.get_basedir(), h + "-workdir")
         status_file = os.path.join(workdir, "0.txt")
         if os.path.isfile(status_file):
-            link_workdir(h, name)
+            self.link_workdir(h, name)
 
             return
 
@@ -221,7 +237,13 @@ class builder:
             si_h = si_drv["src"]
 
             si = pkg_drvs[si_h]
-            fetcher.fetch_by_drv_string(si)
+            try:
+                fetcher.fetch_by_drv_string(si)
+            except subprocess.CalledProcessError as e:
+
+                self.failed_builds.append(bi_drv_drv_hash)
+                print("faling args:", e.args)
+                raise e
 
         print(f"building {name}")
 
@@ -251,7 +273,7 @@ class builder:
             ],
             check=True,
         )
-        link_workdir(h, name)
+        self.link_workdir(h, name)
 
         os.makedirs(f"{workdir}/packed")
 
@@ -293,7 +315,7 @@ class builder:
                 mount_commands.append(
                     ["mount", "-v", "--bind", mounts[dest][0], relative_dest])
             else:
-                mount_opts = "lowerdir="+":".join(mounts[dest])
+                mount_opts = "lowerdir="+":".join(reversed(mounts[dest]))
                 mount_command = ["mount", "-v", "-t", "overlay",
                                  "overlay", "-o", mount_opts, relative_dest]
                 mount_commands.append(mount_command)
@@ -478,7 +500,7 @@ class builder:
         )
 
         chroot_string = "#!/bin/sh\n"
-        chroot_string += "run(){"
+        chroot_string += "run(){\n"
         chroot_string += "OLD=$(pwd)\n"
         chroot_string += "cd $(dirname $0)/sysroot.link\n"
         chroot_string += "\n".join(' '.join(mc)
@@ -486,6 +508,9 @@ class builder:
         chroot_string += "cd $OLD\n"
         chroot_string += (''.join([s+" " for s in bwrap_wrap])[
             : -1-len("/tmp/workdir/build.sh")] + "sh\n")
+        chroot_string += "}\n"
+        # chroot_string +="unshare --map-root-user -m run"
+        chroot_string += "run"
 
         with open(f"{workdir}/chroot.sh", "w", encoding="utf-8") as f_chroot:
             f_chroot.write(chroot_string)
