@@ -18,13 +18,13 @@
       },
       {
         src = {
-          uri = "https://raw.githubusercontent.com/alpinelinux/aports/refs/heads/master/community/elogind/0008-errno-util-Make-STRERROR-portable-for-musl.patch",
+          uri = "https://raw.githubusercontent.com/alpinelinux/aports/08e9fcc9e1d8442c97807e099ab6783aa9c8d9ab/community/elogind/0008-errno-util-Make-STRERROR-portable-for-musl.patch",
           sha256sum = "2b07cc0f35a7e754f51c6855a24e57424f205bc20e83c2ae2659b3e7919bd5e7"
         }
       },
       {
         src = {
-          uri = "https://raw.githubusercontent.com/alpinelinux/aports/refs/heads/master/community/elogind/0009-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch",
+          uri = "https://raw.githubusercontent.com/alpinelinux/aports/08e9fcc9e1d8442c97807e099ab6783aa9c8d9ab/community/elogind/0009-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch",
           sha256sum = "3a0854135e448373d57affdad830153122bde6299934d120d05d70d7aa8da84a"
         },
       }
@@ -263,13 +263,13 @@
         # },
         {
           src = {
-            uri = "https://raw.githubusercontent.com/alpinelinux/aports/refs/heads/master/community/elogind/0008-errno-util-Make-STRERROR-portable-for-musl.patch",
+            uri = "https://raw.githubusercontent.com/alpinelinux/aports/08e9fcc9e1d8442c97807e099ab6783aa9c8d9ab/community/elogind/0008-errno-util-Make-STRERROR-portable-for-musl.patch",
             sha256sum = "2b07cc0f35a7e754f51c6855a24e57424f205bc20e83c2ae2659b3e7919bd5e7"
           }
         },
         {
           src = {
-            uri = "https://raw.githubusercontent.com/alpinelinux/aports/refs/heads/master/community/elogind/0009-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch",
+            uri = "https://raw.githubusercontent.com/alpinelinux/aports/08e9fcc9e1d8442c97807e099ab6783aa9c8d9ab/community/elogind/0009-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch",
             sha256sum = "3a0854135e448373d57affdad830153122bde6299934d120d05d70d7aa8da84a"
           },
         }
