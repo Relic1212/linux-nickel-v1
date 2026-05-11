@@ -193,7 +193,7 @@
           drvs.xdgRuntimeRun,
           drvs.foot,
           drvs.fontconfig,
-          drvs.ttfCroscore,
+          # drvs.ttfCroscore,
           drvs.fontAwesome,
           drvs.dejavuFonts,
           drvs.hicolorIconTheme,
@@ -636,7 +636,7 @@
         ]
         @ (
           std.array.map
-            (fun x => (x & { dest = "rootfs/" }))
+            (fun x => (x & { dest = "rootfs/", priority | priority 1 = (std.record.get_or "priority" 0 x) + 2 }))
             (
               _baseBaseRootfs.biDrvs
               # @ _cosmicPackages
