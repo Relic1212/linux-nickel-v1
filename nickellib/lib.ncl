@@ -97,7 +97,8 @@ in
         # others
         # busybox,
         #vars
-        baseName | not_exported | String | optional,
+        keyName | not_exported | String | default = "",
+        baseName | not_exported | String | default = "",
         name | String | default =
           if ((stage == "final") || (stage == -1)) then
             baseName
@@ -120,7 +121,7 @@ in
             drvUtils.pkgToHash (
             # std.record.freeze
             {
-              name = _name,
+              # name = _name,
               buildInputsValidated = _bs,
               sourceInputs = _sis,
               patches = _pds,
@@ -135,9 +136,9 @@ in
             }
             )
           in
-          #std.trace "name=%{_name}, drvHash=%{h_final}" 
+          # std.trace "keyName=%{keyName}, drvHash=%{h_final}" 
           h_final,
-        options | default = {},
+        options | not_exported | default = {},
         deterministicFetcher | Bool | default = false,
         outputFile | String | default = "",
         outputSha256sum | String | default = "",
@@ -170,7 +171,7 @@ in
         # with changing configurations, propageted could cause a lot of issues.
         allowDubplicateBuldInputs | Bool | default = false,
 
-        neverInclude | default = [],
+        neverInclude | not_exported | default = [],
 
         buildInputs | Array BuildInput | not_exported | default =
           # filter out things common with neverInclude by keyName
@@ -188,9 +189,9 @@ in
               else
                 std.array.dedup maybeDups
             ),
-        pDrvs | default = [],
-        propagatedBuildInputs | default = pDrvs,
-        indirectDeps | default =
+        pDrvs | not_exported | default = [],
+        propagatedBuildInputs | not_exported | default = pDrvs,
+        indirectDeps | not_exported | default =
           let depKeyNames = std.array.map (fun v => v.keyName) (propagatedBuildInputs) in
           let depPkgs = std.array.map (fun k => pkgs."%{k}") depKeyNames in
           let ll = std.array.map (fun pkg => pkg.propagatedBuildInputs @ pkg.indirectDeps) depPkgs in
@@ -207,7 +208,7 @@ in
         llvmProvider | not_exported | default = drvs.llvm,
         llvmProviders | not_exported | default = [llvmProvider] @ (if buildEnv._isMold then [drvs.mold] else []),
         muslProvider | not_exported | default = if (!debug) then drvs.musl else drvs.muslDebug,
-        muslProviders | default = if (!useMimalloc) then [muslProvider] else [drvs.muslProvider, drvs.mimalloc],
+        muslProviders | not_exported | default = if (!useMimalloc) then [muslProvider] else [drvs.muslProvider, drvs.mimalloc],
 
         # pkgconfProvider | not_exported | default = drvs.pkgconf,
         pkgconfProvider | not_exported | default = drvs.pkgconfMeson,
@@ -218,8 +219,8 @@ in
         biDrvs | Array Dyn | not_exported | default = [],
 
         # buildInputNames | Array String | default = [],
-        buildDir | nullOrString | default = null,
-        buildEnv | BuildEnv | default = {
+        buildDir | not_exported | nullOrString | default = null,
+        buildEnv | not_exported | BuildEnv | default = {
           _stage = stage,
           _isLlvm | force = isLlvm,
           _isStatic = isStatic,
@@ -228,7 +229,7 @@ in
         buildEnv._debug | priority -1000 = debug,
         buildEnv._isStatic | priority -1000 = isStatic,
         symlinkBuldInputs | Bool | default = false, # stage==-1,
-        extraEnv | { _ : StringOrArray } | default = (
+        extraEnv | not_exported | { _ : StringOrArray } | default = (
           if buildInChroot then
             {}
           else
@@ -239,7 +240,7 @@ in
             }
         ),
 
-        unpackPhase | Array String | default = [
+        unpackPhase | not_exported | Array String | default = [
           if (std.array.length sourceInputs) == 0 then
             ""
           else
@@ -256,7 +257,7 @@ in
         ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) sourceInputs ) )}
       "%
         ],
-        envSetupPhase =
+        envSetupPhase | not_exported =
           [
             "export WORKDIR=/tmp/workdir",
             "export SRC=/tmp/workdir/src",
@@ -279,32 +280,32 @@ in
           @ (std.record.values (std.record.map (fun field value => "%{field}=%{functions.varToExportvar value}\nexport %{field}\n") extraEnv))
 
         # @ (functions.createExport "CC" buildEnv)
-        ,patchPhase | Array String | default =
+        ,patchPhase | not_exported | Array String | default =
           if (std.array.length patches) == 0 then
             []
           else
             (std.array.map (fun p => "(cd ${SRC}; patch -p1 < /tmp/workdir/patches/%{p.file})") patches),
-        preConfigurePhase | Array String | default = [],
-        configurePhase | Array String | default = (if (buildDir == null) then [] else ["cd %{buildDir}"]),
-        preBuildPhase | Array String | default = [],
-        buildPhase | Array String | default = [],
-        preInstallPhase | Array String | default = [],
-        installPhase | Array String | default = [],
-        postInstallPhase | Array String | default = [],
-        phases | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        preConfigurePhase | not_exported | Array String | default = [],
+        configurePhase | not_exported | Array String | default = (if (buildDir == null) then [] else ["cd %{buildDir}"]),
+        preBuildPhase | not_exported | Array String | default = [],
+        buildPhase | not_exported | Array String | default = [],
+        preInstallPhase | not_exported | Array String | default = [],
+        installPhase | not_exported | Array String | default = [],
+        postInstallPhase | not_exported | Array String | default = [],
+        phases | not_exported | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
-        cdBuildPhase | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
-        separateBuildDir | Bool | default = true,
-        commands | Array String | default = std.array.flatten phases,
+        cdBuildPhase | not_exported | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
+        separateBuildDir | not_exported | Bool | default = true,
+        commands | not_exported | Array String | default = std.array.flatten phases,
         scriptContent | String | force = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
-        singleSource | Dyn | default = null,
+        singleSource | not_exported | Dyn | default = null,
         sourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
         patchDir | String | default = "%{name}/patches",
         filesDir | String | default = "%{name}/files",
         patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
-        eofPatches | Array { patch | String, subdir | String | default = "" } | default = [],
-        eofPatchPhase = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 << 'EOF'\n%{eofPatch.patch}\nEOF\n)") eofPatches,
+        eofPatches | not_exported | Array { patch | String, subdir | String | default = "" } | default = [],
+        eofPatchPhase | not_exported = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 << 'EOF'\n%{eofPatch.patch}\nEOF\n)") eofPatches,
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
 
         enableParallel | Bool | default = true,
