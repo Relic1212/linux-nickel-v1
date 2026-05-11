@@ -21,21 +21,6 @@
       ],
     },
 
-    sccacheSetupPhase | priority 1 = [
-      "export SCCACHE_DIR=/tmp/sccache", # set in conf instead
-      "export SCCACHE_MAX_SIZE=100G", # set in conf instead
-      # "export SCCACHE_CONF=/tmp/sccache/config",
-      "export RUSTC_WRAPPER=/usr/bin/sccache",
-      # "export SCCACHE_ERROR_LOG=${SRC}/sccache_log.txt",
-      #  "export SCCACHE_LOG=debug",
-      #  "export SCCACHE_START_SERVER=1",
-      #  "export SCCACHE_NO_DAEMON=1",
-      #  "mkdir -p /tmp/home/.config/sccache/",
-      #  "touch /tmp/home/.config/sccache/config",
-      #  "export HOME=/tmp/home",
-      "sccache --stop-server || echo 'sccache server not running'",
-      "echo sccache setup done",
-    ],
     extraCargoFlags = [
       # "--verbose",
     ],
