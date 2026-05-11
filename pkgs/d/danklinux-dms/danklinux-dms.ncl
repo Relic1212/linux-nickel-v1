@@ -32,10 +32,10 @@ in
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "67820a2903038063f994493e801ccf9a3539a2a2da44a65847d22db7361a32a5",
+    outputSha256sum = "1f08e5b0a785c5e50a63998fa4b2fb7d230254b25aee9a46c9430919c54cc3b3",
 
     biDrvs = [
-      drvs.go_1_24,
+      drvs.go_1_26,
       drvs.emptyResolvConf,
       drvs.caCertificates,
       (drvs.gnutar & { priority = 1 }),
@@ -73,7 +73,7 @@ in
     enableCcache = false,
     biDrvs = [
       drvs.danklinuxDmsSource,
-      drvs.go_1_24,
+      drvs.go_1_26,
       # drvs.llvm,
       # drvs.musl,
       drvs.basefiles,
