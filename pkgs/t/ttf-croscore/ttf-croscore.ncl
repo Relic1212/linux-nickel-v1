@@ -3,7 +3,8 @@
   ttfCroscore | lib.Package = {
     name = "ttf-croscore",
     singleSource = {
-      uri = "https://gsdview.appspot.com/chromeos-localmirror/distfiles/croscorefonts-1.31.0.tar.bz2",
+      # as used here: https://github.com/gentoo/gentoo/blob/c3152327f5ce59090775e5dba34ddea0783a68f6/media-fonts/croscorefonts/croscorefonts-1.31.0.ebuild
+      uri = "https://commondatastorage.googleapis.com/chromeos-localmirror/distfiles/croscorefonts-1.31.0.tar.bz2",
       sha256sum = "672c3487883ec1ef83d9254240d4327b014212abc823d06d15816095867315e1",
     },
     buildDir = "${SRC}",
