@@ -99,6 +99,7 @@
           # LDFLAGS = ["-static-libgcc"],
           # CFLAGS = ["-static-libgcc"],
           # CXXFLAGS = ["-static-libgcc"],
+          PKG_CONFIG = null, # why?
         },
 
       unpackPhase = [
@@ -168,7 +169,7 @@
       biDrvs = [
         drvs.pythonFull,
         # drvs.rsync,
-        drvs.pkgconf,
+        drvs.pkgconfMeson,
         drvs.muslShared,
         (drvs.clangCc & { priority = 1 }),
         drvs.llvmFullPic,
