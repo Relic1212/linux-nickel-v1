@@ -22,7 +22,7 @@
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "2a874253c9364155a90b96358ecbcc357f13ecd7b141419577d4054b8999591c",
+    outputSha256sum = "b276f1fd06fcca22a5ac4e105568b62ce0efcfb506ded5b546c5bde9df38bc62",
 
     biDrvs = [
       drvs.go_1_9,
