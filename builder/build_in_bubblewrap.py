@@ -112,11 +112,13 @@ class DependencyException(Exception):
 class builder:
     def __init__(self):
         self.failed_builds = []
+        self.failed_build_names = []
         self.linked_hashes = []
 
     def print_failed(self):
         if len(self.failed_builds) > 0:
-            print("The following failed to build", self.failed_builds)
+            print("The following drvs failed to build", self.failed_builds)
+            print("The following names failed to build", self.failed_build_names)
 
     def link_workdir(self, h, name):
         if h in self.linked_hashes:
@@ -204,6 +206,7 @@ class builder:
                 bi_drv_name = pkg_names[bi_drv_drv_hash]
                 failed_names.append(bi_drv_name)
                 self.failed_builds.append(bi_drv_drv_hash)
+                self.failed_build_names.append(bi_drv_name)
                 print(f"failed to build {bi_drv_name} (for {name})")
                 # try:
                 #     with open(dirpaths.get_basedir() + "/failed.txt", "a", encoding="utf-8") as f:
@@ -221,6 +224,7 @@ class builder:
                 bi_drv_name = pkg_names[bi_drv_drv_hash]
                 failed_names.append(bi_drv_name)
                 self.failed_builds.append(bi_drv_drv_hash)
+                self.failed_build_names.append(bi_drv_name)
                 print(f"failed to build {bi_drv_name} (for {name})")
                 try:
                     with open(dirpaths.get_basedir() + "/failed.txt", "a", encoding="utf-8") as f:
@@ -242,6 +246,7 @@ class builder:
             except subprocess.CalledProcessError as e:
 
                 self.failed_builds.append(bi_drv_drv_hash)
+                self.failed_build_names.append(bi_drv_name)
                 print("faling args:", e.args)
                 raise e
 
@@ -307,10 +312,13 @@ class builder:
             else:
                 mounts[""].append("s")
         mount_commands = []
+        # mkdir_commands = []
+        mountpoints = []
         for dest in mounts:
             # print(f"(mount comands) dest=\"{dest}\"")
             relative_dest = os.path.join("../sysroot", dest)
-            mount_commands.append(["mkdir", "-p", relative_dest])
+            # mkdir_commands.append(["mkdir", "-p", relative_dest])
+            mountpoints.append(dest)
             if len(mounts[dest]) == 1:
                 mount_commands.append(
                     ["mount", "-v", "--bind", mounts[dest][0], relative_dest])
@@ -451,7 +459,7 @@ class builder:
         if sandboxed:
             sysroot = sysroot_dir
 
-            for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev"]:
+            for d in ropaths + rwpaths + ["/tmp", "/run", "/proc", "/sys", "/dev"]+mountpoints:
                 os.makedirs(sysroot_link_dir + "/s/" + d, exist_ok=True)
 
             # os.environ.clear()
