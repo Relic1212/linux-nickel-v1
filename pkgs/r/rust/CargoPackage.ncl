@@ -46,6 +46,8 @@
         llvmProviders,
         singleSource,
         buildEnv,
+        # it seems that when PKG_CONFIG is set it looks for PKG_CONFG_<target> etc
+        buildEnv.PKG_CONFIG | priority -1000 = null,
         target = (if buildEnv.TARGET == null then "x86_64-unknown-linux-musl" else buildEnv.TARGET),
         linkSelfContained | default = "yes",
         extraEnv = {
@@ -110,6 +112,7 @@
             [
               "export SCCACHE_DIR=/tmp/sccache", # set in conf instead
               "export SCCACHE_CACHE_SIZE=100G", # set in conf instead
+              "export SCCACHE_SERVER_UDS=/tmp/sccache.sock",
               # "export SCCACHE_CONF=/tmp/sccache/config",
               "export RUSTC_WRAPPER=/usr/bin/sccache",
               # "export SCCACHE_ERROR_LOG=${SRC}/sccache_log.txt",
