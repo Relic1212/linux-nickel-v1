@@ -69,7 +69,8 @@
   drvs,
   docbookXml | lib.Package = {
     singleSource = {
-      uri = "https://www.docbook.org/xml/4.5/docbook-xml-4.5.zip",
+      # uri = "https://www.docbook.org/xml/4.5/docbook-xml-4.5.zip",
+      uri = "https://archive.docbook.org/xml/4.5/docbook-xml-4.5.zip",
 
       sha256sum = "4e4e037a2b83c98c6c94818390d4bdd3f6e10f6ec62dd79188594e26190dc7b4"
     },
