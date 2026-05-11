@@ -53,7 +53,8 @@
     & {
       isStatic | force = false,
       buildEnv = {
-        _isStatic | force = false
+        _isStatic | force = false,
+        PKG_CONFIG = null,
       },
       options = {
         cairo | default = drvs.cairo,
@@ -236,7 +237,8 @@
       ],
       isStatic | force = false,
       buildEnv = {
-        _isStatic | force = false
+        _isStatic | force = false,
+        PKG_CONFIG = null,
       },
       # postInstallPhase | priority 1 = [],
       extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=static", "-Dintrospection=enabled"],

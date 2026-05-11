@@ -232,6 +232,8 @@ Cflags: -I${includedir}/libadwaita-1' > ${DEST}/usr/lib/pkgconfig/libadwaita-1.p
     buildEnv = {
       _isStatic = false,
     },
+    buildEnv.PKG_CONFIG = null,
+
     isStatic = false,
     extraMesonArgs = [
       "-Dintrospection=enabled",

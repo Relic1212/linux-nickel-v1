@@ -69,6 +69,7 @@
   gdkPixbufIntrospection | lib.MesonPackage = {
     singleSource = gdkPixbufFull.singleSource,
     buildEnv = gdkPixbufFull.buildEnv & { _isStatic = false },
+    buildEnv.PKG_CONFIG = null,
 
     muslProvider = drvs.muslBoth,
     pythonProvider = drvs.pythonDynamic,

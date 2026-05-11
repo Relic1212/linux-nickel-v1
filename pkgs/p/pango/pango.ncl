@@ -55,6 +55,8 @@
       buildEnv = {
         _isStatic = false,
       },
+      buildEnv.PKG_CONFIG = null,
+
       extraEnv = {
         GI_SCANNER_DEBUG = "save-temps",
       },

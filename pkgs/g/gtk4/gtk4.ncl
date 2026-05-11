@@ -36,7 +36,7 @@
         drvs.readline,
         drvs.pcre2,
         drvs.pango,
-        drvs.cairo,
+        # drvs.cairo,
         drvs.libpng,
         drvs.glibDynamic,
         drvs.muslShared,
@@ -106,6 +106,8 @@
     gtk4
     & {
       buildEnv._isStatic = false,
+      buildEnv.PKG_CONFIG = null,
+
       options.introspection = true,
       pythonProvider = drvs.pythonDynamic,
     },

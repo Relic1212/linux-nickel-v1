@@ -20,6 +20,7 @@
     ],
     pythonProvider = drvs.pythonDynamic,
     buildEnv._isStatic = false,
+    buildEnv.PKG_CONFIG = null,
     biDrvs = [
       drvs.pcre2,
       drvs.libffi,

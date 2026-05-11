@@ -94,6 +94,7 @@
   },
   gtk4LayerShellIntrospection | lib.MesonPackage = {
     singleSource = gtk4LayerShell.singleSource,
+    buildEnv.PKG_CONFIG = null,
 
     buildEnv = {
       _isStatic = false,

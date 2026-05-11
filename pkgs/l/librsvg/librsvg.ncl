@@ -47,7 +47,7 @@
       "export CARGO_HOME=${SRC}/.cargo",
       m%"sed -i 's|shared_library|library|g' ${SRC}/rsvg/meson.build"%,
     ],
-
+    buildEnv.PKG_CONFIG = null,
     extraMesonArgs = [
       "-Dtriplet='x86_64-unknown-linux-musl'",
       "-Dvala=disabled",

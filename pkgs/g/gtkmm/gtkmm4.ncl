@@ -31,7 +31,7 @@
       drvs.readline,
       drvs.pcre2,
       drvs.pango,
-      drvs.cairo,
+      # drvs.cairo,
       drvs.libpng,
       drvs.harfbuzzFull,
       drvs.glibDynamic,

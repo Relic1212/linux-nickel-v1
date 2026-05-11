@@ -49,6 +49,8 @@
   harfbuzzGobjectDynamic =
     harfbuzzGobject
     & {
+      # ERROR: pkg-config: error executing command ['pkg-config --static', '--cflags', 'glib-2.0', 'gobject-2.0']: [Errno 2] No such file or directory: 'pkg-config --static'
+      buildEnv.PKG_CONFIG = null,
       extraMesonArgs | priority 1 = [
         "-Dfreetype=enabled",
         "-Dcairo=enabled",
