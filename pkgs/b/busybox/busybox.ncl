@@ -4,7 +4,7 @@
   drvs,
   _busyboxBaseTarget,
 
-  busyboxStage1 =
+  busyboxStage1 | lib.MakePackage =
     _busyboxBaseTarget
     & {
       stage = 1,
@@ -18,7 +18,7 @@
       ]
     },
 
-  busyboxStage2 =
+  busyboxStage2 | lib.MakePackage =
     _busyboxBaseTarget
     & {
       stage = 2,
@@ -34,7 +34,7 @@
 
   #3
 
-  busyboxStage3 =
+  busyboxStage3 | lib.MakePackage =
     _busyboxBaseTarget
     & {
       stage = -1,
@@ -50,7 +50,7 @@
         drvs.gnumakeStage4
       ]
     },
-  busybox =
+  busybox | lib.MakePackage =
     _busyboxBaseTarget
     & {
       stage = -1,
@@ -66,7 +66,7 @@
         drvs.gnumake
       ]
     },
-  busyboxAarch64 =
+  busyboxAarch64 | lib.MakePackage =
     _busyboxBaseTarget
     & {
       stage = -1,
