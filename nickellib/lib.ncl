@@ -153,7 +153,9 @@ in
             (
               if (
                 # functions.isValidShasumArray (std.array.map (fun x => x.drvHash) arr)
-                functions.hasNoDups arr
+                functions.hasNoDups (
+                  std.array.map (fun elem => { keyName = elem.keyName, dest = elem.dest, priority = std.record.get_or "priority" 0 elem }) arr
+                )
                 # true
               ) then
                 'Ok
