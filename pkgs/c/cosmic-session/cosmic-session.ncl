@@ -54,10 +54,9 @@
       XDP_COSMIC = "'/usr/libexec/xdg-desktop-portal-cosmic'",
     },
 
-    patches = [
+    eofPatches = [
       {
-        sha256sum = "035383fd16604845096ca9306dff0c8e81aa56e2c3a032be86a8767a7355d29c",
-        file = "fix-auto.patch"
+        patch = import "fix-auto.patch" as 'Text
       }
     ],
     extraCargoFlags = [

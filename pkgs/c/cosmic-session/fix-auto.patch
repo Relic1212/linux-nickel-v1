@@ -1,8 +1,14 @@
+commit 401c3d4877dabeda93e51365dc066b0514e59257
+Author: Relic1212 <67271773+Relic1212@users.noreply.github.com>
+Date:   Tue May 12 07:34:52 2026 +0200
+
+    fix
+
 diff --git a/src/main.rs b/src/main.rs
-index edb8700..2d4e904 100644
+index 07461b8..8a21a3c 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -352,7 +352,7 @@ async fn start(
+@@ -350,7 +350,7 @@ async fn start(
  	start_component("cosmic-idle", span, &process_manager, &env_vars).await;
  
  	#[cfg(feature = "autostart")]
@@ -18,5 +24,5 @@ index edb8700..2d4e904 100644
 -	}
 +	
  
- 	let mut signals = Signals::new(vec![libc::SIGTERM, libc::SIGINT]).unwrap();
- 	let mut status = Status::Exited;
+ 	let mut sigterm = signal(SignalKind::terminate()).expect("Failed to bind SIGTERM handler");
+ 	let mut sigint = signal(SignalKind::interrupt()).expect("Failed to bind SIGINT handler");

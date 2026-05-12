@@ -128,8 +128,8 @@
     biDrvs = [
       (drvs.findutils & { priority = 1 }),
       drvs.just,
-      # drvs.cosmicSettingsSources,
-      drvs.cosmicSettingsGitSources,
+      drvs.cosmicSettingsSources,
+      # drvs.cosmicSettingsGitSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
       drvs.bluez,

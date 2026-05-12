@@ -1,0 +1,33 @@
+diff --git a/smithay/build.rs b/smithay/build.rs
+index 2c6a6423..6c0a8991 100644
+--- a/smithay/build.rs
++++ b/smithay/build.rs
+@@ -49,8 +49,12 @@ fn gl_generate() {
+                 "EGL_IMG_context_priority",
+             ],
+         )
+-        .write_bindings(gl_generator::GlobalGenerator, &mut file)
++        // .write_bindings(gl_generator::GlobalGenerator, &mut file)
++        .write_bindings(gl_generator::StaticGenerator, &mut file)
+         .unwrap();
++        println!("cargo:rustc-link-lib=static=EGL");
++        println!("cargo:rustc-link-search=native=/usr/lib");
++
+     }
+ 
+     if env::var_os("CARGO_FEATURE_RENDERER_GL").is_some() {
+@@ -69,8 +73,13 @@ fn gl_generate() {
+                 "GL_EXT_disjoint_timer_query",
+             ],
+         )
+-        .write_bindings(gl_generator::StructGenerator, &mut file)
++        .write_bindings(gl_generator::StaticStructGenerator, &mut file)
++        // .write_bindings(gl_generator::StructGenerator, &mut file)
+         .unwrap();
++        println!("cargo:rustc-link-lib=static=gallium_dri"); // FIXME: version
++        println!("cargo:rustc-link-search=native=/usr/lib");
++
++
+     }
+ }
+ 

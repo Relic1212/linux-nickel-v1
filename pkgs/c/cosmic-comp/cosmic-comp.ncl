@@ -24,6 +24,10 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/winit/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
       # "(cd ${SRC} && patch -p1 < ../packed/370435f120c904c002af256554085b788e32cd9ecc51ddec7ddb6ab0a05fc835/dc983e7ee4201040e0f58fdbe96be1afcbdf7312.patch)",
+
+      # "sed -i 's|2024|2021|g' ${SRC}/Cargo.toml",
+      "sed -i 's|extern|unsafe extern|g' ${SRC}/vendor/gl_generator/generators/static_gen.rs",
+      "sed -i 's|extern|unsafe extern|g' ${SRC}/vendor/gl_generator/generators/static_struct_gen.rs",
     ],
 
     extraEnv = {
@@ -54,14 +58,14 @@
         ],
     },
 
-    patches = [
+    eofPatches = [
       {
-        file = "static-gl.patch",
-        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
+        patch = import "static-gl.patch" as 'Text,
+        subdir = "/vendor",
       },
       {
-        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
-        file = "ffi.patch"
+        patch = import "ffi.patch" as 'Text,
+        subdir = "/vendor",
       },
       # {
       #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
