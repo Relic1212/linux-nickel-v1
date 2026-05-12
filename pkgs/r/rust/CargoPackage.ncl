@@ -177,12 +177,13 @@
         unpackPhase,
         envSetupPhase,
         patchPhase,
+        eofPatchPhase,
         cdBuildPhase,
         configurePhase,
         preBuildPhase,
         preInstallPhase,
         postInstallPhase,
-        phases | priority -1000 = [unpackPhase, envSetupPhase, patchPhase, cdBuildPhase, preConfigurePhase, sccacheSetupPhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        phases | priority -1000 = [unpackPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, sccacheSetupPhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
       },
 
     Crate = {
