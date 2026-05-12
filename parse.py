@@ -11,7 +11,7 @@ import argparse
 from builder import build_in_bubblewrap
 
 
-KNOWN_SLOW = ["base-image", "base-image-small", "plasma-packages"]
+KNOWN_SLOW = [] #  ["base-image", "base-image-small", "plasma-packages"]
 
 
 class GraphNode:
@@ -74,7 +74,7 @@ def pn_to_pn_key(pn: str):
 
 
 def get_drvs(pn):
-    fp = "nickellib/pkgs2.ncl"
+    fp = "nickellib/pkgs3.ncl"
     c = nickel_to_json(fp, args=["--", f"pn=\"{pn}\""])
     data = c["data"]
     return data
