@@ -1,0 +1,165 @@
+diff --git a/OverviewPassElement.cpp b/OverviewPassElement.cpp
+index dc6a822..aec5511 100644
+--- a/OverviewPassElement.cpp
++++ b/OverviewPassElement.cpp
+@@ -13,12 +13,14 @@
+ #include <string_view>
+ #include <utility>
+ #include <vector>
+-#define private public
++// #define private public
+ #include <hyprland/src/render/OpenGL.hpp>
+ #include <hyprland/src/helpers/math/Math.hpp>
+-#undef private
++#include <hyprland/src/render/Renderer.hpp>
++// #undef private
+ #include <hyprutils/utils/ScopeGuard.hpp>
+ #include "IOverview.hpp"
++using namespace Render::GL;
+ 
+ static CRegion roundedRectRegion(const CBox& box, int rounding, float roundingPower) {
+     const auto ROUNDEDBOX = box.copy().round();
+@@ -128,9 +130,9 @@ void COverviewShadowPassElement::draw(const CRegion& damage) {
+     if (shadowDamage.empty())
+         return;
+ 
+-    const auto SAVEDDAMAGE = g_pHyprOpenGL->m_renderData.damage;
+-    g_pHyprOpenGL->m_renderData.damage = shadowDamage;
+-    auto restoreDamage = Hyprutils::Utils::CScopeGuard([SAVEDDAMAGE] { g_pHyprOpenGL->m_renderData.damage = SAVEDDAMAGE; });
++    const auto SAVEDDAMAGE = g_pHyprRenderer->m_renderData.damage;
++    g_pHyprRenderer->m_renderData.damage = shadowDamage;
++    auto restoreDamage = Hyprutils::Utils::CScopeGuard([SAVEDDAMAGE] { g_pHyprRenderer->m_renderData.damage = SAVEDDAMAGE; });
+ 
+     auto color = data.color;
+     color.a *= data.alpha;
+diff --git a/OverviewRender.cpp b/OverviewRender.cpp
+index fae9b38..9866170 100644
+--- a/OverviewRender.cpp
++++ b/OverviewRender.cpp
+@@ -2,11 +2,12 @@
+ #include <chrono>
+ #include <cmath>
+ #include <sstream>
+-#define private public
++// #define private public
+ #include <hyprland/src/render/Renderer.hpp>
+ #include <hyprland/src/render/OpenGL.hpp>
+ #include <hyprland/src/helpers/math/Math.hpp>
+-#undef private
++// #undef private
++using namespace Render::GL;
+ 
+ namespace OverviewRender {
+ 
+@@ -28,8 +29,8 @@ void renderBlur(PHLMONITOR monitor, const CBox& windowBox, int rounding, float r
+ 
+     CRegion drawDamage{CBox{{}, monitor->m_transformedSize}};
+ 
+-    auto* const SAVEDFB            = g_pHyprOpenGL->m_renderData.currentFB;
+-    CFramebuffer* const BLURREDFB = usePrecomputedBlur && g_pHyprOpenGL->m_renderData.pCurrentMonData ? &g_pHyprOpenGL->m_renderData.pCurrentMonData->blurFB :
++    const auto SAVEDFB            = g_pHyprRenderer->m_renderData.currentFB;
++    CGLFramebuffer* const BLURREDFB = usePrecomputedBlur && g_pHyprRenderer->m_renderData.pMonitor->resources() ? g_pHyprRenderer->m_renderData.pMonitor->resources()->m_blurFB :
+                                                                                                           g_pHyprOpenGL->blurMainFramebufferWithDamage(alpha, &blurDamage);
+ 
+     if (SAVEDFB)
+@@ -59,16 +60,16 @@ void renderBlur(PHLMONITOR monitor, const CBox& windowBox, int rounding, float r
+     renderData.allowDim                             = false;
+ 
+     g_pHyprOpenGL->pushMonitorTransformEnabled(true);
+-    const auto SAVEDRENDERMODIF                     = g_pHyprOpenGL->m_renderData.renderModif;
+-    const auto SAVEDUVTOPLEFT                       = g_pHyprOpenGL->m_renderData.primarySurfaceUVTopLeft;
+-    const auto SAVEDUVBOTTOMRIGHT                   = g_pHyprOpenGL->m_renderData.primarySurfaceUVBottomRight;
+-    g_pHyprOpenGL->m_renderData.renderModif         = {};
+-    g_pHyprOpenGL->m_renderData.primarySurfaceUVTopLeft     = monitorSpaceBox.pos() / monitor->m_transformedSize;
+-    g_pHyprOpenGL->m_renderData.primarySurfaceUVBottomRight = (monitorSpaceBox.pos() + monitorSpaceBox.size()) / monitor->m_transformedSize;
++    const auto SAVEDRENDERMODIF                     = g_pHyprRenderer->m_renderData.renderModif;
++    const auto SAVEDUVTOPLEFT                       = g_pHyprRenderer->m_renderData.primarySurfaceUVTopLeft;
++    const auto SAVEDUVBOTTOMRIGHT                   = g_pHyprRenderer->m_renderData.primarySurfaceUVBottomRight;
++    g_pHyprRenderer->m_renderData.renderModif         = {};
++    g_pHyprRenderer->m_renderData.primarySurfaceUVTopLeft     = monitorSpaceBox.pos() / monitor->m_transformedSize;
++    g_pHyprRenderer->m_renderData.primarySurfaceUVBottomRight = (monitorSpaceBox.pos() + monitorSpaceBox.size()) / monitor->m_transformedSize;
+     g_pHyprOpenGL->renderTexture(BLURREDTEXTURE, windowBox, renderData);
+-    g_pHyprOpenGL->m_renderData.primarySurfaceUVTopLeft     = SAVEDUVTOPLEFT;
+-    g_pHyprOpenGL->m_renderData.primarySurfaceUVBottomRight = SAVEDUVBOTTOMRIGHT;
+-    g_pHyprOpenGL->m_renderData.renderModif                 = SAVEDRENDERMODIF;
++    g_pHyprRenderer->m_renderData.primarySurfaceUVTopLeft     = SAVEDUVTOPLEFT;
++    g_pHyprRenderer->m_renderData.primarySurfaceUVBottomRight = SAVEDUVBOTTOMRIGHT;
++    g_pHyprRenderer->m_renderData.renderModif                 = SAVEDRENDERMODIF;
+     g_pHyprOpenGL->popMonitorTransformEnabled();
+ }
+ 
+diff --git a/Window.cpp b/Window.cpp
+index 1552a27..69aa988 100644
+--- a/Window.cpp
++++ b/Window.cpp
+@@ -3,7 +3,7 @@
+ #include <cmath>
+ #include <dlfcn.h>
+ #include <functional>
+-#define private public
++// #define private public
+ #include <hyprland/src/render/Renderer.hpp>
+ #include <hyprland/src/Compositor.hpp>
+ #include <hyprland/src/config/ConfigValue.hpp>
+@@ -23,7 +23,7 @@
+ #include <hyprland/src/render/decorations/CHyprGroupBarDecoration.hpp>
+ #include <hyprland/src/render/decorations/DecorationPositioner.hpp>
+ #include <hyprutils/utils/ScopeGuard.hpp>
+-#undef private
++// #undef private
+ #include "OverviewPassElement.hpp"
+ #include "OverviewRender.hpp"
+ 
+diff --git a/scrollOverview.cpp b/scrollOverview.cpp
+index cdec838..1bef092 100644
+--- a/scrollOverview.cpp
++++ b/scrollOverview.cpp
+@@ -8,7 +8,7 @@
+ #include <limits>
+ #include <optional>
+ #include <linux/input-event-codes.h>
+-#define private public
++// #define private public
+ #include <hyprland/src/render/Renderer.hpp>
+ #include <hyprland/src/Compositor.hpp>
+ #include <hyprland/src/config/ConfigValue.hpp>
+@@ -47,7 +47,7 @@
+ #include <hyprland/src/render/decorations/CHyprGroupBarDecoration.hpp>
+ #include <hyprland/src/render/decorations/DecorationPositioner.hpp>
+ #include <hyprutils/utils/ScopeGuard.hpp>
+-#undef private
++// #undef private
+ #include "OverviewPassElement.hpp"
+ #include "OverviewRender.hpp"
+ #include "Window.hpp"
+@@ -1229,14 +1229,14 @@ void CScrollOverview::updateBackdropBlurCache(PHLMONITOR monitor, int wallpaperM
+     if (!backdropBlurDirty)
+         return;
+ 
+-    auto* const SAVEDFB = g_pHyprOpenGL->m_renderData.currentFB;
++    const auto SAVEDFB = g_pHyprRenderer->m_renderData.currentFB;
+     backdropBlurFB.bind();
+-    g_pHyprOpenGL->m_renderData.currentFB = &backdropBlurFB;
++    g_pHyprRenderer->m_renderData.currentFB = &backdropBlurFB;
+     auto restoreFB = Hyprutils::Utils::CScopeGuard([SAVEDFB] {
+         if (SAVEDFB)
+             SAVEDFB->bind();
+ 
+-        g_pHyprOpenGL->m_renderData.currentFB = SAVEDFB;
++        g_pHyprRenderer->m_renderData.currentFB = SAVEDFB;
+     });
+     g_pHyprOpenGL->clear(CHyprColor{0.F, 0.F, 0.F, 1.F});
+ 
+diff --git a/scrollOverview.hpp b/scrollOverview.hpp
+index 00a1dc1..5e36f38 100644
+--- a/scrollOverview.hpp
++++ b/scrollOverview.hpp
+@@ -110,7 +110,7 @@ class CScrollOverview : public IOverview {
+     float  lastOverviewBlurScale    = 1.F;
+     int    lastBackdropWallpaperMode = -1;
+     Vector2D lastOverviewBlurViewOffset = Vector2D{};
+-    CFramebuffer backdropBlurFB;
++    CGLFramebuffer backdropBlurFB;
+ 
+     struct SWorkspaceImage {
+         PHLWORKSPACE              pWorkspace;

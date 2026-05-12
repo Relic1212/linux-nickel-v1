@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04a379f..51b6f89 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,8 +63,7 @@ pkg_check_modules(
+   libjpeg
+   libwebp
+   libmagic
+-  libpng
+-  librsvg-2.0)
++  libpng)
+ 
+ pkg_check_modules(
+   JXL
+diff --git a/src/image/Image.cpp b/src/image/Image.cpp
+index 8709d1e..4e0ecb2 100644
+--- a/src/image/Image.cpp
++++ b/src/image/Image.cpp
+@@ -10,7 +10,7 @@
+ #endif
+ #include "formats/Webp.hpp"
+ #include "formats/Png.hpp"
+-#include "formats/Svg.hpp"
++// #include "formats/Svg.hpp"
+ #include <magic.h>
+ #include <format>
+ 
+@@ -36,7 +36,7 @@ Hyprgraphics::CImage::CImage(std::span<const uint8_t> data, eImageFormat format,
+ #else
+         case IMAGE_FORMAT_AVIF: lastError = "hyprgraphics compiled without HEIF support"; return;
+ #endif
+-        case IMAGE_FORMAT_SVG: CAIROSURFACE = SVG::createSurfaceFromData(data, size); break;
++        // case IMAGE_FORMAT_SVG: CAIROSURFACE = SVG::createSurfaceFromData(data, size); break;
+         default: lastError = "Currently only PNG and AVIF images are supported for embedding"; return;
+     }
+ 
+@@ -81,7 +81,7 @@ Hyprgraphics::CImage::CImage(const std::string& path, const Vector2D& size) : fi
+         case IMAGE_FORMAT_JXL: lastError = "hyprgraphics compiled without JXL support"; return;
+ #endif
+         case IMAGE_FORMAT_JPEG: CAIROSURFACE = JPEG::createSurfaceFromJPEG(path); break;
+-        case IMAGE_FORMAT_SVG: CAIROSURFACE = SVG::createSurfaceFromSVG(path, size); break;
++        // case IMAGE_FORMAT_SVG: CAIROSURFACE = SVG::createSurfaceFromSVG(path, size); break;
+         case IMAGE_FORMAT_WEBP: CAIROSURFACE = WEBP::createSurfaceFromWEBP(path); break;
+         default: lastError = "internal error"; return;
+     }
+diff --git a/tests/image.cpp b/tests/image.cpp
+index ef4a3c9..6223d2d 100644
+--- a/tests/image.cpp
++++ b/tests/image.cpp
+@@ -10,7 +10,7 @@
+ using namespace Hyprgraphics;
+ 
+ static bool tryLoadImageFromFile(const std::string& path) {
+-    auto image = path.ends_with("svg") ? CImage(path, {512, 512}) : CImage(path);
++    auto image = false ? CImage(path, {512, 512}) : CImage(path);
+ 
+     if (!image.success()) {
+         std::println("Failed to load {}: {}", path, image.getError());

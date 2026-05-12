@@ -48,10 +48,10 @@ extern int stub_dladdr(const void *handle, Dl_info *info);
 const char *main_program_handle = "main_program";
 
 const char *lib__usr_lib_libborders_plus_plus_so = "lib__usr_lib_libborders_plus_plus_so";
-const char *lib__usr_lib_libhyprexpo_so = "lib__usr_lib_libhyprexpo_so";
+// const char *lib__usr_lib_libhyprexpo_so = "lib__usr_lib_libhyprexpo_so";
 // const char *lib__usr_lib_libhyprscrolling_so = "lib__usr_lib_libhyprscrolling_so";
 const char *lib__usr_lib_libhyprbars_so = "lib__usr_lib_libhyprbars_so";
-const char *lib__usr_lib_libxtra_dispatchers_so = "lib__usr_lib_libxtra_dispatchers_so";
+// const char *lib__usr_lib_libxtra_dispatchers_so = "lib__usr_lib_libxtra_dispatchers_so";
 const char *lib__usr_lib_libhyprfocus_so = "lib__usr_lib_libhyprfocus_so";
 const char *lib__usr_lib_libHyprspace_so = "lib__usr_lib_libHyprspace_so";
 
@@ -66,11 +66,11 @@ void *dlopen(const char *path, int mode)
 		dbg_print("(dlopen) found library /usr/lib/libborders-plus-plus.so (handle=%p)\n", &lib__usr_lib_libborders_plus_plus_so);
 		return &lib__usr_lib_libborders_plus_plus_so;
 	}
-	if (strcmp(path, "/usr/lib/libhyprexpo.so") == 0)
-	{
-		dbg_print("(dlopen) found library /usr/lib/libhyprexpo.so (handle=%p)\n", &lib__usr_lib_libhyprexpo_so);
-		return &lib__usr_lib_libhyprexpo_so;
-	}
+	// if (strcmp(path, "/usr/lib/libhyprexpo.so") == 0)
+	// {
+	// 	dbg_print("(dlopen) found library /usr/lib/libhyprexpo.so (handle=%p)\n", &lib__usr_lib_libhyprexpo_so);
+	// 	return &lib__usr_lib_libhyprexpo_so;
+	// }
 	// if (strcmp(path, "/usr/lib/libhyprscrolling.so") == 0)
 	// {
 	// 	dbg_print("(dlopen) found library /usr/lib/libhyprscrolling.so (handle=%p)\n", &lib__usr_lib_libhyprscrolling_so);
@@ -81,11 +81,11 @@ void *dlopen(const char *path, int mode)
 		dbg_print("(dlopen) found library /usr/lib/libhyprbars.so (handle=%p)\n", &lib__usr_lib_libhyprbars_so);
 		return &lib__usr_lib_libhyprbars_so;
 	}
-	if (strcmp(path, "/usr/lib/libxtra-dispatchers.so") == 0)
-	{
-		dbg_print("(dlopen) found library /usr/lib/libxtra-dispatchers.so (handle=%p)\n", &lib__usr_lib_libxtra_dispatchers_so);
-		return &lib__usr_lib_libxtra_dispatchers_so;
-	}
+	// if (strcmp(path, "/usr/lib/libxtra-dispatchers.so") == 0)
+	// {
+	// 	dbg_print("(dlopen) found library /usr/lib/libxtra-dispatchers.so (handle=%p)\n", &lib__usr_lib_libxtra_dispatchers_so);
+	// 	return &lib__usr_lib_libxtra_dispatchers_so;
+	// }
 	if (strcmp(path, "/usr/lib/libhyprfocus.so") == 0)
 	{
 		dbg_print("(dlopen) found library /usr/lib/libhyprfocus.so (handle=%p)\n", &lib__usr_lib_libhyprfocus_so);
@@ -123,45 +123,45 @@ void *dlsym(void *__restrict handle, const char *__restrict symbol)
 			return &borders_plus_plus_pluginInit;
 		}
 	}
-	if (handle == &lib__usr_lib_libhyprexpo_so || handle == NULL || handle == &main_program_handle)
-	{
-		if (strcmp(symbol, "pluginAPIVersion") == 0)
-		{
-			extern void *hyprexpo_pluginAPIVersion;
-			dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &hyprexpo_pluginAPIVersion);
-			return &hyprexpo_pluginAPIVersion;
-		}
-		if (strcmp(symbol, "pluginExit") == 0)
-		{
-			extern void *hyprexpo_pluginExit;
-			dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &hyprexpo_pluginExit);
-			return &hyprexpo_pluginExit;
-		}
-		if (strcmp(symbol, "pluginInit") == 0)
-		{
-			extern void *hyprexpo_pluginInit;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &hyprexpo_pluginInit);
-			return &hyprexpo_pluginInit;
-		}
-        if (strcmp(symbol, "_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE") == 0)
-		{
-			extern void *_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE);
-			return &_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE;
-		}
-        if (strcmp(symbol, "_ZN8CMonitor9addDamageEPK15pixman_region32") == 0)
-		{
-			extern void *_ZN8CMonitor9addDamageEPK15pixman_region32;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN8CMonitor9addDamageEPK15pixman_region32);
-			return &_ZN8CMonitor9addDamageEPK15pixman_region32;
-		}
-        if (strcmp(symbol, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE") == 0)
-		{
-			extern void *_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE);
-			return &_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE;
-		}
-	}
+	// if (handle == &lib__usr_lib_libhyprexpo_so || handle == NULL || handle == &main_program_handle)
+	// {
+	// 	if (strcmp(symbol, "pluginAPIVersion") == 0)
+	// 	{
+	// 		extern void *hyprexpo_pluginAPIVersion;
+	// 		dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &hyprexpo_pluginAPIVersion);
+	// 		return &hyprexpo_pluginAPIVersion;
+	// 	}
+	// 	if (strcmp(symbol, "pluginExit") == 0)
+	// 	{
+	// 		extern void *hyprexpo_pluginExit;
+	// 		dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &hyprexpo_pluginExit);
+	// 		return &hyprexpo_pluginExit;
+	// 	}
+	// 	if (strcmp(symbol, "pluginInit") == 0)
+	// 	{
+	// 		extern void *hyprexpo_pluginInit;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &hyprexpo_pluginInit);
+	// 		return &hyprexpo_pluginInit;
+	// 	}
+    //     if (strcmp(symbol, "_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE") == 0)
+	// 	{
+	// 		extern void *_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE);
+	// 		return &_ZN13CHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS2_I10CWorkspaceEERKNSt3__16chrono10time_pointINS8_12steady_clockENS8_8durationIxNS7_5ratioILl1ELl1000000000EEEEEEERKNS0_4Math4CBoxE;
+	// 	}
+    //     if (strcmp(symbol, "_ZN8CMonitor9addDamageEPK15pixman_region32") == 0)
+	// 	{
+	// 		extern void *_ZN8CMonitor9addDamageEPK15pixman_region32;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN8CMonitor9addDamageEPK15pixman_region32);
+	// 		return &_ZN8CMonitor9addDamageEPK15pixman_region32;
+	// 	}
+    //     if (strcmp(symbol, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE") == 0)
+	// 	{
+	// 		extern void *_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE);
+	// 		return &_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE;
+	// 	}
+	// }
 	// if (handle == &lib__usr_lib_libhyprscrolling_so || handle == NULL || handle == &main_program_handle)
 	// {
 	// 	if (strcmp(symbol, "pluginAPIVersion") == 0)
@@ -204,27 +204,27 @@ void *dlsym(void *__restrict handle, const char *__restrict symbol)
 			return &hyprbars_pluginInit;
 		}
 	}
-	if (handle == &lib__usr_lib_libxtra_dispatchers_so || handle == NULL || handle == &main_program_handle)
-	{
-		if (strcmp(symbol, "pluginAPIVersion") == 0)
-		{
-			extern void *xtra_dispatchers_pluginAPIVersion;
-			dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginAPIVersion);
-			return &xtra_dispatchers_pluginAPIVersion;
-		}
-		if (strcmp(symbol, "pluginExit") == 0)
-		{
-			extern void *xtra_dispatchers_pluginExit;
-			dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginExit);
-			return &xtra_dispatchers_pluginExit;
-		}
-		if (strcmp(symbol, "pluginInit") == 0)
-		{
-			extern void *xtra_dispatchers_pluginInit;
-			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginInit);
-			return &xtra_dispatchers_pluginInit;
-		}
-	}
+	// if (handle == &lib__usr_lib_libxtra_dispatchers_so || handle == NULL || handle == &main_program_handle)
+	// {
+	// 	if (strcmp(symbol, "pluginAPIVersion") == 0)
+	// 	{
+	// 		extern void *xtra_dispatchers_pluginAPIVersion;
+	// 		dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginAPIVersion);
+	// 		return &xtra_dispatchers_pluginAPIVersion;
+	// 	}
+	// 	if (strcmp(symbol, "pluginExit") == 0)
+	// 	{
+	// 		extern void *xtra_dispatchers_pluginExit;
+	// 		dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginExit);
+	// 		return &xtra_dispatchers_pluginExit;
+	// 	}
+	// 	if (strcmp(symbol, "pluginInit") == 0)
+	// 	{
+	// 		extern void *xtra_dispatchers_pluginInit;
+	// 		dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &xtra_dispatchers_pluginInit);
+	// 		return &xtra_dispatchers_pluginInit;
+	// 	}
+	// }
 	if (handle == &lib__usr_lib_libhyprfocus_so || handle == NULL || handle == &main_program_handle)
 	{
 		if (strcmp(symbol, "pluginAPIVersion") == 0)
@@ -267,9 +267,9 @@ void *dlsym(void *__restrict handle, const char *__restrict symbol)
 			return &Hyprspace_pluginInit;
 		}
 
-		DLSYM(_ZN15CKeybindManager5mouseENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE,)
-		DLSYM(_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View7CWindowEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb,)
-		DLSYM(_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View13CLayerSurfaceEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEbb,)
+		//DLSYM(_ZN15CKeybindManager5mouseENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE,)
+		//DLSYM(_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View7CWindowEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb,)
+		//DLSYM(_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View13CLayerSurfaceEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEbb,)
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);
 	return stub_dlsym(handle, symbol);

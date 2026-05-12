@@ -5,8 +5,8 @@
     generator = "Ninja",
     singleSource = {
 
-      uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.11.0.tar.gz",
-      sha256sum = "1f097eb9915081f1b929973701643bcd8581b469c242eae5446275b120a3b229",
+      uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.13.1.tar.gz",
+      sha256sum = "480ee026105deea64a24eb96d80cabe54b357594ce36cb05c021ea226c69aede",
     },
     biDrvs = [
       drvs.pixman,

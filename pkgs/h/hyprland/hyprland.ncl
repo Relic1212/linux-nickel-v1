@@ -11,8 +11,8 @@
         {
           src = {
 
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.54.3.tar.gz",
-            sha256sum = "4bc4b870e7c7529006c6c3782695e446df915851b941f9866adfe9f8c4ed445b",
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.55.0.tar.gz",
+            sha256sum = "7a547042fc291695dc4f75cc63a0c52e85a2e1e3071fa5eaf08f54c425ea271d",
           },
         },
       ],
@@ -36,6 +36,8 @@
       preConfigurePhase = [
         # m%"sed -i "s@'opengl'@'egl'@g" ${SRC}/src/meson.build"%,
         m%"sed -i "s|OpenGL::GL ||g" ${SRC}/CMakeLists.txt"%,
+        # https://github.com/hyprwm/Hyprland/pull/14406/changes
+        m%"sed -i "s@#include <numeric>@#include <numeric>\n#include <numbers>@g" ${SRC}/src/helpers/cm/ColorManagement.cpp"%,
       ],
 
       postInstallPhase = [
@@ -43,6 +45,7 @@
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/shared/animation/AnimationTree.hpp"%,
       ],
 
       buildEnv = {
@@ -65,6 +68,10 @@
 
       biDrvs =
         [
+          drvs.glslang,
+          drvs.lcms,
+          drvs.pythonFull,
+          drvs.lua,
           drvs.hyprwire,
           drvs.muparser,
           drvs.expat,

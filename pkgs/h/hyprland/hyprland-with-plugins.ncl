@@ -30,10 +30,10 @@
             let flags = [
               "-lborders-plus-plus",
               "-lhyprbars",
-              "-lhyprexpo",
+              # "-lhyprexpo",
               "-lhyprfocus",
               # "-lhyprscrolling",
-              "-lxtra-dispatchers",
+              # "-lxtra-dispatchers",
               "-lHyprspace",
               # "-lhyprlang",
               "/tmp/workdir/src/dlopen.o",

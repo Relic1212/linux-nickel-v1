@@ -1,35 +1,30 @@
 {
   lib,
   drvs,
-  hyprlandHyprspace | lib.MesonPackage = {
+  hyprlandScrollOverview | lib.CmakePackage = {
+    generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/KZDKM/Hyprspace/archive/12ddde04f8584bf7de3151e6169918e0dda9f822.tar.gz",
-      sha256sum = "2f26b5417c8faa5fbd21ed9d91d06207cae2ad83210b9e6c00989c26ed42b49b"
+      uri = "https://github.com/yayuuu/hyprland-scroll-overview/archive/ef2ca3ff4c660e1231868b439e1feeb89d68c4a1.tar.gz",
+      sha256sum = "7587a0d1b84d6c21ebee7f0cdfcf46962a61a7507f51b77b1e287df9f60fb174",
     },
     eofPatches = [
       {
-        patch = import "hyprland-hyprexpo.patch" as 'Text,
+        patch = import "fix.patch" as 'Text
       },
     ],
-    options = {
-      glx | default = false,
+    buildEnv = {
+      EXTRA_CXXFLAGS = ["-Wno-c++11-narrowing", ]
     },
-    preConfigurePhase = [
-      "sed -i 's|shared_module|library|g' ${SRC}/meson.build",
-      "sed -i 's|system_clock|steady_clock|g' ${SRC}/src/Overview.hpp",
-    ],
-    postInstallPhase =
-      let s = "Hyprspace" in
-      let prefix = std.string.replace "-" "_" s in
-      [
-        "objcopy --redefine-sym pluginAPIVersion=%{prefix}_pluginAPIVersion ${DEST}/usr/lib/lib%{s}.a",
-        "objcopy --redefine-sym pluginExit=%{prefix}_pluginExit ${DEST}/usr/lib/lib%{s}.a",
-        "objcopy --redefine-sym pluginInit=%{prefix}_pluginInit ${DEST}/usr/lib/lib%{s}.a"
-      ],
+    options = {
+      glx = false,
+    },
+
     llvmProvider = drvs.llvmFull,
 
     biDrvs =
       [
+        drvs.glslang,
+        drvs.lua,
         drvs.expat,
         drvs.jsonC,
         drvs.pcre2,
@@ -86,7 +81,7 @@
         drvs.libzip,
         drvs.spirvTools,
         drvs.glaze,
-        drvs.cmake,
+        # drvs.cmake,
         drvs.fribidi,
       ]
       @ (
