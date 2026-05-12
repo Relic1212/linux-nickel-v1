@@ -30,14 +30,14 @@
       & {
         isStatic,
         buildDir,
-        configureFlags | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ (configureFlagsFromRecord (extraFlagsByField & extraConfigureFlagsByField)) @ extraConfigureFlags,
-        extraConfigureFlags | Array String | default = [],
-        extraFlagsByField | default = {},
-        extraConfigureFlagsByField | default = {},
-        configureScript | String | default = "${SRC}/configure",
-        separateBuildDir | priority -999 = true,
+        configureFlags | not_exported | nullOrArray | default = constants.configureFlags @ (if isStatic then constants.configureFlagsStatic else []) @ (configureFlagsFromRecord (extraFlagsByField & extraConfigureFlagsByField)) @ extraConfigureFlags,
+        extraConfigureFlags | not_exported | Array String | default = [],
+        extraFlagsByField | not_exported | default = {},
+        extraConfigureFlagsByField | not_exported | default = {},
+        configureScript | not_exported | String | default = "${SRC}/configure",
+        separateBuildDir | not_exported | priority -999 = true,
 
-        configurePhase | priority -11 =
+        configurePhase | not_exported | priority -11 =
           (if (buildDir == null) then [] else ["cd %{buildDir}"])
           @ [
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags)
@@ -50,20 +50,20 @@
         buildDir,
         configureScript,
         configureFlags,
-        configurePhase | priority -10 =
+        configurePhase | not_exported | priority -10 =
           (if (buildDir == null) then [] else ["cd %{buildDir}"])
           @ [
             "(cd ${SRC}; autoreconf -fiv)",
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
           ],
-        pkgconfProvider,
-        muslProvider,
+        pkgconfProvider | not_exported,
+        muslProvider | not_exported,
         perlProvider | not_exported | default = drvs.perl,
-        utilsProviders,
+        utilsProviders | not_exported,
         isLlvm,
-        llvmProviders,
+        llvmProviders | not_exported,
         enableCcache,
-        baseBuildinputPackages | priority -999 =
+        baseBuildinputPackages | not_exported | priority -999 =
           # AutotoolsPackage.baseBuildinputPackages
           AutotoolsPackage.utilsProviders
           @ (

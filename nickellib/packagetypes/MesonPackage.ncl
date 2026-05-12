@@ -18,11 +18,11 @@
         llvmProviders | not_exported,
         muslProvider | not_exported,
 
-        mesonArgs | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
-        mesonArgsStatic | default = constants.mesonArgsStatic,
-        baseMesonArgs | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then mesonArgsStatic else []),
-        extraMesonArgs | Array String | default = [],
-        configurePhase | priority -1000 =
+        mesonArgs | not_exported | nullOrArray | default = (baseMesonArgs @ extraMesonArgs),
+        mesonArgsStatic | not_exported | default = constants.mesonArgsStatic,
+        baseMesonArgs | not_exported | Array String | default = (if (!debug) then constants.mesonArgs else constants.mesonArgsDebug) @ (if isStatic then mesonArgsStatic else []),
+        extraMesonArgs | not_exported | Array String | default = [],
+        configurePhase | not_exported | priority -1000 =
           if (
             !useMuon
             # true
@@ -34,7 +34,7 @@
             [
               "(cd ${SRC} && meson setup %{std.string.join constants.buildFlagSep mesonArgs} ../build)"
             ],
-        buildPhase | priority -1000 =
+        buildPhase | not_exported | priority -1000 =
           if (
             !useMuon
             # true
@@ -51,10 +51,10 @@
         ],
         useMuon | Bool | default = false,
         usePkgconf | Bool | default = true,
-        pkgconfProvider,
+        pkgconfProvider | not_exported,
 
-        pythonProvider | default = drvs.pythonFull,
-        baseBuildinputPackages | priority -1000 =
+        pythonProvider | not_exported | default = drvs.pythonFull,
+        baseBuildinputPackages | not_exported | priority -1000 =
           utilsProviders
           @ (
             if (stage == -1) then

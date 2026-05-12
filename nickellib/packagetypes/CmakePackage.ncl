@@ -52,13 +52,13 @@
         buildInChroot,
         isLlvm,
         enableCcache,
-        utilsProviders,
-        llvmProviders,
+        utilsProviders | not_exported,
+        llvmProviders | not_exported,
 
         enableParallel,
         debug,
         noDev | Bool | default = false,
-        cmakeArgs | Array String | default =
+        cmakeArgs | not_exported | Array String | default =
           cmakeArgsPrepend
           @ (
           # std.array.sort (std.string.compare)
@@ -76,19 +76,19 @@
           )
           @ extraCmakeArgs
           @ (if noDev then ["-Wno-dev"] else []),
-        cmakeArgsPrepend | Array String | default = [],
+        cmakeArgsPrepend | not_exported | Array String | default = [],
 
-        extraCmakeArgs | Array String | default = [],
-        cmakeArgsRecord | default = {},
-        cmakeExtraArgsRecord | default = {},
+        extraCmakeArgs | not_exported | Array String | default = [],
+        cmakeArgsRecord | not_exported | default = {},
+        cmakeExtraArgsRecord | not_exported | default = {},
 
-        generator | nullOrString | default = null,
+        generator | not_exported | nullOrString | default = null,
 
-        pkgconfProvider,
+        pkgconfProvider | not_exported,
 
-        muslProvider,
+        muslProvider | not_exported,
 
-        baseBuildinputPackages | priority -1000 =
+        baseBuildinputPackages | not_exported | priority -1000 =
           utilsProviders
           @ (
             if (stage == -1) then
@@ -109,10 +109,10 @@
 
         cmakeDir | String | default = "${SRC}",
 
-        configurePhase | priority -10 = ["cmake -B . -S %{cmakeDir} %{std.string.join constants.buildFlagSep cmakeArgs}"],
-        buildPhase | priority -10 = ["cmake --build ."],
-        installPhase | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
-        extraEnv | priority -10 =
+        configurePhase | not_exported | priority -10 = ["cmake -B . -S %{cmakeDir} %{std.string.join constants.buildFlagSep cmakeArgs}"],
+        buildPhase | not_exported | priority -10 = ["cmake --build ."],
+        installPhase | not_exported | priority -10 = ["DESTDIR=${DEST} cmake --install ."],
+        extraEnv | not_exported | priority -10 =
           (
             (if buildInChroot then Package.extraEnv else (Package & { buildInChroot = false }).extraEnv)
             & (

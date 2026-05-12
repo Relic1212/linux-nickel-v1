@@ -8,20 +8,20 @@
       Package
       & {
         enableParallel,
-        makeArgs | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []) @ extraMakeArgs,
-        extraMakeArgs | Array String | default = [],
-        makeTargets | nullOrArray | default = null,
-        makeInstallArgs | nullOrArray | default = ["DESTDIR=${DEST}"] @ extraMakeInstallArgs,
-        extraMakeInstallArgs | Array String | default = [],
-        makeInstallTargets | nullOrArray | default = ["install"],
+        makeArgs | not_exported | nullOrArray | default = ["PREFIX=/usr"] @ (if enableParallel then ["-j$(nproc)"] else []) @ extraMakeArgs,
+        extraMakeArgs | not_exported | Array String | default = [],
+        makeTargets | not_exported | nullOrArray | default = null,
+        makeInstallArgs | not_exported | nullOrArray | default = ["DESTDIR=${DEST}"] @ extraMakeInstallArgs,
+        extraMakeInstallArgs | not_exported | Array String | default = [],
+        makeInstallTargets | not_exported | nullOrArray | default = ["install"],
         utilsProviders,
         stage,
         isLlvm,
         enableCcache,
         separateBuildDir | priority -1000 = false,
         llvmProviders | not_exported,
-        muslProvider,
-        baseBuildinputPackages | priority -1000 =
+        muslProvider | not_exported,
+        baseBuildinputPackages | not_exported | priority -1000 =
           utilsProviders
           @ (
             if (stage == -1) then
@@ -34,10 +34,10 @@
               []
           ),
 
-        buildPhase | priority -10 = [
+        buildPhase | not_exported | priority -10 = [
           "make " ++ (std.string.join " " makeArgs) ++ (if makeTargets == null then "" else " " ++ std.string.join " " makeTargets)
         ],
-        installPhase | priority -10 = [
+        installPhase | not_exported | priority -10 = [
           "make " ++ (std.string.join " " makeInstallArgs) ++ " " ++ (std.string.join " " makeInstallTargets)
         ]
       },
