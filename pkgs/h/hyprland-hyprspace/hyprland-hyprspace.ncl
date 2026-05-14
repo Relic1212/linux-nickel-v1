@@ -14,6 +14,12 @@
           sha256sum = "8f04ae2328548bc28c229801c6ac8366f7111f11e38a38bc18c8a90d7e03a2df"
         }
       },
+      {
+        src = {
+          uri = "https://github.com/KZDKM/Hyprspace/commit/a9d7685ef610d5a45c7c4f9f974bdf78443c9829.patch",
+          sha256sum = "28fd761a35cbe10dc77c1e0b2168f642af936bb0e5e573a36b3d4a15a44049c1"
+        },
+      },
     ],
     # eofPatches = [
     #   {
@@ -23,8 +29,10 @@
     options = {
       glx | default = false,
     },
+    # debug = true,
     preConfigurePhase = [
       "(cd ${SRC} && patch -p1 < 5f12222eeab6cb3a0ff1237f7444eb0b8ca00351.patch)",
+      "(cd ${SRC} && patch -p1 < a9d7685ef610d5a45c7c4f9f974bdf78443c9829.patch)",
       "sed -i 's|shared_module|library|g' ${SRC}/meson.build",
       "sed -i 's|system_clock|steady_clock|g' ${SRC}/src/Overview.hpp",
     ],
