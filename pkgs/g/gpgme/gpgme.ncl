@@ -6,9 +6,8 @@
       uri = "https://gnupg.org/ftp/gcrypt/gpgme/gpgme-1.24.0.tar.bz2",
       sha256sum = "61e3a6ad89323fecfaff176bc1728fb8c3312f2faa83424d9d5077ba20f5f7da"
     },
-    biDrvs = [
+    pDrvs = [
       drvs.libassuan,
-      drvs.libgpgError,
     ],
     preConfigurePhase = [
       "sed -i 's@off64_t@off_t@g' ${SRC}/src/posix-io.c",

@@ -17,17 +17,14 @@
       m%"sed -i "s@subdir('docs')@@g" ${SRC}/meson.build"%,
     ],
     biDrvs = [
+      # drvs.libxslt,
+    ],
+    pDrvs = [
       drvs.gpgme,
-      drvs.libassuan,
-      drvs.libgpgError,
       drvs.libgcrypt,
       drvs.openssl,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
       drvs.glib,
       drvs.linuxHeaders,
-      drvs.libxslt,
     ]
   }
 }

@@ -84,64 +84,12 @@
 & {
   lib,
   drvs,
-  gnupg2 | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.4.6.tar.bz2",
-      sha256sum = "95acfafda7004924a6f5c901677f15ac1bda2754511d973bb4523e8dd840e17a"
-    },
-    biDrvs = [
-      drvs.libgpgError,
-      drvs.libassuan,
-      drvs.libgcrypt,
-      drvs.npth,
-      drvs.libksba,
-      drvs.gettext,
-    ],
-    preConfigurePhase = [
-      m%"
-        sed -i 's@#include <npth.h>@#include <npth.h>\n#include <unistd.h>@g' ${SRC}/scd/app.c
-        "%
-    ],
-    extraConfigureFlags = [
-      "--disable-gnutls",
-      "--enable-symcryptrun",
-      "--enable-gpg-is-gpg2",
-      "--disable-ldap",
-      "--disable-nls",
-      "--disable-doc",
-    ],
-    extraMakeArgs = [
-      "PREFIX=/usr",
-    ],
-    extraMakeInstallArgs = extraMakeArgs,
-    extraEnv = {
-      CC_FOR_BUILD = ["clang", "-static"]
-    },
-    separateBuildDir = false,
-  }
-}
-& {
-  lib,
-  drvs,
-  libgpgError | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.51.tar.bz2",
-      sha256sum = "be0f1b2db6b93eed55369cdf79f19f72750c8c7c39fc20b577e724545427e6b2"
-    },
-    extraEnv = {
-      LDFLAGS_FOR_BUILD = ["-static", "--static"]
-    }
-  }
-}
-& {
-  lib,
-  drvs,
   libassuan | lib.AutotoolsPackage = {
     singleSource = {
       uri = "https://gnupg.org/ftp/gcrypt/libassuan/libassuan-3.0.1.tar.bz2",
       sha256sum = "c8f0f42e6103dea4b1a6a483cb556654e97302c7465308f58363778f95f194b1"
     },
-    biDrvs = [
+    pDrvs = [
       drvs.libgpgError,
     ],
     extraEnv = {
@@ -157,7 +105,7 @@
       uri = "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.11.0.tar.bz2",
       sha256sum = "09120c9867ce7f2081d6aaa1775386b98c2f2f246135761aae47d81f58685b9c"
     },
-    biDrvs = [
+    pDrvs = [
       drvs.libgpgError,
     ],
     extraEnv = {

@@ -11,14 +11,14 @@
       "-Dfreetype=enabled",
       "-Dcairo=enabled"
     ],
-    biDrvs = [
-      drvs.freetype,
+    pDrvs = [
+      # drvs.freetype,
       drvs.cairo,
-      drvs.zlibNg,
-      drvs.pixman,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat
+      # drvs.zlibNg,
+      # drvs.pixman,
+      # drvs.fontconfig,
+      # drvs.libpng,
+      # drvs.expat
     ]
   }
 }
@@ -33,16 +33,16 @@
       "-Dcairo=enabled",
       "-Dglib=enabled",
     ],
-    biDrvs = [
-      drvs.freetype,
+    pDrvs = [
+      # drvs.freetype,
       drvs.cairo,
-      drvs.zlibNg,
-      drvs.pixman,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
-      drvs.pcre2,
-      drvs.libffi,
+      # drvs.zlibNg,
+      # drvs.pixman,
+      # drvs.fontconfig,
+      # drvs.libpng,
+      # drvs.expat,
+      # drvs.pcre2,
+      # drvs.libffi,
       drvs.glib,
     ]
   },

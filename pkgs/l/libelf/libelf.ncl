@@ -18,10 +18,12 @@
       drvs.argpStandalone,
       drvs.muslFts,
       drvs.muslObstack,
-      drvs.zlibNg,
       drvs.m4,
       drvs.pkgconf,
       drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.zlibNg,
     ],
     preConfigurePhase = [
       "cd ${SRC}",

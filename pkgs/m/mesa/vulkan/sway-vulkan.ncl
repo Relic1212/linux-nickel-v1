@@ -74,7 +74,9 @@
         ],
       baseMesonArgs = lib.constants.mesonArgsDebug @ lib.constants.mesonArgsStatic,
       llvmProvider | priority 1 = drvs.llvmFullDebug,
-
+      pDrvs | priority 1 = [
+        drvs.seatd,
+      ],
       biDrvs | priority 1 = [
         # drvs.libdl_vulkan,
         drvs.expat,

@@ -21,8 +21,10 @@
       "-Dnouveau=disabled",
     ],
     biDrvs = [
-      drvs.libpciaccess,
       drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.libpciaccess,
     ],
 
     preConfigurePhase = [

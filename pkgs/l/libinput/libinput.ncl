@@ -14,12 +14,14 @@
     ],
     extraMesonArgs = ["-Dtests=false", "-Dlibwacom=false", "-Ddebug-gui=false"],
     biDrvs = [
-      drvs.eudev,
       # drvs.libudevZero,
+      drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.eudev,
       drvs.mtdev,
       drvs.libevdev,
-      drvs.linuxHeaders,
-    ]
+    ],
   },
 
   libinputFixedSyms | lib.MesonPackage =

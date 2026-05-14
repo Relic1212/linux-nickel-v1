@@ -113,7 +113,6 @@
         drvs.readline,
         drvs.libxml2,
         drvs.libxslt,
-        drvs.utilLinux,
         drvs.eudevNm,
         drvs.libndp,
         drvs.glibPatched,
@@ -129,10 +128,8 @@
         drvs.linuxHeaders,
         drvs.bash,
         # drvs.jansson,
-        drvs.gmp,
-        drvs.libtasn1,
-        drvs.nettleGmp,
-        drvs.gnutls,
+
+        # drvs.gnutls,
         drvs.dnsmasq,
         drvs.docbookXslNons,
         drvs.docbookXml,
@@ -153,6 +150,13 @@
         else
           []
       ),
+    pDrvs = [
+      drvs.utilLinux,
+      drvs.gnutls,
+      drvs.gmp,
+      drvs.libtasn1,
+      drvs.nettleGmp,
+    ]
   },
 }
 & {

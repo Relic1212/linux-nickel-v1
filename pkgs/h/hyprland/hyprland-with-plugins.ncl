@@ -53,7 +53,7 @@
           drvs.hyprlandPlugins,
           drvs.hyprlandHyprspace,
           drvs.hyprlandHyprexpo,
-          drvs.googletest,
+          # drvs.googletest,
         ],
     }
 }

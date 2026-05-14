@@ -21,7 +21,6 @@
       #   file = "vulkan-tools-cube.patch",
       # },
     ],
-  
 
     buildEnv = {
       # EXTRA_CPPFLAGS = [
@@ -272,7 +271,7 @@
     cmakeExtraArgsRecord = {
       "-DBUILD_CUBE" = true,
     },
-       preConfigurePhase = [
+    preConfigurePhase = [
       m%"sed -i 's|MODULE|STATIC|g' ${SRC}/icd/CMakeLists.txt"%,
       "echo '%{ import "vulkan-tools-dl.c" as 'Text }' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",

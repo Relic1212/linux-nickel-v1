@@ -250,7 +250,7 @@
               # # drvs.hyprlandQtSupport,
               # # drvs.hyprlandQtutils,
               # drvs.qt5compat,
-              drvs.quickshell,
+              # drvs.quickshell,
               drvs.danklinuxDgop,
               drvs.danklinuxDms,
               drvs.ddcutil,
@@ -641,7 +641,7 @@
             (fun x => (x & { dest = "rootfs/", priority | priority 1 = (std.record.get_or "priority" 0 x) + 2 }))
             (
               _baseBaseRootfs.biDrvs
-              @ _cosmicPackages
+              # @ _cosmicPackages
               # @ _lxqtPackages
               # @ [drvs.labwc]
               # @ [drvs.kwin]

@@ -120,76 +120,30 @@
         "-Dlogind-provider=libelogind",
       ],
       biDrvs | priority 1 = [
-        drvs.dbus,
-        drvs.alsaLibs,
-        drvs.fontconfig,
-        drvs.freetype,
-        drvs.zlibNg,
-        drvs.gperf,
-        # drvs.pixman,
-        # drvs.wayland,
-        # drvs.waylandProtocols,
-        drvs.libffi,
-        drvs.libxkbcommon,
-        drvs.expat,
-        drvs.linuxHeaders,
-        drvs.ncurses,
-        drvs.readline,
-        drvs.pcre2,
-        drvs.glib,
-        drvs.hwdata,
-        drvs.eudev,
-        drvs.kmod,
-        drvs.xz,
-        drvs.openssl,
-        drvs.zstd,
-        drvs.utilLinux,
-        drvs.libevdev,
         (drvs.findutils & { priority = 1 }),
-        drvs.libsndfile,
-        drvs.libopus,
-        drvs.lua,
-        drvs.bluez,
-        drvs.sbc,
-        drvs.libusb,
-        drvs.ffmpeg,
-        drvs.jansson,
-        drvs.fdkAac,
-        drvs.ldacbt,
-        # 
-        drvs.libyaml,
-
-        ## if gsettings
-        # drvs.gobjectDynamic,
-        # drvs.cairoGobject,
-        # drvs.fribidi,
-        # drvs.gdkPixbufFull,
-        # drvs.libjpegTurbo,
-        # drvs.libepoxy,
-        # drvs.atSpi2Core,
-        # drvs.mesa2,
-        # drvs.libelf,
-        # drvs.libdrm,
-        # drvs.libpciaccess,
-        # drvs.llvmConfigStatic,
-        # drvs.spirvTools,
-        # drvs.spirvLlvmTranslator,
-        # drvs.gtk3,
-        # drvs.muslShared,
-        # drvs.pango,
-        # drvs.cairo,
-        # drvs.libpng,
-        # drvs.harfbuzz,
       ],
-      allowDubplicateBuldInputs = true,
-      propagatedBuildInputs = (
-        if (options.elogind) then
-          [
-            drvs.elogindWithPolkit,
-            drvs.libcap,
-          ]
-        else
-          []
-      ),
+      # allowDubplicateBuldInputs = true,
+      pDrvs =
+        (
+          if (options.elogind) then
+            [
+              drvs.elogindWithPolkit,
+              # drvs.libcap,
+            ]
+          else
+            []
+        )
+        @ [
+          drvs.bluez,
+          drvs.ffmpeg,
+          drvs.utilLinux,
+          drvs.libusb,
+          drvs.libopus,
+          drvs.libsndfile,
+          drvs.lua,
+          drvs.sbc,
+          drvs.fdkAac,
+          drvs.ldacbt,
+        ],
     }
 }

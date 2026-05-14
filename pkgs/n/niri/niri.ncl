@@ -14,9 +14,7 @@
       # LD | priority 1 = "\"lld --verbose -lEGL -lgallium_dri\"",
       CC = "cc",
     },
-    options = {
-      glx | default = false,
-    },
+
     extraEnv = {
       # https://github.com/NixOS/nixpkgs/pull/264517#issuecomment-1817817060
       EXTRA_RUSTFLAGS =
@@ -48,15 +46,6 @@
           let s = "-lEGL -lpthread -lpthread -lz -lgbm -lGLESv2 -lgallium_dri -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -ldl -lpthread -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link -ldrm_amdgpu -lelf -lz -ldrm_intel -ldrm -lpciaccess -lz -ldrm -lwayland-client -lwayland-server -lm -pthread -lrt -lffi"
           in
           std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
-        )
-        @ (
-          if (options.glx) then
-            [
-              "$(pkg-config --libs --static xcb)",
-              "$(pkg-config --libs --static xcb-shm x11 x11-xcb)",
-            ]
-          else
-            []
         )
         @ [
           "-C link-arg=-Wl,--pop-state",
@@ -239,107 +228,50 @@
       @ utilsProviders,
     llvmProvider = drvs.llvmFull,
 
-    biDrvs =
-      [
-        drvs.alsaLibs,
-        drvs.atSpi2Core,
-        drvs.bluez,
-        drvs.cairo,
-        drvs.cairoGobjectEmpty,
-        drvs.dbus,
-        drvs.eudev,
-        drvs.expat,
-        drvs.fdkAac,
-        drvs.ffmpeg,
-        drvs.fontconfig,
-        drvs.freetype,
-        drvs.fribidi,
-        drvs.gdkPixbufFull,
-        drvs.glib,
-        drvs.gperf,
-        # drvs.gtk3,
-        drvs.harfbuzz,
-        drvs.hwdata,
-        drvs.jansson,
-        drvs.jsonC,
-        drvs.kmod,
-        drvs.ldacbt,
-        drvs.libdisplayinfo,
-        drvs.libdlEgl,
-        drvs.libdrm,
-        drvs.libelf,
-        # drvs.libepoxy,
-        drvs.libevdev,
-        drvs.libffi,
-        # drvs.libfreeaptx,
-        drvs.libinput,
-        drvs.libjpegTurbo,
-        drvs.libopus,
-        drvs.libpciaccess,
-        drvs.libpng,
-        drvs.libsndfile,
-        drvs.libusb,
-        drvs.libxkbcommon,
-        drvs.libyaml,
-        drvs.linuxHeaders,
-        drvs.llvmConfigStatic,
-        drvs.lua,
-        drvs.m4,
-        drvs.mtdev,
-        drvs.ncurses,
-        drvs.openssl,
-        drvs.pango,
-        drvs.pcre2,
-        drvs.pixman,
-        drvs.readline,
-        drvs.sbc,
-        # drvs.seatd,
-        drvs.spirvLlvmTranslator,
-        drvs.spirvTools,
-        drvs.utilLinux,
-        drvs.wayland,
-        drvs.waylandProtocols,
-        drvs.xz,
-        drvs.zlibNg,
-        drvs.zstd,
-        drvs.pipewire,
-        drvs.dinit,
-        drvs.libstdcppCompat,
-      ]
-      @ (
-        if options.glx then
-          [
-            drvs.libxcursor,
-            drvs.xorgMacros,
-            drvs.xorgproto,
-            drvs.xtrans,
-            drvs.libxcb,
-            drvs.xcbProto,
-            drvs.libxau,
-            drvs.libx11,
-            drvs.libxrender,
-            drvs.libxfixes,
-            drvs.xcbRenderutil,
-            drvs.libxfont2,
-            drvs.libfontenc,
-            drvs.libxcvt,
-            drvs.libxshmfence,
-            # drvs.xwayland,
-            drvs.libxkbfile,
-            drvs.xcbUtilWm,
-            drvs.xcbUtilErrors,
-            drvs.libxext,
-            drvs.libxf86vm,
-            drvs.libxrandr,
-            drvs.mesaGlx,
-          ]
-        else
-          [
-            drvs.mesaExp,
-          ]
-      ),
+    biDrvs = [
+      # drvs.alsaLibs,
+      drvs.atSpi2Core,
+      # drvs.bluez,
+      drvs.cairoGobjectEmpty,
+      # drvs.dbus,
+      drvs.dinit,
+      # drvs.fdkAac,
+      # drvs.ffmpeg,
+      # drvs.gperf,
+      # drvs.hwdata,
+      # drvs.jansson,
+      # drvs.jsonC,
+      # drvs.kmod,
+      # drvs.ldacbt,
+      # drvs.libopus,
+      # drvs.libsndfile,
+      drvs.libstdcppCompat,
+      # drvs.libusb,
+      # drvs.libxkbcommon,
+      # drvs.libyaml,
+      drvs.llvmConfigStatic,
+      # drvs.lua,
+      # drvs.ncurses,
+      # drvs.openssl,
+      # drvs.readline,
+      # drvs.sbc,
+      # drvs.spirvLlvmTranslator,
+      # drvs.utilLinux,
+      # drvs.xz,
+      # drvs.zstd,
+    ],
+    neverInclude = [
+      drvs.mesa2, # pulled by ffmpeg
+    ],
     propagatedBuildInputs = [
       drvs.seatd,
+      drvs.mesaExp,
+      drvs.libinput,
+      # drvs.harfbuzz,
+      drvs.gdkPixbufFull,
+      drvs.pango,
+      drvs.pipewire,
+      drvs.libdisplayinfo,
     ]
   },
 }

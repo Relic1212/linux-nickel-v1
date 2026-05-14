@@ -8,7 +8,7 @@
       uri = "https://github.com/hyprwm/hyprutils/archive/refs/tags/v0.13.1.tar.gz",
       sha256sum = "480ee026105deea64a24eb96d80cabe54b357594ce36cb05c021ea226c69aede",
     },
-    biDrvs = [
+    pDrvs = [
       drvs.pixman,
     ],
     preConfigurePhase = [

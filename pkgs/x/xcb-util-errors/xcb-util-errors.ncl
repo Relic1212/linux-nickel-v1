@@ -7,21 +7,23 @@
       sha256sum = "5628c87b984259ad927bacd8a42958319c36bdf4b065887803c9d820fb80f357"
     },
     biDrvs = [
-      drvs.libxcursor,
-      drvs.xorgMacros,
-      drvs.xorgproto,
-      drvs.xtrans,
-      drvs.libxcb,
-      drvs.xcbProto,
-      drvs.libxau,
-      drvs.libx11,
-      drvs.libxrender,
-      drvs.libxfixes,
+      # drvs.libxcursor,
+      # drvs.xorgMacros,
+      # drvs.xorgproto,
+      # drvs.xtrans,
+      # drvs.libxcb,
+      # drvs.xcbProto,
+      # drvs.libxau,
+      # drvs.libx11,
+      # drvs.libxrender,
+      # drvs.libxfixes,
       drvs.pkgconf,
       drvs.zlibNg,
-      drvs.xcbRenderutil,
       drvs.m4,
       drvs.pythonFull,
-    ]
+    ],
+    pDrvs = [
+      drvs.xcbRenderutil,
+    ],
   }
 }

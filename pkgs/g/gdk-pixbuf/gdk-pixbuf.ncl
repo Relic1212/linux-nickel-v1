@@ -6,11 +6,11 @@
       uri = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.42.12/gdk-pixbuf-2.42.12.tar.gz",
       sha256sum = "d41966831b3d291fcdfe31f683bea4b3f03241d591ddbe550b5db873af3da364",
     },
-    biDrvs = [
+    pDrvs = [
       drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.zlibNg
     ],
     extraMesonArgs = [
       "-Dgio_sniffing=false",
@@ -28,23 +28,20 @@
 & {
   lib,
   drvs,
+  gdkPixbuf,
   gdkPixbufFull | lib.MesonPackage = {
-    singleSource = {
-      uri = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.42.12/gdk-pixbuf-2.42.12.tar.gz",
-      sha256sum = "d41966831b3d291fcdfe31f683bea4b3f03241d591ddbe550b5db873af3da364",
-    },
-
+    singleSource = gdkPixbuf.singleSource,
     buildEnv = {
       # _isStatic=false,
       EXTRA_LDFLAGS = ["-lpng", "-l:libjpeg.a"],
     },
     # isStatic=false,
-    biDrvs = [
+    pDrvs = [
       drvs.glib,
       #drvs.muslShared,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.zlibNg,
       drvs.libpng,
       drvs.libjpegTurbo,
     ],

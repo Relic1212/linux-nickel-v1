@@ -102,7 +102,7 @@
       drvs.flex,
       drvs.m4,
       (drvs.coreutils & { priority = 1 }),
-      drvs.ncurses,
+      drvs.ncurses, # not in any .pc file
     ]
   },
   utilLinuxCol =

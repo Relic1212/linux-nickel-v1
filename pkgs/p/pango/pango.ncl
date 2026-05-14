@@ -23,18 +23,18 @@
     ],
     # patches = [{ file = "kisslinux-no-fribidi.patch", sha256sum = "fb69568c89cc1c00a3d5f5aaffa048ffe2d1d846a6153f7c7c2665717e10191f" }],
 
-    biDrvs = [
+    pDrvs = [
       drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.zlibNg,
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.freetype,
+      # drvs.fontconfig,
+      # drvs.zlibNg,
       drvs.harfbuzz,
-      drvs.cairo,
-      drvs.pixman,
-      drvs.libpng,
-      drvs.expat,
+      # drvs.cairo,
+      # drvs.pixman,
+      # drvs.libpng,
+      # drvs.expat,
       drvs.fribidi,
     ]
   },
@@ -67,6 +67,7 @@
       #   ],
       isStatic = false,
       pythonProvider = drvs.pythonDynamic,
+      pDrvs | priority 1 = [],
       biDrvs | priority 1 = [
         # drvs.glibDynamic2 & { priority = -1 },
         drvs.glibGobjectDynamic & { priority = -2 },
@@ -89,25 +90,5 @@
         drvs.ldd,
         # drvs.cairoGobjectEmpty,
       ]
-    }
-}
-& {
-  lib,
-  drvs,
-  pango,
-  pango157,
-  pango157 =
-    pango
-    & {
-      singleSource | priority 1 = {
-        uri = "https://download.gnome.org/sources/pango/1.57/pango-1.57.0.tar.xz",
-        sha256sum = "890640c841dae77d3ae3d8fe8953784b930fa241b17423e6120c7bfdf8b891e7",
-      },
-      # patches | priority 1 = [],
-      # biDrvs | priority 1 =
-      #   pango.biDrvs
-      #   @ [
-      #     drvs.fribidi
-      #   ]
     }
 }

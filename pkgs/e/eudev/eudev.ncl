@@ -19,6 +19,9 @@
       drvs.file,
       drvs.pkgconf
     ],
+    pDrvs = [
+      # TODO: .pc has o req but some symbols seem to be missing
+    ],
     patches = [
       {
         file = "0001-fix-static-kmod-in-eudev.patch",

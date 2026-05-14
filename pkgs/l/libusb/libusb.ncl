@@ -10,18 +10,9 @@
     #   "--disable-udev"
     # ],
     biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.jansson,
-      drvs.gperf,
-      drvs.kmod,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
       drvs.linuxHeaders,
+    ],
+    pDrvs = [
       drvs.eudev,
     ],
   }

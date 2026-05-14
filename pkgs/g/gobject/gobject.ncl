@@ -182,6 +182,7 @@
         drvs.zlibNgPic,
         drvs.muslShared
       ],
+      pDrvs | priority 1 = [],
     },
 
   glibDynamic2 =
@@ -193,6 +194,7 @@
         _isStatic | force = false
       },
       # options.patched = true,
+      pDrvs | priority 1 = [],
 
       extraMesonArgs | priority 1 = ["-Dglib_assert=false", "-Dnls=disabled", "-Dglib_debug=disabled", "-Dtests=false", "--prefer-static", "-Ddefault_library=both"],
       biDrvs | priority 1 = [
@@ -213,6 +215,7 @@
       #     @ [
       #       "-Dintrospection=enabled",
       #     ],
+      pDrvs | priority 1 = [],
       biDrvs | priority 1 = [
         drvs.pcre2,
         drvs.libffi,

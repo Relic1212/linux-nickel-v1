@@ -14,17 +14,10 @@
         file = "hyprcyrsor-no-svg-v3.patch",
       }
     ],
-    biDrvs = [
+    pDrvs = [
       drvs.cairo,
       drvs.libzip,
-      drvs.pixman,
-      drvs.zlibNg,
-      drvs.freetype,
-      drvs.fontconfig,
-      drvs.libpng,
-      drvs.expat,
       drvs.hyprlang,
-      drvs.hyprutils,
       drvs.tomlplusplus,
 
       # drvs.librsvg,

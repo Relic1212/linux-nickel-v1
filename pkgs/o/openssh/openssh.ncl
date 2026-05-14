@@ -11,9 +11,11 @@
       "--with-mantype=man",
     ],
     biDrvs = [
-      drvs.openssl,
       drvs.linuxHeaders,
+    ],
+    pDrvs = [
       drvs.zlibNg,
+      drvs.openssl,
     ]
   }
 }

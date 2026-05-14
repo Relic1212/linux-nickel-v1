@@ -26,7 +26,7 @@
       m%"sed -i 's@-Wl,--whole-archive@-lgmodule-2.0@g' ${DEST}/usr/lib/pkgconfig/gmodule-2.0.pc"%,
       m%"sed -i 's@-Wl,--whole-archive@@g' ${DEST}/usr/lib/pkgconfig/gmodule-export-2.0.pc"%,
     ],
-    biDrvs = [
+    pDrvs = [
       drvs.pcre2,
       drvs.libffi,
       drvs.zlibNg,

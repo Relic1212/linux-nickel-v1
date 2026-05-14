@@ -17,36 +17,30 @@
 
       biDrvs =
         [
-          drvs.expat,
-          drvs.jsonC,
-          drvs.pcre2,
-          drvs.wayland,
-          drvs.waylandProtocols,
-          drvs.libelf,
-          drvs.libpciaccess,
-          drvs.libdrm,
-          drvs.libxkbcommon,
-          drvs.pixman,
-          drvs.eudev,
-          drvs.libdisplayinfo,
-          drvs.libinput,
-          drvs.libffi,
-          drvs.libevdev,
-          drvs.mtdev,
-          drvs.pango,
-          drvs.cairo,
-          drvs.libpng,
-          drvs.freetype,
-          drvs.fontconfig,
-          drvs.zlibNg,
-          drvs.harfbuzz,
-          drvs.glib,
+          # drvs.expat,
+          # drvs.jsonC,
+          # drvs.pcre2,
+          # drvs.wayland,
+          # drvs.waylandProtocols,
+          # drvs.libelf,
+          # drvs.libpciaccess,
+          # drvs.libdrm,
+          # drvs.libxkbcommon,
+          # drvs.pixman,
+          # drvs.libffi,
+          # drvs.libevdev,
+          # drvs.mtdev,
+          # drvs.pango,
+          # drvs.cairo,
+          # drvs.libpng,
+          # drvs.freetype,
+          # drvs.fontconfig,
+          # drvs.zlibNg,
+          # drvs.harfbuzz,
+          # drvs.glib,
           drvs.hwdata,
-          drvs.linuxHeaders,
+          # drvs.linuxHeaders,
           drvs.hyprwaylandScanner,
-          drvs.hyprutils,
-          drvs.libzip,
-          drvs.spirvTools,
         ]
         @ (
           if options.glx then
@@ -77,14 +71,26 @@
               drvs.libxrandr,
             ]
           else
-            [
-              drvs.mesa2
-            ]
+            []
         ),
 
-      propagatedBuildInputs = [
-        drvs.seatd,
-      ],
+      pDrvs =
+        [
+          drvs.seatd,
+          # drvs.eudev,
+          drvs.hyprutils,
+          drvs.libzip,
+          drvs.libinput,
+          drvs.libdisplayinfo,
+        ]
+        @ (
+          if options.glx then
+            []
+          else
+            [
+              drvs.mesa2,
+            ]
+        ),
       preConfigurePhase = [
         m%"
           sed -i \

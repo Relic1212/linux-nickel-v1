@@ -124,20 +124,18 @@
       # drvs.glslang,
       # drvs.wayland,
       # drvs.waylandProtocols,
+      drvs.spirvHeaders,
+      drvs.spirvLlvmTranslator,
+      drvs.llvmConfigStatic,
     ],
     propagatedBuildInputs = [
       drvs.libelf,
       drvs.libdrm,
-      drvs.zlibNg,
       drvs.linuxHeaders,
       drvs.spirvTools,
-      drvs.spirvHeaders,
-      drvs.spirvLlvmTranslator,
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libpciaccess,
       drvs.libffi,
-      drvs.llvmConfigStatic,
     ]
   },
 }

@@ -13,11 +13,13 @@
     },
     extraMesonArgs = ["-Denable-x11=false", "-Denable-xkbregistry=false"],
     biDrvs = [
+      drvs.bison,
+      drvs.m4
+    ],
+    pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libffi,
-      drvs.bison,
-      drvs.m4
     ]
   }
 }
@@ -36,11 +38,13 @@
     },
 
     biDrvs = [
+      drvs.bison,
+      drvs.m4,
+    ],
+    pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libffi,
-      drvs.bison,
-      drvs.m4,
       drvs.libxml2,
     ]
   }
@@ -60,24 +64,26 @@
     },
 
     biDrvs = [
+      drvs.bison,
+      drvs.m4,
+    ],
+    pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libffi,
-      drvs.bison,
-      drvs.m4,
       drvs.libxml2,
-      drvs.libxcursor,
-      drvs.xorgMacros,
-      drvs.xorgproto,
-      drvs.xtrans,
-      drvs.libxcb,
-      drvs.xcbProto,
-      drvs.libxau,
-      drvs.libx11,
-      drvs.libxrender,
-      drvs.libxfixes,
+      # drvs.libxcursor,
+      # drvs.xorgMacros,
+      # drvs.xorgproto,
+      # drvs.xtrans,
+      # drvs.libxcb,
+      # drvs.xcbProto,
+      # drvs.libxau,
+      # drvs.libx11,
+      # drvs.libxrender,
+      # drvs.libxfixes,
       drvs.zlibNg,
-      drvs.xcbRenderutil,
+      # drvs.xcbRenderutil,
       drvs.xcbUtilWm,
     ]
   }

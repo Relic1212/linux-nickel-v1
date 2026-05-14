@@ -73,12 +73,14 @@
     ),
 
     biDrvs = [
+      drvs.scdoc,
+      # drvs.bash,
+    ],
+    pDrvs = [
+      drvs.openssl,
       drvs.xz,
       drvs.zlibNg,
       drvs.zstd,
-      drvs.openssl,
-      drvs.scdoc,
-      # drvs.bash,
     ],
   },
   kmodRenamedSyms =
