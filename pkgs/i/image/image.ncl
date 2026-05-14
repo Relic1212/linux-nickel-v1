@@ -181,6 +181,7 @@
           drvs.openssl,
           drvs.fscrypt,
           drvs.tpm2Tools,
+          drvs.gocryptfs,
 
           # gui
           drvs.seatd,
@@ -193,7 +194,7 @@
           drvs.xdgRuntimeRun,
           drvs.foot,
           drvs.fontconfig,
-          # drvs.ttfCroscore,
+          drvs.ttfCroscore,
           drvs.fontAwesome,
           drvs.dejavuFonts,
           drvs.hicolorIconTheme,
@@ -210,8 +211,8 @@
               # drvs.swayfx,
               drvs.xwayland,
               drvs.xkbcomp,
-              drvs.hyprlandWithPlugins,
-              # drvs.hyprland,
+              # drvs.hyprlandWithPlugins,
+              drvs.hyprland,
               drvs.hyprpaper,
               drvs.hyprpicker,
               drvs.hyprlandContrib,
@@ -235,9 +236,10 @@
               drvs.swaync,
               drvs.noctalia,
               drvs.satty,
+              drvs.fastfetch,
               # drvs.miri,
               # drvs.mwc,
-              # drvs.mangowc,
+              drvs.mangowc,
               # drvs.river,
 
               # ### QT
@@ -639,7 +641,7 @@
             (fun x => (x & { dest = "rootfs/", priority | priority 1 = (std.record.get_or "priority" 0 x) + 2 }))
             (
               _baseBaseRootfs.biDrvs
-              # @ _cosmicPackages
+              @ _cosmicPackages
               # @ _lxqtPackages
               # @ [drvs.labwc]
               # @ [drvs.kwin]
