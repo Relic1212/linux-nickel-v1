@@ -30,7 +30,7 @@
             let flags = [
               "-lborders-plus-plus",
               "-lhyprbars",
-              # "-lhyprexpo",
+              "-lhyprexpo",
               "-lhyprfocus",
               # "-lhyprscrolling",
               # "-lxtra-dispatchers",
@@ -42,14 +42,18 @@
             let line = m%"target_link_options(Hyprland PUBLIC %{std.string.join " " flags})"% in
             m%"sed -i "s@if(BUILT_WITH_NIX)@%{line}\\nif(BUILT_WITH_NIX)@g" ${SRC}/CMakeLists.txt"%
           ),
+          "sed -i 's|BUILD_TESTING ON|BUILD_TESTING OFF|g' ${SRC}/CMakeLists.txt",
         ]
         @ hyprland.preConfigurePhase,
       muslProvider = drvs.muslBothWeakDl,
+      # debug = true,
       biDrvs | priority 1 =
         hyprland.biDrvs
         @ [
           drvs.hyprlandPlugins,
           drvs.hyprlandHyprspace,
+          drvs.hyprlandHyprexpo,
+          drvs.googletest,
         ],
     }
 }
