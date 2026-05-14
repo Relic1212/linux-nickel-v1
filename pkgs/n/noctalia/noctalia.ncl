@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/79113421ba8aafe04046f99d870a9f1a8569b083.tar.gz",
-      sha256sum = "e40c17bbf6733bf20604b22ed53202f18ac50294683e88ff79c49bf55d401f7c",
+      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/50debaef58093b20d7c0c4d0b5445047ca3500e0.tar.gz",
+      sha256sum = "0b07c6bbc864cfa81250ea1f29bfd02e23f43b534d456db79a9fe73c81dca0f8",
     },
     eofPatches = [
       #   {
@@ -13,6 +13,12 @@
       {
         patch = import "noctalia-full.patch" as 'Text
       },
+      #  {
+      #   patch = import "timezone.patch" as 'Text
+      # },
+      #    {
+      #   patch = import "log.patch" as 'Text
+      # },
     ],
     # separateBuildDir = false,
     # allowDubplicateBuldInputs = true,
