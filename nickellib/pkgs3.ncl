@@ -44,6 +44,6 @@ in
   # data = f1 needed pn ,# pkgsAll.busybox.keyName,
   #include needed
 
-  data = let filtered = std.record.filter (fun k v => v.f) (f1 pkgsAll pn) in getData filtered,
+  data = if (pn == "") then (getData pkgsAll) else (let filtered = std.record.filter (fun k v => v.f) (f1 pkgsAll pn) in getData filtered),
   # data = let filtered = std.record.filter (fun k v => v.f) (f1 needed pn) in getData ( std.record.filter (fun k v=>filtered."%{k}") pkgsAll),
 }
