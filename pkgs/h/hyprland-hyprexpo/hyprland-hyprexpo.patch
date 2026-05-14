@@ -1,0 +1,52 @@
+diff --git a/hyprexpo/main.cpp b/hyprexpo/main.cpp
+index 171b28c..0a57a62 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -190,29 +190,29 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
+         throw std::runtime_error("[he] Version mismatch");
+     }
+ 
+-    auto FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "renderWorkspace");
+-    if (FNS.empty()) {
+-        failNotif("no fns for hook renderWorkspace");
+-        throw std::runtime_error("[he] No fns for hook renderWorkspace");
+-    }
++    // auto FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "renderWorkspace");
++    // if (FNS.empty()) {
++    //     failNotif("no fns for hook renderWorkspace");
++    //     throw std::runtime_error("[he] No fns for hook renderWorkspace");
++    // }
+ 
+-    g_pRenderWorkspaceHook = HyprlandAPI::createFunctionHook(PHANDLE, FNS[0].address, (void*)hkRenderWorkspace);
++    g_pRenderWorkspaceHook = HyprlandAPI::createFunctionHook(PHANDLE, HyprlandAPI::getFunctionAddressFromSignature(PHANDLE, "_ZN6Render13IHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS3_I10CWorkspaceEERKNSt3__16chrono10time_pointINS9_12steady_clockENS9_8durationIxNS8_5ratioILl1ELl1000000000EEEEEEERKNS1_4Math4CBoxE"), (void*)hkRenderWorkspace);
+ 
+-    FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "addDamageEPK15pixman_region32");
+-    if (FNS.empty()) {
+-        failNotif("no fns for hook addDamageEPK15pixman_region32");
+-        throw std::runtime_error("[he] No fns for hook addDamageEPK15pixman_region32");
+-    }
++    // FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "addDamageEPK15pixman_region32");
++    // if (FNS.empty()) {
++    //     failNotif("no fns for hook addDamageEPK15pixman_region32");
++    //     throw std::runtime_error("[he] No fns for hook addDamageEPK15pixman_region32");
++    // }
+ 
+-    g_pAddDamageHookB = HyprlandAPI::createFunctionHook(PHANDLE, FNS[0].address, (void*)hkAddDamageB);
++    g_pAddDamageHookB = HyprlandAPI::createFunctionHook(PHANDLE, HyprlandAPI::getFunctionAddressFromSignature(PHANDLE, "_ZN8CMonitor9addDamageEPK15pixman_region32"), (void*)hkAddDamageB);
+ 
+-    FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
+-    if (FNS.empty()) {
+-        failNotif("no fns for hook _ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
+-        throw std::runtime_error("[he] No fns for hook _ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
+-    }
++    // FNS = HyprlandAPI::findFunctionsByName(PHANDLE, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
++    // if (FNS.empty()) {
++    //     failNotif("no fns for hook _ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
++    //     throw std::runtime_error("[he] No fns for hook _ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE");
++    // }
+ 
+-    g_pAddDamageHookA = HyprlandAPI::createFunctionHook(PHANDLE, FNS[0].address, (void*)hkAddDamageA);
++    g_pAddDamageHookA = HyprlandAPI::createFunctionHook(PHANDLE, HyprlandAPI::getFunctionAddressFromSignature(PHANDLE, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE"), (void*)hkAddDamageA);
+ 
+     bool success = g_pRenderWorkspaceHook->hook();
+     success      = success && g_pAddDamageHookA->hook();
