@@ -8,11 +8,11 @@
     },
     biDrvs = [
       drvs.caCertificates,
+      drvs.perl,
     ],
     propagatedBuildInputs = [
       drvs.openssl,
       drvs.libpsl,
-      drvs.perl,
       drvs.zlibNg,
     ],
     extraConfigureFlags = [
