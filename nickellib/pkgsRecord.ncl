@@ -5,7 +5,14 @@ let keyToName = (import "keyToName.ncl").keyToName in
 let name_pkgs = (fun x =>
   (
     std.record.map
-      (fun k v => v & { name | priority 100 = keyToName k })
+      (fun k v =>
+        v
+        & {
+          name | priority 100 =
+            # std.trace (std.serialize 'Json v.sourceInputs)
+            (keyToName k)
+        }
+      )
       x
   )
 )
@@ -58,7 +65,8 @@ let ro = {
           drvs =
             std.record.map
               (fun k v =>
-                # std.trace k
+                # (std.trace k )
+                # ((std.trace k ) (std.trace (std.serialize 'Json v.configurePhase )))
                 {
                   name = keyToName k,
                   keyName = k,
