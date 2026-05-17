@@ -17,6 +17,8 @@
     ],
     preConfigurePhase = [
       m%"for f in $(find ${SRC}/ -type f );do sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${f};done"%,
+      lib.functions.writeFile "${SRC}/dlopen.c" (import "udisks_dlopen.c" as 'Text),
+      "${CC} ${CFLAGS} -c -Werror ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
     # preBuildPhase =[
     #   m%"for f in $(find . -name Makefile);do sed -i 's|-Wl,--export-dynamic||g' $f;done"%
@@ -25,7 +27,7 @@
       EXTRA_LDFLAGS = [
         "-lcap",
         "-lblkid",
-        "-ldl_factory",
+        # "-ldl_factory",
         # "-lblockdev_dl",
         # "-l:libbd_crypto.a",
         # "-l:libbd_dm.a",
@@ -51,14 +53,15 @@
         "-lbd_nvme",
 
         # "-l:libblockdev.a",
-        "/usr/lib/libblockdev_symbols.o",
+        # "/usr/lib/libblockdev_symbols.o",
+        "/tmp/workdir/src/dlopen.o",
       ],
-      EXTRA_CFLAGS = EXTRA_LDFLAGS
+      # EXTRA_CFLAGS = EXTRA_LDFLAGS
     },
     muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
-      drvs.libdlFactory,
-      drvs.libblockdevDl,
+      # drvs.libdlFactory,
+      # drvs.libblockdevDl,
       drvs.libbytesize,
       drvs.gmp,
       drvs.mpfr,

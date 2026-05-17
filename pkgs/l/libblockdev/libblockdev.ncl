@@ -306,12 +306,12 @@
         "bd_fs_xfs_set_label",
         "bd_fs_xfs_set_uuid",
         "bd_get_available_plugin_names",
-        "bd_get_plugin_name",
+        # "bd_get_plugin_name",
         "bd_get_plugin_soname",
         "bd_init",
         "bd_init_error_quark",
         "bd_is_initialized",
-        "bd_is_plugin_available",
+        # "bd_is_plugin_available",
         "bd_loop_error_quark",
         "bd_loop_get_loop_name",
         "bd_loop_info",
@@ -588,15 +588,16 @@
         "bd_swap_swapoff",
         "bd_swap_swapon",
         "bd_swap_swapstatus",
-        "bd_try_init",
+        # "bd_try_init",
         "bd_try_reinit",
       ]
       in
       (
         std.array.map
-          (fun s => "llvm-objcopy -W %{s} ${DEST}/usr/lib/libblockdev.a"
+          (fun s => "llvm-objcopy --redefine-sym %{s}=libblockdev__%{s} ${DEST}/usr/lib/libblockdev.a"
           )
           symbols
+        # []
       ),
     biDrvs = [
       drvs.autoconfArchive,
