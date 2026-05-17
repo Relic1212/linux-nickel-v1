@@ -191,18 +191,18 @@
       #LDFLAGS = ["--static","-static"],
       #CXXFLAGS =  ["--static","-static" ],
       #CFLAGS =  null,
-      LDFLAGS = ["-fPIC"],
+      LDFLAGS = ["-lc++", "-lc++abi", "-fPIC"],
 
-      CXXFLAGS = ["--verbose", "-fPIC"],
-      CFLAGS = ["--verbose", "-fPIC"],
+      CXXFLAGS = ["-fPIC"],
+      CFLAGS = ["-fPIC"],
 
       CPPFLAGS = null,
       #CC = ["gcc"],
       #CXX = ["g++"],
-      #CC = ["clang"],
-      #CXX = ["clang++"],
-      CC = null,
-      CXX = null,
+      CC = ["clang"],
+      CXX = ["clang++"],
+      # CC = null,
+      # CXX = null,
       CPP = null,
 
       AS = null,
@@ -217,6 +217,10 @@
 
       READELF = null,
     },
+    extraEnv = {
+      HOST_CC = buildEnv.CC,
+      HOST_CXX = buildEnv.CXX,
+    },
     patches = [
       {
         file = "0022-x86_64-disable-multilib-support.patch",
@@ -227,20 +231,14 @@
       uri = "https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz",
       sha256sum = "7d376d445f93126dc545e2c0086d0f647c3094aae081cdb78f42ce2bc25e7293",
     },
-    llvmProvider = drvs.llvmPic,
-    biDrvs = [
-      drvs.m4,
-      drvs.flex,
-      drvs.bison,
-      drvs.mpc,
-      drvs.gmp,
-      drvs.mpfr,
-      drvs.clangCc,
-      #drvs.clangStatic,
-      (drvs.binutils & { priority = 1 }),
-      #(drvs.gcc0 & {priority = 1}),
-      drvs.muslShared,
+
+    buildPhase = [
+      "make all-target-libgcc",
     ],
+    installPhase = [
+      "make DESTDIR=${DEST} install-target-libgcc",
+    ],
+
     configureFlags =
       lib.constants.configureFlags
       @ [
@@ -263,7 +261,22 @@
         "--enable-install-libiberty",
         " --enable-libstdcxx-time=rt",
         " --disable-libstdcxx",
-      ]
+      ],
+    # llvmProvider = drvs.llvmPic,
+    biDrvs = [
+      drvs.m4,
+      drvs.flex,
+      drvs.bison,
+      drvs.mpc,
+      drvs.gmp,
+      drvs.mpfr,
+      # drvs.clangCc,
+      #drvs.clangStatic,
+      drvs.binutils & { priority = 1 },
+      drvs.libcxx & { priority = 1 },
+      #(drvs.gcc0 & {priority = 1}),
+      drvs.muslShared,
+    ],
   }
 }
 & {
@@ -445,41 +458,41 @@
         ],
     }
 }
-& {
+# & {
 
-  llvm,
+#   llvm,
 
-  llvmPic =
-    llvm
-    & {
-      cmakeArgsRecord = {
-        "-DLLVM_ENABLE_PIC" | force = "ON",
-      },
-      buildEnv = {
-        EXTRA_CFLAGS = ["-fPIC"],
-        EXTRA_CXXFLAGS = ["-fPIC"],
-        EXTRA_LDFLAGS = ["-fPIC"],
-      }
-    }
-}
-& {
+#   llvmPic =
+#     llvm
+#     & {
+#       cmakeArgsRecord = {
+#         "-DLLVM_ENABLE_PIC" | force = "ON",
+#       },
+#       buildEnv = {
+#         EXTRA_CFLAGS = ["-fPIC"],
+#         EXTRA_CXXFLAGS = ["-fPIC"],
+#         EXTRA_LDFLAGS = ["-fPIC"],
+#       }
+#     }
+# }
+# & {
 
-  llvmFull,
-  drvs,
+#   llvmFull,
+#   drvs,
 
-  llvmFullPic =
-    llvmFull
-    & {
-      cmakeArgsRecord = {
-        "-DLLVM_ENABLE_PIC" | force = "ON",
-        "-DLLVM_TOOL_LLVM_DRIVER_BUILD" | force = false,
-        "-DLLVM_TARGETS_TO_BUILD" | priority 10000 = "'X86'"
-      },
-      llvmProvider = drvs.llvmPic,
-      buildEnv = {
-        EXTRA_CFLAGS = ["-fPIC"],
-        EXTRA_CXXFLAGS = ["-fPIC"],
-        EXTRA_LDFLAGS = ["-fPIC"],
-      }
-    }
-}
+#   llvmFullPic =
+#     llvmFull
+#     & {
+#       cmakeArgsRecord = {
+#         "-DLLVM_ENABLE_PIC" | force = "ON",
+#         "-DLLVM_TOOL_LLVM_DRIVER_BUILD" | force = false,
+#         "-DLLVM_TARGETS_TO_BUILD" | priority 10000 = "'X86'"
+#       },
+#       llvmProvider = drvs.llvmPic,
+#       buildEnv = {
+#         EXTRA_CFLAGS = ["-fPIC"],
+#         EXTRA_CXXFLAGS = ["-fPIC"],
+#         EXTRA_LDFLAGS = ["-fPIC"],
+#       }
+#     }
+# }

@@ -62,8 +62,9 @@
           # "-C link-arg=-L/usr/lib/pulseaudio",
           # "-C link-arg=-lpulsecommon-17.0",
           "-C link-arg=-lc++",
-          "-C link-arg=-L/usr/lib/clang/21/lib/linux",
-          "-C link-arg=-lclang_rt.builtins-x86_64",
+          # "-C link-arg=-L/usr/lib/clang/21/lib/linux",
+          # "-C link-arg=-lclang_rt.builtins-x86_64",
+          "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
 
           #
           "-C link-arg=/tmp/workdir/src/dlopen.o",

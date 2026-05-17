@@ -3,8 +3,8 @@
   drvs,
   sccache | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/mozilla/sccache/archive/refs/tags/v0.11.0.tar.gz",
-      sha256sum = "eed7ba2b55f91511481df75e238307ac95885064fe734e0aab945654244ecec8"
+      uri = "https://github.com/mozilla/sccache/archive/refs/tags/v0.15.0.tar.gz",
+      sha256sum = "6e69b88f2f88982dc6389f68a6624b35502b5a2760a6a8a07bdb10a250ed98df"
     },
     enableSccache = false,
     crates = lib.functions.filterCrates (import "sccache-crates.json"),

@@ -21,19 +21,19 @@
   },
   ##
 
-  flexStage1 | lib.AutotoolsPackage =
-    _flexBase
-    & {
-      stage = 1,
-      biDrvs = [
-        drvs.llvmStage0,
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-        drvs.m4Stage1,
-        drvs.busyboxStage0,
-      ]
-    },
+  # flexStage1 | lib.AutotoolsPackage =
+  #   _flexBase
+  #   & {
+  #     stage = 1,
+  #     biDrvs = [
+  #       drvs.llvmStage0,
+  #       drvs.muslStage1,
+  #       drvs.gnumakeStage1,
+  #       drvs.ccacheBin,
+  #       drvs.m4Stage1,
+  #       drvs.busyboxStage0,
+  #     ]
+  #   },
 
   #2
 

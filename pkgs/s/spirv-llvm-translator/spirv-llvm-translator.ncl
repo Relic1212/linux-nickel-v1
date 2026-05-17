@@ -18,17 +18,13 @@
       # "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "${SRC}/SPIRV-Headers",
       "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR" = "/usr/include/spirv",
     },
+    singleSource = {
+      uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v22.1.2.tar.gz",
+      sha256sum = "b37196b1a1a60282a24cf937ab7d6807d7d54dc718f2a37a78e211be26df57ac",
+    },
     sourceInputs = [
       {
-        src = {
-          # uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v20.1.0.tar.gz",
-          # sha256sum = "ffca6b2aa53076ef85a09676ef0079877cce4977d7aa64f5f5b33596c7d1d285",
-
-          # uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v21.1.1.tar.gz",
-          # sha256sum = "dda46febdb060a1d5cc2ceeb9682ccaf33e55ae294fd0793274531b54f07c46b",
-          uri = "https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v21.1.2.tar.gz",
-          sha256sum = "8c91542b579a3b27b7aeae1db12004eb412c9ed9bdff0a29ee862c3551cadfe3",
-        }
+        src = singleSource,
       },
       # {
       #   dest = "SPIRV-Headers",

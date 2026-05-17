@@ -17,18 +17,18 @@
   },
   ##
 
-  m4Stage1 =
-    _m4Base
-    & {
-      stage = 1,
-      buildInputs = [
-        drvs.busyboxStage0,
-        drvs.llvmStage0,
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-      ]
-    },
+  # m4Stage1 =
+  #   _m4Base
+  #   & {
+  #     stage = 1,
+  #     buildInputs = [
+  #       drvs.busyboxStage0,
+  #       drvs.llvmStage0,
+  #       drvs.muslStage1,
+  #       drvs.gnumakeStage1,
+  #       drvs.ccacheBin,
+  #     ]
+  #   },
 
   #2
 

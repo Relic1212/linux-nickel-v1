@@ -83,6 +83,11 @@
           sha256sum = "0229cc4fde33b0d6b3e74395b441629a8f5a5aaadc65fa1e8d1584cda01d93d8"
         }
       ],
+      buildEnv = {
+        EXTRA_CFLAGS = [
+          "-Wno-incompatible-pointer-types",
+        ],
+      },
 
       options = {
         elogind | default = true

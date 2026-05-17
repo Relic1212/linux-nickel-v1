@@ -66,6 +66,8 @@
 
       uri = "https://archive.mesa3d.org/mesa-26.0.4.tar.xz",
       sha256sum = "6d91541e086f29bb003602d2c81070f2be4c0693a90b181ca91e46fa3953fe78",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-26.1.0/mesa-mesa-26.1.0.tar.bz2",
+      # sha256sum = "dd7faea0eceae636f88e1aee988ca0f5bd6a1a0d3828d3f34bb030abd4476659",
     },
 
     extraEnv = {
@@ -127,6 +129,7 @@
       drvs.spirvHeaders,
       drvs.spirvLlvmTranslator,
       drvs.llvmConfigStatic,
+      drvs.libclc,
     ],
     propagatedBuildInputs = [
       drvs.libelf,

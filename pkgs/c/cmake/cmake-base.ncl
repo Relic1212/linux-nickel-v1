@@ -41,8 +41,10 @@ in
   cmakeSingleSource = {
     # uri = "https://github.com/Kitware/CMake/releases/download/v3.30.3/cmake-3.30.3.tar.gz",
     # sha256sum = "6d5de15b6715091df7f5441007425264bdd477809f80333fdf95f846aaff88e4",
-    uri = "https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.2.tar.gz",
-    sha256sum = "643f04182b7ba323ab31f526f785134fb79cba3188a852206ef0473fee282a15"
+    # uri = "https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.2.tar.gz",
+    # sha256sum = "643f04182b7ba323ab31f526f785134fb79cba3188a852206ef0473fee282a15",
+    uri = "https://github.com/Kitware/CMake/releases/download/v4.3.2/cmake-4.3.2.tar.gz",
+    sha256sum = "b0231eb39b3c3cabdc568c619df78208a7bd95ea10c9b2236d61218bac1b367d",
   },
 
   cmakeCmakeArgs = _cmakeCmakeArgs

@@ -4,7 +4,19 @@
   llvm,
 
   llvmFull | lib.CmakePackage = {
-    sourceInputs = llvm.sourceInputs,
+    sourceInputs = llvm.sourceInputs
+    # @ [
+    #   {
+    #     src = {
+    #       uri ="https://patch-diff.githubusercontent.com/raw/llvm/llvm-project/pull/185247.patch",
+    #       sha256sum = "db5e0e992cc7143cd303cb342875ee864b905c3137cc99398a4b0a050f9b447c"
+    #     },
+    #   },
+    # ]
+    ,unpackPhase = llvm.unpackPhase,
+    # patchPhase = [
+    #   "(cd ${SRC} && patch -p1 < /tmp/workdir/packed/db5e0e992cc7143cd303cb342875ee864b905c3137cc99398a4b0a050f9b447c/185247.patch)",
+    # ],
     cmakeDir = llvm.cmakeDir,
     generator = "Ninja",
     biDrvs = [
@@ -12,6 +24,8 @@
       drvs.linuxHeaders,
     ],
     cmakeExtraArgsRecord = {
+      "-DLLVM_TOOL_LLVM_DRIVER_BUILD" = true,
+
       "-DCLANG_BUILD_TOOLS" = "ON",
       "-DCLANG_DEFAULT_CXX_STDLIB" = "libc++",
       "-DCLANG_DEFAULT_LINKER" = "lld",
@@ -100,9 +114,21 @@
       "-DLLVM_ENABLE_OCAMLDOC" = "OFF",
       "-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR:BOOL" = "OFF",
       "-DLLVM_ENABLE_PIC" = "OFF",
-      "-DLLVM_ENABLE_PROJECTS" = "'libclc;clang;lld;llvm'",
+      # "-DLLVM_ENABLE_PROJECTS" = "'libclc;clang;lld;llvm'",
+      "-DLLVM_ENABLE_PROJECTS" = "'clang;lld;llvm'",
       "-DLLVM_ENABLE_RTTI" = "OFF",
-      "-DLLVM_ENABLE_RUNTIMES" = "'libcxx;libcxxabi;compiler-rt;libunwind'",
+      # "-DLLVM_ENABLE_RUNTIMES" = "'libcxx;libcxxabi;compiler-rt;libunwind'",
+      "-DLLVM_ENABLE_RUNTIMES" = (
+        let runtimes = [
+          "libcxx",
+          "libcxxabi",
+          "compiler-rt",
+          "libunwind",
+          # "libclc",
+        ]
+        in
+        ("'%{   std.string.join ";"    runtimes}'")
+      ),
       "-DLLVM_ENABLE_SHARED_LIBS" = "OFF",
       "-DLLVM_ENABLE_SPHINX" = "OFF",
       "-DLLVM_ENABLE_TERMINFO" = "OFF",

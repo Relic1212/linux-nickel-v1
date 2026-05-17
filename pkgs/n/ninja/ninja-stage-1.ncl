@@ -30,20 +30,20 @@
     ]
   },
 
-  ninjaStage1 =
-    _ninja
-    & {
-      stage = 1,
-      name | priority 1 = "ninja-stage-1",
-      utilsProviders = [],
-      baseBuildinputPackages = [],
+  # ninjaStage1 =
+  #   _ninja
+  #   & {
+  #     stage = 1,
+  #     name | priority 1 = "ninja-stage-1",
+  #     utilsProviders = [],
+  #     baseBuildinputPackages = [],
 
-      buildInputs | priority 10 = [
-        drvs.muslStage0,
-        drvs.busyboxStage0,
-        drvs.pythonStage1,
-        drvs.llvmStage0,
-        drvs.ccacheBin
-      ],
-    }
+  #     buildInputs | priority 10 = [
+  #       drvs.muslStage0,
+  #       drvs.busyboxStage0,
+  #       drvs.pythonStage1,
+  #       drvs.llvmStage0,
+  #       drvs.ccacheBin
+  #     ],
+  #   }
 }

@@ -57,6 +57,9 @@
 
     llvmProvider = drvs.llvmFull,
     neverInclude = [drvs.glib, ],
+    biDrvs = [
+      drvs.librsvg,
+    ],
     pDrvs = [
       drvs.jemalloc,
       drvs.sdbusCpp,
@@ -72,7 +75,8 @@
       # drvs.fribidi,
       drvs.glibPatched,
       # drvs.pcre2,
-      drvs.librsvg,
+      # drvs.librsvg,
+      # drvs.librsvgC,
       drvs.gdkPixbuf,
       drvs.libxml2,
       drvs.cairoGobject,

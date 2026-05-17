@@ -90,7 +90,7 @@
         "echo 'install done'"
       ],
 
-      llvmProvider = drvs.llvmFullPic,
+      # llvmProvider = drvs.llvmFullPic,
       biDrvs = [
         drvs.pythonFull,
         # drvs.rsync,
@@ -98,15 +98,17 @@
         # drvs.libgccSymlinks,
         drvs.zlibNgPic,
         drvs.opensslPic,
-        (drvs.musl & { priority = 1 }),
+        drvs.musl & { priority = 1 },
 
         # drvs.gccSymlink,
         #(drvs.binutils & { priority = 1 }),
         # drvs.libemptyGcc,
         # drvs.libempty,
-        (drvs.llvmConfigStatic & { priority = 1 }),
-        (drvs.gnutar & { priority = 1 }),
-        (drvs.xz & { priority = 1 }),
+        drvs.llvmConfigStatic & { priority = 1 },
+        drvs.libcxx & { priority = 1 },
+        drvs.libllvm & { priority = 1 },
+        drvs.gnutar & { priority = 1 },
+        drvs.xz & { priority = 1 },
         drvs.libgit2,
         # drvs.basefiles,
       ],

@@ -36,7 +36,7 @@
       uri = "https://archive.mesa3d.org/mesa-24.3.4.tar.xz",
       sha256sum = "e641ae27191d387599219694560d221b7feaa91c900bcec46bf444218ed66025"
     },
-    biDrvs = _mesa2426.biDrvs @ [drvs.libclc],
+    biDrvs = _mesa2426.biDrvs @ [drvs.libclc20_1_8],
     patches = _mesa2426.patches,
     llvmProvider = _mesa2426.llvmProvider,
 
@@ -60,7 +60,7 @@
 & {
   lib,
   drvs,
-  libclc | lib.CmakePackage = {
+  libclc20_1_8 | lib.CmakePackage = {
     llvmProvider = drvs.llvmFull,
     generator = "Ninja",
     singleSource = {

@@ -334,7 +334,7 @@
     _mesa250,
     # _mesa2521,
     _mesa2426,
-    _spirvTools,
+    # _spirvTools,
     # _spirvTools2,
     # mesa2 = if newMesa then _mesa2521 else _mesa2426,
     # mesa2 = _mesa2521,

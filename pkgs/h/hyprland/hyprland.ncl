@@ -5,6 +5,8 @@
   hyprland
     | lib.CmakePackage
     = {
+      debug = true,
+
       generator = "Ninja",
 
       sourceInputs = [
@@ -38,6 +40,7 @@
         m%"sed -i "s|OpenGL::GL ||g" ${SRC}/CMakeLists.txt"%,
         # https://github.com/hyprwm/Hyprland/pull/14406/changes
         m%"sed -i "s@#include <numeric>@#include <numeric>\n#include <numbers>@g" ${SRC}/src/helpers/cm/ColorManagement.cpp"%,
+        "sed -i 's|BUILD_TESTING ON|BUILD_TESTING OFF|g' ${SRC}/CMakeLists.txt",
       ],
 
       postInstallPhase = [
@@ -47,7 +50,6 @@
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/shared/animation/AnimationTree.hpp"%,
       ],
-
       buildEnv = {
         EXTRA_LDFLAGS =
           [
@@ -66,60 +68,62 @@
       },
       llvmProvider = drvs.llvmFull,
 
-      biDrvs = [
-        drvs.pythonFull,
+      biDrvs =
+        [
+          drvs.pythonFull,
 
-        # drvs.expat,
-        # drvs.jsonC,
-        # drvs.pcre2,
-        drvs.waylandWeaksyms2,
-        # drvs.waylandProtocols,
-        # drvs.libelf,
-        # drvs.libpciaccess,
-        # drvs.libdrm,
-        # drvs.pixman,
-        # drvs.eudev,
-        # drvs.libdisplayinfo,
-        # drvs.libinput,
-        # drvs.libffi,
-        # drvs.libevdev,
-        # drvs.mtdev,
-        # drvs.pango,
-        # drvs.fribidi,
-        # drvs.cairo,
-        # drvs.libpng,
-        # drvs.freetype,
-        # drvs.fontconfig,
-        # drvs.zlibNg,
-        # drvs.harfbuzz,
-        # drvs.glib,
-        # drvs.hwdata,
-        # drvs.linuxHeaders,
-        drvs.hyprwaylandScanner,
-        # drvs.hyprcursor,
-        # drvs.tomlplusplus,
-        ###############################################################
-        drvs.hyprlandProtocols,
-        drvs.udis86,
-        drvs.re2,
-        drvs.abseilCpp,
-        ###############################################################
-        # drvs.xorgMacros,
-        # drvs.xorgproto,
-        # drvs.xtrans,
-        # drvs.libxcb,
-        # drvs.xcbProto,
-        # drvs.libxau,
-        # drvs.libx11,
-        # drvs.libxrender,
-        # drvs.libxfixes,
-        ###################################################
-        drvs.git,
-        # drvs.spirvTools,
-        # drvs.libspng,
-        # drvs.libwebp,
-        # drvs.file, # libmagic
-      ],
+          # drvs.expat,
+          # drvs.jsonC,
+          # drvs.pcre2,
+          drvs.waylandWeaksyms2,
+          # drvs.waylandProtocols,
+          # drvs.libelf,
+          # drvs.libpciaccess,
+          # drvs.libdrm,
+          # drvs.pixman,
+          # drvs.eudev,
+          # drvs.libdisplayinfo,
+          # drvs.libinput,
+          # drvs.libffi,
+          # drvs.libevdev,
+          # drvs.mtdev,
+          # drvs.pango,
+          # drvs.fribidi,
+          # drvs.cairo,
+          # drvs.libpng,
+          # drvs.freetype,
+          # drvs.fontconfig,
+          # drvs.zlibNg,
+          # drvs.harfbuzz,
+          # drvs.glib,
+          # drvs.hwdata,
+          # drvs.linuxHeaders,
+          drvs.hyprwaylandScanner,
+          # drvs.hyprcursor,
+          # drvs.tomlplusplus,
+          ###############################################################
+          drvs.hyprlandProtocols,
+          drvs.udis86,
+          drvs.re2,
+          drvs.abseilCpp,
+          ###############################################################
+          # drvs.xorgMacros,
+          # drvs.xorgproto,
+          # drvs.xtrans,
+          # drvs.libxcb,
+          # drvs.xcbProto,
+          # drvs.libxau,
+          # drvs.libx11,
+          # drvs.libxrender,
+          # drvs.libxfixes,
+          ###################################################
+          drvs.git,
+          # drvs.spirvTools,
+          # drvs.libspng,
+          # drvs.libwebp,
+          # drvs.file, # libmagic
+        ]
+        @ (if debug then [drvs.googletest] else []),
       neverInclude = [
         drvs.wayland,
       ],

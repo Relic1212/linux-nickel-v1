@@ -27,10 +27,10 @@ in
       "install -m0755 ../build/%{outputFile} ${DEST}/%{outputFile}"
     ],
     outputFile = "source.tar",
-    outputSha256sum = "7b2a5a0721a72fad2d7be27fb3bf6424a3b9998e56bd85498255a104f76d1081",
+    outputSha256sum = "22a342d8537a2f93a0dce28afb4a1c22abac4494e528dd14c36dffec74181163",
 
     biDrvs = [
-      drvs.go_1_24,
+      drvs.go_1_26,
       drvs.emptyResolvConf,
       drvs.caCertificates,
       (drvs.gnutar & { priority = 1 }),

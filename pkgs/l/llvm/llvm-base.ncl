@@ -7,21 +7,24 @@
   _llvmBase | lib.CmakePackage = {
     baseName = "llvm",
     stage,
-    sourceInputs = [
-      {
-        src = {
-          # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.2/llvm-project-19.1.2.src.tar.xz",
-          # sha256sum = "3666f01fc52d8a0b0da83e107d74f208f001717824be0b80007f529453aa1e19",
+    singleSource = {
+      # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.2/llvm-project-19.1.2.src.tar.xz",
+      # sha256sum = "3666f01fc52d8a0b0da83e107d74f208f001717824be0b80007f529453aa1e19",
 
-          # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/llvm-project-20.1.1.src.tar.xz",
-          # sha256sum = "4d5ebbd40ce1e984a650818a4bb5ae86fc70644dec2e6d54e78b4176db3332e0",
-          # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/llvm-project-20.1.8.src.tar.xz",
-          # sha256sum = "6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d",
+      # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.1/llvm-project-20.1.1.src.tar.xz",
+      # sha256sum = "4d5ebbd40ce1e984a650818a4bb5ae86fc70644dec2e6d54e78b4176db3332e0",
+      # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/llvm-project-20.1.8.src.tar.xz",
+      # sha256sum = "6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d",
 
-          uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.4/llvm-project-21.1.4.src.tar.xz",
-          sha256sum = "a01ad7e5167780c945871d75c0413081d12067607a6de5cf71dc3e8d1a82112c",
-        },
-      }
+      # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.4/llvm-project-21.1.4.src.tar.xz",
+      # sha256sum = "a01ad7e5167780c945871d75c0413081d12067607a6de5cf71dc3e8d1a82112c",
+
+      uri = "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-22.1.5.tar.gz",
+      sha256sum = "263e99bd0b590664a886b0332037ff060e108f4e7b0310b7c8277208858f867d",
+    },
+
+    unpackPhase = [
+      "tar xf /tmp/workdir/packed/%{singleSource.sha256sum}/%{std.string.split "/" singleSource.uri |>std.array.last } -C /tmp/workdir/src --strip-components=1",
     ],
     isStatic,
     isLlvm,
@@ -305,23 +308,40 @@
     buildPhase =
       #llvm-driver
       [
-        "ninja llvm-driver distribution llvm-config cxx cxxabi runtimes builtins unwind compiler-rt",
+        "ninja llvm-driver llvm-config cxx cxxabi runtimes builtins unwind compiler-rt",
       ],
     # install-llvm-driver install-clang-resource
     installPhase = [
-      m%"ninja \
-            install-llvm-driver \
-            install-distribution \
-            install-llvm-config \
-            install-cxx \
-            install-cxxabi \
-            install-unwind \
-            install-compiler-rt \
-            install-builtins \
-            install-clang-headers \
-            install-clang-resource-headers \
-            install-runtimes
-            "%,
+      # m%"ninja \
+      #       install-llvm-driver \
+      #       install-distribution \
+      #       install-llvm-config \
+      #       install-cxx \
+      #       install-cxxabi \
+      #       install-unwind \
+      #       install-compiler-rt \
+      #       install-builtins \
+      #       install-clang-headers \
+      #       install-clang-resource-headers \
+      #       install-runtimes
+      #       "%,
+      (
+        let tgt = [
+          "install-llvm-driver",
+          # "install-distribution",
+          "install-llvm-config",
+          "install-cxx",
+          "install-cxxabi",
+          "install-unwind",
+          "install-compiler-rt",
+          "install-builtins",
+          "install-clang-headers",
+          "install-clang-resource-headers",
+          "install-runtimes",
+        ]
+        in
+        "ninja %{std.string.join " " tgt}"
+      ),
 
       #"cd ${DEST}/usr/bin",
       # "ln -s clang cc",

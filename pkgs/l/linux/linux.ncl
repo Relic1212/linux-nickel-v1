@@ -176,6 +176,7 @@ let
         # CONFIG_DRM_HYPERV is not set
         # CONFIG_DRM_LEGACY is not set
         CONFIG_NTSYNC=y
+        # CONFIG_X86_DECODER_SELFTEST is not set
         " > /tmp/workdir/build/misc.diffconfig
         "%,
       "./scripts/kconfig/merge_config.sh -m -r .config /tmp/workdir/build/misc.diffconfig",
@@ -226,6 +227,10 @@ in
       uri = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.19.tar.xz",
       sha256sum = "303079a8250b8f381f82b03f90463d12ac98d4f6b149b761ea75af1323521357",
     },
+    "7.0.8" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.0.8.tar.xz",
+      sha256sum = "1945afb22c9f4f7c78d971210f3bbb7deb09f5d8c41a38bfac772de25f6dcb22",
+    },
   },
   linuxHeaders,
   libModulesDirectory | lib.Package = {
@@ -256,16 +261,21 @@ in
     in
     {
       singleSource = _linuxSources."%{options.version}",
+      unpackPhase = [
+        "tar xf /tmp/workdir/packed/%{singleSource.sha256sum}/%{std.string.split "/" singleSource.uri |>std.array.last } -C /tmp/workdir/src --strip-components=1",
+      ],
 
       options = {
         # version = linuxHeaders.options.version ,
         # version = "6.17.6",
         # version = "6.18.0",
         # version = "6.18.8",
-        version = "6.19.0",
+        # version = "6.19.0",
+        version = "7.0.8",
         compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
+      # enableParallel = false,
       separateBuildDir = true,
       buildEnv,
       makeArgs,
@@ -282,7 +292,9 @@ in
       extraEnv = {
         KBUILD_BUILD_TIMESTAMP = "''",
         HOSTLDFLAGS = "%{ lib.functions.varToExportvar (buildEnv.LDFLAGS @ ["-lz","-leu"] )}",
-        HOSTCFLAGS = "%{ lib.functions.varToExportvar  buildEnv.CFLAGS}",
+        # HOSTCFLAGS = "%{ lib.functions.varToExportvar  ( [ "-nostdinc"] @ buildEnv.CFLAGS)}",
+        # HOSTCFLAGS=m%""-I./usr/include""%,
+        HOSTCFLAGS = m%""-I./arch/x86/include""%,
       },
       extraMakeArgs = [
         "LLVM=1",

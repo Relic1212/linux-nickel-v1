@@ -4,8 +4,8 @@
   strace | lib.AutotoolsPackage = {
     buildEnv,
     singleSource = {
-      uri = "https://strace.io/files/6.13/strace-6.13.tar.xz",
-      sha256sum = "e209daf0ee038ca5adcc4c277e9273b4d51f46a2ff86da575d36742ac3508a17",
+      uri = "https://strace.io/files/7.0/strace-7.0.tar.xz",
+      sha256sum = "6c92419be3f2ec560b31728a4652217c59864c8642ba7b1b3771b1b013ad074b",
     },
     extraConfigureFlags = [
       "--enable-mpers=no"

@@ -7,107 +7,107 @@ in
   drvs,
   _busyboxBase,
 
-  busyboxStage0 | lib.MakePackage =
-    _busyboxBase
-    & {
-      stage = 0,
-      buildDir = _busyboxBase.buildDir,
-      extraFiles = [
-        {
-          file = "busybox-minimal.config",
-          sha256sum = "a3248eac1cb490d1324df3c79151f66ca75fe2fa2c66c2fbfd249a17d739e389" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
-        }
-      ],
-      # buildInputs = [
-      #   import "../musl/musl-stage-0.ncl",
-      #   import "../llvm/llvm-stage-0.ncl",
-      # ],
-      configurePhase = [
-        "cd %{buildDir}",
-        "unset CPPFLAGS",
-        "cp /tmp/workdir/files/busybox-minimal.config .config",
-        "sed -i 's@-falign-jumps=1@@g' Makefile.flags",
-        "sed -i 's@-falign-labels=1@@g' Makefile.flags",
-        "sed -i 's@-finline-limit=0@@g' Makefile.flags",
-      ],
+  # busyboxStage0 | lib.MakePackage =
+  #   _busyboxBase
+  #   & {
+  #     stage = 0,
+  #     buildDir = _busyboxBase.buildDir,
+  #     extraFiles = [
+  #       {
+  #         file = "busybox-minimal.config",
+  #         sha256sum = "a3248eac1cb490d1324df3c79151f66ca75fe2fa2c66c2fbfd249a17d739e389" #let s=import 'Raw "./files_minimal/busybox-minimal.config" in lib.functions.computeSha256 s
+  #       }
+  #     ],
+  #     # buildInputs = [
+  #     #   import "../musl/musl-stage-0.ncl",
+  #     #   import "../llvm/llvm-stage-0.ncl",
+  #     # ],
+  #     configurePhase = [
+  #       "cd %{buildDir}",
+  #       "unset CPPFLAGS",
+  #       "cp /tmp/workdir/files/busybox-minimal.config .config",
+  #       "sed -i 's@-falign-jumps=1@@g' Makefile.flags",
+  #       "sed -i 's@-falign-labels=1@@g' Makefile.flags",
+  #       "sed -i 's@-finline-limit=0@@g' Makefile.flags",
+  #     ],
 
-      buildEnv | priority 1 =
-        let cf = [
-          "--sysroot=/tmp/workdir/sysroot/",
-          "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
-          # "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
-          # "-stdlib=libc++",
-          # "-rtlib=compiler-rt",
-          # "-unwindlib=libunwind",
-          "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
-          "-Qunused-arguments",
-          #"--no-default-config",
-          # "-nodefaultlibs",
-          # "-nostdlib",
-          # "--for-linker=-nostdlib",
-          "--for-linker=--sysroot=/tmp/workdir/sysroot/",
-          "--for-linker=-L/tmp/workdir/sysroot/usr/lib",
-        ]
-        in
-        let sr = " --sysroot=/tmp/workdir/sysroot"
-        in
-        (
-          _busyboxBase.buildEnv
-          & {
+  #     buildEnv | priority 1 =
+  #       let cf = [
+  #         "--sysroot=/tmp/workdir/sysroot/",
+  #         "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
+  #         # "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld",
+  #         # "-stdlib=libc++",
+  #         # "-rtlib=compiler-rt",
+  #         # "-unwindlib=libunwind",
+  #         "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
+  #         "-Qunused-arguments",
+  #         #"--no-default-config",
+  #         # "-nodefaultlibs",
+  #         # "-nostdlib",
+  #         # "--for-linker=-nostdlib",
+  #         "--for-linker=--sysroot=/tmp/workdir/sysroot/",
+  #         "--for-linker=-L/tmp/workdir/sysroot/usr/lib",
+  #       ]
+  #       in
+  #       let sr = " --sysroot=/tmp/workdir/sysroot"
+  #       in
+  #       (
+  #         _busyboxBase.buildEnv
+  #         & {
 
-            CPPFLAGS | priority 2 = [
-              "--sysroot=/tmp/workdir/sysroot/",
-              "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
-              "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
-              "-I/tmp/workdir/sysroot/usr/include",
-              "-Qunused-arguments",
-            ],
-            CXXFLAGS | priority 2 =
-              _busyboxBase.buildEnv.CXXFLAGS
-              @ [
-                "--sysroot=/tmp/workdir/sysroot/",
-              ],
+  #           CPPFLAGS | priority 2 = [
+  #             "--sysroot=/tmp/workdir/sysroot/",
+  #             "-I/tmp/workdir/sysroot/include/x86_64-unknown-linux-musl/c++/v1",
+  #             "-I/tmp/workdir/sysroot/usr/lib/clang/19/include/x86_64-unknown-linux-musl",
+  #             "-I/tmp/workdir/sysroot/usr/include",
+  #             "-Qunused-arguments",
+  #           ],
+  #           CXXFLAGS | priority 2 =
+  #             _busyboxBase.buildEnv.CXXFLAGS
+  #             @ [
+  #               "--sysroot=/tmp/workdir/sysroot/",
+  #             ],
 
-            CFLAGS | priority 2 = (
-              _busyboxBase.buildEnv.CFLAGS
-              @ [
-                "--sysroot=/tmp/workdir/sysroot/",
-              ]
-            ),
+  #           CFLAGS | priority 2 = (
+  #             _busyboxBase.buildEnv.CFLAGS
+  #             @ [
+  #               "--sysroot=/tmp/workdir/sysroot/",
+  #             ]
+  #           ),
 
-            LDFLAGS | priority 2 =
-              (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" _busyboxBase.buildEnv.LDFLAGS)
-              @ [
-                "--sysroot=/tmp/workdir/sysroot/",
-                "-L/tmp/workdir/sysroot/usr/lib/clang/19/lib/x86_64-unknown-linux-musl",
-                "-L/tmp/workdir/sysroot/usr/lib",
-                "-Qunused-arguments",
-              ],
+  #           LDFLAGS | priority 2 =
+  #             (lib.functions.replaceArrayElem "-fuse-ld=lld" "-fuse-ld=/tmp/workdir/sysroot/usr/bin/ld.lld" _busyboxBase.buildEnv.LDFLAGS)
+  #             @ [
+  #               "--sysroot=/tmp/workdir/sysroot/",
+  #               "-L/tmp/workdir/sysroot/usr/lib/clang/19/lib/x86_64-unknown-linux-musl",
+  #               "-L/tmp/workdir/sysroot/usr/lib",
+  #               "-Qunused-arguments",
+  #             ],
 
-            AR | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ar",
-            AS | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-as",
+  #           AR | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ar",
+  #           AS | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-as",
 
-            NM | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-nm",
-            OBJCOPY | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objcopy",
-            OBJDUMP | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objdump",
-            RANLIB | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ranlib",
-            READELF | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-readelf",
-            LD | priority 1 = "/tmp/workdir/sysroot/usr/bin/ld.lld",
-            # CC | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang%{sr}\"",
-            # CXX | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang++%{sr}\"",
-            # CPP | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang-cpp%{sr}\"",
+  #           NM | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-nm",
+  #           OBJCOPY | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objcopy",
+  #           OBJDUMP | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-objdump",
+  #           RANLIB | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-ranlib",
+  #           READELF | priority 1 = "/tmp/workdir/sysroot/usr/bin/llvm-readelf",
+  #           LD | priority 1 = "/tmp/workdir/sysroot/usr/bin/ld.lld",
+  #           # CC | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang%{sr}\"",
+  #           # CXX | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang++%{sr}\"",
+  #           # CPP | priority 1 = "\"/tmp/workdir/sysroot/usr/bin/clang-cpp%{sr}\"",
 
-            CC | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang",
-            CXX | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang++",
-            CPP | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang-cpp",
-          }
-        ),
-      stage = 0,
-      biDrvs = [
-        drvs.llvmStage0,
-        drvs.muslStage0,
-      ]
-    },
+  #           CC | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang",
+  #           CXX | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang++",
+  #           CPP | priority 1 = "/tmp/workdir/sysroot/usr/bin/clang-cpp",
+  #         }
+  #       ),
+  #     stage = 0,
+  #     biDrvs = [
+  #       drvs.llvmStage0,
+  #       drvs.muslStage0,
+  #     ]
+  #   },
 
   busyboxBootstrapStage0 | lib.MakePackage =
     let p = "x86_64-linux-musl" in

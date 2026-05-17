@@ -6,73 +6,38 @@
     {
       # 
 
-      sourceInputs =
-        if (!true) then
-          [
-            {
-              src = {
+      sourceInputs = [
+        {
+          src = {
 
-                uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.91.1-src.tar.xz",
-                sha256sum | priority 1 = "66401bb815e236cc6b2aacbbe23b61b286c1fe27a67902e7c0222cfe77b3dbab",
-              },
-            },
-            {
-              dest = "local",
-              src = {
+            uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.95.0-src.tar.xz",
+            sha256sum | priority 1 = "62b67230754da642a264ca0cb9fc08820c54e2ed7b3baba0289876d4cdb48c08",
+          },
+        },
+        {
+          dest = "local",
+          src = {
 
-                uri = "https://static.rust-lang.org/dist/rust-std-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "38490d575786f4688e83b357baeb022d8dde0ace2cb8c1357e060c76644fc56a",
-              }
-            },
-            {
-              dest = "local1",
-              src = {
+            uri = "https://static.rust-lang.org/dist/rust-std-1.94.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "5a233ab503d58a3fb65bf7ecaa1b82f821f799dfd94a2613215317097ad43547",
+          }
+        },
+        {
+          dest = "local1",
+          src = {
 
-                uri = "https://static.rust-lang.org/dist/rustc-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "993cb26cee9525b1553d82b8fc2b6ddffd50a0a561cd896e3daa3a9f8ae65949",
-              }
-            },
-            {
-              dest = "local2",
-              src = {
-                uri = "https://static.rust-lang.org/dist/cargo-1.90.0-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "dddd1ee3da59440d5aa4d149ebb5fbbe0d7252dd94e171d5f2b071d7354f9b3a",
-              }
-            },
-          ]
-        else
-          [
-            {
-              src = {
-
-                uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.95.0-src.tar.xz",
-                sha256sum | priority 1 = "62b67230754da642a264ca0cb9fc08820c54e2ed7b3baba0289876d4cdb48c08",
-              },
-            },
-            {
-              dest = "local",
-              src = {
-
-                uri = "https://static.rust-lang.org/dist/rust-std-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "5a233ab503d58a3fb65bf7ecaa1b82f821f799dfd94a2613215317097ad43547",
-              }
-            },
-            {
-              dest = "local1",
-              src = {
-
-                uri = "https://static.rust-lang.org/dist/rustc-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "9eb8e88598190dc97162b775349080ae00b222e0b2718da4011ff10f0db4ba07",
-              }
-            },
-            {
-              dest = "local2",
-              src = {
-                uri = "https://static.rust-lang.org/dist/cargo-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-                sha256sum = "1d729de129de82ecf00c3f5b9a3e70dedf6a37e16ab66dbdad0f86886a8b2c11",
-              }
-            },
-          ],
+            uri = "https://static.rust-lang.org/dist/rustc-1.94.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "9eb8e88598190dc97162b775349080ae00b222e0b2718da4011ff10f0db4ba07",
+          }
+        },
+        {
+          dest = "local2",
+          src = {
+            uri = "https://static.rust-lang.org/dist/cargo-1.94.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "1d729de129de82ecf00c3f5b9a3e70dedf6a37e16ab66dbdad0f86886a8b2c11",
+          }
+        },
+      ],
 
       separateBuildDir = false,
       isStatic = false,
@@ -141,7 +106,10 @@
         #   ${SRC}/compiler/rustc_codegen_ssa/src/back/linker.rs
         # "%,
         "export OPENSSL_NO_VENDOR=1",
+        # "export LIBGIT2_NO_VENDOR=1"
         "export RUST_BACKTRACE=1",
+        # "export LDFLAGS=\"-lc++ -lc++abi\"",
+        "export RUSTFLAGS=\"-C link-arg=-lc++ -C link-arg=-lc++abi\"",
 
         # m%"sed -i 's|\[package\]|cargo-features = \["edition2024"\]\n\[package\]|g' ${SRC}/src/bootstrap/Cargo.toml"%,
       ],
@@ -165,14 +133,16 @@
       installPhase = [
         "DESTDIR=${DEST} ./x.py install",
       ],
-
       biDrvs = [
         drvs.pythonFull,
         # drvs.rsync,
         drvs.pkgconfMeson,
         drvs.muslShared,
         (drvs.clangCc & { priority = 1 }),
-        drvs.llvmFullPic,
+        # drvs.llvmFullPic,
+        drvs.llvmFull,
+        drvs.libcxx & { priority = 1 },
+        drvs.libllvm & { priority = 1 },
         drvs.libgccSymlinks,
         drvs.zlibNgPic,
         drvs.opensslPic,

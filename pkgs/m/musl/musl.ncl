@@ -10,21 +10,28 @@
     muslProvider = drvs.musl,
     # buildEnv._isStatic |priority 1 = true,
 
-    sourceInputs = [
-      {
-        src = { uri = "https://musl.libc.org/releases/musl-1.2.5.tar.gz", sha256sum = "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4" }
-      }
-    ],
-    patches = [
-      {
-        file = "CVE-2025-26519-1.patch",
-        sha256sum = "0896fcdb5125d9d0723f4e165f13c209830e7045a75cba4e858060837cb7292e"
-      },
-      {
-        file = "CVE-2025-26519-2.patch",
-        sha256sum = "0620fcee4e8a4e52ebe1ea75e2b51d2197ebda242489c0586924eafa9e9606a1",
-      },
-    ],
+    # sourceInputs = [
+    #   {
+    #     src = {
+    #       uri = "https://musl.libc.org/releases/musl-1.2.5.tar.gz",
+    #       sha256sum = "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4"
+    #     }
+    #   }
+    # ],
+    singleSource = {
+      uri = "https://musl.libc.org/releases/musl-1.2.6.tar.gz",
+      sha256sum = "d585fd3b613c66151fc3249e8ed44f77020cb5e6c1e635a616d3f9f82460512a",
+    },
+    # patches = [
+    #   {
+    #     file = "CVE-2025-26519-1.patch",
+    #     sha256sum = "0896fcdb5125d9d0723f4e165f13c209830e7045a75cba4e858060837cb7292e"
+    #   },
+    #   {
+    #     file = "CVE-2025-26519-2.patch",
+    #     sha256sum = "0620fcee4e8a4e52ebe1ea75e2b51d2197ebda242489c0586924eafa9e9606a1",
+    #   },
+    # ],
     extraEnv | priority -10 = lib.AutotoolsPackage.extraEnv & (if isLlvm then { LIBCC_LDFLAGS = ["--rtlib=compiler-rt"] } else {}),
     #configureFlags | priority -10 = (lib.AutotoolsPackage.configureFlags @ ["--disable-shared"])
     debug,

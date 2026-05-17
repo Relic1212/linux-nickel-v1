@@ -12,19 +12,19 @@
   },
   # 1
 
-  bisonStage1 | lib.AutotoolsPackage =
-    _bisonBase
-    & {
-      stage = 1,
-      biDrvs = [
-        drvs.muslStage1,
-        drvs.gnumakeStage1,
-        drvs.ccacheBin,
-        drvs.m4Stage1,
-        drvs.busyboxStage0,
-        drvs.llvmStage0
-      ]
-    },
+  # bisonStage1 | lib.AutotoolsPackage =
+  #   _bisonBase
+  #   & {
+  #     stage = 1,
+  #     biDrvs = [
+  #       drvs.muslStage1,
+  #       drvs.gnumakeStage1,
+  #       drvs.ccacheBin,
+  #       drvs.m4Stage1,
+  #       drvs.busyboxStage0,
+  #       drvs.llvmStage0,
+  #     ]
+  #   },
 
   # 2
 

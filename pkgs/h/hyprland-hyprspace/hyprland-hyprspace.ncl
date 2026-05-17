@@ -1,7 +1,9 @@
 {
   lib,
   drvs,
+  hyprland,
   hyprlandHyprspace | lib.MesonPackage = {
+    debug = hyprland.debug,
     singleSource = {
       uri = "https://github.com/KZDKM/Hyprspace/archive/12ddde04f8584bf7de3151e6169918e0dda9f822.tar.gz",
       sha256sum = "2f26b5417c8faa5fbd21ed9d91d06207cae2ad83210b9e6c00989c26ed42b49b"
@@ -20,6 +22,12 @@
           sha256sum = "28fd761a35cbe10dc77c1e0b2168f642af936bb0e5e573a36b3d4a15a44049c1"
         },
       },
+      {
+        src = {
+          uri = "https://github.com/KZDKM/Hyprspace/commit/2ca4f1a47cf2dc569e6e7034e53c4cd9b25e36a8.patch",
+          sha256sum = "7785df0d84283ac4d7a2392d5f2a1bd3270e986071d55e884ea81f02b5e13722",
+        },
+      },
     ],
     # eofPatches = [
     #   {
@@ -33,6 +41,7 @@
     preConfigurePhase = [
       "(cd ${SRC} && patch -p1 < 5f12222eeab6cb3a0ff1237f7444eb0b8ca00351.patch)",
       "(cd ${SRC} && patch -p1 < a9d7685ef610d5a45c7c4f9f974bdf78443c9829.patch)",
+      "(cd ${SRC} && patch -p1 < 2ca4f1a47cf2dc569e6e7034e53c4cd9b25e36a8.patch)",
       "sed -i 's|shared_module|library|g' ${SRC}/meson.build",
       "sed -i 's|system_clock|steady_clock|g' ${SRC}/src/Overview.hpp",
     ],

@@ -211,8 +211,10 @@
               # drvs.swayfx,
               drvs.xwayland,
               drvs.xkbcomp,
-              # drvs.hyprlandWithPlugins,
-              drvs.hyprland,
+              drvs.hyprlandWithPlugins,
+              # drvs.hyprland,
+              drvs.hyprlandGuiutils,
+              drvs.hyprlauncher,
               drvs.hyprpaper,
               drvs.hyprpicker,
               drvs.hyprlandContrib,
@@ -250,7 +252,7 @@
               # # drvs.hyprlandQtSupport,
               # # drvs.hyprlandQtutils,
               # drvs.qt5compat,
-              # drvs.quickshell,
+              drvs.quickshell,
               drvs.danklinuxDgop,
               drvs.danklinuxDms,
               drvs.ddcutil,
@@ -643,6 +645,7 @@
               _baseBaseRootfs.biDrvs
               # @ _cosmicPackages
               # @ _lxqtPackages
+              @ [drvs.llvmLldb]
               # @ [drvs.labwc]
               # @ [drvs.kwin]
               # @ _plasmaPackages
