@@ -22,6 +22,7 @@
     ],
 
     extraEnv = {
+      PKG_CONFIG_PATH = "\"/usr/lib/pkgconfig:/usr/lib/gstreamer-1.0/pkgconfig\"",
       # cosmic-epoch alpha
       VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
