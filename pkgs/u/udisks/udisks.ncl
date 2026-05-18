@@ -3,13 +3,14 @@
   drvs,
   udisks | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://github.com/storaged-project/udisks/archive/refs/tags/udisks-2.10.2.tar.gz",
-      sha256sum = "69479fde489f8c5b3908f583f35d38c2273c38572adac3597a8a0ff855b436de"
+      uri = "https://github.com/storaged-project/udisks/archive/refs/tags/udisks-2.11.1.tar.gz",
+      sha256sum = "e40ee20e1f24783f30109d7fd20553aeb93c4808ceb67a4c980bf698cfde32d6"
     },
     extraConfigureFlags = [
       "--enable-introspection=no",
       "--disable-nls",
       "--disable-btrfs",
+      "--disable-smart",
     ],
     separateBuildDir = false,
     extraMakeArgs = [
