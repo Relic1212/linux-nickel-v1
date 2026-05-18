@@ -59,8 +59,9 @@
           "-C link-arg=-lmtdev",
           # input
           "-C link-arg=-lcap", # elogind
-          "-C link-arg=-L/usr/lib/clang/21/lib/linux",
-          "-C link-arg=-lclang_rt.builtins-x86_64",
+          # "-C link-arg=-L/usr/lib/clang/21/lib/linux",
+          # "-C link-arg=-lclang_rt.builtins-x86_64",
+          "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
           "-C link-arg=/tmp/workdir/src/dlopen.o",
           m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
         ]
