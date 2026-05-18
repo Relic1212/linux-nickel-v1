@@ -77,7 +77,6 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.mesa2,
-      drvs.musl,
       drvs.ncurses,
       drvs.pango,
       drvs.pcre2,
