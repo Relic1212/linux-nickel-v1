@@ -9,27 +9,30 @@
     extraMesonArgs = [
       "-Dintrospection=disabled",
       "-Dplugin_uefi_capsule_splash=false",
+      # "-Dplugin_uefi_capsule_splash=true",
       "-Dplugin_flashrom=disabled",
+      "-Dsupported_build=enabled",
+      # "-Defi_os_dir=/efi",
     ],
     preConfigurePhase = [
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
       lib.functions.writeFile "${SRC}/dlopen.c" (import "fwupd_dlopen.c" as 'Text),
       "${CC} ${CFLAGS} -c -Werror ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      # m%"sed -i "s@subdir('po')@@g" ${SRC}/meson.build"%,
+      # m%"sed -i "s@subdir('po')@@g" ${SRC}/meson.build"%,
+      # m%"printf "#!/usr/bin/env python\nexit(0)\n" > ${SRC}/po/test-deps"%,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lassuan",
         "-ldrm_amdgpu",
-        # "-ldl_factory",
         "/tmp/workdir/src/dlopen.o",
       ],
     },
-    enableParallel = false,
+    # enableParallel = false,
 
     preBuildPhase = [
-      # "ninja libfwupd/fwupd-bios-setting-struct.h",
-      # "ninja libfwupd/fwupd-client-struct.h",
       "ninja libfwupd/fwupd-bios-setting-struct.h",
       "ninja libfwupd/fwupd-client-struct.h",
       "ninja libfwupd/fwupd-codec-struct.h",
@@ -44,6 +47,9 @@
       "ninja libfwupd/fwupd-report-struct.h",
       "ninja libfwupd/fwupd-request-struct.h",
       "ninja libfwupd/fwupd-security-attr-struct.h",
+    ],
+    postInstallPhase = [
+      "rm -r ${DEST}/usr/libexec/installed-tests/fwupd",
     ],
     pythonProvider = drvs.pythonDynamic,
 
