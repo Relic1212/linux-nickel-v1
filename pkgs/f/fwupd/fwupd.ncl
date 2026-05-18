@@ -3,8 +3,8 @@
   drvs,
   fwupd | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/fwupd/fwupd/archive/refs/tags/2.0.16.tar.gz",
-      sha256sum = "e63f7ce7d536cf38961c4f3a87835f76043128cb964ae193c4144d94f4d6f49b",
+      uri = "https://github.com/fwupd/fwupd/archive/refs/tags/2.1.3.tar.gz",
+      sha256sum = "19db782eeae2c7439ad27eb0b3ed8005689542f3a91606e9c4b459fcd09f73b6",
     },
     extraMesonArgs = [
       "-Dintrospection=disabled",
@@ -14,20 +14,43 @@
     preConfigurePhase = [
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
+      lib.functions.writeFile "${SRC}/dlopen.c" (import "fwupd_dlopen.c" as 'Text),
+      "${CC} ${CFLAGS} -c -Werror ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lassuan",
         "-ldrm_amdgpu",
-        "-ldl_factory",
+        # "-ldl_factory",
+        "/tmp/workdir/src/dlopen.o",
       ],
     },
+    enableParallel = false,
+
+    preBuildPhase = [
+      # "ninja libfwupd/fwupd-bios-setting-struct.h",
+      # "ninja libfwupd/fwupd-client-struct.h",
+      "ninja libfwupd/fwupd-bios-setting-struct.h",
+      "ninja libfwupd/fwupd-client-struct.h",
+      "ninja libfwupd/fwupd-codec-struct.h",
+      "ninja libfwupd/fwupd-device-struct.h",
+      "ninja libfwupd/fwupd-enums-struct.h",
+      "ninja libfwupd/fwupd-error-struct.h",
+      "ninja libfwupd/fwupd-jcat-struct.h",
+      "ninja libfwupd/fwupd-json-struct.h",
+      "ninja libfwupd/fwupd-plugin-struct.h",
+      "ninja libfwupd/fwupd-release-struct.h",
+      "ninja libfwupd/fwupd-remote-struct.h",
+      "ninja libfwupd/fwupd-report-struct.h",
+      "ninja libfwupd/fwupd-request-struct.h",
+      "ninja libfwupd/fwupd-security-attr-struct.h",
+    ],
     pythonProvider = drvs.pythonDynamic,
 
     muslProvider = drvs.muslBothRenamedDl,
 
     biDrvs = [
-      drvs.libdlFactory,
+      # drvs.libdlFactory,
       drvs.acl,
       drvs.attr,
       drvs.bash,
