@@ -3,22 +3,22 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/50debaef58093b20d7c0c4d0b5445047ca3500e0.tar.gz",
-      sha256sum = "0b07c6bbc864cfa81250ea1f29bfd02e23f43b534d456db79a9fe73c81dca0f8",
+      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/4738f263d6074faedc236dd64dc217b79ce3190d.tar.gz",
+      sha256sum = "82e33c6f4ea6a0dab49548341747a112979d809353ad01861366ac1cc5284f8b",
     },
     eofPatches = [
       #   {
       #     patch = import "noctalia-no-time_zone.patch" as 'Text
       #   },
+      # {
+      #   patch = import "noctalia-full.patch" as 'Text
+      # },
       {
-        patch = import "noctalia-full.patch" as 'Text
+        patch = import "timezone.patch" as 'Text
       },
-      #  {
-      #   patch = import "timezone.patch" as 'Text
-      # },
-      #    {
-      #   patch = import "log.patch" as 'Text
-      # },
+      {
+        patch = import "to_string.patch" as 'Text
+      },
     ],
     # separateBuildDir = false,
     # allowDubplicateBuldInputs = true,
@@ -59,6 +59,7 @@
     neverInclude = [drvs.glib, ],
     biDrvs = [
       drvs.librsvg,
+      # drvs.gnupatch & {priority = 1 },
     ],
     pDrvs = [
       drvs.jemalloc,
