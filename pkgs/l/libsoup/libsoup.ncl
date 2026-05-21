@@ -7,12 +7,12 @@
       uri = "https://download.gnome.org/sources/libsoup/2.74/libsoup-2.74.3.tar.xz",
       sha256sum = "e4b77c41cfc4c8c5a035fcdc320c7bc6cfb75ef7c5a034153df1413fa1d92f13"
     },
-    biDrvs = [
+    pDrvs = [
       drvs.libpsl,
       drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.zlibNg,
       drvs.libxml2,
       drvs.sqlite,
     ],
@@ -38,12 +38,12 @@
       uri = "https://download.gnome.org/sources/libsoup/3.6/libsoup-3.6.5.tar.xz",
       sha256sum = "6891765aac3e949017945c3eaebd8cc8216df772456dc9f460976fbdb7ada234"
     },
-    biDrvs = [
+    pDrvs = [
       drvs.libpsl,
       drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.zlibNg,
       drvs.libxml2,
       drvs.sqlite,
       drvs.nghttp2,
