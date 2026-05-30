@@ -301,7 +301,17 @@
       "--disable-host-shared",
       "--with-static-standard-libraries",
     ]
-  }
+  },
+  binutilsObjcopy | lib.AutotoolsPackage =
+    binutils
+    & {
+      # buildPhase = [
+      #   "make -C binutils objcopy",
+      # ],
+      installPhase = [
+        "install -Dm0755 binutils/objcopy ${DEST}/usr/bin/objcopy.binutils",
+      ],
+    }
 }
 & {
   lib,
