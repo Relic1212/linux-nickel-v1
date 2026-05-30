@@ -189,7 +189,9 @@
     Crate = {
       name | String,
       version | String,
-      uri | String | default = "https://crates.io/api/v1/crates/%{name}/%{version}/download",
+      # uri | String | default = "https://crates.io/api/v1/crates/%{name}/%{version}/download",
+      # https://github.com/rust-lang/crates.io/issues/13482#issuecomment-4304855751
+      uri | String | default = "https://static.crates.io/crates/%{name}/%{version}/download",
       sha256sum | String,
       meta = {
         source | String | optional,
