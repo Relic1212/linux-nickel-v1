@@ -3,29 +3,25 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/14916551be08fdcb6f2fb8df2e96f0f1ec24d774.tar.gz",
-      sha256sum = "6a1479b8cbeaaa31edafd24101e7043f6b198baecba3ad62cd1f4bc7c67aa542",
+      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/bbfc136c5305a541664606256e692f673dad61fe.tar.gz",
+      sha256sum = "716476cc33cfd6791c851003b0e20ae75542300680c3cdfe34be3f9bc89d27ac",
     },
     eofPatches = [
-      #   {
-      #     patch = import "noctalia-no-time_zone.patch" as 'Text
-      #   },
-      # {
-      #   patch = import "noctalia-full.patch" as 'Text
-      # },
       {
         patch = import "timezone.patch" as 'Text
       },
-      {
-        patch = import "to_string.patch" as 'Text
-      },
+      # {
+      #   patch = import "to_string.patch" as 'Text
+      # },
     ],
     # separateBuildDir = false,
     # allowDubplicateBuldInputs = true,
     # enableParallel = false,
-    # preConfigurePhase = [
-    # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
-    # ],
+    preConfigurePhase = [
+      "sed -i 's| log| noctalia_log|g' ${SRC}/src/system/desktop_entry_launch.cpp",
+      m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
+      # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
+    ],
     # mesonArgs,
     # configurePhase = [
     #   "meson setup %{std.string.join lib.constants.buildFlagSep mesonArgs} build ."
