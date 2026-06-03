@@ -50,7 +50,7 @@
         #   m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys*/Cargo.toml"%,
         m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys*/Cargo.toml"%,
         m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys*/build.rs"%,
-        lib.functions.writeFile "${SRC}/dlopen.c" (import "ironbar_dlopen.c" as 'Text),
+        lib.functions.writeFile "${SRC}/dlopen.c" (import "wayle_dlopen.c" as 'Text),
         "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       ],
 
