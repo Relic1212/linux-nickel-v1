@@ -202,6 +202,95 @@
       drvs.libadwaitaIntrospection & { priority = -1 },
       drvs.astalIo,
     ],
-  }
+  },
+
+  astalApps | lib.MesonPackage =
+    astalGtk4
+    & {
+
+      preConfigurePhase | priority 1 = [
+        "export SRC=/tmp/workdir/src/lib/apps",
+      ],
+      biDrvs | priority 1 =
+        astalGtk4.biDrvs
+        @ [
+          drvs.jsonGlib,
+        ]
+    },
+  astalLib | lib.MesonPackage =
+    let
+      libs = [
+        "apps",
+        # "astal",
+        "auth",
+        "battery",
+        "bluetooth",
+        # "cava",
+        # "gir.py",
+        "greet",
+        "hyprland",
+        "mpris",
+        # "network",
+        "notifd",
+        "powerprofiles",
+        "quarrel",
+        # "river",
+        # "tray",
+        "wayland-glib",
+        "wireplumber",
+        # "wl",
+      ],
+      args = {
+        "auth" = ["-Dintrospection=false", "-Dvapi=false"],
+        "wireplumber" = ["-Dintrospection=false", "-Dvapi=false"],
+      }
+    in
+    (
+      astalGtk4
+      & {
+
+        buildEnv.PKG_CONFIG = null,
+
+        mesonArgs,
+
+        preConfigurePhase | priority 1 = [],
+        configurePhase =
+          std.array.map
+            (fun d =>
+              "meson setup %{std.string.join lib.constants.buildFlagSep (mesonArgs @ (std.record.get_or d [] args)) } build-%{d} ${SRC}/lib/%{d}"
+            )
+            libs,
+
+        buildPhase =
+          std.array.map
+            (fun d =>
+              "meson compile -C build-%{d}"
+            )
+            libs,
+
+        installPhase =
+          std.array.map
+            (fun d =>
+              "meson install -C build-%{d} --destdir ${DEST}"
+            )
+            libs,
+        biDrvs | priority 1 =
+          astalGtk4.biDrvs
+          @ [
+            drvs.jsonGlib,
+            # drvs.libpam,
+            # drvs.networkmanager,
+            # drvs.utilLinux,
+            # drvs.eudev,
+            # drvs.gnutls,
+            # drvs.libtasn1,
+            # drvs.nettleGmp,
+          ],
+        pDrvs = [
+          drvs.pipewire,
+        ],
+        allowDubplicateBuldInputs = true,
+      }
+    )
 }
 & (import "ags.ncl")
