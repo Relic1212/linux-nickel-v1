@@ -2,10 +2,13 @@
   lib,
   drvs,
   gjs | lib.MesonPackage = {
+
+    debug = true,
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/gjs/-/archive/1.88.0/gjs-1.88.0.tar.bz2",
       sha256sum = "f314939c68953104620eedc1f54434e2e113f2401894ea67fa64e05fc3b57b55",
     },
+
     sourceInputs = [
       {
         src = singleSource,
@@ -23,10 +26,15 @@
         # "$(pkg-config --libs --static mozjs-140)",
         "-lc++",
         # "/usr/lib/moz-libs/libjsrust.a",
+        # "/usr/lib/moz-libs/libjsrust.a",
       ],
       EXTRA_CPPFLAGS = [
-        "-DXP_UNIX"
+        "-DXP_UNIX",
+        "$(pkg-config --cflags mozjs-140)",
       ],
+      # EXTRA_CFLAGS=[
+      #   "--verbose",
+      # ],
       PKG_CONFIG = null,
       _isStatic = false,
     },
@@ -35,21 +43,44 @@
       "-Dinstalled_tests=false",
       "-Dskip_gtk_tests=true",
       "-Dskip_dbus_tests=true",
+      "-Dbsymbolic_functions=false",
     ],
 
-    preConfigurePhase = [
-      "sed -i 's|shared_library|library|g' ${SRC}/meson.build",
-      "sed -i 's|if not minimal_program.compiled()|if false|g' ${SRC}/meson.build",
-      "sed -i 's|elif minimal_program.returncode() != 0|elif false|g' ${SRC}/meson.build",
-      m%"sed -i "s@subdir('test')@# subdir('test')@g" ${SRC}/meson.build"%,
-      m%"sed -i "s@dependencies: libgjs_dep, install: true@dependencies: libgjs_dep, link_args: ['-static', '--static'], install: true@g" ${SRC}/meson.build"%,
-      m%"sed -i "s|subdir\('installed-tests'\)|# subdir\('installed-tests'\)|g" ${SRC}/meson.build"%,
+    preConfigurePhase =
+      let link = "'-static', '--static', '-Wl,--whole-archive', '/usr/lib/libmozjs-140.ajs', '/usr/lib/moz-libs/libjsrust.a', 'libgjs.a', '-Wl,--no-whole-archive', 'libgjs-jsapi.a', '/tmp/workdir/src/dlopen.o'"
+      in
+      [
+        "sed -i 's|shared_library|library|g' ${SRC}/meson.build",
+        "sed -i 's|if not minimal_program.compiled()|if false|g' ${SRC}/meson.build",
+        "sed -i 's|elif minimal_program.returncode() != 0|elif false|g' ${SRC}/meson.build",
+        m%"sed -i "s@subdir('test')@# subdir('test')@g" ${SRC}/meson.build"%,
+        # m%"sed -i "s@dependencies: libgjs_dep, install: true@dependencies: libgjs_dep, link_args: [%{link}], install: true@g" ${SRC}/meson.build"%,
+        m%"sed -i "s@dependencies: libgjs_dep, install: true@dependencies: [dependency('girepository-2.0'),cairo, gtk4_dep], link_args: [%{link}], install: true@g" ${SRC}/meson.build"%,
+        m%"sed -i "s@subdir('installed-tests')@# subdir('installed-tests')@g" ${SRC}/meson.build"%,
+        "sed -i 's|static GjsInit gjs_is_inited;|// static GjsInit gjs_is_inited;|g' ${SRC}/gjs/engine.cpp",
+        "sed -i 's|g_assert(gjs_is_inited);|// g_assert(gjs_is_inited);|g' ${SRC}/gjs/engine.cpp",
+        m%"printf "extern \"C\" void gjs_init() { static GjsInit gjs_is_inited; }\n" >> ${SRC}/gjs/engine.cpp"%,
+        lib.functions.writeFile "${SRC}/patch.py" (import "patch.py" as 'Text),
+        "python ${SRC}/patch.py ${SRC}/gjs/console.cpp",
+        # m%"sed -i "s@dependency('mozjs-140')@dependency('mozjs-140').as_link_whole()@g" ${SRC}/meson.build"%,
+        # m%"sed -i "s@link_with: [libgjs, libgjs_jsapi]@link_with: [libgjs, libgjs_jsapi], link_whole: true@g" ${SRC}/meson.build"%,
+        # lib.functions.writeFile "${SRC}/constructor.c" (import "gjs_constructor.c" as 'Text),
+        # "${CC} ${CFLAGS} -Werror -c ${SRC}/constructor.c -o ${SRC}/constructor.o",
+        lib.functions.writeFile "${SRC}/dlopen.c" (import "gjs_dlopen.c" as 'Text),
+        "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      ],
+    buildPhase = [
+      "ninja libgjs.a",
+      "ninja libgjs-jsapi.a",
+      "meson compile --verbose",
     ],
 
     llvmProvider = drvs.llvmFull,
     pythonProvider = drvs.pythonDynamic,
+    muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
       drvs.libmozjs,
+      drvs.spidermonkeySymlinks,
       drvs.pythonSetuptools,
       ###########3
       drvs.muslShared,
@@ -126,10 +157,12 @@
       # drvs.libxi,
       # drvs.dbus,
     ],
+    neverInclude = [
+      drvs.harfbuzz,
+    ],
     pDrvs = [
       drvs.gtk4,
       drvs.spidermonkey,
-      # drvs.spidermonkeySymlinks,
     ]
   }
 }
