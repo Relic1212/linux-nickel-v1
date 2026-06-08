@@ -247,6 +247,9 @@
   lib,
   drvs,
   _CargoFetcher | lib.DeterministicFetcher = {
+    options = {
+      vendorFilter | default = false,
+    },
 
     extraEnv = {
       HOME = "/tmp/home"
@@ -255,7 +258,12 @@
     buildPhase = [
       "mkdir -p $HOME",
       "mkdir -p .cargo",
-      "cargo vendor --locked >> .cargo/config.toml",
+      (
+        if (!options.vendorFilter) then
+          "cargo vendor --locked >> .cargo/config.toml"
+        else
+          "cargo vendor-filterer  --platform=x86_64-unknown-linux-musl >> .cargo/config.toml"
+      ),
       # https://superuser.com/questions/705877/compressing-compressed-tar-gz-files-deterministically
       m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
       "tar cf - . > ../build/%{outputFile}",
@@ -274,6 +282,7 @@
       drvs.rust,
       drvs.gitFull,
       drvs.caCertificates,
+      drvs.cargoVendorFilter,
       # drsv.findutils & {priority = 1},
       # drsv.gnutar & {priority = 1},
     ]
