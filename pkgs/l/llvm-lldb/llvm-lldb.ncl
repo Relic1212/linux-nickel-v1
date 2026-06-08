@@ -36,6 +36,8 @@
       "-DPython3_EXECUTABLE" = "/usr/bin/python",
       "-DLLVM_DIR" = "/tmp/workdir/src/cmake/llvm",
       "-DLLDB_ENABLE_CURSES" = true,
+      "-DLLVM_ENABLE_ZLIB" = true,
+      "-DLLVM_ENABLE_ZSTD" = true,
     },
     biDrvs = [
       drvs.llvmConfigStatic,
