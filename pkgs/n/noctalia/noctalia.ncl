@@ -3,8 +3,10 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/bbfc136c5305a541664606256e692f673dad61fe.tar.gz",
-      sha256sum = "716476cc33cfd6791c851003b0e20ae75542300680c3cdfe34be3f9bc89d27ac",
+      # uri = "https://github.com/noctalia-dev/noctalia-shell/archive/17c6ebdea119f89944dbdd479611a4231ee925d5.tar.gz",
+      # sha256sum = "d6dd12fc904123cd13d8f3b03983fa716c51f4d74f4477d4de5b81d463a3b806",
+      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/aa420b7f077ca6c6dded999e317f776c5ba9f5c7.tar.gz",
+      sha256sum = "0251b319d10afc743aec62f118feea2d1d21978495b793e5d026d38ce058ce0b",
     },
     eofPatches = [
       {
@@ -14,12 +16,21 @@
       #   patch = import "to_string.patch" as 'Text
       # },
     ],
+    buildEnv = {
+      EXTRA_CPPFLAGS = [
+        # https://github.com/llvm/llvm-project/issues/107779#issuecomment-2339420980
+        # https://releases.llvm.org/19.1.0/projects/libcxx/docs/UsingLibcxx.html
+        "-fexperimental-library",
+        "-I/usr/include/libxml2",
+      ],
+    },
     # separateBuildDir = false,
     # allowDubplicateBuldInputs = true,
     # enableParallel = false,
     preConfigurePhase = [
       "sed -i 's| log| noctalia_log|g' ${SRC}/src/system/desktop_entry_launch.cpp",
       m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
+      m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
     ],
     # mesonArgs,
@@ -60,43 +71,18 @@
     pDrvs = [
       drvs.jemalloc,
       drvs.sdbusCpp,
-      # drvs.mesa2,
-      # drvs.freetype,
-      # drvs.fontconfig,
-      # drvs.expat,
-      #   drvs.cairo,
-      # drvs.libpng,
-      # drvs.pixman,
-      # drvs.harfbuzz,
       drvs.pango,
-      # drvs.fribidi,
       drvs.glibPatched,
-      # drvs.pcre2,
-      # drvs.librsvg,
-      # drvs.librsvgC,
       drvs.gdkPixbuf,
-      drvs.libxml2,
+      # drvs.libxml2,
       drvs.cairoGobject,
-      # drvs.libxkbcommon,
       drvs.polkit,
       drvs.pipewire,
-      # drvs.libsndfile,
-      # drvs.libopus,
-      # drvs.lua,
-      # drvs.bluez,
-      # drvs.sbc,
-      # drvs.libusb,
-      # drvs.jansson,
-      # drvs.fdkAac,
-      # drvs.ldacbt,
-      # drvs.eudev,
       drvs.kmod,
-      # drvs.xz,
-      # drvs.zstd,
-      # drvs.alsaLibs,
-      # drvs.dbus,
-      drvs.curl,
+
+      # drvs.curl,
       drvs.libwebp,
+      drvs.libqalculate,
     ]
   },
 }
