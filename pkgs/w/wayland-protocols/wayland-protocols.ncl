@@ -9,8 +9,11 @@
       # uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.45/wayland-protocols-1.45.tar.gz",
       # sha256sum = "460dad72a6c84b2a7d80745bee43d96ba117f4e3dfc4d7c45f83f66469ea27df",
 
-      uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.47/wayland-protocols-1.47.tar.gz",
-      sha256sum = "dd2df14ab5f41038257aaedcc4b5fb9ac0ee018f3f0f94af9097028e60d33223",
+      # uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.47/wayland-protocols-1.47.tar.gz",
+      # sha256sum = "dd2df14ab5f41038257aaedcc4b5fb9ac0ee018f3f0f94af9097028e60d33223",
+
+      uri = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/1.49/wayland-protocols-1.49.tar.bz2",
+      sha256sum = "7330d2d8fbda81991548738e81da493829bc55db2daf1ae15b9d4952e4d7d83b"
     },
     biDrvs = [
       drvs.wayland,
