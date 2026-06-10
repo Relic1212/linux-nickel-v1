@@ -104,7 +104,7 @@ index c59851f7..790a5301 100644
 -    #[inline]
 -    pub unsafe fn BindWaylandDisplayWL(
 +unsafe extern "system" {
-+    #[link_name="BindWaylandDisplayWL"]   
++    #[link_name="eglBindWaylandDisplayWL"]   
 +    pub fn BindWaylandDisplayWL(
          dpy: types::EGLDisplay,
          display: *mut __gl_imports::raw::c_void,
@@ -121,7 +121,7 @@ index c59851f7..790a5301 100644
 -    #[inline]
 -    pub unsafe fn UnbindWaylandDisplayWL(
 +unsafe extern "system" {
-+    #[link_name="UnbindWaylandDisplayWL"]
++    #[link_name="eglUnbindWaylandDisplayWL"]
 +    pub fn UnbindWaylandDisplayWL(
          dpy: types::EGLDisplay,
          display: *mut __gl_imports::raw::c_void,
@@ -138,7 +138,7 @@ index c59851f7..790a5301 100644
 -    #[inline]
 -    pub unsafe fn QueryWaylandBufferWL(
 +unsafe extern "system" {
-+    #[link_name="QueryWaylandBufferWL"]
++    #[link_name="eglQueryWaylandBufferWL"]
 +    pub fn QueryWaylandBufferWL(
          dpy: types::EGLDisplay,
          buffer: *mut __gl_imports::raw::c_void,

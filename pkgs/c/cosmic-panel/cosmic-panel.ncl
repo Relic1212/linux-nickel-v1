@@ -31,6 +31,10 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       #
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      #
+      "sed -i 's|extern|unsafe extern|g' ${SRC}/vendor/gl_generator/generators/static_gen.rs",
+      "sed -i 's|extern|unsafe extern|g' ${SRC}/vendor/gl_generator/generators/static_struct_gen.rs",
+      #
       "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
@@ -61,15 +65,25 @@
         "-C link-arg=-Wl,--pop-state",
       ],
 
+    eofPatches = [
+      {
+        patch = import "../cosmic-comp/static-gl.patch" as 'Text,
+        subdir = "/vendor",
+      },
+      {
+        patch = import "../cosmic-comp/ffi.patch" as 'Text,
+        subdir = "/vendor",
+      },
+    ],
     patches = [
-      {
-        file = "static-gl.patch",
-        sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
-      },
-      {
-        sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
-        file = "ffi.patch"
-      },
+      # {
+      #   file = "static-gl.patch",
+      #   sha256sum = "87d04858cb694020f4b6e2354ef2640f4e7f1bac3c933c8b7b2f37d43d59b7b7"
+      # },
+      # {
+      #   sha256sum = "9c4fd74ddabfbe7ce1e1cd71c728fc912659185fe5f2ec03905498badfc1afd0",
+      #   file = "ffi.patch"
+      # },
       # {
       #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
       #   file = "cosmic-osd-xkb.patch",
