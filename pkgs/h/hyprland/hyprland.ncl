@@ -5,7 +5,8 @@
   hyprland
     | lib.CmakePackage
     = {
-      debug = true,
+      debug,
+      # debug = true,
 
       generator = "Ninja",
 
@@ -13,8 +14,8 @@
         {
           src = {
 
-            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.55.0.tar.gz",
-            sha256sum = "7a547042fc291695dc4f75cc63a0c52e85a2e1e3071fa5eaf08f54c425ea271d",
+            uri = "https://github.com/hyprwm/Hyprland/archive/refs/tags/v0.55.3.tar.gz",
+            sha256sum = "f417c775df8dba75747dabc03c349c862817d45ff96dfdee09c3ecc8b4f134fe",
           },
         },
       ],
@@ -46,9 +47,17 @@
       postInstallPhase = [
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/Renderer.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/OpenGL.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/pass/Pass.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/managers/KeybindManager.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/ConfigManager.hpp"%,
         m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/config/shared/animation/AnimationTree.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/layout/algorithm/Algorithm.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/layout/algorithm/tiled/monocle/MonocleAlgorithm.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/decorations/CHyprGroupBarDecoration.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/render/decorations/DecorationPositioner.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/desktop/view/Window.hpp"%,
+        m%"sed -i 's|  private:||g' ${DEST}/usr/include/hyprland/src/desktop/view/Group.hpp"%,
       ],
       buildEnv = {
         EXTRA_LDFLAGS =

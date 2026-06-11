@@ -1,0 +1,80 @@
+diff --git a/OverviewGesture.cpp b/OverviewGesture.cpp
+index 81ff63c..0551c07 100644
+--- a/OverviewGesture.cpp
++++ b/OverviewGesture.cpp
+@@ -4,7 +4,7 @@
+ 
+ #include <hyprland/src/Compositor.hpp>
+ #include <hyprland/src/desktop/state/FocusState.hpp>
+-#include <hyprland/src/output/Monitor.hpp>
++#include <hyprland/src/helpers/Monitor.hpp>
+ 
+ void COverviewGesture::begin(const ITrackpadGesture::STrackpadGestureBegin& e) {
+     ITrackpadGesture::begin(e);
+diff --git a/main.cpp b/main.cpp
+index 8ce092c..848710e 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -145,7 +145,7 @@ static void hkSurfaceFrame(void* thisptr, const Time::steady_tp& now) {
+ }
+ 
+ static void hkAddDamageA(void* thisptr, const CBox& box) {
+-    const auto PMONITOR = (Monitor::CMonitor*)thisptr;
++    const auto PMONITOR = (CMonitor*)thisptr;
+ 
+     if (g_pScrollOverview && g_pScrollOverview->pMonitor == PMONITOR->m_self && renderingOverview && !damageFromSurface && g_pScrollOverview->shouldSuppressRenderDamage()) {
+         return;
+@@ -161,7 +161,7 @@ static void hkAddDamageA(void* thisptr, const CBox& box) {
+ }
+ 
+ static void hkAddDamageB(void* thisptr, const pixman_region32_t* rg) {
+-    const auto PMONITOR = (Monitor::CMonitor*)thisptr;
++    const auto PMONITOR = (CMonitor*)thisptr;
+ 
+     if (g_pScrollOverview && g_pScrollOverview->pMonitor == PMONITOR->m_self && renderingOverview && !damageFromSurface && g_pScrollOverview->shouldSuppressRenderDamage()) {
+         return;
+@@ -344,37 +344,37 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
+ 
+     g_pScrollRenderWorkspaceHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("renderWorkspace", {"CHyprRenderer::renderWorkspace(", "IHyprRenderer::renderWorkspace("}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN6Render13IHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS3_I10CWorkspaceEERKNSt3__16chrono10time_pointINS9_12steady_clockENS9_8durationIxNS8_5ratioILl1ELl1000000000EEEEEEERKNS1_4Math4CBoxE"),
+         (void*)hkRenderWorkspace);
+ 
+     g_pScrollScheduleFrameHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE, 
+-        findFnOrThrow("scheduleFrameForMonitor", {"CCompositor::scheduleFrameForMonitor("}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN11CCompositor23scheduleFrameForMonitorEN9Hyprutils6Memory14CSharedPointerI8CMonitorEEN10Aquamarine7IOutput19scheduleFrameReasonE"),
+         (void*)hkScheduleFrameForMonitor);
+ 
+     g_pScrollDamageSurfaceHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("damageSurface", {"CHyprRenderer::damageSurface(", "IHyprRenderer::damageSurface("}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN6Render13IHyprRenderer13damageSurfaceEN9Hyprutils6Memory14CSharedPointerI18CWLSurfaceResourceEEddd"),
+         (void*)hkDamageSurface);
+ 
+     g_pScrollSendFrameEventsHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("sendFrameEventsToWorkspace", {"CHyprRenderer::sendFrameEventsToWorkspace(", "IHyprRenderer::sendFrameEventsToWorkspace("}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN6Render13IHyprRenderer26sendFrameEventsToWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS3_I10CWorkspaceEERKNSt3__16chrono10time_pointINS9_12steady_clockENS9_8durationIxNS8_5ratioILl1ELl1000000000EEEEEEE"),
+         (void*)hkSendFrameEventsToWorkspace);
+ 
+     g_pScrollSurfaceFrameHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("_ZN18CWLSurfaceResource5frameERKNSt6chrono10time_pointINS0_3_V212steady_clockENS0_8durationIlSt5ratioILl1ELl1000000000EEEEEE", {""}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN18CWLSurfaceResource5frameERKNSt3__16chrono10time_pointINS1_12steady_clockENS1_8durationIxNS0_5ratioILl1ELl1000000000EEEEEEE"),
+         (void*)hkSurfaceFrame);
+ 
+     g_pScrollAddDamageHookB = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("addDamageEPK15pixman_region32", {"CMonitor::addDamage"}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN8CMonitor9addDamageEPK15pixman_region32"),
+         (void*)hkAddDamageB);
+ 
+     g_pScrollAddDamageHookA = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE", {""}),
++        HyprlandAPI::getFunctionAddressFromSignature(SCROLLOVERVIEW_HANDLE, "_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE"),
+         (void*)hkAddDamageA);
+ 
+     static auto P = Event::bus()->m_events.render.pre.listen([](PHLMONITOR monitor) {

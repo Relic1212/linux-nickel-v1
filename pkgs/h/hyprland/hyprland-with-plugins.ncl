@@ -36,6 +36,7 @@
               # "-lxtra-dispatchers",
               "-lHyprspace",
               # "-lhyprlang",
+              "-lscrolloverview",
               "/tmp/workdir/src/dlopen.o",
             ]
             in
@@ -53,6 +54,7 @@
           drvs.hyprlandPlugins,
           drvs.hyprlandHyprspace,
           drvs.hyprlandHyprexpo,
+          drvs.hyprlandScrollOverview,
           # drvs.googletest,
         ],
     }

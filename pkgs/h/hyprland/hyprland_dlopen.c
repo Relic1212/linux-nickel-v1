@@ -54,6 +54,7 @@ const char *lib__usr_lib_libhyprbars_so = "lib__usr_lib_libhyprbars_so";
 // const char *lib__usr_lib_libxtra_dispatchers_so = "lib__usr_lib_libxtra_dispatchers_so";
 const char *lib__usr_lib_libhyprfocus_so = "lib__usr_lib_libhyprfocus_so";
 const char *lib__usr_lib_libHyprspace_so = "lib__usr_lib_libHyprspace_so";
+const char *lib__usr_lib_libscrolloverview_so = "lib__usr_lib_libscrolloverview_so";
 
 void *dlopen(const char *path, int mode)
 {
@@ -95,6 +96,11 @@ void *dlopen(const char *path, int mode)
 	{
 		dbg_print("(dlopen) found library /usr/lib/libHyprspace.so (handle=%p)\n", &lib__usr_lib_libHyprspace_so);
 		return &lib__usr_lib_libHyprspace_so;
+	}
+	if (strcmp(path, "/usr/lib/libscrolloverview.so") == 0)
+	{
+		dbg_print("(dlopen) found library /usr/lib/libscrolloverview.so (handle=%p)\n", &lib__usr_lib_libscrolloverview_so);
+		return &lib__usr_lib_libscrolloverview_so;
 	}
 	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);
 	return stub_dlopen(path, mode);
@@ -270,6 +276,37 @@ void *dlsym(void *__restrict handle, const char *__restrict symbol)
 		//DLSYM(_ZN15CKeybindManager5mouseENSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE,)
 		//DLSYM(_ZN13CHyprRenderer12renderWindowEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View7CWindowEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEb15eRenderPassModebb,)
 		//DLSYM(_ZN13CHyprRenderer11renderLayerEN9Hyprutils6Memory14CSharedPointerIN7Desktop4View13CLayerSurfaceEEENS2_I8CMonitorEERKNSt3__16chrono10time_pointINSA_12steady_clockENSA_8durationIxNS9_5ratioILl1ELl1000000000EEEEEEEbb,)
+	}
+
+	if (handle == &lib__usr_lib_libscrolloverview_so || handle == NULL || handle == &main_program_handle)
+	{
+		if (strcmp(symbol, "pluginAPIVersion") == 0)
+		{
+			extern void *scrolloverview_pluginAPIVersion;
+			dbg_print("(dlsym) found symbol pluginAPIVersion with handle=%p, address=%p\n", handle, &scrolloverview_pluginAPIVersion);
+			return &scrolloverview_pluginAPIVersion;
+		}
+		if (strcmp(symbol, "pluginExit") == 0)
+		{
+			extern void *scrolloverview_pluginExit;
+			dbg_print("(dlsym) found symbol pluginExit with handle=%p, address=%p\n", handle, &scrolloverview_pluginExit);
+			return &scrolloverview_pluginExit;
+		}
+		if (strcmp(symbol, "pluginInit") == 0)
+		{
+			extern void *scrolloverview_pluginInit;
+			dbg_print("(dlsym) found symbol pluginInit with handle=%p, address=%p\n", handle, &scrolloverview_pluginInit);
+			return &scrolloverview_pluginInit;
+		}
+
+		DLSYM(_ZN6Render13IHyprRenderer15renderWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS3_I10CWorkspaceEERKNSt3__16chrono10time_pointINS9_12steady_clockENS9_8durationIxNS8_5ratioILl1ELl1000000000EEEEEEERKNS1_4Math4CBoxE, )
+		DLSYM(_ZN11CCompositor23scheduleFrameForMonitorEN9Hyprutils6Memory14CSharedPointerI8CMonitorEEN10Aquamarine7IOutput19scheduleFrameReasonE, )
+		DLSYM(_ZN6Render13IHyprRenderer13damageSurfaceEN9Hyprutils6Memory14CSharedPointerI18CWLSurfaceResourceEEddd, )
+		DLSYM(_ZN6Render13IHyprRenderer26sendFrameEventsToWorkspaceEN9Hyprutils6Memory14CSharedPointerI8CMonitorEENS3_I10CWorkspaceEERKNSt3__16chrono10time_pointINS9_12steady_clockENS9_8durationIxNS8_5ratioILl1ELl1000000000EEEEEEE, )
+		DLSYM(_ZN18CWLSurfaceResource5frameERKNSt3__16chrono10time_pointINS1_12steady_clockENS1_8durationIxNS0_5ratioILl1ELl1000000000EEEEEEE, )
+		DLSYM(_ZN8CMonitor9addDamageEPK15pixman_region32, )
+		DLSYM(_ZN8CMonitor9addDamageERKN9Hyprutils4Math4CBoxE, )
+
 	}
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s\n", symbol);
 	return stub_dlsym(handle, symbol);
