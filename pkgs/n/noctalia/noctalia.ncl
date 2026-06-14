@@ -3,17 +3,10 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia-shell/archive/99f59698a4e51ebddab4edd036edca7470f39690.tar.gz",
-      sha256sum = "eae328581aef81ddb96188fd2ced076ef5e0c7bb87927f16582b319f0387920c",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/7fb6c33deafc172ab0b3c229d95d9e2e4087efc4.tar.gz",
+      sha256sum = "9ffb22fcd4cfa6305ef424f6c912ee219c17a64645f30aeec543d31e191f51dd",
     },
-    eofPatches = [
-      {
-        patch = import "timezone.patch" as 'Text
-      },
-      # {
-      #   patch = import "to_string.patch" as 'Text
-      # },
-    ],
+
     buildEnv = {
       EXTRA_CPPFLAGS = [
         # https://github.com/llvm/llvm-project/issues/107779#issuecomment-2339420980
@@ -31,34 +24,6 @@
       m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
     ],
-    # mesonArgs,
-    # configurePhase = [
-    #   "meson setup %{std.string.join lib.constants.buildFlagSep mesonArgs} build ."
-    # ],
-    preBuildPhase = [
-      "ninja cursor-shape-v1-client-protocol.h",
-      "ninja dwl-ipc-unstable-v2-client-protocol.h",
-      "ninja ext-background-effect-v1-client-protocol.h",
-      "ninja ext-data-control-v1-client-protocol.h",
-      "ninja ext-idle-notify-v1-client-protocol.h",
-      "ninja ext-session-lock-v1-client-protocol.h",
-      "ninja ext-workspace-v1-client-protocol.h",
-      "ninja fractional-scale-v1-client-protocol.h",
-      "ninja hyprland-focus-grab-v1-client-protocol.h",
-      "ninja idle-inhibit-unstable-v1-client-protocol.h",
-      "ninja viewporter-client-protocol.h",
-      "ninja virtual-keyboard-unstable-v1-client-protocol.h",
-      "ninja wlr-data-control-unstable-v1-client-protocol.h",
-      "ninja wlr-foreign-toplevel-management-unstable-v1-client-protocol.h",
-      "ninja wlr-layer-shell-unstable-v1-client-protocol.h",
-      "ninja xdg-activation-v1-client-protocol.h",
-      "ninja xdg-output-unstable-v1-client-protocol.h",
-      "ninja xdg-shell-client-protocol.h",
-      "ninja wlr-gamma-control-unstable-v1-client-protocol.h",
-    ],
-    # installPhase = [
-    #   "meson install --destdir ${DEST}"
-    # ],
 
     llvmProvider = drvs.llvmFull,
     neverInclude = [drvs.glib, ],
