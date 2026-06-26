@@ -1,48 +1,48 @@
 diff --git a/src/config/parse_config.h b/src/config/parse_config.h
-index 72140d1..4120bfb 100644
+index 849da3c..79a4b3e 100644
 --- a/src/config/parse_config.h
 +++ b/src/config/parse_config.h
-@@ -104,7 +104,7 @@ typedef struct {
+@@ -119,7 +119,7 @@ typedef struct {
  #define CHVT(n)                                                                \
  	{                                                                          \
  		WLR_MODIFIER_CTRL | WLR_MODIFIER_ALT,                                  \
 -			{.keysym = XKB_KEY_XF86Switch_VT_##n, .type = KEY_TYPE_SYM}, chvt, \
-+			{.keysym = XKB_KEY_XF86Switch_VT_##n, .type = KEY_TYPE_SYM}, mangowc__chvt, \
++			{.keysym = XKB_KEY_XF86Switch_VT_##n, .type = KEY_TYPE_SYM}, mango_chvt, \
  		{                                                                      \
  			.ui = (n)                                                          \
  		}                                                                      \
-@@ -967,7 +967,7 @@ FuncType parse_func_name(char *func_name, Arg *arg, char *arg_value,
+@@ -1150,7 +1150,7 @@ FuncType parse_func_name(char *func_name, Arg *arg, char *arg_value,
  	} else if (strcmp(func_name, "togglegaps") == 0) {
  		func = togglegaps;
  	} else if (strcmp(func_name, "chvt") == 0) {
 -		func = chvt;
-+		func = mangowc__chvt;
++		func = mango_chvt;
  		(*arg).ui = atoi(arg_value);
  	} else if (strcmp(func_name, "spawn") == 0) {
  		func = spawn;
 diff --git a/src/dispatch/bind_declare.h b/src/dispatch/bind_declare.h
-index b38e2da..12995ab 100644
+index a04ba0c..cfd033b 100644
 --- a/src/dispatch/bind_declare.h
 +++ b/src/dispatch/bind_declare.h
-@@ -38,7 +38,7 @@ int toggleglobal(const Arg *arg);
- int incnmaster(const Arg *arg);
- int focusmon(const Arg *arg);
- int focusstack(const Arg *arg);
--int chvt(const Arg *arg);
-+int mangowc__chvt(const Arg *arg);
- int reload_config(const Arg *arg);
- int smartmovewin(const Arg *arg);
- int smartresizewin(const Arg *arg);
+@@ -37,7 +37,7 @@ int32_t toggleglobal(const Arg *arg);
+ int32_t incnmaster(const Arg *arg);
+ int32_t focusmon(const Arg *arg);
+ int32_t focusstack(const Arg *arg);
+-int32_t chvt(const Arg *arg);
++int32_t mango_chvt(const Arg *arg);
+ int32_t reload_config(const Arg *arg);
+ int32_t smartmovewin(const Arg *arg);
+ int32_t smartresizewin(const Arg *arg);
 diff --git a/src/dispatch/bind_define.h b/src/dispatch/bind_define.h
-index 57efa88..448e92c 100644
+index db082b6..eeda25a 100644
 --- a/src/dispatch/bind_define.h
 +++ b/src/dispatch/bind_define.h
-@@ -30,7 +30,7 @@ int bind_to_view(const Arg *arg) {
+@@ -31,7 +31,7 @@ int32_t bind_to_view(const Arg *arg) {
  	return 0;
  }
  
--int chvt(const Arg *arg) {
-+int mangowc__chvt(const Arg *arg) {
- 	wlr_session_change_vt(session, arg->ui);
- 	return 0;
- }
+-int32_t chvt(const Arg *arg) {
++int32_t mango_chvt(const Arg *arg) {
+ 	struct timespec ts;
+ 
+ 	allow_frame_scheduling = false;
