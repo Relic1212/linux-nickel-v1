@@ -12,8 +12,11 @@
     biDrvs = [
       drvs.linuxHeaders,
       drvs.expat,
+    ],
+    pDrvs = [
       drvs.libffi,
     ],
+
     preConfigurePhase = [
       m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/os-compatibility.c"%,
       m%"sed -i 's@os_create_anonymous_file@os_create_anonymous_file_wayland_private_symbol@g' ${SRC}/cursor/os-compatibility.h"%,

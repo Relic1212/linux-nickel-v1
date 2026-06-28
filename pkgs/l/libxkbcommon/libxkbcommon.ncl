@@ -19,7 +19,6 @@
     pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libffi,
     ]
   }
 }
@@ -44,7 +43,6 @@
     pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libffi,
       drvs.libxml2,
     ]
   }
@@ -70,7 +68,6 @@
     pDrvs = [
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libffi,
       drvs.libxml2,
       # drvs.libxcursor,
       # drvs.xorgMacros,

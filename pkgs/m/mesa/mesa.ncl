@@ -131,14 +131,14 @@
       drvs.llvmConfigStatic,
       drvs.libclc,
     ],
-    propagatedBuildInputs = [
+    pDrvs = [
       drvs.libelf,
       drvs.libdrm,
       drvs.linuxHeaders,
       drvs.spirvTools,
       drvs.wayland,
       drvs.waylandProtocols,
-      drvs.libffi,
+      # drvs.libffi,
     ]
   },
 }
