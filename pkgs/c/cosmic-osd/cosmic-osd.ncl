@@ -37,7 +37,7 @@
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-      m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
+      # m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
       #
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
       "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
@@ -73,8 +73,8 @@
 
     extraEnv = {
       EXTRA_RUSTFLAGS = [
-        "-C link-arg=-L/usr/lib/pulseaudio",
-        "-C link-arg=-lpulsecommon-17.0",
+        # "-C link-arg=-L/usr/lib/pulseaudio",
+        # "-C link-arg=-lpulsecommon-17.0",
         "-C link-arg=-ldbus-1",
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
@@ -165,7 +165,7 @@
       drvs.libstdcppCompat,
       drvs.elogindWithPolkit,
       drvs.libcap,
-      drvs.pulseaudio17,
+      # drvs.pulseaudio17,
     ],
   },
 }

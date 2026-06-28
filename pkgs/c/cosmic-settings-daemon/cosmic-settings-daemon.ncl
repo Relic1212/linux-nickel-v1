@@ -29,8 +29,11 @@
       m%"sed -i 's@\["dlopen"\]@\[\]@g' ${SRC}/vendor/iced_wgpu/Cargo.toml"%,
       m%"sed -i 's@"dlopen",@@g' ${SRC}/vendor/smithay-clipboard/Cargo.toml"%,
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
-      m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
+      # m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys/Cargo.toml"%,
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/libspa-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/pipewire-sys/Cargo.toml"%,
+      m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys/Cargo.toml"%,
     ],
 
     extraEnv = {
@@ -39,10 +42,11 @@
         [
           "-C link-arg=-Wl,--push-state,--no-as-needed",
           "-C link-arg=-lc++",
-          "-C link-arg=-lpulse",
-          "-C link-arg=-L/usr/lib/pulseaudio",
-          "-C link-arg=-lpulsecommon-17.0",
+          # "-C link-arg=-lpulse",
+          # "-C link-arg=-L/usr/lib/pulseaudio",
+          # "-C link-arg=-lpulsecommon-17.0",
           "-C link-arg=-ldbus-1",
+          "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
 
           # pkg-config --libs --static libinput
           "-C link-arg=-linput",
@@ -169,7 +173,9 @@
       drvs.zstd,
       drvs.pipewire,
       drvs.libstdcppCompat,
-      drvs.pulseaudio17,
+      # drvs.pulseaudio17,
+      drvs.elogindWithPolkit,
+      drvs.libcap,
     ],
   },
 }
