@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia/archive/1d17e1d1f543c97952d1260f571ba40699a27c1d.tar.gz",
-      sha256sum = "457e77580e99321a3dc01a782c916c5916e0a567dba1a52c03c38664dc876b6c",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.0.0-beta2.tar.gz",
+      sha256sum = "6329818e294feb141e079b0f4bcf1006b196ed74183f793fcf0feddf8b7540a0",
     },
 
     buildEnv = {
@@ -23,6 +23,7 @@
       m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
       m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
+      "sed -i 's|lua_ident|lua_ident_compat|g' ${SRC}/third_party/luau/VM/src/lapi.cpp",
     ],
 
     llvmProvider = drvs.llvmFull,
@@ -46,6 +47,10 @@
       # drvs.curl,
       drvs.libwebp,
       drvs.libqalculate,
+      drvs.md4c,
+      drvs.nlohmannJsonCmake,
+      drvs.tomlplusplus,
+      drvs.stb,
     ]
   },
 }
