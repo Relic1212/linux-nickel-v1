@@ -1,4 +1,28 @@
-Builds happen im `$TMPDIR/work`, where the following directories are special:
+This repository contains the build infrastructure for a Linux distribution where every (target) package is statically linked. Packages are described in the Nickel configuration language (https://github.com/nickel-lang/nickel/).
+
+Features:
+* Software is statically linked using Clang
+* Full wayland gui with packages such as Cosmic desktop and Niri
+* Dm-verity with a/b partitions and fscrypt on `$HOME` for security
+
+
+Repository layout:
+* `builder`: Scripts written in Python for execution of builds
+* `container`: Dockerfiles that can be used for bootstrapping
+* `distro`: Global configuration that affects all packages
+* `nickellib`: Nickel contracts and functions used to describe packages
+* `pkgs`: Package definitions
+* `scripts`: Misc scripts
+
+To build a package, make sure you have a c and c++ compiler, a Python interpreter and Nickel installed (for instance by using one of the Dockerfiles). Then run:
+
+```python parse.py <package name>```
+
+ For instance, to build the reference root and boot partition, run 
+
+```python parse.py base-image```
+
+Builds take place im `$TMPDIR/work`, where the following directories are special:
 
 * `./build`
 * `./src` 
