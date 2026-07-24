@@ -49,7 +49,7 @@
       drvs.hwdata,
       drvs.linuxHeaders,
       drvs.nlohmannJson,
-      drvs.glm,
+      drvs.glmWf,
       drvs.libxml2,
     ],
 
@@ -81,7 +81,7 @@
 & {
   lib,
   drvs,
-  glm | lib.CmakePackage = {
+  glmWf | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
       uri = "https://github.com/g-truc/glm/archive/33b4a621a697a305bc3a7610d290677b96beb181.zip",

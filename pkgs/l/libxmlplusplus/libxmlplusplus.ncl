@@ -34,17 +34,37 @@
     },
 
     biDrvs = [
-      drvs.linuxHeaders,
-      drvs.pkgconf,
-      # drvs.libxml2DynamicCmake,
+      drvs.pkgconfMeson,
       drvs.libxml2Cmake,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.libsigcpp2,
-      drvs.glibmm,
       drvs.perl,
-    ]
+    ],
+    pDrvs = [
+      drvs.glibmm,
+      # drvs.libsigcpp2,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  libxmlplusplus26 | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://download.gnome.org/sources/libxml++/2.6/libxml%2B%2B-2.6.1.tar.bz2",
+      sha256sum = "461b924966f1ca54623b90b47d84061331e546960d47b410c87410ba9b025782"
+    },
+
+    buildEnv = {
+      EXTRA_CPPFLAGS = ["-I/usr/include/libxml2", ],
+      EXTRA_CXXFLAGS = ["-std=c++14", ],
+    },
+
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.libxml2,
+    ],
+    pDrvs = [
+      drvs.glibmm,
+      # drvs.libsigcpp2,
+    ],
   }
 }
