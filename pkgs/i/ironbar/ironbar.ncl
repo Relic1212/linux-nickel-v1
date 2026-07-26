@@ -3,8 +3,8 @@
   drvs,
   ironbar | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/JakeStanger/ironbar/archive/4ec9be14d452a1b2825eb181c140470ca5f5cc54.tar.gz",
-      sha256sum = "e6d7ed7fcba7c04f700e95bf49dc91244df8747ef023f6262481b20a2d06560d",
+      uri = "https://github.com/JakeStanger/ironbar/archive/4917a8401cc9920b8925bf4892517ace894f814c.tar.gz",
+      sha256sum = "4d7a520514731393d97f5fd130e72e5da15f880cab5ec22a15791344985bcc35",
     },
     crates = lib.functions.filterCrates (import "ironbar-crates.json"),
     # linkSelfContained = "no",
