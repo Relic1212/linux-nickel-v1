@@ -1,0 +1,10 @@
+{
+  lib,
+  drvs,
+  libsodium | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/jedisct1/libsodium/archive/refs/tags/1.0.22-RELEASE.tar.gz",
+      sha256sum = "5838bb0c3da6148c24ebe531d1ed1297de9a87aea77d426bcd99f289e681631c",
+    },
+  }
+}
