@@ -6,14 +6,19 @@ import subprocess
 def compute_file_or_dir_sha256sum(filepath: str):
 
     if os.path.isfile(filepath):
-        try:
-            with open(filepath) as f:
-                s = f.read()
-                sha256sum = str_to_sha256sum(s)
-        except (UnicodeDecodeError,Exception):
+            
+        if True:
+        # try:
+        #     with open(filepath) as f:
+        #         s = f.read()
+        #         sha256sum = str_to_sha256sum(s)
+        # except (UnicodeDecodeError, Exception):
+            # https://www.reddit.com/r/learnpython/comments/yq4s0n/comment/ivmrpeb/
+            hf = hashlib.sha256()
             with open(filepath, "rb") as f:
-                b = f.read()
-                sha256sum = hashlib.sha256(b).hexdigest()
+                for chunk in iter(lambda: f.read(4096), b""):
+                    hf.update(chunk)
+            sha256sum = hf.hexdigest()
     elif os.path.isdir(filepath):
         sha256sum = compute_directoy_sha256sum(filepath)
     else:
@@ -25,7 +30,8 @@ def compute_file_or_dir_sha256sum(filepath: str):
 
 def compute_directoy_sha256sum(directory: str) -> str:
 
-    dir_sha256sum=hashlib.sha256(subprocess.run([ "tar","cf","-",directory ],capture_output=True,check=True).stdout).hexdigest()
+    dir_sha256sum = hashlib.sha256(subprocess.run(
+        ["tar", "cf", "-", directory], capture_output=True, check=True).stdout).hexdigest()
 
     return dir_sha256sum
 
