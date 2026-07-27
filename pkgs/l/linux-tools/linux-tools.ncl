@@ -75,7 +75,7 @@
         )
         @ (
           std.array.map
-            (fun f => m%"sed -i 's@bin\/bash@usr\/bin\/bash@g' ${SRC}/%{f}"%
+            (fun f => m%"sed -i 's@bin\/bash@usr\/bin\/bash@g' ${SRC}/%{f} || true"%
             )
             [
               "tools/certs/print-cert-tbs-hash.sh",

@@ -231,6 +231,10 @@ in
       uri = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.0.8.tar.xz",
       sha256sum = "1945afb22c9f4f7c78d971210f3bbb7deb09f5d8c41a38bfac772de25f6dcb22",
     },
+    "7.1.5" = {
+      uri = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.1.5.tar.xz",
+      sha256sum = "22a0196b3cbcdf34dc27b77561f4d040585fd3447edc9ab3531a1ac79e3041e7",
+    },
   },
   linuxHeaders,
   libModulesDirectory | lib.Package = {
@@ -271,7 +275,8 @@ in
         # version = "6.18.0",
         # version = "6.18.8",
         # version = "6.19.0",
-        version = "7.0.8",
+        # version = "7.0.8",
+        version = "7.1.5",
         compress | default = true,
       },
       buildDir = "/tmp/workdir/src",
