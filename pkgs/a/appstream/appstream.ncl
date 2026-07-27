@@ -8,18 +8,16 @@
     },
 
     biDrvs = [
+      drvs.gperf,
+      drvs.gettext,
+    ],
+
+    pDrvs = [
       drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
       drvs.curl,
-      drvs.openssl,
-      drvs.libpsl,
       drvs.libxml2,
       drvs.libyaml,
       drvs.libxmlb,
-      drvs.gperf,
-      drvs.gettext,
     ],
 
     # https://github.com/kiss-community/community/blob/153bd6c63fb8291b385e95d30da1dc6b9de87244/community/appstream/build
