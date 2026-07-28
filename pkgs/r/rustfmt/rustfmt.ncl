@@ -3,8 +3,8 @@
   drvs,
   rustfmt | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/rust-lang/rustfmt/archive/refs/tags/v1.8.0.tar.gz",
-      sha256sum = "d23bc8bfba28685fd68cf207dde62d0868ae0e4378d438d58b4b51763e6b92f5"
+      uri = "https://github.com/rust-lang/rustfmt/archive/refs/tags/v1.6.0.tar.gz",
+      sha256sum = "32ba647a9715efe2699acd3d011e9f113891be02ac011d314b955a9beea723a2"
     },
     crates = lib.functions.filterCrates (import "rustfmt-crates.json")
   }
@@ -20,6 +20,10 @@
       crates = lib.functions.filterCrates (import "cargo-crates.json"),
 
       extraEnv.STATIC_RUSTFLAGS = [],
+      extraEnv.EXTRA_RUSTFLAGS = [
+        "-C link-arg=-lc++",
+        "-C link-arg=-lc++abi",
+      ],
       cargoFlags = [
         "--release",
         "--offline",
@@ -91,6 +95,7 @@
       ],
 
       # llvmProvider = drvs.llvmFullPic,
+      llvmProvider = drvs.llvmFull,
       biDrvs = [
         drvs.pythonFull,
         # drvs.rsync,
@@ -110,6 +115,7 @@
         drvs.gnutar & { priority = 1 },
         drvs.xz & { priority = 1 },
         drvs.libgit2,
+        drvs.zlibNg,
         # drvs.basefiles,
       ],
     }
