@@ -47,6 +47,7 @@
     ],
     pDrvs = [
       drvs.libxkbcommon,
+      drvs.dav1d,
     ],
   },
 }

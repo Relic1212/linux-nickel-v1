@@ -81,11 +81,12 @@
     cargoFlags,
     target,
 
-    buildPhase = [
-      "make ARGS+=\"%{std.string.join " " cargoFlags}\" prefix=/usr",
-    ],
+    # buildPhase = [
+    #   "make ARGS+=\"%{std.string.join " " cargoFlags}\" prefix=/usr",
+    # ],
     installPhase = [
-      "make TARGET=\"%{target}/release\" prefix=/usr DESTDIR=$DEST install",
+      "export CARGO_TARGET_DIR=\"target/%{target}\"",
+      "just rootdir=$DEST install",
     ],
 
     postInstallPhase = [
@@ -118,7 +119,7 @@
     biDrvs = [
       (drvs.findutils & { priority = 1 }),
       drvs.git,
-      drvs.gnumake,
+      drvs.just,
       drvs.cosmicXdgDesktopPortalSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,

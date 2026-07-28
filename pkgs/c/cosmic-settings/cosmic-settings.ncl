@@ -196,6 +196,7 @@
       drvs.elogindWithPolkit,
       drvs.libcap,
       drvs.libstdcppCompat,
+      drvs.dav1d,
     ],
   },
 }
