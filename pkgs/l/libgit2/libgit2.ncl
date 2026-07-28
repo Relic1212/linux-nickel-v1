@@ -4,8 +4,8 @@
   libgit2 | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/libgit2/libgit2/archive/refs/tags/v1.9.1.tar.gz",
-      sha256sum = "14cab3014b2b7ad75970ff4548e83615f74d719afe00aa479b4a889c1e13fc00"
+      uri = "https://github.com/libgit2/libgit2/archive/refs/tags/v1.9.6.tar.gz",
+      sha256sum = "a88a42a4ea9bdab7aa8686eead3bf7d9c6dd74529caca16ab22eaa92433d31d9"
     },
     cmakeExtraArgsRecord = {
       "-DUSE_GSSAPI" = false,
@@ -13,10 +13,12 @@
       # "-DBUILD_TESTS" = false,
     },
     biDrvs = [
-      drvs.zlibNg,
-      drvs.openssl,
       drvs.linuxHeaders,
       drvs.pythonFull,
     ],
+    pDrvs = [
+      drvs.zlibNg,
+      drvs.openssl,
+    ]
   }
 }
