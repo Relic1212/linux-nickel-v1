@@ -1,0 +1,14 @@
+diff --git a/dirlock/src/convert/mod.rs b/dirlock/src/convert/mod.rs
+index 46b3888..604f1de 100644
+--- a/dirlock/src/convert/mod.rs
++++ b/dirlock/src/convert/mod.rs
+@@ -485,8 +485,7 @@ impl ConvertJob {
+         check_injected_error(Injected::ConvertCommitBeforeExchange)?;
+ 
+         // Exchange atomically the source directory and its encrypted copy
+-        fcntl::renameat2(None, &self.dirs.src, None, &dstdir_2,
+-                         fcntl::RenameFlags::RENAME_EXCHANGE)?;
++        fcntl::renameat(None, &self.dirs.src, None, &dstdir_2)?;
+         _ = nix::unistd::syncfs(syncfd.as_raw_fd());
+ 
+         check_injected_error(Injected::ConvertCommitAfterExchange)?;
