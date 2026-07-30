@@ -153,7 +153,7 @@
     pDrvs = [
       drvs.utilLinux,
       drvs.gnutls,
-      drvs.gmp,
+      # drvs.gmp,
       drvs.libtasn1,
       drvs.nettleGmp,
     ]

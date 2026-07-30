@@ -123,6 +123,9 @@ in
     biDrvs = [
       # drvs.libxslt,
     ],
+    neverInclude = [
+      drvs.harfbuzz,
+    ],
     pDrvs = [
       drvs.gtk4,
       drvs.p11Kit,

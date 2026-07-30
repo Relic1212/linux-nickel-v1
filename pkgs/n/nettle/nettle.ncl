@@ -18,8 +18,7 @@
   nettleGmp =
     nettle
     & {
-      biDrvs | priority 1 = [
-        drvs.m4,
+      pDrvs = [
         drvs.gmp,
       ],
       extraConfigureFlags = [
