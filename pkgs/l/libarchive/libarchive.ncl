@@ -16,7 +16,7 @@
       "ln -s bsdtar tar",
       "ln -s bsdunzip unzip",
     ],
-    biDrvs = [
+    pDrvs = [
       drvs.zlibNg,
       drvs.zstd,
       drvs.lz4,
