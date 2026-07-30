@@ -241,6 +241,7 @@ in
               SYSROOT = "/tmp/workdir/sysroot",
             }
         ),
+        preUnpackPhase | not_exported | Array String | default = [],
 
         unpackPhase | not_exported | Array String | default = [
           if (std.array.length sourceInputs) == 0 then
@@ -259,6 +260,7 @@ in
         ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) sourceInputs ) )}
       "%
         ],
+        preEnvSetupPhase | not_exported | default = [],
         envSetupPhase | not_exported =
           [
             "export WORKDIR=/tmp/workdir",
@@ -294,7 +296,7 @@ in
         preInstallPhase | not_exported | Array String | default = [],
         installPhase | not_exported | Array String | default = [],
         postInstallPhase | not_exported | Array String | default = [],
-        phases | not_exported | Array (Array String) | default = [unpackPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        phases | not_exported | Array (Array String) | default = [preUnpackPhase, unpackPhase, preEnvSetupPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
         cdBuildPhase | not_exported | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
         separateBuildDir | not_exported | Bool | default = true,
