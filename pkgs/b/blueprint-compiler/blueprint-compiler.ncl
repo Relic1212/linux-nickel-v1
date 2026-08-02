@@ -16,5 +16,12 @@
       uri = "https://gitlab.gnome.org/GNOME/blueprint-compiler/-/archive/0.19.0/blueprint-compiler-0.19.0.tar.bz2",
       sha256sum = "c3d5ba91e6e952b6b2e9540eb4328520482c3b8f5f53f3269f047a85bcda349c",
     }
+  },
+  blueprintCompiler22 | lib.MesonPackage = {
+    singleSource = {
+
+      uri = "https://gitlab.gnome.org/GNOME/blueprint-compiler/-/archive/v0.22.2/blueprint-compiler-v0.22.2.tar.bz2?ref_type=tags",
+      sha256sum = "d8d7071f7ea957a2a4974514576e3282e3641d05c856bbc9454b78cbe2975749",
+    }
   }
 }
