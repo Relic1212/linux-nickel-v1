@@ -5,14 +5,14 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/sentriz/cliphist/archive/refs/tags/v0.6.1.tar.gz",
-          sha256sum = "db0f25ba3e9173dcb257d66cb1293e277a8bdfed11cc8d6b38b7473b0947781d"
+          uri = "https://github.com/sentriz/cliphist/archive/refs/tags/v0.7.0.tar.gz",
+          sha256sum = "8d7dc7b4495e5812b5613274c250ba5d3900933d78888ce7921c01247f191cc8"
         }
       },
       {
         src = {
-          uri = "https://slackware.lngn.net/pub/source/cliphist/cliphist-vendor-0.6.1.tar.xz",
-          sha256sum = "29b05beb0e1802c7a37bd15e70b48f807f281183aa9633de7eeda0a66a53da4e"
+          uri = "https://slackware.lngn.net/pub/source/cliphist/cliphist-vendor-0.7.0.tar.xz",
+          sha256sum = "196a7992308b1b3658517c9b0c42494a601707210e98251afe12b49dcb87bbee"
         },
         dest = "vendor"
       }
