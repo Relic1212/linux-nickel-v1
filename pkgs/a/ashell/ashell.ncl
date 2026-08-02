@@ -6,11 +6,15 @@
     _CargoFetcher
     & {
       singleSource = {
-        uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.9.0.tar.gz",
-        sha256sum = "d99c5895079e39d66d07d0937e8d26b2622f8ca6f9de5fb1f49b68b01766e3f3",
+        # uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.9.0.tar.gz",
+        # sha256sum = "d99c5895079e39d66d07d0937e8d26b2622f8ca6f9de5fb1f49b68b01766e3f3",
+
+        uri = "https://github.com/MalpenZibo/ashell/archive/e1a01416cb928b7e118f21aa72e6502717452c69.tar.gz",
+        sha256sum = "14621d548d4d67f4da8320276d614b54b510089ce7457396c779157260d55094",
       },
 
-      outputSha256sum = "9a36d682d21ef7152953002ca97b6c5bcf0812f758e0ad8142135d2a3f23377a",
+      # outputSha256sum = "9a36d682d21ef7152953002ca97b6c5bcf0812f758e0ad8142135d2a3f23377a",
+      outputSha256sum = "c511766bf5a8e54d1886cb0d618a48d86632e02940b2204f807c08ec60e6babf",
     },
   ashell | lib.CargoPackage = {
 
