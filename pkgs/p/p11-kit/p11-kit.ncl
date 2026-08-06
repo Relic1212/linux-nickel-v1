@@ -7,8 +7,17 @@
       sha256sum = "04d0a86450cdb1be018f26af6699857171a188ac6d5b8c90786a60854e1198e5"
     },
 
+    extraMesonArgs = [
+      "-Dtrust_module=enabled",
+      "-Dtrust_paths=\"/etc/ssl/cert.pem:/etc/ssl/certs/ca-certificates.crt\"",
+    ],
+
     preConfigurePhase = [
       m%"sed -i "s@shared_library@library@g" ${SRC}/p11-kit/meson.build"%,
+    ],
+
+    postInstallPhase = [
+      "llvm-objcopy --redefine-sym=memdup=p11kit_memdup ${DEST}/usr/lib/libp11-kit.a",
     ],
 
     biDrvs = [
@@ -21,6 +30,7 @@
       drvs.glib,
       drvs.gpgme,
       drvs.gnupg2,
+      drvs.libtasn1,
     ],
   }
 }
