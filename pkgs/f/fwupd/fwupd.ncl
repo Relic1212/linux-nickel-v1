@@ -131,6 +131,7 @@
       drvs.zlibNg,
       drvs.zstd,
       drvs.cairoGobject,
+      drvs.p11Kit,
     ]
   }
 }
