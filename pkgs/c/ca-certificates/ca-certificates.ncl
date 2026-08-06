@@ -1,5 +1,6 @@
 {
   lib,
+  drvs,
   caCertificates | lib.Package = {
     singleSource = {
       uri = "https://curl.se/ca/cacert-2025-02-25.pem",
@@ -9,7 +10,33 @@
       "install -d -m0755 ${DEST}/etc/ssl",
       "install -m 0755 ${SRC}/cacert*.pem ${DEST}/etc/ssl/cert.pem",
     ]
-  }
+  },
+
+  caCertificatesDebian | lib.MakePackage = {
+    singleSource = {
+      uri = "https://salsa.debian.org/debian/ca-certificates/-/archive/debian/20211016/ca-certificates-debian-20211016.tar.bz2",
+      sha256sum = "95c514375faa4b4c22566fd2ad9cd988cf57644ec911707b87c5bc8e8b39c6e6",
+    },
+    biDrvs = [
+      drvs.pythonFull,
+    ],
+  },
+
+  caCertificatesAlpine | lib.MakePackage = {
+    singleSource = {
+      uri = "https://gitlab.alpinelinux.org/alpine/ca-certificates/-/archive/20260611/ca-certificates-20260611.tar.bz2",
+      sha256sum = "32ca73f2e81e2b88dc614f12e1ee04a82b1ec5a8e29d9f359ddf8905a0afcbb0",
+    },
+    preConfigurePhase = [
+      "sed -i 's|sbin|bin|g' Makefile",
+    ],
+    biDrvs = [
+      drvs.perl,
+    ],
+    pDrvs = [
+      drvs.openssl,
+    ],
+  },
 }
 & {
   lib,
