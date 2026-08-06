@@ -19,6 +19,11 @@
 
       crates = lib.functions.filterCrates (import "cargo-crates.json"),
 
+      options = {
+        tools | default = "cargo,src,rustfmt",
+        sccache | default = false,
+      },
+
       extraEnv.STATIC_RUSTFLAGS = [],
       extraEnv.EXTRA_RUSTFLAGS = [
         "-C link-arg=-lc++",
@@ -57,7 +62,7 @@
               "--enable-locked-deps",
               "--disable-codegen-tests",
               "--enable-cargo-native-static",
-              "--tools=\"cargo,src,rustfmt\"",
+              "--tools=\"%{options.tools}\"",
               "--set=\"rust.codegen-tests=false\"",
               "--set=\"rust.musl-root=/usr\"",
               "--set=\"rust.rpath=false\"",
@@ -75,6 +80,15 @@
               "--set=\"target.%{tgt}.crt-static=false\"",
               "--set=\"build.local-rebuild=true\"",
             ]
+            @ (
+              if options.sccache then
+                [
+                  "--enable-sccache",
+                  "--set=\"build.profiler=true\"",
+                ]
+              else
+                []
+            )
           )
           in
           [
@@ -84,13 +98,13 @@
 
       buildPhase = [
         "echo 'running build'",
-        "./x.py build  --jobs $(nproc)",
+        "./x.py build  --jobs $(nproc)" ++ (if options.sccache then " --stage 1" else ""),
         "echo 'build done'"
       ],
 
       installPhase = [
         "echo 'running install'",
-        "DESTDIR=${DEST} ./x.py install",
+        "DESTDIR=${DEST} ./x.py install" ++ (if options.sccache then " --stage 1" else ""),
         "echo 'install done'"
       ],
 
@@ -118,10 +132,19 @@
         drvs.zlibNg,
         # drvs.basefiles,
       ],
-    }
+    },
     in
     p
     & {
       preConfigurePhase | priority 1 = std.array.map (fun s => std.string.replace "--strip-components=1" "--strip-components=1 --no-same-owner" s) p.preConfigurePhase
+    },
+
+  rustProfiler | lib.CargoPackage =
+    rustWFmt
+    & {
+      options = {
+        tools = "cargo,src,rustfmt,profiler",
+        sccache = true,
+      },
     }
 }
