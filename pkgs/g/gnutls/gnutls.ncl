@@ -8,8 +8,21 @@
     },
     extraConfigureFlags = [
       "--with-included-unistring",
-      "--without-p11-kit",
+      # "--without-p11-kit",
+      # "--with-default-trust-store-pkcs11=\"pkcs11\"",
+      "--with-default-trust-store-file=/etc/ssl/cert.pem",
     ],
+
+    preConfigurePhase =
+      std.array.map
+        (fun s => "sed -i 's|getprogname |gnutls_getprogname |g' ${SRC}/%{s}")
+        [
+          "src/gl/error.c",
+          "src/gl/getprogname.c",
+          "src/gl/tests/test-getprogname.c",
+          "src/gl/getprogname.h",
+        ],
+
     biDrvs = [
       #   (drvs.libffi & { priority = 2}),
       #   drvs.glib,
@@ -23,14 +36,27 @@
       #   drvs.p11Kit,
       #   drvs.pcre2,
       #   drvs.zlibNg,
-      drvs.gmp,
-      drvs.libtasn1,
+      # drvs.gmp,
+      # drvs.libtasn1,
       drvs.linuxHeaders,
       drvs.m4,
-      drvs.nettleGmp,
+      # drvs.nettleGmp,
       drvs.pkgconfMeson,
+    ],
+    pDrvs = [
+      # drvs.libtasn1,
+      drvs.nettleGmp,
+      drvs.p11Kit,
     ]
   },
+
+  # gnutlsWithTrust | lib.AutotoolsPackage= gnutls & {
+  #    pDrvs | priority 1= [
+  #     drvs.libtasn1,
+  #     drvs.nettleGmp,
+  #     drvs.p11Kit,
+  #   ]
+  # }
 
   libtasn1 | lib.AutotoolsPackage = {
     singleSource = {
