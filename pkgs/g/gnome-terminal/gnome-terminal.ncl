@@ -118,6 +118,7 @@
       drvs.gmp,
       drvs.libtasn1,
       drvs.gnutls,
+      drvs.p11Kit,
       drvs.libicu,
     ],
   }
