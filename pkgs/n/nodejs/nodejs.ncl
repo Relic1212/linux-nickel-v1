@@ -11,7 +11,7 @@
       "--prefix=/usr",
       "--fully-static",
       "--without-lief",
-      "--without-intl",
+      "--with-intl=small-icu",
       "--without-sqlite",
       "--use_clang",
     ],
@@ -21,5 +21,27 @@
       drvs.libemptyAtomic,
       drvs.libempty,
     ]
+  },
+  nodejsDynamic | lib.AutotoolsPackage = {
+    singleSource = nodejs.singleSource,
+    buildEnv._isStatic = false,
+    isStatic = false,
+    separateBuildDir = false,
+
+    configureFlags = [
+      "--prefix=/usr",
+      "--without-lief",
+      "--with-intl=small-icu",
+      "--without-sqlite",
+      "--use_clang",
+    ],
+
+    biDrvs = [
+      drvs.pythonInteractive,
+      drvs.linuxHeaders,
+      drvs.libemptyAtomic,
+      drvs.libempty,
+      drvs.muslShared,
+    ],
   }
 }
