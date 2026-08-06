@@ -3,8 +3,8 @@
   drvs,
   rofi | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/davatorium/rofi/archive/refs/tags/2.0.0-beta1.tar.gz",
-      sha256sum = "17934ff9922b25ba93c659956940d96aa4571523c2b4bdff9e9dee40e208ca24",
+      uri = "https://github.com/davatorium/rofi/archive/refs/tags/2.0.0.tar.gz",
+      sha256sum = "ae2b7bdc8333628eea97daa904d33aa14c34fa733f0718a406535fed26b2deaf",
     },
     sourceInputs = [
       {
