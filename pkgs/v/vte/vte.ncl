@@ -143,6 +143,7 @@
       drvs.libtasn1,
       drvs.nettleGmp,
       drvs.gnutls,
+      drvs.p11Kit,
     ],
   }
 }
