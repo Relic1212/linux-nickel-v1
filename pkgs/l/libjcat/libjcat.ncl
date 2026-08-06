@@ -16,19 +16,19 @@
       ]
     },
     biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
       drvs.jsonGlib,
-      drvs.gmp,
-      drvs.libtasn1,
-      drvs.nettleGmp,
-      drvs.gnutls,
-      drvs.libassuan,
-      drvs.libgcrypt,
-      drvs.libgpgError,
-      drvs.gpgme,
+      # drvs.gmp,
+      # drvs.libtasn1,
+      # drvs.nettleGmp,
+      # drvs.gnutls,
+      # drvs.libassuan,
+      # drvs.libgcrypt,
+      # drvs.libgpgError,
+      # drvs.gpgme,
     ],
+    pDrvs = [
+      drvs.gnutls,
+      # drvs.glib,
+    ]
   }
 }
