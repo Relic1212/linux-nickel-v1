@@ -119,6 +119,10 @@ in
       m%"sed -i "s@shared_library@library@g" ${SRC}/gck/meson.build"%,
       m%"sed -i "s@shared_library@library@g" ${SRC}/gcr/meson.build"%,
     ],
+    postInstallPhase = [
+      "llvm-objcopy --redefine-sym=pkix_asn1_tab=gcr4__pkix_asn1_tab ${DEST}/usr/lib/libgck-2.a",
+      "llvm-objcopy --redefine-sym=SECMEM_pool_data_v1_0=gcr4__SECMEM_pool_data_v1_0 ${DEST}/usr/lib/libgck-2.a",
+    ],
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       # drvs.libxslt,
