@@ -17,8 +17,11 @@
           # uri="https://github.com/swaywm/sway/releases/download/1.10.1/sway-1.10.1.tar.gz",
           # sha256sum = "b2fbf3a2f94c8926efa18d6af59bb9f5f1eafa6d46491284b1610c57bef2d105"
 
-          uri = "https://github.com/swaywm/sway/releases/download/1.11/sway-1.11.tar.gz",
-          sha256sum = "0e37a55b7c3379230e97e1ad982542b75016a0c7d6676198604e557f9b373dae"
+          # uri = "https://github.com/swaywm/sway/releases/download/1.11/sway-1.11.tar.gz",
+          # sha256sum = "0e37a55b7c3379230e97e1ad982542b75016a0c7d6676198604e557f9b373dae",
+
+          uri = "https://github.com/swaywm/sway/releases/download/1.12/sway-1.12.tar.gz",
+          sha256sum = "a7b1becc217433c11c6284d36bcea0687b87b77b0ed26a384565292ec321f2b1",
         }
       },
       {
@@ -29,8 +32,11 @@
           # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.18.2/downloads/wlroots-0.18.2.tar.gz",
           # sha256sum = "cf776c169169f279808d9eabc6583f484338dcd454c966a285ff178c88c105d4",
 
-          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.2/downloads/wlroots-0.19.2.tar.gz",
-          sha256sum = "09a0a8d60104c8b0772fee4f60ba76a89aed7e59dff7659d00960fba06bdf267",
+          # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.2/downloads/wlroots-0.19.2.tar.gz",
+          # sha256sum = "09a0a8d60104c8b0772fee4f60ba76a89aed7e59dff7659d00960fba06bdf267",
+
+          uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.20.2/downloads/wlroots-0.20.2.tar.gz",
+          sha256sum = "80c567d2ed4efb2cfa6b077f22c7a710d9c78ba4e185a75e8694001114af0733",
         },
         dest = "wlroots"
       }
