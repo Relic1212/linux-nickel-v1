@@ -9,7 +9,10 @@
     },
 
     buildEnv = {
-      EXTRA_LDFLAGS = ["-lc++"],
+      EXTRA_LDFLAGS = [
+        "-lc++",
+        # "-Wl,--no-gc-sections",
+      ],
     },
     # patches = [
     #   {
@@ -30,6 +33,15 @@
       drvs.mesa2,
     ],
   },
+
+  libepoxyDebug =
+    libepoxy
+    & {
+      debug = true,
+      postInstallPhase = [
+        "llvm-objcopy --globalize-symbol=library_init ${DEST}/usr/lib/libepoxy.a",
+      ],
+    },
 }
 # & {
 #   lib,
