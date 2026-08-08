@@ -297,18 +297,25 @@
         # "rm -rf third_party/wayland-protocols",
       ],
       buildPhase = [
-        "ninja -C out/Bld chrome",
+        "ninja -C out/Bld -j$(nproc) chrome",
         "ninja -C out/Bld chrome_sandbox",
-        "echo 'built chrom, building rest'",
+        "echo 'built chrome, building rest'",
         "ninja -C out/Bld || echo failed",
       ],
 
       installPhase = [
         "DESTDIR=$DEST ninja -C out/Bld install",
         "install -dm0755 ${DEST}/usr/bin",
-        "cp out/Bld/chrome ${DEST}/usr/bin",
-        "cp out/Bld/chrome-wrapper ${DEST}/usr/bin/",
-        "cp out/Bld/chrome_crashpad_handler ${DEST}/usr/bin/",
+        "install -dm0755 ${DEST}/usr/lib/chromium/extensions",
+        "strip out/Bld/chrome", # 2.1 gb -> 310 mb
+        "cp out/Bld/chrome ${DEST}/usr/lib/chromium/",
+        "cp out/Bld/chrome-wrapper ${DEST}/usr/lib/chromium/",
+        "cp out/Bld/chrome_crashpad_handler ${DEST}/usr/lib/chromium/",
+        "cp out/Bld/chrome_sandbox ${DEST}/usr/lib/chromium/",
+        "cp -r out/Bld/locales ${DEST}/usr/lib/chromium/locales",
+        "cp out/Bld/resources.pak ${DEST}/usr/lib/chromium/",
+        "cp out/Bld/chrome_100_percent.pak ${DEST}/usr/lib/chromium/",
+        "(cd ${DEST}/usr/bin && ln -s /usr/lib/chromium/chrome chrome)",
       ],
 
       llvmProvider,
