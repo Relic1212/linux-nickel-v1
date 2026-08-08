@@ -338,3 +338,30 @@ replace("sandbox/linux/services/libc_interceptor.cc",
 //     const time_t* timep,
 //     struct tm* result) __asm__("localtime_r");'''
     )
+
+def dquote(s):
+    return f'"{s}"'
+
+libs=[
+    "/tmp/workdir/src/libdl_chromium.a", 
+    "/usr/lib/libgcm.a", 
+    "/usr/lib/libhw-acc-crypto-avx2.a", 
+    "/usr/lib/libhw-acc-crypto-avx.a", 
+    "/usr/lib/libghash-aes-x86_c_lib.a",
+    "/usr/lib/libsha-x86_c_lib.a",
+    "/usr/lib/libintel-gcm-wrap_c_lib.a", 
+    "/usr/lib/libfreebl_static.a", 
+    "/usr/lib/libsqlite.a", 
+    "/usr/lib/libpk11wrap.a", 
+    "/usr/lib/libEGL.a", 
+    "/usr/lib/libpci.a", 
+    "/usr/lib/libplds4.a", 
+    "/usr/lib/libplc4.a", 
+    "/usr/lib/libsoftokn.a" 
+    ]
+
+libs_str=",".join([dquote(l) for l in libs])
+replace("chrome/BUILD.gn",
+"ldflags = []",
+f'ldflags = [{libs_str}]'
+)

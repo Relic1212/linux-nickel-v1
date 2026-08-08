@@ -77,7 +77,8 @@
         ],
         EXTRA_LDFLAGS = [
           # "/tmp/workdir/src/dlopen.o",
-          "/tmp/workdir/src/libdl_chromium.a",
+          # "/tmp/workdir/src/libdl_chromium.a",
+          "/tmp/workdir/src/libdl_basic.a",
           "-Wl,--error-limit=0",
           "-lcertdb",
           "-lpk11wrap",
@@ -88,6 +89,7 @@
           "-lnsspki",
           "-lpkcs12",
           "-lpkcs7",
+          # "$(pkg-config --libs --static egl libpci)"
         ],
       },
       separateBuildDir = false,
@@ -197,6 +199,8 @@
           ##
           "pdf_enable_xfa=false",
           "icu_use_data_file=false",
+          "v8_use_external_startup_data=false",
+          # "headless_use_embedded_resources=true",
         ]
         in
         [
@@ -204,7 +208,11 @@
         ],
 
       preConfigurePhase = [
-        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen2.c" as 'Text),
+        lib.functions.writeFile "dlopen_basic.c" (import "chromium_dlopen0.c" as 'Text),
+        "${CC} ${CFLAGS} -Werror -fPIC -c dlopen_basic.c -o dlopen_basic.o", # also gets into some (currently) shared libs
+        "llvm-ar rcs libdl_basic.a dlopen_basic.o",
+        "llvm-ranlib libdl_basic.a",
+        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen3.c" as 'Text),
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen.c -o dlopen.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_chromium.a dlopen.o",
         "llvm-ranlib libdl_chromium.a",
@@ -283,6 +291,10 @@
         "sed -i 's|shared_library|static_library|g' ui/gl/BUILD.gn",
         "sed -i 's@libEGL.so@obj/ui/gl/libEGL.a@g' chrome/BUILD.gn",
         "sed -i 's@libGLESv2.so@obj/ui/gl/libGLESv2.a@g' chrome/BUILD.gn",
+        "sed -i 's|int getaddrinfo|int bad_getaddrinfo|g' sandbox/linux/services/libc_interceptor.cc",
+
+        # "rm -rf third_party/wayland",
+        # "rm -rf third_party/wayland-protocols",
       ],
       buildPhase = [
         "ninja -C out/Bld chrome",
@@ -326,8 +338,13 @@
           drvs.libempty,
           # drvs.gcc, # libgcc
           drvs.cdefs,
+          drvs.mesaChromium,
         ]
         @ (if options.unpack then [] else [drvs.chromiumSourceUnpacked]),
+
+      neverInclude = [
+        drvs.mesa2,
+      ],
       pDrvs = [
         drvs.gtk4,
         drvs.gtk3,
@@ -386,6 +403,21 @@
           "objcopy --globalize-symbol stub_dlopen libc.so",
           "objcopy --globalize-symbol stub_dlsym libc.so",
           "objcopy --globalize-symbol stub_dladdr libc.so",
+        ]
+    },
+  mesa2,
+  mesaChromium | lib.MesonPackage =
+    mesa2
+    & {
+
+      postInstallPhase | priority 1 =
+        mesa2.postInstallPhase
+        @ [
+          "llvm-objcopy --redefine-sym=zwp_linux_dmabuf_v1_interface=libegl__zwp_linux_dmabuf_v1_interface ${DEST}/usr/lib/libEGL.a",
+          "llvm-objcopy --redefine-sym=zwp_linux_buffer_params_v1_interface=libegl__zwp_linux_buffer_params_v1_interface ${DEST}/usr/lib/libEGL.a",
+          "llvm-objcopy --redefine-sym=zwp_linux_dmabuf_feedback_v1_interface=libegl__zwp_linux_dmabuf_feedback_v1_interface ${DEST}/usr/lib/libEGL.a",
+          "llvm-objcopy --redefine-sym=wp_presentation_interface=libegl__wp_presentation_interface ${DEST}/usr/lib/libEGL.a",
+          "llvm-objcopy --redefine-sym=wp_presentation_feedback_interface=libegl__wp_presentation_feedback_interface ${DEST}/usr/lib/libEGL.a",
         ]
     }
 }

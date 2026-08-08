@@ -190,7 +190,7 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 
     DLSYM(localtime, )
     DLSYM(localtime_r, )
-    DLSYM(nspr_use_zone_allocator, )
+    // DLSYM(nspr_use_zone_allocator, )
     DLSYM(getaddrinfo, )
 
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s (handle=%p)\n", symbol, handle);	return stub_dlsym(handle, symbol);
