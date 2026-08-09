@@ -12,6 +12,19 @@
     isStatic = false,
     buildEnv = {
       _isStatic = false,
+      EXTRA_CPPFLAGS = [
+        "-DCMAC_Init=libnss_freebl__CMAC_Init",
+        "-DCMAC_Update=libnss_freebl__CMAC_Update",
+        "-DHMAC_Update=libnss_freebl__HMAC_Update",
+        "-DHMAC_Init=libnss_freebl__HMAC_Init",
+        "-DSHA1_Update=libnss_freebl__SHA1_Update",
+        "-DSHA224_Update=libnss_freebl__SHA224_Update",
+        "-DSHA256_Update=libnss_freebl__SHA256_Update",
+        "-DSHA384_Update=libnss_freebl__SHA384_Update",
+        "-DSHA512_Update=libnss_freebl__SHA512_Update",
+        "-DMD5_Update=libnss_freebl__MD5_Update",
+      ],
+      EXTRA_CFLAGS = EXTRA_CPPFLAGS,
     },
     cdBuildPhase | priority 1 = ["cd ${SRC}/nss"],
     buildPhase = [
