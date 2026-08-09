@@ -365,3 +365,43 @@ replace("chrome/BUILD.gn",
 "ldflags = []",
 f'ldflags = [{libs_str}]'
 )
+
+#  https://github.com/void-linux/void-packages/issues/55571
+replace("sandbox/linux/services/credentials.cc",
+  "(defined(ARCH_CPU_X86_64) || defined(ARCH_CPU_ARM_FAMILY))",
+  "0 && (defined(ARCH_CPU_X86_64) || defined(ARCH_CPU_ARM_FAMILY))")
+
+
+# replace("third_party/webrtc/modules/portal/BUILD.gn",
+# '''  config("pipewire_base") {
+#     configs = [
+#       ":gio",
+#       ":pipewire",
+#     ]
+#   }
+# ''',
+# '''  config("pipewire_base") {
+#     all_dependent_configs = [ ":gio", ]
+#     configs = [
+#       # ":gio",
+#       ":pipewire",
+#     ]
+#   }
+# '''
+# )
+
+replace("third_party/webrtc/modules/portal/BUILD.gn",
+'''    configs += [
+      ":gio",
+      ":pipewire",
+      ":pipewire_config",
+    ]
+''',
+'''    all_dependent_configs = [ ":gio", ]
+    configs += [
+      ##":gio",
+      ":pipewire",
+      ":pipewire_config",
+    ]
+'''
+)
