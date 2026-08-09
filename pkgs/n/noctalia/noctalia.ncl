@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia/releases/download/v5.0.0-beta.4/noctalia-v5.0.0-beta.4.tar.gz",
-      sha256sum = "53319101d752f24086804fb8d4997dc9c760106c6bdf68c71b4bea81c577f576",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.0.0-beta.7.tar.gz",
+      sha256sum = "fb553e9a1ff8451fe9ceb34c6dbbdf14771e3576cc2e94fcee194d15ee46ccc2",
     },
 
     buildEnv = {
@@ -21,6 +21,7 @@
     preConfigurePhase = [
       "sed -i 's| log| noctalia_log|g' ${SRC}/src/system/desktop_entry_launch.cpp",
       m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
+      m%"sed -i 's|std::to_string(modified.time_since_epoch().count())|std::to_string(static_cast<long long>(modified.time_since_epoch().count()))|g' ${SRC}/src/system/icon_resolver.cpp"%,
       m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
       "sed -i 's|lua_ident|lua_ident_compat|g' ${SRC}/third_party/luau/VM/src/lapi.cpp",
@@ -53,6 +54,8 @@
       drvs.stb,
       drvs.libsodium,
       drvs.libsecret,
+      drvs.libical,
+      drvs.libjxl,
     ]
   },
 }
