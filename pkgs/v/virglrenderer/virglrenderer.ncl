@@ -3,12 +3,16 @@
   drvs,
   virglrenderer | lib.MesonPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/virgl/virglrenderer/-/archive/1.2.0/virglrenderer-1.2.0.tar.bz2",
-      sha256sum = "f4f52db11297b52b35c8c2d5bf5e21b7997b52f8bfad99ea2b1c155997cff4ad"
+      uri = "https://gitlab.freedesktop.org/virgl/virglrenderer/-/archive/virglrenderer-1.3.0/virglrenderer-virglrenderer-1.3.0.tar.gz",
+      sha256sum = "56170f8caa1bb642a2624b649e3bcca095ec2834814e5c308efc8a85a709e4ce"
     },
     extraMesonArgs = [
       "-Dplatforms=egl",
-      # "-Dvideo=true",
+      "-Dvideo=true",
+      # "-Ddrm-amdgpu=true",
+      # "-Ddrm-renderers='amdgpu-experimental,i915-experimental'",
+      "-Ddrm-renderers='amdgpu-experimental'",
+      # "-Drender-server-worker='process,thread'",
     ],
 
     buildEnv = {
@@ -91,7 +95,9 @@
       drvs.expat,
       drvs.jsonC,
       drvs.pcre2,
-      drvs.mesaGlxEpoxy,
+      # drvs.mesaGlx,
+      drvs.mesa2,
+      drvs.libva,
       drvs.wayland,
       drvs.waylandProtocols,
       drvs.libelf,
