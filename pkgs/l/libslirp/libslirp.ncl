@@ -7,11 +7,10 @@
       sha256sum = "3caff6e2de445f4995629d4929c55419f661b2b1d14f12481e155a71c1e8f811"
     },
     biDrvs = [
-      drvs.glib,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
       drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.glib,
     ]
   }
 }
