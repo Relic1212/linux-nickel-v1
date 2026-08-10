@@ -10,9 +10,11 @@
       "-Dplatforms=egl",
       "-Dvideo=true",
       # "-Ddrm-amdgpu=true",
-      # "-Ddrm-renderers='amdgpu-experimental,i915-experimental'",
-      "-Ddrm-renderers='amdgpu-experimental'",
-      # "-Drender-server-worker='process,thread'",
+      "-Ddrm-renderers='amdgpu-experimental,i915-experimental'",
+      # "-Ddrm-renderers='amdgpu-experimental'",
+      "-Drender-server-worker='thread'",
+      # "-Drender-server-worker='process'",
+      "-Dcheck-gl-errors=false",
     ],
 
     buildEnv = {
@@ -71,6 +73,8 @@
         "_mesa_pointer_hash_table_create",
         "_mesa_hash_table_u64_remove",
         "_mesa_hash_table_u64_search",
+        "virgl_video_create_codec",
+        "virgl_video_create_buffer",
       ]
       in
       std.array.map (fun s => "llvm-objcopy --redefine-sym %{s}=__virglrenderer_private_%{s} ${DEST}/usr/lib/libvirglrenderer.a") syms,
