@@ -1,0 +1,23 @@
+{
+  lib,
+  drvs,
+  libva | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://github.com/intel/libva/archive/refs/tags/2.24.1.tar.gz",
+      sha256sum = "0b4a3649ee8d683b9cce2ef094df4fb039d276c0cef7e49337c43d3b297b9f42",
+    },
+    extraMesonArgs = [
+      "-Dwith_wayland=yes",
+    ],
+    preConfigurePhase = [
+      "sed -i 's|shared_library|library|g' ${SRC}/va/meson.build",
+    ],
+    biDrvs = [
+      drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.libdrm,
+      drvs.wayland,
+    ]
+  }
+}
