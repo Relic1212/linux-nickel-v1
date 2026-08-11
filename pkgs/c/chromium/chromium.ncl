@@ -222,11 +222,11 @@
         ],
 
       preConfigurePhase = [
-        lib.functions.writeFile "dlopen_basic.c" (import "chromium_dlopen0.c" as 'Text),
+        lib.functions.writeFile "dlopen_basic.c" (import "chromium_empty_dlopen.c" as 'Text),
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen_basic.c -o dlopen_basic.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_basic.a dlopen_basic.o",
         "llvm-ranlib libdl_basic.a",
-        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen3.c" as 'Text),
+        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen.c" as 'Text),
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen.c -o dlopen.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_chromium.a dlopen.o",
         "llvm-ranlib libdl_chromium.a",
