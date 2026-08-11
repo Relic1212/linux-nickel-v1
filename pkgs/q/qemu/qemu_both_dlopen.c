@@ -460,6 +460,20 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(glWaitSync, )
 
         DLSYM(glDrawBuffer, )
+
+#define glPointSize _mesa_PointSize
+        DLSYM(glPointSize, )
+#undef glPointSize
+
+#define glPolygonMode _mesa_PolygonMode
+        DLSYM(glPolygonMode, )
+#undef glPolygonMode
+
+#define glDepthRange _mesa_DepthRange
+		DLSYM(glDepthRange, )
+#undef glDepthRange
+
+
 	}
 	if (handle == &lib_libgtk_3_so || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(gtk_about_dialog_get_type, )
