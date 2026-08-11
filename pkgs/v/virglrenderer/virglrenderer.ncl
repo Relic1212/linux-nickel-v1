@@ -13,14 +13,14 @@
     extraMesonArgs =
       [
         "-Dplatforms=egl",
-        # "-Dvideo=true",
+        "-Dvideo=true",
         "-Dvideo=false",
         "-Ddrm-renderers='amdgpu-experimental,i915-experimental'",
         # "-Ddrm-renderers='amdgpu-experimental'",
         # "-Drender-server-worker='thread'",
         # "-Drender-server-worker='process'",
-        "-Dcheck-gl-errors=false",
-        # "-Dcheck-gl-errors=true",
+        # "-Dcheck-gl-errors=false",
+        "-Dcheck-gl-errors=true",
       ]
       @ [
         # "-Ddrm=enabled",
