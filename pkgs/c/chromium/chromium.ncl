@@ -27,6 +27,10 @@
       copiumSrc = {
         uri = "https://codeberg.org/selfisekai/copium/archive/151.2.tar.gz",
         sha256sum = "8c036397ea69f98af09db5a8d304ec21f0ae55801f7d5c2eda7396e382fb2594",
+      },
+      muslSandboxPatch = {
+        uri = "https://raw.githubusercontent.com/alpinelinux/aports/63664a5c5eff79b63e8538a34e13bd4dc25cbe73/community/chromium/musl-sandbox.patch",
+        sha256sum = "a0b617eec291834abac9bd8affa9c4eebebe7388f601af8a67939925e9c1a4a0",
       }
     in
     {
@@ -45,6 +49,9 @@
         },
         {
           src = copiumSrc,
+        },
+        {
+          src = muslSandboxPatch,
         }
       ],
       unpackPhase =
@@ -222,6 +229,7 @@
         ],
 
       preConfigurePhase = [
+        "(patch -p1 < /tmp/workdir/packed/%{muslSandboxPatch.sha256sum}/musl-sandbox.patch)",
         lib.functions.writeFile "dlopen_basic.c" (import "chromium_empty_dlopen.c" as 'Text),
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen_basic.c -o dlopen_basic.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_basic.a dlopen_basic.o",
@@ -337,6 +345,7 @@
       llvmProvider = drvs.llvmFull,
       biDrvs =
         [
+          drvs.gnupatch & { priority = 1 }, #  Some fuzzyness needed for Alpine patch
           drvs.go_1_26,
           drvs.gn2435,
           drvs.pythonFull,

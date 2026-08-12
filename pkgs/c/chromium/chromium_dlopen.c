@@ -49,6 +49,7 @@ const char* lib_libpci_so_3_libpci_so = "lib_libpci_so_3_libpci_so";
 const char* lib_libEGL_so_1 = "lib_libEGL_so_1";
 const char* lib_libsoftokn3_so = "lib_libsoftokn3_so";
 const char* lib_libfreeblpriv3_so = "lib_libfreeblpriv3_so";
+const char* lib_libnssckbi_so = "lib_libnssckbi_so";
 
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
@@ -57,6 +58,7 @@ void* dlopen(const char *path, int mode) {
 	if (strcmp( path, "libEGL.so.1" ) == 0) { dbg_print("(dlopen) found library libEGL.so.1 (handle=%p)\n", &lib_libEGL_so_1); return &lib_libEGL_so_1; }
 	if (strcmp( path, "libsoftokn3.so" ) == 0) { dbg_print("(dlopen) found library libsoftokn3.so (handle=%p)\n", &lib_libsoftokn3_so); return &lib_libsoftokn3_so; }
 	if (strcmp( path, "libfreeblpriv3.so" ) == 0) { dbg_print("(dlopen) found library libfreeblpriv3.so (handle=%p)\n", &lib_libfreeblpriv3_so); return &lib_libfreeblpriv3_so; }
+	if (strstr( path, "libnssckbi.so" ) != NULL) { dbg_print("(dlopen) found library libnssckbi.so (handle=%p)\n", &lib_libnssckbi_so); return &lib_libnssckbi_so; }
 	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 
@@ -659,6 +661,10 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 	if (handle == &lib_libfreeblpriv3_so || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(FREEBL_Deprecated, )
 		DLSYM(FREEBL_GetVector, )
+	}
+	if (handle == &lib_libnssckbi_so || handle == NULL || handle == &main_program_handle) { 
+		// DLSYM(C_GetInterface, nssckbi__)
+		DLSYM(C_GetFunctionList, nssckbi__)
 	}
 
 	DLSYM(localtime, )

@@ -343,6 +343,7 @@ def dquote(s):
     return f'"{s}"'
 
 libs=[
+    "-Wl,--start-group",
     "/tmp/workdir/src/libdl_chromium.a", 
     "/usr/lib/libgcm.a", 
     "/usr/lib/libhw-acc-crypto-avx2.a", 
@@ -353,11 +354,20 @@ libs=[
     "/usr/lib/libfreebl_static.a", 
     "/usr/lib/libsqlite.a", 
     "/usr/lib/libpk11wrap.a", 
+    "/usr/lib/libnssutil.a",
     "/usr/lib/libEGL.a", 
     "/usr/lib/libpci.a", 
     "/usr/lib/libplds4.a", 
     "/usr/lib/libplc4.a", 
-    "/usr/lib/libsoftokn.a" 
+    "/usr/lib/libsoftokn.a" ,
+    "/usr/lib/libfreeblpriv3.a",
+    "/usr/lib/libnss_static.a",
+    "-Wl,--whole-archive",
+    "/usr/lib/libnssckbi.a",
+    "/usr/lib/libnssckfw.a",
+    "/usr/lib/libnssb.a",
+    "-Wl,--no-whole-archive",
+    "-Wl,--end-group",
     ]
 
 libs_str=",".join([dquote(l) for l in libs])
