@@ -473,6 +473,11 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(glDepthRange, )
 #undef glDepthRange
 
+#define glClearDepth _mesa_ClearDepth
+		DLSYM(glClearDepth, )
+#undef glClearDepth
+
+
 
 	}
 	if (handle == &lib_libgtk_3_so || handle == NULL || handle == &main_program_handle) { 
