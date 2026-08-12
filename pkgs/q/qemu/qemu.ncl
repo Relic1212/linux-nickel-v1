@@ -2,7 +2,7 @@
   lib,
   drvs,
   qemu | lib.AutotoolsPackage = {
-    debug = true,
+    # debug = true,
     singleSource = {
       # uri = "https://download.qemu.org/qemu-10.1.0.tar.xz",
       # sha256sum = "e0517349b50ca73ebec2fa85b06050d5c463ca65c738833bd8fc1f15f180be51",
@@ -13,8 +13,11 @@
       # uri = "https://download.qemu.org/qemu-7.2.22.tar.xz",
       # sha256sum = "c74b398c1950526686cb7784e23bd8945ef138b0e6541ba0495015aad3ac9532",
 
-      uri = "https://download.qemu.org/qemu-10.2.4.tar.xz",
-      sha256sum = "821b545b92f165e57dddccac5077d76d4d436a226595b8813ad59306bbfd0746",
+      # uri = "https://download.qemu.org/qemu-10.2.4.tar.xz",
+      # sha256sum = "821b545b92f165e57dddccac5077d76d4d436a226595b8813ad59306bbfd0746",
+
+      uri = "https://download.qemu.org/qemu-11.0.3.tar.xz",
+      sha256sum = "da5fcffc32762820568b828ed430a728864d34d50b6d2f30358597760cbb0523",
     },
 
     configureFlags = [
@@ -29,6 +32,8 @@
       "--enable-sdl",
       "--disable-plugins",
       "--disable-modules",
+      "--disable-download",
+      "--disable-tcg",
     ],
 
     buildEnv.EXTRA_LDFLAGS = [
@@ -44,6 +49,8 @@
         lib.functions.writeFile "${SRC}/gl_draw_buffer.c" (import "gl_draw_buffer.c" as 'Text),
         "${CC} ${CFLAGS} -c ${SRC}/qemu_symbols.c -o ${SRC}/symbols.o",
         "${CC} ${CFLAGS} -Werror -c ${SRC}/gl_draw_buffer.c -o ${SRC}/gl_draw_buffer.o",
+        m%"sed -i 's|"wheel" = { accepted = ">=0.34.2" }|# "wheel" = {}|g' ${SRC}/pythondeps.toml"%,
+        m%"sed -i "s@err = pthread_attr_init(\&attr);@ err = pthread_attr_init(\&attr);\nif (err) { error_exit(err, __func__); }\nerr = pthread_attr_setstacksize(\&attr, 8 * 1024 * 1024);@g" $SRC/util/qemu-thread-posix.c"%,
       ]
       @ (
         if (true) then
@@ -101,6 +108,7 @@
       drvs.pythonDynamic,
       drvs.bash,
       drvs.glSymlink,
+      drvs.pythonSetuptools,
     ],
     pDrvs = [
       # drvs.gtk3,
@@ -114,7 +122,7 @@
       drvs.utilLinux,
       # drvs.libevdev,
       drvs.libusb,
-      drvs.sdl2Debug,
+      drvs.sdl2,
       drvs.ncurses,
     ]
   }
