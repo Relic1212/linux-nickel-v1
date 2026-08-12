@@ -2,7 +2,7 @@
   lib,
   drvs,
   virglrenderer | lib.MesonPackage = {
-    debug = true,
+    # debug = true,
     singleSource = {
       uri = "https://gitlab.freedesktop.org/virgl/virglrenderer/-/archive/virglrenderer-1.3.0/virglrenderer-virglrenderer-1.3.0.tar.gz",
       sha256sum = "56170f8caa1bb642a2624b649e3bcca095ec2834814e5c308efc8a85a709e4ce",
