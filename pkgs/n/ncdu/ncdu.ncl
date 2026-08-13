@@ -1,0 +1,16 @@
+{
+  lib,
+  drvs,
+  ncdu | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://dev.yorhel.nl/download/ncdu-1.22.tar.gz",
+      sha256sum = "0ad6c096dc04d5120581104760c01b8f4e97d4191d6c9ef79654fa3c691a176b",
+    },
+    biDrvs = [
+      drvs.pkgconfMeson,
+    ],
+    pDrvs = [
+      drvs.ncurses,
+    ]
+  }
+}
