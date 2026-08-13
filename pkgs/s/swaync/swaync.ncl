@@ -30,7 +30,7 @@
     biDrvs = [
       drvs.muslShared,
       drvs.atSpi2Core,
-      drvs.cairo,
+      # drvs.cairo,
       drvs.cairoGobject,
       drvs.cairomm_1_16,
       drvs.dbus,

@@ -3,8 +3,10 @@
   drvs,
   libpng | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://download.sourceforge.net/libpng/libpng-1.6.44.tar.gz",
-      sha256sum = "8c25a7792099a0089fa1cc76c94260d0bb3f1ec52b93671b572f8bb61577b732",
+      # uri = "https://download.sourceforge.net/libpng/libpng-1.6.44.tar.gz",
+      # sha256sum = "8c25a7792099a0089fa1cc76c94260d0bb3f1ec52b93671b572f8bb61577b732",
+      uri = "https://download.sourceforge.net/libpng/libpng-1.6.58.tar.gz",
+      sha256sum = "8c9b05b675ca7301a458df2c2e46f26e1d41ff36b8863f8c33530bc58c2e6225",
     },
     pDrvs = [
       drvs.zlibNg

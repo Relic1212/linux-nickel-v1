@@ -63,6 +63,7 @@
     ],
     neverInclude = [
       drvs.harfbuzz,
+      drvs.cairo,
     ],
     pDrvs = [
       drvs.fastFloat,
