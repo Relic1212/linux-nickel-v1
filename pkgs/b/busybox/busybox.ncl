@@ -92,7 +92,7 @@
       # buildEnv.EXTRA_LDFLAGS = ["-nostdlib", "-l:libc.a" ],
 
       buildEnv.TARGET = "aarch64-unknown-linux-musl",
-      configurePhase | force = [
+      configurePhase | priority 2000 = [
         "cd %{buildDir}",
         "unset CPPFLAGS",
         "cp /tmp/workdir/files/busybox.config .config",
