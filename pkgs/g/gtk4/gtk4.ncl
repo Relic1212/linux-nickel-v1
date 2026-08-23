@@ -47,27 +47,42 @@
     ],
 
     neverInclude = [drvs.cairo, drvs.glib, drvs.harfbuzz, ],
-    pDrvs = [
-      # drvs.mesa2,
-      drvs.gdkPixbufFull,
-      drvs.harfbuzzFull,
-      drvs.atSpi2Core,
-      drvs.graphene,
-      drvs.libxkbcommon,
-      drvs.pango,
-      drvs.libtiff,
-      drvs.libepoxy,
-      # drvs.gobjectDynamic,
-      drvs.cairoGobject,
-    ],
+    pDrvs =
+      [
+        # drvs.mesa2,
+        drvs.gdkPixbufFull,
+        drvs.harfbuzzFull,
+        drvs.atSpi2Core,
+        drvs.graphene,
+        drvs.libxkbcommon,
+        drvs.pango,
+        drvs.libtiff,
+        drvs.libepoxy,
+        # drvs.gobjectDynamic,
+        drvs.cairoGobject,
+      ]
+      @ (
+        if options.x11 then
+          [
+            drvs.cairoXlib & { priority = 1 },
+            drvs.libepoxyX11 & { priority = 1 },
+            drvs.libxrandr,
+            drvs.libxi,
+            drvs.libxdamage,
+            drvs.libxinerama,
+          ]
+        else
+          []
+      ),
 
     options = {
       introspection | default = false,
+      x11 | default = false,
     },
 
     extraMesonArgs = [
       "-Dwayland-backend=true",
-      "-Dx11-backend=false",
+      "-Dx11-backend=%{options.x11}",
       "-Dmedia-gstreamer=disabled",
       "-Dvulkan=disabled",
       "-Df16c=disabled",
@@ -83,6 +98,11 @@
       "sed -i 's@shared_library@library@g' ${SRC}/gtk/meson.build"
     ]
   },
+  gtk4X11 | lib.MesonPackage =
+    gtk4
+    & {
+      options.x11 = true
+    },
   gtk4Introspection =
     gtk4
     & {
