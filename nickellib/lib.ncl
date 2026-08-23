@@ -76,7 +76,9 @@ in
         hasNoDups = (fun arr => ((arrayContainsDups arr) == false)),
         allHaveLen = (fun len arr => (false == (std.array.elem false (std.array.map (fun s => ((std.string.length s) == len)) arr)))),
         isValidShasumArray = (fun arr => ((hasNoDups arr) && (allHaveLen 64 arr))),
-        writeFile = (fun path content => "cat >%{path} << 'EOF'" ++ "\n" ++ content ++ "\nEOF\n"),
+        _writeFile = (fun path content append => "cat %{if append then ">>" else ">"}%{path} << 'EOF'" ++ "\n" ++ content ++ "\nEOF\n"),
+        writeFile = (fun path content => _writeFile path content false),
+        appendFile = (fun path content => _writeFile path content false),
       },
       nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
