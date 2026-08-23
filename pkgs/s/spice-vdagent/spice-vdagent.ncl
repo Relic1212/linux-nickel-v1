@@ -8,14 +8,15 @@
     },
     buildEnv = {
       EXTRA_CFLAGS = [
-        "$(pkg-config --cflags gtk+-3.0)",
+        # "$(pkg-config --cflags gtk+-3.0)",
       ],
       EXTRA_CPPFLAGS = EXTRA_CFLAGS,
     },
     extraConfigureFlags = [
-      "--with-gtk4=no",
+      "--with-gtk4=yes",
       "--with-gtk=no",
     ],
+    llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.pkgconfMeson,
       drvs.gtk3X11,
@@ -24,15 +25,15 @@
       drvs.gtk3,
     ],
     pDrvs = [
-      drvs.gtk4,
-      drvs.libxrandr,
-      drvs.libxinerama,
+      drvs.gtk4X11,
+      #   drvs.libxrandr,
+      #   drvs.libxinerama,
       # drvs.libx11,
       #   drvs.libxfixes,
       drvs.spiceProtocol,
       drvs.alsaLibs,
-      drvs.libxi,
-      drvs.cairoXlib,
+      #   drvs.libxi,
+      #   drvs.cairoXlib,
       # drvs.libxcursor,
     ],
   }
