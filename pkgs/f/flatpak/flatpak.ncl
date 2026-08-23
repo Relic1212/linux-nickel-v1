@@ -83,13 +83,3 @@
     },
   }
 }
-& {
-  lib,
-  drvs,
-  pythonPyparsing | lib.SetuptoolPackage = {
-    singleSource = {
-      uri = "https://github.com/pyparsing/pyparsing/archive/refs/tags/3.2.0.tar.gz",
-      sha256sum = "91f52e4e06a2ee736531a3038fc2c7d6bb83f321831435fcedc14f95749c86ac"
-    }
-  }
-}
