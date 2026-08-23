@@ -3,8 +3,8 @@
   drvs,
   cbindgen | lib.CargoPackage = {
     singleSource = {
-      uri = "https://github.com/mozilla/cbindgen/archive/refs/tags/0.29.2.tar.gz",
-      sha256sum = "e2e8b044662804ef55c075ffca03da1d69c443d4749590cb29f03e8588ba49d1",
+      uri = "https://github.com/mozilla/cbindgen/archive/refs/tags/0.29.4.tar.gz",
+      sha256sum = "9b5757e915cf8be523d3aca282b9b5651bafa112e14bf1ba488562ba282807d6",
     },
     crates = lib.functions.filterCrates (import "cbindgen-crates.json"),
   }
