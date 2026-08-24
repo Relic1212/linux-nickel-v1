@@ -1,15 +1,22 @@
 {
   lib,
   drvs,
+  distro,
   dinitUtils | lib.Package = {
-    extraFiles = [
-      {
-        file = "early-filesystems.c",
-        sha256sum = "9f06539d1e28a91951e95aefee5de1c27c33eb450208ed389bc40db652c65b0a",
-      }
-    ],
+    options = {
+      selinux | default = distro.selinux,
+    },
+
+    buildEnv.EXTRA_CFLAGS =
+      if options.selinux then
+        [
+          "-DSELINUX_ENABLED",
+        ]
+      else
+        [],
     buildPhase = [
-      "${CC} ${CFLAGS} /tmp/workdir/files/early-filesystems.c -o /tmp/workdir/build/mount-early",
+      lib.functions.writeFile "early-filesystems.c" (import "files-utils/early-filesystems.c" as 'Text),
+      "${CC} ${CFLAGS} early-filesystems.c -o /tmp/workdir/build/mount-early",
       # "clang -static /tmp/workdir/files/early-filesystems.c -o /tmp/workdir/build/mount-early",
     ],
     installPhase = [
@@ -21,5 +28,11 @@
       drvs.llvm,
       drvs.musl,
     ]
+  },
+  dinitUtilsSh | lib.Package = {
+    buildPhase = [
+      lib.functions.writeFile "mount-early" (import "files-utils/early-filesystems.sh" as 'Text),
+    ],
+    installPhase = dinitUtils.installPhase,
   }
 }
