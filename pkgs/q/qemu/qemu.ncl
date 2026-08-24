@@ -33,16 +33,25 @@
       "--disable-plugins",
       "--disable-modules",
       "--disable-download",
-      "--disable-tcg",
+      # "--disable-tcg",
+      "--enable-tcg",
+      "--enable-spice",
     ],
 
-    buildEnv.EXTRA_LDFLAGS = [
-      "-lc++",
-      "$(pkg-config --static --libs egl gl gtk+-3.0)",
-      "/tmp/workdir/src/symbols.o",
-      "/tmp/workdir/src/gl_draw_buffer.o",
-      "-Wl,--error-limit=0",
-    ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-lc++",
+        "$(pkg-config --static --libs egl gl gtk+-3.0)",
+        "/tmp/workdir/src/symbols.o",
+        "/tmp/workdir/src/gl_draw_buffer.o",
+        "-Wl,--error-limit=0",
+      ],
+
+      EXTRA_CPPFLAGS = [
+        "-Dmodule_load=qemu__module_load",
+      ],
+      EXTRA_CFLAGS = EXTRA_CPPFLAGS,
+    },
     preConfigurePhase =
       [
         "echo '%{import "qemu_both_dlopen.c" as 'Text}' > ${SRC}/qemu_symbols.c",
@@ -116,14 +125,18 @@
       drvs.virglrenderer,
       drvs.libslirp,
       drvs.libfdt,
-      # drvs.fastFloat,
       drvs.vte,
-      # drvs.nettleGmp,
-      drvs.utilLinux,
-      # drvs.libevdev,
-      drvs.libusb,
+      # drvs.utilLinux,
+      # drvs.libusb,
       drvs.sdl2,
-      drvs.ncurses,
+      # drvs.ncurses,
+      drvs.spiceServer,
+      drvs.bzip2,
+      drvs.zstd,
+      # drvs.keyutils,
+      drvs.fuse,
+      drvs.pipewire,
+      drvs.usbredir,
     ]
   }
 }
