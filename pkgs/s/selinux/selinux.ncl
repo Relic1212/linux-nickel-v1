@@ -7,6 +7,9 @@
       sha256sum = "6ac2a91c05243895e69d5ecd182b78e3f90f09f0fed33933f0e026f4ed44cde6",
     },
     buildEnv = {
+      EXTRA_CPPFLAGS = [
+        "-Dwrite_full=semanage__write_full", #  Duplicate in shadow
+      ],
       EXTRA_LDFLAGS = [
         "-Wl,--undefined-version",
         "$(pkg-config --libs --static musl-fts)",
