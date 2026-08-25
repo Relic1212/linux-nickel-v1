@@ -1,19 +1,20 @@
+# {
+#   lib,
+#   drvs,
+#   libpam161 | lib.AutotoolsPackage = {
+#     name = "libpam",
+#     singleSource = {
+#       uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.6.1/Linux-PAM-1.6.1.tar.xz",
+#       sha256sum = "f8923c740159052d719dbfc2a2f81942d68dd34fcaf61c706a02c9b80feeef8e",
+#     },
+#     biDrvs = [
+#       drvs.linuxHeaders,
+#     ],
+#     configureFlags = std.array.filter (fun flag => (flag != "--includedir=/usr/include")) lib.AutotoolsPackage.configureFlags,
+#   }
+# }
+# & 
 {
-  lib,
-  drvs,
-  libpam161 | lib.AutotoolsPackage = {
-    name = "libpam",
-    singleSource = {
-      uri = "https://github.com/linux-pam/linux-pam/releases/download/v1.6.1/Linux-PAM-1.6.1.tar.xz",
-      sha256sum = "f8923c740159052d719dbfc2a2f81942d68dd34fcaf61c706a02c9b80feeef8e",
-    },
-    biDrvs = [
-      drvs.linuxHeaders,
-    ],
-    configureFlags = std.array.filter (fun flag => (flag != "--includedir=/usr/include")) lib.AutotoolsPackage.configureFlags,
-  }
-}
-& {
   lib,
   drvs,
   libpam | lib.MesonPackage =
@@ -87,11 +88,15 @@
       options = {
         isFinal | Bool | default = false,
         systemd | Bool | default = false,
+        selinux | Bool | default = false,
+        include pam_modules,
       },
-      extraMesonArgs = [
-        "-Dexamples=false",
-        "-Delogind=disabled",
-      ],
+      extraMesonArgs =
+        [
+          "-Dexamples=false",
+          "-Delogind=disabled",
+        ]
+        @ (if options.selinux then ["-Dselinux=enabled"] else []),
       baseMesonArgs = (std.array.filter (fun flag => (flag != "--includedir=include")) lib.constants.mesonArgs) @ lib.constants.mesonArgsStatic,
 
       buildEnv.EXTRA_CFLAGS = [
@@ -179,7 +184,7 @@
                   # "llvm-strip --strip-symbol=%{s}__pam_sm_chauthtok ../libpam.a",
                 ]
               )
-              pam_modules
+              options.pam_modules
           )
         )
         @ [
@@ -232,6 +237,17 @@
             [
               drvs.elogindWithPolkit,
               drvs.gnomeKeyring,
+            ]
+          else
+            []
+        )
+        @ (
+          if options.selinux then
+            [
+              drvs.selinux,
+              drvs.auditUserspace,
+              drvs.muslFts,
+              drvs.pcre2,
             ]
           else
             []
@@ -311,5 +327,70 @@
               "warn_file_is_world_accessible",
             ]
         )
-    }
+    },
+  libpamSelinux | lib.MesonPackage =
+    libpam
+    & {
+      buildEnv = {
+        EXTRA_CFLAGS | priority 1 = [],
+      },
+      patches | priority 1 = [],
+      options.selinux = true,
+      options.pam_modules | priority 1 = libpam.options.pam_modules @ ["pam_selinux"],
+
+      preConfigurePhase = [
+        m%"sed -i 's|shared_library|library|g' ${SRC}/*/meson.build"%,
+        m%"sed -i 's|shared_module|library|g' ${SRC}/modules/module-meson.build"%,
+        m%"sed -i 's|getpwnam_r|pam__getpwnam_r|g' ${SRC}/modules/pam_canonicalize_user/tst-pam_canonicalize_user-retval.c"%,
+      ],
+
+      postInstallPhase | priority 1 =
+        [
+          "cd ${DEST}/usr/lib/security",
+        ]
+        @ (
+          std.array.flatten (
+            std.array.map
+              (fun s =>
+                [
+                  "llvm-objcopy --redefine-sym pam_sm_authenticate=%{s}__pam_sm_authenticate %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_setcred=%{s}__pam_sm_setcred %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_acct_mgmt=%{s}__pam_sm_acct_mgmt %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_open_session=%{s}__pam_sm_open_session %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_close_session=%{s}__pam_sm_close_session %{s}.a",
+                  "llvm-objcopy --redefine-sym pam_sm_chauthtok=%{s}__pam_sm_chauthtok %{s}.a",
+                  "llvm-objcopy -W _pam_line_buffer_clear %{s}.a",
+                  "llvm-objcopy -W _pam_line_buffer_init %{s}.a",
+                  "llvm-objcopy -W _pam_line_assemble %{s}.a",
+
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_authenticate ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_setcred ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_acct_mgmt ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_open_session ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_close_session ../libpam.a",
+                  # "llvm-strip --strip-symbol=%{s}__pam_sm_chauthtok ../libpam.a",
+                ]
+              )
+              options.pam_modules
+          )
+        )
+        @ [
+          "cd ..",
+          "llvm-objcopy --redefine-sym dlopen=libpam_dlopen libpam.a",
+          "llvm-objcopy --redefine-sym dlsym=libpam_dlsym libpam.a",
+          "llvm-objcopy --redefine-sym dladdr=libpam_dladdr libpam.a",
+          lib.functions.writeFile "${BUILDDIR}/dlopen.c" (import "libpam_selinux_dlopen.c" as 'Text),
+
+          # "${CC} ${CFLAGS} -Werror -o ${BUILDDIR}/dlopen.o -c << 'EOF'\n%{import "libpam_selinux_dlopen.c" as 'Text}\n\nEOF\n",
+          "${CC} ${CFLAGS} -Werror -o ${BUILDDIR}/dlopen.o -c ${BUILDDIR}/dlopen.c",
+          "llvm-objcopy --redefine-sym dlopen=libpam_dlopen ${BUILDDIR}/dlopen.o",
+          "llvm-objcopy --redefine-sym stub_dlopen=dlopen ${BUILDDIR}/dlopen.o",
+          "llvm-objcopy --redefine-sym dlsym=libpam_dlsym ${BUILDDIR}/dlopen.o",
+          "llvm-objcopy --redefine-sym stub_dlsym=dlsym ${BUILDDIR}/dlopen.o",
+          "llvm-objcopy --redefine-sym dladdr=libpam_dladdr ${BUILDDIR}/dlopen.o",
+          "llvm-objcopy --redefine-sym stub_dladdr=dladdr ${BUILDDIR}/dlopen.o",
+          "${AR} rcs libpam_dl.a ${BUILDDIR}/dlopen.o",
+          m%"sed -i 's@-lpam@%{std.array.map (fun m => "/usr/lib/security/%{m}.a" ) options.pam_modules |>std.string.join " " } /usr/lib/libpam_dl.a -lpam@g' pkgconfig/pam.pc"%,
+        ]
+    },
 }
