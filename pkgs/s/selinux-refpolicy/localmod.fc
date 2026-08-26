@@ -1,0 +1,2 @@
+/usr/bin/initse	--	gen_context(system_u:object_r:init_exec_t,s0)
+/usr/bin/dinit	--	gen_context(system_u:object_r:init_exec_t,s0)
