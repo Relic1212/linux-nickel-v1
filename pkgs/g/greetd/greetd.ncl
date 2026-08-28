@@ -8,7 +8,21 @@
     },
 
     crates = lib.functions.filterCrates (import "greetd-crates.json"),
-    extraEnv.EXTRA_RUSTFLAGS = ["-C link-arg=-lcap"],
+    options = {
+      selinux | default = false,
+    },
+    extraEnv.EXTRA_RUSTFLAGS =
+      ["-C link-arg=-lcap"]
+      @ (
+        if options.selinux then
+          [
+            "-C link-arg=/usr/lib/security/pam_elogind.a",
+            "-C link-arg=/usr/lib/security/pam_gnome_keyring.a",
+            m%"$(for l in $(pkg-config --libs --static pam libselinux);do printf " -C link-arg=$l ";done)"%,
+          ]
+        else
+          []
+      ),
     preInstallPhase = [
       "cd man",
       "make PREFIX=/usr",
@@ -21,11 +35,33 @@
       "make PREFIX=/usr DESTDIR=${DEST} install",
       "cd .."
     ],
-    biDrvs = [
-      drvs.libpamFinal,
-      drvs.libcap,
-      drvs.scdoc,
-      drvs.gnumake,
-    ]
-  }
+    biDrvs =
+      [
+        drvs.libcap,
+        drvs.scdoc,
+        drvs.gnumake,
+      ]
+      @ (
+        if options.selinux then
+          [
+            drvs.selinux,
+            drvs.muslFts,
+            drvs.auditUserspace,
+            drvs.libpamSelinux,
+            drvs.pcre2,
+            drvs.bzip2,
+            drvs.elogindSelinux,
+            drvs.gnomeKeyring,
+          ]
+        else
+          [
+            drvs.libpamFinal,
+          ]
+      ),
+  },
+  greetdSelinux | lib.CargoPackage =
+    greetd
+    & {
+      options.selinux = true,
+    }
 }
