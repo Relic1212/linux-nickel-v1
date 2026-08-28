@@ -268,8 +268,11 @@
         drvs.musl
       ],
       biDrvs | priority 1 = pythonInteractive.biDrvs @ [drvs.muslBothRenamedDlRelease],
+      options = {
+        dlopen_src | default = (import "python_dlopen.c" as 'Text),
+      },
       preConfigurePhase | priority 1 = [
-        lib.functions.writeFile "${SRC}/dlopen.c" (import "python_dlopen.c" as 'Text),
+        lib.functions.writeFile "${SRC}/dlopen.c" options.dlopen_src,
         "clang -O2 -Werror -c ${SRC}/dlopen.c -o ${BUILDDIR}/dlopen.o",
         "ar rcs ${BUILDDIR}/libdlopen.a ${BUILDDIR}/dlopen.o",
         "ranlib ${BUILDDIR}/libdlopen.a",
@@ -277,6 +280,10 @@
         "export LDFLAGS=\"${LDFLAGS} ${BUILDDIR}/libdlopen.a\"",
         # "export LDFLAGS=\"${LDFLAGS} -Wl,--allow-multiple-definition=dlopen\"",
       ],
+      postInstallPhase = [
+        m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py"%,
+        m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/Makefile"%,
+      ]
     },
 
   pythonDynamic =
