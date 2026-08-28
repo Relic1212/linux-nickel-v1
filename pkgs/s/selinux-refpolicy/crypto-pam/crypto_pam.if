@@ -1,0 +1,40 @@
+
+## <summary>policy for crypto_pam</summary>
+
+########################################
+## <summary>
+##	Execute crypto_pam_exec_t in the crypto_pam domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`crypto_pam_domtrans',`
+	gen_require(`
+		type crypto_pam_t, crypto_pam_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, crypto_pam_exec_t, crypto_pam_t)
+')
+
+######################################
+## <summary>
+##	Execute crypto_pam in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`crypto_pam_exec',`
+	gen_require(`
+		type crypto_pam_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, crypto_pam_exec_t)
+')

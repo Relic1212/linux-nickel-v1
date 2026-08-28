@@ -39,6 +39,9 @@
       # lib.functions.writeFile "policy/modules/local/metadata.xml" "<summary>local</summary>",
       # lib.functions.writeFile "policy/modules/admin/localmod.te" (import "localmod.te" as 'Text),
       # lib.functions.writeFile "policy/modules/admin/localmod.if" (import "localmod.if" as 'Text),
+       lib.functions.writeFile "policy/modules/admin/crypto_pam.fc" (import "crypto-pam/crypto_pam.fc" as 'Text),
+       lib.functions.writeFile "policy/modules/admin/crypto_pam.if" (import "crypto-pam/crypto_pam.if" as 'Text),
+       lib.functions.writeFile "policy/modules/admin/crypto_pam.te" (import "crypto-pam/crypto_pam.te" as 'Text),
 
       # "mkoverlay /usr/bin",
       # "mv /usr/bin/semodule /usr/bin/semodule.real",
@@ -56,7 +59,8 @@
       lib.functions.writeFile "${DEST}/etc/selinux/semanage.conf" (import "semanage.conf" as 'Text),
       (
         let config = [
-          "SELINUX=permissive",
+          # "SELINUX=permissive",
+          "SELINUX=enforcing",
           "SELINUXTYPE=targeted",
         ]
         in std.string.join "\n" (std.array.map (fun c => "printf \"%{c}\\n\" >> ${DEST}/etc/selinux/config") config)
