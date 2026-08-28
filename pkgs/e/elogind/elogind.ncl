@@ -265,9 +265,8 @@
   #   }
 }
 & {
-  distro,
   # _elogindWithPolkit,
-  _elogind255,
+  # _elogind255,
   _elogindU,
 
   # elogindWithPolkit = if distro.pam then _elogind255 else null,

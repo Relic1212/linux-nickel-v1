@@ -231,28 +231,39 @@
         in std.array.map (fun sym => "llvm-objcopy --redefine-sym %{sym}=elogind_private__%{sym} ${DEST}/usr/lib/libelogind.a") symsbols
       ),
 
-    biDrvs = [
-      drvs.attr,
-      drvs.acl,
-      drvs.dbus,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.libxslt,
-      drvs.gudev,
-      drvs.eudev,
-      drvs.linuxHeaders,
-      drvs.gperf,
-      drvs.pythonJinja2,
-      (drvs.coreutils & { priority = 1 }),
-      drvs.muslGetent,
-      drvs.utilLinux,
-      drvs.bash,
-      drvs.pythonMarkupsafe,
-      drvs.pythonFlitCore,
-      drvs.docbookXslNons,
-    ],
+    biDrvs =
+      [
+        drvs.attr,
+        drvs.acl,
+        drvs.dbus,
+        drvs.pcre2,
+        drvs.libffi,
+        drvs.zlibNg,
+        drvs.glib,
+        drvs.libxslt,
+        drvs.gudev,
+        drvs.eudev,
+        drvs.linuxHeaders,
+        drvs.gperf,
+        drvs.pythonJinja2,
+        (drvs.coreutils & { priority = 1 }),
+        drvs.muslGetent,
+        drvs.utilLinux,
+        drvs.bash,
+        drvs.pythonMarkupsafe,
+        drvs.pythonFlitCore,
+        drvs.docbookXslNons,
+      ]
+      @ (
+        if options.selinux then
+          [
+            drvs.selinux,
+            drvs.auditUserspace,
+            drvs.muslFts,
+          ]
+        else
+          []
+      ),
     propagatedBuildInputs = [
       drvs.libpam,
       drvs.libcap,
