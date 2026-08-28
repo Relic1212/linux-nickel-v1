@@ -32,5 +32,20 @@
       "--enable-kmod",
       "--with-rootrundir=/run"
     ]
-  }
+  },
+
+  eudevSelinux | lib.AutotoolsPackage =
+    eudev
+    & {
+      extraConfigureFlags | priority 1 =
+        eudev.extraConfigureFlags
+        @ [
+          "--enable-selinux",
+        ],
+      allowDubplicateBuldInputs = true,
+
+      pDrvs | priority 1 = [
+        drvs.selinux,
+      ],
+    },
 }
