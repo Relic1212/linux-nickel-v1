@@ -57,7 +57,8 @@
     biDrvs = [
       drvs.go_1_9,
       drvs.findutils,
-      drvs.libpam161,
+      # drvs.libpam161,
+      drvs.libpam,
       drvs.microSource,
     ]
   }
