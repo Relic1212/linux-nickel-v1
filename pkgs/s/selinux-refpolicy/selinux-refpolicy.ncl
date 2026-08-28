@@ -6,6 +6,15 @@
       uri = "https://github.com/SELinuxProject/refpolicy/archive/refs/tags/RELEASE_2_20260616.tar.gz",
       sha256sum = "f95eb4e677745518d980618f1eb9ca880721e2f5102ad33dacbb55c997e14e33",
     },
+    sourceInputs = [
+      { src = singleSource, },
+      {
+        src = {
+          uri = "https://github.com/SELinuxProject/refpolicy/commit/7426d2180c573492391148adf2217b2a81fec5e9.patch",
+          sha256sum = "f55965eea2192bf1d8cecc15b9e9254522cdd2af565cd6686c48fa01fc803373"
+        },
+      },
+    ],
     # enableParallel = false,
     makeArgs,
     extraMakeArgs = [
@@ -18,7 +27,12 @@
     ],
     extraMakeInstallArgs = ["PREFIX=/usr"] @ extraMakeArgs,
     makeInstallTargets = ["install", "install-src"],
-    preConfigurePhase = [],
+    preConfigurePhase = [
+      "patch -p1 < 7426d2180c573492391148adf2217b2a81fec5e9.patch",
+      "rm policy/modules/services/uwimap.*",
+      m%"sed -i 's|user_u|unconfined_u|g' config/appconfig-standard/seusers"%,
+      m%"sed -i 's|root:root|root:unconfined_u|g' config/appconfig-standard/seusers"%,
+    ],
     buildPhase = [
       # "mkdir -p policy/modules/local",
       lib.functions.appendFile "policy/modules/system/init.fc" (import "localmod.fc" as 'Text),
@@ -59,9 +73,12 @@
       #   "exit 0",
       #     "make DESTDIR=$DEST install",
       # "echo 'preConfigurePhase done'",
+      # m%"sed -i 's|user_u|unconfined_u|g' ${DEST}/etc/selinux/targeted/seusers"%,
+      # m%"sed -i 's|root:root|root:unconfined_u|g' ${DEST}/etc/selinux/targeted/seusers"%,    
     ],
     # buildPhase = [],
     installPhase = [],
+
     biDrvs = [
       drvs.m4,
       drvs.pythonFull,
@@ -74,11 +91,12 @@
   seRoot | lib.MakePackage = {
     biDrvs = [
       drvs.m4,
-      drvs.pythonFull,
+      drvs.pythonSelinux,
       drvs.selinux,
       drvs.gawk,
       drvs.selinuxRefpolicy,
       drvs.mkoverlay,
+      drvs.selinuxSetools,
     ],
   }
 }
