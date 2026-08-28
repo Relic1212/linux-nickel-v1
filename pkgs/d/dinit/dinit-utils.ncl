@@ -31,7 +31,14 @@
   },
   dinitUtilsSh | lib.Package = {
     buildPhase = [
-      lib.functions.writeFile "mount-early" (import "files-utils/early-filesystems.sh" as 'Text),
+      lib.functions.writeFile
+        "mount-early"
+        (
+          if distro.selinux then
+            (import "files-utils/early-filesystems-selinux.sh" as 'Text)
+          else
+            (import "files-utils/early-filesystems.sh" as 'Text)
+        ),
     ],
     installPhase = dinitUtils.installPhase,
   }

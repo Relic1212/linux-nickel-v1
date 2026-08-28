@@ -26,4 +26,11 @@ mount -v -n -t proc -o remount,hidepid=1 proc /proc
 mkdir -p -m 0755 /sys/fs/cgroup 
 mount -v -wt cgroup2 cgroup /sys/fs/cgroup 
 
+mount -v -t selinuxfs selinuxfs /sys/fs/selinux
 mount -v -n -t tmpfs  tmpfs -o nosuid,nodev,mode=1777 /tmp 
+
+restorecon -rvF /sys
+restorecon -rvF /dev
+restorecon -rvF /run
+restorecon -rvF /proc
+

@@ -3,6 +3,14 @@
 #include <sys/mount.h>
 #include <sys/stat.h>
 
+int same_mount(const char *path1, const char *path2)
+{
+    struct s1;
+    struct s2;
+
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
 

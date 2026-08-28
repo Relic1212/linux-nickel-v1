@@ -411,6 +411,15 @@ let _services = (
         # "udevd",
       ],
     },
+    # varrw-selinux = {
+    #   type = "scripted",
+    #   command = "/usr/bin/restorecon -rvF /var",
+    #   restart = false,
+    #   logfile = "/run/var-restorecon.log",
+    #   "depends-on" = [
+    #     "varrw",
+    #   ],
+    # },
     "zram-init" = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/zram-init.sh",
@@ -559,13 +568,16 @@ let scripts = {
             /usr/bin/mkdir -p /run/systemd/system
             "%
     ),
-  "varrw.sh" = m%"
+  "varrw.sh" =
+    m%"
             #!/bin/sh -e
             mkdir -p /run/var_overlay/upper
             mkdir -p /run/var_overlay/work
             modprobe overlay || /usr/bin/true
             mount -t overlay overlay -o lowerdir=/var,upperdir=/run/var_overlay/upper,workdir=/run/var_overlay/work /var
-            "%,
+            "% ++
+    # TODO: enable only when image has selinux
+    "\nrestorecon -rvF /var || true\n",
   # echo "$(head -n1 /proc/meminfo | rev |cut -d ' ' -f2 | rev)KiB"
   "zram-init.sh" = m%"
 #!/bin/sh -e
@@ -590,6 +602,9 @@ in
       "install -d -m0755 dinit.d",
       "cd dinit.d",
     ],
+    options = {
+      loginProgram | default = "/usr/bin/crypto-login"
+    },
 
     buildPhase =
       (std.record.values (std.record.map (fun k v => "printf \"%{v}\n\" > %{k}") services))
@@ -600,7 +615,7 @@ in
             m%"
         printf "
         type = process
-        command = /usr/bin/agetty --login-program /usr/bin/crypto-login tty%{vn} linux-c
+        command = /usr/bin/agetty --login-program %{options.loginProgram} tty%{vn} linux-c
         restart = true
         depends-on = loginready
         termsignal = HUP
@@ -631,5 +646,10 @@ in
       "cp -r dinit.d ${DEST}/etc",
       "cp -r dinit ${DEST}/etc",
     ],
-  }
+  },
+  dinitServicesV3DefaultLogin | lib.Package =
+    dinitServicesV3
+    & {
+      options.loginProgram = "/usr/bin/login",
+    },
 }
