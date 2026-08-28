@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#define HAVE_EXTRA
+
 #define DLSYM(sym, prefix) 	\
     if (strcmp(symbol, #sym) == 0) { \
         extern void* prefix##sym; \
@@ -82,6 +84,10 @@ const char* lib__usr_lib_security_pam_usertype_so = "lib__usr_lib_security_pam_u
 const char* lib__usr_lib_security_pam_warn_so = "lib__usr_lib_security_pam_warn_so";
 const char* lib__usr_lib_security_pam_wheel_so = "lib__usr_lib_security_pam_wheel_so";
 const char* lib__usr_lib_security_pam_xauth_so = "lib__usr_lib_security_pam_xauth_so";
+#ifdef HAVE_EXTRA
+const char* lib__usr_lib_security_pam_elogind_so = "lib__usr_lib_security_pam_elogind_so";
+const char* lib__usr_lib_security_pam_gnome_keyring_so = "lib__usr_lib_security_pam_gnome_keyring_so";
+#endif // HAVE_EXTRA
 
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
@@ -127,7 +133,12 @@ void* dlopen(const char *path, int mode) {
 	if (strcmp( path, "/usr/lib/security/pam_warn.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_warn.so (handle=%p)\n", &lib__usr_lib_security_pam_warn_so); return &lib__usr_lib_security_pam_warn_so; }
 	if (strcmp( path, "/usr/lib/security/pam_wheel.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_wheel.so (handle=%p)\n", &lib__usr_lib_security_pam_wheel_so); return &lib__usr_lib_security_pam_wheel_so; }
 	if (strcmp( path, "/usr/lib/security/pam_xauth.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_xauth.so (handle=%p)\n", &lib__usr_lib_security_pam_xauth_so); return &lib__usr_lib_security_pam_xauth_so; }
-	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
+
+#ifdef HAVE_EXTRA
+    if (strcmp( path, "/usr/lib/security/pam_elogind.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_elogind.so (handle=%p)\n", &lib__usr_lib_security_pam_elogind_so); return &lib__usr_lib_security_pam_elogind_so; }
+	if (strcmp( path, "/usr/lib/security/pam_gnome_keyring.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_gnome_keyring.so (handle=%p)\n", &lib__usr_lib_security_pam_gnome_keyring_so); return &lib__usr_lib_security_pam_gnome_keyring_so; }
+#endif // HAVE_EXTRA
+    fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 
 void* dlsym(void *__restrict handle, const char *__restrict symbol) {
@@ -369,6 +380,21 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(pam_sm_close_session, pam_xauth__)
 		DLSYM(pam_sm_open_session, pam_xauth__)
 	}
+    
+#ifdef HAVE_EXTRA
+	if (handle == &lib__usr_lib_security_pam_elogind_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(pam_sm_close_session, pam_elogind_)
+		DLSYM(pam_sm_open_session, pam_elogind_)
+	}
+	if (handle == &lib__usr_lib_security_pam_gnome_keyring_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(pam_sm_authenticate, pam_gnome_keyring_)
+		DLSYM(pam_sm_chauthtok, pam_gnome_keyring_)
+		DLSYM(pam_sm_close_session, pam_gnome_keyring_)
+		DLSYM(pam_sm_open_session, pam_gnome_keyring_)
+		DLSYM(pam_sm_setcred, pam_gnome_keyring_)
+	}
+#endif // HAVE_EXTRA
+
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s (handle=%p)\n", symbol, handle);	return stub_dlsym(handle, symbol);
 }
 
