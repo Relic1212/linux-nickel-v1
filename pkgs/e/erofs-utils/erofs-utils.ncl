@@ -1,27 +1,41 @@
 {
   lib,
   drvs,
+  distro,
   erofsUtils | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/snapshot/erofs-utils-1.9.1.tar.gz",
-      sha256sum = "a9ef5ab67c4b8d2d3e9ed71f39cd008bda653142a720d8a395a36f1110d0c432",
+      uri = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/snapshot/erofs-utils-1.9.4.tar.gz",
+      sha256sum = "7d135aa2550326a5acf20f53c518aea5a8900015ce50700044e40f818c31dd80",
     },
-    extraConfigureFlags = [
-      "--enable-multithreading",
-      "--enable-lz4",
-      # "--with-libdeflate",
-      "--with-xxhash",
-      "--enable-static-fuse",
-      "--enable-fuse",
-    ],
+    options = {
+      selinux | default = distro.selinux,
+      # selinux = false,
+    },
+    extraConfigureFlags =
+      [
+        "--enable-multithreading",
+        "--enable-lz4",
+        # "--with-libdeflate",
+        "--with-xxhash",
+        "--enable-static-fuse",
+        "--enable-fuse",
+      ]
+      @ (if options.selinux then ["--with-selinux"] else []),
     biDrvs = [
       drvs.utilLinux,
       drvs.lz4,
       drvs.xz,
-      drvs.zlibNg,
       drvs.zstd,
       drvs.xxhash,
       drvs.linuxHeaders,
-    ]
+    ],
+    pDrvs = (
+      if options.selinux then
+        [drvs.selinux]
+      else
+        [
+          drvs.zlibNg,
+        ]
+    ),
   }
 }
