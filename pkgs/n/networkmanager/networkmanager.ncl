@@ -410,3 +410,15 @@
         )
     }
 }
+& {
+  lib,
+  drvs,
+  networkmanagerConfDisablePolkit | lib.Package = {
+    # very unclear why this is sometimes needed and sometimes not
+    # https://wiki.alpinelinux.org/wiki/NetworkManager#Using_nm-applet
+    installPhase = [
+      "install -dm0755 ${DEST}/etc/NetworkManager/conf.d",
+      lib.functions.writeFile "${DEST}/etc/NetworkManager/conf.d/no-auth-polkit.conf" "[main]\nauth-polkit=false\n",
+    ]
+  }
+}
