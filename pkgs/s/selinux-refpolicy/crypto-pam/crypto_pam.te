@@ -103,3 +103,12 @@ allow sysadm_t xdg_config_t:dir watch;
 
 #============= unconfined_t ==============
 allow unconfined_t gkeyringd_exec_t:file entrypoint;
+
+require {
+	type local_login_t;
+	type var_log_t;
+	class dir write;
+}
+
+#============= local_login_t ==============
+allow local_login_t var_log_t:dir write;
