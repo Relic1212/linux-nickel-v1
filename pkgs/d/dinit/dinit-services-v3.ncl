@@ -136,7 +136,8 @@ let _services = (
       logfile = "/var/log/dropbear.log",
       "waits-for" = [
         #"dhcpcd",
-        "dropbear-keys"
+        "dropbear-keys",
+        "varrw",
       ],
     },
 
@@ -295,6 +296,24 @@ let _services = (
       "depends-on" = ["iwd"],
       logfile = "/var/log/networkmanager.log",
       "smooth-recovery" = "yes",
+    },
+
+    openssh = {
+      type = "process",
+      command = "/usr/bin/sshd -D -e -h /run/openssh/id_ed25519",
+      logfile = "/var/log/openssh.log",
+      "waits-for" = [
+        "openssh-keys"
+      ],
+      "depends-on" = ["varrw"],
+    },
+
+    "openssh-keys" = {
+      type = "scripted",
+      command = "/etc/dinit.d/scripts/openssh-keys.sh",
+      restart = false,
+      options = "starts-rwfs",
+      "depends-on" = ["early-filesystems"],
     },
 
     rcboot = {
@@ -542,6 +561,15 @@ let scripts = {
             dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
             dropbearkey -t ecdsa -f /etc/dropbear/dropbear_ecdsa_host_key
             dropbearkey -t ed25519 -f /etc/dropbear/dropbear_ed25519_host_key
+            "%,
+  "openssh-keys.sh" = m%"
+            #!/bin/sh
+
+            export PATH="/usr/bin:/bin"
+
+            mkdir -p /run/openssh
+            chmod 0600 /run/openssh
+            ssh-keygen -f /run/openssh/id_ed25519 -N \"\"
             "%,
   # "loadkeys.sh" = m%"
   #           #!/bin/sh -e
