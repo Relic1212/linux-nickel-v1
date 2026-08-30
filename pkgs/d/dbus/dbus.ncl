@@ -16,6 +16,17 @@
     ],
     preConfigurePhase = [
       "sed -i 's@    post_install_exe()@    # post_install_exe()@g' ${SRC}/meson_post_install.py"
-    ]
-  }
+    ],
+  },
+  dbusSelinux | lib.MesonPackage =
+    dbus
+    & {
+      extraMesonArgs | priority 1 = [
+        "-Druntime_dir=/run",
+        "-Dselinux=enabled",
+      ],
+      pDrvs = [
+        drvs.selinux,
+      ]
+    }
 }
