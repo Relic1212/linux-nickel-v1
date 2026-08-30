@@ -320,6 +320,9 @@
         # "rm -rf third_party/wayland",
         # "rm -rf third_party/wayland-protocols",
         m%"sed -i "s@#include <gbm.h>@#include <gbm.h>\n#include <sys/types.h>@g" third_party/webrtc/modules/desktop_capture/linux/wayland/egl_dmabuf.h"%,
+
+        # Needed on selinux for some reason 
+        m%" sed -i "s@case __NR_pwrite64:@case __NR_pwrite64:\n\t    case __NR_pwritev2:@g" sandbox/policy/linux/bpf_gpu_policy_linux.cc"%,
       ],
       buildPhase = [
         "ninja -C out/Bld -j$(nproc) chrome",
