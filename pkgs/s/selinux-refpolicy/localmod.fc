@@ -1,2 +1,11 @@
 /usr/bin/initse	--	gen_context(system_u:object_r:init_exec_t,s0)
 /usr/bin/dinit	--	gen_context(system_u:object_r:init_exec_t,s0)
+/etc/dinit\.d/scripts/.*	--	gen_context(system_u:object_r:initrc_exec_t,s0)
+/run/.*\.log	--  gen_context(system_u:object_r:var_log_t,s0)
+/run/rootrw.log	--  gen_context(system_u:object_r:var_log_t,s0)
+/run/udevd.log	--  gen_context(system_u:object_r:var_log_t,s0)
+/run/rootrw\.log	--  gen_context(system_u:object_r:var_log_t,s0)
+/run/udevd\.log	--  gen_context(system_u:object_r:var_log_t,s0)
+
+/usr/lib/chromium/chrome				--	gen_context(system_u:object_r:chromium_exec_t,s0)
+/usr/lib/chromium/chrome_sandbox			--	gen_context(system_u:object_r:chromium_sandbox_exec_t,s0)

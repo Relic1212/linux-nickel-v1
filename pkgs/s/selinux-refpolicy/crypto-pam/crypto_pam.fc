@@ -1,1 +1,3 @@
 /usr/libexec/crypto-pam		--	gen_context(system_u:object_r:crypto_pam_exec_t,s0)
+
+/usr/libexec/elogind		--	gen_context(system_u:object_r:systemd_logind_exec_t,s0)

@@ -15,11 +15,18 @@
         },
       },
     ],
+    eofPatches = [
+      {
+        patch = (import "init.patch" as 'Text),
+      },
+    ],
     # enableParallel = false,
     makeArgs,
     extraMakeArgs = [
       "NAME=targeted",
       "TYPE=standard",
+      "DIRECT_INITRC=y",
+      # "SYSTEMD=y",
       # "LOCAL_ROOT=${DEST}",
       "DESTDIR=${DEST}",
       "SBINDIR=/usr/bin",
@@ -32,6 +39,9 @@
       "rm policy/modules/services/uwimap.*",
       m%"sed -i 's|user_u|unconfined_u|g' config/appconfig-standard/seusers"%,
       m%"sed -i 's|root:root|root:unconfined_u|g' config/appconfig-standard/seusers"%,
+
+      #  Fedora has this on
+      m%"sed -i 's@gen_tunable(allow_mount_anyfile, false)@gen_tunable(allow_mount_anyfile, true)@g' policy/modules/system/mount.te"%,
     ],
     buildPhase = [
       # "mkdir -p policy/modules/local",
@@ -39,9 +49,9 @@
       # lib.functions.writeFile "policy/modules/local/metadata.xml" "<summary>local</summary>",
       # lib.functions.writeFile "policy/modules/admin/localmod.te" (import "localmod.te" as 'Text),
       # lib.functions.writeFile "policy/modules/admin/localmod.if" (import "localmod.if" as 'Text),
-       lib.functions.writeFile "policy/modules/admin/crypto_pam.fc" (import "crypto-pam/crypto_pam.fc" as 'Text),
-       lib.functions.writeFile "policy/modules/admin/crypto_pam.if" (import "crypto-pam/crypto_pam.if" as 'Text),
-       lib.functions.writeFile "policy/modules/admin/crypto_pam.te" (import "crypto-pam/crypto_pam.te" as 'Text),
+      lib.functions.writeFile "policy/modules/admin/crypto_pam.fc" (import "crypto-pam/crypto_pam.fc" as 'Text),
+      lib.functions.writeFile "policy/modules/admin/crypto_pam.if" (import "crypto-pam/crypto_pam.if" as 'Text),
+      lib.functions.writeFile "policy/modules/admin/crypto_pam.te" (import "crypto-pam/crypto_pam.te" as 'Text),
 
       # "mkoverlay /usr/bin",
       # "mv /usr/bin/semodule /usr/bin/semodule.real",

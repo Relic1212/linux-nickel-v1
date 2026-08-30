@@ -1,0 +1,28 @@
+diff --git a/policy/modules/system/init.if b/policy/modules/system/init.if
+index b38e97299..d23183d48 100644
+--- a/policy/modules/system/init.if
++++ b/policy/modules/system/init.if
+@@ -304,9 +304,9 @@ interface(`init_daemon_domain',`
+ 
+ 	domtrans_pattern(initrc_t, $2, $1)
+ 
+-	ifdef(`init_systemd',`
++	#ifdef(`init_systemd',`
+ 		init_domain($1, $2)
+-	')
++	#')
+ ')
+ 
+ ########################################
+@@ -522,9 +522,9 @@ interface(`init_system_domain',`
+ 
+ 	domtrans_pattern(initrc_t, $2, $1)
+ 
+-	ifdef(`init_systemd',`
++	# ifdef(`init_systemd',`
+ 		init_domain($1, $2)
+-	')
++	# ')
+ ')
+ 
+ ########################################
