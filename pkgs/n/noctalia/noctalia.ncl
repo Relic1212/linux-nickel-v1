@@ -32,6 +32,7 @@
     biDrvs = [
       drvs.librsvg,
       # drvs.gnupatch & {priority = 1 },
+      drvs.polkit,
     ],
     pDrvs = [
       drvs.jemalloc,
@@ -41,7 +42,6 @@
       drvs.gdkPixbuf,
       # drvs.libxml2,
       drvs.cairoGobject,
-      drvs.polkit,
       drvs.pipewire,
       drvs.kmod,
 
