@@ -6,6 +6,7 @@ let Service = {
   "inittab-id" | optional,
   "inittab-ine" | optional,
   logfile | String | optional,
+  log-type | String | optional,
   options | optional,
   "pid-file" | String | optional,
   "ready-notification" | optional,
@@ -149,9 +150,10 @@ let _services = (
       "depends-on" = ["early-filesystems"],
     },
 
-    "early-filesystems" = {
+    early-filesystems = {
       type = "scripted",
       command = "/usr/libexec/mount-early",
+      log-type = "buffer",
       restart = false,
       options = "starts-rwfs",
     },
@@ -192,6 +194,7 @@ let _services = (
       type = "scripted",
       command = "/usr/bin/chown -R greeter:greeter /var/lib/greeter",
       "depends-on" = ["varrw"],
+      log-type = "buffer",
     },
 
     hostname = {
@@ -254,7 +257,7 @@ let _services = (
       restart = false,
       "depends-on" = ["early-filesystems"],
     },
-    "mount-others" = {
+    mount-others = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/mount-other.sh",
       restart = false,
@@ -266,13 +269,13 @@ let _services = (
         "udev-settle",
       ]
     },
-    "netdev" = {
+    netdev = {
       type = "scripted",
       command = "/usr/bin/ip link set group 0 up",
       restart = false,
       "depends-on" = ["varrw"],
     },
-    "netdev-lo" = {
+    netdev-lo = {
       type = "scripted",
       command = "/usr/bin/ip link set lo up",
       restart = false,
@@ -290,7 +293,7 @@ let _services = (
     #   restart = false,
     #   "depends-on" = ["varrw"],
     # },
-    "networkmanager" = {
+    networkmanager = {
       type = "process",
       command = "/usr/bin/NetworkManager -n",
       "depends-on" = ["iwd"],
@@ -308,7 +311,7 @@ let _services = (
       "depends-on" = ["varrw"],
     },
 
-    "openssh-keys" = {
+    openssh-keys = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/openssh-keys.sh",
       restart = false,
@@ -319,7 +322,8 @@ let _services = (
     rcboot = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/rcboot.sh",
-      logfile = "/var/log/rcboot.log",
+      # logfile = "/var/log/rcboot.log",
+      log-type = "buffer",
       restart = false,
       "depends-on" = ["varrw"],
     },
@@ -461,7 +465,7 @@ let _services = (
     if useUdev then
       {
 
-        "udev-settle" = {
+        udev-settle = {
           type = "scripted",
           command = "/usr/bin/udevadm settle",
           restart = false,
@@ -469,10 +473,12 @@ let _services = (
         },
 
         # Trigger udev events for already-present devices.
-        "udev-trigger" = {
+        udev-trigger = {
           type = "scripted",
           command = "/usr/bin/udevadm trigger --action=add",
-          logfile = "/run/udev-trigger.log",
+          # logfile = "/run/udev-trigger.log",
+          log-type = "buffer",
+
           restart = false,
           "depends-on" = ["udevd"],
         },
@@ -481,7 +487,8 @@ let _services = (
           type = "scripted",
           command = "/usr/bin/udevd --daemon",
           "stop-command" = "/usr/bin/udevadm control -e",
-          logfile = "/run/udevd.log",
+          # logfile = "/run/udevd.log",
+          log-type = "buffer",
           restart = false,
           depends-on = "early-filesystems",
         },

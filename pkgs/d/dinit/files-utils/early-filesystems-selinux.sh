@@ -20,8 +20,10 @@ mkdir /run/lock /run/udev
 
 # "hidepid=1" doesn't appear to take effect on first mount -v of /proc,
 # so we mount -v it and then remount:
-mount -v -n -t proc -o hidepid=1 proc /proc
-mount -v -n -t proc -o remount,hidepid=1 proc /proc
+mount -v -n -t proc  proc /proc
+
+# hidepid breaks polkit
+# mount -v -n -t proc -o remount,hidepid=1 proc /proc
 
 mkdir -p -m 0755 /sys/fs/cgroup 
 mount -v -wt cgroup2 cgroup /sys/fs/cgroup 
