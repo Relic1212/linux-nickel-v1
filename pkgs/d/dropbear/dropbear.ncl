@@ -16,5 +16,35 @@
     biDrvs = [
       drvs.zlibNg,
     ]
-  }
+  },
+  dropbearSelinux | lib.AutotoolsPackage =
+    dropbear
+    & {
+      buildEnv = {
+        EXTRA_LDFLAGS = [
+          # "-lpam_dl",
+
+          # "$(pkg-config --static --libs audit pam)",
+          "$(pkg-config --libs --static libsepol libsemanage libselinux pam pam_misc libcap)",
+          "/usr/lib/security/pam_gnome_keyring.a",
+          "/usr/lib/security/pam_elogind.a",
+        ],
+      },
+      extraConfigureFlags | priority 1 =
+        dropbear.extraConfigureFlags
+        @ [
+          "--enable-shadow",
+          "--enable-pam",
+        ],
+      biDrvs | priority 1 = [
+        drvs.pkgconfMeson,
+      ],
+      pDrvs = [
+        drvs.shadowSelinux,
+        drvs.libpamSelinux,
+        drvs.selinux,
+        drvs.gnomeKeyring,
+        drvs.elogindSelinux,
+      ]
+    }
 }
