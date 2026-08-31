@@ -42,6 +42,9 @@
 
       #  Fedora has this on
       m%"sed -i 's@gen_tunable(allow_mount_anyfile, false)@gen_tunable(allow_mount_anyfile, true)@g' policy/modules/system/mount.te"%,
+      m%"sed -i 's@gen_tunable(allow_execmem,false)@gen_tunable(allow_execmem,true)@g' policy/global_tunables"%,
+      m%"sed -i 's@gen_tunable(allow_execheap,false)@gen_tunable(allow_execheap,true)@g' policy/global_tunables"%,
+      m%"sed -i 's@gen_tunable(user_i2c, false)@gen_tunable(user_i2c, true)@g' policy/modules/system/userdomain.te"%,
     ],
     buildPhase = [
       # "mkdir -p policy/modules/local",

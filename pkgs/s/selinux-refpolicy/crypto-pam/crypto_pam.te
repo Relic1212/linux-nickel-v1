@@ -322,6 +322,39 @@ allow systemd_logind_t systemd_machined_runtime_t:dir create;
 allow systemd_logind_t var_log_t:file { append ioctl };
 allow systemd_logind_t var_run_t:file { create ioctl open read rename setattr unlink write };
 
+## things for tty login
+
+require {
+	type xdm_var_run_t;
+	type unlabeled_t;
+	type local_login_t;
+	type unconfined_t;
+	type fsadm_exec_t;
+	type gkeyringd_exec_t;
+	type mount_exec_t;
+	type var_run_t;
+	type fixed_disk_device_t;
+	type xserver_log_t;
+	class dir { getattr search write };
+	class file { execute ioctl read write };
+	class blk_file getattr;
+	class capability net_admin;
+	class process { noatsecure rlimitinh siginh };
+}
+
+#============= local_login_t ==============
+allow local_login_t fixed_disk_device_t:blk_file getattr;
+allow local_login_t fsadm_exec_t:file execute;
+allow local_login_t gkeyringd_exec_t:file execute;
+allow local_login_t mount_exec_t:file execute;
+allow local_login_t self:capability net_admin;
+allow local_login_t unconfined_t:process { noatsecure rlimitinh siginh };
+allow local_login_t unlabeled_t:dir { getattr search };
+allow local_login_t var_run_t:dir write;
+allow local_login_t xdm_var_run_t:file { read write };
+allow local_login_t xserver_log_t:file ioctl;
+## -end tty login
+
 #============= udev_t ==============
 allow udev_t sysctl_vm_t:dir search;
 allow udev_t sysctl_vm_t:file { getattr write };
@@ -347,6 +380,50 @@ allow system_dbusd_t dri_device_t:chr_file { read write };
 allow system_dbusd_t systemd_logind_exec_t:file { open read };
 
 #####
+
+
+# flatpak install 
+#============= mount_t ==============
+allow mount_t tmp_t:lnk_file read;
+######
+
+
+## blocaled
+require {
+	type systemd_locale_exec_t;
+	type system_dbusd_t;
+	class file { execute execute_no_trans open read };
+}
+
+#============= system_dbusd_t ==============
+allow system_dbusd_t systemd_locale_exec_t:file { execute execute_no_trans open read };
+
+###
+
+
+## misc
+
+require {
+	type power_profilesd_t;
+	type sysfs_t;
+	type unconfined_t;
+	type mount_t;
+	type devicekit_var_lib_t;
+	type systemd_logind_t;
+	class dir { create watch };
+	class capability sys_resource;
+	class io_uring allowed;
+}
+
+#============= mount_t ==============
+allow mount_t devicekit_var_lib_t:dir create;
+
+#============= power_profilesd_t ==============
+allow power_profilesd_t sysfs_t:dir watch;
+
+#============= systemd_logind_t ==============
+allow systemd_logind_t self:capability sys_resource;
+###
 
 ifdef(`force_it',`
 require {
