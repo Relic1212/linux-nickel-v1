@@ -50,10 +50,11 @@
         buildDir,
         configureScript,
         configureFlags,
+        autoReconf | default = "(cd ${SRC}; autoreconf -fiv)",
         configurePhase | not_exported | priority -10 =
           (if (buildDir == null) then [] else ["cd %{buildDir}"])
           @ [
-            "(cd ${SRC}; autoreconf -fiv)",
+            autoReconf,
             configureScript ++ " " ++ (std.string.join constants.buildFlagSep configureFlags),
           ],
         pkgconfProvider | not_exported,
