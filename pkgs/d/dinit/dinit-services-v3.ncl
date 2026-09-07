@@ -100,7 +100,7 @@ let _services = (
       "depends-on" = ["early-filesystems"],
     },
 
-    "i2c-dev" = {
+    i2c-dev = {
       type = "scripted",
       command = "/usr/bin/modprobe i2c-dev",
       restart = false,
@@ -146,7 +146,6 @@ let _services = (
       type = "scripted",
       command = "/etc/dinit.d/scripts/dropbear-keys.sh",
       restart = false,
-      options = "starts-rwfs",
       "depends-on" = ["early-filesystems"],
     },
 
@@ -154,8 +153,10 @@ let _services = (
       type = "scripted",
       command = "/usr/libexec/mount-early",
       log-type = "buffer",
+      log-buffer-size = 65536,
       restart = false,
-      options = "starts-rwfs",
+      # options = "starts-rwfs",
+      options = "shares-console",
     },
     earlyoom = {
       type = "process",
@@ -190,11 +191,14 @@ let _services = (
       logfile = "/var/log/greetd.log"
     },
 
-    "greetd-apply-perms" = {
+    greetd-apply-perms = {
       type = "scripted",
       command = "/usr/bin/chown -R greeter:greeter /var/lib/greeter",
       "depends-on" = ["varrw"],
       log-type = "buffer",
+      log-buffer-size = 65536,
+
+      options = "shares-console",
     },
 
     hostname = {
@@ -315,7 +319,6 @@ let _services = (
       type = "scripted",
       command = "/etc/dinit.d/scripts/openssh-keys.sh",
       restart = false,
-      options = "starts-rwfs",
       "depends-on" = ["early-filesystems"],
     },
 
@@ -324,6 +327,8 @@ let _services = (
       command = "/etc/dinit.d/scripts/rcboot.sh",
       # logfile = "/var/log/rcboot.log",
       log-type = "buffer",
+      log-buffer-size = 65536,
+
       restart = false,
       "depends-on" = ["varrw"],
     },
@@ -331,7 +336,8 @@ let _services = (
     recovery = {
       type = "process",
       command = "/usr/bin/sulogin",
-      options = "runs-on-console"
+      options = "runs-on-console",
+      restart = false,
     },
 
     rtkit = {
@@ -374,6 +380,13 @@ let _services = (
               "mdevd"
             ]
         ),
+    },
+    single = {
+      type = "process",
+      command = "/bin/sh",
+      options = "shares-console",
+      restart = false,
+      chain-to = "boot",
     },
 
     # syslogd = {
@@ -427,8 +440,11 @@ let _services = (
       type = "scripted",
       command = "/etc/dinit.d/scripts/varrw.sh",
       restart = false,
-      options = "starts-rwfs",
-      logfile = "/run/rootrw.log",
+      # options = "starts-rwfs",
+      # logfile = "/run/rootrw.log",
+      log-type = "buffer",
+      log-buffer-size = 65536,
+
       "depends-on" = [
         "early-filesystems",
         # "udevd",
@@ -455,6 +471,8 @@ let _services = (
     "create-x11-socket" = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/create-x11-socket.sh",
+      log-type = "buffer",
+      log-buffer-size = 65536,
 
       "depends-on" = [
         "early-filesystems",
@@ -478,6 +496,7 @@ let _services = (
           command = "/usr/bin/udevadm trigger --action=add",
           # logfile = "/run/udev-trigger.log",
           log-type = "buffer",
+          log-buffer-size = 65536,
 
           restart = false,
           "depends-on" = ["udevd"],
@@ -489,6 +508,8 @@ let _services = (
           "stop-command" = "/usr/bin/udevadm control -e",
           # logfile = "/run/udevd.log",
           log-type = "buffer",
+          log-buffer-size = 65536,
+
           restart = false,
           depends-on = "early-filesystems",
         },
