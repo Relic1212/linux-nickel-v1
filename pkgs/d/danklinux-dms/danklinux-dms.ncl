@@ -1,7 +1,7 @@
 let s = {
 
-  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.5.3.tar.gz",
-  sha256sum = "2d665870f7019700fb38d59d043202e298e1aad1d3f1cb96360a75acbd3be9ca",
+  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.6.1.tar.gz",
+  sha256sum = "abd50f97df1a4714526089825e5ba4bba2850e5d635f7618511c68a4a6276bbd",
 }
 in
 
@@ -21,7 +21,8 @@ in
     buildPhase = [
       "cd core",
       "go mod vendor -v",
-      "cd ..",
+      # "cd ..",
+      "cd ${SRC}/core/go-mod",
       "chown -R root:root .",
       "chmod -R 755 .",
       m%"find . -print0 | xargs -0r touch --no-dereference --date="@1302044400""%,
@@ -32,7 +33,8 @@ in
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "99457824a0e2191715243420886fe41864c5edcdf1257cdb4994b45d84899469",
+    # outputSha256sum = "9a9436571def018b0e4ca6620ccb814d7476d031d8a8abe3f39ae73f737c4dc2", # "all"
+    outputSha256sum = "a22b638e075237d69dd4a598f5cfdd33cbe867dfbae1488ffe436e5b20a14f34", # vendor
 
     biDrvs = [
       drvs.go_1_26,
@@ -43,6 +45,18 @@ in
     ]
   },
   danklinuxDms | lib.MakePackage = {
+    sourceInputs = [
+      {
+        src = s,
+      },
+      {
+        src = {
+          uri = "https://github.com/AvengeMedia/dank-qml-common/archive/26396ce432d6c71c3f5367438f96f4a8d667e160.tar.gz",
+          sha256sum = "f5aa4d56a937a275c9ee504c567c36c141cb11297cae934f1b5cf3cf3620de10",
+        },
+        dest = "dank-qml-common",
+      },
+    ],
 
     separateBuildDir = false,
     configurePhase = [
@@ -51,7 +65,8 @@ in
       #   "export CGO_ENABLED=1",
       "mkdir /tmp/home",
       "export HOME=/tmp/home",
-      "tar xf /source.tar",
+      "mkdir core/go-mod",
+      "(cd core/go-mod && tar xf /source.tar)",
     ],
 
     extraMakeInstallArgs = [
