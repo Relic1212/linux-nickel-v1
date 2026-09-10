@@ -1,0 +1,18 @@
+diff --git a/crates/kit/src/run_ephemeral.rs b/crates/kit/src/run_ephemeral.rs
+index aa7ad76..1aadba8 100644
+--- a/crates/kit/src/run_ephemeral.rs
++++ b/crates/kit/src/run_ephemeral.rs
+@@ -841,11 +841,11 @@ fn prepare_run_command_with_temp(
+         // in the entrypoint script, but we just grab the host's `/usr`.
+         // (We don't want all of `/` as that would scope in a lot more)
+         "/usr:/run/tmproot/usr:ro",
+-        "-v",
++        // "-v",
+         // Some host distributions don't have all libraries in /lib or /lib64.
+         // We mount the current ld.so.cache into the tmproot so it matches
+         // library locations in the mounted /usr
+-        "/etc/ld.so.cache:/run/tmproot/etc/ld.so.cache:ro",
++        // "/etc/ld.so.cache:/run/tmproot/etc/ld.so.cache:ro",
+         "-v",
+         &format!("{}:{}", entrypoint_path, ENTRYPOINT),
+         "-v",
