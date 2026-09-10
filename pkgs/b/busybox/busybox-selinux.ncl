@@ -38,4 +38,30 @@
         drvs.selinux,
       ],
     },
+
+  busyboxSelinuxProgs | lib.Package = {
+    utilsProviders = [
+      drvs.busyboxSelinux,
+    ],
+
+    buildPhase = [
+      lib.functions.writeFile "busybox_cmd.c" (import "busybox_cmd.c" as 'Text),
+      "mkdir out",
+      "for p in $(busybox --list); do",
+      m%"${CC} ${CFLAGS} --verbose -Werror -DAPPLET="\"$p\"" busybox_cmd.c -o  out/"$p""%,
+      # m%"printf "#!/usr/bin/busybox sh\nset -e\nexec /usr/bin/busybox $p  \"\$@\"\n" > out/"$p""%,
+      m%"chmod +x out/"$p""%,
+      "done",
+    ],
+
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/bin",
+      "install -m0755 out/* ${DEST}/usr/bin",
+    ],
+
+    biDrvs = [
+      drvs.musl,
+      drvs.llvm,
+    ]
+  }
 }
