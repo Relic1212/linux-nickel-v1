@@ -234,7 +234,7 @@
       # drvs.bluez,
       drvs.cairoGobjectEmpty,
       # drvs.dbus,
-      drvs.dinit,
+      # drvs.dinit,
       # drvs.fdkAac,
       # drvs.ffmpeg,
       # drvs.gperf,
