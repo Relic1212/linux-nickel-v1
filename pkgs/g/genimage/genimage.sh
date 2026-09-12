@@ -73,7 +73,21 @@ create_part() {
 		-zlz4hc \
 		-d 0 \
 		-L roota \
-		$UUID_ARGS		\
+		${UUID_ARGS} \
+		${MKFS_EROFS_EXTRA_ARGS} \
+		--exclude-path=usr/include \
+		--exclude-regex='usr/lib/.*\.a$' \
+		--exclude-regex='usr/lib/.*\.la$' \
+		--exclude-regex='usr/lib/.*\.prl$' \
+		--exclude-path=usr/lib/pkgconfig \
+		 \
+		--exclude-path=usr/lib/cmake \
+		--exclude-path=usr/lib/ossl-modules \
+		--exclude-path=usr/lib/kernel \
+		--exclude-path=usr/lib/objects-Release \
+		--exclude-path=usr/share/pkgconfig \
+		--exclude-path=usr/share/gdb \
+		--exclude-path=usr/libexec/installed-tests \
 		$outdir/$rootimg $rootdir
 
 	# Generate the hash tree
@@ -242,7 +256,7 @@ TABLE="verity,,,ro,0 \
 	${ROOT_HASH} ${SALT} \
 	9 ignore_zero_blocks use_fec_from_device /dev/sda fec_roots 2 fec_start ${FEC_DEVICE_START} fec_blocks ${FEC_DEVICE_START}"
 
-CMDLINE="dm-mod.create=\"${TABLE}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE="dm-mod.create=\"${TABLE}\" rootfstype=erofs root=/dev/dm-0 "
 
 echo "${CMDLINE}" >  "$outdir/${rootname}.img.cmdline.txt"
 
@@ -277,22 +291,22 @@ ${ROOT_HASH} ${SALT} \
 # EXTRA_CMDLINE="debug sysctl.kernel.sysrq=1 rootwait lsm=lockdown,capability"
 
 
-OPTIONS_REFIND="\"boot ${part}\"  \"${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+OPTIONS_REFIND="\"boot ${part}\"  \"${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind} dm-mod.create=\"\"${TABLE_METAL}\"\" rootfstype=erofs root=/dev/dm-0 \""
 echo "${OPTIONS_REFIND}"  >  "$outdir/${rootname}.img.options_refind.txt"
 
 
-OPTIONS_REFIND_A="\"boot a\"  \"rootslot=a  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"\"${TABLE_METAL_A}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+OPTIONS_REFIND_A="\"boot a\"  \"rootslot=a  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"\"${TABLE_METAL_A}\"\" rootfstype=erofs root=/dev/dm-0 \""
 echo "${OPTIONS_REFIND_A}"  >  "$outdir/${rootname}.a.img.options_refind.txt"
 
 
-OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"\"${TABLE_METAL_B}\"\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit\""
+OPTIONS_REFIND_B="\"boot b\"  \"rootslot=b  raid=noautodetect rootwait ro ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"\"${TABLE_METAL_B}\"\" rootfstype=erofs root=/dev/dm-0 \""
 echo "${OPTIONS_REFIND_B}"  >  "$outdir/${rootname}.b.img.options_refind.txt"
 
 
-CMDLINE_UKI_A="rootslot=a ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_A="rootslot=a ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_a} dm-mod.create=\"${TABLE_METAL_A}\" rootfstype=erofs root=/dev/dm-0 "
 echo "${CMDLINE_UKI_A}" > "$outdir/${rootname}.img.cmdline_uki_a.txt"
 
-CMDLINE_UKI_B="rootslot=b ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs root=/dev/dm-0 init=/usr/bin/dinit"
+CMDLINE_UKI_B="rootslot=b ${EXTRA_CMDLINE} dm-mod.waitfor=${dev_refind_b} dm-mod.create=\"${TABLE_METAL_B}\" rootfstype=erofs root=/dev/dm-0 "
 echo "${CMDLINE_UKI_B}" > "$outdir/${rootname}.img.cmdline_uki_b.txt"
 
 
