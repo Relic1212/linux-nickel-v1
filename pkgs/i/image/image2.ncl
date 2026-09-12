@@ -31,7 +31,8 @@
     drvs.gnused,
     drvs.gnugrep,
     (drvs.sbase & { priority = -1 }),
-    # (drvs.utilLinux & { priority = -1 }),
+    drvs.utilLinuxSelinux & { priority = 2 },
+    drvs.iproute2 & { priority = 1 },
     drvs.libarchive,
     drvs.wget,
     drvs.bzip2,
@@ -59,10 +60,11 @@
     drvs.ncurses,
     (drvs.basefiles & { priority = 1 }),
     drvs.dinit,
-    drvs.dinitServicesV3,
+    # drvs.dinitServicesV3,
+    drvs.dinitServicesV3DefaultLogin,
     drvs.dinitUtils,
     drvs.shadowPamSystemd & { priority = 2 },
-    drvs.libpam,
+    drvs.libpamSelinuxSystemd,
     drvs.cryptoPam,
     # drvs.gnomeKeyring,
     # drvs.gcr,
@@ -70,7 +72,7 @@
     # drvs.gtkgreet,
     # (drvs.gtkgreetSwayConf & { priority = 1 }),
     drvs.libcap,
-    drvs.utilLinux,
+    # drvs.utilLinux,
     drvs.pciutils,
     drvs.xz,
     # drvs.linux,
@@ -81,7 +83,8 @@
     # drvs.linuxFirmwareSmaller,
     # drvs.mdevd,
     # drvs.mdevdConf,
-    drvs.dbus,
+    # drvs.dbus,
+    drvs.dbusSystemd,
     drvs.bkeymaps,
     drvs.kmod,
     drvs.keyutils,
@@ -106,7 +109,9 @@
     # drvs._elogind255,
     # drvs.eudev,
     # drvs.systemd258,
-    drvs.systemd259 & { priority = -1 },
+    drvs.systemd & { priority = 3 },
+    drvs.systemdVt,
+    drvs.systemdWrapped,
     (drvs.dinitEnv & { priority = 1 }),
     # drvs-basu,
     drvs.openssl,
@@ -142,9 +147,9 @@
     drvs.procps,
     drvs.wlClipboard,
     drvs.slurp,
-    drvs.grim,
-    drvs.grimshot,
-    drvs.fuzzel,
+    # drvs.grim,
+    # drvs.grimshot,
+    # drvs.fuzzel,
     drvs.upower,
     drvs.acpid,
     drvs.laptopModeTools,
@@ -175,8 +180,10 @@
     # drvs.sndiod,
     drvs.desktopFileUtils,
     drvs.bluez,
+    drvs.greetd,
     drvs.tuigreet,
     drvs.tuigreetConfig,
+    drvs.rtkit,
 
     # drvs.flatpak,
     # drvs.fuse,
@@ -189,6 +196,8 @@
     # drvs.crun,
     # drvs.netavark,
     # drvs.networkmanager,
+    drvs.selinuxRefpolicy,
+    drvs.selinux,
   ],
 
   # TODO: uneccesary paths
@@ -200,28 +209,72 @@
   # /usr/lib/gtk-3.0/3.0.0/printbackends/libprintbackend-file.so
   # /usr/bin/gtk-builder-tool
   # /usr/bin/gtk-query-im*
-  _baseImageSmall =
+  baseImageSmall =
     _rootfs2
     & {
       enableCcache = false,
 
+      # biDrvs =
+      #   [
+      #     # drvs.baseBaseRootfs,
+      #     drvs.erofsUtils,
+      #     drvs.mtools,
+      #     drvs.genimage,
+      #     drvs.cryptsetup,
+      #     drvs.systemdBoot,
+      #     drvs.llvm, # objdump
+      #     drvs.pythonFull,
+      #     drvs.utilLinux,
+      #   ]
+      #   @ (
+      #     std.array.map
+      #       # (fun x =>
+      #       #   (
+      #       #     x
+      #       #     & {
+      #       #       dest = "rootfs/",
+      #       #       priority | priority 10 =
+      #       #         #  std.trace (std.serialize 'Json x) 
+      #       #         # (std.record.get_or "priority" 0 x) + 2 
+      #       #         10
+      #       #       #
+      #       #     }
+      #       #   )
+      #       # )
+      #       (fun x => (x & { dest = "rootfs/", priority | priority 1 = (std.record.get_or "priority" 0 x) + 2 }))
+
+      #       (
+      #         _neededPkgs
+      #       )
+      #   ),
+
       biDrvs =
-        [
-          # drvs.baseBaseRootfs,
-          drvs.erofsUtils,
-          drvs.mtools,
-          drvs.genimage,
-          drvs.cryptsetup,
-          drvs.systemdBoot,
-          drvs.llvm, # objdump
-          drvs.pythonFull,
-          drvs.utilLinux,
-        ]
+        (
+          std.array.map
+            (fun x => x & { priority = -10 })
+            [
+              # drvs.baseBaseRootfs,
+              drvs.erofsUtils,
+              drvs.mtools,
+              drvs.genimage,
+              drvs.cryptsetup,
+              drvs.systemdBoot,
+              drvs.llvm, # objdump
+              drvs.pythonFull,
+              # (if distro.selinux then drvs.pythonSelinux else drvs.pythonFull),
+              drvs.utilLinux,
+              drvs.rsync,
+              #drvs.gdb & { dest = "roootfs/", priority = 100, },
+            ]
+        )
         @ (
           std.array.map
-            (fun x => (x & { dest = "rootfs/" }))
+            (fun x => (x & { dest = "rootfs/", priority | priority 100 = (std.record.get_or "priority" 0 x) }))
             (
               _neededPkgs
+              @ [
+                # drvs.gdb,
+              ]
             )
         ),
     },

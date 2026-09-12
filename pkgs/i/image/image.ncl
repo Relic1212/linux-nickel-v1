@@ -7,6 +7,7 @@
   _rootfs,
   _rootfs2,
   busybox,
+  distro,
   busyboxMimalloc =
     busybox
     & {
@@ -40,14 +41,30 @@
         utilsBsd = [
           drvs.bsdutils,
           (drvs.sbase & { priority = -1 }),
+          drvs.dash,
+          drvs.dashSh,
         ],
         utilsUu = [
           drvs.uutils,
           drvs.uutilsSymlinks,
           drvs.uutilsFindutils,
+          drvs.dash,
+          drvs.dashSh,
         ],
         utilsBb = [
           drvs.busyboxFinal,
+        ],
+        utilsBbSelinux = [
+          drvs.busyboxSelinux & { priority = -2 },
+          drvs.busyboxSelinuxProgs & { priority = -1 },
+          drvs.selinuxRefpolicy,
+          drvs.auditUserspace,
+          drvs.selinux,
+          drvs.selinuxSetools,
+          drvs.selinuxInit,
+          # drvs.pythonSelinux,
+          drvs.dash & { priority = 1 },
+          drvs.dashSh & { priority = 1 },
         ],
         utilsSbase = [
           drvs.gnugrep & { priority = 1 },
@@ -57,9 +74,12 @@
           drvs.ubase & { priority = -1 }, # df
           drvs.emptyStty,
           drvs.lsof,
+          drvs.dash,
+          drvs.dashSh,
         ],
 
-        utils = utilsSbase,
+        # utils = utilsSbase,
+        utils = utilsBbSelinux,
       },
       name = "base-base-rootfs",
       biDrvs =
@@ -105,8 +125,6 @@
           drvs.gitFull,
           drvs.vim,
           drvs.bc,
-          drvs.dash,
-          drvs.dashSh,
           drvs.iproute2,
           (drvs.kbd & { priority = -1 }),
           drvs.pigz,
@@ -120,32 +138,34 @@
           (drvs.basefiles & { priority = 1 }),
           drvs.etcSkel,
           drvs.dinit,
-          drvs.dinitServicesV3,
-          drvs.dinitUtils,
-          drvs.shadowPam,
+          (if distro.selinux then drvs.dinitServicesV3DefaultLogin else drvs.dinitServicesV3),
+          # drvs.dinitUtils,
+          drvs.dinitUtilsSh,
+          (if distro.selinux then drvs.shadowSelinux else drvs.shadowPam),
           drvs.libpam,
           drvs.fscryptUnlockHome,
           drvs.cryptoPam,
-          drvs.greetd,
+          (if distro.selinux then drvs.greetdSelinux else drvs.greetd),
           drvs.gtkgreet,
           (drvs.gtkgreetSwayConf & { priority = 1 }),
           drvs.tuigreet,
           drvs.tuigreetConfig,
           drvs.libcap,
-          drvs.utilLinux,
+          (if distro.selinux then drvs.utilLinuxSelinux else drvs.utilLinux) & { priority = 1 },
           drvs.pciutils,
           drvs.hwinfo,
           drvs.xz,
+          drvs.ncdu,
           # drvs.linux,
           drvs.linuxFedora,
 
           # drvs.v4l2loopback,
 
           # drvs.linuxFirmwareSmaller,
-          drvs.eudev,
+          (if distro.selinux then drvs.eudevSelinux else drvs.eudev),
           # drvs.mdevd,
           # drvs.mdevdConf,
-          drvs.dbus,
+          (if distro.selinux then drvs.dbusSelinux else drvs.dbus),
           drvs.bkeymaps,
           drvs.kmod,
           drvs.keyutils,
@@ -157,16 +177,21 @@
           # net
           drvs.dhcpcd,
           drvs.iwd,
-          drvs.dropbear,
-          drvs.openssh,
+          (if distro.selinux then drvs.dropbearSelinux else drvs.dropbear),
+          (if distro.selinux then drvs.opensshSelinux else drvs.openssh),
           drvs.openresolv,
           drvs.caCertificates,
           drvs.dnsmasq,
           drvs.networkmanager,
+          # drvs.networkmanagerConfDisablePolkit,
           drvs.networkManagerApplet,
           drvs.nftables,
           drvs.iputils,
+          drvs.firewalld,
           drvs.netcatOpenbsd,
+          drvs.iftop,
+          drvs.nload,
+          drvs.iperf,
 
           # enc
           drvs.e2fsprogs,
@@ -174,7 +199,7 @@
           # drvs.fscryptUnlockHomeElogind,
           # drvs.elogind,
           drvs.polkit,
-          drvs.elogindWithPolkit,
+          (if distro.selinux then drvs.elogindSelinux else drvs.elogindWithPolkit),
           # drvs.openrcSettingsd,
           # drvs.openntpd,
           # drvs-basu,
@@ -200,15 +225,16 @@
           drvs.hicolorIconTheme,
           drvs.terminusFont,
           drvs.symbolsNerdFont,
+          drvs.xdgDefaultIconTheme,
           # drvs.notoFonts,
         ]
         @ (
           if options.hasX11 then
             [
-              drvs.sway,
+              # drvs.sway,
               # drvs.scroll,
               # drvs.cwcwm,
-              # drvs.swayfx,
+              drvs.swayfx,
               drvs.xwayland,
               drvs.xkbcomp,
               drvs.hyprlandWithPlugins,
@@ -229,6 +255,7 @@
               drvs.niriTag,
               drvs.niriSidebar,
               drvs.niriSwitch,
+              drvs.nirimon,
               drvs.swaytreesave,
               drvs.stasis,
               drvs.system76Scheduler,
@@ -237,12 +264,19 @@
               drvs.ironbar,
               drvs.swaync,
               drvs.noctalia,
+              drvs.libqalculate,
               drvs.satty,
               drvs.fastfetch,
               # drvs.miri,
               # drvs.mwc,
               drvs.mangowc,
               # drvs.river,
+              ##########
+              # drvs.ags,
+              drvs.nodejs,
+              drvs.sassc,
+              # drvs.gjs,
+              ##########
 
               # ### QT
               # drvs.qtdeclarative,
@@ -259,6 +293,7 @@
               drvs.lmSensorsSensors,
               drvs.androidTools,
               drvs.androidUdevRules,
+              drvs.scrcpy,
               drvs.kanshi,
               # drvs.iwmenu,
               drvs.iwgtk,
@@ -284,6 +319,7 @@
                 # drvs.basu,
                 drvs.libnotify,
                 drvs.strace,
+                drvs.gptfdisk,
                 #drvs.dwl,
                 drvs.dconf,
                 drvs.psmisc,
@@ -311,6 +347,9 @@
                 drvs.waybar,
                 # drvs.eww,
                 drvs.thunar,
+                drvs.nautilus,
+                drvs.localsearch,
+                drvs.gtk4, #  schemas for nautilus
                 drvs.gammastep,
                 drvs.gammad,
                 drvs.wlsunset,
@@ -321,6 +360,8 @@
                 drvs.wayEdges,
                 drvs.wtype,
                 drvs.wlrctl,
+                drvs.waylandUtils,
+                drvs.wlopm,
                 drvs.xremap,
                 drvs.keyd,
                 drvs.keydConfig,
@@ -376,7 +417,7 @@
                 drvs.mountOthers,
                 drvs.sbctl,
                 # drvs.pythonFull,
-                drvs.pythonInteractive,
+                (if distro.selinux then drvs.pythonSelinux else drvs.pythonInteractive),
                 # drvs.autotiling,
                 # drvs.i3ipcPython,
                 drvs.tzdata,
@@ -397,10 +438,11 @@
                 drvs.gcr,
                 drvs.gtk3,
                 drvs.ptyxis,
+                drvs.xfce4Terminal,
                 # drvs.libadwaitaShared_181,
                 drvs.vte,
                 # drvs.gnomeConsole,
-                drvs.gnomeTerminal,
+                # drvs.gnomeTerminal,
                 # drvs.libhandy,
                 drvs.cliphist,
                 # drvs.copyq,
@@ -419,6 +461,7 @@
                 drvs.geoclue,
                 drvs.isoCodes,
                 drvs.blocaled,
+                drvs.muslLocales,
                 drvs.socat,
                 drvs.pv,
                 drvs.parted,
@@ -430,6 +473,8 @@
                 # drvs.konsole,
                 drvs.alacritty,
                 drvs.micro,
+                drvs.wayle,
+                drvs.helix,
                 # ttyescape
                 # drvs.buffybox,
                 # drvs.hkdm,
@@ -444,6 +489,16 @@
                 # drvs.nwgLook,
                 # ### -nwg
                 # drvs.yad,
+
+                # browser
+                drvs.epiphany,
+                drvs.webkitgtk,
+                drvs.p11Kit,
+                drvs.gnutls,
+                drvs.caCertificatesAlpine,
+                drvs.debianutils,
+                drvs.chromium,
+                drvs.ffmpeg,
               ]
             else
               []
@@ -470,6 +525,14 @@
                 drvs.conmon,
                 drvs.crun,
                 drvs.netavark,
+                drvs.kubernetes,
+                drvs.qemu,
+                drvs.spiceGtk,
+                drvs.spiceVdagent,
+                drvs.bcvk,
+                drvs.bootc,
+                drvs.virtiofsd,
+                drvs.composefs,
               ]
             else
               []
@@ -516,9 +579,9 @@
     drvs.wkeys,
   ],
 
-  # cosmicPackages | lib.Package = {
-  #   biDrvs = _cosmicPackages
-  # },
+  cosmicPackages | lib.Package = {
+    biDrvs = _cosmicPackages
+  },
   _pplasmaPackages | lib.Package = {
     biDrvs = _plasmaPackages
   },
@@ -635,9 +698,19 @@
           drvs.systemdBoot,
           drvs.llvm, # objdump
           drvs.pythonFull,
+          # (if distro.selinux then drvs.pythonSelinux else drvs.pythonFull),
           drvs.utilLinux,
           drvs.rsync,
         ]
+        @ (
+          if distro.selinux then
+            [
+              # drvs.selinux,
+              # drvs.selinuxSetools,
+            ]
+          else
+            []
+        )
         @ (
           std.array.map
             (fun x => (x & { dest = "rootfs/", priority | priority 1 = (std.record.get_or "priority" 0 x) + 2 }))
@@ -645,7 +718,10 @@
               _baseBaseRootfs.biDrvs
               # @ _cosmicPackages
               # @ _lxqtPackages
-              @ [drvs.llvmLldb]
+              @ [
+                # drvs.llvmLldb, 
+                drvs.gdb,
+              ]
               # @ [drvs.labwc]
               # @ [drvs.kwin]
               # @ _plasmaPackages
