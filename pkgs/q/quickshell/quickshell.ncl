@@ -109,8 +109,10 @@
     ],
 
     singleSource = {
-      uri = "https://github.com/quickshell-mirror/quickshell/archive/8db8ca1fecfcce8def1f9265fa1742baa0e0c271.tar.gz",
-      sha256sum = "80d68bd65d247a0818c8b6544a341c5d04be8d11bff4f1e6a9f00c0f828c290a",
+      uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.3.1.tar.gz",
+      sha256sum = "218f6327293928bcb1f9b25728b336c4ab125f67fe1babd7d47313f890a16c99",
+      # uri = "https://github.com/quickshell-mirror/quickshell/archive/8db8ca1fecfcce8def1f9265fa1742baa0e0c271.tar.gz",
+      # sha256sum = "80d68bd65d247a0818c8b6544a341c5d04be8d11bff4f1e6a9f00c0f828c290a",
 
       # latest without vulkan:
       # uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
