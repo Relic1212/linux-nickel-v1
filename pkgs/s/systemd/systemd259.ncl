@@ -1,27 +1,43 @@
 {
   lib,
   drvs,
-  systemd259 | lib.MesonPackage = {
-    debug = true,
+  systemd | lib.MesonPackage = {
+    # debug = true,
+    debug,
     singleSource = {
-      uri = "https://github.com/systemd/systemd/archive/refs/tags/v259-rc2.tar.gz",
-      sha256sum = "639f1f6453bce3412feb8c4471355c3839765e254afe2638f885fd7de99a37f0"
+      uri = "https://github.com/systemd/systemd/archive/refs/tags/v261.2.tar.gz",
+      sha256sum = "ed1059ff964f5df35b6056434cc17cc83f86dc913f10489948a0b19b6081c5ec"
     },
-    patches = [
-      #   {
-      #     sha256sum = "7a4631d2a63058622b36e1debc5fea6c11d56fd8b6089a0b5868f128e843996f",
-      #     file = "systemd-link-kmod-3.patch"
-      #   },
-      # { file ="systemd-259-dl.patch", sha256sum="ab7fba45a13c02837d53e2a22b08f98df04586c696ae43e7658ebc5b078eecd6" },
-      { file = "systemd-259-pam.patch", sha256sum = "b17134446fc10c7104bc3fb25b87bd147661511ccaa10a1ccdea5908eecf30e4" },
-    ],
+
+    buildEnv = {
+      EXTRA_CPPFLAGS = [
+        "-Dcap_last_cap=systemd__cap_last_cap",
+        "-Dpid_get_cmdline=systemd__pid_get_cmdline",
+      ],
+      EXTRA_LDFLAGS = [
+        #"-lc",
+        "-ldl_systemd",
+        "$(pkg-config --static --libs libkmod mount libacl libsepol libsemanage libselinux pam)",
+        "-lpam_dl",
+        # "-lpam_misc",
+        "/tmp/workdir/src/pam_systemd.a",
+        # "/usr/lib/security/pam_gnome_keyring.a",
+        "/tmp/workdir/src/pam_gnome_keyring.a",
+      ],
+    },
+
     extraMesonArgs =
       [
         "-Dlibc=musl",
         "-Dtests=false",
         # "-Dstatic-libudev=no-pic",
-        "-Dpamconfdir=no",
+        # "-Dpamconfdir=no",
         "-Dsplit-bin=false",
+        "-Dldconfig=false",
+        "-Dblkid=enabled",
+        "-Dxkbcommon=enabled",
+        "-Dpcre2=enabled",
+        "-Dman=enabled",
       ]
       @ (
         std.array.map
@@ -35,6 +51,16 @@
             "journalctl",
             "boot",
             "portabled"
+          ]
+      )
+      @ (
+        if debug then
+          [
+            "-Dlog-trace=true",
+          ]
+        else
+          [
+            "-Dmode=release",
           ]
       ),
     preConfigurePhase = [
@@ -60,7 +86,62 @@
       # m%"sed -i "s@'-Wl,--version-script=' + d@# '-Wl,--version-script=' + d@g" ${SRC}/meson.build"%,
       # m%"sed -i "s@dict.get('version-script')@# dict.get('version-script')@g" ${SRC}/meson.build"%,
       # m%"sed -i 's@local@global@g' ${SRC}/src/login/pam_systemd.sym"%,
+      "cp /usr/lib/libempty.a /tmp/workdir/src/pam_systemd.a",
+      "cp /usr/lib/libempty.a /tmp/workdir/src/pam_gnome_keyring.a",
+      m%"touch --no-dereference --date="@1302044400" /tmp/workdir/src/pam_systemd.a /tmp/workdir/src/pam_gnome_keyring.a"%,
+
+      # man
+      m%"sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${SRC}/man/custom-man.xsl"%,
     ],
+    preBuildPhase =
+      [
+        "echo 'building boot'",
+        "ninja src/boot/libefix64.a",
+        "ninja src/boot/systemd-bootx64.elf",
+        "ninja src/boot/linuxx64.elf.stub",
+        "ninja src/boot/addonx64.elf.stub",
+        "ninja src/boot/systemd-bootx64.efi",
+        "ninja src/boot/linuxx64.efi.stub",
+        "ninja src/boot/addonx64.efi.stub",
+        "ninja systemd-boot",
+        "echo 'building pam_systemd'",
+        "ninja pam_systemd.a",
+        "llvm-objcopy --redefine-sym pam_sm_open_session=pam_systemd_pam_sm_open_session pam_systemd.a",
+        "llvm-objcopy --redefine-sym pam_sm_close_session=pam_systemd_pam_sm_close_session pam_systemd.a",
+      ]
+      @ (
+        std.array.map
+          (fun s => "llvm-objcopy -W %{s} pam_systemd.a"
+          )
+          [
+            "log_internal",
+            "freeze",
+            "log_level_from_string",
+            "log_get_max_level",
+            "parse_boolean",
+            "log_set_max_level",
+            "log_set_max_level_from_string",
+            "hexdump",
+            "strv_free",
+            "parse_boolean",
+            "hexdump",
+            "log_internal",
+            "freeze",
+            "log_level_from_string",
+            "log_get_max_level",
+            "log_set_max_level",
+            "log_set_max_level_from_string",
+            "strv_free",
+          ]
+      )
+      @ [
+        "cp pam_systemd.a /tmp/workdir/src/pam_systemd.a",
+        "cp /usr/lib/security/pam_gnome_keyring.a /tmp/workdir/src/pam_gnome_keyring.a",
+        m%"touch --no-dereference --date="@1302044400" /tmp/workdir/src/pam_systemd.a /tmp/workdir/src/pam_gnome_keyring.a"%,
+      ],
+    # buildPhase=[
+    #   "ninja",
+    # ],
     postInstallPhase =
       (
         let symbols = [
@@ -221,31 +302,28 @@
         "install -d -m0755 ${DEST}/usr/libexec",
         "(cd ${DEST}/usr/libexec && ln -s ../lib/systemd/systemd-logind elogind)",
         m%"for f in $(find ${DEST}/usr/share/dbus-1/ -type f); do sed -i 's@\/bin\/false@\/usr\/bin\/true@g' ${f};done"%,
-        "for symbol in $(llvm-nm ${DEST}/usr/lib/security/pam_systemd.a | grep ' t ' | cut -d ' ' -f3); do echo 'globalizing ${symbol}'; llvm-objcopy --globalize-symbol ${symbol} ${DEST}/usr/lib/security/pam_systemd.a;done",
+        m%"for symbol in $(llvm-nm ${DEST}/usr/lib/security/pam_systemd.a | grep ' t pam' | cut -d ' ' -f3); do echo "globalizing ${symbol}"; llvm-objcopy --globalize-symbol ${symbol} ${DEST}/usr/lib/security/pam_systemd.a;done"%,
+        ###
+        "llvm-objcopy --redefine-sym pam_sm_open_session=pam_systemd_pam_sm_open_session ${DEST}/usr/lib/security/pam_systemd.a",
+        "llvm-objcopy --redefine-sym pam_sm_close_session=pam_systemd_pam_sm_close_session ${DEST}/usr/lib/security/pam_systemd.a",
+        ###
         "cp ${DEST}/usr/lib/security/pam_systemd.a ${DEST}/usr/lib/libpam_systemd.a",
+
+        ###
+        m%"sed -i 's@/usr/bin/agetty --noreset@/usr/bin/agetty --login-program /usr/bin/login --noreset@g' ${DEST}/usr/lib/systemd/system/*.service"%,
       ],
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "-ldl_systemd",
-        "$(pkg-config --static --libs libkmod)",
-        "-lpam",
-        "-lpam_misc",
-      ],
-    },
+
     muslProvider = drvs.muslBothRenamedDl,
     biDrvs = [
       drvs.systemdLibdl,
-      drvs.acl,
-      drvs.dbus,
-      drvs.zlibNg,
-      drvs.zstd,
-      drvs.xz,
+      # drvs.acl,
+      # drvs.dbus,
+      # drvs.zlibNg,
+      # drvs.zstd,
+      # drvs.xz,
       drvs.gettext,
       drvs.basefiles,
       drvs.gnugrep,
-      drvs.kmodRenamedSyms,
-      drvs.openssl,
-      drvs.libcap,
       drvs.pythonDynamic,
       drvs.pythonJinja2,
       # drvs.bash,
@@ -257,10 +335,37 @@
       drvs.gperf,
       drvs.pythonElftools,
       drvs.muslGetent,
+      drvs.gnomeKeyring,
+      drvs.libempty,
+      drvs.libxslt,
+      drvs.docbookXslNons,
+      drvs.docbookXml,
+      # drvs.docbookSymlink,
+
+      # drvs.libpam,
+      #   drvs.busyboxMiscUtils,
+    ],
+
+    neverInclude = [
+      drvs.kmod,
+      drvs.libpam,
+    ],
+
+    pDrvs = [
+      # drvs.libpamSelinux,
+      drvs.libpamSelinuxSystemd,
       drvs.utilLinux,
       drvs.libarchive,
-      drvs.libpam,
-      #   drvs.busyboxMiscUtils,
+      drvs.kmodRenamedSyms,
+      # drvs.libcap,
+      drvs.acl,
+      drvs.dbus,
+      drvs.libucontext,
+      drvs.libxkbcommon,
+      drvs.curl,
+      # drvs.pcre2,
+      # drvs.bzip2,
+      drvs.selinux,
     ],
     # pulls in static python otherwise
     baseBuildinputPackages = [
@@ -269,8 +374,7 @@
       drvs.bashSh,
       drvs.meson,
       drvs.samurai,
-      drvs.pkgconf,
-      drvs.musl,
+      drvs.pkgconfMeson,
       drvs.llvm,
       drvs.ccacheBin,
       muslProvider,
@@ -281,9 +385,13 @@
       drvs.gawk,
     ],
   },
+}
+& {
+  lib,
+  drvs,
   libpamSystemd | lib.Package = {
     biDrvs = [
-      drvs.systemd259,
+      drvs.systemd,
     ],
     installPhase = [
       "install -dm0755 ${DEST}/usr/lib",
@@ -294,14 +402,76 @@
 & {
   lib,
   drvs,
-  systemdLibdl | lib.MakePackage = {
-    singleSource = {
-      uri = "/home/user/Projects/test-static-linking/kmod",
-      sha256sum = "aa9e8def409709c26b36554d9ee1a15cd5089dd1",
-      fetchMethod = "git"
-    },
-    preConfigurePhase = [
-      m%"for f in $(find ${SRC}/ -type f); do sed -i 's|stderr|stdout|g' ${f}; done"%,
+  systemdLibdl | lib.Package = {
+    buildPhase = [
+      lib.functions.writeFile "systemd_dlopen.c" (import "systemd_dlopen2.c" as 'Text),
+      "${CC} ${CFLAGS} -c -Werror systemd_dlopen.c -o systemd_dlopen.o",
+      "${AR} rcs libdl_systemd.a systemd_dlopen.o",
     ],
+    installPhase = [
+      "install -Dm0755 libdl_systemd.a ${DEST}/usr/lib/libdl_systemd.a",
+    ],
+    enableCcache = false,
+    biDrvs = [
+      drvs.llvm,
+      drvs.musl,
+      # drvs.linuxHeaders,
+    ]
   }
+}
+& {
+  lib,
+  drvs,
+  systemdWrapped | lib.Package = {
+    buildPhase = [
+      lib.functions.writeFile "systemd-wrapped" (import "systemd.sh" as 'Text),
+      "chmod +x systemd-wrapped",
+    ],
+    installPhase = [
+      "install -Dm0755 systemd-wrapped ${DEST}/usr/lib/systemd/systemd-wrapped",
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  systemdSyscalls | lib.Package = {
+    buildPhase = [
+      lib.functions.writeFile "syscalls.c" (import "systemd_syscalls.c" as 'Text),
+      "${CC} ${CFLAGS} -Werror syscalls.c -o syscalls",
+    ],
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/bin",
+      "install -m0755 syscalls ${DEST}/usr/bin",
+    ],
+
+    biDrvs = [
+      drvs.musl,
+      drvs.llvm,
+      drvs.linuxHeaders,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  docbookSymlink | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/share/xml/docbook",
+      "cd ${DEST}/usr/share/xml/docbook",
+      "ln -s xsl-stylesheets-nons-1.79.2 current",
+      "install -dm0755 ${DEST}/usr/share/xml/docbook/stylesheet/",
+      "cd ${DEST}/usr/share/xml/docbook/stylesheet/",
+      "ln -s /usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2 docbook-xsl-ns",
+      "ln -s /usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2 docbook-xsl",
+    ]
+  },
+
+  systemdVt | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/lib/systemd/system",
+      "cd ${DEST}/usr/lib/systemd/system",
+      "ln -s getty@.service autovt@.service",
+    ],
+  },
 }
