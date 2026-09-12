@@ -1,0 +1,10 @@
+{
+  lib,
+  drvs,
+  libucontext | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://github.com/kaniini/libucontext/archive/refs/tags/libucontext-1.5.2.tar.gz",
+      sha256sum = "9230397327bbf580e04c9456d1509e9af19599c7f6deca7f75969ece6e9d598e",
+    }
+  }
+}
