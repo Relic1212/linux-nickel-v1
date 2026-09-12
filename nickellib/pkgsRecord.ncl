@@ -65,7 +65,7 @@ let ro = {
           drvs =
             std.record.map
               (fun k v =>
-                # (std.trace k )
+                # (std.trace "%{k}: %{v.drvHash}" )
                 # ((std.trace k ) (std.trace (std.serialize 'Json v.configurePhase )))
                 {
                   name = keyToName k,
