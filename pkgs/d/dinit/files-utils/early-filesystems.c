@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 #ifdef SELINUX_ENABLED
     if (mount("selinuxfs", "/sys/fs/selinux", "selinuxfs", 0, "rw") != 0)
     {
-        status = 1;
+        // status = 1;
         printf("Faild to mount selinuxfs\n");
     }
 #endif // SELINUX_ENABLED

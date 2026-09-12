@@ -9,6 +9,7 @@
 
     extraMakeArgs = [
       "SBINDIR=/usr/bin",
+      "SYSCONTROLSOCKET=/dev/dinitctl",
     ],
     extraMakeInstallArgs =
       extraMakeArgs

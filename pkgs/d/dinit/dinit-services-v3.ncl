@@ -109,7 +109,10 @@ let _services = (
     dbusd = {
       type = "process",
       command = "/usr/bin/dbus-daemon --system --nofork --nopidfile --print-address=4",
-      "depends-on" = ["rcboot"],
+      depends-on = [
+        "rcboot",
+        "varrw",
+      ],
       logfile = "/var/log/dbus-daemon.log",
       ready-notification = "pipefd:4",
       smooth-recovery = "yes",
@@ -227,7 +230,7 @@ let _services = (
 
     loadkeys = {
       type = "scripted",
-      command = "/etc/dinit.d/scripts/loadkeys.sh",
+      command = "/usr/bin/loadkeys sv-latin1",
       restart = false,
       options = "start-interruptible",
       "start-timeout" = "1200", # 20 minutes
@@ -323,14 +326,46 @@ let _services = (
     },
 
     rcboot = {
-      type = "scripted",
-      command = "/etc/dinit.d/scripts/rcboot.sh",
-      # logfile = "/var/log/rcboot.log",
-      log-type = "buffer",
-      log-buffer-size = 65536,
-
+      type = "internal",
       restart = false,
-      "depends-on" = ["varrw"],
+      "depends-on" = [
+        # "varrw",
+        "rcboot-modes",
+      ],
+
+      # type = "scripted",
+      # command = "/etc/dinit.d/scripts/rcboot.sh",
+      # # logfile = "/var/log/rcboot.log",
+      # log-type = "buffer",
+      # log-buffer-size = 65536,
+
+      # restart = false,
+      # "depends-on" = ["varrw"],
+    },
+    rcboot-dirs = {
+      type = "scripted",
+      command = "/usr/bin/mkdir -p -m755 /run/dbus",
+      restart = false,
+
+      depends-on = [
+        "early-filesystems",
+      ],
+    },
+    rcboot-modes = {
+      type = "scripted",
+      command = "/usr/bin/chown -R messagebus:messagebus /run/dbus",
+      restart = false,
+      depends-on = [
+        "rcboot-dirs",
+      ],
+    },
+    rcboot-systemd = {
+      type = "scripted",
+      restart = false,
+      command = "/usr/bin/mkdir -p /run/systemd/seats /run/systemd/system",
+      depends-on = [
+        "early-filesystems",
+      ],
     },
 
     recovery = {
@@ -437,28 +472,51 @@ let _services = (
     },
 
     varrw = {
+      type = "internal",
+      depends-on = [
+        "varrw-selinux",
+        # "varrw-mount",
+      ],
+    },
+
+    varrw-mount = {
       type = "scripted",
-      command = "/etc/dinit.d/scripts/varrw.sh",
+      command = "/usr/bin/mount -v -toverlay overlay -o lowerdir=/var,upperdir=/run/var_overlay/upper,workdir=/run/var_overlay/work,metacopy=on /var",
       restart = false,
       # options = "starts-rwfs",
       # logfile = "/run/rootrw.log",
       log-type = "buffer",
       log-buffer-size = 65536,
-
-      "depends-on" = [
-        "early-filesystems",
+      depends-on = [
+        # "early-filesystems",
         # "udevd",
+        "varrw-prep",
       ],
     },
-    # varrw-selinux = {
-    #   type = "scripted",
-    #   command = "/usr/bin/restorecon -rvF /var",
-    #   restart = false,
-    #   logfile = "/run/var-restorecon.log",
-    #   "depends-on" = [
-    #     "varrw",
-    #   ],
-    # },
+
+    varrw-prep = {
+      type = "scripted",
+      command = "/usr/bin/mkdir -p /run/var_overlay/upper /run/var_overlay/work",
+      restart = false,
+
+      log-type = "buffer",
+      log-buffer-size = 65536,
+      depends-on = [
+        "early-filesystems",
+      ],
+    },
+    varrw-selinux = {
+      type = "scripted",
+      command = "/usr/bin/restorecon -rvF /var /run/var_overlay",
+      restart = false,
+      # logfile = "/run/var-restorecon.log",
+      log-type = "buffer",
+      log-buffer-size = 65536,
+      depends-on = [
+        "varrw-mount",
+      ],
+    },
+
     "zram-init" = {
       type = "scripted",
       command = "/etc/dinit.d/scripts/zram-init.sh",
@@ -470,7 +528,8 @@ let _services = (
     },
     "create-x11-socket" = {
       type = "scripted",
-      command = "/etc/dinit.d/scripts/create-x11-socket.sh",
+      # command = "/etc/dinit.d/scripts/create-x11-socket.sh",
+      command = "/usr/bin/mkdir -p -m1777 /tmp/.X11-unix",
       log-type = "buffer",
       log-buffer-size = 65536,
 
@@ -603,37 +662,37 @@ let scripts = {
   #           #!/bin/sh -e
   #           loadkmap < /usr/share/bkeymaps/sv/sv-latin1.bmap
   #           "%,
-  "loadkeys.sh" = m%"
-            #!/bin/sh -e
-            loadkeys sv-latin1
-            "%,
+  # "loadkeys.sh" = m%"
+  #           #!/bin/sh -e
+  #           loadkeys sv-latin1
+  #           "%,
 
-  "rcboot.sh" =
-    m%"
-            #!/bin/sh -e
-            /usr/bin/mkdir -p -m755 /run/dbus
-            /usr/bin/chown -R messagebus:messagebus /run/dbus
-            "%
-    ++ (
-      if (!prepSystemd) then
-        ""
-      else
-        "\n"
-        ++ m%"
-            /usr/bin/mkdir -p /run/systemd/seats
-            /usr/bin/mkdir -p /run/systemd/system
-            "%
-    ),
-  "varrw.sh" =
-    m%"
-            #!/bin/sh -e
-            mkdir -p /run/var_overlay/upper
-            mkdir -p /run/var_overlay/work
-            modprobe overlay || /usr/bin/true
-            mount -t overlay overlay -o lowerdir=/var,upperdir=/run/var_overlay/upper,workdir=/run/var_overlay/work /var
-            "% ++
-    # TODO: enable only when image has selinux
-    "\nrestorecon -rvF /var || true\n",
+  # "rcboot.sh" =
+  #   m%"
+  #           #!/bin/sh -e
+  #           /usr/bin/mkdir -p -m755 /run/dbus
+  #           /usr/bin/chown -R messagebus:messagebus /run/dbus
+  #           "%
+  #   ++ (
+  #     if (!prepSystemd) then
+  #       ""
+  #     else
+  #       "\n"
+  #       ++ m%"
+  #           /usr/bin/mkdir -p /run/systemd/seats
+  #           /usr/bin/mkdir -p /run/systemd/system
+  #           "%
+  #   ),
+  # "varrw.sh" =
+  #   m%"
+  #           #!/bin/sh -e
+  #           mkdir -p /run/var_overlay/upper
+  #           mkdir -p /run/var_overlay/work
+  #           modprobe overlay || /usr/bin/true
+  #           mount -t overlay overlay -o lowerdir=/var,upperdir=/run/var_overlay/upper,workdir=/run/var_overlay/work /var
+  #           "% ++
+  #   # TODO: enable only when image has selinux
+  #   "\nrestorecon -rvF /var || true\n",
   # echo "$(head -n1 /proc/meminfo | rev |cut -d ' ' -f2 | rev)KiB"
   "zram-init.sh" = m%"
 #!/bin/sh -e
@@ -642,11 +701,11 @@ let scripts = {
 /usr/bin/mkswap -U clear /dev/zram0
 /usr/bin/swapon --discard --priority 100 /dev/zram0
   "%,
-  "create-x11-socket.sh" = m%"
-#!/bin/sh -e
-mkdir -p /tmp/.X11-unix
-chmod 1777 /tmp/.X11-unix
-"%
+  #   "create-x11-socket.sh" = m%"
+  # #!/bin/sh -e
+  # mkdir -p /tmp/.X11-unix
+  # chmod 1777 /tmp/.X11-unix
+  # "%
 }
 in
 

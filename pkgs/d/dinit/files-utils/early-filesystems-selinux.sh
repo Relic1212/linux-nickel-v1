@@ -6,7 +6,7 @@ set -e
 PATH=/usr/bin:/bin
 
 # Must have sysfs mount -ved for udevtrigger to function.
-mount -v -n -t sysfs sysfs /sys
+# mount -v -n -t sysfs sysfs /sys
 
 # Ideally devtmpfs will be mount -ved by kernel, we can mount -v here anyway:
 # mount -v -n -t devtmpfs tmpfs /dev
@@ -15,7 +15,7 @@ mount -v -n -t tmpfs -o nodev,nosuid tmpfs /dev/shm
 mount -v -n -t devpts -o gid=5 devpts /dev/pts
 
 # /run, and various directories within it
-mount -v -n -t tmpfs -o mode=775 tmpfs /run
+# mountpoint -q /run || mount -v -n -t tmpfs -o mode=775 tmpfs /run
 mkdir /run/lock /run/udev
 
 # "hidepid=1" doesn't appear to take effect on first mount -v of /proc,
@@ -28,11 +28,15 @@ mount -v -n -t proc  proc /proc
 mkdir -p -m 0755 /sys/fs/cgroup 
 mount -v -wt cgroup2 cgroup /sys/fs/cgroup 
 
-mount -v -t selinuxfs selinuxfs /sys/fs/selinux
+# mount -v -t selinuxfs selinuxfs /sys/fs/selinux
 mount -v -n -t tmpfs  tmpfs -o nosuid,nodev,mode=1777 /tmp 
 
 restorecon -rvF /sys
 restorecon -rvF /dev
 restorecon -rvF /run
 restorecon -rvF /proc
+restorecon -rvF /tmp
 
+
+echo "secon:"
+secon || true
