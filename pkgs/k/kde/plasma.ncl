@@ -502,6 +502,7 @@
     _plasma
     & {
       singleSource.uri = "https://download.kde.org/stable/plasma/6.6.4/layer-shell-qt-6.6.4.tar.xz",
+      singleSource.sha256sum = "731af7a222bc1a1e87fd993060ed8fa515b4b38cbc294063b700ec87451e013f",
       preConfigurePhase = [
         m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| SHARED| STATIC|g' ${f};done"%,
         m%"for f in $(find ${SRC} -type f -name CMakeLists.txt);do sed -i 's| MODULE| STATIC|g' ${f};done"%,
