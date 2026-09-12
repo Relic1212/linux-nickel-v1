@@ -21,12 +21,32 @@
   dbusSelinux | lib.MesonPackage =
     dbus
     & {
-      extraMesonArgs | priority 1 = [
-        "-Druntime_dir=/run",
-        "-Dselinux=enabled",
-      ],
-      pDrvs = [
-        drvs.selinux,
-      ]
-    }
+      options = {
+        systemd | default = false,
+      },
+      extraMesonArgs | priority 1 =
+        [
+          "-Druntime_dir=/run",
+          "-Dselinux=enabled",
+        ]
+        @ (
+          if options.systemd then
+            [
+              "-Dsystemd=enabled",
+            ]
+          else
+            []
+        ),
+      pDrvs =
+        []
+        @ (
+          if options.systemd then
+            [drvs.systemd]
+          else
+            [
+              drvs.selinux,
+            ]
+        )
+    },
+  dbusSystemd | lib.MesonPackage = dbusSelinux & { options.systemd = true },
 }
