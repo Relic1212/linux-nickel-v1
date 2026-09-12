@@ -1,0 +1,47 @@
+
+module init_console 1.0;
+
+require {
+	type root_t;
+	type device_t;
+	type mount_t;
+	type setfiles_t;
+	type console_device_t;
+	class chr_file { read write };
+}
+
+#============= mount_t ==============
+allow mount_t device_t:chr_file { read write };
+
+#============= setfiles_t ==============
+allow setfiles_t console_device_t:chr_file read;
+allow setfiles_t root_t:chr_file { read write };
+
+require {
+	type root_t;
+	type mount_t;
+	type device_t;
+	type setfiles_t;
+	class chr_file ioctl;
+}
+
+#============= mount_t ==============
+allow mount_t device_t:chr_file ioctl;
+
+#============= setfiles_t ==============
+allow setfiles_t root_t:chr_file ioctl;
+
+
+
+require {
+	type event_device_t;
+	type mount_t;
+	type setfiles_t;
+	class chr_file { read write ioctl };
+}
+
+#============= mount_t ==============
+allow mount_t event_device_t:chr_file { read write ioctl };
+
+#============= setfiles_t ==============
+allow setfiles_t event_device_t:chr_file { read write ioctl };

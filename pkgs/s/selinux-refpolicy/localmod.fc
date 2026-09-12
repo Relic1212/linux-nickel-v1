@@ -11,3 +11,5 @@
 /usr/lib/chromium/chrome_sandbox			--	gen_context(system_u:object_r:chromium_sandbox_exec_t,s0)
 
 /usr/libexec/blocaled	--	gen_context(system_u:object_r:systemd_locale_exec_t,s0)
+
+/dev/dinitctl			--	gen_context(system_u:object_r:var_run_t,s0)

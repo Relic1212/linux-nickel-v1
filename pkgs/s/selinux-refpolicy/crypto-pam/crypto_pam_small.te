@@ -1,0 +1,105 @@
+policy_module(crypto_pam, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+type crypto_pam_t;
+type crypto_pam_exec_t;
+init_daemon_domain(crypto_pam_t, crypto_pam_exec_t)
+
+permissive crypto_pam_t;
+
+########################################
+#
+# crypto_pam local policy
+#
+allow crypto_pam_t self:fifo_file rw_fifo_file_perms;
+allow crypto_pam_t self:unix_stream_socket create_stream_socket_perms;
+
+domain_use_interactive_fds(crypto_pam_t)
+
+files_read_etc_files(crypto_pam_t)
+
+miscfiles_read_localization(crypto_pam_t)
+
+
+require {
+	type chkpwd_t;
+	type getty_t;
+	type init_t;
+	type local_login_t;
+	type tty_device_t;
+	type var_log_t;
+	type xserver_log_t;
+    class chr_file { read write };
+	class file append;
+	class process { noatsecure rlimitinh siginh };
+	class unix_dgram_socket sendto;
+}
+
+
+
+#============= chkpwd_t ==============
+allow chkpwd_t tty_device_t:chr_file { read write };
+
+#============= getty_t ==============
+allow getty_t local_login_t:process { noatsecure rlimitinh siginh };
+
+#============= local_login_t ==============
+allow local_login_t chkpwd_t:process { noatsecure rlimitinh siginh };
+allow local_login_t init_t:unix_dgram_socket sendto;
+allow local_login_t var_log_t:file append;
+allow local_login_t xserver_log_t:file append;
+
+
+require {
+	type sysfs_t;
+	type bin_t;
+	type local_login_t;
+	type gkeyringd_exec_t;
+	type crypto_pam_exec_t;
+	type devpts_t;
+	type sysadm_t;
+	type xdg_config_t;
+	type xserver_log_t;
+	type init_t;
+	type chkpwd_t;
+	type default_t;
+	type unconfined_t;
+	type debugfs_t;
+	type xdm_var_run_t;
+	type kernel_t;
+	class filesystem associate;
+	class system firmware_load;
+	class file { entrypoint execute execute_no_trans getattr map open read };
+	class unix_dgram_socket sendto;
+	class dir { getattr watch };
+	class process getsched;
+}
+
+#============= chkpwd_t ==============
+allow chkpwd_t init_t:unix_dgram_socket sendto;
+allow chkpwd_t xdm_var_run_t:file { open read };
+
+#============= debugfs_t ==============
+allow debugfs_t sysfs_t:filesystem associate;
+
+#============= kernel_t ==============
+allow kernel_t self:system firmware_load;
+
+#============= local_login_t ==============
+allow local_login_t bin_t:file { execute execute_no_trans map };
+allow local_login_t crypto_pam_exec_t:file { execute execute_no_trans };
+allow local_login_t default_t:dir getattr;
+allow local_login_t devpts_t:dir getattr;
+allow local_login_t self:process getsched;
+allow local_login_t xdm_var_run_t:file getattr;
+allow local_login_t xserver_log_t:file open;
+
+#============= sysadm_t ==============
+allow sysadm_t xdg_config_t:dir watch;
+
+#============= unconfined_t ==============
+allow unconfined_t gkeyringd_exec_t:file entrypoint;

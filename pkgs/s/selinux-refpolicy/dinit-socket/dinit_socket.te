@@ -1,0 +1,209 @@
+
+module dinit_socket 1.0;
+
+require {
+	type var_run_t;
+	type mount_t;
+	class dir setattr;
+    type tmp_t;
+	type bin_t;
+	type hostname_t;
+	type var_log_t;
+	type tmpfs_t;
+	type mount_runtime_t;
+	type var_run_t;
+	type var_lib_t;
+	type mount_t;
+	class dir { create relabelfrom search write };
+	class chr_file unlink;
+	class lnk_file getattr;
+}
+
+#============= hostname_t ==============
+allow hostname_t bin_t:dir search;
+
+#============= mount_t ==============
+allow mount_t mount_runtime_t:chr_file unlink;
+allow mount_t tmp_t:lnk_file getattr;
+allow mount_t tmpfs_t:dir write;
+allow mount_t var_lib_t:dir create;
+allow mount_t var_log_t:dir create;
+allow mount_t var_run_t:dir relabelfrom;
+allow mount_t var_run_t:dir setattr;
+
+
+
+require {
+	type var_t;
+	type mount_t;
+	class dir relabelto;
+}
+
+#============= mount_t ==============
+allow mount_t var_t:dir relabelto;
+
+require {
+	type bin_t;
+	type hostname_t;
+	type mount_t;
+	type var_t;
+	class file execute;
+	class dir setattr;
+}
+
+#============= hostname_t ==============
+allow hostname_t bin_t:file execute;
+
+#============= mount_t ==============
+allow mount_t var_t:dir setattr;
+
+require {
+	type mount_t;
+	type var_log_t;
+	type var_lib_t;
+	class dir { rmdir setattr };
+}
+
+#============= mount_t ==============
+allow mount_t var_lib_t:dir { rmdir setattr };
+allow mount_t var_log_t:dir { rmdir setattr };
+
+require {
+	type var_t;
+	type mount_t;
+	class dir write;
+}
+
+#============= mount_t ==============
+allow mount_t var_t:dir write;
+
+
+require {
+	type var_lib_t;
+	type var_log_t;
+	type hostname_t;
+	type mount_t;
+	type bin_t;
+	class file { open read };
+	class dir write;
+}
+
+#============= hostname_t ==============
+allow hostname_t bin_t:file { open read };
+
+#============= mount_t ==============
+allow mount_t var_lib_t:dir write;
+allow mount_t var_log_t:dir write;
+
+######## SYSTEMD=y 
+
+require {
+	type udev_t;
+	type initrc_runtime_t;
+	type mount_t;
+	class dir { search setattr write add_name create };
+}
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:dir { setattr write add_name create };
+
+# #============= udev_t ==============
+# allow udev_t initrc_runtime_t:dir search;
+
+
+require {
+	type mount_t;
+	type initrc_runtime_t;
+	class file { create write };
+	class dir remove_name;
+}
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:dir remove_name;
+allow mount_t initrc_runtime_t:file { create write };
+
+require {
+	type initrc_runtime_t;
+	type mount_t;
+	class file { rename unlink };
+	class dir rmdir;
+}
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:dir rmdir;
+allow mount_t initrc_runtime_t:file { rename unlink };
+
+require {
+	type mount_t;
+	type initrc_runtime_t;
+	class chr_file unlink;
+}
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:chr_file unlink;
+
+require {
+	type mount_t;
+	type initrc_runtime_t;
+	class dir relabelfrom;
+}
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:dir relabelfrom;
+
+
+require {
+	type mount_t;
+	type var_t;
+	type var_lib_t;
+	type var_log_t;
+	type hostname_t;
+	type bin_t;
+	type NetworkManager_var_lib_t;
+	type xserver_log_t;
+	class file { execute_no_trans map create rename setattr unlink write append create };
+	class dir { add_name remove_name rename reparent setattr write };
+}
+
+#============= hostname_t ==============
+allow hostname_t bin_t:file { execute_no_trans map };
+
+#============= mount_t ==============
+allow mount_t var_t:dir { add_name remove_name rename };
+allow mount_t var_lib_t:dir { add_name remove_name rename };
+allow mount_t var_log_t:dir { add_name remove_name rename };
+
+allow mount_t NetworkManager_var_lib_t:dir { add_name create remove_name rename reparent setattr write };
+allow mount_t NetworkManager_var_lib_t:file { create rename setattr unlink write };
+allow mount_t var_lib_t:dir { add_name rename reparent write };
+allow mount_t var_log_t:dir { add_name rename reparent write };
+allow mount_t var_log_t:file { append create setattr write };
+allow mount_t var_t:dir add_name;
+allow mount_t xserver_log_t:file { append create };
+
+
+require {
+	type var_log_t;
+	type system_dbusd_t;
+	class file append;
+}
+
+#============= system_dbusd_t ==============
+allow system_dbusd_t var_log_t:file append;
+
+
+
+require {
+	type selinux_config_t;
+	type hostname_t;
+	type proc_t;
+	type security_t;
+	class filesystem getattr;
+	class file read;
+	class dir search;
+}
+
+#============= hostname_t ==============
+allow hostname_t proc_t:file read;
+allow hostname_t security_t:filesystem getattr;
+allow hostname_t selinux_config_t:dir search;

@@ -1,0 +1,4 @@
+/run/var_overlay -d  gen_context(system_u:object_r:var_t,s0)
+/run/var_overlay/upper -d  gen_context(system_u:object_r:var_t,s0)
+/run/var_overlay/work -d  gen_context(system_u:object_r:var_t,s0)
+/run/var_overlay/work/work -d  gen_context(system_u:object_r:var_t,s0)
