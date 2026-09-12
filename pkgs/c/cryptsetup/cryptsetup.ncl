@@ -12,13 +12,15 @@
       "-Dssh-token=false",
     ],
     biDrvs = [
+      drvs.bash,
+      drvs.linuxHeaders,
+      drvs.popt,
+    ],
+    pDrvs = [
       drvs.utilLinux,
       drvs.jsonC,
       drvs.lvm2,
       drvs.openssl,
-      drvs.bash,
-      drvs.linuxHeaders,
-      drvs.popt,
     ],
     preConfigurePhase = [
       m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/tests/generate-symbols-list"%
