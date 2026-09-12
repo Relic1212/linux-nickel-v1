@@ -36,6 +36,8 @@
       # "--disable-tcg",
       "--enable-tcg",
       "--enable-spice",
+      "--enable-gtk-clipboard",
+      "--disable-docs",
     ],
 
     buildEnv = {
