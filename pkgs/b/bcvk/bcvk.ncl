@@ -26,7 +26,7 @@
     ],
     # crates = lib.functions.filterCrates (import "bcvk-crates.json"),
 
-    eofPatches=[
+    eofPatches = [
       {
         patch = (import "no-ld-so-cache.patch" as 'Text),
       },
