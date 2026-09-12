@@ -38,6 +38,7 @@
         "-Dxkbcommon=enabled",
         "-Dpcre2=enabled",
         "-Dman=enabled",
+        "-Dtpm2=enabled",
       ]
       @ (
         std.array.map
@@ -343,7 +344,8 @@
       # drvs.docbookSymlink,
 
       # drvs.libpam,
-      #   drvs.busyboxMiscUtils,
+      # drvs.busyboxMiscUtils,
+      drvs.tpm2Tss,
     ],
 
     neverInclude = [
