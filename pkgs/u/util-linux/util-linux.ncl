@@ -43,6 +43,9 @@
       uri = "https://github.com/util-linux/util-linux/archive/063d65949c6b1dbe25ccc7948debbd019f88a111.tar.gz",
       sha256sum = "f84cf67013bf53ecedaa2804aad151b9eca9d6fb25daeb1b198c0cb5474ab895",
     },
+    options = {
+      selinux | default = false,
+    },
     # sourceInputs = [
     #   {src=singleSource},
     #   {
@@ -87,13 +90,22 @@
     # )
     ,
 
-    extraMesonArgs = [
-      "-Dprogram-tests=false",
-      "-Dfs-search-path=/usr/bin",
-      "-Dbuild-python=disabled",
-      "-Dbuild-pylibmount=disabled",
-      "-Dbuild-fdisks=enabled",
-    ],
+    extraMesonArgs =
+      [
+        "-Dprogram-tests=false",
+        "-Dfs-search-path=/usr/bin",
+        "-Dbuild-python=disabled",
+        "-Dbuild-pylibmount=disabled",
+        "-Dbuild-fdisks=enabled",
+      ]
+      @ (
+        if options.selinux then
+          [
+            "-Dselinux=enabled"
+          ]
+        else
+          []
+      ),
 
     biDrvs = [
       drvs.linuxHeaders,
@@ -103,7 +115,14 @@
       drvs.m4,
       (drvs.coreutils & { priority = 1 }),
       drvs.ncurses, # not in any .pc file
-    ]
+    ],
+    pDrvs =
+      if options.selinux then
+        [
+          drvs.selinux,
+        ]
+      else
+        []
   },
   utilLinuxCol =
     utilLinux
@@ -126,7 +145,12 @@
       debug = true,
       biDrvs | priority 1 = utilLinux.biDrvs @ [drvs.libpam131],
       extraMesonArgs | priority 1 = utilLinux.extraMesonArgs @ ["-Dbuild-login=enabled"],
-    }
+    },
+  utilLinuxSelinux | lib.MesonPackage =
+    utilLinux
+    & {
+      options.selinux = true,
+    },
 }
 & {
   _utilLinux240,
