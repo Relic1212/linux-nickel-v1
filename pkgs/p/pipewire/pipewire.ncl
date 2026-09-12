@@ -90,40 +90,50 @@
       },
 
       options = {
-        elogind | default = true
+        elogind | default = true,
+        raop | default = true,
       },
 
-      extraMesonArgs | priority 1 = [
-        "-Dsession-managers=wireplumber",
-        # "-Dsession-managers=[]",
-        "-Dvideotestsrc=disabled",
-        "-Dvideoconvert=enabled",
-        # "-Dv4l2=disabled",
-        "-Dsupport=enabled",
-        "-Dspa-plugins=enabled",
-        "-Dtests=disabled",
-        # "-Davb=disabled",
-        # "-Draop=disabled",
-        "-Dsndfile=enabled",
-        "-Dudev=enabled",
-        "-Dwireplumber:system-lua=true",
-        "-Dwireplumber:tests=false",
-        "-Dbluez5=enabled",
-        "-Dbluez5-backend-hsp-native=enabled",
-        "-Dbluez5-backend-hfp-native=enabled",
-        "-Dbluez5-backend-ofono=enabled",
-        "-Dbluez5-backend-hsphfpd=enabled",
-        "-Dbluez5-codec-aptx=disabled",
-        # "-Dbluez5-codec-ldac=enabled",
-        "-Dbluez5-codec-aac=enabled",
+      extraMesonArgs | priority 1 =
+        [
+          "-Dsession-managers=wireplumber",
+          # "-Dsession-managers=[]",
+          "-Dvideotestsrc=disabled",
+          "-Dvideoconvert=enabled",
+          # "-Dv4l2=disabled",
+          "-Dsupport=enabled",
+          "-Dspa-plugins=enabled",
+          "-Dtests=disabled",
+          # "-Davb=disabled",
+          # "-Draop=disabled",
+          "-Dsndfile=enabled",
+          "-Dudev=enabled",
+          "-Dwireplumber:system-lua=true",
+          "-Dwireplumber:tests=false",
+          "-Dbluez5=enabled",
+          "-Dbluez5-backend-hsp-native=enabled",
+          "-Dbluez5-backend-hfp-native=enabled",
+          "-Dbluez5-backend-ofono=enabled",
+          "-Dbluez5-backend-hsphfpd=enabled",
+          "-Dbluez5-codec-aptx=disabled",
+          # "-Dbluez5-codec-ldac=enabled",
+          "-Dbluez5-codec-aac=enabled",
 
-        # TODO: lc3plus and lc3
-        "-Dlibcamera=disabled",
-        "-Dgsettings=disabled",
-        "-Dwireplumber:elogind=%{ if options.elogind then "enabled" else "disabled" }",
-        "-Dlogind=%{ if options.elogind then "enabled" else "disabled" }",
-        "-Dlogind-provider=libelogind",
-      ],
+          # TODO: lc3plus and lc3
+          "-Dlibcamera=disabled",
+          "-Dgsettings=disabled",
+          "-Dwireplumber:elogind=%{ if options.elogind then "enabled" else "disabled" }",
+          "-Dlogind=%{ if options.elogind then "enabled" else "disabled" }",
+          "-Dlogind-provider=libelogind",
+        ]
+        @ (
+          if options.raop then
+            []
+          else
+            [
+              "-Draop=disabled",
+            ]
+        ),
       biDrvs | priority 1 = [
         (drvs.findutils & { priority = 1 }),
       ],
@@ -150,5 +160,13 @@
           drvs.fdkAac,
           drvs.ldacbt,
         ],
+    },
+  pipewireNoRaop =
+    pipewire
+    & {
+      options.raop = false,
+      neverInclude = [
+        drvs.openssl,
+      ],
     }
 }
