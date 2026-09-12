@@ -30,6 +30,10 @@
       "mv ${SRC}/usr/sbin ${SRC}/usr/bin"
     ],
 
+    postInstallPhase = [
+      m%"sed -i "s@/bin/rm@/usr/bin/rm@g" ${DEST}/usr/lib/systemd/system/laptop-mode.service"%,
+    ],
+
     buildPhase = [],
     extraMakeInstallArgs = [
       "PREFIX=/usr",
