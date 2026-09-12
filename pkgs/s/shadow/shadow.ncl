@@ -162,56 +162,6 @@
         "%,
       ]
     },
-
-  shadowPamSystemd =
-    shadowPam
-    & {
-      debug = true,
-      options.pam_elogind = "pam_systemd",
-      buildEnv.EXTRA_LDFLAGS | priority 1 = [
-        "-Wl,--allow-multiple-definition",
-
-        #   "-lpam_systemd",
-        #   "-lpam_misc",
-        #   "-lcap",
-        #   "$(pkg-config --static --libs openssl)",
-      ],
-
-      extraEnv = {
-
-        LIBS = [
-          # "-Wl,--allow-multiple-definition",
-          "-lpam_misc",
-          "-lpam_systemd",
-          # "-Wl,--no-allow-multiple-definition",
-          "-lcap",
-          "-lssl",
-          "-lcrypto",
-          "-lmount",
-        ]
-      },
-
-      extraConfigureFlags | priority 2 =
-        shadowPam.extraConfigureFlags
-        @ [
-          m%"LIBS="${LIBS}""%,
-          m%"LIBPAM="${LIBS}""%,
-        ],
-
-      muslProvider = drvs.muslBothRenamedDl,
-      biDrvs | priority 2 =
-        shadow.biDrvs
-        @ [
-          # drvs.libpam,
-          drvs.libpamFinalSystemd,
-          drvs.openssl,
-          drvs.libpamSystemd,
-          drvs.systemdLibdl,
-          drvs.utilLinux,
-          (drvs.libarchive & { priority = 1 }), # busybox cpio not good enough
-          # drvs.elogind255,
-        ],
-    },
   shadowSelinux =
     shadowPam
     & {
