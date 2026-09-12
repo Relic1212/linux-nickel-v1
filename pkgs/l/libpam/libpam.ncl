@@ -336,6 +336,11 @@
       },
       patches | priority 1 = [],
       options.selinux = true,
+      options.DL_CFLAGS = [
+        "-DHAVE_ELOGIND",
+        # "-DHAVE_SYSTEMD",
+        "-DHAVE_GNOME_KEYRING",
+      ],
       options.pam_modules | priority 1 = libpam.options.pam_modules @ ["pam_selinux"],
 
       preConfigurePhase = [
@@ -382,7 +387,7 @@
           lib.functions.writeFile "${BUILDDIR}/dlopen.c" (import "libpam_selinux_dlopen.c" as 'Text),
 
           # "${CC} ${CFLAGS} -Werror -o ${BUILDDIR}/dlopen.o -c << 'EOF'\n%{import "libpam_selinux_dlopen.c" as 'Text}\n\nEOF\n",
-          "${CC} ${CFLAGS} -Werror -o ${BUILDDIR}/dlopen.o -c ${BUILDDIR}/dlopen.c",
+          "${CC} ${CFLAGS} %{std.string.join " " options.DL_CFLAGS } -Werror -o ${BUILDDIR}/dlopen.o -c ${BUILDDIR}/dlopen.c",
           "llvm-objcopy --redefine-sym dlopen=libpam_dlopen ${BUILDDIR}/dlopen.o",
           "llvm-objcopy --redefine-sym stub_dlopen=dlopen ${BUILDDIR}/dlopen.o",
           "llvm-objcopy --redefine-sym dlsym=libpam_dlsym ${BUILDDIR}/dlopen.o",
@@ -393,4 +398,13 @@
           m%"sed -i 's@-lpam@%{std.array.map (fun m => "/usr/lib/security/%{m}.a" ) options.pam_modules |>std.string.join " " } /usr/lib/libpam_dl.a -lpam@g' pkgconfig/pam.pc"%,
         ]
     },
+  libpamSelinuxSystemd | lib.MesonPackage =
+    libpamSelinux
+    & {
+      options.DL_CFLAGS | priority 1 = [
+        # "-DHAVE_ELOGIND",
+        "-DHAVE_SYSTEMD",
+        "-DHAVE_GNOME_KEYRING",
+      ],
+    }
 }

@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#define HAVE_EXTRA
 
 #define DLSYM(sym, prefix) 	\
     if (strcmp(symbol, #sym) == 0) { \
@@ -40,54 +39,61 @@ extern void *stub_dlopen(const char *, int);
 extern void *stub_dlsym(void *__restrict, const char *__restrict);
 extern int stub_dladdr(const void *handle, Dl_info *info);
 
-const char* main_program_handle = "main_program";
+static const char* main_program_handle = "main_program";
 
-const char* lib__usr_lib_security_pam_access_so = "lib__usr_lib_security_pam_access_so";
-const char* lib__usr_lib_security_pam_canonicalize_user_so = "lib__usr_lib_security_pam_canonicalize_user_so";
-const char* lib__usr_lib_security_pam_debug_so = "lib__usr_lib_security_pam_debug_so";
-const char* lib__usr_lib_security_pam_deny_so = "lib__usr_lib_security_pam_deny_so";
-const char* lib__usr_lib_security_pam_echo_so = "lib__usr_lib_security_pam_echo_so";
-const char* lib__usr_lib_security_pam_env_so = "lib__usr_lib_security_pam_env_so";
-const char* lib__usr_lib_security_pam_exec_so = "lib__usr_lib_security_pam_exec_so";
-const char* lib__usr_lib_security_pam_faildelay_so = "lib__usr_lib_security_pam_faildelay_so";
-const char* lib__usr_lib_security_pam_faillock_so = "lib__usr_lib_security_pam_faillock_so";
-const char* lib__usr_lib_security_pam_filter_so = "lib__usr_lib_security_pam_filter_so";
-const char* lib__usr_lib_security_pam_ftp_so = "lib__usr_lib_security_pam_ftp_so";
-const char* lib__usr_lib_security_pam_group_so = "lib__usr_lib_security_pam_group_so";
-const char* lib__usr_lib_security_pam_issue_so = "lib__usr_lib_security_pam_issue_so";
-const char* lib__usr_lib_security_pam_keyinit_so = "lib__usr_lib_security_pam_keyinit_so";
-const char* lib__usr_lib_security_pam_limits_so = "lib__usr_lib_security_pam_limits_so";
-const char* lib__usr_lib_security_pam_listfile_so = "lib__usr_lib_security_pam_listfile_so";
-const char* lib__usr_lib_security_pam_localuser_so = "lib__usr_lib_security_pam_localuser_so";
-const char* lib__usr_lib_security_pam_loginuid_so = "lib__usr_lib_security_pam_loginuid_so";
-const char* lib__usr_lib_security_pam_mail_so = "lib__usr_lib_security_pam_mail_so";
-const char* lib__usr_lib_security_pam_mkhomedir_so = "lib__usr_lib_security_pam_mkhomedir_so";
-const char* lib__usr_lib_security_pam_motd_so = "lib__usr_lib_security_pam_motd_so";
-const char* lib__usr_lib_security_pam_namespace_so = "lib__usr_lib_security_pam_namespace_so";
-const char* lib__usr_lib_security_pam_nologin_so = "lib__usr_lib_security_pam_nologin_so";
-const char* lib__usr_lib_security_pam_permit_so = "lib__usr_lib_security_pam_permit_so";
-const char* lib__usr_lib_security_pam_pwhistory_so = "lib__usr_lib_security_pam_pwhistory_so";
-const char* lib__usr_lib_security_pam_rootok_so = "lib__usr_lib_security_pam_rootok_so";
-const char* lib__usr_lib_security_pam_securetty_so = "lib__usr_lib_security_pam_securetty_so";
-const char* lib__usr_lib_security_pam_selinux_so = "lib__usr_lib_security_pam_selinux_so";
-const char* lib__usr_lib_security_pam_sepermit_so = "lib__usr_lib_security_pam_sepermit_so";
-const char* lib__usr_lib_security_pam_setquota_so = "lib__usr_lib_security_pam_setquota_so";
-const char* lib__usr_lib_security_pam_shells_so = "lib__usr_lib_security_pam_shells_so";
-const char* lib__usr_lib_security_pam_stress_so = "lib__usr_lib_security_pam_stress_so";
-const char* lib__usr_lib_security_pam_succeed_if_so = "lib__usr_lib_security_pam_succeed_if_so";
-const char* lib__usr_lib_security_pam_time_so = "lib__usr_lib_security_pam_time_so";
-const char* lib__usr_lib_security_pam_timestamp_so = "lib__usr_lib_security_pam_timestamp_so";
-const char* lib__usr_lib_security_pam_tty_audit_so = "lib__usr_lib_security_pam_tty_audit_so";
-const char* lib__usr_lib_security_pam_umask_so = "lib__usr_lib_security_pam_umask_so";
-const char* lib__usr_lib_security_pam_unix_so = "lib__usr_lib_security_pam_unix_so";
-const char* lib__usr_lib_security_pam_usertype_so = "lib__usr_lib_security_pam_usertype_so";
-const char* lib__usr_lib_security_pam_warn_so = "lib__usr_lib_security_pam_warn_so";
-const char* lib__usr_lib_security_pam_wheel_so = "lib__usr_lib_security_pam_wheel_so";
-const char* lib__usr_lib_security_pam_xauth_so = "lib__usr_lib_security_pam_xauth_so";
-#ifdef HAVE_EXTRA
-const char* lib__usr_lib_security_pam_elogind_so = "lib__usr_lib_security_pam_elogind_so";
-const char* lib__usr_lib_security_pam_gnome_keyring_so = "lib__usr_lib_security_pam_gnome_keyring_so";
-#endif // HAVE_EXTRA
+static const char* lib__usr_lib_security_pam_access_so = "lib__usr_lib_security_pam_access_so";
+static const char* lib__usr_lib_security_pam_canonicalize_user_so = "lib__usr_lib_security_pam_canonicalize_user_so";
+static const char* lib__usr_lib_security_pam_debug_so = "lib__usr_lib_security_pam_debug_so";
+static const char* lib__usr_lib_security_pam_deny_so = "lib__usr_lib_security_pam_deny_so";
+static const char* lib__usr_lib_security_pam_echo_so = "lib__usr_lib_security_pam_echo_so";
+static const char* lib__usr_lib_security_pam_env_so = "lib__usr_lib_security_pam_env_so";
+static const char* lib__usr_lib_security_pam_exec_so = "lib__usr_lib_security_pam_exec_so";
+static const char* lib__usr_lib_security_pam_faildelay_so = "lib__usr_lib_security_pam_faildelay_so";
+static const char* lib__usr_lib_security_pam_faillock_so = "lib__usr_lib_security_pam_faillock_so";
+static const char* lib__usr_lib_security_pam_filter_so = "lib__usr_lib_security_pam_filter_so";
+static const char* lib__usr_lib_security_pam_ftp_so = "lib__usr_lib_security_pam_ftp_so";
+static const char* lib__usr_lib_security_pam_group_so = "lib__usr_lib_security_pam_group_so";
+static const char* lib__usr_lib_security_pam_issue_so = "lib__usr_lib_security_pam_issue_so";
+static const char* lib__usr_lib_security_pam_keyinit_so = "lib__usr_lib_security_pam_keyinit_so";
+static const char* lib__usr_lib_security_pam_limits_so = "lib__usr_lib_security_pam_limits_so";
+static const char* lib__usr_lib_security_pam_listfile_so = "lib__usr_lib_security_pam_listfile_so";
+static const char* lib__usr_lib_security_pam_localuser_so = "lib__usr_lib_security_pam_localuser_so";
+static const char* lib__usr_lib_security_pam_loginuid_so = "lib__usr_lib_security_pam_loginuid_so";
+static const char* lib__usr_lib_security_pam_mail_so = "lib__usr_lib_security_pam_mail_so";
+static const char* lib__usr_lib_security_pam_mkhomedir_so = "lib__usr_lib_security_pam_mkhomedir_so";
+static const char* lib__usr_lib_security_pam_motd_so = "lib__usr_lib_security_pam_motd_so";
+static const char* lib__usr_lib_security_pam_namespace_so = "lib__usr_lib_security_pam_namespace_so";
+static const char* lib__usr_lib_security_pam_nologin_so = "lib__usr_lib_security_pam_nologin_so";
+static const char* lib__usr_lib_security_pam_permit_so = "lib__usr_lib_security_pam_permit_so";
+static const char* lib__usr_lib_security_pam_pwhistory_so = "lib__usr_lib_security_pam_pwhistory_so";
+static const char* lib__usr_lib_security_pam_rootok_so = "lib__usr_lib_security_pam_rootok_so";
+static const char* lib__usr_lib_security_pam_securetty_so = "lib__usr_lib_security_pam_securetty_so";
+static const char* lib__usr_lib_security_pam_selinux_so = "lib__usr_lib_security_pam_selinux_so";
+static const char* lib__usr_lib_security_pam_sepermit_so = "lib__usr_lib_security_pam_sepermit_so";
+static const char* lib__usr_lib_security_pam_setquota_so = "lib__usr_lib_security_pam_setquota_so";
+static const char* lib__usr_lib_security_pam_shells_so = "lib__usr_lib_security_pam_shells_so";
+static const char* lib__usr_lib_security_pam_stress_so = "lib__usr_lib_security_pam_stress_so";
+static const char* lib__usr_lib_security_pam_succeed_if_so = "lib__usr_lib_security_pam_succeed_if_so";
+static const char* lib__usr_lib_security_pam_time_so = "lib__usr_lib_security_pam_time_so";
+static const char* lib__usr_lib_security_pam_timestamp_so = "lib__usr_lib_security_pam_timestamp_so";
+static const char* lib__usr_lib_security_pam_tty_audit_so = "lib__usr_lib_security_pam_tty_audit_so";
+static const char* lib__usr_lib_security_pam_umask_so = "lib__usr_lib_security_pam_umask_so";
+static const char* lib__usr_lib_security_pam_unix_so = "lib__usr_lib_security_pam_unix_so";
+static const char* lib__usr_lib_security_pam_usertype_so = "lib__usr_lib_security_pam_usertype_so";
+static const char* lib__usr_lib_security_pam_warn_so = "lib__usr_lib_security_pam_warn_so";
+static const char* lib__usr_lib_security_pam_wheel_so = "lib__usr_lib_security_pam_wheel_so";
+static const char* lib__usr_lib_security_pam_xauth_so = "lib__usr_lib_security_pam_xauth_so";
+#ifdef HAVE_ELOGIND
+static const char* lib__usr_lib_security_pam_elogind_so = "lib__usr_lib_security_pam_elogind_so";
+#endif // HAVE_ELOGIND
+
+#ifdef HAVE_SYSTEMD
+static const char* lib__usr_lib_security_pam_systemd_so = "lib__usr_lib_security_pam_systemd_so";
+#endif // HAVE_SYSTEMD
+
+#ifdef HAVE_GNOME_KEYRING
+static const char* lib__usr_lib_security_pam_gnome_keyring_so = "lib__usr_lib_security_pam_gnome_keyring_so";
+#endif // HAVE_GNOME_KEYRING
 
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
@@ -134,10 +140,18 @@ void* dlopen(const char *path, int mode) {
 	if (strcmp( path, "/usr/lib/security/pam_wheel.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_wheel.so (handle=%p)\n", &lib__usr_lib_security_pam_wheel_so); return &lib__usr_lib_security_pam_wheel_so; }
 	if (strcmp( path, "/usr/lib/security/pam_xauth.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_xauth.so (handle=%p)\n", &lib__usr_lib_security_pam_xauth_so); return &lib__usr_lib_security_pam_xauth_so; }
 
-#ifdef HAVE_EXTRA
+#ifdef HAVE_ELOGIND
     if (strcmp( path, "/usr/lib/security/pam_elogind.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_elogind.so (handle=%p)\n", &lib__usr_lib_security_pam_elogind_so); return &lib__usr_lib_security_pam_elogind_so; }
+#endif // HAVE_ELOGIND
+
+#ifdef HAVE_SYSTEMD
+    if (strcmp( path, "/usr/lib/security/pam_systemd.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_systemd.so (handle=%p)\n", &lib__usr_lib_security_pam_systemd_so); return &lib__usr_lib_security_pam_systemd_so; }
+#endif // HAVE_SYSTEMD
+
+#ifdef HAVE_GNOME_KEYRING
 	if (strcmp( path, "/usr/lib/security/pam_gnome_keyring.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/security/pam_gnome_keyring.so (handle=%p)\n", &lib__usr_lib_security_pam_gnome_keyring_so); return &lib__usr_lib_security_pam_gnome_keyring_so; }
-#endif // HAVE_EXTRA
+#endif // HAVE_GNOME_KEYRING
+
     fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 
@@ -381,11 +395,21 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(pam_sm_open_session, pam_xauth__)
 	}
     
-#ifdef HAVE_EXTRA
+#ifdef HAVE_ELOGIND
 	if (handle == &lib__usr_lib_security_pam_elogind_so || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(pam_sm_close_session, pam_elogind_)
 		DLSYM(pam_sm_open_session, pam_elogind_)
 	}
+#endif // HAVE_ELOGIND
+
+#ifdef HAVE_SYSTEMD
+	if (handle == &lib__usr_lib_security_pam_systemd_so || handle == NULL || handle == &main_program_handle) { 
+		DLSYM(pam_sm_close_session, pam_systemd_)
+		DLSYM(pam_sm_open_session, pam_systemd_)
+	}
+#endif // HAVE_SYSTEMD
+
+#ifdef HAVE_GNOME_KEYRING
 	if (handle == &lib__usr_lib_security_pam_gnome_keyring_so || handle == NULL || handle == &main_program_handle) { 
 		DLSYM(pam_sm_authenticate, pam_gnome_keyring_)
 		DLSYM(pam_sm_chauthtok, pam_gnome_keyring_)
@@ -393,7 +417,7 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		DLSYM(pam_sm_open_session, pam_gnome_keyring_)
 		DLSYM(pam_sm_setcred, pam_gnome_keyring_)
 	}
-#endif // HAVE_EXTRA
+#endif // HAVE_GNOME_KEYRING
 
 	fprintf(stderr, "(dlsym) WARNING: failed for symbol %s (handle=%p)\n", symbol, handle);	return stub_dlsym(handle, symbol);
 }
