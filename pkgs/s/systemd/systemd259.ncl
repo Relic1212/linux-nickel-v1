@@ -9,6 +9,13 @@
       sha256sum = "ed1059ff964f5df35b6056434cc17cc83f86dc913f10489948a0b19b6081c5ec"
     },
 
+
+    eofPatches=[
+      {
+        patch = import "skip-user-session-3.patch" as 'Text,
+      },
+    ],
+
     buildEnv = {
       EXTRA_CPPFLAGS = [
         "-Dcap_last_cap=systemd__cap_last_cap",
@@ -39,6 +46,9 @@
         "-Dpcre2=enabled",
         "-Dman=enabled",
         "-Dtpm2=enabled",
+        "-Dlibcryptsetup=enabled",
+        "-Dhomed=enabled",
+        "-Dvmspawn=enabled",
       ]
       @ (
         std.array.map
@@ -354,9 +364,11 @@
     ],
 
     pDrvs = [
+      drvs.cryptsetup,
+
       # drvs.libpamSelinux,
       drvs.libpamSelinuxSystemd,
-      drvs.utilLinux,
+      # drvs.utilLinux,
       drvs.libarchive,
       drvs.kmodRenamedSyms,
       # drvs.libcap,
