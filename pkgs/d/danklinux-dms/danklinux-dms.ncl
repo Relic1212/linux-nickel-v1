@@ -57,7 +57,11 @@ in
         dest = "dank-qml-common",
       },
     ],
-
+    eofPatches = [
+      {
+        patch = import "dms-cp.patch" as 'Text,
+      },
+    ],
     separateBuildDir = false,
     configurePhase = [
       "export GOROOT=/usr/lib/go",

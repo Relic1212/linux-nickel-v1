@@ -1,0 +1,13 @@
+diff --git a/quickshell/Services/NiriService.qml b/quickshell/Services/NiriService.qml
+index 855c5fbe..a4b325e5 100644
+--- a/quickshell/Services/NiriService.qml
++++ b/quickshell/Services/NiriService.qml
+@@ -1309,7 +1309,7 @@ window-rule {
+         const sourceBlurrulePath = Paths.strip(Qt.resolvedUrl("niri-wpblur.kdl"));
+ 
+         writeBlurruleProcess.blurrulePath = blurrulePath;
+-        writeBlurruleProcess.command = ["sh", "-c", `mkdir -p "${niriDmsDir}" && cp --no-preserve=mode "${sourceBlurrulePath}" "${blurrulePath}"`];
++        writeBlurruleProcess.command = ["sh", "-c", `mkdir -p "${niriDmsDir}" && cat "${sourceBlurrulePath}" > "${blurrulePath}"`];
+         writeBlurruleProcess.running = true;
+     }
+ 
