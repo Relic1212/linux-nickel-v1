@@ -1,0 +1,100 @@
+diff --git a/src/login/logind-session.c b/src/login/logind-session.c
+index f5fb479207..869f2480e4 100644
+--- a/src/login/logind-session.c
++++ b/src/login/logind-session.c
+@@ -899,7 +899,9 @@ int session_start(Session *s, sd_bus_message *properties, sd_bus_error *error) {
+         if (r < 0)
+                 return r;
+ 
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         r = session_start_scope(s, properties, error);
++        }
+         if (r < 0)
+                 return r;
+ 
+@@ -1285,7 +1287,9 @@ void session_set_class(Session *s, SessionClass c) {
+         (void) session_send_changed(s, "Class");
+ 
+         /* This class change might mean we need the per-user session manager now. Try to start it. */
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         (void) user_start_service_manager(s->user);
++        } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+ }
+ 
+ int session_set_display(Session *s, const char *display) {
+diff --git a/src/login/logind-user.c b/src/login/logind-user.c
+index 9bac65cc81..1375679062 100644
+--- a/src/login/logind-user.c
++++ b/src/login/logind-user.c
+@@ -78,6 +78,7 @@ int user_new(Manager *m, UserRecord *ur, User **ret) {
+         if (r < 0)
+                 return r;
+ 
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         r = unit_name_build("user-runtime-dir", lu, ".service", &u->runtime_dir_unit);
+         if (r < 0)
+                 return r;
+@@ -89,6 +90,7 @@ int user_new(Manager *m, UserRecord *ur, User **ret) {
+         r = unit_name_build("systemd-pcrlogin", lu, ".service", &u->measure_unit);
+         if (r < 0)
+                 return r;
++        } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+ 
+         r = hashmap_put(m->users, UID_TO_PTR(ur->uid), u);
+         if (r < 0)
+@@ -98,6 +100,7 @@ int user_new(Manager *m, UserRecord *ur, User **ret) {
+         if (r < 0)
+                 return r;
+ 
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         r = hashmap_put(m->user_units, u->runtime_dir_unit, u);
+         if (r < 0)
+                 return r;
+@@ -109,6 +112,7 @@ int user_new(Manager *m, UserRecord *ur, User **ret) {
+         r = hashmap_put(m->user_units, u->measure_unit, u);
+         if (r < 0)
+                 return r;
++        } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+ 
+         *ret = TAKE_PTR(u);
+         return 0;
+@@ -126,6 +130,7 @@ User *user_free(User *u) {
+ 
+         sd_event_source_unref(u->timer_event_source);
+ 
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         if (u->service_manager_unit) {
+                 (void) hashmap_remove_value(u->manager->user_units, u->service_manager_unit, u);
+                 free(u->service_manager_unit);
+@@ -143,6 +148,7 @@ User *user_free(User *u) {
+                 free(u->measure_unit);
+         }
+         free(u->measure_job);
++        } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+ 
+         if (u->slice) {
+                 (void) hashmap_remove_value(u->manager->user_units, u->slice, u);
+@@ -563,6 +569,7 @@ int user_start(User *u) {
+                 /* Set slice parameters */
+                 (void) user_update_slice(u);
+ 
++                if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+                 /* Measure the user record into the 'login' NvPCR. We do this *before* starting the runtime dir
+                  * (and, further below, the service manager): manager_start_unit() is synchronous, so by the
+                  * time those units are enqueued the measurement's start job already exists, and their
+@@ -572,12 +579,15 @@ int user_start(User *u) {
+                 (void) user_start_measure(u);
+ 
+                 (void) user_start_runtime_dir(u);
++                } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+         }
+ 
++        if (getenv("SYSTEMD_LOGIND_USER_SERVICE_SKIP") == NULL){
+         /* Start user@UID.service if needed. */
+         r = user_start_service_manager(u);
+         if (r < 0)
+                 return r;
++        } else { fprintf(stderr, "SYSTEMD_LOGIND_USER_SERVICE_SKIP set, not executing\n"); }
+ 
+         if (!u->started) {
+                 if (!dual_timestamp_is_set(&u->timestamp))
