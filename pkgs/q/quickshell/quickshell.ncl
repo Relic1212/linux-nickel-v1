@@ -91,13 +91,14 @@
       crash = (true),
       vulkan = true,
     },
-
+    neverInclude = [drvs.qtbaseVulkan],
     biDrvs = [
       drvs.cpptrace,
       drvs.libdwarf,
       drvs.polkit,
       drvs.jemalloc,
       # drvs.qtmultimedia,
+      drvs.qtbaseDebug,
     ],
 
     pDrvs = [
@@ -140,8 +141,8 @@
 
       muslProvider | priority 1 = drvs.muslBothRenamedDlRelease,
       # llvmProvider | priority 1 = drvs.llvmFullTypeinfo,
-      neverInclude = [drvs.qtbaseVulkan],
-      biDrvs | priority 1 = quickshell.biDrvs @ [drvs.qtbaseDebug],
+      # neverInclude = [drvs.qtbaseVulkan],
+      # biDrvs | priority 1 = quickshell.biDrvs @ [drvs.qtbaseDebug],
     },
 
   llvmFull,
@@ -156,7 +157,14 @@
       preConfigurePhase | priority 1 = [],
       cmakeExtraArgsRecord = {
         # "-DCMAKE_BUILD_TYPE" | priority 1 = "RelWithDebInfo",
-        "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
+        # "-DCMAKE_BUILD_TYPE" | priority 1 = "Debug",
+        # segfault in fetchTransformedBilinear64
+        # https://discourse.cmake.org/t/override-the-default-o3-dndebug-release-flags/11085/11
+        "-DCMAKE_BUILD_TYPE" | priority 1 = "None",
+
+        # "-DCMAKE_ASM_FLAGS_RELEASE" = "'-O0 -DNDEBUG'",
+        # "-DCMAKE_C_FLAGS_RELEASE" = "'-O0 -DNDEBUG'",
+        # "-DCMAKE_CXX_FLAGS_RELEASE" = "'-O0 -DNDEBUG'",
       },
     },
   llvmFullTypeinfo | lib.CmakePackage =
