@@ -8,12 +8,12 @@ require {
 	type udev_t;
 	type systemd_logind_t;
 	class dir { getattr mounton relabelfrom search };
-	class chr_file getattr;
+	class chr_file { getattr setattr };
 }
 
 #============= systemd_logind_t ==============
 allow systemd_logind_t bin_t:dir getattr;
-allow systemd_logind_t i2c_device_t:chr_file getattr;
+allow systemd_logind_t i2c_device_t:chr_file { getattr setattr };
 allow systemd_logind_t sysfs_t:dir { mounton relabelfrom };
 
 #============= udev_t ==============
