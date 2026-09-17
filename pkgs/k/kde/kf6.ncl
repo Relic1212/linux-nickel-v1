@@ -853,15 +853,15 @@
       #   uri = "https://download.kde.org/stable/frameworks/6.16/ki18n-6.16.0.tar.xz",
       #   sha256sum = "c52ad10b14365e60c4a219cb66706d114476645297cb2a9f15498747cf4421d7"
       # },
-      # biDrvs =
-      #   _kf.biDrvs
-      #   @ [
-      #     drvs.kcoreaddons,
-      #     drvs.gperf,
-      #     drvs.isoCodes,
-      #     drvs.pythonFull,
-      #     drvs.gettext,
-      #   ]
+      biDrvs =
+        _kf.biDrvs
+        @ [
+          # drvs.kcoreaddons,
+          # drvs.gperf,
+          # drvs.isoCodes,
+          drvs.pythonFull,
+          drvs.gettext,
+        ],
     },
 
   kguiaddons =
@@ -936,7 +936,8 @@
       biDrvs =
         _kf.biDrvs
         @ [
-          drvs.kcoreaddons
+          drvs.kcoreaddons,
+          drvs.qtTools,
         ],
       cmakeExtraArgsRecord = {
         "-DBUILD_TESTING" = false,
