@@ -9,8 +9,7 @@
       sha256sum = "ed1059ff964f5df35b6056434cc17cc83f86dc913f10489948a0b19b6081c5ec"
     },
 
-
-    eofPatches=[
+    eofPatches = [
       {
         patch = import "skip-user-session-3.patch" as 'Text,
       },
