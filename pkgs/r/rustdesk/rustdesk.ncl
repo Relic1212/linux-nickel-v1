@@ -101,7 +101,10 @@
     },
 
     extraCargoFlags = [
-      "--features linux-pkg-config",
+      # "--features linux-pkg-config",
+      # https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/flutter-build.yml#L1589C45-L1589C93
+      # "--features linux-pkg-config,hwcodec,flutter,unix-file-copy-paste"
+      "--features linux-pkg-config,flutter"
     ],
     preConfigurePhase = [
       m%"TMP="$(for l in $(pkg-config --libs --static epoxy wayland-client wayland-egl cairo xcursor atk-bridge-2.0 gtk+-3.0 gtk+-wayland-3.0 gtk+-x11-3.0 libpulse gstreamer-full-1.0 gsthip);do printf " -C link-arg=$l ";done)""%,
@@ -119,6 +122,9 @@
       m%"sed -i 's@"runtime"@"static","libcpp"@g' ${SRC}/vendor/clang-sys*/Cargo.toml"%,
       m%"sed -i 's@libpulse.so.0@libpulse.a@g' ${SRC}/vendor/libpulse-sys*/build.rs"%,
       m%"sed -i 's@libpulse-simple.so.0@libpulse-simple.a@g' ${SRC}/vendor/libpulse-simple-sys*/build.rs"%,
+
+      #https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/bridge.yml#L103C24-L103C188
+      "flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart --c-output ./flutter/macos/Runner/bridge_generated.h",
       "cargo metadata --offline --no-deps",
       m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/*/.cargo-checksum.json"%,
       "cargo tree --target=x86_64-unknown-linux-musl %{std.string.join " " extraCargoFlags } -e features",
@@ -131,6 +137,7 @@
       drvs.rustdeskSources,
       drvs.llvmConfigStatic,
       drvs.libstdcppCompat,
+      drvs.flutter_rust_bridge,
       # drvs.rustfmt,
     ],
     neverInclude = [
