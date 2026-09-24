@@ -24,6 +24,7 @@
         "--no-default-features",
       ],
       linkSelfContained = "no",
+      # buildEnv._isMold = true,
 
       biDrvs = [
         drvs.pythonFull,
