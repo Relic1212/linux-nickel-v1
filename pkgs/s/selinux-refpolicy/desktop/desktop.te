@@ -7,8 +7,13 @@ require {
 	type systemd_sessions_runtime_t;
 	type udev_t;
 	type systemd_logind_t;
+	type system_dbusd_t;
+	type systemd_locale_exec_t;
+	type NetworkManager_var_lib_t;
+	type mount_t;
 	class dir { getattr mounton relabelfrom search };
 	class chr_file { getattr setattr };
+	class file map;
 }
 
 #============= systemd_logind_t ==============
@@ -21,12 +26,8 @@ allow udev_t systemd_sessions_runtime_t:dir search;
 
 
 
-require {
-	type NetworkManager_var_lib_t;
-	type mount_t;
-	class file map;
-}
-
 #============= mount_t ==============
 allow mount_t NetworkManager_var_lib_t:file map;
 
+#============= system_dbusd_t ==============
+allow system_dbusd_t systemd_locale_exec_t:file map;
