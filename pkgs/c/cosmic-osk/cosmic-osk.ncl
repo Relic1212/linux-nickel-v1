@@ -7,10 +7,11 @@
   cosmicOskSources | lib.DeterministicFetcher =
     _CargoFetcher
     & {
-      singleSource = {
-        uri = "https://github.com/pop-os/cosmic-osk/archive/eee4d0472c815bad010492c16f4358fca9a47e5f.tar.gz",
-        sha256sum = "e65326222752eec16a9bceacf0591798dbc05b2f70442aa0ee9ac2128f66a373"
-      },
+      # singleSource = {
+      #   uri = "https://github.com/pop-os/cosmic-osk/archive/eee4d0472c815bad010492c16f4358fca9a47e5f.tar.gz",
+      #   sha256sum = "e65326222752eec16a9bceacf0591798dbc05b2f70442aa0ee9ac2128f66a373"
+      # },
+      singleSource = _cosmicSrcs."cosmic-osk",
 
       outputSha256sum = (import "src.sha256sum" as 'Text),
     },

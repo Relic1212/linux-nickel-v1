@@ -64,6 +64,11 @@
     sha256sum = "7f4e7e991f9201bacb0d0c3c47d160419de849710f16c9deb29a3aaeb82b0de3",
   },
 
+  "cosmic-osk" = {
+    uri = "https://github.com/pop-os/cosmic-osk/archive/refs/tags/epoch-1.9.0.tar.gz",
+    sha256sum = "6a4095f0474d55ecefe0e1f4bb24f5a7bffdf0450e87de40c668da1d628bd1f6",
+  },
+
   "cosmic-panel" = {
     uri = "https://github.com/pop-os/cosmic-panel/archive/refs/tags/epoch-1.9.0.tar.gz",
     sha256sum = "6b036076e162568b6d0230ab82916b30d06b4942cb5be6a39960e42b499cab9b",
