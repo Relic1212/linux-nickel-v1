@@ -184,6 +184,7 @@
       drvs.libstdcppCompat,
       drvs.libpamFinal,
       drvs.libcap,
+      drvs.dav1d,
     ],
   },
 

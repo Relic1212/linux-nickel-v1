@@ -31,7 +31,7 @@ PKG_NAMES = [
     "cosmic-player",
 ]
 
-RELEASE_TAG = "epoch-1.4.0"
+RELEASE_TAG = "epoch-1.9.0"
 
 def fetch(url):
 
@@ -62,7 +62,7 @@ with open("src.txt") as f:
     urls = [l.strip() for l in f.readlines()]
 
 
-with open("_cosmic_sources.ncl", "a") as f:
+with open("_cosmic_sources.ncl", "w") as f:
     f.write("\n{" + "\n")
 for pkg_name in PKG_NAMES:
     url = f"https://github.com/pop-os/{pkg_name}/archive/refs/tags/{RELEASE_TAG}.tar.gz"

@@ -58,6 +58,7 @@
       VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
+        "-C link-arg=/usr/lib/libc.a",
         "-lc++",
         m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
@@ -91,6 +92,7 @@
       [
         drvs.rust,
         drvs.muslBothRenamedDl,
+        # drvs.muslBothWeakDl,
         drvs.pkgconf,
         llvmProvider,
         drvs.clangCc,

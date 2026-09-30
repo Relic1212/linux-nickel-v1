@@ -43,6 +43,7 @@
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
       "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      "export LOCKSTEP_XML_PATH=${SRC}/vendor/atspi-common/xml",
     ],
     # patches = [
     #   {
