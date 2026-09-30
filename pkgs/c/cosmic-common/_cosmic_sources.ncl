@@ -109,6 +109,11 @@
     sha256sum = "2e5ef9ff8428503024f84e9d0c9d8b0007dec0be42b398e5925d209ec91e2e19",
   },
 
+  "cosmic-viewer" = {
+    uri = "https://github.com/pop-os/cosmic-viewer/archive/refs/tags/epoch-1.9.0.tar.gz",
+    sha256sum = "a1c3b54c5f7dde278d17e4bd67395cd1ce4ef4a130ec1b0cfeebc05cc0ce3026",
+  },
+
   "cosmic-wallpapers" = {
     uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.9.0.tar.gz",
     sha256sum = "d898a1a7f84c8138e9b16e6a0cc1ed806ce9a87a94ab75561895b8e1d7a465f5",
