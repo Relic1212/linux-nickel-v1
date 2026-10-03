@@ -23,6 +23,9 @@
       sha256sum = "6d91541e086f29bb003602d2c81070f2be4c0693a90b181ca91e46fa3953fe78",
       # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-26.1.0/mesa-mesa-26.1.0.tar.bz2",
       # sha256sum = "dd7faea0eceae636f88e1aee988ca0f5bd6a1a0d3828d3f34bb030abd4476659",
+
+      # uri | priority 1 = "https://archive.mesa3d.org/mesa-26.2.4.tar.xz",
+      # sha256sum | priority 1 = "bce5f7fbebb934373b86c999a064d52fb5065878dc57f287f95346648ec832e9",
     },
 
     sourceInputs = [
@@ -55,24 +58,32 @@
       },
       {
         file = "mesa-26.0.0-no-virgl-cache.patch",
-
         sha256sum = "9af9263c2590fc092f2f8c96cf3ce08591b241423be121ed14980882b9479893"
       },
     ],
+
+    # eofPatches = [
+    #   {
+    #     patch = import "mesa-26.2.4-patches/mesa-26.0.0.patch" as 'Text,
+    #   },
+    #   {
+    #     patch = import "mesa-26.2.4-patches/mesa-26.0.0-no-virgl-cache.patch" as 'Text,
+    #   },
+    # ],
 
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",
       "-Dshared-llvm=disabled",
       "-Dgles2=enabled",
-      #   "-Dgallium-nine=false",
-      #   "-Ddri3=disabled",
+      # "-Dgallium-nine=false",
+      # "-Ddri3=disabled",
       "-Dopengl=true",
       "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris",
       # "-Dgallium-drivers=radeonsi,virgl,i915,crocus,iris,nouveau",
       "-Dplatforms='wayland'",
       "-Dcpp_rtti=false",
-      #   "-Dshared-glapi=enabled",
+      # "-Dshared-glapi=enabled",
       "-Dgbm=enabled",
       "-Dzstd=disabled",
       "-Dzlib=enabled",
@@ -84,17 +95,17 @@
       "-Dtools=''",
       "-Degl=enabled",
       "-Dglx-read-only-text=true",
-      #   "-Dgallium-xa=disabled",
-      #   "-Dgallium-vdpau=disabled",
-      #   "-Dgallium-va=disabled",
-      #   "-Dgallium-opencl=disabled",
+      # "-Dgallium-xa=disabled",
+      # "-Dgallium-vdpau=disabled",
+      # "-Dgallium-va=disabled",
+      # "-Dgallium-opencl=disabled",
       "-Dimagination-srv=false",
       "-Dglx=disabled",
       #   "-Dopencl-spirv=false",
       #   "-Dosmesa=false",
       "-Dvulkan-beta=false",
       "-Degl-native-platform=wayland",
-      #   "-Dintel-clc=enabled",
+      # "-Dintel-clc=enabled",
       # "-Dllvm=enabled",
       "-Dunversion-libgallium=true",
       "-Dradv-build-id=eacebefb-54f9-4b7f-9ebe-3f9c33ae41da",

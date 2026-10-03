@@ -1,0 +1,100 @@
+diff --git a/src/gbm/main/backend.c b/src/gbm/main/backend.c
+index f49c86f0984..153ecb5fd7f 100644
+--- a/src/gbm/main/backend.c
++++ b/src/gbm/main/backend.c
+@@ -39,6 +39,7 @@
+ 
+ #include "loader.h"
+ #include "backend.h"
++#include "../backends/dri/gbm_dri.c"
+ 
+ #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
+ #define VER_MIN(a, b) ((a) < (b) ? (a) : (b))
+@@ -109,25 +110,29 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
+ static struct gbm_device *
+ load_backend_by_name(const char *name, int fd, bool warn_on_fail)
+ {
+-   void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
+-                                      backend_search_path_vars,
+-                                      DEFAULT_BACKENDS_PATH,
+-                                      warn_on_fail);
++   // void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
++   //                                    backend_search_path_vars,
++   //                                    DEFAULT_BACKENDS_PATH,
++   //                                    warn_on_fail);
+ 
+-   if (!lib)
+-      return NULL;
++   // if (!lib)
++   //    return NULL;
++
++   void *lib = NULL;
+ 
+    struct gbm_device *dev = NULL;
+    struct gbm_backend_desc *backend_desc;
+    const struct gbm_backend *gbm_backend;
+-   GBM_GET_BACKEND_PROC_PTR get_backend;
++   // GBM_GET_BACKEND_PROC_PTR get_backend;
+ 
+-   get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
++   // // get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
+ 
+-   if (!get_backend)
+-      goto fail;
++   // get_backend = gbmint_get_backend;
++
++   // if (!get_backend)
++   //    goto fail;
+ 
+-   gbm_backend = get_backend(&gbm_core);
++   gbm_backend = gbmint_get_backend(&gbm_core);
+    backend_desc = create_backend_desc(name, gbm_backend, lib);
+ 
+    if (!backend_desc)
+diff --git a/src/gbm/meson.build b/src/gbm/meson.build
+index fbfdfb20f26..381dac03119 100644
+--- a/src/gbm/meson.build
++++ b/src/gbm/meson.build
+@@ -9,6 +9,8 @@ files_gbm = files(
+   'main/gbm.c',
+   'main/gbm.h',
+   'main/gbmint.h',
++  'backends/dri/gbm_dri.c',
++  'backends/dri/gbm_driint.h',
+ )
+ args_gbm = [
+   '-DDEFAULT_BACKENDS_PATH="@0@"'.format(gbm_backends_path),
+@@ -21,14 +23,28 @@ if with_platform_android and get_option('platform-sdk-version') >= 30
+   libgbm_name = 'gbm_mesa'
+ endif
+ 
+-libgbm = shared_library(
++deps_libgbm_dri = []
++flags_libgbm_dri = []
++
++# TODO: fix includes to delete this
++incs_libgbm_dri = [inc_mesa]
++
++if with_platform_wayland
++  deps_libgbm_dri += dep_wayland_server
++  if with_wayland_bind_display
++    flags_libgbm_dri += ['-DHAVE_BIND_WL_DISPLAY']
++    incs_libgbm_dri += inc_wayland_drm
++  endif
++endif
++
++libgbm = library(
+   libgbm_name,
+   files_gbm,
+-  include_directories : incs_gbm,
+-  c_args : [args_gbm],
++  include_directories : [inc_gallium, incs_gbm, inc_loader, inc_st_dri, inc_gallium_aux, incs_libgbm_dri],
++  c_args : [args_gbm, flags_libgbm_dri],
+   link_args : [ld_args_gc_sections],
+-  link_with : [libloader],
+-  dependencies : [dep_libdrm, idep_xmlconfig],
++  link_with : [libloader,libgallium_dri],
++  dependencies : [dep_libdrm, idep_xmlconfig, deps_libgbm_dri,idep_mesautil],
+   gnu_symbol_visibility : 'hidden',
+   version : '1.0.0',
+   install : true,

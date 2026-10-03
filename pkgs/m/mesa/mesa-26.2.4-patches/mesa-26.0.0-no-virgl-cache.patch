@@ -1,0 +1,102 @@
+commit c6edc761f0c5779a6d0431f976698c53a5c5d460
+Author: Relic1212 <67271773+Relic1212@users.noreply.github.com>
+Date:   Thu Feb 12 00:16:02 2026 +0100
+
+    virgl: disable cache
+
+diff --git a/src/gallium/drivers/virgl/virgl_screen.c b/src/gallium/drivers/virgl/virgl_screen.c
+index 6d4b84c039d..8910465da10 100644
+--- a/src/gallium/drivers/virgl/virgl_screen.c
++++ b/src/gallium/drivers/virgl/virgl_screen.c
+@@ -833,7 +833,7 @@ virgl_destroy_screen(struct pipe_screen *screen)
+    if (vws)
+       vws->destroy(vws);
+ 
+-   disk_cache_destroy(vscreen->disk_cache);
++   // disk_cache_destroy(vscreen->disk_cache);
+ 
+    FREE(vscreen);
+ }
+@@ -892,43 +892,6 @@ static void virgl_query_memory_info(struct pipe_screen *screen, struct pipe_memo
+    ctx->destroy(ctx);
+ }
+ 
+-static struct disk_cache *virgl_get_disk_shader_cache (struct pipe_screen *pscreen)
+-{
+-   struct virgl_screen *screen = virgl_screen(pscreen);
+-
+-   return screen->disk_cache;
+-}
+-
+-static void virgl_disk_cache_create(struct virgl_screen *screen)
+-{
+-   struct mesa_sha1 sha1_ctx;
+-   _mesa_sha1_init(&sha1_ctx);
+-
+-#if HAVE_BUILD_ID
+-   const struct build_id_note *note =
+-      build_id_find_nhdr_for_addr(virgl_disk_cache_create);
+-   assert(note);
+-
+-   unsigned build_id_len = build_id_length(note);
+-   assert(build_id_len == BUILD_ID_EXPECTED_HASH_LENGTH); /* sha1 */
+-
+-   const uint8_t *id_sha1 = build_id_data(note);
+-   assert(id_sha1);
+-
+-   _mesa_sha1_update(&sha1_ctx, id_sha1, build_id_len);
+-#endif
+-
+-   /* When we switch the host the caps might change and then we might have to
+-    * apply different lowering. */
+-   _mesa_sha1_update(&sha1_ctx, &screen->caps, sizeof(screen->caps));
+-
+-   uint8_t sha1[SHA1_DIGEST_LENGTH];
+-   _mesa_sha1_final(&sha1_ctx, sha1);
+-   char timestamp[SHA1_DIGEST_STRING_LENGTH];
+-   _mesa_sha1_format(timestamp, sha1);
+-
+-   screen->disk_cache = disk_cache_create("virgl", timestamp, 0);
+-}
+ 
+ static bool
+ virgl_is_dmabuf_modifier_supported(UNUSED struct pipe_screen *pscreen,
+@@ -1036,7 +999,7 @@ virgl_create_screen(struct virgl_winsys *vws, const struct pipe_screen_config *c
+    screen->base.fence_finish = virgl_fence_finish;
+    screen->base.fence_get_fd = virgl_fence_get_fd;
+    screen->base.query_memory_info = virgl_query_memory_info;
+-   screen->base.get_disk_shader_cache = virgl_get_disk_shader_cache;
++   // screen->base.get_disk_shader_cache = virgl_get_disk_shader_cache;
+    screen->base.is_dmabuf_modifier_supported = virgl_is_dmabuf_modifier_supported;
+    screen->base.get_dmabuf_modifier_planes = virgl_get_dmabuf_modifier_planes;
+ 
+@@ -1081,6 +1044,6 @@ virgl_create_screen(struct virgl_winsys *vws, const struct pipe_screen_config *c
+ 
+    slab_create_parent(&screen->transfer_pool, sizeof(struct virgl_transfer), 16);
+ 
+-   virgl_disk_cache_create(screen);
++   // virgl_disk_cache_create(screen);
+    return &screen->base;
+ }
+diff --git a/src/gallium/drivers/virgl/virgl_screen.h b/src/gallium/drivers/virgl/virgl_screen.h
+index d29572529c0..a3ab959a66b 100644
+--- a/src/gallium/drivers/virgl/virgl_screen.h
++++ b/src/gallium/drivers/virgl/virgl_screen.h
+@@ -25,7 +25,7 @@
+ 
+ #include "pipe/p_screen.h"
+ #include "util/slab.h"
+-#include "util/disk_cache.h"
++// #include "util/disk_cache.h"
+ #include "virgl_winsys.h"
+ #include "compiler/nir/nir.h"
+ #include "virtio-gpu/virgl_protocol.h"
+@@ -70,7 +70,7 @@ struct virgl_screen {
+ 
+    nir_shader_compiler_options compiler_options;
+ 
+-   struct disk_cache *disk_cache;
++   // struct disk_cache *disk_cache;
+ };
+ 
+ 
