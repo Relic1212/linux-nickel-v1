@@ -64,6 +64,7 @@
 
     preConfigurePhase =
       [
+        m%"sed -i -e 's@static bool terminate_request = false;@@g' -e 's@terminate_request = true;@@g' ${SRC}/sway/main.c"%,
         m%"
             fix_symbol(){
                 echo    sed -i "s@${1}(@${1}_sway(@g"
