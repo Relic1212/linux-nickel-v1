@@ -19,8 +19,11 @@
       # uri = "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.4/llvm-project-21.1.4.src.tar.xz",
       # sha256sum = "a01ad7e5167780c945871d75c0413081d12067607a6de5cf71dc3e8d1a82112c",
 
-      uri = "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-22.1.5.tar.gz",
-      sha256sum = "263e99bd0b590664a886b0332037ff060e108f4e7b0310b7c8277208858f867d",
+      # uri = "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-22.1.5.tar.gz",
+      # sha256sum = "263e99bd0b590664a886b0332037ff060e108f4e7b0310b7c8277208858f867d",
+
+      uri = "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-23.1.2.tar.gz",
+      sha256sum = "75788d759e6987a910975b902f554dc77c08b076b945b2cebde54116d8e831ca",
     },
 
     unpackPhase = [
