@@ -10,8 +10,10 @@
       {
         src = {
 
-          uri = "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/vulkan-sdk-1.4.350.0.tar.gz",
-          sha256sum = "446b288fe76d3f31bbf9a405d62b97020ac0f135edb0ed5dbdf1136c488138f5",
+          # uri = "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/vulkan-sdk-1.4.350.0.tar.gz",
+          # sha256sum = "446b288fe76d3f31bbf9a405d62b97020ac0f135edb0ed5dbdf1136c488138f5",
+          uri = "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/vulkan-sdk-1.4.363.0.tar.gz",
+          sha256sum = "e6c83a215538fbfd265ccf398d3877985055df1273dbed73912bd05307664688",
         }
       },
       {
