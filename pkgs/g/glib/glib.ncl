@@ -3,8 +3,8 @@
   drvs,
   glib | lib.MesonPackage = {
     singleSource = {
-      uri = "https://download.gnome.org/sources/glib/2.86/glib-2.86.1.tar.xz",
-      sha256sum = "119d1708ca022556d6d2989ee90ad1b82bd9c0d1667e066944a6d0020e2d5e57",
+      uri = "https://download.gnome.org/sources/glib/2.90/glib-2.90.0.tar.xz",
+      sha256sum = "17d15cac2af80a33271127408e0abc2748eb297c595c2a26409e81e14e7d1b8f",
     },
     options = {
       patched | default = false,
