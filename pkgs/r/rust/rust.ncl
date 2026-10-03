@@ -10,31 +10,31 @@
         {
           src = {
 
-            uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.95.0-src.tar.xz",
-            sha256sum | priority 1 = "62b67230754da642a264ca0cb9fc08820c54e2ed7b3baba0289876d4cdb48c08",
+            uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.99.0-src.tar.xz",
+            sha256sum | priority 1 = "cc41916a8c84f5d9ec4f55561b44e39f43b647b133f8a6f51be9ea13c83f7036",
           },
         },
         {
           dest = "local",
           src = {
 
-            uri = "https://static.rust-lang.org/dist/rust-std-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "5a233ab503d58a3fb65bf7ecaa1b82f821f799dfd94a2613215317097ad43547",
+            uri = "https://static.rust-lang.org/dist/rust-std-1.98.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "bd9f35880de21dab0e387e84009c00001ae7836a4ba565cb16823f13f75f325f",
           }
         },
         {
           dest = "local1",
           src = {
 
-            uri = "https://static.rust-lang.org/dist/rustc-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "9eb8e88598190dc97162b775349080ae00b222e0b2718da4011ff10f0db4ba07",
+            uri = "https://static.rust-lang.org/dist/rustc-1.98.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "dea916164b47437402d8041cbba90c1ff9ce859948b1ece8e36b08100ff92063",
           }
         },
         {
           dest = "local2",
           src = {
-            uri = "https://static.rust-lang.org/dist/cargo-1.94.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "1d729de129de82ecf00c3f5b9a3e70dedf6a37e16ab66dbdad0f86886a8b2c11",
+            uri = "https://static.rust-lang.org/dist/cargo-1.98.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "2bced641e198f9c4e7b129770de65cb052f2486a8f58d577792ea57c66c91b1c",
           }
         },
       ],
@@ -175,6 +175,7 @@
           "--enable-cargo-native-static",
           "--tools=\"cargo,src\"",
           "--set=\"rust.codegen-tests=false\"",
+          "--set=\"rust.compress-debuginfo=false\"",
           "--set=\"rust.musl-root=/usr\"",
           "--set=\"rust.rpath=false\"",
           # "--set=\"llvm-libunwind=in-tree\"",
@@ -187,6 +188,8 @@
           "--set=\"target.%{tgt}.llvm-libunwind=system\"",
           "--set=\"target.%{tgt}.musl-root=/usr\"",
           "--set=\"target.%{tgt}.crt-static=false\"",
+          # "--set=\"compress-debuginfo=none\"",
+          # "--dist-compression-formats=\"\""
         ],
     },
 }
