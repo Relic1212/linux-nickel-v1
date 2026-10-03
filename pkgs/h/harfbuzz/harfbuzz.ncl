@@ -2,10 +2,9 @@
   lib,
   drvs,
   harfbuzz | lib.MesonPackage = {
-    name = "harfbuzz",
     singleSource = {
-      uri = "https://github.com/harfbuzz/harfbuzz/releases/download/10.0.1/harfbuzz-10.0.1.tar.xz",
-      sha256sum = "b2cb13bd351904cb9038f907dc0dee0ae07127061242fe3556b2795c4e9748fc"
+      uri = "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/14.5.1.tar.gz",
+      sha256sum = "a058ff4c32dad1e163cd62dce4bca81035f7fbc060bc52fc97f6079c4446ec44"
     },
     extraMesonArgs = [
       "-Dfreetype=enabled",
