@@ -1,0 +1,8 @@
+prefix=/usr
+libexecdir=/usr/libexec 
+
+Name: libclc
+Version: 23.1.2
+Description: libclc
+
+Libs: /usr/share/clc/spirv64-unknown-unknown/libclc.a
