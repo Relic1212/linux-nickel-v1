@@ -4,6 +4,62 @@
   lib,
   mesa2 | lib.MesonPackage = {
 
+    singleSource = {
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.1/mesa-mesa-25.2.1.tar.gz",
+      # sha256sum = "ae8534d4da0b8fc0e384db9e82605677143ff86bfcb7833bd8551ad36e99ca73",
+
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.6/mesa-mesa-25.2.6.tar.bz2",
+      # sha256sum = "a33d8400c0f4ee729c1b7224834a84415681c842dbd36e2431fade180440d0a5",
+
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.0/mesa-mesa-25.3.0.tar.bz2",
+      # sha256sum = "f30228a63cf567225ffea42464d87fdc2026e1f5c55f5cc7de69b2531688e1ce",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
+      # sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
+
+      # uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
+      # sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72",
+
+      uri = "https://archive.mesa3d.org/mesa-26.0.4.tar.xz",
+      sha256sum = "6d91541e086f29bb003602d2c81070f2be4c0693a90b181ca91e46fa3953fe78",
+      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-26.1.0/mesa-mesa-26.1.0.tar.bz2",
+      # sha256sum = "dd7faea0eceae636f88e1aee988ca0f5bd6a1a0d3828d3f34bb030abd4476659",
+    },
+
+    sourceInputs = [
+      { src = singleSource },
+      { src = { uri = "https://gitlab.freedesktop.org/mesa/mesa/-/commit/f958ad11955638758c19170d9df4d67bf1ff8bcb.patch", sha256sum = "d19c552c88733650781bd08074605dd8baa457d6638b9aff037f18425f30594e", }, },
+    ],
+    buildEnv = {
+      EXTRA_LDFLAGS = [
+        "-lLLVMABI",
+      ],
+    },
+    extraEnv = {
+      PATH = "/usr/libexec:${PATH}"
+    },
+    # patches = [
+    #   {
+    #     sha256sum = "9f8f56eaf204a3e4832ba1c898e473fe3f55d0ea5d9157a47739879e16f25dae",
+    #     file = "mesa-25.3.0.patch",
+    #   },
+    #   {
+    #     file = "mesa-no-virgl-cache.patch",
+    #     sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
+    #   },
+    # ],
+
+    patches = [
+      {
+        sha256sum = "0e84a42748ef7b8af159047e647907de17e107ad4e39557bafdc877a329257a4",
+        file = "mesa-26.0.0.patch",
+      },
+      {
+        file = "mesa-26.0.0-no-virgl-cache.patch",
+
+        sha256sum = "9af9263c2590fc092f2f8c96cf3ce08591b241423be121ed14980882b9479893"
+      },
+    ],
+
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",
@@ -49,55 +105,10 @@
       # "-Dmesa-clc=disabled",
     ],
 
-    singleSource = {
-      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.1/mesa-mesa-25.2.1.tar.gz",
-      # sha256sum = "ae8534d4da0b8fc0e384db9e82605677143ff86bfcb7833bd8551ad36e99ca73",
-
-      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.6/mesa-mesa-25.2.6.tar.bz2",
-      # sha256sum = "a33d8400c0f4ee729c1b7224834a84415681c842dbd36e2431fade180440d0a5",
-
-      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.0/mesa-mesa-25.3.0.tar.bz2",
-      # sha256sum = "f30228a63cf567225ffea42464d87fdc2026e1f5c55f5cc7de69b2531688e1ce",
-      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.3.2/mesa-mesa-25.3.2.tar.bz2",
-      # sha256sum = "e52aba61bee1f2fd1b9e3503626788fcf9c161bc64dcb0a9dbfdd022c7992eb8",
-
-      # uri = "https://mesa.freedesktop.org/archive/mesa-26.0.0.tar.xz",
-      # sha256sum = "2a44e98e64d5c36cec64633de2d0ec7eff64703ee25b35364ba8fcaa84f33f72",
-
-      uri = "https://archive.mesa3d.org/mesa-26.0.4.tar.xz",
-      sha256sum = "6d91541e086f29bb003602d2c81070f2be4c0693a90b181ca91e46fa3953fe78",
-      # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-26.1.0/mesa-mesa-26.1.0.tar.bz2",
-      # sha256sum = "dd7faea0eceae636f88e1aee988ca0f5bd6a1a0d3828d3f34bb030abd4476659",
-    },
-
-    extraEnv = {
-      PATH = "/usr/libexec:${PATH}"
-    },
-    # patches = [
-    #   {
-    #     sha256sum = "9f8f56eaf204a3e4832ba1c898e473fe3f55d0ea5d9157a47739879e16f25dae",
-    #     file = "mesa-25.3.0.patch",
-    #   },
-    #   {
-    #     file = "mesa-no-virgl-cache.patch",
-    #     sha256sum = "f5b6671dae52941927aeb8d86155b2f5d4f3966651673942b29218864c4fd08f"
-    #   },
-    # ],
-
-    patches = [
-      {
-        sha256sum = "0e84a42748ef7b8af159047e647907de17e107ad4e39557bafdc877a329257a4",
-        file = "mesa-26.0.0.patch",
-      },
-      {
-        file = "mesa-26.0.0-no-virgl-cache.patch",
-
-        sha256sum = "9af9263c2590fc092f2f8c96cf3ce08591b241423be121ed14980882b9479893"
-      },
-    ],
     preConfigurePhase = [
       "sed -i 's@main()@print()@g' ${SRC}/bin/install_megadrivers.py",
       "sed -i 's@def print()@def main()@g' ${SRC}/bin/install_megadrivers.py",
+      "(cd ${SRC} && patch -p1 < f958ad11955638758c19170d9df4d67bf1ff8bcb.patch)",
 
       # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32439/diffs?commit_id=8a453669e2bd44651cacdeac1c372d6e80cab0a7
     ],
