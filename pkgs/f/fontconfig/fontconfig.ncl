@@ -3,8 +3,8 @@
   drvs,
   fontconfig | lib.MesonPackage = {
     singleSource = {
-      uri = "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.gz",
-      sha256sum = "f5f359d6332861bd497570848fcb42520964a9e83d5e3abe397b6b6db9bcaaf4",
+      uri = "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/2.18.3/fontconfig-2.18.3.tar.bz2",
+      sha256sum = "8d28f79d2017cbe1fbb7da84b2502c86421b4f45860234d2f4ab5b35564c8d01",
     },
     biDrvs = [
       drvs.gperf,
