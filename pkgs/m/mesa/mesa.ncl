@@ -208,6 +208,9 @@
         #   "-Dintel-clc=enabled",
         "-Dllvm=enabled",
         "-Dunversion-libgallium=true",
+        "-Dradv-build-id=eacebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+        "-Dradeonsi-build-id=facebefb-54f9-4b7f-9ebe-3f9c33ae41da",
+        "-Damd-use-llvm=false",
       ],
       postInstallPhase = [
         m%"
