@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.2.0.tar.gz",
-      sha256sum = "b1080bcb19c9ee7836153464d99021f34d1e3564f4bf4a26331a2af21234ddf8",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.2.1.tar.gz",
+      sha256sum = "5418f6b759de96e56a4bbca809c5a4c60a8a9594bdf67ecb8c5a341f97c221d1",
     },
 
     buildEnv = {
@@ -23,6 +23,10 @@
       m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
       m%"sed -i 's|std::to_string(modified.time_since_epoch().count())|std::to_string(static_cast<long long>(modified.time_since_epoch().count()))|g' ${SRC}/src/system/icon_resolver.cpp"%,
       m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
+      m%"sed -i "s@#include <string.h>@#include <string.h>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Compiler/src/lcode.cpp"%,
+      m%"sed -i "s@#include <string.h>@#include <string.h>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Bytecode/src/BytecodeBuilder.cpp"%,
+      m%"sed -i "s@#include <memory>@#include <memory>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Compiler/src/Compiler.cpp"%,
+      m%"sed -i "s@#include <algorithm>@#include <algorithm>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Ast/src/Parser.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
       "sed -i 's|lua_ident|lua_ident_compat|g' ${SRC}/third_party/luau/VM/src/lapi.cpp",
     ],
