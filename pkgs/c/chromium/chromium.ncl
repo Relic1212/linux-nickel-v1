@@ -113,7 +113,7 @@
           "clang_use_chrome_plugins=false",
           # "clang_base_path=\"/usr</lib/clang/22\"",
           "clang_base_path=\"/usr\"",
-          "clang_version=22",
+          "clang_version=23",
           "custom_toolchain=\"//build/toolchain/linux/unbundle:default\"",
           "host_toolchain=\"//build/toolchain/linux/unbundle:default\"",
           # "target_cflags_cc=[\"-D_LIBCPP_PROVIDES_DEFAULT_RUNE_TABLE=1\"]",
@@ -144,7 +144,7 @@
           "use_system_harfbuzz=true",
           "use_system_lcms2=true",
           # "use_system_libdrm=true", #  not supported
-          "use_system_libffi=true",
+          # "use_system_libffi=true",
           "use_system_libjpeg=true",
           # "use_system_libopenjpeg2=true",
           "use_system_libpng=true",
@@ -227,7 +227,7 @@
         ]
         in
         [
-          "gn gen out/Bld --args='%{std.string.join " " args}'",
+          m%"gn gen out/Bld --args="%{ std.string.replace m%"""% m%"\""% (std.string.join " \\\n" args)}""%,
         ],
 
       preConfigurePhase = [
@@ -290,7 +290,7 @@
         "tar xf /tmp/workdir/packed/%{wasmNode.sha256sum}/%{std.string.split "/" wasmNode.uri |>std.array.last } -C third_party/devtools-frontend/src/node_modules/rollup --strip-components=1",
         "mkdir copium",
         "tar xf /tmp/workdir/packed/%{copiumSrc.sha256sum}/%{std.string.split "/" copiumSrc.uri |>std.array.last } -C copium --strip-components=1",
-        m%"sed -i 's|NODE_VERSION="v24.12.0"|NODE_VERSION="v25.9.0"|g' third_party/node/update_node_binaries"%,
+        m%"sed -i 's|NODE_VERSION="v24.12.0"|NODE_VERSION="v26.10.0"|g' third_party/node/update_node_binaries"%,
         m%"sed -i 's@#include <sys/cdefs.h>@// #include <sys/cdefs.h> @g' base/allocator/partition_allocator/src/partition_alloc/shim/allocator_shim_internals.h"%,
         "python << 'EOF'\n%{import "patch.py" as 'Text}\n\nEOF\n",
         "sed -i 's@__THROW _NOEXCEPT@__THROW // _NOEXCEPT@g' base/allocator/partition_allocator/src/partition_alloc/shim/allocator_shim_internals.h",
@@ -323,6 +323,7 @@
 
         # Needed on selinux for some reason 
         m%" sed -i "s@case __NR_pwrite64:@case __NR_pwrite64:\n\t    case __NR_pwritev2:@g" sandbox/policy/linux/bpf_gpu_policy_linux.cc"%,
+        m%"sed -i 's@u8::max_value()@u8::MAX@g' third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/structured.rs"%,
       ],
       buildPhase = [
         "ninja -C out/Bld -j$(nproc) chrome",
@@ -406,20 +407,26 @@
       ],
     },
   libclangCompat | lib.Package = {
+    options = {
+      v | default = "23",
+    },
     installPhase = [
-      "install -dm0755 ${DEST}/usr/lib/clang/22/lib/x86_64-unknown-linux-gnu",
-      "cd ${DEST}/usr/lib/clang/22/lib/x86_64-unknown-linux-gnu",
-      "ln -s /usr/lib/clang/22/lib/linux/libclang_rt.builtins-x86_64.a libclang_rt.builtins.a",
+      "install -dm0755 ${DEST}/usr/lib/clang/%{options.v}/lib/x86_64-unknown-linux-gnu",
+      "cd ${DEST}/usr/lib/clang/%{options.v}/lib/x86_64-unknown-linux-gnu",
+      "ln -s /usr/lib/clang/%{options.v}/lib/linux/libclang_rt.builtins-x86_64.a libclang_rt.builtins.a",
       #
-      "install -dm0755 ${DEST}/usr/lib/clang/22/lib/x86_64-unknown-linux-musl",
-      "cd ${DEST}/usr/lib/clang/22/lib/x86_64-unknown-linux-musl",
-      "ln -s /usr/lib/clang/22/lib/linux/libclang_rt.builtins-x86_64.a libclang_rt.builtins.a",
+      "install -dm0755 ${DEST}/usr/lib/clang/%{options.v}/lib/x86_64-unknown-linux-musl",
+      "cd ${DEST}/usr/lib/clang/%{options.v}/lib/x86_64-unknown-linux-musl",
+      "ln -s /usr/lib/clang/%{options.v}/lib/linux/libclang_rt.builtins-x86_64.a libclang_rt.builtins.a",
     ]
   },
   cfiIgnoreList | lib.Package = {
+    options = {
+      v | default = libclangCompat.options.v,
+    },
     installPhase = [
-      "install -dm0755 ${DEST}/usr/lib/clang/22/share",
-      "touch ${DEST}/usr/lib/clang/22/share/cfi_ignorelist.txt",
+      "install -dm0755 ${DEST}/usr/lib/clang/%{options.v}/share",
+      "touch ${DEST}/usr/lib/clang/%{options.v}/share/cfi_ignorelist.txt",
     ]
   },
   cdefs | lib.Package = {
