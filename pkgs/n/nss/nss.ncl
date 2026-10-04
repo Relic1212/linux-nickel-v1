@@ -23,6 +23,8 @@
         "-DSHA384_Update=libnss_freebl__SHA384_Update",
         "-DSHA512_Update=libnss_freebl__SHA512_Update",
         "-DMD5_Update=libnss_freebl__MD5_Update",
+        # -Werror,-Wunused-but-set-global
+        "-Wno-error=unused-but-set-global",
       ],
       EXTRA_CFLAGS = EXTRA_CPPFLAGS,
       EXTRA_LDFLAGS = [
@@ -32,15 +34,28 @@
     cdBuildPhase | priority 1 = ["cd ${SRC}/nss"],
     preConfigurePhase = [
       m%"for f in $(find . -name '*.gyp'); do sed -i "s|'shared_library'|'static_library'|g" $f;done"%,
+      m%"sed -i "s@#include <prio.h>@#include <prio.h>\n#include <algorithm>@g" ${SRC}/nss/nss-tool/db/dbtool.cc"%
+
       # m%" sed -i "s|shared_library|static_library|g" coreconf/config.gypi"%,
       # m%"sed -i "s|'so'|'a'|g" coreconf/config.gypi"%,
       # m%"sed -i 's|const SEC_ASN1Template SECKEY_PQGParamsTemplate|static const SEC_ASN1Template SECKEY_PQGParamsTemplate|g' cmd/certutil/keystuff.c"%,
       # m%"sed -i 's|const SEC_ASN1Template SECKEY_PQGParamsTemplate|static const SEC_ASN1Template SECKEY_PQGParamsTemplate|g' lib/cryptohi/seckey.c"%,
     ],
+    options = {
+      args = [
+        "--opt",
+        "--clang",
+        "--static",
+        "--system-nspr",
+        "--disable-tests",
+        "-v",
+        "-Dsign_libs=0",
+      ],
+    },
     buildPhase = [
       "./build.sh --help || true",
       "echo help-done",
-      "./build.sh --opt --clang --static --system-nspr --disable-tests -v -Dsign_libs=0",
+      "./build.sh %{std.string.join " " options.args}",
       # "echo builddone"
     ],
     installPhase = [
@@ -79,9 +94,15 @@
   nssFull | lib.MakePackage =
     nss
     & {
-      postInstallPhase = [
-        "cd ${SRC}/nss",
-        "cp ../dist/Release/lib/* ${DEST}/usr/lib/",
+      buildPhase | priority 1 = [
+        "./build.sh --help || true",
+        "echo help-done",
+        "./build.sh --opt --clang --system-nspr --disable-tests -v -Dsign_libs=0",
+        # "echo builddone"
       ],
+      # postInstallPhase = [
+      #   "cd ${SRC}/nss",
+      #   "cp ../dist/Release/lib/* ${DEST}/usr/lib/",
+      # ],
     }
 }
