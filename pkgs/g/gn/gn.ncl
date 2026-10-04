@@ -17,15 +17,20 @@
       # "install -Dm0755 ${DEST}/usr/bin",
       "install -Dm0755 out/gn ${DEST}/usr/bin/gn",
     ],
+    options = {
+      bash | default = false,
+    },
     muslProvider,
-    biDrvs = [
-      drvs.samurai,
-      drvs.pythonFull,
-      muslProvider,
-      drvs.git,
-      drvs.llvm,
-      drvs.ccacheBin,
-    ]
+    biDrvs =
+      [
+        drvs.samurai,
+        drvs.pythonFull,
+        muslProvider,
+        drvs.git,
+        drvs.llvm,
+        drvs.ccacheBin,
+      ]
+      @ (if options.bash then [drvs.bash, drvs.bashBinBash, ] else []),
   },
   gn2435 | lib.Package =
     gn
@@ -33,6 +38,17 @@
       singleSource = {
         sha256sum | priority 1 = "1d86777e7f2562a86ecea77d1809ac4f82bb5bfe"
       }
+    },
+  gn2436 | lib.Package =
+    gn
+    & {
+      options.bash = true,
+      preConfigurePhase = [
+        ":> tools/run_formatter.sh",
+      ],
+      singleSource = {
+        sha256sum | priority 1 = "dc685a2b72b24234ba5cbc821375c3d2ac4f0409"
+      },
     },
   gnOld | lib.Package =
     gn
