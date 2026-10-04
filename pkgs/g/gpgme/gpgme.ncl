@@ -3,8 +3,10 @@
   drvs,
   gpgme | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://gnupg.org/ftp/gcrypt/gpgme/gpgme-1.24.0.tar.bz2",
-      sha256sum = "61e3a6ad89323fecfaff176bc1728fb8c3312f2faa83424d9d5077ba20f5f7da"
+      # uri = "https://gnupg.org/ftp/gcrypt/gpgme/gpgme-1.24.0.tar.bz2",
+      # sha256sum = "61e3a6ad89323fecfaff176bc1728fb8c3312f2faa83424d9d5077ba20f5f7da",
+      uri = "https://gnupg.org/ftp/gcrypt/gpgme/gpgme-2.2.0.tar.bz2",
+      sha256sum = "7160e80e84dafd00d956c84891c533bb7ab16a6a54fbe1574b2f3acf0496977b",
     },
     pDrvs = [
       drvs.libassuan,
