@@ -64,6 +64,7 @@
               "--enable-cargo-native-static",
               "--tools=\"%{options.tools}\"",
               "--set=\"rust.codegen-tests=false\"",
+              "--set=\"rust.compress-debuginfo=false\"",
               "--set=\"rust.musl-root=/usr\"",
               "--set=\"rust.rpath=false\"",
               # "--set=\"rust.llvm-config=/usr/bin/llvm-config\"",
