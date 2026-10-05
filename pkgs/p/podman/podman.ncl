@@ -5,13 +5,13 @@
     sourceInputs = [
       {
         src = {
-          uri = "https://github.com/containers/podman/archive/refs/tags/v5.5.1.tar.gz",
-          sha256sum = "00d02f85ad27a46e77456fef1be81865a43147544ed2487e6c4c8decd0e3748f"
+          uri = "https://github.com/containers/podman/archive/refs/tags/v6.1.3.tar.gz",
+          sha256sum = "6253aee14e573f747ca77e5a83a0df4ef9c2f609604f56715070ed06b6f9ddd8"
         }
       },
     ],
     biDrvs = [
-      drvs.go_1_23,
+      drvs.go_1_26,
       drvs.bash,
       drvs.linuxHeaders,
       drvs.pkgconf,
@@ -22,7 +22,7 @@
       drvs.gpgme,
       drvs.libgpgError,
       drvs.libassuan,
-      drvs.libseccomp,
+      drvs.libseccomp261,
     ],
     buildEnv = {
       EXTRA_LDFLAGS = ["-lassuan", "-lgpg-error", "-lgpgme", "-Wl,--no-gc-sections", "--verbose"],
@@ -177,5 +177,26 @@
     preConfigurePhase = [
       m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/src/arch-gperf-generate"%
     ]
-  }
+  },
+
+  libseccomp261 | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/seccomp/libseccomp/archive/refs/tags/v2.6.1.tar.gz",
+      sha256sum = "f9a13e4c633d319a9240189760ca348caa0837c0ebe2a09b17061da8ceaf60f0"
+    },
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.gperf,
+      drvs.linuxHeaders,
+      drvs.bash,
+    ],
+
+    extraEnv = {
+      # LDFLAGS_FOR_BUILD = ["-static","--static"],
+      CC_FOR_BUILD = ["clang", "-static", "--static"]
+    },
+    preConfigurePhase = [
+      m%"sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${SRC}/src/arch-gperf-generate"%
+    ]
+  },
 }
