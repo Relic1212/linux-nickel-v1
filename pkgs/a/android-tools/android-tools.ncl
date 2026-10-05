@@ -24,11 +24,6 @@
     ],
     buildEnv = {
       EXTRA_LDFLAGS = ["-ludev"],
-      EXTRA_CPPFLAGS = [
-        "-DABSL_NO_LOG_MACROS",
-      ],
-      EXTRA_CFLAGS = EXTRA_CPPFLAGS,
-      EXTRA_CXXFLAGS = EXTRA_CPPFLAGS,
     },
 
     preConfigurePhase = [
