@@ -82,6 +82,9 @@
     },
   harfbuzzGobject | lib.MesonPackage = {
     singleSource = harfbuzz.singleSource,
+    buildEnv.EXTRA_LDFLAGS = [
+      "$(pkg-config --libs --static zlib)",
+    ],
     extraMesonArgs = [
       "-Dfreetype=enabled",
       "-Dcairo=enabled",
