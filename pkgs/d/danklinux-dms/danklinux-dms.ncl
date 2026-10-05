@@ -34,7 +34,7 @@ in
     outputFile = "source.tar",
 
     # outputSha256sum = "9a9436571def018b0e4ca6620ccb814d7476d031d8a8abe3f39ae73f737c4dc2", # "all"
-    outputSha256sum = "a22b638e075237d69dd4a598f5cfdd33cbe867dfbae1488ffe436e5b20a14f34", # vendor
+    outputSha256sum = "dbcc3dfc097aebc74cb52854ddef6b3312e69bce6e4f72d1b7bc7f1110dfd2fe", # vendor
 
     biDrvs = [
       drvs.go_1_26,
