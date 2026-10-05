@@ -68,6 +68,7 @@
 
     preConfigurePhase =
       [
+        m%"sed -i -e 's@static bool terminate_request = false;@@g' -e 's@terminate_request = true;@@g' ${SRC}/sway/main.c"%,
         m%"
       fix_symbol_wlroots(){
         for f in $(find ${SRC}/subprojects/wlroots -type f);do
