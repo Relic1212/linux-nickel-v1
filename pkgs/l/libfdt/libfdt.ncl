@@ -3,8 +3,8 @@
   drvs,
   libfdt | lib.MesonPackage = {
     singleSource = {
-      uri = "https://mirrors.edge.kernel.org/pub/software/utils/dtc/dtc-1.7.2.tar.xz",
-      sha256sum = "92d8ca769805ae1f176204230438fe52808f4e1c7944053c9eec0e649b237539"
+      uri = "https://mirrors.edge.kernel.org/pub/software/utils/dtc/dtc-1.8.1.tar.xz",
+      sha256sum = "23526015a6f1550e0541a53fe7acea1b5a11e3697cdf3a3bdc076abc38f6045d"
     },
 
     preConfigurePhase = [
