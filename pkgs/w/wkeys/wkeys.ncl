@@ -11,7 +11,7 @@
         sha256sum = "b6f432f87ff8391b244cdc64b2ae1e6e23643483c2587ef603bbe0de1aaa66ac",
       },
 
-      outputSha256sum = "460eb9196d982d024d3975de6b8ff22ed7a9a2036c59d521dc2050bf0aa8bdc1",
+      outputSha256sum = "74b3c63c89750c5c45ee5dbcce5598879c64e6288e845b7da773e8dbb375fd9b",
     },
   wkeys | lib.CargoPackage = {
 
