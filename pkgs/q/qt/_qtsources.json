@@ -1,54 +1,54 @@
 {
     "qtlocation": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtlocation-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "89b8386a8ae9e0b40a43fad398ac344f93a3b0d22f09bec4631f25d79135abef"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtlocation-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "218696d57c9eb95e8756e9fda62a8eabf94badc507db5f6e8ab9a640c4b0f50d"
     },
     "qtmultimedia": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtmultimedia-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "90c4cac0a7a983b68d1b0873d0714e7873b9a493403fa8593e8a4eea3ea26040"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtmultimedia-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "3143f53b64257ba2a0685c940f5dce476c75871ff86b516de45cfd54ea93a62d"
     },
     "qtpositioning": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtpositioning-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "d61fd0985ede513ec34d2d1c1e92f383eb8eb46678ca9da805cf795cccb796e9"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtpositioning-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "b060d410fac7413b05a0e7938bbf3325f7ad08d7df14af3956270f0696e76763"
     },
     "qtsensors": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtsensors-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "412829258bc9f42766ed13a4b9d66604f184d349510b3248ec065cf90e1fc3c7"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtsensors-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "861df58be8808cef777a1b531d7bec804d25733ec34e8ebbdafbe27040319090"
     },
     "qtspeech": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtspeech-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "a9c585d1a65a19686dd4d39432fdc8f2b22c9415798a928dba60b39dcd46db21"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtspeech-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "9a60ce5bee54a9343740feab2582bffb996812f43d6c5585aade26dbd04933db"
     },
     "qtsvg": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtsvg-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "dfa8d653be07087d9407ed4a4ebae847f8953e0b7abd829f089803ab652a30e6"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtsvg-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "e4ab39534ec97987b1b9b60ef7f4d3253d5912a69f8c713a01753174a4029331"
     },
     "qttools": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qttools-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "cfb1993d7a10848965b01b9cf33a54b8a4ba4e5e3a6d28d59483e73f10d9fc76"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qttools-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "8dab8f3611496486a470ad5f115ceea584f36bc22a2b8b6f6ebdbafbb8160693"
     },
     "qt5compat": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qt5compat-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "e62954646b2749723aa5c7db32faab407358734075590058a01e793382d4c63e"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qt5compat-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "78cf1c283795312a7fa31c73eb7f7f556b48374adc484f10ad5a3c0bcb59264e"
     },
     "qtbase": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtbase-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtbase-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "a951bd163c7b80fc6b8c88d7668fb56abf91c152373e13c10666763238131307"
     },
     "qtdeclarative": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtdeclarative-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "4eece569431ddf8324e7d322fa27001916570b23df535f8fb28aba445eedfde9"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtdeclarative-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "311f3a2603e1973bb59baef9dfa740a376de713157d4782ee043681e889c9260"
     },
     "qtquick3d": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtquick3d-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "b42000bb33e55b6c642657eb7022ee1f74f9e19cf64d52e85d41763f567b8994"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtquick3d-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "6ced6edbd25fb5a632fe770ae820b376bf50233e8d62002c79a69a505a2e429e"
     },
     "qtshadertools": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtshadertools-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "e43cb1ae8809b2a858281ee269f98da59d0fc1bcf958ca5510c81f7ad3d2e14a"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtshadertools-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "c7d84f436e1aaef39fdcadebf2bd71bdf24dc69497e13f2e0198873cbbfea2ab"
     },
     "qtwayland": {
-        "uri": "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtwayland-everywhere-src-6.11.0.tar.xz",
-        "sha256sum": "e710e6e760f92922b86e4dd68f6bbe94ef6510919519d1b0068e874b5ad84d37"
+        "uri": "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtwayland-everywhere-src-6.12.0.tar.xz",
+        "sha256sum": "ae14d9bcf1bb3c300a3ab2e6a53f50284e5c6c966a4ac4cc5aedcb1bc74e4d02"
     }
 }

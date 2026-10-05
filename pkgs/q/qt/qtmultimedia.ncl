@@ -9,11 +9,19 @@
         "$(pkg-config --libs --static gbm glesv2 egl dri wayland-client glib-2.0 gmodule-2.0 expat)",
       ]
     },
-    patches = [
-      {
-        sha256sum = "50a6a59f65477ee1c883333a4a47907cdb137f12534663865db1c9477cd5dace",
-        file = "qtmultimedia.patch",
-      },
+    # patches = [
+    #   {
+    #     sha256sum = "50a6a59f65477ee1c883333a4a47907cdb137f12534663865db1c9477cd5dace",
+    #     file = "qtmultimedia.patch",
+    #   },
+    # ],
+    preConfigurePhase = [
+      m%"sed -i 's@INIT_FUNC(pw_load_spa_handle);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
+      m%"sed -i 's@DEFINE_FUNC(pw_load_spa_handle, 5);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
+      m%"sed -i 's@INIT_FUNC(pw_unload_spa_handle);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
+      m%"sed -i 's@DEFINE_FUNC(pw_unload_spa_handle, 1);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
+      m%"sed -i 's@INIT_FUNC(pw_get_support);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
+      m%"sed -i 's@DEFINE_FUNC(pw_get_support, 2);@@g' ${SRC}/src/multimedia/pipewire/qpipewire_symbolloader.cpp"%,
     ],
     postInstallPhase =
       std.array.map
