@@ -4,10 +4,13 @@
   tigervnc | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://github.com/TigerVNC/tigervnc/archive/refs/tags/v1.16.0.tar.gz",
-      sha256sum = "10512fc0254ae3bde41c19d18c15f7ebd8cd476261afe0611c41965d635d46e8",
+      uri = "https://github.com/TigerVNC/tigervnc/archive/refs/tags/v1.16.2.tar.gz",
+      sha256sum = "b107c0c8b8a962594281690366c24186e95c2ea4a169acbc0076aa62ed01f467",
     },
     buildEnv = {
+      EXTRA_CFLAGS = [
+        "-Wno-error=unused-but-set-global",
+      ],
       EXTRA_LDFLAGS = [
         "$(pkg-config --libs --static xau)",
         "$(pkg-config --libs --static xcb)",
@@ -20,6 +23,10 @@
         "$(pkg-config --libs --static xrender)",
       ],
     },
+    preConfigurePhase = [
+      m%"sed -i "s@#include <stdexcept>@#include <stdexcept>\n#include <new>@g" ${SRC}/vncviewer/Surface_X11.cxx"%,
+      m%"sed -i "s@#include <assert.h>@#include <assert.h>\n#include <cstdlib>@g" ${SRC}/common/rfb/UnixPasswordValidator.cxx"%,
+    ],
     # biDrvs = [
     #   drvs.xorgMacros,
     #   drvs.xorgproto,
