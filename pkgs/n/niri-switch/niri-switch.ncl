@@ -60,9 +60,9 @@
       drvs.graphene,
       drvs.gtkmm4,
       drvs.libsigcpp,
-      drvs.cairomm_1_16,
-      drvs.pangomm_2_48,
-      drvs.glibmm_2_82,
+      drvs.cairomm,
+      drvs.pangomm,
+      drvs.glibmm,
       drvs.gtk4LayerShell,
     ],
   }

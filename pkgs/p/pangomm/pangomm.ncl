@@ -3,12 +3,15 @@
   drvs,
   pangomm | lib.MesonPackage = {
     singleSource = {
+      # uri = "https://download.gnome.org/sources/pangomm/2.58/pangomm-2.58.0.tar.xz",
+      # sha256sum = "217514c1a65035c2fce6e69e33b0d92bafa2594cc474e995a4473441b10f3a33",
       uri = "https://download.gnome.org/sources/pangomm/2.46/pangomm-2.46.4.tar.xz",
-      sha256sum = "b92016661526424de4b9377f1512f59781f41fb16c9c0267d6133ba1cd68db22"
+      sha256sum = "b92016661526424de4b9377f1512f59781f41fb16c9c0267d6133ba1cd68db22",
     },
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [
+      drvs.libsigcpp,
       drvs.fontconfig,
       drvs.freetype,
       drvs.zlibNg,
@@ -47,7 +50,8 @@
       drvs.gtk3,
       drvs.libsigcpp2,
       drvs.cairomm_1_0,
-      drvs.glibmm
+      drvs.glibmm,
+      drvs.glibmm_2_4,
     ],
   }
 }
@@ -58,6 +62,10 @@
     singleSource = {
       uri = "https://download.gnome.org/sources/pango/1.54/pango-1.54.0.tar.xz",
       sha256sum = "8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8"
+    },
+
+    buildEnv = {
+      # EXTRA_CPPFLAGS = ["-Wno-error=unused-but-set-global", ],
     },
 
     llvmProvider = drvs.llvmFull,
@@ -103,10 +111,12 @@
       drvs.libsigcpp2,
       drvs.cairomm_1_0,
       drvs.glibmm,
+      drvs.glibmm_2_4,
       drvs.pythonSetuptools,
     ],
     extraMesonArgs = [
       "-Dintrospection=disabled",
+      "-Dbuild-testsuite=false",
     ]
   }
 }
@@ -162,8 +172,8 @@
       drvs.libtiff,
       drvs.graphene,
       drvs.libsigcpp,
-      drvs.cairomm_1_16,
-      drvs.glibmm_2_82,
+      drvs.cairomm,
+      drvs.glibmm,
     ],
   }
 }

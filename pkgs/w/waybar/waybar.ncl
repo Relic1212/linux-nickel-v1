@@ -83,6 +83,7 @@
         drvs.cairomm_1_0,
         drvs.pangomm,
         drvs.glibmm,
+        drvs.glibmm_2_4,
         drvs.pythonSetuptools,
         drvs.gtkmm3,
         drvs.fmt,

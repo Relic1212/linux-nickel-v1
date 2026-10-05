@@ -48,9 +48,13 @@
       drvs.spirvLlvmTranslator,
       drvs.gtk3,
       drvs.libsigcpp2,
+      drvs.libsigcpp,
       drvs.cairomm_1_0,
+      drvs.cairomm,
+      # drvs.pangomm_1_0,
       drvs.pangomm,
       drvs.glibmm,
+      drvs.glibmm_2_4,
       (drvs.pythonSetuptools & { priority = 1 }),
     ],
     extraMesonArgs = [
