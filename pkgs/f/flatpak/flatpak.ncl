@@ -73,7 +73,7 @@
         "-lzstd",
         "-lssl",
         "-lcrypto",
-        "-l:libgpgmepp.a",
+        # "-l:libgpgmepp.a",
         "-l:libgpgme.a",
         "-llz4",
         "-l:libassuan.a",
