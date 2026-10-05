@@ -8,12 +8,20 @@
       "sed -i 's@-Wmaybe-uninitialized@-Wuninitialized@g' ${SRC}/meson.build",
       m%"sed -i "s@\'--release\'@\'--release\',\'--offline\',\'--target\', \'x86_64-unknown-linux-musl\', \'--verbose\'@g" ${SRC}/meson.build"%,
       m%"sed -i 's@\.\/@\.\/x86_64-unknown-linux-musl\/@g' ${SRC}/cargo_build.py"%,
+
+      # m%"sed -i 's@fn close@// fn close@g' ${SRC}/src/vkeyboard.rs"%,
+      m%"sed -i 's@fn close(fd: u32)@fn close(fd: i32)->i32@g' ${SRC}/src/vkeyboard.rs"%,
+      m%"sed -i 's@close((self.fd as u32)@close((self.fd as i32)@g' ${SRC}/src/vkeyboard.rs"%,
+      m%"sed -i 's@close(self.fd as u32)@close(self.fd as i32)@g' ${SRC}/src/vkeyboard.rs"%,
     ]
     in
     {
       singleSource = {
-        uri = "https://gitlab.gnome.org/World/Phosh/squeekboard/-/archive/v1.43.1/squeekboard-v1.43.1.tar.gz",
-        sha256sum = "64c73636f6d8a6ffe9f1094c4084b184db3f60ac4e02bf8bff860060308c61ab"
+        # uri = "https://gitlab.gnome.org/World/Phosh/squeekboard/-/archive/v1.43.1/squeekboard-v1.43.1.tar.gz",
+        # sha256sum = "64c73636f6d8a6ffe9f1094c4084b184db3f60ac4e02bf8bff860060308c61ab",
+
+        uri = "https://gitlab.gnome.org/World/Phosh/squeekboard/-/archive/27c359c4ccd7516cdd2b5189dd5f5e33ce57a9db/squeekboard-27c359c4ccd7516cdd2b5189dd5f5e33ce57a9db.tar.bz2",
+        sha256sum = "1c7d727760a799de43631fe5a32ab3acb724298cca496fd34bb2052c95689cd3",
       },
       crates = lib.functions.filterCrates (import "./squeekboard-crates.json"),
 
