@@ -4,6 +4,33 @@
   distro,
   quickshell | lib.QtPackage = {
 
+    singleSource = {
+      # uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.3.1.tar.gz",
+      # sha256sum = "218f6327293928bcb1f9b25728b336c4ab125f67fe1babd7d47313f890a16c99",
+      # uri = "https://github.com/quickshell-mirror/quickshell/archive/8db8ca1fecfcce8def1f9265fa1742baa0e0c271.tar.gz",
+      # sha256sum = "80d68bd65d247a0818c8b6544a341c5d04be8d11bff4f1e6a9f00c0f828c290a",
+
+      # latest without vulkan:
+      # uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
+      # sha256sum = "dac6768b33e51d2930061ed789d603dd5eea0dd0a6255800b9b96afe517b4fa5",
+
+      ###
+
+      uri = "https://github.com/quickshell-mirror/quickshell/archive/5d5d49873fe8cf1f99ddfd5006ceb2057c5c9b13.tar.gz",
+      sha256sum = "dbb31528a63f553c7e7443485f7b46437118d63e25cf554a5e3e7031c27702eb",
+    },
+
+    # sourceInputs = [
+    #   { src = singleSource },
+    #   {
+    #     src = {
+    #       uri = "https://github.com/quickshell-mirror/quickshell/commit/5d5d49873fe8cf1f99ddfd5006ceb2057c5c9b13.patch",
+    #       sha256sum = "b8a7eab0f883070a26283140e06d252a0aa3483287c54bbb0c3aacb6e82eb0b2",
+    #     },
+    #     dest ="patches",
+    #   },
+    # ],
+
     llvmProvider = drvs.llvmFull,
 
     buildEnv = {
@@ -83,6 +110,8 @@
       "sed -i 's|quickshell main.cpp|quickshell main.cpp gen.cpp|g' ${SRC}/src/CMakeLists.txt",
       "cat >>${SRC}/CMakeLists.txt << 'EOF'\n%{import "link.cmake" as 'Text}\nEOF\n",
       "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+      m%"sed -i 's@#include <glib-object.h>@#include <glib-object.h>\n#include <vector>@g' ${SRC}/src/services/polkit/gobjectref.hpp"%,
+      # "(cd ${SRC} && patch -p1 < patches/5d5d49873fe8cf1f99ddfd5006ceb2057c5c9b13.patch)",
     ],
     muslProvider = drvs.muslBothRenamedDl,
     options = {
@@ -108,17 +137,6 @@
       drvs.cli11,
       drvs.zstd,
     ],
-
-    singleSource = {
-      uri = "https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v0.3.1.tar.gz",
-      sha256sum = "218f6327293928bcb1f9b25728b336c4ab125f67fe1babd7d47313f890a16c99",
-      # uri = "https://github.com/quickshell-mirror/quickshell/archive/8db8ca1fecfcce8def1f9265fa1742baa0e0c271.tar.gz",
-      # sha256sum = "80d68bd65d247a0818c8b6544a341c5d04be8d11bff4f1e6a9f00c0f828c290a",
-
-      # latest without vulkan:
-      # uri = "https://github.com/quickshell-mirror/quickshell/archive/158db16b931d04b43ec84748ee49390ea9f7c3f8.tar.gz",
-      # sha256sum = "dac6768b33e51d2930061ed789d603dd5eea0dd0a6255800b9b96afe517b4fa5",
-    },
   },
   noctaliaQs | lib.QtPackage =
     quickshell
