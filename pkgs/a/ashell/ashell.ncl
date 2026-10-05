@@ -13,8 +13,7 @@
         sha256sum = "14621d548d4d67f4da8320276d614b54b510089ce7457396c779157260d55094",
       },
 
-      # outputSha256sum = "9a36d682d21ef7152953002ca97b6c5bcf0812f758e0ad8142135d2a3f23377a",
-      outputSha256sum = "c511766bf5a8e54d1886cb0d618a48d86632e02940b2204f807c08ec60e6babf",
+      outputSha256sum = "d77cade10d8635d6998bdf3b567dfd9c104f4bf185206acd04015d6de4caea29",
     },
   ashell | lib.CargoPackage = {
 
