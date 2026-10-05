@@ -12,7 +12,7 @@
     _CargoFetcher
     & {
       singleSource = _cosmicUtilsClipboardManager.singleSource,
-      outputSha256sum = "d05e95bd122425f63dfd5c9d1c2dc6084e4e7d955639a037498cf546c41a9a67",
+      outputSha256sum = "0b88fddad6b157f282892e6f02958bb5b2e7741340a8918f17f460e60da74e27",
     },
 
   cosmicUtilsClipboardManager | lib.CargoPackage = {
