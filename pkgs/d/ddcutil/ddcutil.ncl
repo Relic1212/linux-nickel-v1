@@ -3,30 +3,17 @@
   drvs,
   ddcutil | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://github.com/rockowitz/ddcutil/archive/refs/tags/v2.2.1.tar.gz",
-      sha256sum = "ff8eb39b4559fcbc83de7b16834a010262dfa825938625272212fcaeefaef692"
+      uri = "https://github.com/rockowitz/ddcutil/archive/refs/tags/v3.0.1.tar.gz",
+      sha256sum = "561e26f8ebcdb07e182092b9a0d27477842879b1a5338b52505ad49780cc824b"
+    },
+
+    buildEnv = {
+      EXTRA_CFLAGS = [
+        "-Wno-error=unused-but-set-global",
+      ],
     },
 
     separateBuildDir = false,
-
-    biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.jansson,
-      drvs.gperf,
-      drvs.kmod,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
-      drvs.linuxHeaders,
-      drvs.eudev,
-      drvs.libusb,
-      drvs.libdrm,
-      drvs.libpciaccess,
-    ],
 
     preConfigurePhase = [
       m%"
@@ -47,7 +34,27 @@
 
     extraConfigureFlags = [
       "--enable-x11=no"
-    ]
+    ],
+    biDrvs = [
+      drvs.pcre2,
+      drvs.libffi,
+      drvs.zlibNg,
+      drvs.glib,
+      drvs.jansson,
+      drvs.gperf,
+      drvs.kmod,
+      drvs.xz,
+      drvs.openssl,
+      drvs.zstd,
+      drvs.utilLinux,
+      drvs.linuxHeaders,
+      drvs.eudev,
+      drvs.libusb,
+      drvs.libdrm,
+      drvs.libpciaccess,
+      drvs.acl,
+      drvs.attr,
+    ],
   }
 }
 & {
