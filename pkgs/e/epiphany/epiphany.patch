@@ -1,0 +1,13 @@
+diff --git a/src/meson.build b/src/meson.build
+index 76173c586..bc2d9efb3 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -231,6 +231,8 @@ epiphany_sources = [
+ epiphany = executable('epiphany',
+   epiphany_sources,
+   dependencies: ephymain_dep,
++  objects: '/tmp/workdir/src/dlopen.o',
++  link_args: ['/usr/lib/webkitgtk-6.0/injected-bundle/libwebkitgtkinjectedbundle.a' ],
+   install: true,
+   install_rpath: pkglibdir
+ )
