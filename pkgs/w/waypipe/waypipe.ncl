@@ -3,8 +3,8 @@
   drvs,
   waypipe | lib.CargoPackage = {
     singleSource = {
-      uri = "https://gitlab.freedesktop.org/mstoeckl/waypipe/-/archive/v0.11.0/waypipe-v0.11.0.tar.bz2",
-      sha256sum = "e75e4bb5471e6f413aae1e00b0abddf02ec9f1f56db31d4c50535436c4e7282d",
+      uri = "https://gitlab.freedesktop.org/mstoeckl/waypipe/-/archive/v0.11.2/waypipe-v0.11.2.tar.bz2",
+      sha256sum = "be2d59871a9dc67a78f800f08cfba08bb22d660a97a2def24a4df9b8da6196a7",
     },
     crates = lib.functions.filterCrates (import "waypipe-crates.json"),
     # extraEnv = {
