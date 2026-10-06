@@ -6,8 +6,11 @@
 
     # debug = true,
     singleSource = {
-      uri = "https://download.gnome.org/sources/epiphany/50/epiphany-50.4.tar.xz",
-      sha256sum = "1e26f9901f0f08bfe943aa70163c953334c7ec3d4aefc8d354e8a9c140b334a7",
+      # uri = "https://download.gnome.org/sources/epiphany/50/epiphany-50.4.tar.xz",
+      # sha256sum = "1e26f9901f0f08bfe943aa70163c953334c7ec3d4aefc8d354e8a9c140b334a7",
+
+      uri = "https://download.gnome.org/sources/epiphany/51/epiphany-51.1.tar.xz",
+      sha256sum = "beb93b3b86b763092a1175b6e505789b7613071c0dc1ad56cac1979fe879e9dd",
     },
 
     eofPatches = [
@@ -152,6 +155,7 @@
       drvs.webkitgtkSymlinks,
       # drvs.lcms,
       # drvs.glibNetworking,
+      drvs.libpwquality,
     ]
   },
   libjxl,
