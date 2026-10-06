@@ -238,6 +238,24 @@
           drvs.webkitgtk,
         ],
     },
+
+  webkitgtkMissingSyms | lib.Package = {
+    buildPhase = [
+      lib.functions.writeFile "${SRC}/missing_syms.c" (import "webkitgtk_missing_syms.c" as 'Text),
+      "${CC} ${CFLAGS} -Werror -c -o ${SRC}/missing_syms.o ${SRC}/missing_syms.c",
+      "${AR} rcs ${SRC}/libwebkitgtk-missing-symbols.a ${SRC}/missing_syms.o",
+      "ranlib ${SRC}/libwebkitgtk-missing-symbols.a",
+    ],
+
+    installPhase = [
+      "install -Dm0755 ${SRC}/libwebkitgtk-missing-symbols.a  ${DEST}/usr/lib/libwebkitgtk-missing-symbols.a",
+    ],
+
+    biDrvs = [
+      drvs.llvm,
+      drvs.musl,
+    ],
+  },
   libelf,
   libelfFixed =
     libelf
