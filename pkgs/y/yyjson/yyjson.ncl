@@ -1,0 +1,11 @@
+{
+  lib,
+  drvs,
+  yyjson | lib.CmakePackage = {
+    generator = "Ninja",
+    singleSource = {
+      uri = "https://github.com/ibireme/yyjson/archive/refs/tags/0.13.0.tar.gz",
+      sha256sum = "34e0f62a2bc11ab20d601e8ca1cc2b2079503aa45119a19133d89d19b94a0fae"
+    },
+  }
+}
