@@ -166,7 +166,7 @@
           @ [
             "-Wl,--start-group",
             "/tmp/workdir/src/dlopen.o",
-            "/tmp/workdir/src/missing_syms.o",
+            "-lwebkitgtk-missing-symbols",
             "/usr/lib/webkitgtk-6.0/injected-bundle/libwebkitgtkinjectedbundle.a",
             "/usr/lib/gio/modules/libgiognomeproxy-static.a",
             "/usr/lib/gio/modules/libgiognutls-static.a",
@@ -225,17 +225,12 @@
           ],
       },
 
-      preConfigurePhase | priority 1 =
-        webkitgtk.preConfigurePhase
-        @ [
-          lib.functions.writeFile "${SRC}/missing_syms.c" "void* _ZN11SkStrikeRefC1E5sk_spI8SkStrikeEf = 0;\nvoid* _ZNK6SkPath4dumpEP9SkWStreamb = 0;\n",
-          "${CC} ${CFLAGS} -Werror -c -o ${SRC}/missing_syms.o ${SRC}/missing_syms.c",
-        ],
       muslProvider | priority 1 = drvs.muslBothRenamedDl,
       biDrvs | priority 1 =
         webkitgtk.biDrvs
         @ [
           drvs.webkitgtk,
+          drvs.webkitgtkMissingSyms,
         ],
     },
 
