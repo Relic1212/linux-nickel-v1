@@ -1,0 +1,55 @@
+diff --git a/src/gbm/main/backend.c b/src/gbm/main/backend.c
+index 7eb835d371c..3811793d427 100644
+--- a/src/gbm/main/backend.c
++++ b/src/gbm/main/backend.c
+@@ -104,28 +104,30 @@ backend_create_device(const struct gbm_backend_desc *bd, int fd)
+    return dev;
+ }
+ 
++extern struct gbm_backend * gbmint_get_backend(const struct gbm_core *gbm_core);
++
+ static struct gbm_device *
+ load_backend_by_name(const char *name, int fd, bool warn_on_fail)
+ {
+-   void *lib = loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
+-                                      backend_search_path_vars,
+-                                      DEFAULT_BACKENDS_PATH,
+-                                      warn_on_fail);
++   void *lib = NULL; // loader_open_driver_lib(name, BACKEND_LIB_SUFFIX,
++   //                                    backend_search_path_vars,
++   //                                    DEFAULT_BACKENDS_PATH,
++   //                                    warn_on_fail);
+ 
+-   if (!lib)
+-      return NULL;
++   // if (!lib)
++   //    return NULL;
+ 
+    struct gbm_device *dev = NULL;
+    struct gbm_backend_desc *backend_desc;
+    const struct gbm_backend *gbm_backend;
+-   GBM_GET_BACKEND_PROC_PTR get_backend;
++   // GBM_GET_BACKEND_PROC_PTR get_backend;
+ 
+-   get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
++   // get_backend = dlsym(lib, GBM_GET_BACKEND_PROC_NAME);
+ 
+-   if (!get_backend)
+-      goto fail;
++   // if (!get_backend)
++   //    goto fail;
+ 
+-   gbm_backend = get_backend(&gbm_core);
++   gbm_backend = gbmint_get_backend(&gbm_core);
+    backend_desc = create_backend_desc(name, gbm_backend, lib);
+ 
+    if (!backend_desc)
+@@ -139,7 +141,7 @@ load_backend_by_name(const char *name, int fd, bool warn_on_fail)
+    return dev;
+ 
+ fail:
+-   dlclose(lib);
++   // dlclose(lib);
+    return NULL;
+ }
+ 
