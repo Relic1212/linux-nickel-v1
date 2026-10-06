@@ -10,9 +10,16 @@
       # sha256sum = "ebace3bcb36cf1583db2f2c24a36ddddc8b6437eee2dd1748e802097c00a3a8c",
       # uri = "https://github.com/fenrus75/powertop/archive/refs/tags/v2.16-rc3.tar.gz",
       # sha256sum = "c1fe112ca1a79e1e308b259e2b7493f53577a937992c085189887c1a956db65c",
-      uri = "https://github.com/fenrus75/powertop/archive/4faf9b946152dd66eb4e37b914cc701ad676cd8b.tar.gz",
-      sha256sum = "8e17366c4fee4ca2a7ea0359035b4580543e08d3895ba5e6a4d2d43c7d7e66b4",
+      uri = "https://github.com/fenrus75/powertop/archive/580dbd7ad138b2ae46e2a5e0404ef090a2279308.tar.gz",
+      sha256sum = "285e8d7864f31b1766bcc0d0ba172f0eb4e23155a761c4048a3d43aee008291c",
     },
+
+    buildEnv = {
+      EXTRA_CXXFLAGS = [
+        "-fexperimental-library",
+      ],
+    },
+
     extraMesonArgs = [
       "-Dnls=false",
     ],
