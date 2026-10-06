@@ -17,11 +17,6 @@
       },
     ],
 
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "-lLLVMABI",
-      ],
-    },
     extraMesonArgs = [
       "-Dgles1=disabled",
       "-Dxmlconfig=disabled",
@@ -71,7 +66,6 @@
     preConfigurePhase = [
       "sed -i 's@main()@print()@g' ${SRC}/bin/install_megadrivers.py",
       "sed -i 's@def print()@def main()@g' ${SRC}/bin/install_megadrivers.py",
-      # m%"sed -i 's@2.4.133@2.4.131@g' ${SRC}/meson.build"%,
       m%"for f in $(find "${SRC}" -name "meson.build" ); do sed -i 's@shared_library@library@g' "${f}";done"%,
       m%"sed -i -e "s@dri_gbm@libdri_gbm@g" -e "s@'gbm'@''@g" ${SRC}/src/gbm/backends/dri/meson.build"%,
 
