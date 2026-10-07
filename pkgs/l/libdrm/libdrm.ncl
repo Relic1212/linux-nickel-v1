@@ -21,7 +21,7 @@
           sha256sum = "45ba9983b51c896406a3d654de81d313b953b76e6391e2797073d543c5f617d5",
         },
     options = {
-      new | default = false,
+      new | default = (!false),
     },
     extraMesonArgs = [
       "-Dintel=enabled",
