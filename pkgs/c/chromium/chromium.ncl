@@ -96,7 +96,9 @@
           "-lnsspki",
           "-lpkcs12",
           "-lpkcs7",
-          # "$(pkg-config --libs --static egl libpci)"
+          # "-lLLVMCore",
+          # "-lgallium_dri",
+          # "$(pkg-config --libs --static egl)",
         ],
       },
       separateBuildDir = false,
@@ -460,7 +462,7 @@
   mesaChromium | lib.MesonPackage =
     mesa2
     & {
-
+      options.legacy = false,
       postInstallPhase | priority 1 =
         mesa2.postInstallPhase
         @ [
@@ -469,6 +471,7 @@
           "llvm-objcopy --redefine-sym=zwp_linux_dmabuf_feedback_v1_interface=libegl__zwp_linux_dmabuf_feedback_v1_interface ${DEST}/usr/lib/libEGL.a",
           "llvm-objcopy --redefine-sym=wp_presentation_interface=libegl__wp_presentation_interface ${DEST}/usr/lib/libEGL.a",
           "llvm-objcopy --redefine-sym=wp_presentation_feedback_interface=libegl__wp_presentation_feedback_interface ${DEST}/usr/lib/libEGL.a",
+          m%"sed -i 's@zlib@glesv2, zlib@g' ${DEST}/usr/lib/pkgconfig/gbm.pc"%,
         ]
     },
   glSymlink | lib.Package = {
