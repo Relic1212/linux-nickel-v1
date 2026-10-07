@@ -68,6 +68,7 @@
             "$(pkg-config --libs --static libmagic)",
             "$(pkg-config --static --libs wayland-client)",
             "$(pkg-config --static --libs xcursor)",
+            "$(pkg-config --static --libs glesv2)",
             "-ltomlplusplus",
             "-lzip",
             "-ldisplay-info",
