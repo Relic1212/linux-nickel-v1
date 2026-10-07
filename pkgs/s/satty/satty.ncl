@@ -19,6 +19,7 @@
         "-C link-arg=-Wl,--allow-multiple-definition",
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         "-C link-arg=-lc++",
+        "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
         m%"$(for l in $(pkg-config --libs --static glesv2 egl epoxy);do printf " -C link-arg=$l ";done)"%,
       ],
     },
