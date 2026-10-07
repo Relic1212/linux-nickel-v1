@@ -104,6 +104,10 @@
           ${SRC}/CMakeLists.txt
         "%,
         m%"sed -i 's@private:@@g' ${SRC}/include/aquamarine/backend/Backend.hpp"%,
+        m%"sed -i 's@add_dependencies(tests simpleWindow)@@g' ${SRC}/CMakeLists.txt"%,
+      ],
+      preBuildPhase = [
+        m%"sed -i 's@libaquamarine.a simpleWindow attachments@libaquamarine.a attachments@g' ${BUILDDIR}/build.ninja"%
       ],
       postInstallPhase = [
         # fix duplicate symbols wit hyprland
@@ -154,19 +158,23 @@
           }
         else
           {
-            EXTRA_LDFLAGS = (if distro.pam then ["-lcap"] else []),
+            EXTRA_LDFLAGS =
+              (if distro.pam then ["-lcap"] else [])
+              @ ["$(pkg-config --libs --static egl)"],
+
             #EXTRA_CXXFLAGS = [ "-I/usr/include/aquamarine/protocols"],
             #EXTRA_CPPFLAGS = [ "-I/usr/include/aquamarine/protocols"],
             #EXTRA_CPPFLAGS=["-DXDG_POSITIONER_INTERFACE","-DXDG_SURFACE_INTERFACE","-DHYPRWAYLAND_SCANNER_NO_INTERFACES"],
             #EXTRA_CXXFLAGS=EXTRA_CPPFLAGS,
           },
       cmakeExtraArgsRecord =
-        if options.glx then
-          {
-            "-DBUILD_TESTING" = false,
-          }
-        else
-          {},
+        # if options.glx then
+        {
+          "-DBUILD_TESTING" = false,
+        }
+      # else
+      #   {}
+      ,
     }
     in
     _p
