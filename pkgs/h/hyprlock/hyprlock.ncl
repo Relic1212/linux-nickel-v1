@@ -17,6 +17,11 @@
         "$(pkg-config --libs --static libmagic)",
       ],
     },
+
+    preConfigurePhase = [
+      m%"sed -i -e 's@eglGetPlatformDisplayEXT @hyprlock__eglGetPlatformDisplayEXT @g' -e 's@ eglGetPlatformDisplayEXT;@ hyprlock__eglGetPlatformDisplayEXT;@g' -e 's@eglGetPlatformDisplayEXT(@hyprlock__eglGetPlatformDisplayEXT(@g' ${SRC}/src/core/Egl.cpp"%,
+    ],
+
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       # drvs.pixman,
