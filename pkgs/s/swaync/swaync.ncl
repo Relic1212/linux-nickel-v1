@@ -69,7 +69,7 @@
       drvs.libxkbcommon,
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.ncurses,
       drvs.pango,
       drvs.pangoGobject & { priority = -1 },
