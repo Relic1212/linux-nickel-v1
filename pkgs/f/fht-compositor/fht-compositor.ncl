@@ -161,7 +161,7 @@ replace-with = "vendored-sources"
       drvs.pipewire,
       drvs.dinit,
       drvs.libstdcppCompat,
-      drvs.mesaExp,
+      drvs.mesa2,
     ],
 
     propagatedBuildInputs = [
