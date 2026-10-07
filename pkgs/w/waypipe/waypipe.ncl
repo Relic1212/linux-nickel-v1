@@ -20,6 +20,7 @@
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lc++",
+        "$(pkg-config --libs --static egl)",
       ],
     },
 
