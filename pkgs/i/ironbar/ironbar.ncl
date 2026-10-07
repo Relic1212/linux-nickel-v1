@@ -15,7 +15,7 @@
         # "-C relocation-model=static",
 
         # "-C link-arg=-l:libdl_ashell",
-        # "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
+        "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
         "-C link-arg=-lc++",
         m%"$(for l in $(pkg-config --libs --static xkbcommon libpulse egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
@@ -85,7 +85,7 @@
       drvs.libxkbcommon,
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.ncurses,
       drvs.pango,
       drvs.pangomm,
