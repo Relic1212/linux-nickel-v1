@@ -3,22 +3,10 @@
   drvs,
   distro,
   sway | lib.MesonPackage = {
-    name = "sway",
 
     sourceInputs = [
       {
         src = {
-          # uri = "https://github.com/swaywm/sway/archive/015e357fce8250cdde03844ca81e9ae982ef4bfb.zip",
-          # sha256sum = "449a213107680cc234c093e3a21247406bac3fa6e1c9c345a3a9854bd804844c",
-
-          #uri = "https://github.com/swaywm/sway/archive/962e1e70a60e9f39d2fdb6fa1810017682fd1f7b.zip",
-          #sha256sum = "a1fcf4b802cc1a14b1627fc35cbe281284fadbdf99dc24473e4f1927879badfa",
-
-          # uri="https://github.com/swaywm/sway/releases/download/1.10.1/sway-1.10.1.tar.gz",
-          # sha256sum = "b2fbf3a2f94c8926efa18d6af59bb9f5f1eafa6d46491284b1610c57bef2d105"
-
-          # uri = "https://github.com/swaywm/sway/releases/download/1.11/sway-1.11.tar.gz",
-          # sha256sum = "0e37a55b7c3379230e97e1ad982542b75016a0c7d6676198604e557f9b373dae",
 
           uri = "https://github.com/swaywm/sway/releases/download/1.12/sway-1.12.tar.gz",
           sha256sum = "a7b1becc217433c11c6284d36bcea0687b87b77b0ed26a384565292ec321f2b1",
@@ -26,14 +14,6 @@
       },
       {
         src = {
-          #uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/a9542b9565260a84c148f277fd9d6a0548405489/wlroots-a9542b9565260a84c148f277fd9d6a0548405489.tar.gz",
-          #sha256sum = "210c49a37ef5c9f771f0dc334cde682d7339e2679011b9c7fbf494c32e1c6dd1"
-
-          # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.18.2/downloads/wlroots-0.18.2.tar.gz",
-          # sha256sum = "cf776c169169f279808d9eabc6583f484338dcd454c966a285ff178c88c105d4",
-
-          # uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.2/downloads/wlroots-0.19.2.tar.gz",
-          # sha256sum = "09a0a8d60104c8b0772fee4f60ba76a89aed7e59dff7659d00960fba06bdf267",
 
           uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.20.2/downloads/wlroots-0.20.2.tar.gz",
           sha256sum = "80c567d2ed4efb2cfa6b077f22c7a710d9c78ba4e185a75e8694001114af0733",
@@ -370,49 +350,6 @@
     pDrvs = [
       drvs.zlibNg,
       drvs.xcbRenderutil,
-    ],
-  }
-}
-& {
-  lib,
-  drvs,
-  xwayland | lib.MesonPackage = {
-    singleSource = {
-      uri = "https://xorg.freedesktop.org/archive/individual/xserver/xwayland-24.1.4.tar.xz",
-      sha256sum = "d96a78dbab819f55750173444444995b5031ebdcc15b77afebbd8dbc02af34f4"
-    },
-    buildEnv.EXTRA_LDFLAGS = ["-lc++"],
-
-    extraMesonArgs = [
-      "-Dxvfb=false",
-      "-Dglx=true",
-      "-Dxdmcp=false",
-      "-Dxdm-auth-1=false",
-      "-Dsecure-rpc=false",
-      "-Dxres=true",
-      # "-Dxace=false",
-      "-Dxinerama=false",
-      "-Dxv=false",
-      "-Dglamor=false",
-    ],
-    preConfigurePhase = [
-      "sed -i 's|XkbFreeGeomOverlayKeys|XkbFreeGeomOverlayKeys__xwayland|g' ${SRC}/xkb/XKBGAlloc.c",
-      "sed -i 's|XkbFreeGeomOverlayKeys|XkbFreeGeomOverlayKeys__xwayland|g' ${SRC}/xkb/xkbgeom.h",
-    ],
-
-    llvmProvider = drvs.llvmFull,
-    pDrvs = [
-      # drvs.jsonC,
-      # drvs.libepoxy,
-      drvs.libxcvt,
-      drvs.libxfont2,
-      drvs.libxkbfile,
-      drvs.libxshmfence,
-      drvs.mesaGlx,
-      drvs.openssl,
-      drvs.xcbUtilWm,
-      drvs.xcbUtilErrors,
-      drvs.libxf86vm,
     ],
   }
 }
