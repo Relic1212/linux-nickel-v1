@@ -1033,7 +1033,7 @@
               drvs.libxcvt,
               drvs.libxfixes,
               drvs.libxrender,
-              # drvs.mesaExpKwin,
+              # drvs.mesa2,
               drvs.pythonFull,
               # drvs.qtsensorsKwin,
               drvs.switcherooControl,

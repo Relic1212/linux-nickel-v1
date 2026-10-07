@@ -72,7 +72,7 @@ in
         drvs.qtTools,
         drvs.qtsensors,
         drvs.qtsvg,
-        drvs.mesaExpKwin,
+        drvs.mesa2,
         # drvs.pkgconf,
         drvs.libelf,
         drvs.libdrm,

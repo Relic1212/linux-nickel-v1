@@ -98,7 +98,7 @@
       drvs.linuxHeaders,
       drvs.llvmConfigStatic,
       drvs.m4,
-      drvs.mesaExpKwin,
+      drvs.mesa2,
       drvs.mtdev,
       drvs.openssl,
       drvs.pango,
