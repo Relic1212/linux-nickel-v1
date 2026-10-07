@@ -47,34 +47,40 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "gtk_toggle_button_get_type") == 0) { extern void* gtk_toggle_button_get_type; return &gtk_toggle_button_get_type; }
 	}
 	if (handle == &lib_libEGL_so_1 || handle == NULL || handle == &main_program_handle) { 
-		if (strcmp(symbol, "zwp_linux_buffer_params_v1_interface") == 0) { extern void* zwp_linux_buffer_params_v1_interface; return &zwp_linux_buffer_params_v1_interface; }
-		if (strcmp(symbol, "zwp_linux_dmabuf_feedback_v1_interface") == 0) { extern void* zwp_linux_dmabuf_feedback_v1_interface; return &zwp_linux_dmabuf_feedback_v1_interface; }
-		if (strcmp(symbol, "zwp_linux_dmabuf_v1_interface") == 0) { extern void* zwp_linux_dmabuf_v1_interface; return &zwp_linux_dmabuf_v1_interface; }
-		if (strcmp(symbol, "wp_presentation_feedback_interface") == 0) { extern void* wp_presentation_feedback_interface; return &wp_presentation_feedback_interface; }
-		if (strcmp(symbol, "wp_presentation_interface") == 0) { extern void* wp_presentation_interface; return &wp_presentation_interface; }
-		if (strcmp(symbol, "loader_fourcc_to_pipe_format") == 0) { extern void* loader_fourcc_to_pipe_format; return &loader_fourcc_to_pipe_format; }
-		if (strcmp(symbol, "loader_pipe_format_to_fourcc") == 0) { extern void* loader_pipe_format_to_fourcc; return &loader_pipe_format_to_fourcc; }
-		if (strcmp(symbol, "iris_predicate") == 0) { extern void* iris_predicate; return &iris_predicate; }
-		if (strcmp(symbol, "loader_bind_extensions") == 0) { extern void* loader_bind_extensions; return &loader_bind_extensions; }
-		if (strcmp(symbol, "loader_get_device_name_for_fd") == 0) { extern void* loader_get_device_name_for_fd; return &loader_get_device_name_for_fd; }
-		if (strcmp(symbol, "loader_get_driver_for_fd") == 0) { extern void* loader_get_driver_for_fd; return &loader_get_driver_for_fd; }
-		if (strcmp(symbol, "loader_get_kernel_driver_name") == 0) { extern void* loader_get_kernel_driver_name; return &loader_get_kernel_driver_name; }
-		if (strcmp(symbol, "loader_get_pci_id_for_fd") == 0) { extern void* loader_get_pci_id_for_fd; return &loader_get_pci_id_for_fd; }
-		if (strcmp(symbol, "loader_get_render_node") == 0) { extern void* loader_get_render_node; return &loader_get_render_node; }
-		if (strcmp(symbol, "loader_get_user_preferred_fd") == 0) { extern void* loader_get_user_preferred_fd; return &loader_get_user_preferred_fd; }
-		if (strcmp(symbol, "loader_is_device_render_capable") == 0) { extern void* loader_is_device_render_capable; return &loader_is_device_render_capable; }
-		if (strcmp(symbol, "loader_open_device") == 0) { extern void* loader_open_device; return &loader_open_device; }
-		if (strcmp(symbol, "loader_open_driver_lib") == 0) { extern void* loader_open_driver_lib; return &loader_open_driver_lib; }
-		if (strcmp(symbol, "loader_open_render_node_platform_device") == 0) { extern void* loader_open_render_node_platform_device; return &loader_open_render_node_platform_device; }
-		if (strcmp(symbol, "loader_open_render_node_platform_devices") == 0) { extern void* loader_open_render_node_platform_devices; return &loader_open_render_node_platform_devices; }
-		if (strcmp(symbol, "loader_set_logger") == 0) { extern void* loader_set_logger; return &loader_set_logger; }
-		if (strcmp(symbol, "nouveau_zink_predicate") == 0) { extern void* nouveau_zink_predicate; return &nouveau_zink_predicate; }
-		if (strcmp(symbol, "os_create_anonymous_file") == 0) { extern void* os_create_anonymous_file; return &os_create_anonymous_file; }
+#if 0
+		if (strcmp(symbol, "blake3_compress_in_place_avx512") == 0) { extern void* blake3_compress_in_place_avx512; return &blake3_compress_in_place_avx512; }
+		if (strcmp(symbol, "blake3_compress_in_place_portable") == 0) { extern void* blake3_compress_in_place_portable; return &blake3_compress_in_place_portable; }
+		if (strcmp(symbol, "blake3_compress_in_place_sse2") == 0) { extern void* blake3_compress_in_place_sse2; return &blake3_compress_in_place_sse2; }
+		if (strcmp(symbol, "blake3_compress_in_place_sse41") == 0) { extern void* blake3_compress_in_place_sse41; return &blake3_compress_in_place_sse41; }
+		if (strcmp(symbol, "blake3_compress_in_place") == 0) { extern void* blake3_compress_in_place; return &blake3_compress_in_place; }
+		if (strcmp(symbol, "blake3_compress_xof_avx512") == 0) { extern void* blake3_compress_xof_avx512; return &blake3_compress_xof_avx512; }
+		if (strcmp(symbol, "blake3_compress_xof_portable") == 0) { extern void* blake3_compress_xof_portable; return &blake3_compress_xof_portable; }
+		if (strcmp(symbol, "blake3_compress_xof_sse2") == 0) { extern void* blake3_compress_xof_sse2; return &blake3_compress_xof_sse2; }
+		if (strcmp(symbol, "blake3_compress_xof_sse41") == 0) { extern void* blake3_compress_xof_sse41; return &blake3_compress_xof_sse41; }
+		if (strcmp(symbol, "blake3_compress_xof") == 0) { extern void* blake3_compress_xof; return &blake3_compress_xof; }
+		if (strcmp(symbol, "blake3_hash_many_avx2") == 0) { extern void* blake3_hash_many_avx2; return &blake3_hash_many_avx2; }
+		if (strcmp(symbol, "blake3_hash_many_avx512") == 0) { extern void* blake3_hash_many_avx512; return &blake3_hash_many_avx512; }
+		if (strcmp(symbol, "blake3_hash_many_portable") == 0) { extern void* blake3_hash_many_portable; return &blake3_hash_many_portable; }
+		if (strcmp(symbol, "blake3_hash_many_sse2") == 0) { extern void* blake3_hash_many_sse2; return &blake3_hash_many_sse2; }
+		if (strcmp(symbol, "blake3_hash_many_sse41") == 0) { extern void* blake3_hash_many_sse41; return &blake3_hash_many_sse41; }
+		if (strcmp(symbol, "blake3_hash_many") == 0) { extern void* blake3_hash_many; return &blake3_hash_many; }
+		if (strcmp(symbol, "blake3_hasher_finalize_seek") == 0) { extern void* blake3_hasher_finalize_seek; return &blake3_hasher_finalize_seek; }
+		if (strcmp(symbol, "blake3_hasher_finalize") == 0) { extern void* blake3_hasher_finalize; return &blake3_hasher_finalize; }
+		if (strcmp(symbol, "blake3_hasher_init_derive_key_raw") == 0) { extern void* blake3_hasher_init_derive_key_raw; return &blake3_hasher_init_derive_key_raw; }
+		if (strcmp(symbol, "blake3_hasher_init_derive_key") == 0) { extern void* blake3_hasher_init_derive_key; return &blake3_hasher_init_derive_key; }
+		if (strcmp(symbol, "blake3_hasher_init_keyed") == 0) { extern void* blake3_hasher_init_keyed; return &blake3_hasher_init_keyed; }
+		if (strcmp(symbol, "blake3_hasher_init") == 0) { extern void* blake3_hasher_init; return &blake3_hasher_init; }
+		if (strcmp(symbol, "blake3_hasher_reset") == 0) { extern void* blake3_hasher_reset; return &blake3_hasher_reset; }
+		if (strcmp(symbol, "blake3_hasher_update") == 0) { extern void* blake3_hasher_update; return &blake3_hasher_update; }
+		if (strcmp(symbol, "blake3_simd_degree") == 0) { extern void* blake3_simd_degree; return &blake3_simd_degree; }
+		if (strcmp(symbol, "blake3_version") == 0) { extern void* blake3_version; return &blake3_version; }
+		if (strcmp(symbol, "blake3_xof_many_avx512") == 0) { extern void* blake3_xof_many_avx512; return &blake3_xof_many_avx512; }
+		if (strcmp(symbol, "blake3_xof_many") == 0) { extern void* blake3_xof_many; return &blake3_xof_many; }
 		if (strcmp(symbol, "blob_align") == 0) { extern void* blob_align; return &blob_align; }
 		if (strcmp(symbol, "blob_copy_bytes") == 0) { extern void* blob_copy_bytes; return &blob_copy_bytes; }
 		if (strcmp(symbol, "blob_finish_get_buffer") == 0) { extern void* blob_finish_get_buffer; return &blob_finish_get_buffer; }
-		if (strcmp(symbol, "blob_init") == 0) { extern void* blob_init; return &blob_init; }
 		if (strcmp(symbol, "blob_init_fixed") == 0) { extern void* blob_init_fixed; return &blob_init_fixed; }
+		if (strcmp(symbol, "blob_init") == 0) { extern void* blob_init; return &blob_init; }
 		if (strcmp(symbol, "blob_overwrite_bytes") == 0) { extern void* blob_overwrite_bytes; return &blob_overwrite_bytes; }
 		if (strcmp(symbol, "blob_overwrite_intptr") == 0) { extern void* blob_overwrite_intptr; return &blob_overwrite_intptr; }
 		if (strcmp(symbol, "blob_overwrite_uint32") == 0) { extern void* blob_overwrite_uint32; return &blob_overwrite_uint32; }
@@ -102,127 +108,145 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "build_id_data") == 0) { extern void* build_id_data; return &build_id_data; }
 		if (strcmp(symbol, "build_id_find_nhdr_for_addr") == 0) { extern void* build_id_find_nhdr_for_addr; return &build_id_find_nhdr_for_addr; }
 		if (strcmp(symbol, "build_id_length") == 0) { extern void* build_id_length; return &build_id_length; }
-		if (strcmp(symbol, "u_cnd_monotonic_broadcast") == 0) { extern void* u_cnd_monotonic_broadcast; return &u_cnd_monotonic_broadcast; }
-		if (strcmp(symbol, "u_cnd_monotonic_destroy") == 0) { extern void* u_cnd_monotonic_destroy; return &u_cnd_monotonic_destroy; }
-		if (strcmp(symbol, "u_cnd_monotonic_init") == 0) { extern void* u_cnd_monotonic_init; return &u_cnd_monotonic_init; }
-		if (strcmp(symbol, "u_cnd_monotonic_signal") == 0) { extern void* u_cnd_monotonic_signal; return &u_cnd_monotonic_signal; }
-		if (strcmp(symbol, "u_cnd_monotonic_timedwait") == 0) { extern void* u_cnd_monotonic_timedwait; return &u_cnd_monotonic_timedwait; }
-		if (strcmp(symbol, "u_cnd_monotonic_wait") == 0) { extern void* u_cnd_monotonic_wait; return &u_cnd_monotonic_wait; }
-		if (strcmp(symbol, "util_compress_deflate") == 0) { extern void* util_compress_deflate; return &util_compress_deflate; }
-		if (strcmp(symbol, "util_compress_inflate") == 0) { extern void* util_compress_inflate; return &util_compress_inflate; }
-		if (strcmp(symbol, "util_compress_max_compressed_len") == 0) { extern void* util_compress_max_compressed_len; return &util_compress_max_compressed_len; }
-		if (strcmp(symbol, "util_thread_sched_apply_policy") == 0) { extern void* util_thread_sched_apply_policy; return &util_thread_sched_apply_policy; }
-		if (strcmp(symbol, "util_thread_scheduler_enabled") == 0) { extern void* util_thread_scheduler_enabled; return &util_thread_scheduler_enabled; }
-		if (strcmp(symbol, "util_thread_scheduler_init_state") == 0) { extern void* util_thread_scheduler_init_state; return &util_thread_scheduler_init_state; }
-		if (strcmp(symbol, "util_hash_crc32") == 0) { extern void* util_hash_crc32; return &util_hash_crc32; }
-		if (strcmp(symbol, "dag_add_edge") == 0) { extern void* dag_add_edge; return &dag_add_edge; }
+		if (strcmp(symbol, "c23_timespec_get") == 0) { extern void* c23_timespec_get; return &c23_timespec_get; }
+		if (strcmp(symbol, "call_once") == 0) { extern void* call_once; return &call_once; }
+		if (strcmp(symbol, "cnd_broadcast") == 0) { extern void* cnd_broadcast; return &cnd_broadcast; }
+		if (strcmp(symbol, "cnd_destroy") == 0) { extern void* cnd_destroy; return &cnd_destroy; }
+		if (strcmp(symbol, "cnd_init") == 0) { extern void* cnd_init; return &cnd_init; }
+		if (strcmp(symbol, "cnd_signal") == 0) { extern void* cnd_signal; return &cnd_signal; }
+		if (strcmp(symbol, "cnd_timedwait") == 0) { extern void* cnd_timedwait; return &cnd_timedwait; }
+		if (strcmp(symbol, "cnd_wait") == 0) { extern void* cnd_wait; return &cnd_wait; }
+		if (strcmp(symbol, "comma_separated_list_contains") == 0) { extern void* comma_separated_list_contains; return &comma_separated_list_contains; }
 		if (strcmp(symbol, "dag_add_edge_max_data") == 0) { extern void* dag_add_edge_max_data; return &dag_add_edge_max_data; }
+		if (strcmp(symbol, "dag_add_edge") == 0) { extern void* dag_add_edge; return &dag_add_edge; }
 		if (strcmp(symbol, "dag_create") == 0) { extern void* dag_create; return &dag_create; }
 		if (strcmp(symbol, "dag_init_node") == 0) { extern void* dag_init_node; return &dag_init_node; }
 		if (strcmp(symbol, "dag_prune_head") == 0) { extern void* dag_prune_head; return &dag_prune_head; }
 		if (strcmp(symbol, "dag_remove_edge") == 0) { extern void* dag_remove_edge; return &dag_remove_edge; }
 		if (strcmp(symbol, "dag_traverse_bottom_up") == 0) { extern void* dag_traverse_bottom_up; return &dag_traverse_bottom_up; }
 		if (strcmp(symbol, "dag_validate") == 0) { extern void* dag_validate; return &dag_validate; }
-		if (strcmp(symbol, "util_compute_fast_sdiv_info") == 0) { extern void* util_compute_fast_sdiv_info; return &util_compute_fast_sdiv_info; }
-		if (strcmp(symbol, "util_compute_fast_udiv_info") == 0) { extern void* util_compute_fast_udiv_info; return &util_compute_fast_udiv_info; }
+		if (strcmp(symbol, "debug_backtrace_capture") == 0) { extern void* debug_backtrace_capture; return &debug_backtrace_capture; }
+		if (strcmp(symbol, "debug_backtrace_dump") == 0) { extern void* debug_backtrace_dump; return &debug_backtrace_dump; }
+		if (strcmp(symbol, "debug_backtrace_print") == 0) { extern void* debug_backtrace_print; return &debug_backtrace_print; }
+		if (strcmp(symbol, "debug_calloc") == 0) { extern void* debug_calloc; return &debug_calloc; }
+		if (strcmp(symbol, "debug_dump_enum") == 0) { extern void* debug_dump_enum; return &debug_dump_enum; }
+		if (strcmp(symbol, "debug_dump_flags") == 0) { extern void* debug_dump_flags; return &debug_dump_flags; }
+		if (strcmp(symbol, "debug_free") == 0) { extern void* debug_free; return &debug_free; }
+		if (strcmp(symbol, "debug_get_bool_option") == 0) { extern void* debug_get_bool_option; return &debug_get_bool_option; }
+		if (strcmp(symbol, "debug_get_flags_option") == 0) { extern void* debug_get_flags_option; return &debug_get_flags_option; }
+		if (strcmp(symbol, "debug_get_num_option") == 0) { extern void* debug_get_num_option; return &debug_get_num_option; }
+		if (strcmp(symbol, "debug_get_option_cached") == 0) { extern void* debug_get_option_cached; return &debug_get_option_cached; }
+		if (strcmp(symbol, "debug_get_option") == 0) { extern void* debug_get_option; return &debug_get_option; }
+		if (strcmp(symbol, "debug_get_version_option") == 0) { extern void* debug_get_version_option; return &debug_get_version_option; }
+		if (strcmp(symbol, "debug_malloc") == 0) { extern void* debug_malloc; return &debug_malloc; }
+		if (strcmp(symbol, "debug_memory_begin") == 0) { extern void* debug_memory_begin; return &debug_memory_begin; }
+		if (strcmp(symbol, "debug_memory_check_block") == 0) { extern void* debug_memory_check_block; return &debug_memory_check_block; }
+		if (strcmp(symbol, "debug_memory_check") == 0) { extern void* debug_memory_check; return &debug_memory_check; }
+		if (strcmp(symbol, "debug_memory_end") == 0) { extern void* debug_memory_end; return &debug_memory_end; }
+		if (strcmp(symbol, "debug_memory_tag") == 0) { extern void* debug_memory_tag; return &debug_memory_tag; }
+		if (strcmp(symbol, "debug_parse_bool_option") == 0) { extern void* debug_parse_bool_option; return &debug_parse_bool_option; }
+		if (strcmp(symbol, "debug_parse_flags_option") == 0) { extern void* debug_parse_flags_option; return &debug_parse_flags_option; }
+		if (strcmp(symbol, "debug_parse_num_option") == 0) { extern void* debug_parse_num_option; return &debug_parse_num_option; }
+		if (strcmp(symbol, "debug_realloc") == 0) { extern void* debug_realloc; return &debug_realloc; }
+		if (strcmp(symbol, "debug_symbol_name_cached") == 0) { extern void* debug_symbol_name_cached; return &debug_symbol_name_cached; }
+		if (strcmp(symbol, "debug_symbol_name") == 0) { extern void* debug_symbol_name; return &debug_symbol_name; }
+		if (strcmp(symbol, "debug_symbol_print") == 0) { extern void* debug_symbol_print; return &debug_symbol_print; }
+		if (strcmp(symbol, "dri2_add_config") == 0) { extern void* dri2_add_config; return &dri2_add_config; }
+		if (strcmp(symbol, "dri2_add_pbuffer_configs_for_visuals") == 0) { extern void* dri2_add_pbuffer_configs_for_visuals; return &dri2_add_pbuffer_configs_for_visuals; }
+		if (strcmp(symbol, "dri2_create_drawable") == 0) { extern void* dri2_create_drawable; return &dri2_create_drawable; }
+		if (strcmp(symbol, "dri2_create_image_dma_buf") == 0) { extern void* dri2_create_image_dma_buf; return &dri2_create_image_dma_buf; }
+		if (strcmp(symbol, "dri2_create_image_from_dri") == 0) { extern void* dri2_create_image_from_dri; return &dri2_create_image_from_dri; }
+		if (strcmp(symbol, "dri2_create_image_khr") == 0) { extern void* dri2_create_image_khr; return &dri2_create_image_khr; }
+		if (strcmp(symbol, "dri2_create_screen") == 0) { extern void* dri2_create_screen; return &dri2_create_screen; }
+		if (strcmp(symbol, "dri2_detect_swrast_kopper") == 0) { extern void* dri2_detect_swrast_kopper; return &dri2_detect_swrast_kopper; }
+		if (strcmp(symbol, "dri2_display_create") == 0) { extern void* dri2_display_create; return &dri2_display_create; }
+		if (strcmp(symbol, "dri2_display_destroy") == 0) { extern void* dri2_display_destroy; return &dri2_display_destroy; }
+		if (strcmp(symbol, "dri2_fini_surface") == 0) { extern void* dri2_fini_surface; return &dri2_fini_surface; }
+		if (strcmp(symbol, "dri2_flush_drawable_for_swapbuffers_flags") == 0) { extern void* dri2_flush_drawable_for_swapbuffers_flags; return &dri2_flush_drawable_for_swapbuffers_flags; }
+		if (strcmp(symbol, "dri2_flush_drawable_for_swapbuffers") == 0) { extern void* dri2_flush_drawable_for_swapbuffers; return &dri2_flush_drawable_for_swapbuffers; }
+		if (strcmp(symbol, "dri2_get_dri_config") == 0) { extern void* dri2_get_dri_config; return &dri2_get_dri_config; }
+		if (strcmp(symbol, "dri2_get_shifts_and_sizes") == 0) { extern void* dri2_get_shifts_and_sizes; return &dri2_get_shifts_and_sizes; }
+		if (strcmp(symbol, "dri2_image_format_for_pbuffer_config") == 0) { extern void* dri2_image_format_for_pbuffer_config; return &dri2_image_format_for_pbuffer_config; }
+		if (strcmp(symbol, "dri2_init_surface") == 0) { extern void* dri2_init_surface; return &dri2_init_surface; }
+		if (strcmp(symbol, "dri2_initialize_device") == 0) { extern void* dri2_initialize_device; return &dri2_initialize_device; }
+		if (strcmp(symbol, "dri2_initialize_drm") == 0) { extern void* dri2_initialize_drm; return &dri2_initialize_drm; }
+		if (strcmp(symbol, "dri2_initialize_surfaceless") == 0) { extern void* dri2_initialize_surfaceless; return &dri2_initialize_surfaceless; }
+		if (strcmp(symbol, "dri2_initialize_wayland") == 0) { extern void* dri2_initialize_wayland; return &dri2_initialize_wayland; }
+		if (strcmp(symbol, "dri2_lookup_egl_image_validated") == 0) { extern void* dri2_lookup_egl_image_validated; return &dri2_lookup_egl_image_validated; }
+		if (strcmp(symbol, "dri2_setup_device") == 0) { extern void* dri2_setup_device; return &dri2_setup_device; }
+		if (strcmp(symbol, "dri2_setup_screen") == 0) { extern void* dri2_setup_screen; return &dri2_setup_screen; }
+		if (strcmp(symbol, "dri2_setup_swap_interval") == 0) { extern void* dri2_setup_swap_interval; return &dri2_setup_swap_interval; }
+		if (strcmp(symbol, "dri2_surface_get_dri_drawable") == 0) { extern void* dri2_surface_get_dri_drawable; return &dri2_surface_get_dri_drawable; }
+		if (strcmp(symbol, "dri2_teardown_drm") == 0) { extern void* dri2_teardown_drm; return &dri2_teardown_drm; }
+		if (strcmp(symbol, "dri2_teardown_wayland") == 0) { extern void* dri2_teardown_wayland; return &dri2_teardown_wayland; }
+		if (strcmp(symbol, "dri2_validate_egl_image") == 0) { extern void* dri2_validate_egl_image; return &dri2_validate_egl_image; }
+		if (strcmp(symbol, "dri2_wl_is_format_supported") == 0) { extern void* dri2_wl_is_format_supported; return &dri2_wl_is_format_supported; }
+		if (strcmp(symbol, "driCheckOption") == 0) { extern void* driCheckOption; return &driCheckOption; }
+		if (strcmp(symbol, "driDestroyOptionCache") == 0) { extern void* driDestroyOptionCache; return &driDestroyOptionCache; }
+		if (strcmp(symbol, "driDestroyOptionInfo") == 0) { extern void* driDestroyOptionInfo; return &driDestroyOptionInfo; }
+		if (strcmp(symbol, "driGetOptionsXml") == 0) { extern void* driGetOptionsXml; return &driGetOptionsXml; }
+		if (strcmp(symbol, "driInjectExecName") == 0) { extern void* driInjectExecName; return &driInjectExecName; }
+		if (strcmp(symbol, "driParseConfigFiles") == 0) { extern void* driParseConfigFiles; return &driParseConfigFiles; }
+		if (strcmp(symbol, "driParseOptionInfo") == 0) { extern void* driParseOptionInfo; return &driParseOptionInfo; }
+		if (strcmp(symbol, "driQueryOptionb") == 0) { extern void* driQueryOptionb; return &driQueryOptionb; }
+		if (strcmp(symbol, "driQueryOptionf") == 0) { extern void* driQueryOptionf; return &driQueryOptionf; }
+		if (strcmp(symbol, "driQueryOptioni") == 0) { extern void* driQueryOptioni; return &driQueryOptioni; }
+		if (strcmp(symbol, "driQueryOptionstr") == 0) { extern void* driQueryOptionstr; return &driQueryOptionstr; }
+		if (strcmp(symbol, "driQueryOptionu64") == 0) { extern void* driQueryOptionu64; return &driQueryOptionu64; }
+		if (strcmp(symbol, "dump_debug_control_string") == 0) { extern void* dump_debug_control_string; return &dump_debug_control_string; }
+#endif
+		if (strcmp(symbol, "eglBindAPI") == 0) { extern void* eglBindAPI; return &eglBindAPI; }
+		if (strcmp(symbol, "eglBindTexImage") == 0) { extern void* eglBindTexImage; return &eglBindTexImage; }
+		if (strcmp(symbol, "eglChooseConfig") == 0) { extern void* eglChooseConfig; return &eglChooseConfig; }
+		if (strcmp(symbol, "eglClientWaitSync") == 0) { extern void* eglClientWaitSync; return &eglClientWaitSync; }
+		if (strcmp(symbol, "eglCopyBuffers") == 0) { extern void* eglCopyBuffers; return &eglCopyBuffers; }
+		if (strcmp(symbol, "eglCreateContext") == 0) { extern void* eglCreateContext; return &eglCreateContext; }
+		if (strcmp(symbol, "eglCreateImage") == 0) { extern void* eglCreateImage; return &eglCreateImage; }
+		if (strcmp(symbol, "eglCreatePbufferFromClientBuffer") == 0) { extern void* eglCreatePbufferFromClientBuffer; return &eglCreatePbufferFromClientBuffer; }
+		if (strcmp(symbol, "eglCreatePbufferSurface") == 0) { extern void* eglCreatePbufferSurface; return &eglCreatePbufferSurface; }
+		if (strcmp(symbol, "eglCreatePixmapSurface") == 0) { extern void* eglCreatePixmapSurface; return &eglCreatePixmapSurface; }
+		if (strcmp(symbol, "eglCreatePlatformPixmapSurface") == 0) { extern void* eglCreatePlatformPixmapSurface; return &eglCreatePlatformPixmapSurface; }
+		if (strcmp(symbol, "eglCreatePlatformWindowSurface") == 0) { extern void* eglCreatePlatformWindowSurface; return &eglCreatePlatformWindowSurface; }
+		if (strcmp(symbol, "eglCreateSync") == 0) { extern void* eglCreateSync; return &eglCreateSync; }
+		if (strcmp(symbol, "eglCreateWindowSurface") == 0) { extern void* eglCreateWindowSurface; return &eglCreateWindowSurface; }
+		if (strcmp(symbol, "eglDestroyContext") == 0) { extern void* eglDestroyContext; return &eglDestroyContext; }
+		if (strcmp(symbol, "eglDestroyImage") == 0) { extern void* eglDestroyImage; return &eglDestroyImage; }
+		if (strcmp(symbol, "eglDestroySurface") == 0) { extern void* eglDestroySurface; return &eglDestroySurface; }
+		if (strcmp(symbol, "eglDestroySync") == 0) { extern void* eglDestroySync; return &eglDestroySync; }
+		if (strcmp(symbol, "eglGetConfigAttrib") == 0) { extern void* eglGetConfigAttrib; return &eglGetConfigAttrib; }
+		if (strcmp(symbol, "eglGetConfigs") == 0) { extern void* eglGetConfigs; return &eglGetConfigs; }
+		if (strcmp(symbol, "eglGetCurrentContext") == 0) { extern void* eglGetCurrentContext; return &eglGetCurrentContext; }
+		if (strcmp(symbol, "eglGetCurrentDisplay") == 0) { extern void* eglGetCurrentDisplay; return &eglGetCurrentDisplay; }
+		if (strcmp(symbol, "eglGetCurrentSurface") == 0) { extern void* eglGetCurrentSurface; return &eglGetCurrentSurface; }
+		if (strcmp(symbol, "eglGetDisplay") == 0) { extern void* eglGetDisplay; return &eglGetDisplay; }
+		if (strcmp(symbol, "eglGetError") == 0) { extern void* eglGetError; return &eglGetError; }
+		if (strcmp(symbol, "eglGetPlatformDisplay") == 0) { extern void* eglGetPlatformDisplay; return &eglGetPlatformDisplay; }
+		if (strcmp(symbol, "eglGetProcAddress") == 0) { extern void* eglGetProcAddress; return &eglGetProcAddress; }
+		if (strcmp(symbol, "eglGetSyncAttrib") == 0) { extern void* eglGetSyncAttrib; return &eglGetSyncAttrib; }
+		if (strcmp(symbol, "eglInitialize") == 0) { extern void* eglInitialize; return &eglInitialize; }
+		if (strcmp(symbol, "eglMakeCurrent") == 0) { extern void* eglMakeCurrent; return &eglMakeCurrent; }
+		if (strcmp(symbol, "eglPrintConfigDebug") == 0) { extern void* eglPrintConfigDebug; return &eglPrintConfigDebug; }
+		if (strcmp(symbol, "eglQueryAPI") == 0) { extern void* eglQueryAPI; return &eglQueryAPI; }
+		if (strcmp(symbol, "eglQueryContext") == 0) { extern void* eglQueryContext; return &eglQueryContext; }
+		if (strcmp(symbol, "eglQueryString") == 0) { extern void* eglQueryString; return &eglQueryString; }
+		if (strcmp(symbol, "eglQuerySurface") == 0) { extern void* eglQuerySurface; return &eglQuerySurface; }
+		if (strcmp(symbol, "eglReleaseTexImage") == 0) { extern void* eglReleaseTexImage; return &eglReleaseTexImage; }
+		if (strcmp(symbol, "eglReleaseThread") == 0) { extern void* eglReleaseThread; return &eglReleaseThread; }
+		if (strcmp(symbol, "eglSurfaceAttrib") == 0) { extern void* eglSurfaceAttrib; return &eglSurfaceAttrib; }
+		if (strcmp(symbol, "eglSwapBuffers") == 0) { extern void* eglSwapBuffers; return &eglSwapBuffers; }
+		if (strcmp(symbol, "eglSwapInterval") == 0) { extern void* eglSwapInterval; return &eglSwapInterval; }
+		if (strcmp(symbol, "eglTerminate") == 0) { extern void* eglTerminate; return &eglTerminate; }
+		if (strcmp(symbol, "eglWaitClient") == 0) { extern void* eglWaitClient; return &eglWaitClient; }
+		if (strcmp(symbol, "eglWaitGL") == 0) { extern void* eglWaitGL; return &eglWaitGL; }
+		if (strcmp(symbol, "eglWaitNative") == 0) { extern void* eglWaitNative; return &eglWaitNative; }
+		if (strcmp(symbol, "eglWaitSync") == 0) { extern void* eglWaitSync; return &eglWaitSync; }
+#if 0
 		if (strcmp(symbol, "foz_destroy") == 0) { extern void* foz_destroy; return &foz_destroy; }
 		if (strcmp(symbol, "foz_prepare") == 0) { extern void* foz_prepare; return &foz_prepare; }
 		if (strcmp(symbol, "foz_read_entry") == 0) { extern void* foz_read_entry; return &foz_read_entry; }
 		if (strcmp(symbol, "foz_write_entry") == 0) { extern void* foz_write_entry; return &foz_write_entry; }
 		if (strcmp(symbol, "futex_wait") == 0) { extern void* futex_wait; return &futex_wait; }
 		if (strcmp(symbol, "futex_wake") == 0) { extern void* futex_wake; return &futex_wake; }
-		if (strcmp(symbol, "util_lower_clearsize_to_dword") == 0) { extern void* util_lower_clearsize_to_dword; return &util_lower_clearsize_to_dword; }
-		if (strcmp(symbol, "util_idalloc_alloc") == 0) { extern void* util_idalloc_alloc; return &util_idalloc_alloc; }
-		if (strcmp(symbol, "util_idalloc_alloc_range") == 0) { extern void* util_idalloc_alloc_range; return &util_idalloc_alloc_range; }
-		if (strcmp(symbol, "util_idalloc_fini") == 0) { extern void* util_idalloc_fini; return &util_idalloc_fini; }
-		if (strcmp(symbol, "util_idalloc_free") == 0) { extern void* util_idalloc_free; return &util_idalloc_free; }
-		if (strcmp(symbol, "util_idalloc_init") == 0) { extern void* util_idalloc_init; return &util_idalloc_init; }
-		if (strcmp(symbol, "util_idalloc_mt_alloc") == 0) { extern void* util_idalloc_mt_alloc; return &util_idalloc_mt_alloc; }
-		if (strcmp(symbol, "util_idalloc_mt_fini") == 0) { extern void* util_idalloc_mt_fini; return &util_idalloc_mt_fini; }
-		if (strcmp(symbol, "util_idalloc_mt_free") == 0) { extern void* util_idalloc_mt_free; return &util_idalloc_mt_free; }
-		if (strcmp(symbol, "util_idalloc_mt_init") == 0) { extern void* util_idalloc_mt_init; return &util_idalloc_mt_init; }
-		if (strcmp(symbol, "util_idalloc_mt_init_tc") == 0) { extern void* util_idalloc_mt_init_tc; return &util_idalloc_mt_init_tc; }
-		if (strcmp(symbol, "util_idalloc_reserve") == 0) { extern void* util_idalloc_reserve; return &util_idalloc_reserve; }
-		if (strcmp(symbol, "util_idalloc_sparse_alloc") == 0) { extern void* util_idalloc_sparse_alloc; return &util_idalloc_sparse_alloc; }
-		if (strcmp(symbol, "util_idalloc_sparse_alloc_range") == 0) { extern void* util_idalloc_sparse_alloc_range; return &util_idalloc_sparse_alloc_range; }
-		if (strcmp(symbol, "util_idalloc_sparse_fini") == 0) { extern void* util_idalloc_sparse_fini; return &util_idalloc_sparse_fini; }
-		if (strcmp(symbol, "util_idalloc_sparse_free") == 0) { extern void* util_idalloc_sparse_free; return &util_idalloc_sparse_free; }
-		if (strcmp(symbol, "util_idalloc_sparse_init") == 0) { extern void* util_idalloc_sparse_init; return &util_idalloc_sparse_init; }
-		if (strcmp(symbol, "util_idalloc_sparse_reserve") == 0) { extern void* util_idalloc_sparse_reserve; return &util_idalloc_sparse_reserve; }
-		if (strcmp(symbol, "mesa_log") == 0) { extern void* mesa_log; return &mesa_log; }
-		if (strcmp(symbol, "mesa_log_get_file") == 0) { extern void* mesa_log_get_file; return &mesa_log_get_file; }
-		if (strcmp(symbol, "mesa_log_if_debug") == 0) { extern void* mesa_log_if_debug; return &mesa_log_if_debug; }
-		if (strcmp(symbol, "mesa_log_stream_destroy") == 0) { extern void* mesa_log_stream_destroy; return &mesa_log_stream_destroy; }
-		if (strcmp(symbol, "mesa_log_stream_printf") == 0) { extern void* mesa_log_stream_printf; return &mesa_log_stream_printf; }
-		if (strcmp(symbol, "mesa_log_v") == 0) { extern void* mesa_log_v; return &mesa_log_v; }
-		if (strcmp(symbol, "util_lut3_to_str") == 0) { extern void* util_lut3_to_str; return &util_lut3_to_str; }
-		if (strcmp(symbol, "u_memstream_close") == 0) { extern void* u_memstream_close; return &u_memstream_close; }
-		if (strcmp(symbol, "u_memstream_flush") == 0) { extern void* u_memstream_flush; return &u_memstream_flush; }
-		if (strcmp(symbol, "u_memstream_open") == 0) { extern void* u_memstream_open; return &u_memstream_open; }
-		if (strcmp(symbol, "os_time_get_absolute_timeout") == 0) { extern void* os_time_get_absolute_timeout; return &os_time_get_absolute_timeout; }
-		if (strcmp(symbol, "os_time_get_nano") == 0) { extern void* os_time_get_nano; return &os_time_get_nano; }
-		if (strcmp(symbol, "os_time_nanosleep_until") == 0) { extern void* os_time_nanosleep_until; return &os_time_nanosleep_until; }
-		if (strcmp(symbol, "os_time_sleep") == 0) { extern void* os_time_sleep; return &os_time_sleep; }
-		if (strcmp(symbol, "os_wait_until_zero") == 0) { extern void* os_wait_until_zero; return &os_wait_until_zero; }
-		if (strcmp(symbol, "os_wait_until_zero_abs_timeout") == 0) { extern void* os_wait_until_zero_abs_timeout; return &os_wait_until_zero_abs_timeout; }
-		if (strcmp(symbol, "os_dupfd_cloexec") == 0) { extern void* os_dupfd_cloexec; return &os_dupfd_cloexec; }
-		if (strcmp(symbol, "os_file_create_unique") == 0) { extern void* os_file_create_unique; return &os_file_create_unique; }
-		if (strcmp(symbol, "os_mkdir") == 0) { extern void* os_mkdir; return &os_mkdir; }
-		if (strcmp(symbol, "os_read_file") == 0) { extern void* os_read_file; return &os_read_file; }
-		if (strcmp(symbol, "os_same_file_description") == 0) { extern void* os_same_file_description; return &os_same_file_description; }
-		if (strcmp(symbol, "os_file_notifier_create") == 0) { extern void* os_file_notifier_create; return &os_file_notifier_create; }
-		if (strcmp(symbol, "os_file_notifier_destroy") == 0) { extern void* os_file_notifier_destroy; return &os_file_notifier_destroy; }
-		if (strcmp(symbol, "os_free_fd") == 0) { extern void* os_free_fd; return &os_free_fd; }
-		if (strcmp(symbol, "os_import_memory_fd") == 0) { extern void* os_import_memory_fd; return &os_import_memory_fd; }
-		if (strcmp(symbol, "os_malloc_aligned_fd") == 0) { extern void* os_malloc_aligned_fd; return &os_malloc_aligned_fd; }
-		if (strcmp(symbol, "os_get_available_system_memory") == 0) { extern void* os_get_available_system_memory; return &os_get_available_system_memory; }
-		if (strcmp(symbol, "os_get_option") == 0) { extern void* os_get_option; return &os_get_option; }
-		if (strcmp(symbol, "os_get_option_cached") == 0) { extern void* os_get_option_cached; return &os_get_option_cached; }
-		if (strcmp(symbol, "os_get_option_secure") == 0) { extern void* os_get_option_secure; return &os_get_option_secure; }
-		if (strcmp(symbol, "os_get_page_size") == 0) { extern void* os_get_page_size; return &os_get_page_size; }
-		if (strcmp(symbol, "os_get_total_physical_memory") == 0) { extern void* os_get_total_physical_memory; return &os_get_total_physical_memory; }
-		if (strcmp(symbol, "os_log_message") == 0) { extern void* os_log_message; return &os_log_message; }
-		if (strcmp(symbol, "os_socket_accept") == 0) { extern void* os_socket_accept; return &os_socket_accept; }
-		if (strcmp(symbol, "os_socket_block") == 0) { extern void* os_socket_block; return &os_socket_block; }
-		if (strcmp(symbol, "os_socket_close") == 0) { extern void* os_socket_close; return &os_socket_close; }
-		if (strcmp(symbol, "os_socket_listen_abstract") == 0) { extern void* os_socket_listen_abstract; return &os_socket_listen_abstract; }
-		if (strcmp(symbol, "os_socket_recv") == 0) { extern void* os_socket_recv; return &os_socket_recv; }
-		if (strcmp(symbol, "os_socket_send") == 0) { extern void* os_socket_send; return &os_socket_send; }
-		if (strcmp(symbol, "pb_slab_alloc") == 0) { extern void* pb_slab_alloc; return &pb_slab_alloc; }
-		if (strcmp(symbol, "pb_slab_alloc_reclaimed") == 0) { extern void* pb_slab_alloc_reclaimed; return &pb_slab_alloc_reclaimed; }
-		if (strcmp(symbol, "pb_slab_free") == 0) { extern void* pb_slab_free; return &pb_slab_free; }
-		if (strcmp(symbol, "pb_slabs_deinit") == 0) { extern void* pb_slabs_deinit; return &pb_slabs_deinit; }
-		if (strcmp(symbol, "pb_slabs_init") == 0) { extern void* pb_slabs_init; return &pb_slabs_init; }
-		if (strcmp(symbol, "pb_slabs_reclaim") == 0) { extern void* pb_slabs_reclaim; return &pb_slabs_reclaim; }
-		if (strcmp(symbol, "u_trace_appendv") == 0) { extern void* u_trace_appendv; return &u_trace_appendv; }
-		if (strcmp(symbol, "u_trace_begin_iterator") == 0) { extern void* u_trace_begin_iterator; return &u_trace_begin_iterator; }
-		if (strcmp(symbol, "u_trace_clone_append") == 0) { extern void* u_trace_clone_append; return &u_trace_clone_append; }
-		if (strcmp(symbol, "u_trace_context_fini") == 0) { extern void* u_trace_context_fini; return &u_trace_context_fini; }
-		if (strcmp(symbol, "u_trace_context_init") == 0) { extern void* u_trace_context_init; return &u_trace_context_init; }
-		if (strcmp(symbol, "u_trace_context_process") == 0) { extern void* u_trace_context_process; return &u_trace_context_process; }
-		if (strcmp(symbol, "u_trace_disable_event_range") == 0) { extern void* u_trace_disable_event_range; return &u_trace_disable_event_range; }
-		if (strcmp(symbol, "u_trace_end_iterator") == 0) { extern void* u_trace_end_iterator; return &u_trace_end_iterator; }
-		if (strcmp(symbol, "u_trace_fini") == 0) { extern void* u_trace_fini; return &u_trace_fini; }
-		if (strcmp(symbol, "u_trace_flush") == 0) { extern void* u_trace_flush; return &u_trace_flush; }
-		if (strcmp(symbol, "u_trace_has_points") == 0) { extern void* u_trace_has_points; return &u_trace_has_points; }
-		if (strcmp(symbol, "u_trace_init") == 0) { extern void* u_trace_init; return &u_trace_init; }
-		if (strcmp(symbol, "u_trace_is_enabled") == 0) { extern void* u_trace_is_enabled; return &u_trace_is_enabled; }
-		if (strcmp(symbol, "u_trace_iterator_equal") == 0) { extern void* u_trace_iterator_equal; return &u_trace_iterator_equal; }
-		if (strcmp(symbol, "u_trace_move") == 0) { extern void* u_trace_move; return &u_trace_move; }
-		if (strcmp(symbol, "u_trace_state_init") == 0) { extern void* u_trace_state_init; return &u_trace_state_init; }
-		if (strcmp(symbol, "util_get_command_line") == 0) { extern void* util_get_command_line; return &util_get_command_line; }
-		if (strcmp(symbol, "util_get_process_exec_path") == 0) { extern void* util_get_process_exec_path; return &util_get_process_exec_path; }
-		if (strcmp(symbol, "util_get_process_name") == 0) { extern void* util_get_process_name; return &util_get_process_name; }
-		if (strcmp(symbol, "tl_qsort_r_arg") == 0) { extern void* tl_qsort_r_arg; return &tl_qsort_r_arg; }
-		if (strcmp(symbol, "tl_qsort_r_compar") == 0) { extern void* tl_qsort_r_compar; return &tl_qsort_r_compar; }
-		if (strcmp(symbol, "util_qsort_adapter") == 0) { extern void* util_qsort_adapter; return &util_qsort_adapter; }
-		if (strcmp(symbol, "util_tls_qsort_r") == 0) { extern void* util_tls_qsort_r; return &util_tls_qsort_r; }
-		if (strcmp(symbol, "u_rwlock_destroy") == 0) { extern void* u_rwlock_destroy; return &u_rwlock_destroy; }
-		if (strcmp(symbol, "u_rwlock_init") == 0) { extern void* u_rwlock_init; return &u_rwlock_init; }
-		if (strcmp(symbol, "u_rwlock_rdlock") == 0) { extern void* u_rwlock_rdlock; return &u_rwlock_rdlock; }
-		if (strcmp(symbol, "u_rwlock_rdunlock") == 0) { extern void* u_rwlock_rdunlock; return &u_rwlock_rdunlock; }
-		if (strcmp(symbol, "u_rwlock_wrlock") == 0) { extern void* u_rwlock_wrlock; return &u_rwlock_wrlock; }
-		if (strcmp(symbol, "u_rwlock_wrunlock") == 0) { extern void* u_rwlock_wrunlock; return &u_rwlock_wrunlock; }
 		if (strcmp(symbol, "gc_alloc_size") == 0) { extern void* gc_alloc_size; return &gc_alloc_size; }
 		if (strcmp(symbol, "gc_context") == 0) { extern void* gc_context; return &gc_context; }
 		if (strcmp(symbol, "gc_free") == 0) { extern void* gc_free; return &gc_free; }
@@ -231,68 +255,122 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "gc_sweep_end") == 0) { extern void* gc_sweep_end; return &gc_sweep_end; }
 		if (strcmp(symbol, "gc_sweep_start") == 0) { extern void* gc_sweep_start; return &gc_sweep_start; }
 		if (strcmp(symbol, "gc_zalloc_size") == 0) { extern void* gc_zalloc_size; return &gc_zalloc_size; }
-		if (strcmp(symbol, "linear_alloc_child") == 0) { extern void* linear_alloc_child; return &linear_alloc_child; }
+		if (strcmp(symbol, "image_lookup_extension") == 0) { extern void* image_lookup_extension; return &image_lookup_extension; }
+		if (strcmp(symbol, "iris_predicate") == 0) { extern void* iris_predicate; return &iris_predicate; }
+		if (strcmp(symbol, "kopper_pbuffer_loader_extension") == 0) { extern void* kopper_pbuffer_loader_extension; return &kopper_pbuffer_loader_extension; }
 		if (strcmp(symbol, "linear_alloc_child_array") == 0) { extern void* linear_alloc_child_array; return &linear_alloc_child_array; }
-		if (strcmp(symbol, "linear_asprintf") == 0) { extern void* linear_asprintf; return &linear_asprintf; }
+		if (strcmp(symbol, "linear_alloc_child") == 0) { extern void* linear_alloc_child; return &linear_alloc_child; }
 		if (strcmp(symbol, "linear_asprintf_append") == 0) { extern void* linear_asprintf_append; return &linear_asprintf_append; }
 		if (strcmp(symbol, "linear_asprintf_rewrite_tail") == 0) { extern void* linear_asprintf_rewrite_tail; return &linear_asprintf_rewrite_tail; }
-		if (strcmp(symbol, "linear_context") == 0) { extern void* linear_context; return &linear_context; }
+		if (strcmp(symbol, "linear_asprintf") == 0) { extern void* linear_asprintf; return &linear_asprintf; }
 		if (strcmp(symbol, "linear_context_with_opts") == 0) { extern void* linear_context_with_opts; return &linear_context_with_opts; }
+		if (strcmp(symbol, "linear_context") == 0) { extern void* linear_context; return &linear_context; }
 		if (strcmp(symbol, "linear_free_context") == 0) { extern void* linear_free_context; return &linear_free_context; }
 		if (strcmp(symbol, "linear_strcat") == 0) { extern void* linear_strcat; return &linear_strcat; }
 		if (strcmp(symbol, "linear_strdup") == 0) { extern void* linear_strdup; return &linear_strdup; }
-		if (strcmp(symbol, "linear_vasprintf") == 0) { extern void* linear_vasprintf; return &linear_vasprintf; }
 		if (strcmp(symbol, "linear_vasprintf_append") == 0) { extern void* linear_vasprintf_append; return &linear_vasprintf_append; }
 		if (strcmp(symbol, "linear_vasprintf_rewrite_tail") == 0) { extern void* linear_vasprintf_rewrite_tail; return &linear_vasprintf_rewrite_tail; }
-		if (strcmp(symbol, "linear_zalloc_child") == 0) { extern void* linear_zalloc_child; return &linear_zalloc_child; }
+		if (strcmp(symbol, "linear_vasprintf") == 0) { extern void* linear_vasprintf; return &linear_vasprintf; }
 		if (strcmp(symbol, "linear_zalloc_child_array") == 0) { extern void* linear_zalloc_child_array; return &linear_zalloc_child_array; }
-		if (strcmp(symbol, "ralloc_adopt") == 0) { extern void* ralloc_adopt; return &ralloc_adopt; }
-		if (strcmp(symbol, "ralloc_array_size") == 0) { extern void* ralloc_array_size; return &ralloc_array_size; }
-		if (strcmp(symbol, "ralloc_asprintf") == 0) { extern void* ralloc_asprintf; return &ralloc_asprintf; }
-		if (strcmp(symbol, "ralloc_asprintf_append") == 0) { extern void* ralloc_asprintf_append; return &ralloc_asprintf_append; }
-		if (strcmp(symbol, "ralloc_asprintf_rewrite_tail") == 0) { extern void* ralloc_asprintf_rewrite_tail; return &ralloc_asprintf_rewrite_tail; }
-		if (strcmp(symbol, "ralloc_context") == 0) { extern void* ralloc_context; return &ralloc_context; }
-		if (strcmp(symbol, "ralloc_free") == 0) { extern void* ralloc_free; return &ralloc_free; }
-		if (strcmp(symbol, "ralloc_memdup") == 0) { extern void* ralloc_memdup; return &ralloc_memdup; }
-		if (strcmp(symbol, "ralloc_parent") == 0) { extern void* ralloc_parent; return &ralloc_parent; }
-		if (strcmp(symbol, "ralloc_parent_of_linear_context") == 0) { extern void* ralloc_parent_of_linear_context; return &ralloc_parent_of_linear_context; }
-		if (strcmp(symbol, "ralloc_print_info") == 0) { extern void* ralloc_print_info; return &ralloc_print_info; }
-		if (strcmp(symbol, "ralloc_set_destructor") == 0) { extern void* ralloc_set_destructor; return &ralloc_set_destructor; }
-		if (strcmp(symbol, "ralloc_size") == 0) { extern void* ralloc_size; return &ralloc_size; }
-		if (strcmp(symbol, "ralloc_steal") == 0) { extern void* ralloc_steal; return &ralloc_steal; }
-		if (strcmp(symbol, "ralloc_steal_linear_context") == 0) { extern void* ralloc_steal_linear_context; return &ralloc_steal_linear_context; }
-		if (strcmp(symbol, "ralloc_str_append") == 0) { extern void* ralloc_str_append; return &ralloc_str_append; }
-		if (strcmp(symbol, "ralloc_strcat") == 0) { extern void* ralloc_strcat; return &ralloc_strcat; }
-		if (strcmp(symbol, "ralloc_strdup") == 0) { extern void* ralloc_strdup; return &ralloc_strdup; }
-		if (strcmp(symbol, "ralloc_strncat") == 0) { extern void* ralloc_strncat; return &ralloc_strncat; }
-		if (strcmp(symbol, "ralloc_strndup") == 0) { extern void* ralloc_strndup; return &ralloc_strndup; }
-		if (strcmp(symbol, "ralloc_vasprintf") == 0) { extern void* ralloc_vasprintf; return &ralloc_vasprintf; }
-		if (strcmp(symbol, "ralloc_vasprintf_append") == 0) { extern void* ralloc_vasprintf_append; return &ralloc_vasprintf_append; }
-		if (strcmp(symbol, "ralloc_vasprintf_rewrite_tail") == 0) { extern void* ralloc_vasprintf_rewrite_tail; return &ralloc_vasprintf_rewrite_tail; }
-		if (strcmp(symbol, "reralloc_array_size") == 0) { extern void* reralloc_array_size; return &reralloc_array_size; }
-		if (strcmp(symbol, "reralloc_size") == 0) { extern void* reralloc_size; return &reralloc_size; }
-		if (strcmp(symbol, "rerzalloc_array_size") == 0) { extern void* rerzalloc_array_size; return &rerzalloc_array_size; }
-		if (strcmp(symbol, "rerzalloc_size") == 0) { extern void* rerzalloc_size; return &rerzalloc_size; }
-		if (strcmp(symbol, "rzalloc_array_size") == 0) { extern void* rzalloc_array_size; return &rzalloc_array_size; }
-		if (strcmp(symbol, "rzalloc_size") == 0) { extern void* rzalloc_size; return &rzalloc_size; }
-		if (strcmp(symbol, "rand_xorshift128plus") == 0) { extern void* rand_xorshift128plus; return &rand_xorshift128plus; }
-		if (strcmp(symbol, "s_rand_xorshift128plus") == 0) { extern void* s_rand_xorshift128plus; return &s_rand_xorshift128plus; }
-		if (strcmp(symbol, "range_minimum_query") == 0) { extern void* range_minimum_query; return &range_minimum_query; }
-		if (strcmp(symbol, "range_minimum_query_table_preprocess") == 0) { extern void* range_minimum_query_table_preprocess; return &range_minimum_query_table_preprocess; }
-		if (strcmp(symbol, "range_minimum_query_table_resize") == 0) { extern void* range_minimum_query_table_resize; return &range_minimum_query_table_resize; }
-		if (strcmp(symbol, "rb_augmented_tree_insert_at") == 0) { extern void* rb_augmented_tree_insert_at; return &rb_augmented_tree_insert_at; }
-		if (strcmp(symbol, "rb_augmented_tree_remove") == 0) { extern void* rb_augmented_tree_remove; return &rb_augmented_tree_remove; }
-		if (strcmp(symbol, "rb_node_next") == 0) { extern void* rb_node_next; return &rb_node_next; }
-		if (strcmp(symbol, "rb_node_prev") == 0) { extern void* rb_node_prev; return &rb_node_prev; }
-		if (strcmp(symbol, "rb_tree_first") == 0) { extern void* rb_tree_first; return &rb_tree_first; }
-		if (strcmp(symbol, "rb_tree_last") == 0) { extern void* rb_tree_last; return &rb_tree_last; }
-		if (strcmp(symbol, "rb_tree_validate") == 0) { extern void* rb_tree_validate; return &rb_tree_validate; }
-		if (strcmp(symbol, "uinterval_node_next") == 0) { extern void* uinterval_node_next; return &uinterval_node_next; }
-		if (strcmp(symbol, "uinterval_tree_first") == 0) { extern void* uinterval_tree_first; return &uinterval_tree_first; }
-		if (strcmp(symbol, "uinterval_tree_insert") == 0) { extern void* uinterval_tree_insert; return &uinterval_tree_insert; }
-		if (strcmp(symbol, "uinterval_tree_remove") == 0) { extern void* uinterval_tree_remove; return &uinterval_tree_remove; }
-		if (strcmp(symbol, "ra_add_node") == 0) { extern void* ra_add_node; return &ra_add_node; }
+		if (strcmp(symbol, "linear_zalloc_child") == 0) { extern void* linear_zalloc_child; return &linear_zalloc_child; }
+		if (strcmp(symbol, "loader_bind_extensions") == 0) { extern void* loader_bind_extensions; return &loader_bind_extensions; }
+		if (strcmp(symbol, "loader_fourcc_to_pipe_format") == 0) { extern void* loader_fourcc_to_pipe_format; return &loader_fourcc_to_pipe_format; }
+		if (strcmp(symbol, "loader_get_device_name_for_fd") == 0) { extern void* loader_get_device_name_for_fd; return &loader_get_device_name_for_fd; }
+		if (strcmp(symbol, "loader_get_driver_for_fd") == 0) { extern void* loader_get_driver_for_fd; return &loader_get_driver_for_fd; }
+		if (strcmp(symbol, "loader_get_kernel_driver_name") == 0) { extern void* loader_get_kernel_driver_name; return &loader_get_kernel_driver_name; }
+		if (strcmp(symbol, "loader_get_pci_id_for_fd") == 0) { extern void* loader_get_pci_id_for_fd; return &loader_get_pci_id_for_fd; }
+		if (strcmp(symbol, "loader_get_render_node") == 0) { extern void* loader_get_render_node; return &loader_get_render_node; }
+		if (strcmp(symbol, "loader_get_user_preferred_fd") == 0) { extern void* loader_get_user_preferred_fd; return &loader_get_user_preferred_fd; }
+		if (strcmp(symbol, "loader_is_device_render_capable") == 0) { extern void* loader_is_device_render_capable; return &loader_is_device_render_capable; }
+		if (strcmp(symbol, "loader_open_device") == 0) { extern void* loader_open_device; return &loader_open_device; }
+		if (strcmp(symbol, "loader_open_driver_lib") == 0) { extern void* loader_open_driver_lib; return &loader_open_driver_lib; }
+		if (strcmp(symbol, "loader_open_render_node_platform_device") == 0) { extern void* loader_open_render_node_platform_device; return &loader_open_render_node_platform_device; }
+		if (strcmp(symbol, "loader_open_render_node_platform_devices") == 0) { extern void* loader_open_render_node_platform_devices; return &loader_open_render_node_platform_devices; }
+		if (strcmp(symbol, "loader_pipe_format_to_fourcc") == 0) { extern void* loader_pipe_format_to_fourcc; return &loader_pipe_format_to_fourcc; }
+		if (strcmp(symbol, "loader_set_logger") == 0) { extern void* loader_set_logger; return &loader_set_logger; }
+		if (strcmp(symbol, "loader_wayland_buffer_destroy") == 0) { extern void* loader_wayland_buffer_destroy; return &loader_wayland_buffer_destroy; }
+		if (strcmp(symbol, "loader_wayland_buffer_set_flow") == 0) { extern void* loader_wayland_buffer_set_flow; return &loader_wayland_buffer_set_flow; }
+		if (strcmp(symbol, "loader_wayland_dispatch") == 0) { extern void* loader_wayland_dispatch; return &loader_wayland_dispatch; }
+		if (strcmp(symbol, "loader_wayland_presentation_destroy") == 0) { extern void* loader_wayland_presentation_destroy; return &loader_wayland_presentation_destroy; }
+		if (strcmp(symbol, "loader_wayland_presentation_feedback") == 0) { extern void* loader_wayland_presentation_feedback; return &loader_wayland_presentation_feedback; }
+		if (strcmp(symbol, "loader_wayland_surface_destroy") == 0) { extern void* loader_wayland_surface_destroy; return &loader_wayland_surface_destroy; }
+		if (strcmp(symbol, "loader_wayland_wrap_buffer") == 0) { extern void* loader_wayland_wrap_buffer; return &loader_wayland_wrap_buffer; }
+		if (strcmp(symbol, "loader_wayland_wrap_presentation") == 0) { extern void* loader_wayland_wrap_presentation; return &loader_wayland_wrap_presentation; }
+		if (strcmp(symbol, "loader_wayland_wrap_surface") == 0) { extern void* loader_wayland_wrap_surface; return &loader_wayland_wrap_surface; }
+		if (strcmp(symbol, "log2_table") == 0) { extern void* log2_table; return &log2_table; }
+		if (strcmp(symbol, "mesa_cache_db_close") == 0) { extern void* mesa_cache_db_close; return &mesa_cache_db_close; }
+		if (strcmp(symbol, "mesa_cache_db_entry_remove") == 0) { extern void* mesa_cache_db_entry_remove; return &mesa_cache_db_entry_remove; }
+		if (strcmp(symbol, "mesa_cache_db_entry_write") == 0) { extern void* mesa_cache_db_entry_write; return &mesa_cache_db_entry_write; }
+		if (strcmp(symbol, "mesa_cache_db_eviction_score") == 0) { extern void* mesa_cache_db_eviction_score; return &mesa_cache_db_eviction_score; }
+		if (strcmp(symbol, "mesa_cache_db_file_entry_size") == 0) { extern void* mesa_cache_db_file_entry_size; return &mesa_cache_db_file_entry_size; }
+		if (strcmp(symbol, "mesa_cache_db_has_space") == 0) { extern void* mesa_cache_db_has_space; return &mesa_cache_db_has_space; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_close") == 0) { extern void* mesa_cache_db_multipart_close; return &mesa_cache_db_multipart_close; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_entry_remove") == 0) { extern void* mesa_cache_db_multipart_entry_remove; return &mesa_cache_db_multipart_entry_remove; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_entry_write") == 0) { extern void* mesa_cache_db_multipart_entry_write; return &mesa_cache_db_multipart_entry_write; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_open") == 0) { extern void* mesa_cache_db_multipart_open; return &mesa_cache_db_multipart_open; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_read_entry") == 0) { extern void* mesa_cache_db_multipart_read_entry; return &mesa_cache_db_multipart_read_entry; }
+		if (strcmp(symbol, "mesa_cache_db_multipart_set_size_limit") == 0) { extern void* mesa_cache_db_multipart_set_size_limit; return &mesa_cache_db_multipart_set_size_limit; }
+		if (strcmp(symbol, "mesa_cache_db_open") == 0) { extern void* mesa_cache_db_open; return &mesa_cache_db_open; }
+		if (strcmp(symbol, "mesa_cache_db_read_entry") == 0) { extern void* mesa_cache_db_read_entry; return &mesa_cache_db_read_entry; }
+		if (strcmp(symbol, "mesa_cache_db_set_size_limit") == 0) { extern void* mesa_cache_db_set_size_limit; return &mesa_cache_db_set_size_limit; }
+		if (strcmp(symbol, "mesa_db_wipe_path") == 0) { extern void* mesa_db_wipe_path; return &mesa_db_wipe_path; }
+		if (strcmp(symbol, "mesa_log_get_file") == 0) { extern void* mesa_log_get_file; return &mesa_log_get_file; }
+		if (strcmp(symbol, "mesa_log_if_debug") == 0) { extern void* mesa_log_if_debug; return &mesa_log_if_debug; }
+		if (strcmp(symbol, "mesa_log_stream_destroy") == 0) { extern void* mesa_log_stream_destroy; return &mesa_log_stream_destroy; }
+		if (strcmp(symbol, "mesa_log_stream_printf") == 0) { extern void* mesa_log_stream_printf; return &mesa_log_stream_printf; }
+		if (strcmp(symbol, "mesa_log_v") == 0) { extern void* mesa_log_v; return &mesa_log_v; }
+		if (strcmp(symbol, "mesa_log") == 0) { extern void* mesa_log; return &mesa_log; }
+		if (strcmp(symbol, "MesaGLInteropEGLExportObject") == 0) { extern void* MesaGLInteropEGLExportObject; return &MesaGLInteropEGLExportObject; }
+		if (strcmp(symbol, "MesaGLInteropEGLFlushObjects") == 0) { extern void* MesaGLInteropEGLFlushObjects; return &MesaGLInteropEGLFlushObjects; }
+		if (strcmp(symbol, "MesaGLInteropEGLQueryDeviceInfo") == 0) { extern void* MesaGLInteropEGLQueryDeviceInfo; return &MesaGLInteropEGLQueryDeviceInfo; }
+		if (strcmp(symbol, "mtx_destroy") == 0) { extern void* mtx_destroy; return &mtx_destroy; }
+		if (strcmp(symbol, "mtx_init") == 0) { extern void* mtx_init; return &mtx_init; }
+		if (strcmp(symbol, "mtx_lock") == 0) { extern void* mtx_lock; return &mtx_lock; }
+		if (strcmp(symbol, "mtx_timedlock") == 0) { extern void* mtx_timedlock; return &mtx_timedlock; }
+		if (strcmp(symbol, "mtx_trylock") == 0) { extern void* mtx_trylock; return &mtx_trylock; }
+		if (strcmp(symbol, "mtx_unlock") == 0) { extern void* mtx_unlock; return &mtx_unlock; }
+		if (strcmp(symbol, "nouveau_zink_predicate") == 0) { extern void* nouveau_zink_predicate; return &nouveau_zink_predicate; }
+		if (strcmp(symbol, "os_create_anonymous_file") == 0) { extern void* os_create_anonymous_file; return &os_create_anonymous_file; }
+		if (strcmp(symbol, "os_dupfd_cloexec") == 0) { extern void* os_dupfd_cloexec; return &os_dupfd_cloexec; }
+		if (strcmp(symbol, "os_file_create_unique") == 0) { extern void* os_file_create_unique; return &os_file_create_unique; }
+		if (strcmp(symbol, "os_file_notifier_create") == 0) { extern void* os_file_notifier_create; return &os_file_notifier_create; }
+		if (strcmp(symbol, "os_file_notifier_destroy") == 0) { extern void* os_file_notifier_destroy; return &os_file_notifier_destroy; }
+		if (strcmp(symbol, "os_free_fd") == 0) { extern void* os_free_fd; return &os_free_fd; }
+		if (strcmp(symbol, "os_get_available_system_memory") == 0) { extern void* os_get_available_system_memory; return &os_get_available_system_memory; }
+		if (strcmp(symbol, "os_get_option_cached") == 0) { extern void* os_get_option_cached; return &os_get_option_cached; }
+		if (strcmp(symbol, "os_get_option_secure") == 0) { extern void* os_get_option_secure; return &os_get_option_secure; }
+		if (strcmp(symbol, "os_get_option") == 0) { extern void* os_get_option; return &os_get_option; }
+		if (strcmp(symbol, "os_get_page_size") == 0) { extern void* os_get_page_size; return &os_get_page_size; }
+		if (strcmp(symbol, "os_get_total_physical_memory") == 0) { extern void* os_get_total_physical_memory; return &os_get_total_physical_memory; }
+		if (strcmp(symbol, "os_import_memory_fd") == 0) { extern void* os_import_memory_fd; return &os_import_memory_fd; }
+		if (strcmp(symbol, "os_log_message") == 0) { extern void* os_log_message; return &os_log_message; }
+		if (strcmp(symbol, "os_malloc_aligned_fd") == 0) { extern void* os_malloc_aligned_fd; return &os_malloc_aligned_fd; }
+		if (strcmp(symbol, "os_mkdir") == 0) { extern void* os_mkdir; return &os_mkdir; }
+		if (strcmp(symbol, "os_read_file") == 0) { extern void* os_read_file; return &os_read_file; }
+		if (strcmp(symbol, "os_same_file_description") == 0) { extern void* os_same_file_description; return &os_same_file_description; }
+		if (strcmp(symbol, "os_socket_accept") == 0) { extern void* os_socket_accept; return &os_socket_accept; }
+		if (strcmp(symbol, "os_socket_block") == 0) { extern void* os_socket_block; return &os_socket_block; }
+		if (strcmp(symbol, "os_socket_close") == 0) { extern void* os_socket_close; return &os_socket_close; }
+		if (strcmp(symbol, "os_socket_listen_abstract") == 0) { extern void* os_socket_listen_abstract; return &os_socket_listen_abstract; }
+		if (strcmp(symbol, "os_socket_recv") == 0) { extern void* os_socket_recv; return &os_socket_recv; }
+		if (strcmp(symbol, "os_socket_send") == 0) { extern void* os_socket_send; return &os_socket_send; }
+		if (strcmp(symbol, "os_time_get_absolute_timeout") == 0) { extern void* os_time_get_absolute_timeout; return &os_time_get_absolute_timeout; }
+		if (strcmp(symbol, "os_time_get_nano") == 0) { extern void* os_time_get_nano; return &os_time_get_nano; }
+		if (strcmp(symbol, "os_time_nanosleep_until") == 0) { extern void* os_time_nanosleep_until; return &os_time_nanosleep_until; }
+		if (strcmp(symbol, "os_time_sleep") == 0) { extern void* os_time_sleep; return &os_time_sleep; }
+		if (strcmp(symbol, "os_wait_until_zero_abs_timeout") == 0) { extern void* os_wait_until_zero_abs_timeout; return &os_wait_until_zero_abs_timeout; }
+		if (strcmp(symbol, "os_wait_until_zero") == 0) { extern void* os_wait_until_zero; return &os_wait_until_zero; }
+		if (strcmp(symbol, "parse_debug_string") == 0) { extern void* parse_debug_string; return &parse_debug_string; }
+		if (strcmp(symbol, "parse_enable_string") == 0) { extern void* parse_enable_string; return &parse_enable_string; }
+		if (strcmp(symbol, "pb_slab_alloc_reclaimed") == 0) { extern void* pb_slab_alloc_reclaimed; return &pb_slab_alloc_reclaimed; }
+		if (strcmp(symbol, "pb_slab_alloc") == 0) { extern void* pb_slab_alloc; return &pb_slab_alloc; }
+		if (strcmp(symbol, "pb_slab_free") == 0) { extern void* pb_slab_free; return &pb_slab_free; }
+		if (strcmp(symbol, "pb_slabs_deinit") == 0) { extern void* pb_slabs_deinit; return &pb_slabs_deinit; }
+		if (strcmp(symbol, "pb_slabs_init") == 0) { extern void* pb_slabs_init; return &pb_slabs_init; }
+		if (strcmp(symbol, "pb_slabs_reclaim") == 0) { extern void* pb_slabs_reclaim; return &pb_slabs_reclaim; }
+		if (strcmp(symbol, "pipe_swizzle_4f") == 0) { extern void* pipe_swizzle_4f; return &pipe_swizzle_4f; }
 		if (strcmp(symbol, "ra_add_node_interference") == 0) { extern void* ra_add_node_interference; return &ra_add_node_interference; }
+		if (strcmp(symbol, "ra_add_node") == 0) { extern void* ra_add_node; return &ra_add_node; }
 		if (strcmp(symbol, "ra_add_reg_conflict") == 0) { extern void* ra_add_reg_conflict; return &ra_add_reg_conflict; }
 		if (strcmp(symbol, "ra_add_transitive_reg_conflict") == 0) { extern void* ra_add_transitive_reg_conflict; return &ra_add_transitive_reg_conflict; }
 		if (strcmp(symbol, "ra_add_transitive_reg_pair_conflict") == 0) { extern void* ra_add_transitive_reg_pair_conflict; return &ra_add_transitive_reg_pair_conflict; }
@@ -322,112 +400,126 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "ra_set_node_spill_cost") == 0) { extern void* ra_set_node_spill_cost; return &ra_set_node_spill_cost; }
 		if (strcmp(symbol, "ra_set_select_reg_callback") == 0) { extern void* ra_set_select_reg_callback; return &ra_set_select_reg_callback; }
 		if (strcmp(symbol, "ra_set_serialize") == 0) { extern void* ra_set_serialize; return &ra_set_serialize; }
-		if (strcmp(symbol, "util_format_signed_encode_rgtc_ubyte") == 0) { extern void* util_format_signed_encode_rgtc_ubyte; return &util_format_signed_encode_rgtc_ubyte; }
-		if (strcmp(symbol, "util_format_signed_fetch_texel_rgtc") == 0) { extern void* util_format_signed_fetch_texel_rgtc; return &util_format_signed_fetch_texel_rgtc; }
-		if (strcmp(symbol, "util_format_unsigned_encode_rgtc_ubyte") == 0) { extern void* util_format_unsigned_encode_rgtc_ubyte; return &util_format_unsigned_encode_rgtc_ubyte; }
-		if (strcmp(symbol, "util_format_unsigned_fetch_texel_rgtc") == 0) { extern void* util_format_unsigned_fetch_texel_rgtc; return &util_format_unsigned_fetch_texel_rgtc; }
-		if (strcmp(symbol, "slab_alloc") == 0) { extern void* slab_alloc; return &slab_alloc; }
+		if (strcmp(symbol, "ralloc_adopt") == 0) { extern void* ralloc_adopt; return &ralloc_adopt; }
+		if (strcmp(symbol, "ralloc_array_size") == 0) { extern void* ralloc_array_size; return &ralloc_array_size; }
+		if (strcmp(symbol, "ralloc_asprintf_append") == 0) { extern void* ralloc_asprintf_append; return &ralloc_asprintf_append; }
+		if (strcmp(symbol, "ralloc_asprintf_rewrite_tail") == 0) { extern void* ralloc_asprintf_rewrite_tail; return &ralloc_asprintf_rewrite_tail; }
+		if (strcmp(symbol, "ralloc_asprintf") == 0) { extern void* ralloc_asprintf; return &ralloc_asprintf; }
+		if (strcmp(symbol, "ralloc_context") == 0) { extern void* ralloc_context; return &ralloc_context; }
+		if (strcmp(symbol, "ralloc_free") == 0) { extern void* ralloc_free; return &ralloc_free; }
+		if (strcmp(symbol, "ralloc_memdup") == 0) { extern void* ralloc_memdup; return &ralloc_memdup; }
+		if (strcmp(symbol, "ralloc_parent_of_linear_context") == 0) { extern void* ralloc_parent_of_linear_context; return &ralloc_parent_of_linear_context; }
+		if (strcmp(symbol, "ralloc_parent") == 0) { extern void* ralloc_parent; return &ralloc_parent; }
+		if (strcmp(symbol, "ralloc_print_info") == 0) { extern void* ralloc_print_info; return &ralloc_print_info; }
+		if (strcmp(symbol, "ralloc_set_destructor") == 0) { extern void* ralloc_set_destructor; return &ralloc_set_destructor; }
+		if (strcmp(symbol, "ralloc_size") == 0) { extern void* ralloc_size; return &ralloc_size; }
+		if (strcmp(symbol, "ralloc_steal_linear_context") == 0) { extern void* ralloc_steal_linear_context; return &ralloc_steal_linear_context; }
+		if (strcmp(symbol, "ralloc_steal") == 0) { extern void* ralloc_steal; return &ralloc_steal; }
+		if (strcmp(symbol, "ralloc_str_append") == 0) { extern void* ralloc_str_append; return &ralloc_str_append; }
+		if (strcmp(symbol, "ralloc_strcat") == 0) { extern void* ralloc_strcat; return &ralloc_strcat; }
+		if (strcmp(symbol, "ralloc_strdup") == 0) { extern void* ralloc_strdup; return &ralloc_strdup; }
+		if (strcmp(symbol, "ralloc_strncat") == 0) { extern void* ralloc_strncat; return &ralloc_strncat; }
+		if (strcmp(symbol, "ralloc_strndup") == 0) { extern void* ralloc_strndup; return &ralloc_strndup; }
+		if (strcmp(symbol, "ralloc_vasprintf_append") == 0) { extern void* ralloc_vasprintf_append; return &ralloc_vasprintf_append; }
+		if (strcmp(symbol, "ralloc_vasprintf_rewrite_tail") == 0) { extern void* ralloc_vasprintf_rewrite_tail; return &ralloc_vasprintf_rewrite_tail; }
+		if (strcmp(symbol, "ralloc_vasprintf") == 0) { extern void* ralloc_vasprintf; return &ralloc_vasprintf; }
+		if (strcmp(symbol, "rand_xorshift128plus") == 0) { extern void* rand_xorshift128plus; return &rand_xorshift128plus; }
+		if (strcmp(symbol, "range_minimum_query_table_preprocess") == 0) { extern void* range_minimum_query_table_preprocess; return &range_minimum_query_table_preprocess; }
+		if (strcmp(symbol, "range_minimum_query_table_resize") == 0) { extern void* range_minimum_query_table_resize; return &range_minimum_query_table_resize; }
+		if (strcmp(symbol, "range_minimum_query") == 0) { extern void* range_minimum_query; return &range_minimum_query; }
+		if (strcmp(symbol, "rb_augmented_tree_insert_at") == 0) { extern void* rb_augmented_tree_insert_at; return &rb_augmented_tree_insert_at; }
+		if (strcmp(symbol, "rb_augmented_tree_remove") == 0) { extern void* rb_augmented_tree_remove; return &rb_augmented_tree_remove; }
+		if (strcmp(symbol, "rb_node_next") == 0) { extern void* rb_node_next; return &rb_node_next; }
+		if (strcmp(symbol, "rb_node_prev") == 0) { extern void* rb_node_prev; return &rb_node_prev; }
+		if (strcmp(symbol, "rb_tree_first") == 0) { extern void* rb_tree_first; return &rb_tree_first; }
+		if (strcmp(symbol, "rb_tree_last") == 0) { extern void* rb_tree_last; return &rb_tree_last; }
+		if (strcmp(symbol, "rb_tree_validate") == 0) { extern void* rb_tree_validate; return &rb_tree_validate; }
+		if (strcmp(symbol, "reralloc_array_size") == 0) { extern void* reralloc_array_size; return &reralloc_array_size; }
+		if (strcmp(symbol, "reralloc_size") == 0) { extern void* reralloc_size; return &reralloc_size; }
+		if (strcmp(symbol, "rerzalloc_array_size") == 0) { extern void* rerzalloc_array_size; return &rerzalloc_array_size; }
+		if (strcmp(symbol, "rerzalloc_size") == 0) { extern void* rerzalloc_size; return &rerzalloc_size; }
+		if (strcmp(symbol, "rzalloc_array_size") == 0) { extern void* rzalloc_array_size; return &rzalloc_array_size; }
+		if (strcmp(symbol, "rzalloc_size") == 0) { extern void* rzalloc_size; return &rzalloc_size; }
+		if (strcmp(symbol, "s_rand_xorshift128plus") == 0) { extern void* s_rand_xorshift128plus; return &s_rand_xorshift128plus; }
 		if (strcmp(symbol, "slab_alloc_st") == 0) { extern void* slab_alloc_st; return &slab_alloc_st; }
-		if (strcmp(symbol, "slab_create") == 0) { extern void* slab_create; return &slab_create; }
+		if (strcmp(symbol, "slab_alloc") == 0) { extern void* slab_alloc; return &slab_alloc; }
 		if (strcmp(symbol, "slab_create_child") == 0) { extern void* slab_create_child; return &slab_create_child; }
 		if (strcmp(symbol, "slab_create_parent") == 0) { extern void* slab_create_parent; return &slab_create_parent; }
-		if (strcmp(symbol, "slab_destroy") == 0) { extern void* slab_destroy; return &slab_destroy; }
+		if (strcmp(symbol, "slab_create") == 0) { extern void* slab_create; return &slab_create; }
 		if (strcmp(symbol, "slab_destroy_child") == 0) { extern void* slab_destroy_child; return &slab_destroy_child; }
 		if (strcmp(symbol, "slab_destroy_parent") == 0) { extern void* slab_destroy_parent; return &slab_destroy_parent; }
-		if (strcmp(symbol, "slab_free") == 0) { extern void* slab_free; return &slab_free; }
+		if (strcmp(symbol, "slab_destroy") == 0) { extern void* slab_destroy; return &slab_destroy; }
 		if (strcmp(symbol, "slab_free_st") == 0) { extern void* slab_free_st; return &slab_free_st; }
+		if (strcmp(symbol, "slab_free") == 0) { extern void* slab_free; return &slab_free; }
 		if (strcmp(symbol, "slab_zalloc") == 0) { extern void* slab_zalloc; return &slab_zalloc; }
-		if (strcmp(symbol, "util_sparse_array_finish") == 0) { extern void* util_sparse_array_finish; return &util_sparse_array_finish; }
-		if (strcmp(symbol, "util_sparse_array_free_list_init") == 0) { extern void* util_sparse_array_free_list_init; return &util_sparse_array_free_list_init; }
-		if (strcmp(symbol, "util_sparse_array_free_list_pop_elem") == 0) { extern void* util_sparse_array_free_list_pop_elem; return &util_sparse_array_free_list_pop_elem; }
-		if (strcmp(symbol, "util_sparse_array_free_list_pop_idx") == 0) { extern void* util_sparse_array_free_list_pop_idx; return &util_sparse_array_free_list_pop_idx; }
-		if (strcmp(symbol, "util_sparse_array_free_list_push") == 0) { extern void* util_sparse_array_free_list_push; return &util_sparse_array_free_list_push; }
-		if (strcmp(symbol, "util_sparse_array_get") == 0) { extern void* util_sparse_array_get; return &util_sparse_array_get; }
-		if (strcmp(symbol, "util_sparse_array_init") == 0) { extern void* util_sparse_array_init; return &util_sparse_array_init; }
-		if (strcmp(symbol, "util_sparse_array_validate") == 0) { extern void* util_sparse_array_validate; return &util_sparse_array_validate; }
-		if (strcmp(symbol, "util_call_once_data_slow") == 0) { extern void* util_call_once_data_slow; return &util_call_once_data_slow; }
-		if (strcmp(symbol, "util_dl_close") == 0) { extern void* util_dl_close; return &util_dl_close; }
-		if (strcmp(symbol, "util_dl_error") == 0) { extern void* util_dl_error; return &util_dl_error; }
-		if (strcmp(symbol, "util_dl_get_path_from_proc") == 0) { extern void* util_dl_get_path_from_proc; return &util_dl_get_path_from_proc; }
-		if (strcmp(symbol, "util_dl_get_proc_address") == 0) { extern void* util_dl_get_proc_address; return &util_dl_get_proc_address; }
-		if (strcmp(symbol, "util_dl_open") == 0) { extern void* util_dl_open; return &util_dl_open; }
-		if (strcmp(symbol, "util_dynarray_is_data_stack_allocated") == 0) { extern void* util_dynarray_is_data_stack_allocated; return &util_dynarray_is_data_stack_allocated; }
-		if (strcmp(symbol, "util_hash_table_create_fd_keys") == 0) { extern void* util_hash_table_create_fd_keys; return &util_hash_table_create_fd_keys; }
-		if (strcmp(symbol, "util_hash_table_create_ptr_keys") == 0) { extern void* util_hash_table_create_ptr_keys; return &util_hash_table_create_ptr_keys; }
-		if (strcmp(symbol, "util_hash_table_foreach") == 0) { extern void* util_hash_table_foreach; return &util_hash_table_foreach; }
-		if (strcmp(symbol, "util_hash_table_get") == 0) { extern void* util_hash_table_get; return &util_hash_table_get; }
-		if (strcmp(symbol, "util_queue_add_job") == 0) { extern void* util_queue_add_job; return &util_queue_add_job; }
-		if (strcmp(symbol, "util_queue_adjust_num_threads") == 0) { extern void* util_queue_adjust_num_threads; return &util_queue_adjust_num_threads; }
-		if (strcmp(symbol, "util_queue_destroy") == 0) { extern void* util_queue_destroy; return &util_queue_destroy; }
-		if (strcmp(symbol, "util_queue_drop_job") == 0) { extern void* util_queue_drop_job; return &util_queue_drop_job; }
-		if (strcmp(symbol, "util_queue_finish") == 0) { extern void* util_queue_finish; return &util_queue_finish; }
-		if (strcmp(symbol, "util_queue_get_thread_time_nano") == 0) { extern void* util_queue_get_thread_time_nano; return &util_queue_get_thread_time_nano; }
-		if (strcmp(symbol, "util_queue_init") == 0) { extern void* util_queue_init; return &util_queue_init; }
-		if (strcmp(symbol, "util_create_range_remap") == 0) { extern void* util_create_range_remap; return &util_create_range_remap; }
-		if (strcmp(symbol, "util_range_insert_remap") == 0) { extern void* util_range_insert_remap; return &util_range_insert_remap; }
-		if (strcmp(symbol, "util_range_remap") == 0) { extern void* util_range_remap; return &util_range_remap; }
-		if (strcmp(symbol, "util_range_switch_to_sorted_array") == 0) { extern void* util_range_switch_to_sorted_array; return &util_range_switch_to_sorted_array; }
-		if (strcmp(symbol, "util_reset_range_remap") == 0) { extern void* util_reset_range_remap; return &util_reset_range_remap; }
-		if (strcmp(symbol, "u_thread_create") == 0) { extern void* u_thread_create; return &u_thread_create; }
-		if (strcmp(symbol, "u_thread_setname") == 0) { extern void* u_thread_setname; return &u_thread_setname; }
-		if (strcmp(symbol, "util_barrier_destroy") == 0) { extern void* util_barrier_destroy; return &util_barrier_destroy; }
-		if (strcmp(symbol, "util_barrier_init") == 0) { extern void* util_barrier_init; return &util_barrier_init; }
-		if (strcmp(symbol, "util_barrier_wait") == 0) { extern void* util_barrier_wait; return &util_barrier_wait; }
-		if (strcmp(symbol, "util_get_current_cpu") == 0) { extern void* util_get_current_cpu; return &util_get_current_cpu; }
-		if (strcmp(symbol, "util_set_thread_affinity") == 0) { extern void* util_set_thread_affinity; return &util_set_thread_affinity; }
-		if (strcmp(symbol, "util_thread_get_time_nano") == 0) { extern void* util_thread_get_time_nano; return &util_thread_get_time_nano; }
-		if (strcmp(symbol, "u_vector_add") == 0) { extern void* u_vector_add; return &u_vector_add; }
-		if (strcmp(symbol, "u_vector_init_pow2") == 0) { extern void* u_vector_init_pow2; return &u_vector_init_pow2; }
-		if (strcmp(symbol, "u_vector_remove") == 0) { extern void* u_vector_remove; return &u_vector_remove; }
-		if (strcmp(symbol, "log2_table") == 0) { extern void* log2_table; return &log2_table; }
-		if (strcmp(symbol, "util_fpstate_get") == 0) { extern void* util_fpstate_get; return &util_fpstate_get; }
-		if (strcmp(symbol, "util_fpstate_set") == 0) { extern void* util_fpstate_set; return &util_fpstate_set; }
-		if (strcmp(symbol, "util_fpstate_set_denorms_to_zero") == 0) { extern void* util_fpstate_set_denorms_to_zero; return &util_fpstate_set_denorms_to_zero; }
-		if (strcmp(symbol, "util_init_math") == 0) { extern void* util_init_math; return &util_init_math; }
-		if (strcmp(symbol, "util_invert_mat4x4") == 0) { extern void* util_invert_mat4x4; return &util_invert_mat4x4; }
+		if (strcmp(symbol, "swrast_pbuffer_loader_extension") == 0) { extern void* swrast_pbuffer_loader_extension; return &swrast_pbuffer_loader_extension; }
+		if (strcmp(symbol, "thrd_create") == 0) { extern void* thrd_create; return &thrd_create; }
+		if (strcmp(symbol, "thrd_current") == 0) { extern void* thrd_current; return &thrd_current; }
+		if (strcmp(symbol, "thrd_detach") == 0) { extern void* thrd_detach; return &thrd_detach; }
+		if (strcmp(symbol, "thrd_equal") == 0) { extern void* thrd_equal; return &thrd_equal; }
+		if (strcmp(symbol, "thrd_exit") == 0) { extern void* thrd_exit; return &thrd_exit; }
+		if (strcmp(symbol, "thrd_join") == 0) { extern void* thrd_join; return &thrd_join; }
+		if (strcmp(symbol, "thrd_sleep") == 0) { extern void* thrd_sleep; return &thrd_sleep; }
+		if (strcmp(symbol, "thrd_yield") == 0) { extern void* thrd_yield; return &thrd_yield; }
+		if (strcmp(symbol, "tl_qsort_r_arg") == 0) { extern void* tl_qsort_r_arg; return &tl_qsort_r_arg; }
+		if (strcmp(symbol, "tl_qsort_r_compar") == 0) { extern void* tl_qsort_r_compar; return &tl_qsort_r_compar; }
+		if (strcmp(symbol, "tss_create") == 0) { extern void* tss_create; return &tss_create; }
+		if (strcmp(symbol, "tss_delete") == 0) { extern void* tss_delete; return &tss_delete; }
+		if (strcmp(symbol, "tss_get") == 0) { extern void* tss_get; return &tss_get; }
+		if (strcmp(symbol, "tss_set") == 0) { extern void* tss_set; return &tss_set; }
+		if (strcmp(symbol, "u_cnd_monotonic_broadcast") == 0) { extern void* u_cnd_monotonic_broadcast; return &u_cnd_monotonic_broadcast; }
+		if (strcmp(symbol, "u_cnd_monotonic_destroy") == 0) { extern void* u_cnd_monotonic_destroy; return &u_cnd_monotonic_destroy; }
+		if (strcmp(symbol, "u_cnd_monotonic_init") == 0) { extern void* u_cnd_monotonic_init; return &u_cnd_monotonic_init; }
+		if (strcmp(symbol, "u_cnd_monotonic_signal") == 0) { extern void* u_cnd_monotonic_signal; return &u_cnd_monotonic_signal; }
+		if (strcmp(symbol, "u_cnd_monotonic_timedwait") == 0) { extern void* u_cnd_monotonic_timedwait; return &u_cnd_monotonic_timedwait; }
+		if (strcmp(symbol, "u_cnd_monotonic_wait") == 0) { extern void* u_cnd_monotonic_wait; return &u_cnd_monotonic_wait; }
+		if (strcmp(symbol, "u_memstream_close") == 0) { extern void* u_memstream_close; return &u_memstream_close; }
+		if (strcmp(symbol, "u_memstream_flush") == 0) { extern void* u_memstream_flush; return &u_memstream_flush; }
+		if (strcmp(symbol, "u_memstream_open") == 0) { extern void* u_memstream_open; return &u_memstream_open; }
 		if (strcmp(symbol, "u_mmAllocMem") == 0) { extern void* u_mmAllocMem; return &u_mmAllocMem; }
 		if (strcmp(symbol, "u_mmDestroy") == 0) { extern void* u_mmDestroy; return &u_mmDestroy; }
 		if (strcmp(symbol, "u_mmDumpMemInfo") == 0) { extern void* u_mmDumpMemInfo; return &u_mmDumpMemInfo; }
 		if (strcmp(symbol, "u_mmFindBlock") == 0) { extern void* u_mmFindBlock; return &u_mmFindBlock; }
 		if (strcmp(symbol, "u_mmFreeMem") == 0) { extern void* u_mmFreeMem; return &u_mmFreeMem; }
 		if (strcmp(symbol, "u_mmInit") == 0) { extern void* u_mmInit; return &u_mmInit; }
-		if (strcmp(symbol, "comma_separated_list_contains") == 0) { extern void* comma_separated_list_contains; return &comma_separated_list_contains; }
-		if (strcmp(symbol, "debug_dump_enum") == 0) { extern void* debug_dump_enum; return &debug_dump_enum; }
-		if (strcmp(symbol, "debug_dump_flags") == 0) { extern void* debug_dump_flags; return &debug_dump_flags; }
-		if (strcmp(symbol, "debug_get_bool_option") == 0) { extern void* debug_get_bool_option; return &debug_get_bool_option; }
-		if (strcmp(symbol, "debug_get_flags_option") == 0) { extern void* debug_get_flags_option; return &debug_get_flags_option; }
-		if (strcmp(symbol, "debug_get_num_option") == 0) { extern void* debug_get_num_option; return &debug_get_num_option; }
-		if (strcmp(symbol, "debug_get_option") == 0) { extern void* debug_get_option; return &debug_get_option; }
-		if (strcmp(symbol, "debug_get_option_cached") == 0) { extern void* debug_get_option_cached; return &debug_get_option_cached; }
-		if (strcmp(symbol, "debug_get_version_option") == 0) { extern void* debug_get_version_option; return &debug_get_version_option; }
-		if (strcmp(symbol, "debug_parse_bool_option") == 0) { extern void* debug_parse_bool_option; return &debug_parse_bool_option; }
-		if (strcmp(symbol, "debug_parse_flags_option") == 0) { extern void* debug_parse_flags_option; return &debug_parse_flags_option; }
-		if (strcmp(symbol, "debug_parse_num_option") == 0) { extern void* debug_parse_num_option; return &debug_parse_num_option; }
-		if (strcmp(symbol, "dump_debug_control_string") == 0) { extern void* dump_debug_control_string; return &dump_debug_control_string; }
-		if (strcmp(symbol, "parse_debug_string") == 0) { extern void* parse_debug_string; return &parse_debug_string; }
-		if (strcmp(symbol, "parse_enable_string") == 0) { extern void* parse_enable_string; return &parse_enable_string; }
-		if (strcmp(symbol, "debug_calloc") == 0) { extern void* debug_calloc; return &debug_calloc; }
-		if (strcmp(symbol, "debug_free") == 0) { extern void* debug_free; return &debug_free; }
-		if (strcmp(symbol, "debug_malloc") == 0) { extern void* debug_malloc; return &debug_malloc; }
-		if (strcmp(symbol, "debug_memory_begin") == 0) { extern void* debug_memory_begin; return &debug_memory_begin; }
-		if (strcmp(symbol, "debug_memory_check") == 0) { extern void* debug_memory_check; return &debug_memory_check; }
-		if (strcmp(symbol, "debug_memory_check_block") == 0) { extern void* debug_memory_check_block; return &debug_memory_check_block; }
-		if (strcmp(symbol, "debug_memory_end") == 0) { extern void* debug_memory_end; return &debug_memory_end; }
-		if (strcmp(symbol, "debug_memory_tag") == 0) { extern void* debug_memory_tag; return &debug_memory_tag; }
-		if (strcmp(symbol, "debug_realloc") == 0) { extern void* debug_realloc; return &debug_realloc; }
-		if (strcmp(symbol, "u_printf") == 0) { extern void* u_printf; return &u_printf; }
 		if (strcmp(symbol, "u_printf_deserialize_info") == 0) { extern void* u_printf_deserialize_info; return &u_printf_deserialize_info; }
 		if (strcmp(symbol, "u_printf_hash") == 0) { extern void* u_printf_hash; return &u_printf_hash; }
 		if (strcmp(symbol, "u_printf_length") == 0) { extern void* u_printf_length; return &u_printf_length; }
 		if (strcmp(symbol, "u_printf_ptr") == 0) { extern void* u_printf_ptr; return &u_printf_ptr; }
 		if (strcmp(symbol, "u_printf_serialize_info") == 0) { extern void* u_printf_serialize_info; return &u_printf_serialize_info; }
-		if (strcmp(symbol, "u_printf_singleton_add") == 0) { extern void* u_printf_singleton_add; return &u_printf_singleton_add; }
 		if (strcmp(symbol, "u_printf_singleton_add_serialized") == 0) { extern void* u_printf_singleton_add_serialized; return &u_printf_singleton_add_serialized; }
+		if (strcmp(symbol, "u_printf_singleton_add") == 0) { extern void* u_printf_singleton_add; return &u_printf_singleton_add; }
 		if (strcmp(symbol, "u_printf_singleton_decref") == 0) { extern void* u_printf_singleton_decref; return &u_printf_singleton_decref; }
 		if (strcmp(symbol, "u_printf_singleton_init_or_ref") == 0) { extern void* u_printf_singleton_init_or_ref; return &u_printf_singleton_init_or_ref; }
 		if (strcmp(symbol, "u_printf_singleton_search") == 0) { extern void* u_printf_singleton_search; return &u_printf_singleton_search; }
-		if (strcmp(symbol, "util_printf_next_spec_pos") == 0) { extern void* util_printf_next_spec_pos; return &util_printf_next_spec_pos; }
-		if (strcmp(symbol, "util_printf_prev_tok") == 0) { extern void* util_printf_prev_tok; return &util_printf_prev_tok; }
+		if (strcmp(symbol, "u_printf") == 0) { extern void* u_printf; return &u_printf; }
+		if (strcmp(symbol, "u_rwlock_destroy") == 0) { extern void* u_rwlock_destroy; return &u_rwlock_destroy; }
+		if (strcmp(symbol, "u_rwlock_init") == 0) { extern void* u_rwlock_init; return &u_rwlock_init; }
+		if (strcmp(symbol, "u_rwlock_rdlock") == 0) { extern void* u_rwlock_rdlock; return &u_rwlock_rdlock; }
+		if (strcmp(symbol, "u_rwlock_rdunlock") == 0) { extern void* u_rwlock_rdunlock; return &u_rwlock_rdunlock; }
+		if (strcmp(symbol, "u_rwlock_wrlock") == 0) { extern void* u_rwlock_wrlock; return &u_rwlock_wrlock; }
+		if (strcmp(symbol, "u_rwlock_wrunlock") == 0) { extern void* u_rwlock_wrunlock; return &u_rwlock_wrunlock; }
+		if (strcmp(symbol, "u_thread_create") == 0) { extern void* u_thread_create; return &u_thread_create; }
+		if (strcmp(symbol, "u_thread_setname") == 0) { extern void* u_thread_setname; return &u_thread_setname; }
+		if (strcmp(symbol, "u_trace_appendv") == 0) { extern void* u_trace_appendv; return &u_trace_appendv; }
+		if (strcmp(symbol, "u_trace_begin_iterator") == 0) { extern void* u_trace_begin_iterator; return &u_trace_begin_iterator; }
+		if (strcmp(symbol, "u_trace_clone_append") == 0) { extern void* u_trace_clone_append; return &u_trace_clone_append; }
+		if (strcmp(symbol, "u_trace_context_fini") == 0) { extern void* u_trace_context_fini; return &u_trace_context_fini; }
+		if (strcmp(symbol, "u_trace_context_init") == 0) { extern void* u_trace_context_init; return &u_trace_context_init; }
+		if (strcmp(symbol, "u_trace_context_process") == 0) { extern void* u_trace_context_process; return &u_trace_context_process; }
+		if (strcmp(symbol, "u_trace_disable_event_range") == 0) { extern void* u_trace_disable_event_range; return &u_trace_disable_event_range; }
+		if (strcmp(symbol, "u_trace_end_iterator") == 0) { extern void* u_trace_end_iterator; return &u_trace_end_iterator; }
+		if (strcmp(symbol, "u_trace_fini") == 0) { extern void* u_trace_fini; return &u_trace_fini; }
+		if (strcmp(symbol, "u_trace_flush") == 0) { extern void* u_trace_flush; return &u_trace_flush; }
+		if (strcmp(symbol, "u_trace_has_points") == 0) { extern void* u_trace_has_points; return &u_trace_has_points; }
+		if (strcmp(symbol, "u_trace_init") == 0) { extern void* u_trace_init; return &u_trace_init; }
+		if (strcmp(symbol, "u_trace_is_enabled") == 0) { extern void* u_trace_is_enabled; return &u_trace_is_enabled; }
+		if (strcmp(symbol, "u_trace_iterator_equal") == 0) { extern void* u_trace_iterator_equal; return &u_trace_iterator_equal; }
+		if (strcmp(symbol, "u_trace_move") == 0) { extern void* u_trace_move; return &u_trace_move; }
+		if (strcmp(symbol, "u_trace_state_init") == 0) { extern void* u_trace_state_init; return &u_trace_state_init; }
+		if (strcmp(symbol, "u_vector_add") == 0) { extern void* u_vector_add; return &u_vector_add; }
+		if (strcmp(symbol, "u_vector_init_pow2") == 0) { extern void* u_vector_init_pow2; return &u_vector_init_pow2; }
+		if (strcmp(symbol, "u_vector_remove") == 0) { extern void* u_vector_remove; return &u_vector_remove; }
 		if (strcmp(symbol, "u_worklist_fini") == 0) { extern void* u_worklist_fini; return &u_worklist_fini; }
 		if (strcmp(symbol, "u_worklist_init") == 0) { extern void* u_worklist_init; return &u_worklist_init; }
 		if (strcmp(symbol, "u_worklist_peek_head_index") == 0) { extern void* u_worklist_peek_head_index; return &u_worklist_peek_head_index; }
@@ -436,335 +528,33 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "u_worklist_pop_tail_index") == 0) { extern void* u_worklist_pop_tail_index; return &u_worklist_pop_tail_index; }
 		if (strcmp(symbol, "u_worklist_push_head_index") == 0) { extern void* u_worklist_push_head_index; return &u_worklist_push_head_index; }
 		if (strcmp(symbol, "u_worklist_push_tail_index") == 0) { extern void* u_worklist_push_tail_index; return &u_worklist_push_tail_index; }
-		if (strcmp(symbol, "vl_zscan_alternate") == 0) { extern void* vl_zscan_alternate; return &vl_zscan_alternate; }
-		if (strcmp(symbol, "vl_zscan_h265_up_right_diagonal") == 0) { extern void* vl_zscan_h265_up_right_diagonal; return &vl_zscan_h265_up_right_diagonal; }
-		if (strcmp(symbol, "vl_zscan_h265_up_right_diagonal_16") == 0) { extern void* vl_zscan_h265_up_right_diagonal_16; return &vl_zscan_h265_up_right_diagonal_16; }
-		if (strcmp(symbol, "vl_zscan_linear") == 0) { extern void* vl_zscan_linear; return &vl_zscan_linear; }
-		if (strcmp(symbol, "vl_zscan_normal") == 0) { extern void* vl_zscan_normal; return &vl_zscan_normal; }
-		if (strcmp(symbol, "vl_zscan_normal_16") == 0) { extern void* vl_zscan_normal_16; return &vl_zscan_normal_16; }
-		if (strcmp(symbol, "util_vma_heap_alloc") == 0) { extern void* util_vma_heap_alloc; return &util_vma_heap_alloc; }
-		if (strcmp(symbol, "util_vma_heap_alloc_addr") == 0) { extern void* util_vma_heap_alloc_addr; return &util_vma_heap_alloc_addr; }
-		if (strcmp(symbol, "util_vma_heap_finish") == 0) { extern void* util_vma_heap_finish; return &util_vma_heap_finish; }
-		if (strcmp(symbol, "util_vma_heap_free") == 0) { extern void* util_vma_heap_free; return &util_vma_heap_free; }
-		if (strcmp(symbol, "util_vma_heap_get_max_free_continuous_size") == 0) { extern void* util_vma_heap_get_max_free_continuous_size; return &util_vma_heap_get_max_free_continuous_size; }
-		if (strcmp(symbol, "util_vma_heap_init") == 0) { extern void* util_vma_heap_init; return &util_vma_heap_init; }
-		if (strcmp(symbol, "util_vma_heap_print") == 0) { extern void* util_vma_heap_print; return &util_vma_heap_print; }
-		if (strcmp(symbol, "mesa_cache_db_close") == 0) { extern void* mesa_cache_db_close; return &mesa_cache_db_close; }
-		if (strcmp(symbol, "mesa_cache_db_entry_remove") == 0) { extern void* mesa_cache_db_entry_remove; return &mesa_cache_db_entry_remove; }
-		if (strcmp(symbol, "mesa_cache_db_entry_write") == 0) { extern void* mesa_cache_db_entry_write; return &mesa_cache_db_entry_write; }
-		if (strcmp(symbol, "mesa_cache_db_eviction_score") == 0) { extern void* mesa_cache_db_eviction_score; return &mesa_cache_db_eviction_score; }
-		if (strcmp(symbol, "mesa_cache_db_file_entry_size") == 0) { extern void* mesa_cache_db_file_entry_size; return &mesa_cache_db_file_entry_size; }
-		if (strcmp(symbol, "mesa_cache_db_has_space") == 0) { extern void* mesa_cache_db_has_space; return &mesa_cache_db_has_space; }
-		if (strcmp(symbol, "mesa_cache_db_open") == 0) { extern void* mesa_cache_db_open; return &mesa_cache_db_open; }
-		if (strcmp(symbol, "mesa_cache_db_read_entry") == 0) { extern void* mesa_cache_db_read_entry; return &mesa_cache_db_read_entry; }
-		if (strcmp(symbol, "mesa_cache_db_set_size_limit") == 0) { extern void* mesa_cache_db_set_size_limit; return &mesa_cache_db_set_size_limit; }
-		if (strcmp(symbol, "mesa_db_wipe_path") == 0) { extern void* mesa_db_wipe_path; return &mesa_db_wipe_path; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_close") == 0) { extern void* mesa_cache_db_multipart_close; return &mesa_cache_db_multipart_close; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_entry_remove") == 0) { extern void* mesa_cache_db_multipart_entry_remove; return &mesa_cache_db_multipart_entry_remove; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_entry_write") == 0) { extern void* mesa_cache_db_multipart_entry_write; return &mesa_cache_db_multipart_entry_write; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_open") == 0) { extern void* mesa_cache_db_multipart_open; return &mesa_cache_db_multipart_open; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_read_entry") == 0) { extern void* mesa_cache_db_multipart_read_entry; return &mesa_cache_db_multipart_read_entry; }
-		if (strcmp(symbol, "mesa_cache_db_multipart_set_size_limit") == 0) { extern void* mesa_cache_db_multipart_set_size_limit; return &mesa_cache_db_multipart_set_size_limit; }
-		if (strcmp(symbol, "pipe_swizzle_4f") == 0) { extern void* pipe_swizzle_4f; return &pipe_swizzle_4f; }
+		if (strcmp(symbol, "uinterval_node_next") == 0) { extern void* uinterval_node_next; return &uinterval_node_next; }
+		if (strcmp(symbol, "uinterval_tree_first") == 0) { extern void* uinterval_tree_first; return &uinterval_tree_first; }
+		if (strcmp(symbol, "uinterval_tree_insert") == 0) { extern void* uinterval_tree_insert; return &uinterval_tree_insert; }
+		if (strcmp(symbol, "uinterval_tree_remove") == 0) { extern void* uinterval_tree_remove; return &uinterval_tree_remove; }
+		if (strcmp(symbol, "util_barrier_destroy") == 0) { extern void* util_barrier_destroy; return &util_barrier_destroy; }
+		if (strcmp(symbol, "util_barrier_init") == 0) { extern void* util_barrier_init; return &util_barrier_init; }
+		if (strcmp(symbol, "util_barrier_wait") == 0) { extern void* util_barrier_wait; return &util_barrier_wait; }
+		if (strcmp(symbol, "util_cache_granularity") == 0) { extern void* util_cache_granularity; return &util_cache_granularity; }
+		if (strcmp(symbol, "util_call_once_data_slow") == 0) { extern void* util_call_once_data_slow; return &util_call_once_data_slow; }
+		if (strcmp(symbol, "util_clflushopt_range") == 0) { extern void* util_clflushopt_range; return &util_clflushopt_range; }
+		if (strcmp(symbol, "util_compress_deflate") == 0) { extern void* util_compress_deflate; return &util_compress_deflate; }
+		if (strcmp(symbol, "util_compress_inflate") == 0) { extern void* util_compress_inflate; return &util_compress_inflate; }
+		if (strcmp(symbol, "util_compress_max_compressed_len") == 0) { extern void* util_compress_max_compressed_len; return &util_compress_max_compressed_len; }
+		if (strcmp(symbol, "util_compute_fast_sdiv_info") == 0) { extern void* util_compute_fast_sdiv_info; return &util_compute_fast_sdiv_info; }
+		if (strcmp(symbol, "util_compute_fast_udiv_info") == 0) { extern void* util_compute_fast_udiv_info; return &util_compute_fast_udiv_info; }
 		if (strcmp(symbol, "util_copy_rect") == 0) { extern void* util_copy_rect; return &util_copy_rect; }
-		if (strcmp(symbol, "util_format_apply_color_swizzle") == 0) { extern void* util_format_apply_color_swizzle; return &util_format_apply_color_swizzle; }
-		if (strcmp(symbol, "util_format_compose_swizzles") == 0) { extern void* util_format_compose_swizzles; return &util_format_compose_swizzles; }
-		if (strcmp(symbol, "util_format_fits_8unorm") == 0) { extern void* util_format_fits_8unorm; return &util_format_fits_8unorm; }
-		if (strcmp(symbol, "util_format_get_array") == 0) { extern void* util_format_get_array; return &util_format_get_array; }
-		if (strcmp(symbol, "util_format_get_largest_non_void_channel") == 0) { extern void* util_format_get_largest_non_void_channel; return &util_format_get_largest_non_void_channel; }
-		if (strcmp(symbol, "util_format_get_last_component") == 0) { extern void* util_format_get_last_component; return &util_format_get_last_component; }
-		if (strcmp(symbol, "util_format_get_max_channel_size") == 0) { extern void* util_format_get_max_channel_size; return &util_format_get_max_channel_size; }
-		if (strcmp(symbol, "util_format_get_tilesize") == 0) { extern void* util_format_get_tilesize; return &util_format_get_tilesize; }
-		if (strcmp(symbol, "util_format_has_alpha") == 0) { extern void* util_format_has_alpha; return &util_format_has_alpha; }
-		if (strcmp(symbol, "util_format_has_alpha1") == 0) { extern void* util_format_has_alpha1; return &util_format_has_alpha1; }
-		if (strcmp(symbol, "util_format_is_alpha") == 0) { extern void* util_format_is_alpha; return &util_format_is_alpha; }
-		if (strcmp(symbol, "util_format_is_float") == 0) { extern void* util_format_is_float; return &util_format_is_float; }
-		if (strcmp(symbol, "util_format_is_float16") == 0) { extern void* util_format_is_float16; return &util_format_is_float16; }
-		if (strcmp(symbol, "util_format_is_intensity") == 0) { extern void* util_format_is_intensity; return &util_format_is_intensity; }
-		if (strcmp(symbol, "util_format_is_luminance") == 0) { extern void* util_format_is_luminance; return &util_format_is_luminance; }
-		if (strcmp(symbol, "util_format_is_luminance_alpha") == 0) { extern void* util_format_is_luminance_alpha; return &util_format_is_luminance_alpha; }
-		if (strcmp(symbol, "util_format_is_pure_integer") == 0) { extern void* util_format_is_pure_integer; return &util_format_is_pure_integer; }
-		if (strcmp(symbol, "util_format_is_pure_sint") == 0) { extern void* util_format_is_pure_sint; return &util_format_is_pure_sint; }
-		if (strcmp(symbol, "util_format_is_pure_uint") == 0) { extern void* util_format_is_pure_uint; return &util_format_is_pure_uint; }
-		if (strcmp(symbol, "util_format_is_red_alpha") == 0) { extern void* util_format_is_red_alpha; return &util_format_is_red_alpha; }
-		if (strcmp(symbol, "util_format_is_red_green") == 0) { extern void* util_format_is_red_green; return &util_format_is_red_green; }
-		if (strcmp(symbol, "util_format_is_scaled") == 0) { extern void* util_format_is_scaled; return &util_format_is_scaled; }
-		if (strcmp(symbol, "util_format_is_snorm") == 0) { extern void* util_format_is_snorm; return &util_format_is_snorm; }
-		if (strcmp(symbol, "util_format_is_snorm8") == 0) { extern void* util_format_is_snorm8; return &util_format_is_snorm8; }
-		if (strcmp(symbol, "util_format_is_subsampled_422") == 0) { extern void* util_format_is_subsampled_422; return &util_format_is_subsampled_422; }
-		if (strcmp(symbol, "util_format_is_unorm") == 0) { extern void* util_format_is_unorm; return &util_format_is_unorm; }
-		if (strcmp(symbol, "util_format_read_4") == 0) { extern void* util_format_read_4; return &util_format_read_4; }
-		if (strcmp(symbol, "util_format_read_4ub") == 0) { extern void* util_format_read_4ub; return &util_format_read_4ub; }
-		if (strcmp(symbol, "util_format_rgb_to_bgr") == 0) { extern void* util_format_rgb_to_bgr; return &util_format_rgb_to_bgr; }
-		if (strcmp(symbol, "util_format_rgbx_to_rgba") == 0) { extern void* util_format_rgbx_to_rgba; return &util_format_rgbx_to_rgba; }
-		if (strcmp(symbol, "util_format_translate") == 0) { extern void* util_format_translate; return &util_format_translate; }
-		if (strcmp(symbol, "util_format_translate_3d") == 0) { extern void* util_format_translate_3d; return &util_format_translate_3d; }
-		if (strcmp(symbol, "util_format_unpack_description") == 0) { extern void* util_format_unpack_description; return &util_format_unpack_description; }
-		if (strcmp(symbol, "util_format_unpack_rgba_8unorm_rect") == 0) { extern void* util_format_unpack_rgba_8unorm_rect; return &util_format_unpack_rgba_8unorm_rect; }
-		if (strcmp(symbol, "util_format_unpack_rgba_rect") == 0) { extern void* util_format_unpack_rgba_rect; return &util_format_unpack_rgba_rect; }
-		if (strcmp(symbol, "util_format_unswizzle_4f") == 0) { extern void* util_format_unswizzle_4f; return &util_format_unswizzle_4f; }
-		if (strcmp(symbol, "util_format_write_4") == 0) { extern void* util_format_write_4; return &util_format_write_4; }
-		if (strcmp(symbol, "util_format_write_4ub") == 0) { extern void* util_format_write_4ub; return &util_format_write_4ub; }
-		if (strcmp(symbol, "util_get_depth_format_mrd") == 0) { extern void* util_get_depth_format_mrd; return &util_get_depth_format_mrd; }
-		if (strcmp(symbol, "util_is_format_compatible") == 0) { extern void* util_is_format_compatible; return &util_is_format_compatible; }
-		if (strcmp(symbol, "util_format_bptc_rgb_float_fetch_rgba") == 0) { extern void* util_format_bptc_rgb_float_fetch_rgba; return &util_format_bptc_rgb_float_fetch_rgba; }
-		if (strcmp(symbol, "util_format_bptc_rgb_float_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_float_pack_rgba_8unorm; return &util_format_bptc_rgb_float_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgb_float_pack_rgba_float") == 0) { extern void* util_format_bptc_rgb_float_pack_rgba_float; return &util_format_bptc_rgb_float_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_rgb_float_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_float_unpack_rgba_8unorm; return &util_format_bptc_rgb_float_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgb_float_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgb_float_unpack_rgba_float; return &util_format_bptc_rgb_float_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_fetch_rgba") == 0) { extern void* util_format_bptc_rgb_ufloat_fetch_rgba; return &util_format_bptc_rgb_ufloat_fetch_rgba; }
-		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_ufloat_pack_rgba_8unorm; return &util_format_bptc_rgb_ufloat_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_pack_rgba_float") == 0) { extern void* util_format_bptc_rgb_ufloat_pack_rgba_float; return &util_format_bptc_rgb_ufloat_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_ufloat_unpack_rgba_8unorm; return &util_format_bptc_rgb_ufloat_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgb_ufloat_unpack_rgba_float; return &util_format_bptc_rgb_ufloat_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_rgba_unorm_fetch_rgba") == 0) { extern void* util_format_bptc_rgba_unorm_fetch_rgba; return &util_format_bptc_rgba_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_bptc_rgba_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgba_unorm_pack_rgba_8unorm; return &util_format_bptc_rgba_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgba_unorm_pack_rgba_float") == 0) { extern void* util_format_bptc_rgba_unorm_pack_rgba_float; return &util_format_bptc_rgba_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_rgba_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgba_unorm_unpack_rgba_8unorm; return &util_format_bptc_rgba_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_rgba_unorm_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgba_unorm_unpack_rgba_float; return &util_format_bptc_rgba_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_srgba_fetch_rgba") == 0) { extern void* util_format_bptc_srgba_fetch_rgba; return &util_format_bptc_srgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_bptc_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_srgba_pack_rgba_8unorm; return &util_format_bptc_srgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_srgba_pack_rgba_float") == 0) { extern void* util_format_bptc_srgba_pack_rgba_float; return &util_format_bptc_srgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_bptc_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_srgba_unpack_rgba_8unorm; return &util_format_bptc_srgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_bptc_srgba_unpack_rgba_float") == 0) { extern void* util_format_bptc_srgba_unpack_rgba_float; return &util_format_bptc_srgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_etc1_rgb8_fetch_rgba") == 0) { extern void* util_format_etc1_rgb8_fetch_rgba; return &util_format_etc1_rgb8_fetch_rgba; }
-		if (strcmp(symbol, "util_format_etc1_rgb8_pack_rgba_8unorm") == 0) { extern void* util_format_etc1_rgb8_pack_rgba_8unorm; return &util_format_etc1_rgb8_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_etc1_rgb8_pack_rgba_float") == 0) { extern void* util_format_etc1_rgb8_pack_rgba_float; return &util_format_etc1_rgb8_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_etc1_rgb8_unpack_rgba_8unorm") == 0) { extern void* util_format_etc1_rgb8_unpack_rgba_8unorm; return &util_format_etc1_rgb8_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_etc1_rgb8_unpack_rgba_float") == 0) { extern void* util_format_etc1_rgb8_unpack_rgba_float; return &util_format_etc1_rgb8_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_fetch_rgba") == 0) { extern void* util_format_fxt1_rgb_fetch_rgba; return &util_format_fxt1_rgb_fetch_rgba; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_fetch_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_fetch_rgba_8unorm; return &util_format_fxt1_rgb_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_pack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_pack_rgba_8unorm; return &util_format_fxt1_rgb_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_pack_rgba_float") == 0) { extern void* util_format_fxt1_rgb_pack_rgba_float; return &util_format_fxt1_rgb_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_unpack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_unpack_rgba_8unorm; return &util_format_fxt1_rgb_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgb_unpack_rgba_float") == 0) { extern void* util_format_fxt1_rgb_unpack_rgba_float; return &util_format_fxt1_rgb_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_fetch_rgba") == 0) { extern void* util_format_fxt1_rgba_fetch_rgba; return &util_format_fxt1_rgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_fetch_rgba_8unorm; return &util_format_fxt1_rgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_pack_rgba_8unorm; return &util_format_fxt1_rgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_pack_rgba_float") == 0) { extern void* util_format_fxt1_rgba_pack_rgba_float; return &util_format_fxt1_rgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_unpack_rgba_8unorm; return &util_format_fxt1_rgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_fxt1_rgba_unpack_rgba_float") == 0) { extern void* util_format_fxt1_rgba_unpack_rgba_float; return &util_format_fxt1_rgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc1_snorm_fetch_rgba") == 0) { extern void* util_format_latc1_snorm_fetch_rgba; return &util_format_latc1_snorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_latc1_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_fetch_rgba_8unorm; return &util_format_latc1_snorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_pack_rgba_8unorm; return &util_format_latc1_snorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_snorm_pack_rgba_float") == 0) { extern void* util_format_latc1_snorm_pack_rgba_float; return &util_format_latc1_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc1_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_unpack_rgba_8unorm; return &util_format_latc1_snorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_snorm_unpack_rgba_float") == 0) { extern void* util_format_latc1_snorm_unpack_rgba_float; return &util_format_latc1_snorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc1_unorm_fetch_rgba") == 0) { extern void* util_format_latc1_unorm_fetch_rgba; return &util_format_latc1_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_latc1_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_fetch_rgba_8unorm; return &util_format_latc1_unorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_pack_rgba_8unorm; return &util_format_latc1_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_unorm_pack_rgba_float") == 0) { extern void* util_format_latc1_unorm_pack_rgba_float; return &util_format_latc1_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc1_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_unpack_rgba_8unorm; return &util_format_latc1_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc1_unorm_unpack_rgba_float") == 0) { extern void* util_format_latc1_unorm_unpack_rgba_float; return &util_format_latc1_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc2_snorm_fetch_rgba") == 0) { extern void* util_format_latc2_snorm_fetch_rgba; return &util_format_latc2_snorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_latc2_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_fetch_rgba_8unorm; return &util_format_latc2_snorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_pack_rgba_8unorm; return &util_format_latc2_snorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_snorm_pack_rgba_float") == 0) { extern void* util_format_latc2_snorm_pack_rgba_float; return &util_format_latc2_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc2_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_unpack_rgba_8unorm; return &util_format_latc2_snorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_snorm_unpack_rgba_float") == 0) { extern void* util_format_latc2_snorm_unpack_rgba_float; return &util_format_latc2_snorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc2_unorm_fetch_rgba") == 0) { extern void* util_format_latc2_unorm_fetch_rgba; return &util_format_latc2_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_latc2_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_fetch_rgba_8unorm; return &util_format_latc2_unorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_pack_rgba_8unorm; return &util_format_latc2_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_unorm_pack_rgba_float") == 0) { extern void* util_format_latc2_unorm_pack_rgba_float; return &util_format_latc2_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_latc2_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_unpack_rgba_8unorm; return &util_format_latc2_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_latc2_unorm_unpack_rgba_float") == 0) { extern void* util_format_latc2_unorm_unpack_rgba_float; return &util_format_latc2_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_r11g11b10_float_fetch_rgba") == 0) { extern void* util_format_r11g11b10_float_fetch_rgba; return &util_format_r11g11b10_float_fetch_rgba; }
-		if (strcmp(symbol, "util_format_r11g11b10_float_pack_rgba_8unorm") == 0) { extern void* util_format_r11g11b10_float_pack_rgba_8unorm; return &util_format_r11g11b10_float_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r11g11b10_float_pack_rgba_float") == 0) { extern void* util_format_r11g11b10_float_pack_rgba_float; return &util_format_r11g11b10_float_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_r11g11b10_float_unpack_rgba_8unorm") == 0) { extern void* util_format_r11g11b10_float_unpack_rgba_8unorm; return &util_format_r11g11b10_float_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r11g11b10_float_unpack_rgba_float") == 0) { extern void* util_format_r11g11b10_float_unpack_rgba_float; return &util_format_r11g11b10_float_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_r8g8bx_snorm_fetch_rgba") == 0) { extern void* util_format_r8g8bx_snorm_fetch_rgba; return &util_format_r8g8bx_snorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_r8g8bx_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_r8g8bx_snorm_pack_rgba_8unorm; return &util_format_r8g8bx_snorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r8g8bx_snorm_pack_rgba_float") == 0) { extern void* util_format_r8g8bx_snorm_pack_rgba_float; return &util_format_r8g8bx_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_r8g8bx_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8g8bx_snorm_unpack_rgba_8unorm; return &util_format_r8g8bx_snorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r8g8bx_snorm_unpack_rgba_float") == 0) { extern void* util_format_r8g8bx_snorm_unpack_rgba_float; return &util_format_r8g8bx_snorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_r9g9b9e5_float_fetch_rgba") == 0) { extern void* util_format_r9g9b9e5_float_fetch_rgba; return &util_format_r9g9b9e5_float_fetch_rgba; }
-		if (strcmp(symbol, "util_format_r9g9b9e5_float_pack_rgba_8unorm") == 0) { extern void* util_format_r9g9b9e5_float_pack_rgba_8unorm; return &util_format_r9g9b9e5_float_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r9g9b9e5_float_pack_rgba_float") == 0) { extern void* util_format_r9g9b9e5_float_pack_rgba_float; return &util_format_r9g9b9e5_float_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_r9g9b9e5_float_unpack_rgba_8unorm") == 0) { extern void* util_format_r9g9b9e5_float_unpack_rgba_8unorm; return &util_format_r9g9b9e5_float_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r9g9b9e5_float_unpack_rgba_float") == 0) { extern void* util_format_r9g9b9e5_float_unpack_rgba_float; return &util_format_r9g9b9e5_float_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_fetch_rgba") == 0) { extern void* util_format_rgtc1_snorm_fetch_rgba; return &util_format_rgtc1_snorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_fetch_rgba_8unorm; return &util_format_rgtc1_snorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_pack_rgba_8unorm; return &util_format_rgtc1_snorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_pack_rgba_float") == 0) { extern void* util_format_rgtc1_snorm_pack_rgba_float; return &util_format_rgtc1_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_r_8snorm") == 0) { extern void* util_format_rgtc1_snorm_unpack_r_8snorm; return &util_format_rgtc1_snorm_unpack_r_8snorm; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_unpack_rgba_8unorm; return &util_format_rgtc1_snorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc1_snorm_unpack_rgba_float; return &util_format_rgtc1_snorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_fetch_rgba") == 0) { extern void* util_format_rgtc1_unorm_fetch_rgba; return &util_format_rgtc1_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_fetch_rgba_8unorm; return &util_format_rgtc1_unorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_pack_rgba_8unorm; return &util_format_rgtc1_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_pack_rgba_float") == 0) { extern void* util_format_rgtc1_unorm_pack_rgba_float; return &util_format_rgtc1_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_r_8unorm") == 0) { extern void* util_format_rgtc1_unorm_unpack_r_8unorm; return &util_format_rgtc1_unorm_unpack_r_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_unpack_rgba_8unorm; return &util_format_rgtc1_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc1_unorm_unpack_rgba_float; return &util_format_rgtc1_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_fetch_rgba") == 0) { extern void* util_format_rgtc2_snorm_fetch_rgba; return &util_format_rgtc2_snorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_fetch_rgba_8unorm; return &util_format_rgtc2_snorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_pack_rgba_8unorm; return &util_format_rgtc2_snorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_pack_rgba_float") == 0) { extern void* util_format_rgtc2_snorm_pack_rgba_float; return &util_format_rgtc2_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rg_8snorm") == 0) { extern void* util_format_rgtc2_snorm_unpack_rg_8snorm; return &util_format_rgtc2_snorm_unpack_rg_8snorm; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_unpack_rgba_8unorm; return &util_format_rgtc2_snorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc2_snorm_unpack_rgba_float; return &util_format_rgtc2_snorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_fetch_rgba") == 0) { extern void* util_format_rgtc2_unorm_fetch_rgba; return &util_format_rgtc2_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_fetch_rgba_8unorm; return &util_format_rgtc2_unorm_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_pack_rgba_8unorm; return &util_format_rgtc2_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_pack_rgba_float") == 0) { extern void* util_format_rgtc2_unorm_pack_rgba_float; return &util_format_rgtc2_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rg_8unorm") == 0) { extern void* util_format_rgtc2_unorm_unpack_rg_8unorm; return &util_format_rgtc2_unorm_unpack_rg_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_unpack_rgba_8unorm; return &util_format_rgtc2_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc2_unorm_unpack_rgba_float; return &util_format_rgtc2_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_rxtc2_snorm_pack_rgba_float") == 0) { extern void* util_format_rxtc2_snorm_pack_rgba_float; return &util_format_rxtc2_snorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_rxtc2_unorm_pack_rgba_float") == 0) { extern void* util_format_rxtc2_unorm_pack_rgba_float; return &util_format_rxtc2_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_fetch") == 0) { extern void* util_format_dxt1_rgb_fetch; return &util_format_dxt1_rgb_fetch; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_fetch_rgba") == 0) { extern void* util_format_dxt1_rgb_fetch_rgba; return &util_format_dxt1_rgb_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_fetch_rgba_8unorm; return &util_format_dxt1_rgb_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_pack_rgba_8unorm; return &util_format_dxt1_rgb_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_pack_rgba_float") == 0) { extern void* util_format_dxt1_rgb_pack_rgba_float; return &util_format_dxt1_rgb_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_unpack_rgba_8unorm; return &util_format_dxt1_rgb_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgb_unpack_rgba_float") == 0) { extern void* util_format_dxt1_rgb_unpack_rgba_float; return &util_format_dxt1_rgb_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_fetch") == 0) { extern void* util_format_dxt1_rgba_fetch; return &util_format_dxt1_rgba_fetch; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_fetch_rgba") == 0) { extern void* util_format_dxt1_rgba_fetch_rgba; return &util_format_dxt1_rgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_fetch_rgba_8unorm; return &util_format_dxt1_rgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_pack_rgba_8unorm; return &util_format_dxt1_rgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt1_rgba_pack_rgba_float; return &util_format_dxt1_rgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_unpack_rgba_8unorm; return &util_format_dxt1_rgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt1_rgba_unpack_rgba_float; return &util_format_dxt1_rgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_fetch_rgba") == 0) { extern void* util_format_dxt1_srgb_fetch_rgba; return &util_format_dxt1_srgb_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_fetch_rgba_8unorm; return &util_format_dxt1_srgb_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_pack_rgba_8unorm; return &util_format_dxt1_srgb_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_pack_rgba_float") == 0) { extern void* util_format_dxt1_srgb_pack_rgba_float; return &util_format_dxt1_srgb_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_unpack_rgba_8unorm; return &util_format_dxt1_srgb_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgb_unpack_rgba_float") == 0) { extern void* util_format_dxt1_srgb_unpack_rgba_float; return &util_format_dxt1_srgb_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_fetch_rgba") == 0) { extern void* util_format_dxt1_srgba_fetch_rgba; return &util_format_dxt1_srgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_fetch_rgba_8unorm; return &util_format_dxt1_srgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_pack_rgba_8unorm; return &util_format_dxt1_srgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt1_srgba_pack_rgba_float; return &util_format_dxt1_srgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_unpack_rgba_8unorm; return &util_format_dxt1_srgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt1_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt1_srgba_unpack_rgba_float; return &util_format_dxt1_srgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_fetch") == 0) { extern void* util_format_dxt3_rgba_fetch; return &util_format_dxt3_rgba_fetch; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_fetch_rgba") == 0) { extern void* util_format_dxt3_rgba_fetch_rgba; return &util_format_dxt3_rgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_fetch_rgba_8unorm; return &util_format_dxt3_rgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_pack_rgba_8unorm; return &util_format_dxt3_rgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt3_rgba_pack_rgba_float; return &util_format_dxt3_rgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_unpack_rgba_8unorm; return &util_format_dxt3_rgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt3_rgba_unpack_rgba_float; return &util_format_dxt3_rgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_fetch_rgba") == 0) { extern void* util_format_dxt3_srgba_fetch_rgba; return &util_format_dxt3_srgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_fetch_rgba_8unorm; return &util_format_dxt3_srgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_pack_rgba_8unorm; return &util_format_dxt3_srgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt3_srgba_pack_rgba_float; return &util_format_dxt3_srgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_unpack_rgba_8unorm; return &util_format_dxt3_srgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt3_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt3_srgba_unpack_rgba_float; return &util_format_dxt3_srgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_fetch") == 0) { extern void* util_format_dxt5_rgba_fetch; return &util_format_dxt5_rgba_fetch; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_fetch_rgba") == 0) { extern void* util_format_dxt5_rgba_fetch_rgba; return &util_format_dxt5_rgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_fetch_rgba_8unorm; return &util_format_dxt5_rgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_pack_rgba_8unorm; return &util_format_dxt5_rgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt5_rgba_pack_rgba_float; return &util_format_dxt5_rgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_unpack_rgba_8unorm; return &util_format_dxt5_rgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt5_rgba_unpack_rgba_float; return &util_format_dxt5_rgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_fetch_rgba") == 0) { extern void* util_format_dxt5_srgba_fetch_rgba; return &util_format_dxt5_srgba_fetch_rgba; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_fetch_rgba_8unorm; return &util_format_dxt5_srgba_fetch_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_pack_rgba_8unorm; return &util_format_dxt5_srgba_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt5_srgba_pack_rgba_float; return &util_format_dxt5_srgba_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_unpack_rgba_8unorm; return &util_format_dxt5_srgba_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_dxt5_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt5_srgba_unpack_rgba_float; return &util_format_dxt5_srgba_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_dxtn_pack") == 0) { extern void* util_format_dxtn_pack; return &util_format_dxtn_pack; }
-		if (strcmp(symbol, "util_format_nr_test_cases") == 0) { extern void* util_format_nr_test_cases; return &util_format_nr_test_cases; }
-		if (strcmp(symbol, "util_format_test_cases") == 0) { extern void* util_format_test_cases; return &util_format_test_cases; }
-		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_fetch_rgba") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_fetch_rgba; return &util_format_g8r8_g8b8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm; return &util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_pack_rgba_float; return &util_format_g8r8_g8b8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm; return &util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_unpack_rgba_float; return &util_format_g8r8_g8b8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_fetch_rgba") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_fetch_rgba; return &util_format_r8g8_b8g8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm; return &util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_pack_rgba_float; return &util_format_r8g8_b8g8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm; return &util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_unpack_rgba_float; return &util_format_r8g8_b8g8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_fetch_rgba") == 0) { extern void* util_format_u8y8v8y8_422_unorm_fetch_rgba; return &util_format_u8y8v8y8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm; return &util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_u8y8v8y8_422_unorm_pack_rgba_float; return &util_format_u8y8v8y8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm; return &util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_u8y8v8y8_422_unorm_unpack_rgba_float; return &util_format_u8y8v8y8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_fetch_rgba") == 0) { extern void* util_format_v8y8u8y8_422_unorm_fetch_rgba; return &util_format_v8y8u8y8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm; return &util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_v8y8u8y8_422_unorm_pack_rgba_float; return &util_format_v8y8u8y8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm; return &util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_v8y8u8y8_422_unorm_unpack_rgba_float; return &util_format_v8y8u8y8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_fetch_rgba") == 0) { extern void* util_format_y8u8y8v8_422_unorm_fetch_rgba; return &util_format_y8u8y8v8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm; return &util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_y8u8y8v8_422_unorm_pack_rgba_float; return &util_format_y8u8y8v8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm; return &util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_y8u8y8v8_422_unorm_unpack_rgba_float; return &util_format_y8u8y8v8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_fetch_rgba") == 0) { extern void* util_format_y8v8y8u8_422_unorm_fetch_rgba; return &util_format_y8v8y8u8_422_unorm_fetch_rgba; }
-		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm; return &util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_y8v8y8u8_422_unorm_pack_rgba_float; return &util_format_y8v8y8u8_422_unorm_pack_rgba_float; }
-		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm; return &util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm; }
-		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_y8v8y8u8_422_unorm_unpack_rgba_float; return &util_format_y8v8y8u8_422_unorm_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_s8_uint_pack_s_8uint") == 0) { extern void* util_format_s8_uint_pack_s_8uint; return &util_format_s8_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_s8_uint_unpack_s_8uint; return &util_format_s8_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_s_8uint") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_s_8uint; return &util_format_s8_uint_z24_unorm_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_z_32unorm") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_z_32unorm; return &util_format_s8_uint_z24_unorm_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_z_float") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_z_float; return &util_format_s8_uint_z24_unorm_pack_z_float; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_s_8uint") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_s_8uint; return &util_format_s8_uint_z24_unorm_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_z_32unorm") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_z_32unorm; return &util_format_s8_uint_z24_unorm_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_z_float") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_z_float; return &util_format_s8_uint_z24_unorm_unpack_z_float; }
-		if (strcmp(symbol, "util_format_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_s8x24_uint_pack_s_8uint; return &util_format_s8x24_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_s8x24_uint_unpack_s_8uint; return &util_format_s8x24_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_x24s8_uint_pack_s_8uint") == 0) { extern void* util_format_x24s8_uint_pack_s_8uint; return &util_format_x24s8_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_x24s8_uint_unpack_s_8uint") == 0) { extern void* util_format_x24s8_uint_unpack_s_8uint; return &util_format_x24s8_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_x32_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_x32_s8x24_uint_pack_s_8uint; return &util_format_x32_s8x24_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_x32_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_x32_s8x24_uint_unpack_s_8uint; return &util_format_x32_s8x24_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_x8z24_unorm_pack_z_32unorm") == 0) { extern void* util_format_x8z24_unorm_pack_z_32unorm; return &util_format_x8z24_unorm_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_x8z24_unorm_pack_z_float") == 0) { extern void* util_format_x8z24_unorm_pack_z_float; return &util_format_x8z24_unorm_pack_z_float; }
-		if (strcmp(symbol, "util_format_x8z24_unorm_unpack_z_32unorm") == 0) { extern void* util_format_x8z24_unorm_unpack_z_32unorm; return &util_format_x8z24_unorm_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_x8z24_unorm_unpack_z_float") == 0) { extern void* util_format_x8z24_unorm_unpack_z_float; return &util_format_x8z24_unorm_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z16_unorm_pack_z_32unorm") == 0) { extern void* util_format_z16_unorm_pack_z_32unorm; return &util_format_z16_unorm_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z16_unorm_pack_z_float") == 0) { extern void* util_format_z16_unorm_pack_z_float; return &util_format_z16_unorm_pack_z_float; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_s_8uint") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_s_8uint; return &util_format_z16_unorm_s8_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_z_32unorm") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_z_32unorm; return &util_format_z16_unorm_s8_uint_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_z_float") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_z_float; return &util_format_z16_unorm_s8_uint_pack_z_float; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_s_8uint; return &util_format_z16_unorm_s8_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_z_32unorm") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_z_32unorm; return &util_format_z16_unorm_s8_uint_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_z_float") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_z_float; return &util_format_z16_unorm_s8_uint_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z16_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z16_unorm_unpack_z_32unorm; return &util_format_z16_unorm_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z16_unorm_unpack_z_float") == 0) { extern void* util_format_z16_unorm_unpack_z_float; return &util_format_z16_unorm_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z24_unorm_packed_pack_z_32unorm") == 0) { extern void* util_format_z24_unorm_packed_pack_z_32unorm; return &util_format_z24_unorm_packed_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24_unorm_packed_pack_z_float") == 0) { extern void* util_format_z24_unorm_packed_pack_z_float; return &util_format_z24_unorm_packed_pack_z_float; }
-		if (strcmp(symbol, "util_format_z24_unorm_packed_unpack_z_32unorm") == 0) { extern void* util_format_z24_unorm_packed_unpack_z_32unorm; return &util_format_z24_unorm_packed_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24_unorm_packed_unpack_z_float") == 0) { extern void* util_format_z24_unorm_packed_unpack_z_float; return &util_format_z24_unorm_packed_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_s_8uint") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_s_8uint; return &util_format_z24_unorm_s8_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_separate") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_separate; return &util_format_z24_unorm_s8_uint_pack_separate; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_separate_z32") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_separate_z32; return &util_format_z24_unorm_s8_uint_pack_separate_z32; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z24") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z24; return &util_format_z24_unorm_s8_uint_pack_z24; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z_32unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z_32unorm; return &util_format_z24_unorm_s8_uint_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z_float") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z_float; return &util_format_z24_unorm_s8_uint_pack_z_float; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_s_8uint; return &util_format_z24_unorm_s8_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z24") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z24; return &util_format_z24_unorm_s8_uint_unpack_z24; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z_32unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z_32unorm; return &util_format_z24_unorm_s8_uint_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z_float") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z_float; return &util_format_z24_unorm_s8_uint_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z24x8_unorm_pack_z_32unorm") == 0) { extern void* util_format_z24x8_unorm_pack_z_32unorm; return &util_format_z24x8_unorm_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24x8_unorm_pack_z_float") == 0) { extern void* util_format_z24x8_unorm_pack_z_float; return &util_format_z24x8_unorm_pack_z_float; }
-		if (strcmp(symbol, "util_format_z24x8_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z24x8_unorm_unpack_z_32unorm; return &util_format_z24x8_unorm_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z24x8_unorm_unpack_z_float") == 0) { extern void* util_format_z24x8_unorm_unpack_z_float; return &util_format_z24x8_unorm_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z32_float_pack_z_32unorm") == 0) { extern void* util_format_z32_float_pack_z_32unorm; return &util_format_z32_float_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_float_pack_z_float") == 0) { extern void* util_format_z32_float_pack_z_float; return &util_format_z32_float_pack_z_float; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_s_8uint; return &util_format_z32_float_s8x24_uint_pack_s_8uint; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_z_32unorm") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_z_32unorm; return &util_format_z32_float_s8x24_uint_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_z_float") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_z_float; return &util_format_z32_float_s8x24_uint_pack_z_float; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_s_8uint; return &util_format_z32_float_s8x24_uint_unpack_s_8uint; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_z_32unorm") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_z_32unorm; return &util_format_z32_float_s8x24_uint_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_z_float") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_z_float; return &util_format_z32_float_s8x24_uint_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z32_float_unpack_z_32unorm") == 0) { extern void* util_format_z32_float_unpack_z_32unorm; return &util_format_z32_float_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_float_unpack_z_float") == 0) { extern void* util_format_z32_float_unpack_z_float; return &util_format_z32_float_unpack_z_float; }
-		if (strcmp(symbol, "util_format_z32_unorm_pack_z_32unorm") == 0) { extern void* util_format_z32_unorm_pack_z_32unorm; return &util_format_z32_unorm_pack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_unorm_pack_z_float") == 0) { extern void* util_format_z32_unorm_pack_z_float; return &util_format_z32_unorm_pack_z_float; }
-		if (strcmp(symbol, "util_format_z32_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z32_unorm_unpack_z_32unorm; return &util_format_z32_unorm_unpack_z_32unorm; }
-		if (strcmp(symbol, "util_format_z32_unorm_unpack_z_float") == 0) { extern void* util_format_z32_unorm_unpack_z_float; return &util_format_z32_unorm_unpack_z_float; }
-		if (strcmp(symbol, "util_sync_provider_drm") == 0) { extern void* util_sync_provider_drm; return &util_sync_provider_drm; }
-		if (strcmp(symbol, "debug_backtrace_capture") == 0) { extern void* debug_backtrace_capture; return &debug_backtrace_capture; }
-		if (strcmp(symbol, "debug_backtrace_dump") == 0) { extern void* debug_backtrace_dump; return &debug_backtrace_dump; }
-		if (strcmp(symbol, "debug_backtrace_print") == 0) { extern void* debug_backtrace_print; return &debug_backtrace_print; }
-		if (strcmp(symbol, "debug_symbol_name") == 0) { extern void* debug_symbol_name; return &debug_symbol_name; }
-		if (strcmp(symbol, "debug_symbol_name_cached") == 0) { extern void* debug_symbol_name_cached; return &debug_symbol_name_cached; }
-		if (strcmp(symbol, "debug_symbol_print") == 0) { extern void* debug_symbol_print; return &debug_symbol_print; }
+		if (strcmp(symbol, "util_create_range_remap") == 0) { extern void* util_create_range_remap; return &util_create_range_remap; }
+		if (strcmp(symbol, "util_dl_close") == 0) { extern void* util_dl_close; return &util_dl_close; }
+		if (strcmp(symbol, "util_dl_error") == 0) { extern void* util_dl_error; return &util_dl_error; }
+		if (strcmp(symbol, "util_dl_get_path_from_proc") == 0) { extern void* util_dl_get_path_from_proc; return &util_dl_get_path_from_proc; }
+		if (strcmp(symbol, "util_dl_get_proc_address") == 0) { extern void* util_dl_get_proc_address; return &util_dl_get_proc_address; }
+		if (strcmp(symbol, "util_dl_open") == 0) { extern void* util_dl_open; return &util_dl_open; }
+		if (strcmp(symbol, "util_dynarray_is_data_stack_allocated") == 0) { extern void* util_dynarray_is_data_stack_allocated; return &util_dynarray_is_data_stack_allocated; }
+		if (strcmp(symbol, "util_flush_inval_range_no_fence") == 0) { extern void* util_flush_inval_range_no_fence; return &util_flush_inval_range_no_fence; }
+		if (strcmp(symbol, "util_flush_inval_range") == 0) { extern void* util_flush_inval_range; return &util_flush_inval_range; }
+		if (strcmp(symbol, "util_flush_range_no_fence") == 0) { extern void* util_flush_range_no_fence; return &util_flush_range_no_fence; }
+		if (strcmp(symbol, "util_flush_range") == 0) { extern void* util_flush_range; return &util_flush_range; }
 		if (strcmp(symbol, "util_format_a16_float_fetch_rgba") == 0) { extern void* util_format_a16_float_fetch_rgba; return &util_format_a16_float_fetch_rgba; }
 		if (strcmp(symbol, "util_format_a16_float_pack_rgba_8unorm") == 0) { extern void* util_format_a16_float_pack_rgba_8unorm; return &util_format_a16_float_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_a16_float_pack_rgba_float") == 0) { extern void* util_format_a16_float_pack_rgba_float; return &util_format_a16_float_pack_rgba_float; }
@@ -939,6 +729,7 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_a8r8g8b8_unorm_pack_rgba_float") == 0) { extern void* util_format_a8r8g8b8_unorm_pack_rgba_float; return &util_format_a8r8g8b8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_a8r8g8b8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_a8r8g8b8_unorm_unpack_rgba_8unorm; return &util_format_a8r8g8b8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_a8r8g8b8_unorm_unpack_rgba_float") == 0) { extern void* util_format_a8r8g8b8_unorm_unpack_rgba_float; return &util_format_a8r8g8b8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_apply_color_swizzle") == 0) { extern void* util_format_apply_color_swizzle; return &util_format_apply_color_swizzle; }
 		if (strcmp(symbol, "util_format_b10g10r10a2_sint_fetch_rgba") == 0) { extern void* util_format_b10g10r10a2_sint_fetch_rgba; return &util_format_b10g10r10a2_sint_fetch_rgba; }
 		if (strcmp(symbol, "util_format_b10g10r10a2_sint_pack_signed") == 0) { extern void* util_format_b10g10r10a2_sint_pack_signed; return &util_format_b10g10r10a2_sint_pack_signed; }
 		if (strcmp(symbol, "util_format_b10g10r10a2_sint_pack_unsigned") == 0) { extern void* util_format_b10g10r10a2_sint_pack_unsigned; return &util_format_b10g10r10a2_sint_pack_unsigned; }
@@ -1121,8 +912,100 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_b8g8r8x8_unorm_pack_rgba_float") == 0) { extern void* util_format_b8g8r8x8_unorm_pack_rgba_float; return &util_format_b8g8r8x8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_b8g8r8x8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_b8g8r8x8_unorm_unpack_rgba_8unorm; return &util_format_b8g8r8x8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_b8g8r8x8_unorm_unpack_rgba_float") == 0) { extern void* util_format_b8g8r8x8_unorm_unpack_rgba_float; return &util_format_b8g8r8x8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgb_float_fetch_rgba") == 0) { extern void* util_format_bptc_rgb_float_fetch_rgba; return &util_format_bptc_rgb_float_fetch_rgba; }
+		if (strcmp(symbol, "util_format_bptc_rgb_float_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_float_pack_rgba_8unorm; return &util_format_bptc_rgb_float_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgb_float_pack_rgba_float") == 0) { extern void* util_format_bptc_rgb_float_pack_rgba_float; return &util_format_bptc_rgb_float_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgb_float_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_float_unpack_rgba_8unorm; return &util_format_bptc_rgb_float_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgb_float_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgb_float_unpack_rgba_float; return &util_format_bptc_rgb_float_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_fetch_rgba") == 0) { extern void* util_format_bptc_rgb_ufloat_fetch_rgba; return &util_format_bptc_rgb_ufloat_fetch_rgba; }
+		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_ufloat_pack_rgba_8unorm; return &util_format_bptc_rgb_ufloat_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_pack_rgba_float") == 0) { extern void* util_format_bptc_rgb_ufloat_pack_rgba_float; return &util_format_bptc_rgb_ufloat_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgb_ufloat_unpack_rgba_8unorm; return &util_format_bptc_rgb_ufloat_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgb_ufloat_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgb_ufloat_unpack_rgba_float; return &util_format_bptc_rgb_ufloat_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgba_unorm_fetch_rgba") == 0) { extern void* util_format_bptc_rgba_unorm_fetch_rgba; return &util_format_bptc_rgba_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_bptc_rgba_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgba_unorm_pack_rgba_8unorm; return &util_format_bptc_rgba_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgba_unorm_pack_rgba_float") == 0) { extern void* util_format_bptc_rgba_unorm_pack_rgba_float; return &util_format_bptc_rgba_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_rgba_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_rgba_unorm_unpack_rgba_8unorm; return &util_format_bptc_rgba_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_rgba_unorm_unpack_rgba_float") == 0) { extern void* util_format_bptc_rgba_unorm_unpack_rgba_float; return &util_format_bptc_rgba_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_srgba_fetch_rgba") == 0) { extern void* util_format_bptc_srgba_fetch_rgba; return &util_format_bptc_srgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_bptc_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_bptc_srgba_pack_rgba_8unorm; return &util_format_bptc_srgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_srgba_pack_rgba_float") == 0) { extern void* util_format_bptc_srgba_pack_rgba_float; return &util_format_bptc_srgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_bptc_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_bptc_srgba_unpack_rgba_8unorm; return &util_format_bptc_srgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_bptc_srgba_unpack_rgba_float") == 0) { extern void* util_format_bptc_srgba_unpack_rgba_float; return &util_format_bptc_srgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_compose_swizzles") == 0) { extern void* util_format_compose_swizzles; return &util_format_compose_swizzles; }
 		if (strcmp(symbol, "util_format_description") == 0) { extern void* util_format_description; return &util_format_description; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_fetch_rgba_8unorm; return &util_format_dxt1_rgb_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_fetch_rgba") == 0) { extern void* util_format_dxt1_rgb_fetch_rgba; return &util_format_dxt1_rgb_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_fetch") == 0) { extern void* util_format_dxt1_rgb_fetch; return &util_format_dxt1_rgb_fetch; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_pack_rgba_8unorm; return &util_format_dxt1_rgb_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_pack_rgba_float") == 0) { extern void* util_format_dxt1_rgb_pack_rgba_float; return &util_format_dxt1_rgb_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgb_unpack_rgba_8unorm; return &util_format_dxt1_rgb_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgb_unpack_rgba_float") == 0) { extern void* util_format_dxt1_rgb_unpack_rgba_float; return &util_format_dxt1_rgb_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_fetch_rgba_8unorm; return &util_format_dxt1_rgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_fetch_rgba") == 0) { extern void* util_format_dxt1_rgba_fetch_rgba; return &util_format_dxt1_rgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_fetch") == 0) { extern void* util_format_dxt1_rgba_fetch; return &util_format_dxt1_rgba_fetch; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_pack_rgba_8unorm; return &util_format_dxt1_rgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt1_rgba_pack_rgba_float; return &util_format_dxt1_rgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_rgba_unpack_rgba_8unorm; return &util_format_dxt1_rgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt1_rgba_unpack_rgba_float; return &util_format_dxt1_rgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_fetch_rgba_8unorm; return &util_format_dxt1_srgb_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_fetch_rgba") == 0) { extern void* util_format_dxt1_srgb_fetch_rgba; return &util_format_dxt1_srgb_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_pack_rgba_8unorm; return &util_format_dxt1_srgb_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_pack_rgba_float") == 0) { extern void* util_format_dxt1_srgb_pack_rgba_float; return &util_format_dxt1_srgb_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgb_unpack_rgba_8unorm; return &util_format_dxt1_srgb_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgb_unpack_rgba_float") == 0) { extern void* util_format_dxt1_srgb_unpack_rgba_float; return &util_format_dxt1_srgb_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_fetch_rgba_8unorm; return &util_format_dxt1_srgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_fetch_rgba") == 0) { extern void* util_format_dxt1_srgba_fetch_rgba; return &util_format_dxt1_srgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_pack_rgba_8unorm; return &util_format_dxt1_srgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt1_srgba_pack_rgba_float; return &util_format_dxt1_srgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt1_srgba_unpack_rgba_8unorm; return &util_format_dxt1_srgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt1_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt1_srgba_unpack_rgba_float; return &util_format_dxt1_srgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_fetch_rgba_8unorm; return &util_format_dxt3_rgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_fetch_rgba") == 0) { extern void* util_format_dxt3_rgba_fetch_rgba; return &util_format_dxt3_rgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_fetch") == 0) { extern void* util_format_dxt3_rgba_fetch; return &util_format_dxt3_rgba_fetch; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_pack_rgba_8unorm; return &util_format_dxt3_rgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt3_rgba_pack_rgba_float; return &util_format_dxt3_rgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt3_rgba_unpack_rgba_8unorm; return &util_format_dxt3_rgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt3_rgba_unpack_rgba_float; return &util_format_dxt3_rgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_fetch_rgba_8unorm; return &util_format_dxt3_srgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_fetch_rgba") == 0) { extern void* util_format_dxt3_srgba_fetch_rgba; return &util_format_dxt3_srgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_pack_rgba_8unorm; return &util_format_dxt3_srgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt3_srgba_pack_rgba_float; return &util_format_dxt3_srgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt3_srgba_unpack_rgba_8unorm; return &util_format_dxt3_srgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt3_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt3_srgba_unpack_rgba_float; return &util_format_dxt3_srgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_fetch_rgba_8unorm; return &util_format_dxt5_rgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_fetch_rgba") == 0) { extern void* util_format_dxt5_rgba_fetch_rgba; return &util_format_dxt5_rgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_fetch") == 0) { extern void* util_format_dxt5_rgba_fetch; return &util_format_dxt5_rgba_fetch; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_pack_rgba_8unorm; return &util_format_dxt5_rgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_pack_rgba_float") == 0) { extern void* util_format_dxt5_rgba_pack_rgba_float; return &util_format_dxt5_rgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt5_rgba_unpack_rgba_8unorm; return &util_format_dxt5_rgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_rgba_unpack_rgba_float") == 0) { extern void* util_format_dxt5_rgba_unpack_rgba_float; return &util_format_dxt5_rgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_fetch_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_fetch_rgba_8unorm; return &util_format_dxt5_srgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_fetch_rgba") == 0) { extern void* util_format_dxt5_srgba_fetch_rgba; return &util_format_dxt5_srgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_pack_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_pack_rgba_8unorm; return &util_format_dxt5_srgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_pack_rgba_float") == 0) { extern void* util_format_dxt5_srgba_pack_rgba_float; return &util_format_dxt5_srgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_unpack_rgba_8unorm") == 0) { extern void* util_format_dxt5_srgba_unpack_rgba_8unorm; return &util_format_dxt5_srgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_dxt5_srgba_unpack_rgba_float") == 0) { extern void* util_format_dxt5_srgba_unpack_rgba_float; return &util_format_dxt5_srgba_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_dxtn_pack") == 0) { extern void* util_format_dxtn_pack; return &util_format_dxtn_pack; }
+		if (strcmp(symbol, "util_format_etc1_rgb8_fetch_rgba") == 0) { extern void* util_format_etc1_rgb8_fetch_rgba; return &util_format_etc1_rgb8_fetch_rgba; }
+		if (strcmp(symbol, "util_format_etc1_rgb8_pack_rgba_8unorm") == 0) { extern void* util_format_etc1_rgb8_pack_rgba_8unorm; return &util_format_etc1_rgb8_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_etc1_rgb8_pack_rgba_float") == 0) { extern void* util_format_etc1_rgb8_pack_rgba_float; return &util_format_etc1_rgb8_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_etc1_rgb8_unpack_rgba_8unorm") == 0) { extern void* util_format_etc1_rgb8_unpack_rgba_8unorm; return &util_format_etc1_rgb8_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_etc1_rgb8_unpack_rgba_float") == 0) { extern void* util_format_etc1_rgb8_unpack_rgba_float; return &util_format_etc1_rgb8_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_fetch_rgba_func") == 0) { extern void* util_format_fetch_rgba_func; return &util_format_fetch_rgba_func; }
+		if (strcmp(symbol, "util_format_fits_8unorm") == 0) { extern void* util_format_fits_8unorm; return &util_format_fits_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_fetch_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_fetch_rgba_8unorm; return &util_format_fxt1_rgb_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_fetch_rgba") == 0) { extern void* util_format_fxt1_rgb_fetch_rgba; return &util_format_fxt1_rgb_fetch_rgba; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_pack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_pack_rgba_8unorm; return &util_format_fxt1_rgb_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_pack_rgba_float") == 0) { extern void* util_format_fxt1_rgb_pack_rgba_float; return &util_format_fxt1_rgb_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_unpack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgb_unpack_rgba_8unorm; return &util_format_fxt1_rgb_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgb_unpack_rgba_float") == 0) { extern void* util_format_fxt1_rgb_unpack_rgba_float; return &util_format_fxt1_rgb_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_fetch_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_fetch_rgba_8unorm; return &util_format_fxt1_rgba_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_fetch_rgba") == 0) { extern void* util_format_fxt1_rgba_fetch_rgba; return &util_format_fxt1_rgba_fetch_rgba; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_pack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_pack_rgba_8unorm; return &util_format_fxt1_rgba_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_pack_rgba_float") == 0) { extern void* util_format_fxt1_rgba_pack_rgba_float; return &util_format_fxt1_rgba_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_unpack_rgba_8unorm") == 0) { extern void* util_format_fxt1_rgba_unpack_rgba_8unorm; return &util_format_fxt1_rgba_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_fxt1_rgba_unpack_rgba_float") == 0) { extern void* util_format_fxt1_rgba_unpack_rgba_float; return &util_format_fxt1_rgba_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_g16r16_sint_fetch_rgba") == 0) { extern void* util_format_g16r16_sint_fetch_rgba; return &util_format_g16r16_sint_fetch_rgba; }
 		if (strcmp(symbol, "util_format_g16r16_sint_pack_signed") == 0) { extern void* util_format_g16r16_sint_pack_signed; return &util_format_g16r16_sint_pack_signed; }
 		if (strcmp(symbol, "util_format_g16r16_sint_pack_unsigned") == 0) { extern void* util_format_g16r16_sint_pack_unsigned; return &util_format_g16r16_sint_pack_unsigned; }
@@ -1137,6 +1020,11 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_g16r16_unorm_pack_rgba_float") == 0) { extern void* util_format_g16r16_unorm_pack_rgba_float; return &util_format_g16r16_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_g16r16_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_g16r16_unorm_unpack_rgba_8unorm; return &util_format_g16r16_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_g16r16_unorm_unpack_rgba_float") == 0) { extern void* util_format_g16r16_unorm_unpack_rgba_float; return &util_format_g16r16_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_fetch_rgba") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_fetch_rgba; return &util_format_g8r8_g8b8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm; return &util_format_g8r8_g8b8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_pack_rgba_float; return &util_format_g8r8_g8b8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm; return &util_format_g8r8_g8b8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_g8r8_g8b8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_g8r8_g8b8_422_unorm_unpack_rgba_float; return &util_format_g8r8_g8b8_422_unorm_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_g8r8_sint_fetch_rgba") == 0) { extern void* util_format_g8r8_sint_fetch_rgba; return &util_format_g8r8_sint_fetch_rgba; }
 		if (strcmp(symbol, "util_format_g8r8_sint_pack_signed") == 0) { extern void* util_format_g8r8_sint_pack_signed; return &util_format_g8r8_sint_pack_signed; }
 		if (strcmp(symbol, "util_format_g8r8_sint_pack_unsigned") == 0) { extern void* util_format_g8r8_sint_pack_unsigned; return &util_format_g8r8_sint_pack_unsigned; }
@@ -1151,6 +1039,13 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_g8r8_unorm_pack_rgba_float") == 0) { extern void* util_format_g8r8_unorm_pack_rgba_float; return &util_format_g8r8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_g8r8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_g8r8_unorm_unpack_rgba_8unorm; return &util_format_g8r8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_g8r8_unorm_unpack_rgba_float") == 0) { extern void* util_format_g8r8_unorm_unpack_rgba_float; return &util_format_g8r8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_get_array") == 0) { extern void* util_format_get_array; return &util_format_get_array; }
+		if (strcmp(symbol, "util_format_get_largest_non_void_channel") == 0) { extern void* util_format_get_largest_non_void_channel; return &util_format_get_largest_non_void_channel; }
+		if (strcmp(symbol, "util_format_get_last_component") == 0) { extern void* util_format_get_last_component; return &util_format_get_last_component; }
+		if (strcmp(symbol, "util_format_get_max_channel_size") == 0) { extern void* util_format_get_max_channel_size; return &util_format_get_max_channel_size; }
+		if (strcmp(symbol, "util_format_get_tilesize") == 0) { extern void* util_format_get_tilesize; return &util_format_get_tilesize; }
+		if (strcmp(symbol, "util_format_has_alpha") == 0) { extern void* util_format_has_alpha; return &util_format_has_alpha; }
+		if (strcmp(symbol, "util_format_has_alpha1") == 0) { extern void* util_format_has_alpha1; return &util_format_has_alpha1; }
 		if (strcmp(symbol, "util_format_i16_float_fetch_rgba") == 0) { extern void* util_format_i16_float_fetch_rgba; return &util_format_i16_float_fetch_rgba; }
 		if (strcmp(symbol, "util_format_i16_float_pack_rgba_8unorm") == 0) { extern void* util_format_i16_float_pack_rgba_8unorm; return &util_format_i16_float_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_i16_float_pack_rgba_float") == 0) { extern void* util_format_i16_float_pack_rgba_float; return &util_format_i16_float_pack_rgba_float; }
@@ -1205,6 +1100,22 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_i8_unorm_pack_rgba_float") == 0) { extern void* util_format_i8_unorm_pack_rgba_float; return &util_format_i8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_i8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_i8_unorm_unpack_rgba_8unorm; return &util_format_i8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_i8_unorm_unpack_rgba_float") == 0) { extern void* util_format_i8_unorm_unpack_rgba_float; return &util_format_i8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_is_alpha") == 0) { extern void* util_format_is_alpha; return &util_format_is_alpha; }
+		if (strcmp(symbol, "util_format_is_float") == 0) { extern void* util_format_is_float; return &util_format_is_float; }
+		if (strcmp(symbol, "util_format_is_float16") == 0) { extern void* util_format_is_float16; return &util_format_is_float16; }
+		if (strcmp(symbol, "util_format_is_intensity") == 0) { extern void* util_format_is_intensity; return &util_format_is_intensity; }
+		if (strcmp(symbol, "util_format_is_luminance_alpha") == 0) { extern void* util_format_is_luminance_alpha; return &util_format_is_luminance_alpha; }
+		if (strcmp(symbol, "util_format_is_luminance") == 0) { extern void* util_format_is_luminance; return &util_format_is_luminance; }
+		if (strcmp(symbol, "util_format_is_pure_integer") == 0) { extern void* util_format_is_pure_integer; return &util_format_is_pure_integer; }
+		if (strcmp(symbol, "util_format_is_pure_sint") == 0) { extern void* util_format_is_pure_sint; return &util_format_is_pure_sint; }
+		if (strcmp(symbol, "util_format_is_pure_uint") == 0) { extern void* util_format_is_pure_uint; return &util_format_is_pure_uint; }
+		if (strcmp(symbol, "util_format_is_red_alpha") == 0) { extern void* util_format_is_red_alpha; return &util_format_is_red_alpha; }
+		if (strcmp(symbol, "util_format_is_red_green") == 0) { extern void* util_format_is_red_green; return &util_format_is_red_green; }
+		if (strcmp(symbol, "util_format_is_scaled") == 0) { extern void* util_format_is_scaled; return &util_format_is_scaled; }
+		if (strcmp(symbol, "util_format_is_snorm") == 0) { extern void* util_format_is_snorm; return &util_format_is_snorm; }
+		if (strcmp(symbol, "util_format_is_snorm8") == 0) { extern void* util_format_is_snorm8; return &util_format_is_snorm8; }
+		if (strcmp(symbol, "util_format_is_subsampled_422") == 0) { extern void* util_format_is_subsampled_422; return &util_format_is_subsampled_422; }
+		if (strcmp(symbol, "util_format_is_unorm") == 0) { extern void* util_format_is_unorm; return &util_format_is_unorm; }
 		if (strcmp(symbol, "util_format_l16_float_fetch_rgba") == 0) { extern void* util_format_l16_float_fetch_rgba; return &util_format_l16_float_fetch_rgba; }
 		if (strcmp(symbol, "util_format_l16_float_pack_rgba_8unorm") == 0) { extern void* util_format_l16_float_pack_rgba_8unorm; return &util_format_l16_float_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_l16_float_pack_rgba_float") == 0) { extern void* util_format_l16_float_pack_rgba_float; return &util_format_l16_float_pack_rgba_float; }
@@ -1328,11 +1239,38 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_l8a8_unorm_pack_rgba_float") == 0) { extern void* util_format_l8a8_unorm_pack_rgba_float; return &util_format_l8a8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_l8a8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_l8a8_unorm_unpack_rgba_8unorm; return &util_format_l8a8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_l8a8_unorm_unpack_rgba_float") == 0) { extern void* util_format_l8a8_unorm_unpack_rgba_float; return &util_format_l8a8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc1_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_fetch_rgba_8unorm; return &util_format_latc1_snorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_snorm_fetch_rgba") == 0) { extern void* util_format_latc1_snorm_fetch_rgba; return &util_format_latc1_snorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_latc1_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_pack_rgba_8unorm; return &util_format_latc1_snorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_snorm_pack_rgba_float") == 0) { extern void* util_format_latc1_snorm_pack_rgba_float; return &util_format_latc1_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc1_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc1_snorm_unpack_rgba_8unorm; return &util_format_latc1_snorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_snorm_unpack_rgba_float") == 0) { extern void* util_format_latc1_snorm_unpack_rgba_float; return &util_format_latc1_snorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc1_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_fetch_rgba_8unorm; return &util_format_latc1_unorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_unorm_fetch_rgba") == 0) { extern void* util_format_latc1_unorm_fetch_rgba; return &util_format_latc1_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_latc1_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_pack_rgba_8unorm; return &util_format_latc1_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_unorm_pack_rgba_float") == 0) { extern void* util_format_latc1_unorm_pack_rgba_float; return &util_format_latc1_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc1_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc1_unorm_unpack_rgba_8unorm; return &util_format_latc1_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc1_unorm_unpack_rgba_float") == 0) { extern void* util_format_latc1_unorm_unpack_rgba_float; return &util_format_latc1_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc2_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_fetch_rgba_8unorm; return &util_format_latc2_snorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_snorm_fetch_rgba") == 0) { extern void* util_format_latc2_snorm_fetch_rgba; return &util_format_latc2_snorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_latc2_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_pack_rgba_8unorm; return &util_format_latc2_snorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_snorm_pack_rgba_float") == 0) { extern void* util_format_latc2_snorm_pack_rgba_float; return &util_format_latc2_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc2_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc2_snorm_unpack_rgba_8unorm; return &util_format_latc2_snorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_snorm_unpack_rgba_float") == 0) { extern void* util_format_latc2_snorm_unpack_rgba_float; return &util_format_latc2_snorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc2_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_fetch_rgba_8unorm; return &util_format_latc2_unorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_unorm_fetch_rgba") == 0) { extern void* util_format_latc2_unorm_fetch_rgba; return &util_format_latc2_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_latc2_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_pack_rgba_8unorm; return &util_format_latc2_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_unorm_pack_rgba_float") == 0) { extern void* util_format_latc2_unorm_pack_rgba_float; return &util_format_latc2_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_latc2_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_latc2_unorm_unpack_rgba_8unorm; return &util_format_latc2_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_latc2_unorm_unpack_rgba_float") == 0) { extern void* util_format_latc2_unorm_unpack_rgba_float; return &util_format_latc2_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_linear_to_srgb_8unorm_table") == 0) { extern void* util_format_linear_to_srgb_8unorm_table; return &util_format_linear_to_srgb_8unorm_table; }
+		if (strcmp(symbol, "util_format_linear_to_srgb_helper_table") == 0) { extern void* util_format_linear_to_srgb_helper_table; return &util_format_linear_to_srgb_helper_table; }
 		if (strcmp(symbol, "util_format_none_fetch_rgba") == 0) { extern void* util_format_none_fetch_rgba; return &util_format_none_fetch_rgba; }
 		if (strcmp(symbol, "util_format_none_pack_rgba_8unorm") == 0) { extern void* util_format_none_pack_rgba_8unorm; return &util_format_none_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_none_pack_rgba_float") == 0) { extern void* util_format_none_pack_rgba_float; return &util_format_none_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_none_unpack_rgba_8unorm") == 0) { extern void* util_format_none_unpack_rgba_8unorm; return &util_format_none_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_none_unpack_rgba_float") == 0) { extern void* util_format_none_unpack_rgba_float; return &util_format_none_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_nr_test_cases") == 0) { extern void* util_format_nr_test_cases; return &util_format_nr_test_cases; }
 		if (strcmp(symbol, "util_format_pack_description") == 0) { extern void* util_format_pack_description; return &util_format_pack_description; }
 		if (strcmp(symbol, "util_format_r10g10b10a2_sint_fetch_rgba") == 0) { extern void* util_format_r10g10b10a2_sint_fetch_rgba; return &util_format_r10g10b10a2_sint_fetch_rgba; }
 		if (strcmp(symbol, "util_format_r10g10b10a2_sint_pack_signed") == 0) { extern void* util_format_r10g10b10a2_sint_pack_signed; return &util_format_r10g10b10a2_sint_pack_signed; }
@@ -1386,6 +1324,11 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_r10sg10sb10sa2u_norm_pack_rgba_float") == 0) { extern void* util_format_r10sg10sb10sa2u_norm_pack_rgba_float; return &util_format_r10sg10sb10sa2u_norm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_r10sg10sb10sa2u_norm_unpack_rgba_8unorm") == 0) { extern void* util_format_r10sg10sb10sa2u_norm_unpack_rgba_8unorm; return &util_format_r10sg10sb10sa2u_norm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r10sg10sb10sa2u_norm_unpack_rgba_float") == 0) { extern void* util_format_r10sg10sb10sa2u_norm_unpack_rgba_float; return &util_format_r10sg10sb10sa2u_norm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_r11g11b10_float_fetch_rgba") == 0) { extern void* util_format_r11g11b10_float_fetch_rgba; return &util_format_r11g11b10_float_fetch_rgba; }
+		if (strcmp(symbol, "util_format_r11g11b10_float_pack_rgba_8unorm") == 0) { extern void* util_format_r11g11b10_float_pack_rgba_8unorm; return &util_format_r11g11b10_float_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r11g11b10_float_pack_rgba_float") == 0) { extern void* util_format_r11g11b10_float_pack_rgba_float; return &util_format_r11g11b10_float_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_r11g11b10_float_unpack_rgba_8unorm") == 0) { extern void* util_format_r11g11b10_float_unpack_rgba_8unorm; return &util_format_r11g11b10_float_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r11g11b10_float_unpack_rgba_float") == 0) { extern void* util_format_r11g11b10_float_unpack_rgba_float; return &util_format_r11g11b10_float_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_r16_float_fetch_rgba") == 0) { extern void* util_format_r16_float_fetch_rgba; return &util_format_r16_float_fetch_rgba; }
 		if (strcmp(symbol, "util_format_r16_float_pack_rgba_8unorm") == 0) { extern void* util_format_r16_float_pack_rgba_8unorm; return &util_format_r16_float_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r16_float_pack_rgba_float") == 0) { extern void* util_format_r16_float_pack_rgba_float; return &util_format_r16_float_pack_rgba_float; }
@@ -1906,6 +1849,11 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_r8a8_unorm_pack_rgba_float") == 0) { extern void* util_format_r8a8_unorm_pack_rgba_float; return &util_format_r8a8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_r8a8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8a8_unorm_unpack_rgba_8unorm; return &util_format_r8a8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r8a8_unorm_unpack_rgba_float") == 0) { extern void* util_format_r8a8_unorm_unpack_rgba_float; return &util_format_r8a8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_fetch_rgba") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_fetch_rgba; return &util_format_r8g8_b8g8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm; return &util_format_r8g8_b8g8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_pack_rgba_float; return &util_format_r8g8_b8g8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm; return &util_format_r8g8_b8g8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r8g8_b8g8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_r8g8_b8g8_422_unorm_unpack_rgba_float; return &util_format_r8g8_b8g8_422_unorm_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_r8g8_sint_fetch_rgba") == 0) { extern void* util_format_r8g8_sint_fetch_rgba; return &util_format_r8g8_sint_fetch_rgba; }
 		if (strcmp(symbol, "util_format_r8g8_sint_pack_signed") == 0) { extern void* util_format_r8g8_sint_pack_signed; return &util_format_r8g8_sint_pack_signed; }
 		if (strcmp(symbol, "util_format_r8g8_sint_pack_unsigned") == 0) { extern void* util_format_r8g8_sint_pack_unsigned; return &util_format_r8g8_sint_pack_unsigned; }
@@ -2028,12 +1976,91 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_r8g8b8x8_unorm_pack_rgba_float") == 0) { extern void* util_format_r8g8b8x8_unorm_pack_rgba_float; return &util_format_r8g8b8x8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_r8g8b8x8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8g8b8x8_unorm_unpack_rgba_8unorm; return &util_format_r8g8b8x8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r8g8b8x8_unorm_unpack_rgba_float") == 0) { extern void* util_format_r8g8b8x8_unorm_unpack_rgba_float; return &util_format_r8g8b8x8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_r8g8bx_snorm_fetch_rgba") == 0) { extern void* util_format_r8g8bx_snorm_fetch_rgba; return &util_format_r8g8bx_snorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_r8g8bx_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_r8g8bx_snorm_pack_rgba_8unorm; return &util_format_r8g8bx_snorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r8g8bx_snorm_pack_rgba_float") == 0) { extern void* util_format_r8g8bx_snorm_pack_rgba_float; return &util_format_r8g8bx_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_r8g8bx_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8g8bx_snorm_unpack_rgba_8unorm; return &util_format_r8g8bx_snorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r8g8bx_snorm_unpack_rgba_float") == 0) { extern void* util_format_r8g8bx_snorm_unpack_rgba_float; return &util_format_r8g8bx_snorm_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_r8sg8sb8ux8u_norm_fetch_rgba") == 0) { extern void* util_format_r8sg8sb8ux8u_norm_fetch_rgba; return &util_format_r8sg8sb8ux8u_norm_fetch_rgba; }
 		if (strcmp(symbol, "util_format_r8sg8sb8ux8u_norm_pack_rgba_8unorm") == 0) { extern void* util_format_r8sg8sb8ux8u_norm_pack_rgba_8unorm; return &util_format_r8sg8sb8ux8u_norm_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r8sg8sb8ux8u_norm_pack_rgba_float") == 0) { extern void* util_format_r8sg8sb8ux8u_norm_pack_rgba_float; return &util_format_r8sg8sb8ux8u_norm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_r8sg8sb8ux8u_norm_unpack_rgba_8unorm") == 0) { extern void* util_format_r8sg8sb8ux8u_norm_unpack_rgba_8unorm; return &util_format_r8sg8sb8ux8u_norm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_r8sg8sb8ux8u_norm_unpack_rgba_float") == 0) { extern void* util_format_r8sg8sb8ux8u_norm_unpack_rgba_float; return &util_format_r8sg8sb8ux8u_norm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_r9g9b9e5_float_fetch_rgba") == 0) { extern void* util_format_r9g9b9e5_float_fetch_rgba; return &util_format_r9g9b9e5_float_fetch_rgba; }
+		if (strcmp(symbol, "util_format_r9g9b9e5_float_pack_rgba_8unorm") == 0) { extern void* util_format_r9g9b9e5_float_pack_rgba_8unorm; return &util_format_r9g9b9e5_float_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r9g9b9e5_float_pack_rgba_float") == 0) { extern void* util_format_r9g9b9e5_float_pack_rgba_float; return &util_format_r9g9b9e5_float_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_r9g9b9e5_float_unpack_rgba_8unorm") == 0) { extern void* util_format_r9g9b9e5_float_unpack_rgba_8unorm; return &util_format_r9g9b9e5_float_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_r9g9b9e5_float_unpack_rgba_float") == 0) { extern void* util_format_r9g9b9e5_float_unpack_rgba_float; return &util_format_r9g9b9e5_float_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_read_4") == 0) { extern void* util_format_read_4; return &util_format_read_4; }
+		if (strcmp(symbol, "util_format_read_4ub") == 0) { extern void* util_format_read_4ub; return &util_format_read_4ub; }
+		if (strcmp(symbol, "util_format_rgb_to_bgr") == 0) { extern void* util_format_rgb_to_bgr; return &util_format_rgb_to_bgr; }
+		if (strcmp(symbol, "util_format_rgbx_to_rgba") == 0) { extern void* util_format_rgbx_to_rgba; return &util_format_rgbx_to_rgba; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_fetch_rgba_8unorm; return &util_format_rgtc1_snorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_fetch_rgba") == 0) { extern void* util_format_rgtc1_snorm_fetch_rgba; return &util_format_rgtc1_snorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_pack_rgba_8unorm; return &util_format_rgtc1_snorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_pack_rgba_float") == 0) { extern void* util_format_rgtc1_snorm_pack_rgba_float; return &util_format_rgtc1_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_r_8snorm") == 0) { extern void* util_format_rgtc1_snorm_unpack_r_8snorm; return &util_format_rgtc1_snorm_unpack_r_8snorm; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_snorm_unpack_rgba_8unorm; return &util_format_rgtc1_snorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_snorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc1_snorm_unpack_rgba_float; return &util_format_rgtc1_snorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_fetch_rgba_8unorm; return &util_format_rgtc1_unorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_fetch_rgba") == 0) { extern void* util_format_rgtc1_unorm_fetch_rgba; return &util_format_rgtc1_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_pack_rgba_8unorm; return &util_format_rgtc1_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_pack_rgba_float") == 0) { extern void* util_format_rgtc1_unorm_pack_rgba_float; return &util_format_rgtc1_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_r_8unorm") == 0) { extern void* util_format_rgtc1_unorm_unpack_r_8unorm; return &util_format_rgtc1_unorm_unpack_r_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc1_unorm_unpack_rgba_8unorm; return &util_format_rgtc1_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc1_unorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc1_unorm_unpack_rgba_float; return &util_format_rgtc1_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_fetch_rgba_8unorm; return &util_format_rgtc2_snorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_fetch_rgba") == 0) { extern void* util_format_rgtc2_snorm_fetch_rgba; return &util_format_rgtc2_snorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_pack_rgba_8unorm; return &util_format_rgtc2_snorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_pack_rgba_float") == 0) { extern void* util_format_rgtc2_snorm_pack_rgba_float; return &util_format_rgtc2_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rg_8snorm") == 0) { extern void* util_format_rgtc2_snorm_unpack_rg_8snorm; return &util_format_rgtc2_snorm_unpack_rg_8snorm; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_snorm_unpack_rgba_8unorm; return &util_format_rgtc2_snorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_snorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc2_snorm_unpack_rgba_float; return &util_format_rgtc2_snorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_fetch_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_fetch_rgba_8unorm; return &util_format_rgtc2_unorm_fetch_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_fetch_rgba") == 0) { extern void* util_format_rgtc2_unorm_fetch_rgba; return &util_format_rgtc2_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_pack_rgba_8unorm; return &util_format_rgtc2_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_pack_rgba_float") == 0) { extern void* util_format_rgtc2_unorm_pack_rgba_float; return &util_format_rgtc2_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rg_8unorm") == 0) { extern void* util_format_rgtc2_unorm_unpack_rg_8unorm; return &util_format_rgtc2_unorm_unpack_rg_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_rgtc2_unorm_unpack_rgba_8unorm; return &util_format_rgtc2_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_rgtc2_unorm_unpack_rgba_float") == 0) { extern void* util_format_rgtc2_unorm_unpack_rgba_float; return &util_format_rgtc2_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_rxtc2_snorm_pack_rgba_float") == 0) { extern void* util_format_rxtc2_snorm_pack_rgba_float; return &util_format_rxtc2_snorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_rxtc2_unorm_pack_rgba_float") == 0) { extern void* util_format_rxtc2_unorm_pack_rgba_float; return &util_format_rxtc2_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_s8_uint_pack_s_8uint") == 0) { extern void* util_format_s8_uint_pack_s_8uint; return &util_format_s8_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_s8_uint_unpack_s_8uint; return &util_format_s8_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_s_8uint") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_s_8uint; return &util_format_s8_uint_z24_unorm_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_z_32unorm") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_z_32unorm; return &util_format_s8_uint_z24_unorm_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_pack_z_float") == 0) { extern void* util_format_s8_uint_z24_unorm_pack_z_float; return &util_format_s8_uint_z24_unorm_pack_z_float; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_s_8uint") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_s_8uint; return &util_format_s8_uint_z24_unorm_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_z_32unorm") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_z_32unorm; return &util_format_s8_uint_z24_unorm_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_s8_uint_z24_unorm_unpack_z_float") == 0) { extern void* util_format_s8_uint_z24_unorm_unpack_z_float; return &util_format_s8_uint_z24_unorm_unpack_z_float; }
+		if (strcmp(symbol, "util_format_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_s8x24_uint_pack_s_8uint; return &util_format_s8x24_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_s8x24_uint_unpack_s_8uint; return &util_format_s8x24_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_signed_encode_rgtc_ubyte") == 0) { extern void* util_format_signed_encode_rgtc_ubyte; return &util_format_signed_encode_rgtc_ubyte; }
+		if (strcmp(symbol, "util_format_signed_fetch_texel_rgtc") == 0) { extern void* util_format_signed_fetch_texel_rgtc; return &util_format_signed_fetch_texel_rgtc; }
+		if (strcmp(symbol, "util_format_srgb_8unorm_to_linear_float_table") == 0) { extern void* util_format_srgb_8unorm_to_linear_float_table; return &util_format_srgb_8unorm_to_linear_float_table; }
+		if (strcmp(symbol, "util_format_srgb_to_linear_8unorm_table") == 0) { extern void* util_format_srgb_to_linear_8unorm_table; return &util_format_srgb_to_linear_8unorm_table; }
+		if (strcmp(symbol, "util_format_test_cases") == 0) { extern void* util_format_test_cases; return &util_format_test_cases; }
+		if (strcmp(symbol, "util_format_translate_3d") == 0) { extern void* util_format_translate_3d; return &util_format_translate_3d; }
+		if (strcmp(symbol, "util_format_translate") == 0) { extern void* util_format_translate; return &util_format_translate; }
+		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_fetch_rgba") == 0) { extern void* util_format_u8y8v8y8_422_unorm_fetch_rgba; return &util_format_u8y8v8y8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm; return &util_format_u8y8v8y8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_u8y8v8y8_422_unorm_pack_rgba_float; return &util_format_u8y8v8y8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm; return &util_format_u8y8v8y8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_u8y8v8y8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_u8y8v8y8_422_unorm_unpack_rgba_float; return &util_format_u8y8v8y8_422_unorm_unpack_rgba_float; }
 		if (strcmp(symbol, "util_format_unpack_description_generic") == 0) { extern void* util_format_unpack_description_generic; return &util_format_unpack_description_generic; }
+		if (strcmp(symbol, "util_format_unpack_description") == 0) { extern void* util_format_unpack_description; return &util_format_unpack_description; }
+		if (strcmp(symbol, "util_format_unpack_rgba_8unorm_rect") == 0) { extern void* util_format_unpack_rgba_8unorm_rect; return &util_format_unpack_rgba_8unorm_rect; }
+		if (strcmp(symbol, "util_format_unpack_rgba_rect") == 0) { extern void* util_format_unpack_rgba_rect; return &util_format_unpack_rgba_rect; }
+		if (strcmp(symbol, "util_format_unsigned_encode_rgtc_ubyte") == 0) { extern void* util_format_unsigned_encode_rgtc_ubyte; return &util_format_unsigned_encode_rgtc_ubyte; }
+		if (strcmp(symbol, "util_format_unsigned_fetch_texel_rgtc") == 0) { extern void* util_format_unsigned_fetch_texel_rgtc; return &util_format_unsigned_fetch_texel_rgtc; }
+		if (strcmp(symbol, "util_format_unswizzle_4f") == 0) { extern void* util_format_unswizzle_4f; return &util_format_unswizzle_4f; }
+		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_fetch_rgba") == 0) { extern void* util_format_v8y8u8y8_422_unorm_fetch_rgba; return &util_format_v8y8u8y8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm; return &util_format_v8y8u8y8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_v8y8u8y8_422_unorm_pack_rgba_float; return &util_format_v8y8u8y8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm; return &util_format_v8y8u8y8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_v8y8u8y8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_v8y8u8y8_422_unorm_unpack_rgba_float; return &util_format_v8y8u8y8_422_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_write_4") == 0) { extern void* util_format_write_4; return &util_format_write_4; }
+		if (strcmp(symbol, "util_format_write_4ub") == 0) { extern void* util_format_write_4ub; return &util_format_write_4ub; }
 		if (strcmp(symbol, "util_format_x1b5g5r5_unorm_fetch_rgba") == 0) { extern void* util_format_x1b5g5r5_unorm_fetch_rgba; return &util_format_x1b5g5r5_unorm_fetch_rgba; }
 		if (strcmp(symbol, "util_format_x1b5g5r5_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_x1b5g5r5_unorm_pack_rgba_8unorm; return &util_format_x1b5g5r5_unorm_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_x1b5g5r5_unorm_pack_rgba_float") == 0) { extern void* util_format_x1b5g5r5_unorm_pack_rgba_float; return &util_format_x1b5g5r5_unorm_pack_rgba_float; }
@@ -2044,6 +2071,10 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_x1r5g5b5_unorm_pack_rgba_float") == 0) { extern void* util_format_x1r5g5b5_unorm_pack_rgba_float; return &util_format_x1r5g5b5_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_x1r5g5b5_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_x1r5g5b5_unorm_unpack_rgba_8unorm; return &util_format_x1r5g5b5_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_x1r5g5b5_unorm_unpack_rgba_float") == 0) { extern void* util_format_x1r5g5b5_unorm_unpack_rgba_float; return &util_format_x1r5g5b5_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_x24s8_uint_pack_s_8uint") == 0) { extern void* util_format_x24s8_uint_pack_s_8uint; return &util_format_x24s8_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_x24s8_uint_unpack_s_8uint") == 0) { extern void* util_format_x24s8_uint_unpack_s_8uint; return &util_format_x24s8_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_x32_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_x32_s8x24_uint_pack_s_8uint; return &util_format_x32_s8x24_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_x32_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_x32_s8x24_uint_unpack_s_8uint; return &util_format_x32_s8x24_uint_unpack_s_8uint; }
 		if (strcmp(symbol, "util_format_x4r12_unorm_fetch_rgba") == 0) { extern void* util_format_x4r12_unorm_fetch_rgba; return &util_format_x4r12_unorm_fetch_rgba; }
 		if (strcmp(symbol, "util_format_x4r12_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_x4r12_unorm_pack_rgba_8unorm; return &util_format_x4r12_unorm_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_x4r12_unorm_pack_rgba_float") == 0) { extern void* util_format_x4r12_unorm_pack_rgba_float; return &util_format_x4r12_unorm_pack_rgba_float; }
@@ -2102,185 +2133,159 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "util_format_x8r8g8b8_unorm_pack_rgba_float") == 0) { extern void* util_format_x8r8g8b8_unorm_pack_rgba_float; return &util_format_x8r8g8b8_unorm_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_x8r8g8b8_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_x8r8g8b8_unorm_unpack_rgba_8unorm; return &util_format_x8r8g8b8_unorm_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_x8r8g8b8_unorm_unpack_rgba_float") == 0) { extern void* util_format_x8r8g8b8_unorm_unpack_rgba_float; return &util_format_x8r8g8b8_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_x8z24_unorm_pack_z_32unorm") == 0) { extern void* util_format_x8z24_unorm_pack_z_32unorm; return &util_format_x8z24_unorm_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_x8z24_unorm_pack_z_float") == 0) { extern void* util_format_x8z24_unorm_pack_z_float; return &util_format_x8z24_unorm_pack_z_float; }
+		if (strcmp(symbol, "util_format_x8z24_unorm_unpack_z_32unorm") == 0) { extern void* util_format_x8z24_unorm_unpack_z_32unorm; return &util_format_x8z24_unorm_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_x8z24_unorm_unpack_z_float") == 0) { extern void* util_format_x8z24_unorm_unpack_z_float; return &util_format_x8z24_unorm_unpack_z_float; }
+		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_fetch_rgba") == 0) { extern void* util_format_y8u8y8v8_422_unorm_fetch_rgba; return &util_format_y8u8y8v8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm; return &util_format_y8u8y8v8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_y8u8y8v8_422_unorm_pack_rgba_float; return &util_format_y8u8y8v8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm; return &util_format_y8u8y8v8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_y8u8y8v8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_y8u8y8v8_422_unorm_unpack_rgba_float; return &util_format_y8u8y8v8_422_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_fetch_rgba") == 0) { extern void* util_format_y8v8y8u8_422_unorm_fetch_rgba; return &util_format_y8v8y8u8_422_unorm_fetch_rgba; }
+		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm") == 0) { extern void* util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm; return &util_format_y8v8y8u8_422_unorm_pack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_pack_rgba_float") == 0) { extern void* util_format_y8v8y8u8_422_unorm_pack_rgba_float; return &util_format_y8v8y8u8_422_unorm_pack_rgba_float; }
+		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm") == 0) { extern void* util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm; return &util_format_y8v8y8u8_422_unorm_unpack_rgba_8unorm; }
+		if (strcmp(symbol, "util_format_y8v8y8u8_422_unorm_unpack_rgba_float") == 0) { extern void* util_format_y8v8y8u8_422_unorm_unpack_rgba_float; return &util_format_y8v8y8u8_422_unorm_unpack_rgba_float; }
+		if (strcmp(symbol, "util_format_z16_unorm_pack_z_32unorm") == 0) { extern void* util_format_z16_unorm_pack_z_32unorm; return &util_format_z16_unorm_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z16_unorm_pack_z_float") == 0) { extern void* util_format_z16_unorm_pack_z_float; return &util_format_z16_unorm_pack_z_float; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_s_8uint") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_s_8uint; return &util_format_z16_unorm_s8_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_z_32unorm") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_z_32unorm; return &util_format_z16_unorm_s8_uint_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_pack_z_float") == 0) { extern void* util_format_z16_unorm_s8_uint_pack_z_float; return &util_format_z16_unorm_s8_uint_pack_z_float; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_s_8uint; return &util_format_z16_unorm_s8_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_z_32unorm") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_z_32unorm; return &util_format_z16_unorm_s8_uint_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z16_unorm_s8_uint_unpack_z_float") == 0) { extern void* util_format_z16_unorm_s8_uint_unpack_z_float; return &util_format_z16_unorm_s8_uint_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z16_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z16_unorm_unpack_z_32unorm; return &util_format_z16_unorm_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z16_unorm_unpack_z_float") == 0) { extern void* util_format_z16_unorm_unpack_z_float; return &util_format_z16_unorm_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z24_unorm_packed_pack_z_32unorm") == 0) { extern void* util_format_z24_unorm_packed_pack_z_32unorm; return &util_format_z24_unorm_packed_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24_unorm_packed_pack_z_float") == 0) { extern void* util_format_z24_unorm_packed_pack_z_float; return &util_format_z24_unorm_packed_pack_z_float; }
+		if (strcmp(symbol, "util_format_z24_unorm_packed_unpack_z_32unorm") == 0) { extern void* util_format_z24_unorm_packed_unpack_z_32unorm; return &util_format_z24_unorm_packed_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24_unorm_packed_unpack_z_float") == 0) { extern void* util_format_z24_unorm_packed_unpack_z_float; return &util_format_z24_unorm_packed_unpack_z_float; }
 		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_as_r8g8b8a8_fetch_rgba") == 0) { extern void* util_format_z24_unorm_s8_uint_as_r8g8b8a8_fetch_rgba; return &util_format_z24_unorm_s8_uint_as_r8g8b8a8_fetch_rgba; }
 		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_8unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_8unorm; return &util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_float") == 0) { extern void* util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_float; return &util_format_z24_unorm_s8_uint_as_r8g8b8a8_pack_rgba_float; }
 		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_8unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_8unorm; return &util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_8unorm; }
 		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_float") == 0) { extern void* util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_float; return &util_format_z24_unorm_s8_uint_as_r8g8b8a8_unpack_rgba_float; }
-		if (strcmp(symbol, "util_format_linear_to_srgb_8unorm_table") == 0) { extern void* util_format_linear_to_srgb_8unorm_table; return &util_format_linear_to_srgb_8unorm_table; }
-		if (strcmp(symbol, "util_format_linear_to_srgb_helper_table") == 0) { extern void* util_format_linear_to_srgb_helper_table; return &util_format_linear_to_srgb_helper_table; }
-		if (strcmp(symbol, "util_format_srgb_8unorm_to_linear_float_table") == 0) { extern void* util_format_srgb_8unorm_to_linear_float_table; return &util_format_srgb_8unorm_to_linear_float_table; }
-		if (strcmp(symbol, "util_format_srgb_to_linear_8unorm_table") == 0) { extern void* util_format_srgb_to_linear_8unorm_table; return &util_format_srgb_to_linear_8unorm_table; }
-		if (strcmp(symbol, "util_cache_granularity") == 0) { extern void* util_cache_granularity; return &util_cache_granularity; }
-		if (strcmp(symbol, "util_flush_inval_range") == 0) { extern void* util_flush_inval_range; return &util_flush_inval_range; }
-		if (strcmp(symbol, "util_flush_inval_range_no_fence") == 0) { extern void* util_flush_inval_range_no_fence; return &util_flush_inval_range_no_fence; }
-		if (strcmp(symbol, "util_flush_range") == 0) { extern void* util_flush_range; return &util_flush_range; }
-		if (strcmp(symbol, "util_flush_range_no_fence") == 0) { extern void* util_flush_range_no_fence; return &util_flush_range_no_fence; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_s_8uint") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_s_8uint; return &util_format_z24_unorm_s8_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_separate_z32") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_separate_z32; return &util_format_z24_unorm_s8_uint_pack_separate_z32; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_separate") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_separate; return &util_format_z24_unorm_s8_uint_pack_separate; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z_32unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z_32unorm; return &util_format_z24_unorm_s8_uint_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z_float") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z_float; return &util_format_z24_unorm_s8_uint_pack_z_float; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_pack_z24") == 0) { extern void* util_format_z24_unorm_s8_uint_pack_z24; return &util_format_z24_unorm_s8_uint_pack_z24; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_s_8uint") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_s_8uint; return &util_format_z24_unorm_s8_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z_32unorm") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z_32unorm; return &util_format_z24_unorm_s8_uint_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z_float") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z_float; return &util_format_z24_unorm_s8_uint_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z24_unorm_s8_uint_unpack_z24") == 0) { extern void* util_format_z24_unorm_s8_uint_unpack_z24; return &util_format_z24_unorm_s8_uint_unpack_z24; }
+		if (strcmp(symbol, "util_format_z24x8_unorm_pack_z_32unorm") == 0) { extern void* util_format_z24x8_unorm_pack_z_32unorm; return &util_format_z24x8_unorm_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24x8_unorm_pack_z_float") == 0) { extern void* util_format_z24x8_unorm_pack_z_float; return &util_format_z24x8_unorm_pack_z_float; }
+		if (strcmp(symbol, "util_format_z24x8_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z24x8_unorm_unpack_z_32unorm; return &util_format_z24x8_unorm_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z24x8_unorm_unpack_z_float") == 0) { extern void* util_format_z24x8_unorm_unpack_z_float; return &util_format_z24x8_unorm_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z32_float_pack_z_32unorm") == 0) { extern void* util_format_z32_float_pack_z_32unorm; return &util_format_z32_float_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_float_pack_z_float") == 0) { extern void* util_format_z32_float_pack_z_float; return &util_format_z32_float_pack_z_float; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_s_8uint") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_s_8uint; return &util_format_z32_float_s8x24_uint_pack_s_8uint; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_z_32unorm") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_z_32unorm; return &util_format_z32_float_s8x24_uint_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_pack_z_float") == 0) { extern void* util_format_z32_float_s8x24_uint_pack_z_float; return &util_format_z32_float_s8x24_uint_pack_z_float; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_s_8uint") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_s_8uint; return &util_format_z32_float_s8x24_uint_unpack_s_8uint; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_z_32unorm") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_z_32unorm; return &util_format_z32_float_s8x24_uint_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_float_s8x24_uint_unpack_z_float") == 0) { extern void* util_format_z32_float_s8x24_uint_unpack_z_float; return &util_format_z32_float_s8x24_uint_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z32_float_unpack_z_32unorm") == 0) { extern void* util_format_z32_float_unpack_z_32unorm; return &util_format_z32_float_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_float_unpack_z_float") == 0) { extern void* util_format_z32_float_unpack_z_float; return &util_format_z32_float_unpack_z_float; }
+		if (strcmp(symbol, "util_format_z32_unorm_pack_z_32unorm") == 0) { extern void* util_format_z32_unorm_pack_z_32unorm; return &util_format_z32_unorm_pack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_unorm_pack_z_float") == 0) { extern void* util_format_z32_unorm_pack_z_float; return &util_format_z32_unorm_pack_z_float; }
+		if (strcmp(symbol, "util_format_z32_unorm_unpack_z_32unorm") == 0) { extern void* util_format_z32_unorm_unpack_z_32unorm; return &util_format_z32_unorm_unpack_z_32unorm; }
+		if (strcmp(symbol, "util_format_z32_unorm_unpack_z_float") == 0) { extern void* util_format_z32_unorm_unpack_z_float; return &util_format_z32_unorm_unpack_z_float; }
+		if (strcmp(symbol, "util_fpstate_get") == 0) { extern void* util_fpstate_get; return &util_fpstate_get; }
+		if (strcmp(symbol, "util_fpstate_set_denorms_to_zero") == 0) { extern void* util_fpstate_set_denorms_to_zero; return &util_fpstate_set_denorms_to_zero; }
+		if (strcmp(symbol, "util_fpstate_set") == 0) { extern void* util_fpstate_set; return &util_fpstate_set; }
+		if (strcmp(symbol, "util_get_command_line") == 0) { extern void* util_get_command_line; return &util_get_command_line; }
+		if (strcmp(symbol, "util_get_current_cpu") == 0) { extern void* util_get_current_cpu; return &util_get_current_cpu; }
+		if (strcmp(symbol, "util_get_depth_format_mrd") == 0) { extern void* util_get_depth_format_mrd; return &util_get_depth_format_mrd; }
+		if (strcmp(symbol, "util_get_process_exec_path") == 0) { extern void* util_get_process_exec_path; return &util_get_process_exec_path; }
+		if (strcmp(symbol, "util_get_process_name") == 0) { extern void* util_get_process_name; return &util_get_process_name; }
+		if (strcmp(symbol, "util_hash_crc32") == 0) { extern void* util_hash_crc32; return &util_hash_crc32; }
+		if (strcmp(symbol, "util_hash_table_create_fd_keys") == 0) { extern void* util_hash_table_create_fd_keys; return &util_hash_table_create_fd_keys; }
+		if (strcmp(symbol, "util_hash_table_create_ptr_keys") == 0) { extern void* util_hash_table_create_ptr_keys; return &util_hash_table_create_ptr_keys; }
+		if (strcmp(symbol, "util_hash_table_foreach") == 0) { extern void* util_hash_table_foreach; return &util_hash_table_foreach; }
+		if (strcmp(symbol, "util_hash_table_get") == 0) { extern void* util_hash_table_get; return &util_hash_table_get; }
+		if (strcmp(symbol, "util_idalloc_alloc_range") == 0) { extern void* util_idalloc_alloc_range; return &util_idalloc_alloc_range; }
+		if (strcmp(symbol, "util_idalloc_alloc") == 0) { extern void* util_idalloc_alloc; return &util_idalloc_alloc; }
+		if (strcmp(symbol, "util_idalloc_fini") == 0) { extern void* util_idalloc_fini; return &util_idalloc_fini; }
+		if (strcmp(symbol, "util_idalloc_free") == 0) { extern void* util_idalloc_free; return &util_idalloc_free; }
+		if (strcmp(symbol, "util_idalloc_init") == 0) { extern void* util_idalloc_init; return &util_idalloc_init; }
+		if (strcmp(symbol, "util_idalloc_mt_alloc") == 0) { extern void* util_idalloc_mt_alloc; return &util_idalloc_mt_alloc; }
+		if (strcmp(symbol, "util_idalloc_mt_fini") == 0) { extern void* util_idalloc_mt_fini; return &util_idalloc_mt_fini; }
+		if (strcmp(symbol, "util_idalloc_mt_free") == 0) { extern void* util_idalloc_mt_free; return &util_idalloc_mt_free; }
+		if (strcmp(symbol, "util_idalloc_mt_init_tc") == 0) { extern void* util_idalloc_mt_init_tc; return &util_idalloc_mt_init_tc; }
+		if (strcmp(symbol, "util_idalloc_mt_init") == 0) { extern void* util_idalloc_mt_init; return &util_idalloc_mt_init; }
+		if (strcmp(symbol, "util_idalloc_reserve") == 0) { extern void* util_idalloc_reserve; return &util_idalloc_reserve; }
+		if (strcmp(symbol, "util_idalloc_sparse_alloc_range") == 0) { extern void* util_idalloc_sparse_alloc_range; return &util_idalloc_sparse_alloc_range; }
+		if (strcmp(symbol, "util_idalloc_sparse_alloc") == 0) { extern void* util_idalloc_sparse_alloc; return &util_idalloc_sparse_alloc; }
+		if (strcmp(symbol, "util_idalloc_sparse_fini") == 0) { extern void* util_idalloc_sparse_fini; return &util_idalloc_sparse_fini; }
+		if (strcmp(symbol, "util_idalloc_sparse_free") == 0) { extern void* util_idalloc_sparse_free; return &util_idalloc_sparse_free; }
+		if (strcmp(symbol, "util_idalloc_sparse_init") == 0) { extern void* util_idalloc_sparse_init; return &util_idalloc_sparse_init; }
+		if (strcmp(symbol, "util_idalloc_sparse_reserve") == 0) { extern void* util_idalloc_sparse_reserve; return &util_idalloc_sparse_reserve; }
+		if (strcmp(symbol, "util_init_math") == 0) { extern void* util_init_math; return &util_init_math; }
+		if (strcmp(symbol, "util_invert_mat4x4") == 0) { extern void* util_invert_mat4x4; return &util_invert_mat4x4; }
+		if (strcmp(symbol, "util_is_format_compatible") == 0) { extern void* util_is_format_compatible; return &util_is_format_compatible; }
+		if (strcmp(symbol, "util_lower_clearsize_to_dword") == 0) { extern void* util_lower_clearsize_to_dword; return &util_lower_clearsize_to_dword; }
+		if (strcmp(symbol, "util_lut3_to_str") == 0) { extern void* util_lut3_to_str; return &util_lut3_to_str; }
 		if (strcmp(symbol, "util_post_flush_fence") == 0) { extern void* util_post_flush_fence; return &util_post_flush_fence; }
 		if (strcmp(symbol, "util_post_flush_inval_fence") == 0) { extern void* util_post_flush_inval_fence; return &util_post_flush_inval_fence; }
 		if (strcmp(symbol, "util_pre_flush_fence") == 0) { extern void* util_pre_flush_fence; return &util_pre_flush_fence; }
-		if (strcmp(symbol, "util_clflushopt_range") == 0) { extern void* util_clflushopt_range; return &util_clflushopt_range; }
+		if (strcmp(symbol, "util_printf_next_spec_pos") == 0) { extern void* util_printf_next_spec_pos; return &util_printf_next_spec_pos; }
+		if (strcmp(symbol, "util_printf_prev_tok") == 0) { extern void* util_printf_prev_tok; return &util_printf_prev_tok; }
+		if (strcmp(symbol, "util_qsort_adapter") == 0) { extern void* util_qsort_adapter; return &util_qsort_adapter; }
+		if (strcmp(symbol, "util_queue_add_job") == 0) { extern void* util_queue_add_job; return &util_queue_add_job; }
+		if (strcmp(symbol, "util_queue_adjust_num_threads") == 0) { extern void* util_queue_adjust_num_threads; return &util_queue_adjust_num_threads; }
+		if (strcmp(symbol, "util_queue_destroy") == 0) { extern void* util_queue_destroy; return &util_queue_destroy; }
+		if (strcmp(symbol, "util_queue_drop_job") == 0) { extern void* util_queue_drop_job; return &util_queue_drop_job; }
+		if (strcmp(symbol, "util_queue_finish") == 0) { extern void* util_queue_finish; return &util_queue_finish; }
+		if (strcmp(symbol, "util_queue_get_thread_time_nano") == 0) { extern void* util_queue_get_thread_time_nano; return &util_queue_get_thread_time_nano; }
+		if (strcmp(symbol, "util_queue_init") == 0) { extern void* util_queue_init; return &util_queue_init; }
+		if (strcmp(symbol, "util_range_insert_remap") == 0) { extern void* util_range_insert_remap; return &util_range_insert_remap; }
+		if (strcmp(symbol, "util_range_remap") == 0) { extern void* util_range_remap; return &util_range_remap; }
+		if (strcmp(symbol, "util_range_switch_to_sorted_array") == 0) { extern void* util_range_switch_to_sorted_array; return &util_range_switch_to_sorted_array; }
+		if (strcmp(symbol, "util_reset_range_remap") == 0) { extern void* util_reset_range_remap; return &util_reset_range_remap; }
+		if (strcmp(symbol, "util_set_thread_affinity") == 0) { extern void* util_set_thread_affinity; return &util_set_thread_affinity; }
+		if (strcmp(symbol, "util_sparse_array_finish") == 0) { extern void* util_sparse_array_finish; return &util_sparse_array_finish; }
+		if (strcmp(symbol, "util_sparse_array_free_list_init") == 0) { extern void* util_sparse_array_free_list_init; return &util_sparse_array_free_list_init; }
+		if (strcmp(symbol, "util_sparse_array_free_list_pop_elem") == 0) { extern void* util_sparse_array_free_list_pop_elem; return &util_sparse_array_free_list_pop_elem; }
+		if (strcmp(symbol, "util_sparse_array_free_list_pop_idx") == 0) { extern void* util_sparse_array_free_list_pop_idx; return &util_sparse_array_free_list_pop_idx; }
+		if (strcmp(symbol, "util_sparse_array_free_list_push") == 0) { extern void* util_sparse_array_free_list_push; return &util_sparse_array_free_list_push; }
+		if (strcmp(symbol, "util_sparse_array_get") == 0) { extern void* util_sparse_array_get; return &util_sparse_array_get; }
+		if (strcmp(symbol, "util_sparse_array_init") == 0) { extern void* util_sparse_array_init; return &util_sparse_array_init; }
+		if (strcmp(symbol, "util_sparse_array_validate") == 0) { extern void* util_sparse_array_validate; return &util_sparse_array_validate; }
 		if (strcmp(symbol, "util_streaming_load_memcpy") == 0) { extern void* util_streaming_load_memcpy; return &util_streaming_load_memcpy; }
-		if (strcmp(symbol, "blake3_hasher_finalize") == 0) { extern void* blake3_hasher_finalize; return &blake3_hasher_finalize; }
-		if (strcmp(symbol, "blake3_hasher_finalize_seek") == 0) { extern void* blake3_hasher_finalize_seek; return &blake3_hasher_finalize_seek; }
-		if (strcmp(symbol, "blake3_hasher_init") == 0) { extern void* blake3_hasher_init; return &blake3_hasher_init; }
-		if (strcmp(symbol, "blake3_hasher_init_derive_key") == 0) { extern void* blake3_hasher_init_derive_key; return &blake3_hasher_init_derive_key; }
-		if (strcmp(symbol, "blake3_hasher_init_derive_key_raw") == 0) { extern void* blake3_hasher_init_derive_key_raw; return &blake3_hasher_init_derive_key_raw; }
-		if (strcmp(symbol, "blake3_hasher_init_keyed") == 0) { extern void* blake3_hasher_init_keyed; return &blake3_hasher_init_keyed; }
-		if (strcmp(symbol, "blake3_hasher_reset") == 0) { extern void* blake3_hasher_reset; return &blake3_hasher_reset; }
-		if (strcmp(symbol, "blake3_hasher_update") == 0) { extern void* blake3_hasher_update; return &blake3_hasher_update; }
-		if (strcmp(symbol, "blake3_version") == 0) { extern void* blake3_version; return &blake3_version; }
-		if (strcmp(symbol, "blake3_compress_in_place") == 0) { extern void* blake3_compress_in_place; return &blake3_compress_in_place; }
-		if (strcmp(symbol, "blake3_compress_xof") == 0) { extern void* blake3_compress_xof; return &blake3_compress_xof; }
-		if (strcmp(symbol, "blake3_hash_many") == 0) { extern void* blake3_hash_many; return &blake3_hash_many; }
-		if (strcmp(symbol, "blake3_simd_degree") == 0) { extern void* blake3_simd_degree; return &blake3_simd_degree; }
-		if (strcmp(symbol, "blake3_xof_many") == 0) { extern void* blake3_xof_many; return &blake3_xof_many; }
-		if (strcmp(symbol, "blake3_compress_in_place_portable") == 0) { extern void* blake3_compress_in_place_portable; return &blake3_compress_in_place_portable; }
-		if (strcmp(symbol, "blake3_compress_xof_portable") == 0) { extern void* blake3_compress_xof_portable; return &blake3_compress_xof_portable; }
-		if (strcmp(symbol, "blake3_hash_many_portable") == 0) { extern void* blake3_hash_many_portable; return &blake3_hash_many_portable; }
-		if (strcmp(symbol, "blake3_compress_in_place_sse2") == 0) { extern void* blake3_compress_in_place_sse2; return &blake3_compress_in_place_sse2; }
-		if (strcmp(symbol, "blake3_compress_xof_sse2") == 0) { extern void* blake3_compress_xof_sse2; return &blake3_compress_xof_sse2; }
-		if (strcmp(symbol, "blake3_hash_many_sse2") == 0) { extern void* blake3_hash_many_sse2; return &blake3_hash_many_sse2; }
-		if (strcmp(symbol, "blake3_compress_in_place_sse41") == 0) { extern void* blake3_compress_in_place_sse41; return &blake3_compress_in_place_sse41; }
-		if (strcmp(symbol, "blake3_compress_xof_sse41") == 0) { extern void* blake3_compress_xof_sse41; return &blake3_compress_xof_sse41; }
-		if (strcmp(symbol, "blake3_hash_many_sse41") == 0) { extern void* blake3_hash_many_sse41; return &blake3_hash_many_sse41; }
-		if (strcmp(symbol, "blake3_hash_many_avx2") == 0) { extern void* blake3_hash_many_avx2; return &blake3_hash_many_avx2; }
-		if (strcmp(symbol, "blake3_compress_in_place_avx512") == 0) { extern void* blake3_compress_in_place_avx512; return &blake3_compress_in_place_avx512; }
-		if (strcmp(symbol, "blake3_compress_xof_avx512") == 0) { extern void* blake3_compress_xof_avx512; return &blake3_compress_xof_avx512; }
-		if (strcmp(symbol, "blake3_hash_many_avx512") == 0) { extern void* blake3_hash_many_avx512; return &blake3_hash_many_avx512; }
-		if (strcmp(symbol, "blake3_xof_many_avx512") == 0) { extern void* blake3_xof_many_avx512; return &blake3_xof_many_avx512; }
-		if (strcmp(symbol, "c23_timespec_get") == 0) { extern void* c23_timespec_get; return &c23_timespec_get; }
-		if (strcmp(symbol, "call_once") == 0) { extern void* call_once; return &call_once; }
-		if (strcmp(symbol, "cnd_broadcast") == 0) { extern void* cnd_broadcast; return &cnd_broadcast; }
-		if (strcmp(symbol, "cnd_destroy") == 0) { extern void* cnd_destroy; return &cnd_destroy; }
-		if (strcmp(symbol, "cnd_init") == 0) { extern void* cnd_init; return &cnd_init; }
-		if (strcmp(symbol, "cnd_signal") == 0) { extern void* cnd_signal; return &cnd_signal; }
-		if (strcmp(symbol, "cnd_timedwait") == 0) { extern void* cnd_timedwait; return &cnd_timedwait; }
-		if (strcmp(symbol, "cnd_wait") == 0) { extern void* cnd_wait; return &cnd_wait; }
-		if (strcmp(symbol, "mtx_destroy") == 0) { extern void* mtx_destroy; return &mtx_destroy; }
-		if (strcmp(symbol, "mtx_init") == 0) { extern void* mtx_init; return &mtx_init; }
-		if (strcmp(symbol, "mtx_lock") == 0) { extern void* mtx_lock; return &mtx_lock; }
-		if (strcmp(symbol, "mtx_timedlock") == 0) { extern void* mtx_timedlock; return &mtx_timedlock; }
-		if (strcmp(symbol, "mtx_trylock") == 0) { extern void* mtx_trylock; return &mtx_trylock; }
-		if (strcmp(symbol, "mtx_unlock") == 0) { extern void* mtx_unlock; return &mtx_unlock; }
-		if (strcmp(symbol, "thrd_create") == 0) { extern void* thrd_create; return &thrd_create; }
-		if (strcmp(symbol, "thrd_current") == 0) { extern void* thrd_current; return &thrd_current; }
-		if (strcmp(symbol, "thrd_detach") == 0) { extern void* thrd_detach; return &thrd_detach; }
-		if (strcmp(symbol, "thrd_equal") == 0) { extern void* thrd_equal; return &thrd_equal; }
-		if (strcmp(symbol, "thrd_exit") == 0) { extern void* thrd_exit; return &thrd_exit; }
-		if (strcmp(symbol, "thrd_join") == 0) { extern void* thrd_join; return &thrd_join; }
-		if (strcmp(symbol, "thrd_sleep") == 0) { extern void* thrd_sleep; return &thrd_sleep; }
-		if (strcmp(symbol, "thrd_yield") == 0) { extern void* thrd_yield; return &thrd_yield; }
-		if (strcmp(symbol, "tss_create") == 0) { extern void* tss_create; return &tss_create; }
-		if (strcmp(symbol, "tss_delete") == 0) { extern void* tss_delete; return &tss_delete; }
-		if (strcmp(symbol, "tss_get") == 0) { extern void* tss_get; return &tss_get; }
-		if (strcmp(symbol, "tss_set") == 0) { extern void* tss_set; return &tss_set; }
-		if (strcmp(symbol, "loader_wayland_buffer_destroy") == 0) { extern void* loader_wayland_buffer_destroy; return &loader_wayland_buffer_destroy; }
-		if (strcmp(symbol, "loader_wayland_buffer_set_flow") == 0) { extern void* loader_wayland_buffer_set_flow; return &loader_wayland_buffer_set_flow; }
-		if (strcmp(symbol, "loader_wayland_dispatch") == 0) { extern void* loader_wayland_dispatch; return &loader_wayland_dispatch; }
-		if (strcmp(symbol, "loader_wayland_presentation_destroy") == 0) { extern void* loader_wayland_presentation_destroy; return &loader_wayland_presentation_destroy; }
-		if (strcmp(symbol, "loader_wayland_presentation_feedback") == 0) { extern void* loader_wayland_presentation_feedback; return &loader_wayland_presentation_feedback; }
-		if (strcmp(symbol, "loader_wayland_surface_destroy") == 0) { extern void* loader_wayland_surface_destroy; return &loader_wayland_surface_destroy; }
-		if (strcmp(symbol, "loader_wayland_wrap_buffer") == 0) { extern void* loader_wayland_wrap_buffer; return &loader_wayland_wrap_buffer; }
-		if (strcmp(symbol, "loader_wayland_wrap_presentation") == 0) { extern void* loader_wayland_wrap_presentation; return &loader_wayland_wrap_presentation; }
-		if (strcmp(symbol, "loader_wayland_wrap_surface") == 0) { extern void* loader_wayland_wrap_surface; return &loader_wayland_wrap_surface; }
+		if (strcmp(symbol, "util_sync_provider_drm") == 0) { extern void* util_sync_provider_drm; return &util_sync_provider_drm; }
+		if (strcmp(symbol, "util_thread_get_time_nano") == 0) { extern void* util_thread_get_time_nano; return &util_thread_get_time_nano; }
+		if (strcmp(symbol, "util_thread_sched_apply_policy") == 0) { extern void* util_thread_sched_apply_policy; return &util_thread_sched_apply_policy; }
+		if (strcmp(symbol, "util_thread_scheduler_enabled") == 0) { extern void* util_thread_scheduler_enabled; return &util_thread_scheduler_enabled; }
+		if (strcmp(symbol, "util_thread_scheduler_init_state") == 0) { extern void* util_thread_scheduler_init_state; return &util_thread_scheduler_init_state; }
+		if (strcmp(symbol, "util_tls_qsort_r") == 0) { extern void* util_tls_qsort_r; return &util_tls_qsort_r; }
+		if (strcmp(symbol, "util_vma_heap_alloc_addr") == 0) { extern void* util_vma_heap_alloc_addr; return &util_vma_heap_alloc_addr; }
+		if (strcmp(symbol, "util_vma_heap_alloc") == 0) { extern void* util_vma_heap_alloc; return &util_vma_heap_alloc; }
+		if (strcmp(symbol, "util_vma_heap_finish") == 0) { extern void* util_vma_heap_finish; return &util_vma_heap_finish; }
+		if (strcmp(symbol, "util_vma_heap_free") == 0) { extern void* util_vma_heap_free; return &util_vma_heap_free; }
+		if (strcmp(symbol, "util_vma_heap_get_max_free_continuous_size") == 0) { extern void* util_vma_heap_get_max_free_continuous_size; return &util_vma_heap_get_max_free_continuous_size; }
+		if (strcmp(symbol, "util_vma_heap_init") == 0) { extern void* util_vma_heap_init; return &util_vma_heap_init; }
+		if (strcmp(symbol, "util_vma_heap_print") == 0) { extern void* util_vma_heap_print; return &util_vma_heap_print; }
+		if (strcmp(symbol, "vl_zscan_alternate") == 0) { extern void* vl_zscan_alternate; return &vl_zscan_alternate; }
+		if (strcmp(symbol, "vl_zscan_h265_up_right_diagonal_16") == 0) { extern void* vl_zscan_h265_up_right_diagonal_16; return &vl_zscan_h265_up_right_diagonal_16; }
+		if (strcmp(symbol, "vl_zscan_h265_up_right_diagonal") == 0) { extern void* vl_zscan_h265_up_right_diagonal; return &vl_zscan_h265_up_right_diagonal; }
+		if (strcmp(symbol, "vl_zscan_linear") == 0) { extern void* vl_zscan_linear; return &vl_zscan_linear; }
+		if (strcmp(symbol, "vl_zscan_normal_16") == 0) { extern void* vl_zscan_normal_16; return &vl_zscan_normal_16; }
+		if (strcmp(symbol, "vl_zscan_normal") == 0) { extern void* vl_zscan_normal; return &vl_zscan_normal; }
+		if (strcmp(symbol, "wp_presentation_feedback_interface") == 0) { extern void* wp_presentation_feedback_interface; return &wp_presentation_feedback_interface; }
 		if (strcmp(symbol, "wp_presentation_feedback_interface") == 0) { extern void* wp_presentation_feedback_interface; return &wp_presentation_feedback_interface; }
 		if (strcmp(symbol, "wp_presentation_interface") == 0) { extern void* wp_presentation_interface; return &wp_presentation_interface; }
-		if (strcmp(symbol, "driCheckOption") == 0) { extern void* driCheckOption; return &driCheckOption; }
-		if (strcmp(symbol, "driDestroyOptionCache") == 0) { extern void* driDestroyOptionCache; return &driDestroyOptionCache; }
-		if (strcmp(symbol, "driDestroyOptionInfo") == 0) { extern void* driDestroyOptionInfo; return &driDestroyOptionInfo; }
-		if (strcmp(symbol, "driGetOptionsXml") == 0) { extern void* driGetOptionsXml; return &driGetOptionsXml; }
-		if (strcmp(symbol, "driInjectExecName") == 0) { extern void* driInjectExecName; return &driInjectExecName; }
-		if (strcmp(symbol, "driParseConfigFiles") == 0) { extern void* driParseConfigFiles; return &driParseConfigFiles; }
-		if (strcmp(symbol, "driParseOptionInfo") == 0) { extern void* driParseOptionInfo; return &driParseOptionInfo; }
-		if (strcmp(symbol, "driQueryOptionb") == 0) { extern void* driQueryOptionb; return &driQueryOptionb; }
-		if (strcmp(symbol, "driQueryOptionf") == 0) { extern void* driQueryOptionf; return &driQueryOptionf; }
-		if (strcmp(symbol, "driQueryOptioni") == 0) { extern void* driQueryOptioni; return &driQueryOptioni; }
-		if (strcmp(symbol, "driQueryOptionstr") == 0) { extern void* driQueryOptionstr; return &driQueryOptionstr; }
-		if (strcmp(symbol, "driQueryOptionu64") == 0) { extern void* driQueryOptionu64; return &driQueryOptionu64; }
-		if (strcmp(symbol, "MesaGLInteropEGLExportObject") == 0) { extern void* MesaGLInteropEGLExportObject; return &MesaGLInteropEGLExportObject; }
-		if (strcmp(symbol, "MesaGLInteropEGLFlushObjects") == 0) { extern void* MesaGLInteropEGLFlushObjects; return &MesaGLInteropEGLFlushObjects; }
-		if (strcmp(symbol, "MesaGLInteropEGLQueryDeviceInfo") == 0) { extern void* MesaGLInteropEGLQueryDeviceInfo; return &MesaGLInteropEGLQueryDeviceInfo; }
-		if (strcmp(symbol, "eglBindAPI") == 0) { extern void* eglBindAPI; return &eglBindAPI; }
-		if (strcmp(symbol, "eglBindTexImage") == 0) { extern void* eglBindTexImage; return &eglBindTexImage; }
-		if (strcmp(symbol, "eglChooseConfig") == 0) { extern void* eglChooseConfig; return &eglChooseConfig; }
-		if (strcmp(symbol, "eglClientWaitSync") == 0) { extern void* eglClientWaitSync; return &eglClientWaitSync; }
-		if (strcmp(symbol, "eglCopyBuffers") == 0) { extern void* eglCopyBuffers; return &eglCopyBuffers; }
-		if (strcmp(symbol, "eglCreateContext") == 0) { extern void* eglCreateContext; return &eglCreateContext; }
-		if (strcmp(symbol, "eglCreateImage") == 0) { extern void* eglCreateImage; return &eglCreateImage; }
-		if (strcmp(symbol, "eglCreatePbufferFromClientBuffer") == 0) { extern void* eglCreatePbufferFromClientBuffer; return &eglCreatePbufferFromClientBuffer; }
-		if (strcmp(symbol, "eglCreatePbufferSurface") == 0) { extern void* eglCreatePbufferSurface; return &eglCreatePbufferSurface; }
-		if (strcmp(symbol, "eglCreatePixmapSurface") == 0) { extern void* eglCreatePixmapSurface; return &eglCreatePixmapSurface; }
-		if (strcmp(symbol, "eglCreatePlatformPixmapSurface") == 0) { extern void* eglCreatePlatformPixmapSurface; return &eglCreatePlatformPixmapSurface; }
-		if (strcmp(symbol, "eglCreatePlatformWindowSurface") == 0) { extern void* eglCreatePlatformWindowSurface; return &eglCreatePlatformWindowSurface; }
-		if (strcmp(symbol, "eglCreateSync") == 0) { extern void* eglCreateSync; return &eglCreateSync; }
-		if (strcmp(symbol, "eglCreateWindowSurface") == 0) { extern void* eglCreateWindowSurface; return &eglCreateWindowSurface; }
-		if (strcmp(symbol, "eglDestroyContext") == 0) { extern void* eglDestroyContext; return &eglDestroyContext; }
-		if (strcmp(symbol, "eglDestroyImage") == 0) { extern void* eglDestroyImage; return &eglDestroyImage; }
-		if (strcmp(symbol, "eglDestroySurface") == 0) { extern void* eglDestroySurface; return &eglDestroySurface; }
-		if (strcmp(symbol, "eglDestroySync") == 0) { extern void* eglDestroySync; return &eglDestroySync; }
-		if (strcmp(symbol, "eglGetConfigAttrib") == 0) { extern void* eglGetConfigAttrib; return &eglGetConfigAttrib; }
-		if (strcmp(symbol, "eglGetConfigs") == 0) { extern void* eglGetConfigs; return &eglGetConfigs; }
-		if (strcmp(symbol, "eglGetCurrentContext") == 0) { extern void* eglGetCurrentContext; return &eglGetCurrentContext; }
-		if (strcmp(symbol, "eglGetCurrentDisplay") == 0) { extern void* eglGetCurrentDisplay; return &eglGetCurrentDisplay; }
-		if (strcmp(symbol, "eglGetCurrentSurface") == 0) { extern void* eglGetCurrentSurface; return &eglGetCurrentSurface; }
-		if (strcmp(symbol, "eglGetDisplay") == 0) { extern void* eglGetDisplay; return &eglGetDisplay; }
-		if (strcmp(symbol, "eglGetError") == 0) { extern void* eglGetError; return &eglGetError; }
-		if (strcmp(symbol, "eglGetPlatformDisplay") == 0) { extern void* eglGetPlatformDisplay; return &eglGetPlatformDisplay; }
-		if (strcmp(symbol, "eglGetProcAddress") == 0) { extern void* eglGetProcAddress; return &eglGetProcAddress; }
-		if (strcmp(symbol, "eglGetSyncAttrib") == 0) { extern void* eglGetSyncAttrib; return &eglGetSyncAttrib; }
-		if (strcmp(symbol, "eglInitialize") == 0) { extern void* eglInitialize; return &eglInitialize; }
-		if (strcmp(symbol, "eglMakeCurrent") == 0) { extern void* eglMakeCurrent; return &eglMakeCurrent; }
-		if (strcmp(symbol, "eglQueryAPI") == 0) { extern void* eglQueryAPI; return &eglQueryAPI; }
-		if (strcmp(symbol, "eglQueryContext") == 0) { extern void* eglQueryContext; return &eglQueryContext; }
-		if (strcmp(symbol, "eglQueryString") == 0) { extern void* eglQueryString; return &eglQueryString; }
-		if (strcmp(symbol, "eglQuerySurface") == 0) { extern void* eglQuerySurface; return &eglQuerySurface; }
-		if (strcmp(symbol, "eglReleaseTexImage") == 0) { extern void* eglReleaseTexImage; return &eglReleaseTexImage; }
-		if (strcmp(symbol, "eglReleaseThread") == 0) { extern void* eglReleaseThread; return &eglReleaseThread; }
-		if (strcmp(symbol, "eglSurfaceAttrib") == 0) { extern void* eglSurfaceAttrib; return &eglSurfaceAttrib; }
-		if (strcmp(symbol, "eglSwapBuffers") == 0) { extern void* eglSwapBuffers; return &eglSwapBuffers; }
-		if (strcmp(symbol, "eglSwapInterval") == 0) { extern void* eglSwapInterval; return &eglSwapInterval; }
-		if (strcmp(symbol, "eglTerminate") == 0) { extern void* eglTerminate; return &eglTerminate; }
-		if (strcmp(symbol, "eglWaitClient") == 0) { extern void* eglWaitClient; return &eglWaitClient; }
-		if (strcmp(symbol, "eglWaitGL") == 0) { extern void* eglWaitGL; return &eglWaitGL; }
-		if (strcmp(symbol, "eglWaitNative") == 0) { extern void* eglWaitNative; return &eglWaitNative; }
-		if (strcmp(symbol, "eglWaitSync") == 0) { extern void* eglWaitSync; return &eglWaitSync; }
-		if (strcmp(symbol, "eglPrintConfigDebug") == 0) { extern void* eglPrintConfigDebug; return &eglPrintConfigDebug; }
-		if (strcmp(symbol, "dri2_add_config") == 0) { extern void* dri2_add_config; return &dri2_add_config; }
-		if (strcmp(symbol, "dri2_add_pbuffer_configs_for_visuals") == 0) { extern void* dri2_add_pbuffer_configs_for_visuals; return &dri2_add_pbuffer_configs_for_visuals; }
-		if (strcmp(symbol, "dri2_create_drawable") == 0) { extern void* dri2_create_drawable; return &dri2_create_drawable; }
-		if (strcmp(symbol, "dri2_create_image_dma_buf") == 0) { extern void* dri2_create_image_dma_buf; return &dri2_create_image_dma_buf; }
-		if (strcmp(symbol, "dri2_create_image_from_dri") == 0) { extern void* dri2_create_image_from_dri; return &dri2_create_image_from_dri; }
-		if (strcmp(symbol, "dri2_create_image_khr") == 0) { extern void* dri2_create_image_khr; return &dri2_create_image_khr; }
-		if (strcmp(symbol, "dri2_create_screen") == 0) { extern void* dri2_create_screen; return &dri2_create_screen; }
-		if (strcmp(symbol, "dri2_detect_swrast_kopper") == 0) { extern void* dri2_detect_swrast_kopper; return &dri2_detect_swrast_kopper; }
-		if (strcmp(symbol, "dri2_display_create") == 0) { extern void* dri2_display_create; return &dri2_display_create; }
-		if (strcmp(symbol, "dri2_display_destroy") == 0) { extern void* dri2_display_destroy; return &dri2_display_destroy; }
-		if (strcmp(symbol, "dri2_fini_surface") == 0) { extern void* dri2_fini_surface; return &dri2_fini_surface; }
-		if (strcmp(symbol, "dri2_flush_drawable_for_swapbuffers") == 0) { extern void* dri2_flush_drawable_for_swapbuffers; return &dri2_flush_drawable_for_swapbuffers; }
-		if (strcmp(symbol, "dri2_flush_drawable_for_swapbuffers_flags") == 0) { extern void* dri2_flush_drawable_for_swapbuffers_flags; return &dri2_flush_drawable_for_swapbuffers_flags; }
-		if (strcmp(symbol, "dri2_get_dri_config") == 0) { extern void* dri2_get_dri_config; return &dri2_get_dri_config; }
-		if (strcmp(symbol, "dri2_get_shifts_and_sizes") == 0) { extern void* dri2_get_shifts_and_sizes; return &dri2_get_shifts_and_sizes; }
-		if (strcmp(symbol, "dri2_image_format_for_pbuffer_config") == 0) { extern void* dri2_image_format_for_pbuffer_config; return &dri2_image_format_for_pbuffer_config; }
-		if (strcmp(symbol, "dri2_init_surface") == 0) { extern void* dri2_init_surface; return &dri2_init_surface; }
-		if (strcmp(symbol, "dri2_lookup_egl_image_validated") == 0) { extern void* dri2_lookup_egl_image_validated; return &dri2_lookup_egl_image_validated; }
-		if (strcmp(symbol, "dri2_setup_device") == 0) { extern void* dri2_setup_device; return &dri2_setup_device; }
-		if (strcmp(symbol, "dri2_setup_screen") == 0) { extern void* dri2_setup_screen; return &dri2_setup_screen; }
-		if (strcmp(symbol, "dri2_setup_swap_interval") == 0) { extern void* dri2_setup_swap_interval; return &dri2_setup_swap_interval; }
-		if (strcmp(symbol, "dri2_surface_get_dri_drawable") == 0) { extern void* dri2_surface_get_dri_drawable; return &dri2_surface_get_dri_drawable; }
-		if (strcmp(symbol, "dri2_validate_egl_image") == 0) { extern void* dri2_validate_egl_image; return &dri2_validate_egl_image; }
-		if (strcmp(symbol, "image_lookup_extension") == 0) { extern void* image_lookup_extension; return &image_lookup_extension; }
-		if (strcmp(symbol, "kopper_pbuffer_loader_extension") == 0) { extern void* kopper_pbuffer_loader_extension; return &kopper_pbuffer_loader_extension; }
-		if (strcmp(symbol, "swrast_pbuffer_loader_extension") == 0) { extern void* swrast_pbuffer_loader_extension; return &swrast_pbuffer_loader_extension; }
-		if (strcmp(symbol, "dri2_initialize_device") == 0) { extern void* dri2_initialize_device; return &dri2_initialize_device; }
-		if (strcmp(symbol, "dri2_initialize_surfaceless") == 0) { extern void* dri2_initialize_surfaceless; return &dri2_initialize_surfaceless; }
-		if (strcmp(symbol, "dri2_initialize_drm") == 0) { extern void* dri2_initialize_drm; return &dri2_initialize_drm; }
-		if (strcmp(symbol, "dri2_teardown_drm") == 0) { extern void* dri2_teardown_drm; return &dri2_teardown_drm; }
-		if (strcmp(symbol, "dri2_initialize_wayland") == 0) { extern void* dri2_initialize_wayland; return &dri2_initialize_wayland; }
-		if (strcmp(symbol, "dri2_teardown_wayland") == 0) { extern void* dri2_teardown_wayland; return &dri2_teardown_wayland; }
-		if (strcmp(symbol, "dri2_wl_is_format_supported") == 0) { extern void* dri2_wl_is_format_supported; return &dri2_wl_is_format_supported; }
+		if (strcmp(symbol, "wp_presentation_interface") == 0) { extern void* wp_presentation_interface; return &wp_presentation_interface; }
+		if (strcmp(symbol, "zwp_linux_buffer_params_v1_interface") == 0) { extern void* zwp_linux_buffer_params_v1_interface; return &zwp_linux_buffer_params_v1_interface; }
+		if (strcmp(symbol, "zwp_linux_dmabuf_feedback_v1_interface") == 0) { extern void* zwp_linux_dmabuf_feedback_v1_interface; return &zwp_linux_dmabuf_feedback_v1_interface; }
+		if (strcmp(symbol, "zwp_linux_dmabuf_v1_interface") == 0) { extern void* zwp_linux_dmabuf_v1_interface; return &zwp_linux_dmabuf_v1_interface; }
+#endif 
 	}
 	if (handle == &lib_libGLESv2_so_2 || handle == NULL || handle == &main_program_handle) { 
+#if 0
 		if (strcmp(symbol, "c23_timespec_get") == 0) { extern void* c23_timespec_get; return &c23_timespec_get; }
 		if (strcmp(symbol, "call_once") == 0) { extern void* call_once; return &call_once; }
 		if (strcmp(symbol, "cnd_broadcast") == 0) { extern void* cnd_broadcast; return &cnd_broadcast; }
@@ -2307,6 +2312,7 @@ void* dlsym(void *__restrict handle, const char *__restrict symbol) {
 		if (strcmp(symbol, "tss_delete") == 0) { extern void* tss_delete; return &tss_delete; }
 		if (strcmp(symbol, "tss_get") == 0) { extern void* tss_get; return &tss_get; }
 		if (strcmp(symbol, "tss_set") == 0) { extern void* tss_set; return &tss_set; }
+#endif
 		if (strcmp(symbol, "glActiveShaderProgram") == 0) { extern void* glActiveShaderProgram; return &glActiveShaderProgram; }
 		if (strcmp(symbol, "glActiveTexture") == 0) { extern void* glActiveTexture; return &glActiveTexture; }
 		if (strcmp(symbol, "glAttachShader") == 0) { extern void* glAttachShader; return &glAttachShader; }
