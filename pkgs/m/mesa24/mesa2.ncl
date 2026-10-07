@@ -286,31 +286,31 @@
         ]
     },
 }
-& {
-  lib,
-  drvs,
-  mesa2,
-  mesa2NoHidden =
-    mesa2
-    & {
-      postInstallPhase = [
-        m%"
-        cd ${DEST}/usr/lib 
-      "%,
-        m%"
-      for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
-        llvm-objcopy --globalize-symbol ${sym} libEGL.a
-      done
-      "%,
+# & {
+#   lib,
+#   drvs,
+#   mesa2,
+#   mesa2NoHidden =
+#     mesa2
+#     & {
+#       postInstallPhase|priority 1 = [
+#         m%"
+#         cd ${DEST}/usr/lib 
+#       "%,
+#         m%"
+#       for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
+#         llvm-objcopy --globalize-symbol ${sym} libEGL.a
+#       done
+#       "%,
 
-        # m%"
-        # for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
-        #   llvm-objcopy --globalize-symbol ${sym} libEGL.a
-        # done
-        # "%,
-      ]
-    }
-}
+#         # m%"
+#         # for sym in $(llvm-nm libEGL.a |grep " t egl"|cut -d ' ' -f3); do
+#         #   llvm-objcopy --globalize-symbol ${sym} libEGL.a
+#         # done
+#         # "%,
+#       ]
+#     }
+# }
 & {
   lib,
   drvs,

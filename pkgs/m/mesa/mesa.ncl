@@ -2,7 +2,7 @@
   drvs,
   mesa,
   lib,
-  mesa2 | lib.MesonPackage = {
+  mesa2604 | lib.MesonPackage = {
 
     singleSource = {
       # uri = "https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-25.2.1/mesa-mesa-25.2.1.tar.gz",
@@ -212,7 +212,7 @@
         "-Dradeonsi-build-id=facebefb-54f9-4b7f-9ebe-3f9c33ae41da",
         "-Damd-use-llvm=false",
       ],
-      postInstallPhase = [
+      postInstallPhase | priority 1 = [
         m%"
         cd ${DEST}/usr/lib 
       "%,
@@ -244,7 +244,7 @@
   mesaExpKwin =
     mesaExp
     & {
-      postInstallPhase | priority 1 =
+      postInstallPhase | priority 2 =
         mesaExp.postInstallPhase
         @ (
           std.array.map

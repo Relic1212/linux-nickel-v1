@@ -113,8 +113,9 @@
       #   EXTRA_LDFLAGS|priority 1 =  [ "--verbose", "-Wl,--verbose"],
 
       # },
-      postInstallPhase =
-        (
+      postInstallPhase | priority 1 =
+        mesa2.postInstallPhase
+        @ (
           let syms = [
             # "vk_icdGetInstanceProcAddr",
             # "vk_icdGetPhysicalDeviceProcAddr",
