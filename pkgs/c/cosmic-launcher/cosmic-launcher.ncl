@@ -25,7 +25,9 @@
     extraEnv = {
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
-        m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
+        "-lc++",
+        "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
+        m%"$(for l in $(pkg-config --libs --static egl xkbcommon wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
     preConfigurePhase = [
@@ -41,7 +43,7 @@
       m%"sed -i 's@"wayland-dlopen",@@g' ${SRC}/vendor/softbuffer/Cargo.toml"%,
       #
       m%"sed -i 's@"softbuffer/wayland-dlopen",@@g' ${SRC}/vendor/iced_tiny_skia/Cargo.toml"%,
-      "echo '%{import "../cosmic-osk/cosmic_osk_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       "export LOCKSTEP_XML_PATH=${SRC}/vendor/atspi-common/xml",
     ],
