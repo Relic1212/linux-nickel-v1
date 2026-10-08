@@ -151,4 +151,21 @@
       drvs.libstdcppCompat,
     ],
   },
+
+  cosmicNotificationsDbusService | lib.Package = {
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/share/dbus-1/services",
+      lib.functions.writeFile
+        "${DEST}/usr/share/dbus-1/services/org.Cosmic.notifications.service"
+        (
+          std.string.join
+            "\n"
+            [
+              "[D-BUS Service]",
+              "Name=org.freedesktop.Notifications",
+              "Exec=/usr/bin/cosmic-notifications",
+            ]
+        ),
+    ],
+  },
 }
