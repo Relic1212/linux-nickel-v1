@@ -31,3 +31,25 @@ allow mount_t NetworkManager_var_lib_t:file map;
 
 #============= system_dbusd_t ==============
 allow system_dbusd_t systemd_locale_exec_t:file map;
+
+
+require {
+	type init_t;
+	type geoclue_t;
+	class fd use;
+}
+
+#============= geoclue_t ==============
+allow geoclue_t init_t:fd use;
+
+
+### upower:
+require {
+	type mount_t;
+	type devicekit_var_lib_t;
+	class dir { rmdir setattr };
+}
+
+#============= mount_t ==============
+allow mount_t devicekit_var_lib_t:dir { rmdir setattr };
+

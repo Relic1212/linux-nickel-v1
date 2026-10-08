@@ -47,6 +47,7 @@
       m%"sed -i 's@gen_tunable(allow_execheap,false)@gen_tunable(allow_execheap,true)@g' policy/global_tunables"%,
       m%"sed -i 's@gen_tunable(allow_ypbind,false)@gen_tunable(allow_ypbind,true)@g' policy/global_tunables"%, # for geoclue
       m%"sed -i 's@gen_tunable(user_i2c, false)@gen_tunable(user_i2c, true)@g' policy/modules/system/userdomain.te"%,
+      m%"sed -i 's@gen_tunable(allow_execmod,false)@gen_tunable(allow_execmod,false)@g' policy/global_tunables"%, # for qs
     ],
     buildPhase =
       let semoduleArgs = [
