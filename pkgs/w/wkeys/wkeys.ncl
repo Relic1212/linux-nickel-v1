@@ -29,6 +29,7 @@
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         "-C link-arg=-lc++",
+        "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
         m%"$(for l in $(pkg-config --libs --static gtk4-layer-shell-0 egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
