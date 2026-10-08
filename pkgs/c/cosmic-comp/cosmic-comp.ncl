@@ -46,13 +46,10 @@
           "-C link-arg=-lrt",
           "-C link-arg=-lmtdev",
           # input
+          "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
+          m%"$(for l in $(pkg-config --libs --static egl);do printf " -C link-arg=$l ";done)"%,
         ]
         @ (if distro.pam then ["-lcap"] else [])
-        @ (
-          let s = "-lEGL -lpthread -lpthread -lz -lgbm -lGLESv2 -lgallium_dri -lLLVMWindowsDriver -lLLVMFrontendHLSL -lLLVMFrontendDriver -lLLVMX86TargetMCA -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Info -lLLVMMCJIT -lLLVMLTO -lLLVMExtensions -lLLVMLibDriver -lLLVMOption -lLLVMInterpreter -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMOrcTargetProcess -lLLVMOrcShared -lLLVMCoverage -lLLVMAMDGPUTargetMCA -lLLVMMCA -lLLVMAMDGPUDisassembler -lLLVMMCDisassembler -lLLVMAMDGPUAsmParser -lLLVMAMDGPUCodeGen -lLLVMPasses -lLLVMCoroutines -lLLVMCFGuard -lLLVMMIRParser -lLLVMIRPrinter -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMSandboxIR -lLLVMLinker -lLLVMFrontendOpenMP -lLLVMFrontendAtomic -lLLVMFrontendOffloading -lLLVMHipStdPar -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMObjCARCOpts -lLLVMTransformUtils -lLLVMCGData -lLLVMBitWriter -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMCodeGenTypes -lLLVMAnalysis -lLLVMProfileData -lLLVMSymbolize -lLLVMDebugInfoBTF -lLLVMDebugInfoPDB -lLLVMDebugInfoMSF -lLLVMDebugInfoCodeView -lLLVMDebugInfoDWARF -lLLVMObject -lLLVMTextAPI -lLLVMMCParser -lLLVMIRReader -lLLVMAsmParser -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAMDGPUInfo -lLLVMMC -lLLVMBinaryFormat -lLLVMTargetParser -lLLVMSupport -lLLVMDemangle -ldl -lpthread -lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link -ldrm_amdgpu -lelf -lz -ldrm_intel -ldrm -lpciaccess -lz -ldrm -lwayland-client -lwayland-server -lm -pthread -lrt -lffi"
-          in
-          std.array.map (fun a => "-C link-arg=%{a}") (std.string.split " " s)
-        )
         @ [
           "-C link-arg=-Wl,--pop-state",
         ],
@@ -77,18 +74,32 @@
 
     # default = systemd
     extraCargoFlags = [
-      "--no-default-features"
+      "--no-default-features",
+      "--features logind",
     ],
 
     cargoFlags,
     target,
 
     buildPhase = [
-      "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+      # "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+      # "just build-release --offline --target x86_64-unknown-linux-musl",
+      # "just args=\"%{std.string.join " " cargoFlags }\" build-release",
+      "just build-release %{std.string.join " " (std.array.drop_first cargoFlags) }",
     ],
     installPhase = [
-      "make TARGET=%{target}/release DESTDIR=$DEST install",
+      # "make TARGET=\"%{target}/release\" DESTDIR=$DEST install",
+      "export CARGO_TARGET_DIR=\"target/%{target}\"",
+      # "just --set bin-src \"target/%{target}/%{d}/cosmic-settings\" rootdir=$DEST install",
+      "just rootdir=$DEST install",
     ],
+
+    # buildPhase = [
+    #   "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+    # ],
+    # installPhase = [
+    #   "make TARGET=%{target}/release DESTDIR=$DEST install",
+    # ],
     postInstallPhase = [
       "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
@@ -108,84 +119,13 @@
 
     enableSccache = true,
     biDrvs = [
-      drvs.gnumake,
+      drvs.just,
       drvs.cosmicCompSources,
       drvs.gnupatch & { priority = 1 },
-
-      # drvs.alsaLibs,
-      # drvs.atSpi2Core,
-      # drvs.bluez,
-      # drvs.cairo,
-      # drvs.cairoGobjectEmpty,
-      # drvs.dbus,
-      # drvs.eudev,
-      # drvs.expat,
-      # drvs.fdkAac,
-      # drvs.ffmpeg,
-      # drvs.fontconfig,
-      # drvs.freetype,
-      # drvs.fribidi,
-      # drvs.gdkPixbufFull,
-      # drvs.glib,
-      # drvs.gperf,
-      # drvs.gtk3,
-      # drvs.harfbuzz,
-      # drvs.hwdata,
-      # drvs.jansson,
-      # drvs.jsonC,
-      # drvs.kmod,
-      # drvs.ldacbt,
-      # drvs.libdisplayinfo,
-      # drvs.libdlEgl,
-      # drvs.libdrm,
-      # drvs.libelf,
-      # drvs.libepoxy,
-      # drvs.libevdev,
-      # drvs.libffi,
-      # drvs.libfreeaptx,
-      # drvs.libinput,
-      # drvs.libjpegTurbo,
-      # drvs.libopus,
-      # drvs.libpciaccess,
-      # drvs.libpng,
-      # drvs.libsndfile,
-      # drvs.libusb,
-      # drvs.libxkbcommon,
-      # drvs.libyaml,
-      # drvs.linuxHeaders,
-      # drvs.llvmConfigStatic,
-      # drvs.lua,
-      # drvs.m4,
-      # drvs.mesaExp,
-      # drvs.mtdev,
-      # drvs.ncurses,
-      # drvs.openssl,
-      # drvs.pango,
-      # drvs.pcre2,
-      # drvs.pixman,
-      # drvs.readline,
-      # drvs.sbc,
-      # drvs.spirvLlvmTranslator,
-      # drvs.spirvTools,
-      # drvs.utilLinux,
-      # drvs.wayland,
-      # drvs.waylandProtocols,
-      # drvs.xz,
-      # drvs.zlibNg,
-      # drvs.zstd,
-      # drvs.pipewire,
-      # drvs.libstdcppCompat,
-      # drvs.seatd,
-      # drvs.elogindWithPolkit,
-      # drvs.libcap,
-    ],
-
-    neverInclude = [
-      drvs.mesa2,
     ],
 
     pDrvs = [
-      drvs.mesaExp,
+      drvs.mesa2,
       # drvs.eudev,
       drvs.seatd,
       drvs.libdisplayinfo,
@@ -195,7 +135,7 @@
     ],
   },
 
-  testFetcher | lib.DeterministicFetcher = {
+  _testFetcher | lib.DeterministicFetcher = {
     buildPhase = [
       "wget https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.0.0.tar.gz",
       "cp epoch-1.0.0.tar.gz ${DEST}/out.tar.gz",
@@ -237,9 +177,7 @@
     installPhase = [
       "cp ../build/%{outputFile} ${DEST}",
     ],
-    # outputSha256sum = (import "src.sha256sum" as 'Text), # "3ae4cb26d9fff4c7154b68bcbfedb84b9cc14cf5b85bfec71bd4239ef22bedcf",
-    outputSha256sum = (import "src.sha256sum" as 'Text), # "163454290382acc2c491376355c67f93cdb72e1a2fe2056f21c0d4a41f8a1821",
-
+    outputSha256sum = (import "src.sha256sum" as 'Text),
     outputFile = "cosmic-comp-sources.tar",
 
     biDrvs = [

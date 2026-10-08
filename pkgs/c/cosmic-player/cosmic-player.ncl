@@ -45,6 +45,7 @@
           # m%"$(for l in $(pkg-config --libs --static gstreamer-rtp-1.0);do printf " -C link-arg=$l ";done)"%,
           # m%"$(for l in $(pkg-config --libs --static gstreamer-codecparsers-1.0);do printf " -C link-arg=$l ";done)"%,
           "-C link-arg=/tmp/workdir/src/dlopen.o",
+          "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
           m%"$(for l in $(pkg-config --libs --static xkbcommon);do printf " -C link-arg=$l ";done)"%,
         ]
         @ (
@@ -189,7 +190,7 @@
       drvs.llvmConfigStatic,
       drvs.lua,
       drvs.m4,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.mtdev,
       drvs.ncurses,
       drvs.openssl,

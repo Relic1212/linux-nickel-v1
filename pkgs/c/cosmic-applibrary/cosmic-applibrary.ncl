@@ -90,7 +90,7 @@
       drvs.mesa2,
     ],
     pDrvs = [
-      drvs.mesaExp,
+      drvs.mesa2,
       # drvs.pipewire,
       drvs.libxkbcommon,
     ],

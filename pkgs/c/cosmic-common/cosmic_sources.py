@@ -33,7 +33,7 @@ PKG_NAMES = [
     "cosmic-player",
 ]
 
-RELEASE_TAG = "epoch-1.9.0"
+RELEASE_TAG = "epoch-1.10.0"
 
 def fetch(url):
 

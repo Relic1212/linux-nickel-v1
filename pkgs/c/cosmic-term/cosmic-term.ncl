@@ -73,6 +73,7 @@
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         "-C link-arg=-lc++",
+        "-C link-arg=$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
         m%"$(for l in $(pkg-config --libs --static xkbcommon egl wayland-client wayland-egl);do printf " -C link-arg=$l ";done)"%,
       ],
     },
@@ -159,7 +160,7 @@
       drvs.llvmConfigStatic,
       drvs.lua,
       drvs.m4,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.mtdev,
       drvs.ncurses,
       drvs.openssl,

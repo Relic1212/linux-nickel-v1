@@ -1,141 +1,141 @@
 {
   "cosmic-applets" = {
-    uri = "https://github.com/pop-os/cosmic-applets/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "f113f74cd05b179ab0478dd5876b671880914600d5df56d518f8f80c08543037",
+    uri = "https://github.com/pop-os/cosmic-applets/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "fa922a252d87eeb37e5847fa6840e321f9f75961ae3c9bd6d7ab1b779779f08e",
   },
 
   "cosmic-applibrary" = {
-    uri = "https://github.com/pop-os/cosmic-applibrary/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "d85fb7648429bb3319dc1f1dd69f510019d4f5815be93c42a3f57f2211abe740",
+    uri = "https://github.com/pop-os/cosmic-applibrary/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "43ce4f50c97d2106ac981080d8372e03c50af28660a6737400920ecbc6ce4b39",
   },
 
   "cosmic-bg" = {
-    uri = "https://github.com/pop-os/cosmic-bg/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "848594cabc13d78fef20a907bc79aa2b132986e40bb042b9423779bfc081dcca",
+    uri = "https://github.com/pop-os/cosmic-bg/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "1595505815bdf96cf4cfd16736a1d235cb249d78e4a35dccd02e3c997649b357",
   },
 
   "cosmic-comp" = {
-    uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "f0f3a2362861fe8976d7d45436aaa0a10de975522b6e8a53d77058a74ffc81e8",
+    uri = "https://github.com/pop-os/cosmic-comp/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "db6bf35703db06b3ac89e5da9ba9cd60eceaed90515c47e4b3256d73cf0a0b81",
   },
 
   "cosmic-edit" = {
-    uri = "https://github.com/pop-os/cosmic-edit/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "2748de5388e637c8390801961961b063e1c15778c33912cdc62448994194a789",
+    uri = "https://github.com/pop-os/cosmic-edit/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "2cd6e262d5762a62df6e27691b76991ebd0aa7674436e78f8bbee3d4bf8c9ec2",
   },
 
   "cosmic-files" = {
-    uri = "https://github.com/pop-os/cosmic-files/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "c30cb40b8177112c821753a95134ba82e64dfd8230f5c371a1c89a4b0d066309",
+    uri = "https://github.com/pop-os/cosmic-files/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "1c33cf6f65782e8a84bb4281430f182363eb837229f68b7f36cce1f2d8147f05",
   },
 
   "cosmic-greeter" = {
-    uri = "https://github.com/pop-os/cosmic-greeter/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "650e6191abc5fbb1096091cf61dde2b96ec411b604af65e89010785be7f22b57",
+    uri = "https://github.com/pop-os/cosmic-greeter/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "b4dcf23c2bc9719de4aa2c4c315ed30d1d142477b213fcca3d61856ef46dd9b8",
   },
 
   "cosmic-icons" = {
-    uri = "https://github.com/pop-os/cosmic-icons/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "1b15f26b5a6b876aaeb82fd51c1bf242b2c26bb5899105dd03168feba4896ae5",
+    uri = "https://github.com/pop-os/cosmic-icons/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "52625bef1b83ba2b08afe58197573738d72fb4d316de9d99eac34806a4cae80c",
   },
 
   "cosmic-idle" = {
-    uri = "https://github.com/pop-os/cosmic-idle/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "acdd250cc845879352b1707c25636145dbdc3f0b4d17724d9a031e789a0592f1",
+    uri = "https://github.com/pop-os/cosmic-idle/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "532074f48a9c0c23bebfcc171b527a732fa8850ce83f3cd2f4ca5926ef6fbac7",
   },
 
   "cosmic-initial-setup" = {
-    uri = "https://github.com/pop-os/cosmic-initial-setup/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "6327cce425d6590b8479bdd459f34e9522663fa47b86c9af020f055e746c61eb",
+    uri = "https://github.com/pop-os/cosmic-initial-setup/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "9f6320bf51a9edfb63d0bf896e39a34a07e6921b8b67e316ace47081ca368080",
   },
 
   "cosmic-launcher" = {
-    uri = "https://github.com/pop-os/cosmic-launcher/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "9ded0bbe14a08f4b83da8124d1243c965cf71751dc7d94539dd71ad5a4eff54a",
+    uri = "https://github.com/pop-os/cosmic-launcher/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "6700ad7c036b323f877fbedd43d021f50128651af4265554466eb3847013774a",
   },
 
   "cosmic-notifications" = {
-    uri = "https://github.com/pop-os/cosmic-notifications/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "36fb0a639461432f77df30e8d065ecc536a64a8504e2eebe4b0dcd054cffad08",
+    uri = "https://github.com/pop-os/cosmic-notifications/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "73992c11fd16aa695279f78ed412f07cb71b3d62ca4999e2e6fcd44155c8550c",
   },
 
   "cosmic-osd" = {
-    uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "7f4e7e991f9201bacb0d0c3c47d160419de849710f16c9deb29a3aaeb82b0de3",
+    uri = "https://github.com/pop-os/cosmic-osd/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "41cd18721bee2c9123a9fb5f8c09617ad0033f5cf688933fff47f6ac28c825c0",
   },
 
   "cosmic-osk" = {
-    uri = "https://github.com/pop-os/cosmic-osk/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "6a4095f0474d55ecefe0e1f4bb24f5a7bffdf0450e87de40c668da1d628bd1f6",
+    uri = "https://github.com/pop-os/cosmic-osk/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "7d92c3df124d1d009ae94cc95915c9085af4ceeb6027473fc02ee564dcead81a",
   },
 
   "cosmic-panel" = {
-    uri = "https://github.com/pop-os/cosmic-panel/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "6b036076e162568b6d0230ab82916b30d06b4942cb5be6a39960e42b499cab9b",
+    uri = "https://github.com/pop-os/cosmic-panel/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "e532f3ed38cfe911fb71f62a782de50f41488c2d39a24b09708f141826e8e343",
   },
 
   "cosmic-randr" = {
-    uri = "https://github.com/pop-os/cosmic-randr/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "6c082cba6b80c5d89b02aec7ed315c9de8452cd413f5181ece43d7fdb3011481",
+    uri = "https://github.com/pop-os/cosmic-randr/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "4556bc8954b212b74aabc60960c1f5f63af1c3cb3abe6b7e00d8278094a6ab1c",
   },
 
   "cosmic-screenshot" = {
-    uri = "https://github.com/pop-os/cosmic-screenshot/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "2f809f4e1ed8ca218b9d39975cee290d168f231b48204a4d91d75ee63f30abcb",
+    uri = "https://github.com/pop-os/cosmic-screenshot/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "1f74e8ac311e564dd1bac64a2bf02aa095e9c98222be832c2b3366124b3a5000",
   },
 
   "cosmic-session" = {
-    uri = "https://github.com/pop-os/cosmic-session/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "e6d093938ab59baafdccac576cb0bc1a1966c825a5fedf9cb498061d8099ed57",
+    uri = "https://github.com/pop-os/cosmic-session/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "9eafc77c833ae8da30c2d20c751fd585b4e699b4e4bbad44760ab70089923825",
   },
 
   "cosmic-settings-daemon" = {
-    uri = "https://github.com/pop-os/cosmic-settings-daemon/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "69e34f67c1ae727a75b9a75e7901738adf2779ca1024f53d280d474d1af9ff6c",
+    uri = "https://github.com/pop-os/cosmic-settings-daemon/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "e9a193e32857139fa00fcccf8c0ee42d3480b456e4ab8ade1a4cbfed93c70e28",
   },
 
   "cosmic-settings" = {
-    uri = "https://github.com/pop-os/cosmic-settings/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "1e33fec9dc70408a85eca4055dca16afa82baadc2edb957e1400294b09f2ff27",
+    uri = "https://github.com/pop-os/cosmic-settings/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "d11ba9d67d3fa279b659e31d64024366358b3f207ce6fe25564772805e517f34",
   },
 
   "cosmic-store" = {
-    uri = "https://github.com/pop-os/cosmic-store/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "4c736700bbca173ca7d06738fe6f2e74c053abbea676bf083303a72984469a09",
+    uri = "https://github.com/pop-os/cosmic-store/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "8c68dde19cb5326f129d3b84c5d8fda2e4ed4286287e847742013900bb294278",
   },
 
   "cosmic-term" = {
-    uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "2e5ef9ff8428503024f84e9d0c9d8b0007dec0be42b398e5925d209ec91e2e19",
+    uri = "https://github.com/pop-os/cosmic-term/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "0dc1af0a467cf8c9f85f7c7bb0a89e8fde067c7945b7edabd924a370c8083ac9",
   },
 
   "cosmic-viewer" = {
-    uri = "https://github.com/pop-os/cosmic-viewer/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "a1c3b54c5f7dde278d17e4bd67395cd1ce4ef4a130ec1b0cfeebc05cc0ce3026",
+    uri = "https://github.com/pop-os/cosmic-viewer/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "ac0cee420c954b85188d1fbfffee32a49d11dacced881c68b068c56e83efcdad",
   },
 
   "cosmic-wallpapers" = {
-    uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "d898a1a7f84c8138e9b16e6a0cc1ed806ce9a87a94ab75561895b8e1d7a465f5",
+    uri = "https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "a831e9b1d3c4aa10a391cd57c136c0511278a6ed383abd65edd8b9b0d81e3169",
   },
 
   "cosmic-workspaces-epoch" = {
-    uri = "https://github.com/pop-os/cosmic-workspaces-epoch/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "cf9afff9ba023abe3bd996b82ceda7a295f63bcdbbd9ad784a9643a86c647f04",
+    uri = "https://github.com/pop-os/cosmic-workspaces-epoch/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "914c229f29b2dc1eaf91757b7f3d51ee7d58be5687fa6a5d7ad83b23121fd0f6",
   },
 
   "xdg-desktop-portal-cosmic" = {
-    uri = "https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "4fcd4631348e98decfd991489a5e9a941792741f5cf127f8ca9e874056c144d6",
+    uri = "https://github.com/pop-os/xdg-desktop-portal-cosmic/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "b80b6f443ddb1a43b6c02bb1e81ab1b9c1e93724990576ac88d88ef1ccc9c699",
   },
 
   "cosmic-player" = {
-    uri = "https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "d2a13306348cdc3886f75c918f00e3722ec85509d0b7f286023f3929b7aa0600",
+    uri = "https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "421bf528742a737e8a99b9ea7ce753a5ddc8a37f7f694e774292a539e793f5b6",
   },
 
   "cosmic-player" = {
-    uri = "https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.9.0.tar.gz",
-    sha256sum = "d2a13306348cdc3886f75c918f00e3722ec85509d0b7f286023f3929b7aa0600",
+    uri = "https://github.com/pop-os/cosmic-player/archive/refs/tags/epoch-1.10.0.tar.gz",
+    sha256sum = "421bf528742a737e8a99b9ea7ce753a5ddc8a37f7f694e774292a539e793f5b6",
   },
 }

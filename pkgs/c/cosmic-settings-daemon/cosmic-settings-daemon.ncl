@@ -71,10 +71,14 @@
     target,
 
     buildPhase = [
-      "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+      # "make ARGS+=\"%{std.string.join " " cargoFlags}\"",
+      "just build-release --offline --target x86_64-unknown-linux-musl",
     ],
     installPhase = [
-      "make TARGET=\"%{target}/release\" DESTDIR=$DEST install",
+      # "make TARGET=\"%{target}/release\" DESTDIR=$DEST install",
+      "export CARGO_TARGET_DIR=\"target/%{target}\"",
+      # "just --set bin-src \"target/%{target}/%{d}/cosmic-settings\" rootdir=$DEST install",
+      "just rootdir=$DEST install",
     ],
 
     postInstallPhase = [
@@ -107,7 +111,7 @@
 
     enableSccache = true,
     biDrvs = [
-      drvs.gnumake,
+      drvs.just,
       drvs.cosmicSettingsDaemonSources,
       drvs.alsaLibs,
       drvs.atSpi2Core,
@@ -153,7 +157,7 @@
       drvs.llvmConfigStatic,
       drvs.lua,
       drvs.m4,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.mtdev,
       drvs.ncurses,
       drvs.openssl,

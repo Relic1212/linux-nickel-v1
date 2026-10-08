@@ -129,7 +129,7 @@
       drvs.llvmConfigStatic,
       drvs.lua,
       drvs.m4,
-      drvs.mesaExp,
+      drvs.mesa2,
       drvs.mtdev,
       drvs.ncurses,
       drvs.openssl,
