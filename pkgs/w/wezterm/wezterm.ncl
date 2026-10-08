@@ -6,8 +6,10 @@
       # uri = "https://github.com/wezterm/wezterm/archive/refs/tags/20240203-110809-5046fc22.tar.gz",
       # sha256sum = "3a02a68016ef48cdb2127308be20acafe94a568411e95b0e64dc590cf877b401",
 
-      uri = "https://github.com/wezterm/wezterm/archive/6a493f88fab06a792308e0c704790390fd3c6232.tar.gz",
-      sha256sum = "5edb9988a93fdea46e9e305e4fbbe886ed808cf200d006c4931969fe8cabd200"
+      # uri = "https://github.com/wezterm/wezterm/archive/6a493f88fab06a792308e0c704790390fd3c6232.tar.gz",
+      # sha256sum = "5edb9988a93fdea46e9e305e4fbbe886ed808cf200d006c4931969fe8cabd200",    
+      uri = "https://github.com/wezterm/wezterm/archive/372548295b0b25c9a5400f0ea56f0e89f47e0524.tar.gz",
+      sha256sum = "cdbbbf79f065429253477396d79b128b402359b0ca69fc9dd67a09a9767f1905",
     },
 
     nonCrateSourceInputs = [
@@ -75,7 +77,9 @@
         dest = "submodule-libssh"
       }
     ],
-
+    # crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
+    # crates = (lib.functions.filterCrates (import "wezterm-crates.json")),
+    crates = (lib.functions.filterCrates (import "wezterm-crates-oct26.json")),
     enableSccache = true,
 
     configurePhase = [
@@ -102,18 +106,25 @@
             "%,
       "mv vendor-xcb-imdkit-rs vendor/xcb-imdkit-rs",
       "mv vendor-finl_unicode vendor/finl_unicode",
-      "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
-      "cp vendor/log-0.4.27/.cargo-checksum.json /tmp/workdir/src/vendor/finl_unicode/.cargo-checksum.json",
-      "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-git-no-dl.patch)",
+      "cp vendor/log-*/.cargo-checksum.json /tmp/workdir/src/vendor/xcb-imdkit-rs/.cargo-checksum.json",
+      "cp vendor/log-*/.cargo-checksum.json /tmp/workdir/src/vendor/finl_unicode/.cargo-checksum.json",
+      lib.functions.writeFile "f.patch" (import "wezterm-git-no-dl-r2.patch" as 'Text),
+      "patch -p1 < f.patch",
+      # "(cd ${SRC} && patch -p1 < /tmp/workdir/patches/wezterm-git-no-dl.patch)",
     ],
 
-    patches = [
-      {
-        sha256sum = "3e80b352ca40067beb2596d8d41d1e6202870a1b108e49d3fd63f69a5e1a12ec",
-        file = "wezterm-git-no-dl.patch"
-      }
-    ],
+    # patches = [
+    #   {
+    #     sha256sum = "3e80b352ca40067beb2596d8d41d1e6202870a1b108e49d3fd63f69a5e1a12ec",
+    #     file = "wezterm-git-no-dl.patch"
+    #   }
+    # ],
 
+    # eofPatches = [
+    #   {
+    #     patch = import "wezterm-git-no-dl-r2.patch" as 'Text,
+    #   },
+    # ],
     patchPhase = [],
 
     extraCargoFlags = [
@@ -121,6 +132,8 @@
       "--features wayland,vendored-fonts",
     ],
     extraEnv = {
+      OPENSSL_NO_VENDOR = "1",
+      LIBGIT2_NO_VENDOR = "1",
       CARGO_FEATURE_USE_SYSTEM_LIB = "1",
       EXTRA_RUSTFLAGS =
         [
@@ -157,9 +170,6 @@
       "install -m0755 ${SRC}/assets/wezterm.desktop ${DEST}/usr/share/applications/org.wezfurlong.wezterm.desktop",
       "install -Dm0755 ${SRC}/assets/icon/terminal.png ${DEST}/usr/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png",
     ],
-
-    # crates = (lib.functions.filterCrates (import "wezterm-crates-newer.json")),
-    crates = (lib.functions.filterCrates (import "wezterm-crates.json")),
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -223,6 +233,7 @@
       drvs.libstdcppCompat,
       # drvs.git,
       drvs.libdlEgl,
+      drvs.libgit2,
     ],
   }
 }
