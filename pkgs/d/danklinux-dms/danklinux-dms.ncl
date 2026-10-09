@@ -33,7 +33,7 @@ in
     ],
     outputFile = "source.tar",
 
-     outputSha256sum = "040fc9a121f6cda4111989825d5a4029b32de09e77012ac38d23398e92ccd5cb", # vendor
+    outputSha256sum = "040fc9a121f6cda4111989825d5a4029b32de09e77012ac38d23398e92ccd5cb", # vendor
 
     biDrvs = [
       drvs.go_1_26,
