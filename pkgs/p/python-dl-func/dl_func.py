@@ -270,6 +270,10 @@ def json_parse(argv):
     import json
     libs = []
     for elem in argv:
+        if elem.startswith("--file"):
+            p = elem[len("--file")+1:].strip()
+            with open(p) as f:
+                elem = f.read()
         lib_d = json.loads(elem)
         names = lib_d["names"]
         if "prefix" in lib_d:
