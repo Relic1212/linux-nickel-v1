@@ -8,7 +8,7 @@
     _CargoFetcher
     & {
       singleSource = _cosmicSrcs."cosmic-applets",
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "3a58b8e709a9e19e42de654379701a135dd04fcc338d71cb3a1d16470090a9bf"
+      outputSha256sum = (import "src.sha256sum" as 'Text),
     },
 }
 & {
@@ -41,12 +41,6 @@
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
     ],
 
-    patches = [
-      # {
-      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-      #   file = "cosmic-osd-xkb.patch",
-      # }
-    ],
     extraEnv = {
       EXTRA_RUSTFLAGS = [
         "-C link-arg=-lpulse",
@@ -68,27 +62,12 @@
       "just rootdir=$DEST install",
     ],
 
-    utilsProviders,
-    baseBuildinputPackages =
-      [
-        drvs.rust,
-        drvs.muslBothWeakDl,
-        drvs.pkgconf,
-        llvmProvider,
-        drvs.clangCc,
-      ]
-      @ (if enableSccache then [drvs.sccache] else [])
-      @ utilsProviders,
     llvmProvider = drvs.llvmFull,
-
-    enableSccache = true,
+    muslProvider = drvs.muslBothWeakDl,
 
     ################
-    neverInclude = [
-      drvs.mesa2,
-    ],
+
     pDrvs = [
-      drvs.mesa2,
       drvs.pipewire,
       drvs.pulseaudio17,
       drvs.libinput,
