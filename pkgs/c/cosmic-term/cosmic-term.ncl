@@ -8,23 +8,13 @@
     & {
       singleSource = _cosmicSrcs."cosmic-term",
 
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "cba881ee68370c682f4082d33cfdfa73dbcfd9d9fbdffa6f38377d8a3984f502"
-      # preConfigurePhase = [
-      #   "cargo update -p compio-driver --precise 0.11.2",
-      # ]
+      outputSha256sum = (import "src.sha256sum" as 'Text),
     },
 }
 & {
   lib,
   drvs,
   cosmicTerm | lib.CargoPackage = {
-    # sourceInputs = [
-    #   {src = {
-    #     uri = "https://patch-diff.githubusercontent.com/raw/pop-os/cosmic-term/pull/257.patch",
-    #     sha256sum = "16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485"
-    #   },
-    #   }
-    # ],
 
     unpackPhase = [
       "cd /tmp/workdir/src",
@@ -46,30 +36,9 @@
       #
       "echo '%{import "../cosmic-term/cosmic_term_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+    ],
 
-      # "patch -p1 < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch",
-    ]
-    #     @
-    #     ( std .array.map 
-    #       (fun s => 
-    #       "(cd ${SRC} && patch -p1 %{s} < ../packed/16c0255f50f96266b6b2da81d60eaadcfdb3cb083296300fb37053c933dfe485/257.patch)")
-
-    #     [
-    #       "i18n/en/cosmic_term.ftl",
-    # "src/config.rs",
-    # "src/main.rs",
-    # "src/terminal.rs",
-    # # "Cargo.lock",
-    # # "Cargo.toml",
-    # # "i18n/en/cosmic_term.ftl",
-    # # "src/config.rs",
-    # # "src/main.rs",
-    #     ])
-    ,extraEnv = {
-
-      # cosmic-epoch alpha
-      VERGEN_GIT_COMMIT_DATE = "9e13a3e47a41296e815ecffef086746dd6bb44bc",
-      VERGEN_GIT_SHA = "'Sat Apr 26 13:09:25 2025 +0530'",
+    extraEnv = {
       EXTRA_RUSTFLAGS = [
         "-C link-arg=/tmp/workdir/src/dlopen.o",
         "-C link-arg=-lc++",
@@ -78,12 +47,6 @@
       ],
     },
 
-    patches = [
-      # {
-      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-      #   file = "cosmic-osd-xkb.patch",
-      # },
-    ],
     target,
     # buildPhase = [
     #   "just args=\" --target %{target}\" build-vendored "
@@ -98,88 +61,19 @@
       "cargo tree --target=x86_64-unknown-linux-musl -e features",
     ],
 
-    utilsProviders,
-    baseBuildinputPackages =
-      [
-        drvs.rust,
-        drvs.muslBothRenamedDl,
-        drvs.pkgconf,
-        llvmProvider,
-        drvs.clangCc,
-      ]
-      @ (if enableSccache then [drvs.sccache] else [])
-      @ utilsProviders,
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
 
-    enableSccache = true,
     biDrvs = [
       (drvs.findutils & { priority = 1 }), # xargs -d
       drvs.just,
       drvs.cosmicTermSources,
-      drvs.alsaLibs,
-      drvs.atSpi2Core,
-      drvs.bluez,
-      drvs.cairo,
-      drvs.cairoGobjectEmpty,
-      drvs.dbus,
-      drvs.eudev,
-      drvs.expat,
-      drvs.fdkAac,
-      drvs.ffmpeg,
-      drvs.fontconfig,
-      drvs.freetype,
-      drvs.fribidi,
-      drvs.gdkPixbufFull,
-      drvs.glib,
-      drvs.gperf,
-      drvs.gtk3,
-      drvs.harfbuzz,
-      drvs.hwdata,
-      drvs.jansson,
-      drvs.jsonC,
-      drvs.kmod,
-      drvs.ldacbt,
-      drvs.libdisplayinfo,
-      drvs.libdlEgl,
-      drvs.libdrm,
-      drvs.libelf,
-      drvs.libepoxy,
-      drvs.libevdev,
-      drvs.libffi,
-      drvs.libfreeaptx,
-      drvs.libinput,
-      drvs.libjpegTurbo,
-      drvs.libopus,
-      drvs.libpciaccess,
-      drvs.libpng,
-      drvs.libsndfile,
-      drvs.libusb,
-      drvs.libxkbcommon,
-      drvs.libyaml,
-      drvs.linuxHeaders,
-      drvs.llvmConfigStatic,
-      drvs.lua,
-      drvs.m4,
-      drvs.mesa2,
-      drvs.mtdev,
-      drvs.ncurses,
-      drvs.openssl,
-      drvs.pango,
-      drvs.pcre2,
-      drvs.pixman,
-      drvs.readline,
-      drvs.sbc,
-      drvs.seatd,
-      drvs.spirvLlvmTranslator,
-      drvs.spirvTools,
-      drvs.utilLinux,
-      drvs.wayland,
-      drvs.waylandProtocols,
-      drvs.xz,
-      drvs.zlibNg,
-      drvs.zstd,
-      drvs.pipewire,
       drvs.libstdcppCompat,
+    ],
+
+    pDrvs = [
+      drvs.mesa2,
+      drvs.libxkbcommon,
     ],
   },
 }
