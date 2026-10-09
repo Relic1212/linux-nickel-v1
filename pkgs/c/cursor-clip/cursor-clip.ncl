@@ -63,7 +63,7 @@
       drvs.libepoxy,
       drvs.libevdev,
       drvs.libffi,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libpciaccess,
       drvs.libpng,
       drvs.libsigcpp,
