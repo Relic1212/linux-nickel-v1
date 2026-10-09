@@ -10,7 +10,7 @@
     & {
       singleSource = _cosmicSrcs."cosmic-applibrary",
 
-      outputSha256sum = (import "src.sha256sum" as 'Text), # "a7979625f23ab68f6ff46474efc4bb11f9c4108724c6ab57496498946377a304"
+      outputSha256sum = (import "src.sha256sum" as 'Text),
     },
 }
 & {
@@ -52,12 +52,7 @@
       "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
       "export LOCKSTEP_XML_PATH=${SRC}/vendor/atspi-common/xml",
     ],
-    patches = [
-      # {
-      #   sha256sum = "ae7010ae3fd4b4603789a9cb58e5fd40bea31b728bed9fd112c581c039d39527",
-      #   file = "cosmic-osd-xkb.patch",
-      # }
-    ],
+
     target,
     # buildPhase = [
     #   "just args=\" --target %{target}\" build-vendored "
@@ -68,17 +63,7 @@
       "just rootdir=$DEST install",
     ],
 
-    utilsProviders,
-    baseBuildinputPackages =
-      [
-        drvs.rust,
-        drvs.muslBothRenamedDl,
-        drvs.pkgconf,
-        llvmProvider,
-        drvs.clangCc,
-      ]
-      @ (if enableSccache then [drvs.sccache] else [])
-      @ utilsProviders,
+    muslProvider = drvs.muslBothRenamedDl,
     llvmProvider = drvs.llvmFull,
 
     enableSccache = true,
