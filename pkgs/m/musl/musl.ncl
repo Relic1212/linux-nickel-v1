@@ -117,7 +117,6 @@
   muslBothRenamedDl =
     muslBoth
     & {
-      debug = true,
       postInstallPhase = [
         "cd ${DEST}/usr/lib",
         # "objcopy -W dlopen libc.a",
@@ -130,15 +129,14 @@
         "objcopy --globalize-symbol stub_dladdr libc.a",
       ]
     },
-  muslBothRenamedDlRelease =
-    muslBothRenamedDl
-    & {
-      debug | priority 1 = false,
-    },
+  # muslBothRenamedDlRelease =
+  #   muslBothRenamedDl
+  #   & {
+  #     debug | priority 1 = false,
+  #   },
   muslBothWeakDl =
     muslBoth
     & {
-      debug = true,
       postInstallPhase = [
         "cd ${DEST}/usr/lib",
         "objcopy -W dlopen libc.a",
