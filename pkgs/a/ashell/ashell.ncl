@@ -12,11 +12,8 @@
         # uri = "https://github.com/MalpenZibo/ashell/archive/e1a01416cb928b7e118f21aa72e6502717452c69.tar.gz",
         # sha256sum = "14621d548d4d67f4da8320276d614b54b510089ce7457396c779157260d55094",
 
-
-         uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.11.0.tar.gz",
+        uri = "https://github.com/MalpenZibo/ashell/archive/refs/tags/0.11.0.tar.gz",
         sha256sum = "6936c68af32becd22356d6742ed86b7732f06f8cada33bcbe421c123e6ef057f",
-
-
       },
 
       outputSha256sum = "1c1ded78199a66c82a35fcf13b32162252beb9ad9530946c1e141e78a1f14e61",
