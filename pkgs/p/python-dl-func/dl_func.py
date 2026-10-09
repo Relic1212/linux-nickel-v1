@@ -73,7 +73,7 @@ class PluginLibrary:
     def dlsym_c_source(self) -> str:
         s = ""
         # % (self.get_libname())
-        s += f"\tif (handle == &{{{self.get_libname()}}} || handle == NULL || handle == &main_program_handle) {{ \n"
+        s += f"\tif (handle == &{self.get_libname()} || handle == NULL || handle == &main_program_handle) {{ \n"
         # s += f"\tdlsym_debug_library_name = \"{self.names[0]}\";\n"
         for sym in self.symbols:
             assert (sym.startswith(self.prefix))
@@ -87,10 +87,10 @@ class PluginLibrary:
 
     def dlsym_c_dbg_source(self) -> str:
         s = ""
-        # % (self.get_libname())
-        s += f"\telse if (handle == &{{{self.get_libname()}}}) {{ "
-        s += f" dlsym_debug_library_name = \"{self.names[0]}\"; "
-        s += " }\n"
+        if len(self.names) > 0:
+            s += f"\telse if (handle == &{{{self.get_libname()}}}) {{ "
+            s += f" dlsym_debug_library_name = \"{self.names[0]}\"; "
+            s += " }\n"
         return s
 
 
@@ -193,9 +193,9 @@ static const char* main_program_handle = "main_program";
     for plugin in libs:
         s += plugin.dlsym_c_source()
 
-    s += "\tchar* dlsym_debug_library_name = \"?\";\n"
+    s += "\tconst char* dlsym_debug_library_name = \"?\";\n"
     s += "\tif (handle == NULL) { dlsym_debug_library_name = \"NULL\"; }\n"
-    s += "\tif (handle == &main_program_handle) { dlsym_debug_library_name = \"main_program_handle\"; }\n"
+    s += "\telse if (handle == &main_program_handle) { dlsym_debug_library_name = \"main_program_handle\"; }\n"
 
     for plugin in libs:
         s += plugin.dlsym_c_dbg_source()
