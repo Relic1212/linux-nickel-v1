@@ -31,7 +31,7 @@
       # drvs.pango,
       # drvs.cairo,
       # drvs.libpng,
-      drvs.glibDynamic,
+      # drvs.glibDynamic,
       drvs.muslShared,
       # drvs.hwdata,
       # drvs.gobjectDynamic,
@@ -46,7 +46,11 @@
       drvs.sharedMimeInfo,
     ],
 
-    neverInclude = [drvs.cairo, drvs.glib, drvs.harfbuzz, ],
+    neverInclude = [
+      drvs.cairo,
+      # drvs.glib,
+      drvs.harfbuzz,
+    ],
     pDrvs =
       [
         # drvs.mesa2,
