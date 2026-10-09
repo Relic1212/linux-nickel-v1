@@ -15,7 +15,7 @@
         "$(pkg-config --static --libs libbrotlienc)"
       ]
     },
-    biDrvs = [
+    pDrvs = [
       drvs.brotli,
     ]
   }
