@@ -34,7 +34,7 @@
     biDrvs = [
       drvs.googletest,
       drvs.linuxHeaders,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
     ],
     pDrvs = [
       drvs.highway,
