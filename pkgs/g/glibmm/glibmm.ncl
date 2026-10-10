@@ -121,12 +121,11 @@
       drvs.perlDynamic,
       drvs.perlXmlParserDynamic,
       drvs.muslShared,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
+      drvs.m4,
+    ],
+    pDrvs = [
       drvs.glib,
       drvs.libsigcpp2,
-      drvs.m4,
     ],
   }
 }
