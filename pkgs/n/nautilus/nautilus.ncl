@@ -56,7 +56,7 @@
       ],
     debug = true,
     llvmProvider = drvs.llvmFull,
-    muslProvider = drvs.muslBothRenamedDlRelease,
+    muslProvider = drvs.muslBothRenamedDl,
     # pythonProvider = drvs.pythonDynamic,
 
     biDrvs = [
