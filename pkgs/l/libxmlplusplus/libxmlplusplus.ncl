@@ -39,7 +39,7 @@
       drvs.perl,
     ],
     pDrvs = [
-      drvs.glibmm,
+      drvs.glibmm_2_4,
       # drvs.libsigcpp2,
     ],
   }
