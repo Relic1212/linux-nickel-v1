@@ -267,7 +267,7 @@
       neverInclude = [
         drvs.musl
       ],
-      biDrvs | priority 1 = pythonInteractive.biDrvs @ [drvs.muslBothRenamedDlRelease],
+      biDrvs | priority 1 = pythonInteractive.biDrvs @ [drvs.muslBothRenamedDl],
       options = {
         dlopen_src | default = (import "python_dlopen.c" as 'Text),
       },
