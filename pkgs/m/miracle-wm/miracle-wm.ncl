@@ -12,7 +12,6 @@
       EXTRA_CPPFLAGS = ["-D_GNU_SOURCE"],
       EXTRA_CXXFLAGS = [
         "-D_GNU_SOURCE",
-        # "-Duint=\\\"unsigned int\\\"",
       ],
 
       EXTRA_LDFLAGS = [
@@ -25,6 +24,15 @@
         "-llttng-ust-tracepoint",
         "/tmp/workdir/src/dlopen.o",
         "/tmp/workdir/src/obj.o",
+        "/usr/lib/input-evdev-rs.a",
+        "/usr/lib/input-evdev.a",
+        "/usr/lib/renderer-egl-generic.a",
+        "/usr/lib/server-virtual.a",
+        "$(pkg-config --static --libs mircommon mirplatform libinput egl mirwayland)",
+        "-lwayland_rs",
+        "-lmir_platforms_evdev_rs",
+        "/usr/lib/mirdeps/libmirplatforminputevdevrs_rust-cxxbridge.a",
+        "/usr/lib/mirdeps/libgraphics_platform_common.a",
       ],
     },
 
@@ -70,6 +78,54 @@
         # "\"liblttng-ust.so.1\"",
       ]
       in
+      let
+        getInputSyms = fun prefix =>
+          std.string.join
+            ","
+            (
+              std.array.map
+                (fun s => m%""%{prefix}%{s}""%)
+                [
+                  "add_input_platform_options",
+                  "create_input_platform",
+                  "describe_input_module",
+                  "probe_input_platform",
+                ]
+            ),
+        getGSyms = fun prefix =>
+          std.string.join
+            ","
+            (
+              std.array.map
+                (fun s => m%""%{prefix}%{s}""%)
+                [
+                  "add_graphics_platform_options",
+                  "create_rendering_platform",
+                  "describe_graphics_module",
+                  "probe_rendering_platform",
+                ]
+            ),
+        getDSyms = fun prefix =>
+          std.string.join
+            ","
+            (
+              std.array.map
+                (fun s => m%""%{prefix}%{s}""%)
+                [
+                  "add_graphics_platform_options",
+                  "create_display_platform",
+                  "describe_graphics_module",
+                  "probe_display_platform",
+                ]
+            ),
+      in
+      let libs = [
+        m%"'{"names":["server-virtual.so.24"],"symbols":[%{getDSyms "server_virtual__" }],"prefix":"server_virtual__"}'"%,
+        m%"'{"names":["renderer-egl-generic.so.24"],"symbols":[%{getGSyms "renderer_egl_generic__" }],"prefix":"renderer_egl_generic__"}'"%,
+        # m%"'{"names":["input-evdev-rs.so.11"],"symbols":[%{getInputSyms  "input_evdev_rs__"}],"prefix":"input_evdev_rs__"}'"%,
+        m%"'{"names":["input-evdev.so.11"],"symbols":[%{getInputSyms  "input_evdev__"}],"pregix":"input_evdev__"}'"%,
+      ]
+      in
       [
         # m%"sed -i 's@add_subdirectory(tests/)@@g' ${SRC}/CMakeLists.txt"%,
 
@@ -87,7 +143,7 @@
         m%"sed -i "s@#include <stdlib.h>@#include <sys/types.h>\n#include <stdlib.h>@g" ${SRC}/miracle-wm-c/include/miracle/config.h"%,
         m%"sed -i "s@#include <cstdlib>@#include <cstdlib>\n#include <sys/types.h>@g" ${SRC}/miracle-wm-c/include/miracle/cpp/modifiers.h"%,
         m%"sed -i 's@SHARED@STATIC@g' ${SRC}/miracle-wm-c/CMakeLists.txt ${SRC}/CMakeLists.txt"%,
-        m%"dl-func '{"names":["liblttng-ust-tracepoint.so.1"],"symbols":["ltt_probe_register",%{std.string.join "," lu}]}' '{"names":["liblttng-ust.so.1"],"symbols":[]}' > ${SRC}/dlopen.c"%,
+        m%"dl-func '{"names":["liblttng-ust-tracepoint.so.1"],"symbols":["ltt_probe_register",%{std.string.join "," lu}]}' '{"names":["liblttng-ust.so.1"],"symbols":[]}' %{std.string.join " " libs}> ${SRC}/dlopen.c"%,
         "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
         lib.functions.writeFile "${SRC}/obj.c" "__attribute__((weak)) void* ltt_probe_register = 0;\n",
         "${CC} ${CFLAGS} -Werror -c ${SRC}/obj.c -o ${SRC}/obj.o",
@@ -113,7 +169,7 @@
     ],
 
     llvmProvider = drvs.llvmFull,
-    muslProvider = drvs.muslBothRenamedDl,
+    muslProvider = if debug then drvs.muslBothRenamedDlDebug else drvs.muslBothRenamedDl,
   }
 }
 & {

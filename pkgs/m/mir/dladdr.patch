@@ -1,0 +1,20 @@
+diff --git a/src/server/graphics/platform_probe.cpp b/src/server/graphics/platform_probe.cpp
+index a2c5259ff8..eaba9e6471 100644
+--- a/src/server/graphics/platform_probe.cpp
++++ b/src/server/graphics/platform_probe.cpp
+@@ -425,13 +425,14 @@ auto mg::select_display_modules(
+      * both are available, we sort in *reverse* alphabetical order, so “x11” comes before
+      * “wayland”
+      */
++#if 0
+     std::sort(
+         platforms.begin(), platforms.end(),
+         [](auto const& lhs, auto const& rhs)
+         {
+             return !dso_filename_alphabetically_before(*lhs, *rhs);
+         });
+-
++#endif
+     /* Treat the Virtual platform specially:
+      *
+      * It does not participate in the regular platform selection (it does not count as either a

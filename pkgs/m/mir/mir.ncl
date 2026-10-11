@@ -2,6 +2,7 @@
   lib,
   drvs,
   mir | lib.CargoPackage = {
+    debug = true,
 
     singleSource = {
       uri = "https://github.com/canonical/mir/archive/refs/tags/v2.30.0.tar.gz",
@@ -98,12 +99,15 @@
         "-DMIR_ENABLE_RUST:BOOL=OFF",
         "-DMIR_ENABLE_TESTS:BOOL=OFF",
         "-DMIR_FATAL_COMPILE_WARNINGS:BOOL=OFF",
-        "-DMIR_PLATFORM=wayland,gbm-kms",
+        "-DMIR_PLATFORM=wayland,gbm-kms,atomic-kms",
       ]
       in
       [
         "patch -p1 << 'EOF'\n%{import "fix.patch" as 'Text}\nEOF\n",
         "patch -p1 << 'EOF'\n%{import "fix2.patch" as 'Text}\nEOF\n",
+        "patch -p1 << 'EOF'\n%{import "dlclose.patch" as 'Text}\nEOF\n",
+        "patch -p1 << 'EOF'\n%{import "libraries.patch" as 'Text}\nEOF\n",
+        "patch -p1 << 'EOF'\n%{import "dladdr.patch" as 'Text}\nEOF\n",
         m%"sed -i 's@add_subdirectory(example-server-lib)@@g' ${SRC}/examples/CMakeLists.txt"%,
         m%"sed -i 's@add_subdirectory(miral-shell)@@g' ${SRC}/examples/CMakeLists.txt"%,
         m%"sed -i 's@add_subdirectory(miral-kiosk)@@g' ${SRC}/examples/CMakeLists.txt"%,
@@ -150,14 +154,53 @@
       "DESTDIR=${DEST} cmake --install .",
     ],
 
-    postInstallPhase = [
-      "install -m0755 ${BUILDDIR}/src/miral/libmiral-internal.a ${DEST}/usr/lib",
-      "llvm-objcopy --redefine-sym XcursorImagesDestroy=libmir_internal__XcursorImagesDestroy ${DEST}/usr/lib/libmiral-internal.a",
-      #   "cd ${DEST}/usr/lib",
-      #   "mv input-evdev.so.10 input-evdev.a",
-      #   "mv renderer-egl-generic.so.23 renderer-egl-generic.a",
-      #   "mv server-virtual.so.23 server-virtual.a",
-    ],
+    postInstallPhase =
+      [
+        "install -m0755 ${BUILDDIR}/src/miral/libmiral-internal.a ${DEST}/usr/lib",
+        "install -m0755 ${BUILDDIR}/target/x86_64-unknown-linux-musl/release/libwayland_rs.a ${DEST}/usr/lib",
+        "install -m0755 ${BUILDDIR}/target/x86_64-unknown-linux-musl/release/libmir_platforms_evdev_rs.a ${DEST}/usr/lib",
+        "install -dm0755 ${DEST}/usr/lib/mirdeps",
+        "for lib in $(find ${BUILDDIR} -type f -name '*.a'); do install -m0755 \"${lib}\" ${DEST}/usr/lib/mirdeps;done",
+        "llvm-objcopy --redefine-sym XcursorImagesDestroy=libmir_internal__XcursorImagesDestroy ${DEST}/usr/lib/libmiral-internal.a",
+        "cd ${DEST}/usr/lib",
+        "cp input-evdev-rs.so.11 input-evdev-rs.a",
+        "cp input-evdev.so.11 input-evdev.a",
+        "cp renderer-egl-generic.so.24 renderer-egl-generic.a",
+        "cp server-virtual.so.24 server-virtual.a",
+      ]
+      @ (
+        let fNames = [
+          "add_input_platform_options",
+          "create_input_platform",
+          "describe_input_module",
+          "probe_input_platform",
+
+          #
+          "add_graphics_platform_options",
+          "create_rendering_platform",
+          "describe_graphics_module",
+          "probe_rendering_platform",
+          #
+          "add_graphics_platform_options",
+          "create_display_platform",
+          "describe_graphics_module",
+          "probe_display_platform",
+        ]
+        in
+        std.array.map
+          (fun libName =>
+            let prefix = std.string.replace "-" "_" libName
+            in
+            let cmds = (std.array.map (fun sym => "llvm-objcopy --redefine-sym %{sym}=%{prefix}__%{sym} %{libName}.a") fNames)
+            in std.string.join "\n" cmds
+          )
+          [
+            "input-evdev-rs",
+            "input-evdev",
+            "renderer-egl-generic",
+            "server-virtual",
+          ]
+      ),
 
     llvmProvider = drvs.llvmFull,
     biDrvs = [

@@ -1,0 +1,39 @@
+diff --git a/src/common/report/lttng/tracepoint_provider.cpp b/src/common/report/lttng/tracepoint_provider.cpp
+index 0322f3a1cd..e37ebfb3ae 100644
+--- a/src/common/report/lttng/tracepoint_provider.cpp
++++ b/src/common/report/lttng/tracepoint_provider.cpp
+@@ -18,6 +18,7 @@
+ 
+ #include <boost/throw_exception.hpp>
+ #include <stdexcept>
++#include <iostream>
+ 
+ #include <dlfcn.h>
+ 
+@@ -55,5 +56,6 @@ mir::report::lttng::TracepointProvider::TracepointProvider(std::string const& li
+ 
+ mir::report::lttng::TracepointProvider::~TracepointProvider() noexcept
+ {
++    std::cout << "(TracepointProvider) dlcose\n";
+     dlclose(lib);
+ }
+diff --git a/src/common/sharedlibrary/shared_library.cpp b/src/common/sharedlibrary/shared_library.cpp
+index 317b651d3f..f3f2bd7f2c 100644
+--- a/src/common/sharedlibrary/shared_library.cpp
++++ b/src/common/sharedlibrary/shared_library.cpp
+@@ -16,6 +16,7 @@
+ 
+ #include <mir/shared_library.h>
+ #include <compare>
++#include <iostream>
+ 
+ #ifdef MIR_DONT_USE_DLVSYM
+ #include <mir/log.h>
+@@ -41,6 +42,7 @@ mir::SharedLibrary::SharedLibrary(std::string const& library_name) :
+ 
+ mir::SharedLibrary::~SharedLibrary() noexcept
+ {
++    std::cout << "(SharedLibrary) dlcose\n";
+     dlclose(so);
+ }
+ 
