@@ -19,7 +19,7 @@
       drvs.glib,
       drvs.pixman,
       drvs.openssl,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.lz4,
     ]
   }
