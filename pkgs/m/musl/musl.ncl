@@ -129,6 +129,7 @@
         "objcopy --globalize-symbol stub_dladdr libc.a",
       ]
     },
+  muslBothRenamedDlDebug | lib.AutotoolsPackage = muslBothRenamedDl & { debug = true },
   # muslBothRenamedDlRelease =
   #   muslBothRenamedDl
   #   & {
