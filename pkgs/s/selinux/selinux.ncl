@@ -177,7 +177,7 @@
       biDrvs | priority 1 =
         pythonInteractive.biDrvs
         @ [
-          drvs.muslBothRenamedDlRelease,
+          drvs.muslBothRenamedDl,
           drvs.pythonFull,
         ],
 
