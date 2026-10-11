@@ -1,0 +1,20 @@
+diff --git a/src/server/input/xkb_mapper_registrar.cpp b/src/server/input/xkb_mapper_registrar.cpp
+index 043e6c7da7..aa4c73ed44 100644
+--- a/src/server/input/xkb_mapper_registrar.cpp
++++ b/src/server/input/xkb_mapper_registrar.cpp
+@@ -98,6 +98,7 @@ mi::XKBStatePtr make_unique_state(xkb_keymap* keymap)
+ }
+ }
+ 
++#if 0
+ mi::XKBContextPtr mi::make_unique_context()
+ {
+     auto context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+@@ -107,6 +108,7 @@ mi::XKBContextPtr mi::make_unique_context()
+     }
+     return {context, &xkb_context_unref};
+ }
++#endif
+ 
+ mircv::XKBMapperRegistrar::XkbMappingState::XkbMappingStateLedRegistrar::XkbMappingStateLedRegistrar(mir::Executor& executor)
+     : ObserverMultiplexer<LedObserver>(executor)

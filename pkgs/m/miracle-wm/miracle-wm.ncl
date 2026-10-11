@@ -2,109 +2,118 @@
   lib,
   drvs,
   miracleWm | lib.CmakePackage = {
+    debug = true,
     singleSource = {
-      uri = "https://github.com/miracle-wm-org/miracle-wm/archive/refs/tags/v0.10.1.tar.gz",
-      sha256sum = "30fee83ee2fef9d34ce5497bf862f5103095ea1625b1b990530a47dad925b304"
+      uri = "https://github.com/miracle-wm-org/miracle-wm/archive/refs/tags/v0.11.2.tar.gz",
+      sha256sum = "71e244ec4991c21fb875182e220bc17227cd45c361f4b674aecb9af785134d45"
     },
 
     buildEnv = {
       EXTRA_CPPFLAGS = ["-D_GNU_SOURCE"],
       EXTRA_CXXFLAGS = [
         "-D_GNU_SOURCE",
-      ]
-      # @ EXTRA_LDFLAGS
-      ,
+        # "-Duint=\\\"unsigned int\\\"",
+      ],
 
-      EXTRA_LDFLAGS =
-        if true then
-          []
-        else
-          [
-            "-l:input-evdev.a",
-            "-l:libmircommon.a",
-            "-l:libmiroil.a",
-            "-l:libmirserver.a",
-            "-l:libmirwayland.a",
-            "-l:renderer-egl-generic.a",
-            "-l:libmiral.a",
-            "-l:libmircore.a",
-            "-l:libmirplatform.a",
-            "-l:libmirserverlttng.a",
-            "-l:server-virtual.a",
-
-            #     "-l:libboost_atomic.a",
-            # "-l:libboost_charconv.a",
-            # "-l:libboost_chrono.a",
-            # "-l:libboost_container.a",
-            # "-l:libboost_context.a",
-            # "-l:libboost_contract.a",
-            # "-l:libboost_coroutine.a",
-            # "-l:libboost_date_time.a",
-            "-l:libboost_exception.a",
-            # "-l:libboost_fiber.a",
-            # "-l:libboost_filesystem.a",
-            # "-l:libboost_graph.a",
-            # "-l:libboost_iostreams.a",
-            # "-l:libboost_json.a",
-            # "-l:libboost_locale.a",
-            # "-l:libboost_log.a",
-            # "-l:libboost_log_setup.a",
-            # "-l:libboost_math_c99.a",
-            # "-l:libboost_math_c99f.a",
-            # "-l:libboost_math_c99l.a",
-            # "-l:libboost_math_tr1.a",
-            # "-l:libboost_math_tr1f.a",
-            # "-l:libboost_math_tr1l.a",
-            # "-l:libboost_nowide.a",
-            # "-l:libboost_prg_exec_monitor.a",
-            # "-l:libboost_process.a",
-            "-l:libboost_program_options.a",
-            # "-l:libboost_python312.a",
-            # "-l:libboost_random.a",
-            # "-l:libboost_regex.a",
-            # "-l:libboost_serialization.a",
-            # "-l:libboost_stacktrace_basic.a",
-            # "-l:libboost_stacktrace_from_exception.a",
-            # "-l:libboost_stacktrace_noop.a",
-            # "-l:libboost_system.a",
-            # "-l:libboost_test_exec_monitor.a",
-            # "-l:libboost_thread.a",
-            # "-l:libboost_timer.a",
-            # "-l:libboost_type_erasure.a",
-            # "-l:libboost_unit_test_framework.a",
-            # "-l:libboost_url.a",
-            # "-l:libboost_wave.a",
-            # "-l:libboost_wserialization.a",
-            "-lxkbcommon",
-            "-lglib-2.0",
-            "-lfreetype",
-            "$(pkg-config --static --libs xkbcommon mirserver miral xcb wayland-client wayland-server)",
-          ]
+      EXTRA_LDFLAGS = [
+        "-lc++",
+        "-lc++experimental",
+        "-lboost_program_options",
+        "-lboost_iostreams",
+        "-lmiral-internal",
+        "$(pkg-config --static --libs gio-2.0 gobject-2.0 libdisplay-info libudev lttng-ust xcb xcursor xcb-res xcb-xfixes freetype2 xcb-composite)",
+        "-llttng-ust-tracepoint",
+        "/tmp/workdir/src/dlopen.o",
+        "/tmp/workdir/src/obj.o",
+      ],
     },
 
-    preConfigurePhase = [
-      m%"sed -i 's@add_subdirectory(tests/)@@g' ${SRC}/CMakeLists.txt"%,
+    cmakeExtraArgsRecord = {
+      "-DENABLE_TESTS" = false,
+      "-DFEATURE_PLUGIN_SYSTEM" = false,
+      "-DFEATURE_PARENT_CONTAINER_WALLPAPERS" = false,
+      "-DBUILD_ERROR_REPORTER" = false,
+      "-DBUILD_DEBUG_OVERLAY" = false,
+    },
 
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config-c.h"%,
-      # # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config-c.cpp"%,
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config.h"%,
-      # # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config.cpp"%,
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/keyboard.h"%,
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/modifiers.h"%,
+    preConfigurePhase =
+      let lu = [
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tracepoint_module_register\"",
+        "\"lttng_ust_tracepoint_module_unregister\"",
+        "\"lttng_ust_tp_disable_destructors\"",
+        "\"lttng_ust_tp_get_destructors_state\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        "\"lttng_ust_tp_rcu_read_lock\"",
+        "\"lttng_ust_tp_rcu_read_unlock\"",
+        "\"lttng_ust_tp_rcu_dereference_sym\"",
+        # "\"ltt_probe_register\"",
+        # "\"liblttng-ust.so.1\"",
+      ]
+      in
+      [
+        # m%"sed -i 's@add_subdirectory(tests/)@@g' ${SRC}/CMakeLists.txt"%,
 
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/src/config.h"%,
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config-c.h"%,
+        # # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config-c.cpp"%,
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config.h"%,
+        # # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/miracle-wm-config.cpp"%,
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/keyboard.h"%,
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/miracle-wm-config/include/miracle/modifiers.h"%,
 
-      # m%"sed -i 's@uint@unsigned int@g' ${SRC}/tests/test_leaf_container.cpp"%,
-      "sed -i 's@-lpcre2-16 -lpcre2-32@@g' ${SRC}/CMakeLists.txt"
-    ],
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/src/config.h"%,
+
+        # m%"sed -i 's@uint@unsigned int@g' ${SRC}/tests/test_leaf_container.cpp"%,
+        # "sed -i 's@-lpcre2-16 -lpcre2-32@@g' ${SRC}/CMakeLists.txt",
+        m%"sed -i "s@#include <stdlib.h>@#include <sys/types.h>\n#include <stdlib.h>@g" ${SRC}/miracle-wm-c/include/miracle/config.h"%,
+        m%"sed -i "s@#include <cstdlib>@#include <cstdlib>\n#include <sys/types.h>@g" ${SRC}/miracle-wm-c/include/miracle/cpp/modifiers.h"%,
+        m%"sed -i 's@SHARED@STATIC@g' ${SRC}/miracle-wm-c/CMakeLists.txt ${SRC}/CMakeLists.txt"%,
+        m%"dl-func '{"names":["liblttng-ust-tracepoint.so.1"],"symbols":["ltt_probe_register",%{std.string.join "," lu}]}' '{"names":["liblttng-ust.so.1"],"symbols":[]}' > ${SRC}/dlopen.c"%,
+        "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
+        lib.functions.writeFile "${SRC}/obj.c" "__attribute__((weak)) void* ltt_probe_register = 0;\n",
+        "${CC} ${CFLAGS} -Werror -c ${SRC}/obj.c -o ${SRC}/obj.o",
+      ],
     generator = "Ninja",
+    biDrvs = [
+      drvs.pcre2cmake,
+      drvs.pythonDlFunc,
+      drvs.pythonFull,
+    ],
+    neverInclude = [
+      drvs.pcre2,
+    ],
+
     pDrvs = [
-      drvs.mesa2,
-      drvs.elogindWithPolkit,
-      drvs.boost,
+      # drvs.mesa2,
+      # drvs.elogindWithPolkit,
+      # drvs.boost,
+      drvs.mir,
+      drvs.nlohmannJsonCmake,
+      drvs.googletest,
+      drvs.jsonC,
     ],
 
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
   }
 }
 & {
@@ -122,9 +131,12 @@
   lib,
   drvs,
   lttngUst | lib.AutotoolsPackage = {
+    debug = true,
     singleSource = {
-      uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.15.1.tar.bz2",
-      sha256sum = "37c9b58ea7aa7bc47d6630b52ba1a48ebce095b9a196eab4ddd273d78301792d",
+      # uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.15.1.tar.bz2",
+      # sha256sum = "37c9b58ea7aa7bc47d6630b52ba1a48ebce095b9a196eab4ddd273d78301792d",
+      uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.14.3.tar.bz2",
+      sha256sum = "3c232b514f33c4248ce23155f64ad272fdaae3323255f69d5e7a5c3d6812b7ea",
     },
     llvmProvider = drvs.llvmFull,
     biDrvs = [
@@ -178,68 +190,10 @@
 & {
   lib,
   drvs,
-  lttngUst212 | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.12.10.tar.bz2",
-      sha256sum = "aa802851c6d08c653ac1dd7da8f552baaa5d87e9b03c2d6a8b7a04322e53dc47"
-    },
-
-    buildEnv = {
-      EXTRA_LDFLAGS = [
-        "-lurcu-bp"
-      ]
-    },
-
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.popt,
-      drvs.libxml2,
-      drvs.liburcu,
-    ],
-    extraConfigureFlags = [
-      "--enable-shared=yes",
-      "--disable-numa",
-      "--disable-examples",
-    ],
-
-    preConfigurePhase = [
-      #   m%"sed -i 's@if test "$enable_shared" = no@if test "$enable_shared" = yes@g' ${SRC}/configure"%,
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
-  lttngUst213 | lib.AutotoolsPackage = {
-    singleSource = {
-      uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.13.9.tar.bz2",
-      sha256sum = "2ad6d69a54a1d924c18a4aa7a233db104e3cc332bcdd240e196bf7adbed3f712"
-    },
-
-    biDrvs = [
-      drvs.pkgconf,
-      drvs.popt,
-      drvs.libxml2,
-      drvs.liburcu,
-    ],
-    extraConfigureFlags = [
-      #     "--enable-shared=yes",
-      "--disable-numa",
-      "--disable-examples",
-    ],
-
-    preConfigurePhase = [
-      m%"sed -i 's@if test "$enable_shared" = no@if test "$enable_shared" = yes@g' ${SRC}/configure"%,
-    ]
-  }
-}
-& {
-  lib,
-  drvs,
   lttngTools | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://lttng.org/files/lttng-tools/lttng-tools-2.14.0.tar.bz2",
-      sha256sum = "d8c39c26cec13b7bd82551cd52a22efc358b888e36ebcf9c1b60ef1c3a3c2fd3"
+      uri = "https://lttng.org/files/lttng-tools/lttng-tools-2.14.3.tar.bz2",
+      sha256sum = "473ebcf26cae02860ee23e7cbf4ec875586017bd06f32613ba21b6586420e2ed"
     },
     biDrvs = [
       drvs.pkgconf,
@@ -254,8 +208,8 @@
   drvs,
   lttngModules | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://lttng.org/files/lttng-modules/lttng-modules-2.14.0.tar.bz2",
-      sha256sum = "f2261e738b1dd1027640e5ba3040dee292241b847d5745766b3ba640e168c94a"
+      uri = "https://lttng.org/files/lttng-modules/lttng-modules-2.14.3.tar.bz2",
+      sha256sum = "35a1875ad96e8b4b6aa8729f59af350bfc788ba65c6856deaa84d33acc0f28c2"
     },
     biDrvs = [
       drvs.pkgconf,
@@ -267,8 +221,8 @@
   drvs,
   liburcu | lib.AutotoolsPackage = {
     singleSource = {
-      uri = "https://lttng.org/files/urcu/userspace-rcu-0.15.3.tar.bz2",
-      sha256sum = "26687ec84e3e114759454c884a08abeaf79dec09b041895ddf4c45ec150acb6d"
+      uri = "https://lttng.org/files/urcu/userspace-rcu-0.14.3.tar.bz2",
+      sha256sum = "bdcbf18ed37911f489851aa80e98b8d5bc565b329ee2fb66c11ee7a019f43aa0"
     }
   }
 }

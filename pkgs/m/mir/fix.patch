@@ -1,0 +1,66 @@
+commit 2395b89aa2dfa95a26c4c8600ff50532886f5c46
+Author: Relic1212 <67271773+Relic1212@users.noreply.github.com>
+Date:   Sun Oct 11 00:22:02 2026 +0200
+
+    Revert "ShmBacking: Switch from `Synchronised` to `std::atomic` for `current_mapping`"
+    
+    This reverts commit b227ed648a46ddf94f0c1abd368923dc32c9d77f.
+
+diff --git a/src/server/shm_backing.cpp b/src/server/shm_backing.cpp
+index d50f0b3583..9a70035e6d 100644
+--- a/src/server/shm_backing.cpp
++++ b/src/server/shm_backing.cpp
+@@ -333,7 +333,8 @@ private:
+         std::shared_ptr<ShmBufferSIGBUSHandler::AccessProtector> const access_guard;
+     };
+ 
+-    std::atomic<std::shared_ptr<CurrentMapping const>> current_mapping;
++    // Really we only need std::atomic<std::shared_ptr<>>, but 20.04!
++    mir::Synchronised<std::shared_ptr<CurrentMapping const>> current_mapping;
+     mir::Fd const backing_store;
+     int const prot;
+ };
+@@ -388,7 +389,7 @@ template<typename Range, typename Parent>
+ auto ShmBacking::get_range(size_t start, size_t len, std::shared_ptr<Parent> parent)
+     -> std::unique_ptr<Range>
+ {
+-    auto mapping = current_mapping.load();
++    auto mapping = *current_mapping.lock();
+     // This slightly weird comparison is to avoid integer overflow
+     if ((start > mapping->size) ||
+         (mapping->size - start < len))
+@@ -404,7 +405,7 @@ template<typename T>
+ auto ShmBacking::lock_range(size_t start, size_t len)
+     -> std::unique_ptr<mir::shm::Mapping<T>>
+ {
+-    auto mapping = current_mapping.load();
++    auto mapping = *current_mapping.lock();
+ 
+     auto start_addr = static_cast<char*>(mapping->mapped_address) + start;
+     return
+@@ -417,10 +418,10 @@ auto ShmBacking::lock_range(size_t start, size_t len)
+ 
+ auto ShmBacking::resize(size_t new_size) -> std::expected<void, mir::shm::ResizeError>
+ {
+-    auto mapping = current_mapping.load();
++    auto mapping = current_mapping.lock();
+ 
+     // Backing store can only increase in size.
+-    if (mapping && new_size < mapping->size)
++    if (*mapping && new_size < (*mapping)->size)
+     {
+         return std::unexpected{mir::shm::ResizeError::invalid_size};
+     }
+@@ -434,10 +435,10 @@ auto ShmBacking::resize(size_t new_size) -> std::expected<void, mir::shm::Resize
+             "Failed to map client-provided SHM pool"}));
+     }
+ 
+-    current_mapping.store(std::make_shared<CurrentMapping>(
++    *mapping = std::make_shared<CurrentMapping>(
+         mapped_address,
+         new_size,
+-        backing_size_is_guaranteed_at_least(this->backing_store, new_size)));
++        backing_size_is_guaranteed_at_least(this->backing_store, new_size));
+     return {};
+ }
+ 
