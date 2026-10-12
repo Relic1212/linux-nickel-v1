@@ -28,11 +28,19 @@
         "/usr/lib/input-evdev.a",
         "/usr/lib/renderer-egl-generic.a",
         "/usr/lib/server-virtual.a",
-        "$(pkg-config --static --libs mircommon mirplatform libinput egl mirwayland)",
+        "/usr/lib/graphics-gbm-kms.a",
+        "/usr/lib/graphics-atomic-kms.a",
+        "/usr/lib/graphics-wayland.a",
+        "$(pkg-config --static --libs mircommon mirplatform libinput egl mirwayland pixman-1 epoxy wayland-egl)",
         "-lwayland_rs",
         "-lmir_platforms_evdev_rs",
         "/usr/lib/mirdeps/libmirplatforminputevdevrs_rust-cxxbridge.a",
         "/usr/lib/mirdeps/libgraphics_platform_common.a",
+        "/usr/lib/mirdeps/libmirsharedgbmservercommon-static.a",
+        "/usr/lib/mirdeps/libkms_utils.a",
+        "/usr/lib/mirdeps/libmirsharedatomickmscommon-static.a",
+        "/usr/lib/mirdeps/libmirplatformwayland-graphics.a",
+        "/usr/lib/mirdeps/libmirplatformwayland-input.a",
       ],
     },
 
@@ -118,12 +126,30 @@
                   "probe_display_platform",
                 ]
             ),
+        getGDSyms = fun prefix =>
+          std.string.join
+            ","
+            (
+              std.array.map
+                (fun s => m%""%{prefix}%{s}""%)
+                [
+                  "add_graphics_platform_options",
+                  "create_display_platform",
+                  "create_rendering_platform",
+                  "describe_graphics_module",
+                  "probe_display_platform",
+                  "probe_rendering_platform",
+                ]
+            ),
       in
       let libs = [
         m%"'{"names":["server-virtual.so.24"],"symbols":[%{getDSyms "server_virtual__" }],"prefix":"server_virtual__"}'"%,
         m%"'{"names":["renderer-egl-generic.so.24"],"symbols":[%{getGSyms "renderer_egl_generic__" }],"prefix":"renderer_egl_generic__"}'"%,
-        # m%"'{"names":["input-evdev-rs.so.11"],"symbols":[%{getInputSyms  "input_evdev_rs__"}],"prefix":"input_evdev_rs__"}'"%,
-        m%"'{"names":["input-evdev.so.11"],"symbols":[%{getInputSyms  "input_evdev__"}],"pregix":"input_evdev__"}'"%,
+        m%"'{"names":["input-evdev-rs.so.11"],"symbols":[%{getInputSyms  "input_evdev_rs__"}],"prefix":"input_evdev_rs__"}'"%,
+        m%"'{"names":["input-evdev.so.11"],"symbols":[%{getInputSyms  "input_evdev__"}],"prefix":"input_evdev__"}'"%,
+        m%"'{"names":["graphics-atomic-kms.so.24"],"symbols":[%{getDSyms  "graphics_atomic_kms__"}],"prefix":"graphics_atomic_kms__"}'"%,
+        m%"'{"names":["graphics-gbm-kms.so.24"],"symbols":[%{getGDSyms  "graphics_gbm_kms__"}],"prefix":"graphics_gbm_kms__"}'"%,
+        m%"'{"names":["graphics-wayland-kms.so.24"],"symbols":[%{getInputSyms  "graphics_wayland__"},%{getDSyms  "graphics_wayland__"}],"prefix":"graphics_wayland__"}'"%,
       ]
       in
       [

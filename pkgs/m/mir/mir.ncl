@@ -99,7 +99,7 @@
         "-DMIR_ENABLE_RUST:BOOL=OFF",
         "-DMIR_ENABLE_TESTS:BOOL=OFF",
         "-DMIR_FATAL_COMPILE_WARNINGS:BOOL=OFF",
-        "-DMIR_PLATFORM=wayland,gbm-kms,atomic-kms",
+        # "-DMIR_PLATFORM=wayland,gbm-kms,atomic-kms",
       ]
       in
       [
@@ -142,6 +142,7 @@
         m%"sed -i "s@#include <tuple>@#include <tuple>\n#include <vector>@g" ${SRC}/src/server/frontend_wayland/wlr_screencopy_v1.h"%,
         m%"sed -i "s@#include <mutex>@#include <mutex>\n#include <vector>@g" ${SRC}/src/server/frontend_wayland/foreign_toplevel_manager_v1.h"%,
         m%"sed -i "s@namespace mir@#include <vector>\nnamespace mir@g" ${SRC}/src/server/frontend_wayland/wl_data_source.h"%,
+        m%"sed -i "s@#include <future>@#include <future>\n#include <atomic>@g" ${SRC}/src/platforms/atomic-kms/server/kms/atomic_kms_output.h"%,
         # m%"sed -i 's@OBJECT@STATIC@g' ${SRC}/src/miral/CMakeLists.txt"%,
         # m%"sed -i 's@make_unique_context@make_unique_context_registrar@g' ${SRC}/src/server/input/xkb_mapper_registrar.cpp"%,
         ####
@@ -167,6 +168,9 @@
         "cp input-evdev.so.11 input-evdev.a",
         "cp renderer-egl-generic.so.24 renderer-egl-generic.a",
         "cp server-virtual.so.24 server-virtual.a",
+        "cp graphics-atomic-kms.so.24 graphics-atomic-kms.a",
+        "cp graphics-gbm-kms.so.24 graphics-gbm-kms.a",
+        "cp graphics-wayland.so.24 graphics-wayland.a",
       ]
       @ (
         let fNames = [
@@ -199,6 +203,9 @@
             "input-evdev",
             "renderer-egl-generic",
             "server-virtual",
+            "graphics-atomic-kms",
+            "graphics-gbm-kms",
+            "graphics-wayland",
           ]
       ),
 
@@ -223,8 +230,8 @@
       drvs.libinput,
       drvs.lttngUst,
       drvs.utilLinux,
-      drvs.libxcursor,
-      drvs.libxkbcommon,
+      # drvs.libxcursor,
+      drvs.libxkbcommonX11,
       drvs.libdisplayinfo,
       drvs.pixman,
       drvs.libxmlplusplus,
