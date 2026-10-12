@@ -2,6 +2,7 @@
   lib,
   drvs,
   wayfire | lib.MesonPackage = {
+    debug = true,
     sourceInputs =
       [
         {
@@ -97,6 +98,63 @@
       m%"sed -i 's@shared_module@library@g' ${SRC}/src/meson.build"%,
     ],
 
+    postInstallPhase =
+      (
+        std.array.map
+          (fun arg => let ref = "llvm-objcopy --redefine-sym", p = "${DEST}/usr/lib/wayfire/lib%{arg}.a", arg2 = std.string.replace "-" "_" arg in "%{ref} getWayfireVersion=%{arg2}__getWayfireVersion %{p}\n%{ref} newInstance=%{arg2}__newInstance %{p}")
+          [
+            "alpha",
+            "animate",
+            "autostart",
+            "blur",
+            "command",
+            "cube",
+            "decoration",
+            "default-config-backend",
+            "expo",
+            "ext-toplevel",
+            "extra-gestures",
+            "fast-switcher",
+            "foreign-toplevel",
+            "grid",
+            "gtk-shell",
+            "idle",
+            "input-method-v1",
+            "invert",
+            "ipc-rules",
+            "ipc",
+            "kde-appmenu",
+            "move",
+            "oswitch",
+            "place",
+            "preserve-output",
+            "resize",
+            "scale-title-filter",
+            "scale",
+            "security-context-v1",
+            "session-lock",
+            "shortcuts-inhibit",
+            "simple-tile",
+            "stipc",
+            "switcher",
+            "vswipe",
+            "vswitch",
+            "wayfire-shell",
+            "window-rules",
+            "wm-actions",
+            "wobbly",
+            "wrot",
+            "wsets",
+            "xdg-activation",
+            "xkb-bindings",
+            "zoom"
+          ]
+      )
+      @ [
+        "llvm-objcopy -W _Z10get_app_idN6nonstd12observer_ptrIN2wf16view_interface_tEEE ${DEST}/usr/lib/wayfire/libforeign-toplevel.a",
+        "rm ${DEST}/usr/bin/wayfire",
+      ],
+
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       # drvs.cmake,
@@ -115,4 +173,115 @@
       drvs.libxml2,
     ],
   },
+  wayfireDl | lib.Package = {
+    debug = wayfire.debug,
+
+    options.plugins = [
+      "alpha",
+      # "animate",
+      "autostart",
+      "blur",
+      "command",
+      "cube",
+      "decoration",
+      "default-config-backend",
+      "expo",
+      "ext-toplevel",
+      "extra-gestures",
+      "fast-switcher",
+      "foreign-toplevel",
+      "grid",
+      "gtk-shell",
+      "idle",
+      "input-method-v1",
+      "invert",
+      "ipc-rules",
+      "ipc",
+      "kde-appmenu",
+      "move",
+      "oswitch",
+      "place",
+      "preserve-output",
+      "resize",
+      "scale-title-filter",
+      "scale",
+      "security-context-v1",
+      "session-lock",
+      "shortcuts-inhibit",
+      "simple-tile",
+      "stipc",
+      "switcher",
+      "vswipe",
+      "vswitch",
+      "wayfire-shell",
+      "window-rules",
+      "wm-actions",
+      # "wobbly",
+      "wrot",
+      "wsets",
+      "xdg-activation",
+      "xkb-bindings",
+      "zoom"
+    ],
+    buildPhase =
+      let libs =
+        # [
+        #   m%"'{"names":["/usr/lib/wayfire/libresize.so"],"path":"/usr/lib/wayfire/libresize.a","prefix":"resize__"}'"%
+        # ]
+        (
+          std.array.map
+            (fun arg => let prefix = (std.string.replace "-" "_" arg) in m%"'{"names":["/usr/lib/wayfire/lib%{arg}.so"],"symbols":["%{prefix}__getWayfireVersion","%{prefix}__newInstance"],"prefix":"%{prefix}__"}'"%)
+            options.plugins
+        )
+      in
+      [
+        m%"dl-func %{std.string.join " " libs } > dlopen.c"%,
+        m%"${CC} ${CFLAGS} -Werror -c dlopen.c -o dlopen.o"%,
+        "${AR} rcs libwayfiredl.a dlopen.o",
+      ],
+
+    installPhase = [
+      "install -Dm0755 libwayfiredl.a ${DEST}/usr/lib/libwayfiredl.a",
+    ],
+
+    biDrvs = [
+      # drvs.wayfire,
+      drvs.llvm,
+      drvs.musl,
+      drvs.pythonDlFunc,
+      drvs.pythonFull,
+    ]
+  },
+  wayfireWithDl | lib.MesonPackage =
+    wayfire
+    & {
+      debug,
+      buildEnv = {
+        EXTRA_LDFLAGS | priority 1 =
+          wayfire.buildEnv.EXTRA_LDFLAGS
+          @ [
+            "$(pkg-config --static --libs pangocairo wayfire)",
+            "-lwayfire-blur-base",
+            "-lwayfire-move-drag-interface",
+            "-lwayfire-workspace-wall",
+            "-lwayfiredl",
+            "-L/usr/lib/wayfire",
+          ]
+          @ (std.array.map (fun l => "-l%{l}") wayfireDl.options.plugins),
+      },
+      buildPhase = [
+        "ninja src/wayfire",
+      ],
+      installPhase = [
+        "install -Dm0755 src/wayfire ${DEST}/usr/bin/wayfire",
+      ],
+      postInstallPhase | priority 1 = [],
+      muslProvider = if debug then drvs.muslBothRenamedDlDebug else drvs.muslBothRenamedDl,
+      biDrvs | priority 1 =
+        wayfire.biDrvs
+        @ [
+          drvs.wayfireDl,
+          drvs.wayfire,
+        ],
+    }
 }
