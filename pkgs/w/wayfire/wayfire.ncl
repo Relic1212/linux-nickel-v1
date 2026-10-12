@@ -72,7 +72,9 @@
         #   dest = "subprojects/yyjson",
         # },
       ],
-
+    eofPatches = [
+      { patch = import "spin.patch" as 'Text },
+    ],
     extraMesonArgs = [
       "-Dwlroots:backends=drm,libinput",
       "-Denable_openmp=false",
@@ -178,7 +180,7 @@
 
     options.plugins = [
       "alpha",
-      # "animate",
+      "animate",
       "autostart",
       "blur",
       "command",

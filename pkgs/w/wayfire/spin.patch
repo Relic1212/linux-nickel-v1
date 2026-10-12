@@ -1,0 +1,88 @@
+diff --git a/plugins/animate/fire/fire.cpp b/plugins/animate/fire/fire.cpp
+index 2f1fbefb..6262f4ce 100644
+--- a/plugins/animate/fire/fire.cpp
++++ b/plugins/animate/fire/fire.cpp
+@@ -12,10 +12,21 @@
+ #include <wayfire/core.hpp>
+ #include <glm/gtc/matrix_transform.hpp>
+ 
+-static wf::option_wrapper_t<int> fire_particles{"animate/fire_particles"};
+-static wf::option_wrapper_t<double> fire_particle_size{"animate/fire_particle_size"};
+-static wf::option_wrapper_t<bool> random_fire_color{"animate/random_fire_color"};
+-static wf::option_wrapper_t<wf::color_t> fire_color{"animate/fire_color"};
++static wf::option_wrapper_t<int> get_fire_particles(){
++    return wf::option_wrapper_t<int> {"animate/fire_particles"};
++}
++
++static wf::option_wrapper_t<double> get_fire_particle_size(){
++    return wf::option_wrapper_t<double> {"animate/fire_particle_size"};
++}
++
++static wf::option_wrapper_t<bool> get_random_fire_color(){
++    return wf::option_wrapper_t<bool> {"animate/random_fire_color"};
++}
++
++static wf::option_wrapper_t<wf::color_t> get_fire_color(){
++    return wf::option_wrapper_t<wf::color_t> {"animate/fire_color"};
++}
+ 
+ // generate a random float between s and e
+ static float random(float s, float e)
+@@ -27,7 +38,7 @@ static float random(float s, float e)
+ 
+ static int particle_count_for_width(int width)
+ {
+-    int particles = fire_particles;
++    int particles = get_fire_particles();
+ 
+     return particles * std::min(width / 400.0, 3.5);
+ }
+@@ -52,13 +63,13 @@ class fire_node_t : public wf::scene::floating_inner_node_t
+         p.life = 1;
+         p.fade = random(0.1, 0.6);
+ 
+-        wf::color_t color_setting = fire_color;
++        wf::color_t color_setting = get_fire_color();
+ 
+         float r;
+         float g;
+         float b;
+ 
+-        if (!random_fire_color)
++        if (!get_random_fire_color())
+         {
+             // The calculation here makes the variation lower at darker values
+             float randomize_amount_r = (color_setting.r * 0.857) / 2;
+@@ -93,7 +104,7 @@ class fire_node_t : public wf::scene::floating_inner_node_t
+         p.speed     = {random(-10, 10), random(-25, 5)};
+         p.g = {-1, -3};
+ 
+-        double size = fire_particle_size;
++        double size = get_fire_particle_size();
+         p.base_radius = p.radius = random(size * 0.8, size * 1.2);
+     }
+ 
+diff --git a/plugins/animate/spin.hpp b/plugins/animate/spin.hpp
+index d192f44d..c8a30a8d 100644
+--- a/plugins/animate/spin.hpp
++++ b/plugins/animate/spin.hpp
+@@ -30,7 +30,9 @@
+ #include <wayfire/output.hpp>
+ 
+ 
+-wf::option_wrapper_t<int> spin_rotations{"animate/spin_rotations"};
++wf::option_wrapper_t<int> get_spin_rotations(){
++    return wf::option_wrapper_t<int> {"animate/spin_rotations"};
++}
+ 
+ namespace wf
+ {
+@@ -75,7 +77,7 @@ class spin_animation : public animate::animation_base_t
+             ->get_transformer<wf::scene::view_2d_transformer_t>(spin_transformer_name);
+         auto progress = this->progression.progress();
+         transform->alpha   = progress;
+-        transform->angle   = progress * M_PI * 2.0 * int(spin_rotations);
++        transform->angle   = progress * M_PI * 2.0 * int(get_spin_rotations());
+         transform->scale_x = 0.01 + progress * 0.99;
+         transform->scale_y = 0.01 + progress * 0.99;
+ 
