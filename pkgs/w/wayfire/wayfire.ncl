@@ -74,6 +74,8 @@
       ],
     eofPatches = [
       { patch = import "spin.patch" as 'Text },
+      { patch = import "wobbly.patch" as 'Text },
+      { patch = import "plugin-loader.patch" as 'Text },
     ],
     extraMesonArgs = [
       "-Dwlroots:backends=drm,libinput",
@@ -218,7 +220,7 @@
       "wayfire-shell",
       "window-rules",
       "wm-actions",
-      # "wobbly",
+      "wobbly",
       "wrot",
       "wsets",
       "xdg-activation",
@@ -232,7 +234,7 @@
         # ]
         (
           std.array.map
-            (fun arg => let prefix = (std.string.replace "-" "_" arg) in m%"'{"names":["/usr/lib/wayfire/lib%{arg}.so"],"symbols":["%{prefix}__getWayfireVersion","%{prefix}__newInstance"],"prefix":"%{prefix}__"}'"%)
+            (fun arg => let prefix = (std.string.replace "-" "_" arg) in m%"'{"names":["%{arg}","/usr/lib/wayfire/lib%{arg}.so"],"symbols":["%{prefix}__getWayfireVersion","%{prefix}__newInstance"],"prefix":"%{prefix}__"}'"%)
             options.plugins
         )
       in

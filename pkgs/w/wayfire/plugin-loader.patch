@@ -1,0 +1,11 @@
+diff --git a/src/core/plugin-loader.cpp b/src/core/plugin-loader.cpp
+index a3f863e1..ee01cf41 100644
+--- a/src/core/plugin-loader.cpp
++++ b/src/core/plugin-loader.cpp
+@@ -353,5 +353,5 @@ std::optional<std::string> wf::get_plugin_path_for_name(
+         }
+     }
+ 
+-    return {};
++    return plugin_name;
+ }

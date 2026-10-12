@@ -1,0 +1,50 @@
+diff --git a/plugins/wobbly/wobbly.cpp b/plugins/wobbly/wobbly.cpp
+index ea0da710..0951f64c 100644
+--- a/plugins/wobbly/wobbly.cpp
++++ b/plugins/wobbly/wobbly.cpp
+@@ -134,22 +134,29 @@ void render_triangles(OpenGL::program_t *program, wf::gles_texture_t tex, glm::m
+ 
+ namespace wobbly_settings
+ {
+-wf::option_wrapper_t<double> friction{"wobbly/friction"};
+-wf::option_wrapper_t<double> spring_k{"wobbly/spring_k"};
+-wf::option_wrapper_t<int> resolution{"wobbly/grid_resolution"};
++wf::option_wrapper_t<double> get_friction(){
++    return wf::option_wrapper_t<double> {"wobbly/friction"};
++}
++wf::option_wrapper_t<double> get_spring_k(){
++    return wf::option_wrapper_t<double> {"wobbly/spring_k"};
++}
++
++wf::option_wrapper_t<int> get_resolution(){
++    return wf::option_wrapper_t<int> {"wobbly/grid_resolution"};
++}
+ }
+ 
+ extern "C"
+ {
+     double wobbly_settings_get_friction()
+     {
+-        return wf::clamp((double)wobbly_settings::friction,
++        return wf::clamp((double)wobbly_settings::get_friction(),
+             MINIMAL_FRICTION, MAXIMAL_FRICTION);
+     }
+ 
+     double wobbly_settings_get_spring_k()
+     {
+-        return wf::clamp((double)wobbly_settings::spring_k,
++        return wf::clamp((double)wobbly_settings::get_spring_k(),
+             MINIMAL_SPRING_K, MAXIMAL_SPRING_K);
+     }
+ }
+@@ -684,8 +691,8 @@ class wobbly_transformer_node_t : public wf::scene::transformer_base_node_t
+         model->grabbed = 0;
+         model->synced  = 1;
+ 
+-        model->x_cells = wobbly_settings::resolution;
+-        model->y_cells = wobbly_settings::resolution;
++        model->x_cells = wobbly_settings::get_resolution();
++        model->y_cells = wobbly_settings::get_resolution();
+ 
+         model->v  = NULL;
+         model->uv = NULL;
