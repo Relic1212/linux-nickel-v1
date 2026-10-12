@@ -59,19 +59,20 @@
       drvs.intltool,
 
       ## py
-      drvs.pythonDynamicPic,
-      drvs.pythonSetuptools,
-      drvs.pythonInstaller,
-      drvs.pythonGpep517,
-      drvs.pythonFlitCore,
-      drvs.pythonHatchling,
-      drvs.pythonPathspec,
-      drvs.pythonPluggy,
-      drvs.pythonImportlibMetadate,
-      drvs.pythonMako,
-      drvs.pythonPackaging,
-      drvs.pythonMarkupsafe,
-      drvs.pythonTroveClassifiers,
+      drvs.pythonFull,
+      # drvs.pythonDynamicPic,
+      # drvs.pythonSetuptools,
+      # drvs.pythonInstaller,
+      # drvs.pythonGpep517,
+      # drvs.pythonFlitCore,
+      # drvs.pythonHatchling,
+      # drvs.pythonPathspec,
+      # drvs.pythonPluggy,
+      # drvs.pythonImportlibMetadate,
+      # drvs.pythonMako,
+      # drvs.pythonPackaging,
+      # drvs.pythonMarkupsafe,
+      # drvs.pythonTroveClassifiers,
       ## -py
 
       ### autotools ###
