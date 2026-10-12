@@ -88,7 +88,7 @@ class PluginLibrary:
     def dlsym_c_dbg_source(self) -> str:
         s = ""
         if len(self.names) > 0:
-            s += f"\telse if (handle == &{{{self.get_libname()}}}) {{ "
+            s += f"\telse if (handle == &{self.get_libname()}) {{ "
             s += f" dlsym_debug_library_name = \"{self.names[0]}\"; "
             s += " }\n"
         return s
@@ -98,7 +98,7 @@ def get_lib_syms(libpath: str) -> list[str]:
     syms = []
     cmd = ["llvm-nm", "--defined-only", "--extern-only",
            libpath]
-    print(f"// running {" ".join(cmd)}")
+    print(f"// running {" ".join(cmd)}", file=sys.stderr)
     try:
         r = subprocess.run(cmd, capture_output=True, check=False)
         if r.returncode != 0:
@@ -117,7 +117,7 @@ def get_lib_syms(libpath: str) -> list[str]:
         try:
             ls = line.strip().split()
 
-            print(f"ls={ls}")
+            print(f"// ls={ls}", file=sys.stderr)
             if len(ls) < 2:
                 continue
             sn = ls[-1]
@@ -126,9 +126,9 @@ def get_lib_syms(libpath: str) -> list[str]:
                 if is_symbol_name(sn):
                     syms.append(sn)
         except Exception as e:
-            print("failes to parse line", line)
+            print(f"failes to parse line {line}", file=sys.stderr)
             raise e
-    print(f"// returning syms {syms}")
+    print(f"// returning syms {syms}", file=sys.stderr)
     return syms
 
 
@@ -255,7 +255,7 @@ def simple_parse(argv):
     libs_in = parse_argv(argv)
     plugins = []
     for l in libs_in:
-        print(f"l={l}")
+        print(f"l={l}", file=sys.stderr)
         path = l["path"]
         names = l["names"]
         prefix = l["prefix"]
@@ -274,7 +274,11 @@ def json_parse(argv):
             p = elem[len("--file")+1:].strip()
             with open(p) as f:
                 elem = f.read()
-        lib_d = json.loads(elem)
+        try:
+            lib_d = json.loads(elem)
+        except json.decoder.JSONDecodeError as e:
+            print(f"failed to decode '{elem}'", file=sys.stderr)
+            raise e
         names = lib_d["names"]
         if "prefix" in lib_d:
             prefix = lib_d["prefix"]
