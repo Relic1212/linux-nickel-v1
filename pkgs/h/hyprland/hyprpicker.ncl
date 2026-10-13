@@ -14,7 +14,7 @@
       drvs.hyprcursor,
       drvs.libxkbcommon,
       drvs.file,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.pango,
       drvs.libwebp,
     ],

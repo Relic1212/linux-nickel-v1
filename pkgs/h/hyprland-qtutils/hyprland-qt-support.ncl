@@ -31,7 +31,7 @@
       drvs.hyprutils,
       drvs.hyprlang,
       drvs.hyprcursor,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libspng,
       drvs.file,
       drvs.libwebp,

@@ -141,7 +141,7 @@
         [
           # drvs.seatd,
           drvs.glaze,
-          # drvs.libjpegTurboStatic,
+          # drvs.libjpegTurbo,
           # drvs.libzip,
           drvs.libxcursor,
           # drvs.hyprutils,

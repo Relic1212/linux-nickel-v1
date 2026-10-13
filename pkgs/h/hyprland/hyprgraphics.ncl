@@ -48,7 +48,7 @@
       drvs.hyprcursor,
       # drvs.libspng,
       drvs.file,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       # 
       drvs.pango,
       drvs.libwebp,
