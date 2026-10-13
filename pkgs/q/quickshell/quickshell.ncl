@@ -157,7 +157,7 @@
           },
         ],
 
-      muslProvider | priority 1 = drvs.muslBothRenamedDlRelease,
+      muslProvider | priority 1 = drvs.muslBothRenamedDl,
       # llvmProvider | priority 1 = drvs.llvmFullTypeinfo,
       # neverInclude = [drvs.qtbaseVulkan],
       # biDrvs | priority 1 = quickshell.biDrvs @ [drvs.qtbaseDebug],
