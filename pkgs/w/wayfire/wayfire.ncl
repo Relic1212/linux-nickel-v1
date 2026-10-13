@@ -27,14 +27,14 @@
           },
           dest = "subprojects/wf-config"
         },
-        {
-          src = {
-            uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/d783533489e1f75d6886c2ab5c5960090ef268f8/wlroots-d783533489e1f75d6886c2ab5c5960090ef268f8.tar.gz",
+        # {
+        #   src = {
+        #     uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/d783533489e1f75d6886c2ab5c5960090ef268f8/wlroots-d783533489e1f75d6886c2ab5c5960090ef268f8.tar.gz",
 
-            sha256sum = "d4d7c5f4ff5729d5eff33859b58ab7ced812aca54367b75ecbdaf9aae448fff6"
-          },
-          dest = "subprojects/wlroots"
-        },
+        #     sha256sum = "d4d7c5f4ff5729d5eff33859b58ab7ced812aca54367b75ecbdaf9aae448fff6"
+        #   },
+        #   dest = "subprojects/wlroots"
+        # },
         {
           src = {
             uri = "https://github.com/WayfireWM/wf-utils/archive/329c3ff01724d82947f61c45332f75d3534e8454.tar.gz",
@@ -166,15 +166,16 @@
     ],
     pDrvs = [
       drvs.pango,
-      drvs.mesa2,
+      # drvs.mesa2,
       drvs.glmWf,
-      drvs.libinput,
-      drvs.seatd,
-      drvs.libxkbcommon,
-      drvs.hwdata,
-      drvs.libdisplayinfo,
+      # drvs.libinput,
+      # drvs.seatd,
+      # drvs.libxkbcommon,
+      # drvs.hwdata,
+      # drvs.libdisplayinfo,
       drvs.yyjson,
       drvs.libxml2,
+      drvs.wlroots20,
     ],
   },
   wayfireDl | lib.Package = {
