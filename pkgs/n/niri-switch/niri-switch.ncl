@@ -43,7 +43,7 @@
       drvs.cairoGobject,
       drvs.fribidi,
       drvs.gdkPixbufFull,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libepoxy,
       drvs.atSpi2Core,
       drvs.mesa2,
