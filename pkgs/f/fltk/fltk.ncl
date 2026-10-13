@@ -40,7 +40,7 @@
       drvs.libelf,
       drvs.libffi,
       drvs.libfontenc,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libpciaccess,
       drvs.libpng,
       drvs.libx11,
