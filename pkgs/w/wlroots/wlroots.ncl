@@ -2,21 +2,39 @@
   lib,
   drvs,
 
-  wlroots20 | lib.MesonPackage =
-    wlroots19
-    & {
-      singleSource | priority 1 = {
-        uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.20.0/wlroots-0.20.0.tar.bz2",
-        sha256sum = "acb7714cf3853cf6f8f500af35fa5df140fbad2fe9403e978609cf9d0b50b3b4",
-      },
-      preConfigurePhase = [
-        m%"sed -i 's|129|128|g' ${SRC}/meson.build"%, # libdrm
-        m%"sed -i 's|0.46.0|0.43.0|g' ${SRC}/render/pixman/meson.build"%, # pixman
-      ],
-      postInstallPhase | priority 1 = [
-        "(cd ${DEST}/usr/include && ln -s wlroots-0.20/wlr wlr)",
-      ],
+  wlroots20 | lib.MesonPackage = {
+    singleSource | priority 1 = {
+      uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.20.2/wlroots-0.20.2.tar.bz2",
+      sha256sum = "20c37b521dc3054b6e9627b79bdd45fc716db9ebc58bdf97e57e84d04b04610f",
     },
+
+    options = {
+      xwayland | default = false,
+    },
+    extraMesonArgs = [
+      "-Dxwayland=%{ if options.xwayland then "enabled" else "disabled" }",
+      "-Dbackends=drm,libinput%{if options.xwayland then ",x11" else ""}",
+      "-Dwlroots:color-management=enabled",
+      "-Drenderers=gles2",
+      "-Dexamples=false",
+      "-Drenderers=gles2",
+      # "-Dcolor-management=true",
+      # "-Dcolor-management=disabled",
+    ],
+
+    llvmProvider = drvs.llvmFull,
+
+    pDrvs = [
+      drvs.seatd,
+      drvs.mesa2,
+      drvs.libxkbcommon,
+      drvs.pixman,
+      # drvs.eudev,
+      drvs.hwdata,
+      drvs.libdisplayinfo,
+      drvs.libinput,
+    ],
+  },
 
   wlroots19 | lib.MesonPackage = {
     singleSource = {
@@ -48,7 +66,7 @@
 
     llvmProvider = drvs.llvmFull,
 
-    propagatedBuildInputs = [
+    pDrvs = [
       drvs.seatd,
       drvs.mesa2,
       drvs.libxkbcommon,
