@@ -5,6 +5,8 @@
     singleSource = {
       uri = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.42.12/gdk-pixbuf-2.42.12.tar.gz",
       sha256sum = "d41966831b3d291fcdfe31f683bea4b3f03241d591ddbe550b5db873af3da364",
+      # uri ="https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.44.8/gdk-pixbuf-2.44.8.tar.bz2",
+      # sha256sum ="dac855ad56db6f1ae6af60a46e77d8edce418b4935737a52d42f0f7683cb6e51",
     },
     pDrvs = [
       drvs.glib,
@@ -44,6 +46,7 @@
       # drvs.zlibNg,
       drvs.libpng,
       drvs.libjpegTurbo,
+      # drvs.glycin,
     ],
     extraMesonArgs = [
       "-Dgio_sniffing=false",
@@ -53,11 +56,54 @@
       "-Dintrospection=disabled",
       "-Dgtk_doc=false",
       "-Dbuiltin_loaders=png,jpeg,gif",
+      # "-Dbuiltin_loaders=all",
       "-Djpeg=enabled",
       "-Dpng=enabled",
     ]
   },
+  ##################
+  gdkPixbufSvg | lib.MesonPackage = {
+    singleSource = {
 
+      uri = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.44.8/gdk-pixbuf-2.44.8.tar.bz2",
+      sha256sum = "dac855ad56db6f1ae6af60a46e77d8edce418b4935737a52d42f0f7683cb6e51",
+    },
+    buildEnv = {
+      # _isStatic=false,
+      EXTRA_LDFLAGS = ["-lpng", "-l:libjpeg.a"],
+    },
+    # isStatic=false,
+    biDrvs = [
+      drvs.glycin,
+    ],
+    pDrvs = [
+      drvs.glib,
+      #drvs.muslShared,
+      # drvs.pcre2,
+      # drvs.libffi,
+      # drvs.zlibNg,
+      drvs.libpng,
+      drvs.libjpegTurbo,
+      # drvs.glycin,
+      drvs.fontconfig,
+      drvs.libseccomp,
+    ],
+    extraMesonArgs = [
+      "-Dgio_sniffing=false",
+      "-Dinstalled_tests=false",
+      "-Dtests=false",
+      "-Dman=false",
+      "-Dintrospection=disabled",
+      "-Ddocumentation=false",
+      # "-Dbuiltin_loaders=png,jpeg,gif,all",
+      "-Dbuiltin_loaders=all",
+      "-Djpeg=enabled",
+      "-Dpng=enabled",
+      "-Dglycin=enabled",
+    ]
+  },
+
+  ###################
   gdkPixbufIntrospectionDynamic =
     gdkPixbufIntrospection
     & {
