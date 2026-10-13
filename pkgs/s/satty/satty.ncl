@@ -33,7 +33,7 @@
     linkSelfContained = "no",
 
     llvmProvider = drvs.llvmFull,
-    muslProvider = drvs.muslBothRenamedDlRelease,
+    muslProvider = drvs.muslBothRenamedDl,
 
     biDrvs = [
       drvs.appstream,
