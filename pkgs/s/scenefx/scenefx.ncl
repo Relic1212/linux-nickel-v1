@@ -12,6 +12,20 @@
       "-Dexamples=false",
     ],
 
+    buildEnv = {
+      EXTRA_CPPFLAGS = [
+        "-D__always_inline=inline",
+        # "-Dhandle_keyboard_key=scenefx__handle_keyboard_key",
+        # "-Dhandle_switch_toggle=scenefx__handle_switch_toggle",
+        # "-Dhandle_tablet_tool_axis=scenefx__handle_tablet_tool_axis",
+        # "-Dhandle_tablet_tool_proximity=scenefx__handle_tablet_tool_proximity",
+        # "-Dhandle_tablet_tool_tip=scenefx__handle_tablet_tool_tip",
+        # "-Dhandle_tablet_tool_button=scenefx__handle_tablet_tool_button",
+        "-Doutput_pending_resolution=scenefx__output_pending_resolution",
+        "-Doutput_pending_image_description=scenefx__output_pending_image_description",
+      ],
+    },
+
     llvmProvider = drvs.llvmFull,
     biDrvs = [
       drvs.scdoc,

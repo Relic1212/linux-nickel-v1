@@ -3,46 +3,33 @@
   drvs,
   mangowc | lib.MesonPackage = {
     singleSource = {
-      # uri = "https://github.com/DreamMaoMao/mangowc/archive/refs/tags/0.10.5.tar.gz",
-      # sha256sum = "2658454c120cc2d88d25bd105e58337204a84f9e1d418b41ff02983d1354e9ef",
 
-      # uri = "https://github.com/mangowm/mango/archive/refs/tags/0.12.7.tar.gz",
-      # sha256sum = "35bbe111ae27763350b567b2d67e750517d788ec4b4163074267cc564e64642e",
-      # uri = "https://github.com/mangowm/mango/archive/refs/tags/0.12.9.tar.gz",
-      # sha256sum = "937296e104dea6733e1a1f2e5474900fd2bb536aaec0735b135a5e524302770a",
+      # uri = "https://github.com/mangowm/mango/archive/refs/tags/0.14.4.tar.gz",
+      # sha256sum = "e37e732ff3b0db309fc616cec5ed9699e972f2969f82c1bbc3c5a298168401f8",
 
-      uri = "https://github.com/mangowm/mango/archive/refs/tags/0.14.4.tar.gz",
-      sha256sum = "e37e732ff3b0db309fc616cec5ed9699e972f2969f82c1bbc3c5a298168401f8",
+      uri = "https://github.com/mangowm/mango/archive/refs/tags/0.18.0.tar.gz",
+      sha256sum = "984386900d8a6896a67c56e3defcc8a979c8a9bd5b3b8ba9fb1ef537965b64a1",
     },
 
-    # sourceInputs = [
+    # eofPatches = [
     #   {
-    #     src = singleSource
-    #   },
-    #   {
-    #     src = {
-    #       uri = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/0.19.2/wlroots-0.19.2.tar.bz2",
-    #       sha256sum = "804bd3eab10f03556628c4e977351b0b1b17bc34084342dfaff5086c54ce1fa0",
-    #     },
-    #     dest = "subprojects/wlroots"
-    #   },
-    #   {
-    #     src = {
-    #       uri = "https://github.com/wlrfx/scenefx/archive/refs/tags/0.4.1.tar.gz",
-    #       sha256sum = "fa23f6ff509168d4a5eb0c5a7ef3b8cf3d39e3fba18320c28256e6c91c85d9ff",
-    #     },
-    #     dest = "subprojects/scenefx"
-    #   },
+    #     patch = (import "mangowc-chvt-3.patch" as 'Text),
+    #   }
     # ],
-
-    eofPatches = [
-      {
-        patch = (import "mangowc-chvt-3.patch" as 'Text),
-      }
-    ],
     buildEnv = {
       EXTRA_LDFLAGS = [
         "-lc++",
+      ],
+      EXTRA_CPPFLAGS = [
+        "-D__always_inline=inline",
+        "-Dhandle_keyboard_key=mangowc__handle_keyboard_key",
+        "-Dhandle_switch_toggle=mangowc__handle_switch_toggle",
+        "-Dhandle_tablet_tool_axis=mangowc__handle_tablet_tool_axis",
+        "-Dhandle_tablet_tool_proximity=mangowc__handle_tablet_tool_proximity",
+        "-Dhandle_tablet_tool_tip=mangowc__handle_tablet_tool_tip",
+        "-Dhandle_tablet_tool_button=mangowc__handle_tablet_tool_button",
+        # "-Doutput_pending_resolution=mangowc__output_pending_resolution",
+        # "-Doutput_pending_image_description=mangowc__output_pending_image_description",
       ],
     },
     extraMesonArgs = [
@@ -50,67 +37,21 @@
     ],
 
     llvmProvider = drvs.llvmFull,
-    biDrvs = [],
-    propagatedBuildInputs = [
-      drvs.scenefx041,
-      drvs.cjson,
-      drvs.pcre2,
-    ],
-  },
-  scenefx041 | lib.MesonPackage = {
-    singleSource = {
-      uri = "https://github.com/wlrfx/scenefx/archive/refs/tags/0.4.1.tar.gz",
-      sha256sum = "fa23f6ff509168d4a5eb0c5a7ef3b8cf3d39e3fba18320c28256e6c91c85d9ff",
-    },
-    extraMesonArgs = [
-      "-Drenderers=gles2",
-      "-Dexamples=false",
-    ],
-
-    llvmProvider = drvs.llvmFull,
     biDrvs = [
-      drvs.scdoc,
-
-      # drvs.expat,
-
-      # drvs.jsonC,
-      # drvs.pcre2,
-      # drvs.mesa2,
-      # drvs.spirvTools,
-      # drvs.wayland,
-      # drvs.waylandProtocols,
-      # drvs.libelf,
-      # drvs.libpciaccess,
-      # drvs.libdrm,
-      # drvs.libxkbcommon,
-      # drvs.pixman,
-      # drvs.eudev,
-      # drvs.libdisplayinfo,
-      # drvs.libinput,
-      # drvs.libffi,
-      # drvs.libevdev,
-      # drvs.mtdev,
-      # drvs.pango,
-      # drvs.cairo,
-      # drvs.libpng,
-      # drvs.freetype,
-      # drvs.fontconfig,
-      # drvs.zlibNg,
-      # drvs.harfbuzz,
-      # drvs.glib,
-      # drvs.hwdata,
-      # drvs.linuxHeaders,
-      # drvs.gdkPixbufFull,
-      # drvs.libjpegTurbo,
-      # drvs.basu,
-      # drvs.lcms,
-      # drvs.wlroots19,
+      drvs.pangoGobject,
+    ],
+    neverInclude = [
+      drvs.pango,
+      drvs.glib,
     ],
     propagatedBuildInputs = [
-      drvs.wlroots19,
-      drvs.openssl,
-      drvs.xcbUtilWm,
-      drvs.lcms,
+      drvs.scenefx,
+      drvs.cjson,
+      # drvs.pcre2,
+      drvs.glibGobject,
+      # drvs.cairo,
+      drvs.harfbuzzFull,
+      drvs.fribidi,
     ],
   },
 }
