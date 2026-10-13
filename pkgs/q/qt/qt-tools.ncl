@@ -15,6 +15,9 @@
       "-DCMAKE_MODULE_LINKER_FLAGS:STRING" | priority 1 = "\"-static --static -fuse-ld=lld -stdlib=libc++ -rtlib=compiler-rt -unwindlib=libunwind -lc++ -ldrm $(pkg-config --libs --static dri glesv2 gbm egl wayland-client glib-2.0 gmodule-2.0 expat)\"",
     },
     llvmProvider = drvs.llvmFull,
+    biDrvs = [
+      drvs.llvmConfigStatic,
+    ],
     pDrvs = [
       drvs.qtbaseVulkan,
     ],
