@@ -56,14 +56,14 @@
           },
           dest = "subprojects/wf-json"
         },
-        {
-          src = {
-            # uri = "https://gitlab.freedesktop.org/ammen99/wlroots/archive/4c89d4b687826641b37e65441ad1cdd1eca40551.tar.gz",
-            uri = "https://gitlab.freedesktop.org/ammen99/wlroots/-/archive/4c89d4b687826641b37e65441ad1cdd1eca40551/wlroots-4c89d4b687826641b37e65441ad1cdd1eca40551.tar.gz",
-            sha256sum = "2fcb9f8b01f94e24cd95c03ba97c853b4b6cbcbf012b7bbf524b4e089625c025"
-          },
-          dest = "subprojects/wlroots-vkfx"
-        },
+        # {
+        #   src = {
+        #     # uri = "https://gitlab.freedesktop.org/ammen99/wlroots/archive/4c89d4b687826641b37e65441ad1cdd1eca40551.tar.gz",
+        #     uri = "https://gitlab.freedesktop.org/ammen99/wlroots/-/archive/4c89d4b687826641b37e65441ad1cdd1eca40551/wlroots-4c89d4b687826641b37e65441ad1cdd1eca40551.tar.gz",
+        #     sha256sum = "2fcb9f8b01f94e24cd95c03ba97c853b4b6cbcbf012b7bbf524b4e089625c025"
+        #   },
+        #   dest = "subprojects/wlroots-vkfx"
+        # },
         # {
         #   src = {
         #     uri = "https://github.com/ibireme/yyjson/archive/refs/tags/0.13.0.tar.gz",
