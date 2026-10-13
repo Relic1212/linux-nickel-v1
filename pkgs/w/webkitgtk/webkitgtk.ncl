@@ -127,7 +127,6 @@
       drvs.gperf,
       drvs.unidef,
       drvs.gettext,
-      drvs.libjpegTurboStatic,
       drvs.libelfFixed,
       drvs.glibFixed,
       drvs.gnupatch & { priority = 1 },
@@ -135,7 +134,6 @@
     neverInclude = [
       drvs.harfbuzz,
       drvs.harfbuzzFull,
-      drvs.libjpegTurbo,
       drvs.libelf,
       drvs.glib,
     ],
