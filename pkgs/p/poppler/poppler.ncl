@@ -39,7 +39,7 @@
       drvs.libpsl,
       drvs.perl,
       drvs.curl,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.bzip2,
       drvs.zstd,
       drvs.xz,
