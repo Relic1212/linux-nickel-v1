@@ -109,7 +109,7 @@
       drvs.libffi,
       # drvs.libfreeaptx,
       drvs.libinput,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       # drvs.libopus,
       drvs.libpciaccess,
       drvs.libpng,
