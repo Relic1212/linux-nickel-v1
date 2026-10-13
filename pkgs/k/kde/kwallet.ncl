@@ -4,8 +4,8 @@
   kwallet | lib.CmakePackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/kwallet/-/archive/v6.25.0/kwallet-v6.25.0.tar.gz",
-      sha256sum = "888460985802d53a8ed2d6aa928bc00077a53250907b8c910f6ca9fa0ce89cb5"
+      uri = "https://download.kde.org/stable/frameworks/6.31/kwallet-6.31.0.tar.xz",
+      sha256sum = "ce8915f33c1d3a57d738d83c8082c3a76dcc29a1ddd989bee4ea3961e55166e6"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -69,7 +69,7 @@
       drvs.libgcrypt,
       drvs.libgpgError,
       drvs.libinput,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libogg,
       drvs.libpciaccess,
       drvs.libpng,

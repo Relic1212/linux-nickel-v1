@@ -27,7 +27,7 @@ def fetch(url):
 
 
 fn = "plasma_urls.txt"
-# fn = "kf_urls.txt"
+fn = "kf_urls.txt"
 
 if fn == "plasma_urls.txt":
     fn_out = "_plasma_sources.ncl"

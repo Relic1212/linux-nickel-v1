@@ -7,7 +7,7 @@
     name,
     singleSource | priority -999 = {
       # uri = "https://download.kde.org/stable/frameworks/%{options.version}/%{name}-%{options.version}.0.tar.xz",
-      uri = "https://download.kde.org/stable/frameworks/6.25/%{name}-6.25.0.tar.xz",
+      uri = "https://download.kde.org/stable/frameworks/6.31/%{name}-6.31.0.tar.xz",
       sha256sum = _kf_sources."%{uri}",
     },
 
@@ -37,7 +37,7 @@
     #     drvs.glib,
     #     drvs.hwdata,
     #     drvs.linuxHeaders,
-    #     drvs.libjpegTurboStatic,
+    #     drvs.libjpegTurbo,
     #     drvs.libspng,
     #     drvs.file,
     #     drvs.libwebp,

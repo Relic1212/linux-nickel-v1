@@ -59,7 +59,6 @@ in
         drvs.glib,
         drvs.hwdata,
         drvs.linuxHeaders,
-        drvs.libjpegTurboStatic,
         drvs.libspng,
         drvs.file,
         drvs.libwebp,

@@ -78,7 +78,7 @@
       drvs.libevdev,
       drvs.libffi,
       drvs.libinput,
-      drvs.libjpegTurboStatic,
+      drvs.libjpegTurbo,
       drvs.libogg,
       drvs.libpciaccess,
       # drvs.libplasma,

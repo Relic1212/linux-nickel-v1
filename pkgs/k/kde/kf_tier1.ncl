@@ -63,7 +63,7 @@ in
         drvs.glib,
         drvs.hwdata,
         drvs.linuxHeaders,
-        drvs.libjpegTurboStatic,
+        drvs.libjpegTurbo,
         drvs.libspng,
         drvs.file,
         drvs.libwebp,
