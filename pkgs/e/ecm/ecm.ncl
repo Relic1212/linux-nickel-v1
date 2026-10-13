@@ -4,8 +4,8 @@
   ecm | lib.QtPackage = {
     generator = "Ninja",
     singleSource = {
-      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.25.0/extra-cmake-modules-v6.25.0.tar.gz",
-      sha256sum = "be730435025418267d63bee15bf7b5ad4d3afd2b475b6683965f868bb1dc26d1"
+      uri = "https://invent.kde.org/frameworks/extra-cmake-modules/-/archive/v6.31.0/extra-cmake-modules-v6.31.0.tar.gz",
+      sha256sum = "a27ff118cb96af3bacffb289f52e56af3eaa1d73b01f5ca794aa29b760f0204e"
     },
     llvmProvider = drvs.llvmFull,
 
@@ -26,7 +26,7 @@
     #   drvs.glib,
     #   drvs.hwdata,
     #   drvs.linuxHeaders,
-    #   drvs.libjpegTurboStatic,
+    #   drvs.libjpegTurbo,
     #   drvs.libspng,
     #   drvs.file,
     #   drvs.libwebp,
