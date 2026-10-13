@@ -2,4 +2,4 @@
 
 echo "CARGO_WRAPPER: running \"$@\""
 
-exec /usr/bin/cargo $@
+exec /usr/bin/cargo --target x86_64-unknown-musl $@
