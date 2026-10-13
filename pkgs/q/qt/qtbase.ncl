@@ -153,6 +153,7 @@ in
       x11 | default = false,
       vulkan | default = false,
       # optlevel | default = "0",
+      x11flags | priority -1000 = x11,
     },
     cmakeExtraArgsRecord =
       qtbaseCmakeExtraArgsRecorf
