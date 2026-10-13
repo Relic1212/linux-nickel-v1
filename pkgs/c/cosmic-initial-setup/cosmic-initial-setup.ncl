@@ -68,20 +68,9 @@
       "just rootdir=$DEST install",
     ],
 
-    utilsProviders,
-    baseBuildinputPackages =
-      [
-        drvs.rust,
-        drvs.muslBothRenamedDl,
-        drvs.pkgconf,
-        llvmProvider,
-        drvs.clangCc,
-      ]
-      @ (if enableSccache then [drvs.sccache] else [])
-      @ utilsProviders,
     llvmProvider = drvs.llvmFull,
+    muslProvider = drvs.muslBothRenamedDl,
 
-    enableSccache = true,
     biDrvs = [
       (drvs.findutils & { priority = 1 }),
       drvs.just,
