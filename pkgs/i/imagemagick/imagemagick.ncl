@@ -20,9 +20,10 @@
       "--with-lzma=yes",
       "--with-pango=yes",
       "--with-png=yes",
-      "--with-rsvg=no",
+      "--with-rsvg=yes",
       "--with-tiff=yes",
       "--with-webp=yes",
+      "--with-zip=yes",
     ],
     allowDubplicateBuldInputs = true,
     biDrvs = [
@@ -39,9 +40,11 @@
       # drvs.libpng,
       drvs.libxml2,
       drvs.zstd,
-      #   drvs.zlibNg,
+      # drvs.zlibNg,
       drvs.pango,
       drvs.librsvg,
+      drvs.libzip,
+      drvs.libwebp,
     ],
   }
 }
