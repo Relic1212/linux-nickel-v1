@@ -58,5 +58,16 @@
       # drvs.gtkmm4,
       drvs.gtkmm3,
     ],
+  },
+  wayfireWcmIcons | lib.Package = {
+    biDrvs = [
+      drvs.imagemagick,
+      drvs.wayfireWcm,
+    ],
+    installPhase = [
+      "install -dm0755 ${DEST}/usr/share/icons/hicolor/scalable/apps",
+      "cd /usr/share/icons/hicolor/scalable/apps",
+      m%"for f in $(ls | cut -d '.' -f1); do echo  "f=${f}"; magick convert "${f}.svg" "${DEST}/usr/share/icons/hicolor/scalable/apps/${f}.png";done"%,
+    ]
   }
 }
