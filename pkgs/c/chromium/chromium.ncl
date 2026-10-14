@@ -1,3 +1,79 @@
+let system_libs = (
+  std.string.join
+    " "
+    [
+      # "fontconfig",
+      # "libvpx",
+      # "libaom",
+      # "opus",
+      ####
+
+      #-absl+
+      # "absl_algorithm",
+      # "absl_base",
+      # "absl_cleanup",
+      # "absl_container",
+      # "absl_crc",
+      # "absl_debugging",
+      # "absl_flags",
+      # "absl_functional",
+      # "absl_hash",
+      # "absl_log",
+      # "absl_log_internal",
+      # "absl_memory",
+      # "absl_meta",
+      # "absl_numeric",
+      # "absl_random",
+      # "absl_status",
+      # "absl_strings",
+      # "absl_synchronization",
+      # "absl_time",
+      # "absl_types",
+      # "absl_utility",
+      #-absl-
+      "brotli",
+      "crc32c",
+      "dav1d",
+      "double-conversion",
+      # "ffmpeg", # wrong version
+      "flac",
+      # "flatbuffers", # wrong versoin
+      "fontconfig",
+      "freetype",
+      "harfbuzz",
+      "highway",
+      # "icu", # missing dep
+      "jsoncpp",
+      "libaom",
+      "libdrm",
+      "libjpeg",
+      # "libpng", # missing dep
+      "libsecret",
+      "libusb",
+      "libvpx",
+      "libwebp",
+      "libxml",
+      "libXNVCtrl",
+      "libxslt",
+      # "libyuv", # missing MJPGToNV12
+      "openh264",
+      "opus",
+      "re2",
+      # "simdutf", # missing symbol
+      # "snappy", # don't even know what package this is supposed to come from
+      "swiftshader-SPIRV-Headers",
+      "swiftshader-SPIRV-Tools",
+      # "vulkan-SPIRV-Headers", # no-webgpu only
+      # "vulkan-SPIRV-Tools", # no-webgpu only
+      # "vulkan_memory_allocator",
+      "woff2",
+      # "zlib",
+      # "zstd",
+
+      ####
+    ]
+)
+in
 {
   lib,
   drvs,
@@ -225,7 +301,7 @@
           "symbol_level=0",
           "v8_symbol_level=0",
           # "absl_build_tests=false",
-           # "libsrtp_build_boringssl=false",
+          # "libsrtp_build_boringssl=false",
           # "rtc_build_ssl=false",
           # "rtc_build_opus=false",
           # "rtc_ssl_root=\"/usr/include\"",
@@ -239,7 +315,6 @@
           m%"printf "##### BEGIN GN ARGS MANIFEST #####\n" "%,
           "gn args --list out/Bld",
           m%"printf "##### END GN ARGS MANIFEST #####\n""%,
-
         ],
 
       preConfigurePhase = [
@@ -306,77 +381,7 @@
         m%"sed -i 's@#include <sys/cdefs.h>@// #include <sys/cdefs.h> @g' base/allocator/partition_allocator/src/partition_alloc/shim/allocator_shim_internals.h"%,
         "python << 'EOF'\n%{import "patch.py" as 'Text}\n\nEOF\n",
         "sed -i 's@__THROW _NOEXCEPT@__THROW // _NOEXCEPT@g' base/allocator/partition_allocator/src/partition_alloc/shim/allocator_shim_internals.h",
-        "python build/linux/unbundle/replace_gn_files.py --system-libraries %{(std.string.join " " [ 
-            # "fontconfig",
-            # "libvpx",
-            # "libaom",
-            # "opus",
-         ####
-
-         #-absl+
-# "absl_algorithm",
-# "absl_base",
-# "absl_cleanup",
-# "absl_container",
-# "absl_crc",
-# "absl_debugging",
-# "absl_flags",
-# "absl_functional",
-# "absl_hash",
-# "absl_log",
-# "absl_log_internal",
-# "absl_memory",
-# "absl_meta",
-# "absl_numeric",
-# "absl_random",
-# "absl_status",
-# "absl_strings",
-# "absl_synchronization",
-# "absl_time",
-# "absl_types",
-# "absl_utility",
-#-absl-
-"brotli",
-"crc32c",
-"dav1d",
-"double-conversion",
-# "ffmpeg", # wrong version
-"flac",
-# "flatbuffers", # wrong versoin
-"fontconfig",
-"freetype",
-"harfbuzz",
-"highway",
-# "icu", # missing dep
-"jsoncpp",
-"libaom",
-"libdrm",
-"libjpeg",
-# "libpng", # missing dep
-"libsecret",
-"libusb",
-"libvpx",
-"libwebp",
-"libxml",
-"libXNVCtrl",
-"libxslt",
-# "libyuv", # missing MJPGToNV12
-"openh264",
-"opus",
-"re2",
-# "simdutf", # missing symbol
-# "snappy", # don't even know what package this is supposed to come from
-"swiftshader-SPIRV-Headers",
- "swiftshader-SPIRV-Tools",
- # "vulkan-SPIRV-Headers", # no-webgpu only
-# "vulkan-SPIRV-Tools", # no-webgpu only
-# "vulkan_memory_allocator",
-"woff2",
-# "zlib",
-# "zstd",
-
-         ####
-         ])}",
+        "python build/linux/unbundle/replace_gn_files.py --system-libraries %{system_libs}",
         "sed -i 's@#include <linux/prctl.h>@// #include <linux/prctl.h>@g' third_party/webrtc/rtc_base/platform_thread_types.cc",
         "patch -p1 < copium/cr148-rust-1.95-bytemuck.patch",
         m%"sed -i 's@#include <sys/cdefs.h>@// #include <sys/cdefs.h>@g' third_party/crashpad/crashpad/compat/linux/sys/ptrace.h"%,
@@ -485,7 +490,6 @@
         # drvs.simdutf,
         drvs.libyuv,
         # drvs.abseilCppChromium,
-        
         drvs.re2,
         # drvs.zstd,
         # drvs.brotli,
