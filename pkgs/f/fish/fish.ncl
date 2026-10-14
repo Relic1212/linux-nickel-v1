@@ -1,43 +1,6 @@
 {
   lib,
   drvs,
-  fish | lib.CmakePackage = {
-    singleSource = {
-      uri = "https://github.com/fish-shell/fish-shell/releases/download/3.7.0/fish-3.7.0.tar.xz",
-      sha256sum = "df1b7378b714f0690b285ed9e4e58afe270ac98dbc9ca5839589c1afcca33ab1",
-    },
-    generator = "Ninja",
-    biDrvs = [
-      drvs.ncurses,
-      drvs.readline,
-      drvs.pcre2cmake,
-      drvs.gettext,
-    ],
-    preConfigurePhase = [
-      m%"sed -i 's@message(FATAL_ERROR "Fish does not support static linking")@@g' ${SRC}/CMakeLists.txt"%,
-      # m%"sed -i 's@set(CMAKE_CXX_STANDARD 11)@# set(CMAKE_CXX_STANDARD 11)@g' ${SRC}/CMakeLists.txt"%,
-      m%"sed -i 's@__fallthrough__@__fish_fallthrough__@g' ${SRC}/config_cmake.h.in"%,
-      m%"sed -i 's@__fallthrough__@__fish_fallthrough__@g' ${SRC}/src/common.cpp"%,
-      m%"sed -i 's@__fallthrough__@__fish_fallthrough__@g' ${SRC}/src/expand.cpp"%,
-      m%"sed -i 's@__fallthrough__@__fish_fallthrough__@g' ${SRC}/src/parse_util.cpp"%,
-      m%"sed -i 's@__fallthrough__@__fish_fallthrough__@g' ${SRC}/src/reader.cpp"%,
-      m%"sed -i 's@POLICY CMP0037@FALSE@g' ${SRC}/cmake/Tests.cmake"%,
-    ],
-    # buildEnv =
-    #   let c = [
-    #     "-Wno-implicit-fallthrough"
-    #   ]
-    #   in
-    #   {
-    #     EXTRA_CPPFLAGS = c,
-    #     EXTRA_CXXFLAGS = c,
-    #     EXTRA_CFLAGS = c,
-    #   },
-    cmakeArgsRecord = {
-      "-DFISH_USE_SYSTEM_PCRE2" = true,
-      # "-DSYS_PCRE2_LIB:PATH" = "/usr/lib/libpcre2-8.a",
-    }
-  },
   pcre2,
   pcre2cmake | lib.CmakePackage = {
 
@@ -55,14 +18,12 @@
   drvs,
   fish4 | lib.CargoPackage = {
     singleSource = {
-      # uri = "https://github.com/fish-shell/fish-shell/archive/refs/tags/4.0.2.tar.gz",
-      # sha256sum = "a463dd599a0233c88999051af8a54a51a4ff5e4aa4673d318bf273ae8a1c2fd0",
-
-      # uri = "https://github.com/fish-shell/fish-shell/archive/refs/tags/4.1.2.tar.gz",
-      # sha256sum = "f49d54ce82bc00f56ecb1e9c811ee6f9cc79369e4de870e414d38449a1facf5b",
 
       uri = "https://github.com/fish-shell/fish-shell/archive/refs/tags/4.2.0.tar.gz",
       sha256sum = "29b4b0e152351a3a635d3f6f613c2d315095a7f632f2533d7575c8a9ede486d5",
+
+      # uri ="https://github.com/fish-shell/fish-shell/archive/refs/tags/4.9.3.tar.gz",
+      # sha256sum = "9aac04d7be06e9f7bb41c9162e8804857cadbfbfcb4012fb3d4f591fc19b25be",
     },
     nonCrateSourceInputs = [
       {
@@ -79,9 +40,8 @@
     options = {
       cmake | default = false,
     },
-    # crates = lib.functions.filterCrates (import "fish-crates.json"),
-    # crates = lib.functions.filterCrates (import "fish-4.1.2-crates.json"),
     crates = lib.functions.filterCrates (import "fish-4.2.0-crates.json"),
+    # crates = lib.functions.filterCrates (import "fish-4.9.3-crates.json"),
 
     configurePhase = [
       # m%"
@@ -103,6 +63,7 @@
       "cp ${SRC}/vendor/fnv-1.0.7/.cargo-checksum.json ${SRC}/vendor/pcre2",
       "cp ${SRC}/vendor/fnv-1.0.7/.cargo-checksum.json ${SRC}/vendor/pcre2-sys",
       "export FISH_BUILD_VERSION='4.2.0'",
+      # "export FISH_BUILD_VERSION='4.9.3'",
       "export CARGO_NET_OFFLINE=1",
       "export CARGO_TERM_VERBOSE=true",
     ],
