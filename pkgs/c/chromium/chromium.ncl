@@ -248,7 +248,7 @@
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen_basic.c -o dlopen_basic.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_basic.a dlopen_basic.o",
         "llvm-ranlib libdl_basic.a",
-        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen.c" as 'Text),
+        lib.functions.writeFile "dlopen.c" (import "chromium_dlopen.c" as 'Text), # TODO: sometimes it tries to dlopen libpulse.so.0
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen.c -o dlopen.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_chromium.a dlopen.o",
         "llvm-ranlib libdl_chromium.a",
@@ -372,8 +372,8 @@
 # "vulkan-SPIRV-Tools", # no-webgpu only
 # "vulkan_memory_allocator",
 "woff2",
-"zlib",
-"zstd",
+# "zlib",
+# "zstd",
 
          ####
          ])}",
@@ -474,7 +474,7 @@
         # drvs.abseilCpp,
       ],
       pDrvs = [
-        drvs.minizipNg,
+        # drvs.minizipNg,
         drvs.crc32c,
         drvs.doubleConversion,
         drvs.openh264,
@@ -487,7 +487,7 @@
         # drvs.abseilCppChromium,
         
         drvs.re2,
-        drvs.zstd,
+        # drvs.zstd,
         # drvs.brotli,
         drvs.woff2,
         drvs.libwebp,
