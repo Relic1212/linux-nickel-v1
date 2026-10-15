@@ -35,7 +35,23 @@
     singleSource = {
       uri = "https://github.com/python-babel/babel/archive/refs/tags/v2.17.0.tar.gz",
       sha256sum = "a52696499d9da7860726444c170f3481dc7409398392f3500783d01c07221bbf",
-    }
+    },
+    sourceInputs = [
+      { src = singleSource },
+      {
+        src = {
+          uri = "https://unicode.org/Public/cldr/46/cldr-common-46.0.zip",
+          sha256sum = "fbce9c2275862ad26668fb34783fe6c339f3d92ddfeb5a10a1775fb58181a15d",
+        },
+        dest = "cldr-common",
+      },
+    ],
+    preConfigurePhase = [
+      "cd ${SRC}",
+      # "mkdir cldr",
+      "cp /tmp/workdir/packed/*/*/cldr-common-46.0.zip cldr/cldr-common-46.0.zip",
+      "python setup.py import_cldr",
+    ],
   }
 }
 & {
