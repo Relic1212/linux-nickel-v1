@@ -16,6 +16,68 @@
 & {
   lib,
   drvs,
+
+  _CargoFetcher,
+  fishSources | lib.DeterministicFetcher =
+    _CargoFetcher
+    & {
+      singleSource = {
+
+        uri = "https://github.com/fish-shell/fish-shell/archive/refs/tags/4.9.3.tar.gz",
+        sha256sum = "9aac04d7be06e9f7bb41c9162e8804857cadbfbfcb4012fb3d4f591fc19b25be",
+      },
+
+      outputSha256sum = "7241c8678a0da1b84725bd8a81e6db537e9cde85f7038aa291e262fbccf01e41",
+    },
+
+  fish | lib.CargoPackage = {
+    preConfigurePhase = [
+      "(cd /tmp/workdir/src && tar xf /sources.tar)",
+    ],
+    extraCargoFlags = [
+      "--no-default-features",
+      "--features embed-manpages",
+    ],
+    biDrvs = [
+      drvs.fishSources,
+      # drvs.pythonFull,
+      # drvs.pythonSphinx,
+      # drvs.docutils,
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore312,
+      drvs.pythonHatchling,
+      drvs.pythonPathspec,
+      drvs.pythonPluggy,
+      drvs.pythonImportlibMetadate,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.pythonTroveClassifiers,
+      drvs.pythonSphinx,
+      drvs.pythonBabel,
+      drvs.pythonJinja2,
+      drvs.pythonPygments,
+      drvs.pythonSnowballstemmer,
+      drvs.docutils,
+      drvs.pythonImagesize,
+      drvs.pythonRomanNumerals,
+      drvs.pythonRequests,
+      drvs.pythonUrllib3,
+      drvs.pythonIdna,
+      drvs.pythonCertifi,
+      drvs.pythonAlabaster,
+      drvs.pythonSphinxcontribHtmlhelp,
+      drvs.pythonSphinxcontribWebsupport,
+      drvs.pythonSphinxcontribApplehelp,
+      drvs.pythonSphinxcontribDevhelp,
+      drvs.pythonSphinxcontribSerializinghtml,
+      drvs.pythonSphinxcontribQthelp,
+    ],
+  },
+
   fish4 | lib.CargoPackage = {
     singleSource = {
 
