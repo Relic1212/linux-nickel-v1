@@ -1,0 +1,11 @@
+{
+  lib,
+  drvs,
+  zoxide | lib.CargoPackage = {
+    singleSource = {
+      uri = "https://github.com/ajeetdsouza/zoxide/archive/refs/tags/v0.10.0.tar.gz",
+      sha256sum = "4fcd4272b013a10b637dbcc299c58a9924b94470a9042677ca1a204cc2e9150e",
+    },
+    crates = lib.functions.filterCrates (import "zoxide-crates.json"),
+  }
+}
