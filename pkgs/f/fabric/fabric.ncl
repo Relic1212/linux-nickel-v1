@@ -3,8 +3,8 @@
   drvs,
   fabric | lib.SetuptoolPackage = {
     singleSource = {
-      uri = "https://github.com/Fabric-Development/fabric/archive/3ce7523c34f53fda615f8c425ff9de22e1d812cc.tar.gz",
-      sha256sum = "46c4c86bbb0573f4c60eebed0a7dd2028595f9d5136c189139de3169f2287289"
+      uri = "https://github.com/Fabric-Development/fabric/archive/refs/tags/v0.0.2.tar.gz",
+      sha256sum = "83e521fc68a51c9cbeefbdb1965eec42ceca4033fa5d7aea90db9ae1c4f608dd"
     }
   }
 }
