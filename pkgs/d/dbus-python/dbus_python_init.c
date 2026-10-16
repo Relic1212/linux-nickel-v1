@@ -9,6 +9,7 @@
 
 extern PyObject *PyInit__dbus_bindings(void);
 extern PyObject *PyInit__dbus_glib_bindings(void);
+extern PyObject *PyInit__gi(void);
 
 __attribute__((constructor)) void python_dbus_module_init(){
     // fprintf(stderr, "initializing dbus modules\n");
@@ -18,6 +19,9 @@ __attribute__((constructor)) void python_dbus_module_init(){
     }
     if (PyImport_AppendInittab("_dbus_glib_bindings", PyInit__dbus_glib_bindings) == -1){
         fprintf(stderr, "FAIL: error initializing PyInit__dbus_glib_bindings\n");   
+    }
+    if (PyImport_AppendInittab("gi._gi", PyInit__gi) == -1){
+        fprintf(stderr, "FAIL: error initializing PyInit__gi\n");   
     }
 
 }
@@ -59,7 +63,6 @@ extern int stub_dladdr(const void *handle, Dl_info *info);
 const char* main_program_handle = "main_program";
 
 const char* lib_libc_so_6 = "lib_libc_so_6";
-const char* lib__usr_lib_python3_12_site_packages_selinux__selinux_cpython_312_x86_64_linux_gnu_so = "lib__usr_lib_python3_12_site_packages_selinux__selinux_cpython_312_x86_64_linux_gnu_so";
 
 
 
@@ -67,7 +70,6 @@ const char* lib__usr_lib_python3_12_site_packages_selinux__selinux_cpython_312_x
 void* dlopen(const char *path, int mode) {
 	if (path == NULL) { return &main_program_handle; }
 	if (strcmp( path, "libc.so.6" ) == 0) { dbg_print("(dlopen) found library libc.so.6 (handle=%p)\n", &lib_libc_so_6); return &lib_libc_so_6; }
-	// if (strcmp( path, "/usr/lib/python3.12/site-packages/selinux/_selinux.cpython-312-x86_64-linux-gnu.so" ) == 0) { dbg_print("(dlopen) found library /usr/lib/python3.12/site-packages/selinux/_selinux.cpython-312-x86_64-linux-gnu.so (handle=%p)\n", &lib__usr_lib_python3_12_site_packages_selinux__selinux_cpython_312_x86_64_linux_gnu_so); return &lib__usr_lib_python3_12_site_packages_selinux__selinux_cpython_312_x86_64_linux_gnu_so; }
 	fprintf(stderr, "(dlopen) WARNING: failed for path %s\n", path);	return stub_dlopen(path, mode);
 }
 

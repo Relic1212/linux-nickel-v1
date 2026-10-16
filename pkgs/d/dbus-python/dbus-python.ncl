@@ -49,9 +49,10 @@
         dlopen_src | default = (import "dbus_python_init.c" as 'Text),
       },
       buildEnv.EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static dbus-1 python3 glib-2.0)",
+        "$(pkg-config --libs --static dbus-1 python3 glib-2.0 gobject-2.0 girepository-2.0)",
         "-l_dbus_bindings",
         "-l_dbus_glib_bindings",
+        "-l_gi",
       ],
       preConfigurePhase | priority 1 = [
         lib.functions.writeFile "${SRC}/dlopen.c" options.dlopen_src,
@@ -86,6 +87,7 @@
 
       pDrvs = [
         drvs.dbusPython,
+        drvs.pythonPygobjectStatic,
       ],
       allowDubplicateBuldInputs = true,
     },
