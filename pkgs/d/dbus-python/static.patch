@@ -1,0 +1,35 @@
+diff --git a/meson.build b/meson.build
+index ddccacc..8f76f17 100644
+--- a/meson.build
++++ b/meson.build
+@@ -143,7 +143,7 @@ py.install_sources(
+     pure: false,
+ )
+ 
+-dbus_bindings = py.extension_module(
++dbus_bindings = library(
+     '_dbus_bindings',
+     sources: [
+         'dbus_bindings/abstract.c',
+@@ -178,10 +178,10 @@ dbus_bindings = py.extension_module(
+     install: true,
+     # Workaround for https://github.com/mesonbuild/meson/issues/6331
+     # TODO: Remove this when we depend on Meson 0.60
+-    subdir: '',
++    # subdir: '',
+ )
+ 
+-dbus_glib_bindings = py.extension_module(
++dbus_glib_bindings = library(
+     '_dbus_glib_bindings',
+     sources: [
+         'dbus_glib_bindings/module.c',
+@@ -195,7 +195,7 @@ dbus_glib_bindings = py.extension_module(
+     install: true,
+     # Workaround for https://github.com/mesonbuild/meson/issues/6331
+     # TODO: Remove this when we depend on Meson 0.60
+-    subdir: '',
++    # subdir: '',
+ )
+ 
+ install_headers(
