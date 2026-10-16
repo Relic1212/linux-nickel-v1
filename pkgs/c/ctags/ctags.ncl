@@ -1,0 +1,10 @@
+{
+  lib,
+  drvs,
+  ctags | lib.AutomakePackage = {
+    singleSource = {
+      uri = "https://github.com/universal-ctags/ctags/archive/refs/tags/v6.2.1.tar.gz",
+      sha256sum = "f56829e9a576025e98955597ee967099a871987b3476fbd8dbbc2b9dc921f824",
+    }
+  }
+}
