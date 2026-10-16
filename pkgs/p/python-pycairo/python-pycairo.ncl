@@ -30,5 +30,21 @@
       drvs.pythonSetuptools,
       drvs.zlibNgPic,
     ]
-  }
+  },
+
+  pythonPycairoStatic | lib.MesonPackage = {
+    singleSource = {
+      uri = "https://github.com/pygobject/pycairo/archive/refs/tags/v1.28.0.tar.gz",
+      sha256sum = "e7e1a487820467a174512633f3ec4c49d567041e40f2d0135d14679045b054e9"
+    },
+    extraMesonArgs = [
+      "-Dtests=false",
+    ],
+    eofPatches = [
+      { patch = import "static.patch" as 'Text },
+    ],
+    pDrvs = [
+      drvs.cairo,
+    ],
+  },
 }

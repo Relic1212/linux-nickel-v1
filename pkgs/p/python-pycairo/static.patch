@@ -1,0 +1,18 @@
+diff --git a/cairo/meson.build b/cairo/meson.build
+index 31069ba..b7eff30 100644
+--- a/cairo/meson.build
++++ b/cairo/meson.build
+@@ -48,10 +48,10 @@ if not for_wheel
+   install_headers('py3cairo.h', subdir: 'pycairo')
+ endif
+ 
+-pyext = python.extension_module('_cairo', sources,
+-  dependencies : [cairo_dep],
++pyext = library('_cairo', sources,
++  dependencies : [cairo_dep, python.dependency().partial_dependency(compile_args: true)],
+   install: true,
+-  subdir : 'cairo',
++  # subdir : 'cairo',
+   c_args: pyext_c_args + main_c_args,
+ )
+ 
