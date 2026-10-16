@@ -1,6 +1,38 @@
 {
   lib,
   drvs,
+  zsh592 | lib.AutotoolsPackage = {
+    singleSource = {
+      uri = "https://www.zsh.org/pub/zsh-5.9.2.tar.xz",
+      sha256sum = "36fa734374b44783582cec09bcd67822e2f992c779ec1624ab5596df078d2f81",
+    },
+
+    preConfigurePhase = [
+      m%"for f in $(find ${SRC}/Src/Modules -name '*.mdd'); do sed -i -e 's@link=dynamic@link=static@g' -e 's@link=no@link=static@g' -e 's@load=no@load=yes@g' "${f}";done"%,
+      lib.functions.writeFile
+        "${SRC}/Src/Modules/regex.mdd"
+        m%"name=zsh/regex
+          link=static
+          load=yes
+          objects="regex.o"
+          "%,
+    ],
+
+    extraConfigureFlags = [
+      "--enable-libc-musl",
+      "--disable-dynamic-nss",
+      "--disable-dynamic",
+    ],
+    biDrvs = [
+      drvs.pkgconfMeson,
+      drvs.linuxHeaders,
+    ],
+    pDrvs = [
+      drvs.readline,
+      drvs.pcre2,
+      drvs.libcap,
+    ]
+  },
   zsh | lib.AutomakePackage = {
     singleSource = {
       # uri = "https://ftp.funet.fi/pub/unix/shells/zsh/zsh-5.9.tar.xz",
@@ -16,6 +48,8 @@
 
       uri = "https://github.com/zsh-users/zsh/archive/1e266fb8af16ea86a7f246460d212386d1aa009b.tar.gz",
       sha256sum = "d2626eec47d426b00baa86c6f9a47d891d6a99fc379a9ae40e1b493650a859dc",
+      # uri ="https://www.zsh.org/pub/zsh-5.9.2.tar.xz",
+      # sha256sum = "36fa734374b44783582cec09bcd67822e2f992c779ec1624ab5596df078d2f81",
     },
 
     debug = false,
@@ -127,7 +161,7 @@
 
     baseBuildinputPackages = [
       # drvs.utilLinux,
-      drvs.busybox & { preiority = -1 },
+      drvs.busybox & { priority = -1 },
       drvs.coreutils,
       drvs.gnused,
       drvs.gawk,
