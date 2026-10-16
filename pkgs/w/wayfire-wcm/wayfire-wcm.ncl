@@ -63,11 +63,14 @@
     biDrvs = [
       drvs.imagemagick,
       drvs.wayfireWcm,
+      # drvs.fontconfig, # this removes warning messages about fontconfig but doesn't actually change the output
     ],
     installPhase = [
+      "install -dm0755 ${DEST}/usr/share/icons/hicolor/32x32/apps",
       "install -dm0755 ${DEST}/usr/share/icons/hicolor/scalable/apps",
       "cd /usr/share/icons/hicolor/scalable/apps",
-      m%"for f in $(ls | cut -d '.' -f1); do echo  "f=${f}"; magick convert "${f}.svg" "${DEST}/usr/share/icons/hicolor/scalable/apps/${f}.png";done"%,
+      m%"for f in $(ls | cut -d '.' -f1); do echo  "f=${f}"; magick "${f}.svg" "${DEST}/usr/share/icons/hicolor/32x32/apps/${f}.png";done"%,
+      m%"cp "${DEST}/usr/share/icons/hicolor/32x32/apps/wcm.png" "${DEST}/usr/share/icons/hicolor/scalable/apps/wcm.png""%,
     ]
   }
 }
