@@ -46,7 +46,7 @@
     pythonFull
     & {
       options = {
-        dlopen_src | default = (import "dbus_python_init.c" as 'Text),
+        c_src | default = (import "dbus_python_init.c" as 'Text),
       },
       buildEnv.EXTRA_LDFLAGS = [
         "$(pkg-config --libs --static dbus-1 python3 glib-2.0 gobject-2.0 girepository-2.0)",
@@ -55,17 +55,32 @@
         "-l_gi",
       ],
       preConfigurePhase | priority 1 = [
-        lib.functions.writeFile "${SRC}/dlopen.c" options.dlopen_src,
-        "${CC} ${CFLAGS} $(pkg-config --cflags python3) -Werror -c ${SRC}/dlopen.c -o ${BUILDDIR}/dlopen.o",
-        "ar rcs ${BUILDDIR}/libdlopen.a ${BUILDDIR}/dlopen.o",
+        lib.functions.writeFile "${SRC}/init.c" options.c_src,
+        let s = m%""g_option_error_quark","g_quark_to_string","g_error_get_type","g_io_condition_get_type","g_main_loop_get_type","g_main_context_get_type","g_source_get_type","g_io_channel_get_type","g_pollfd_get_type" "% in
+        "dl-func %{std.string.join " "[
+
+          m%"'{"names":["libglib-2.0.so.0"],"symbols":[%{s}]}'"%,
+          m%"'{"names":["libgobject-2.0.so.0"],"symbols":[%{s}]}'"%,
+
+          
+          m%"'{"names":[],"symbols":["python_dbus_module_init"]}'"%,
+
+
+
+
+
+        ]} > ${SRC}/dlopen.c",
+        "${CC} ${CFLAGS} -Werror -c ${SRC}/dlopen.c -o ${BUILDDIR}/dlopen.o",
+        "${CC} ${CFLAGS} $(pkg-config --cflags python3) -Werror -c ${SRC}/init.c -o ${BUILDDIR}/init.o",
+        "ar rcs ${BUILDDIR}/libdlopen.a ${BUILDDIR}/dlopen.o ${BUILDDIR}/init.o",
         "ranlib ${BUILDDIR}/libdlopen.a",
         # "export LDFLAGS=\"${LDFLAGS} ${BUILDDIR}/dlopen.o\"",
         "export LDFLAGS=\"${LDFLAGS} ${BUILDDIR}/libdlopen.a\"",
         # "export LDFLAGS=\"${LDFLAGS} -Wl,--allow-multiple-definition=dlopen\"",
       ],
       postInstallPhase = [
-        m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py"%,
-        m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/Makefile"%,
+        # m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py"%,
+        # m%"sed -i 's@/tmp/workdir/build/libdlopen.a@@g' ${DEST}/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/Makefile"%,
         "cd ${DEST}/usr",
         "rm -rf lib include share",
         "cd bin",
@@ -83,6 +98,7 @@
           drvs.muslBothRenamedDl,
           # drvs.musl,
           drvs.pythonFull,
+          drvs.pythonDlFunc,
         ],
 
       pDrvs = [
