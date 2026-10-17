@@ -50,7 +50,7 @@
       },
       buildEnv={
         EXTRA_LDFLAGS = [
-        "$(pkg-config --libs --static dbus-1 python3 glib-2.0 gobject-2.0 girepository-2.0 libudev cairo pango gdk-pixbuf-2.0 gdk-3.0 gtk+-3.0 atk)",
+        "$(pkg-config --libs --static dbus-1 python3 glib-2.0 gobject-2.0 girepository-2.0 libudev cairo pango gdk-pixbuf-2.0 gdk-3.0 gtk+-3.0 atk cairo-gobject)",
         "-l_dbus_bindings",
         "-l_dbus_glib_bindings",
         "-l_gi",
@@ -69,7 +69,8 @@
         lib.functions.writeFile "${SRC}/gio.json" (let d =import "_gio.ncl" in std.serialize 'Json d),
         lib.functions.writeFile "${SRC}/gtk3.json" (let d =import "_gtk3.ncl" in std.serialize 'Json d),
         lib.functions.writeFile "${SRC}/atk.json" (let d =import "_atk.ncl" in std.serialize 'Json d),
-        let s = m%""g_option_error_quark","g_quark_to_string","g_error_get_type","g_io_condition_get_type","g_main_loop_get_type","g_main_context_get_type","g_source_get_type","g_io_channel_get_type","g_pollfd_get_type","g_main_loop_new","g_main_loop_get_context","g_main_loop_run","g_main_loop_quit","g_type_from_name","g_value_get_type","g_object_get_type","g_binding_get_type","g_initially_unowned_get_type","g_binding_flags_get_type" "% in
+        lib.functions.writeFile "${SRC}/cairo_gobject.json" (let d =import "_cairo_gobject.ncl" in std.serialize 'Json d),
+        let s = m%""g_option_error_quark","g_quark_to_string","g_error_get_type","g_io_condition_get_type","g_main_loop_get_type","g_main_context_get_type","g_source_get_type","g_io_channel_get_type","g_pollfd_get_type","g_main_loop_new","g_main_loop_get_context","g_main_loop_run","g_main_loop_quit","g_type_from_name","g_value_get_type","g_object_get_type","g_binding_get_type","g_initially_unowned_get_type","g_binding_flags_get_type","g_main_context_default" "% in
         "dl-func %{std.string.join " "[
           # m%"'{"names":["libgdk-3.so"],"symbols":["gdk_color_get_type"]}'"%,
           m%"'{"names":["libglib-2.0.so.0"],"symbols":[%{s}]}'"%,
@@ -160,6 +161,7 @@
           "--file=${SRC}/gio.json",
           "--file=${SRC}/gtk3.json",
           "--file=${SRC}/atk.json",
+          "--file=${SRC}/cairo_gobject.json",
           m%"'{"names":[],"symbols":["python_dbus_module_init"]}'"%,
         
 
