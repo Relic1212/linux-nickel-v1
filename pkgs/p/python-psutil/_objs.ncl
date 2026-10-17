@@ -1,0 +1,19 @@
+# Copied from build log (link phase)
+[
+  "build/temp.linux-x86_64-cpython-312/psutil/_psutil_linux.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/all/errors.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/all/init.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/all/pids.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/all/str.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/linux/disk.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/linux/heap.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/linux/mem.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/linux/net.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/linux/proc.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/init.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/net.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/pids.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/proc.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/sysctl.o",
+  "build/temp.linux-x86_64-cpython-312/psutil/arch/posix/users.o"
+]
