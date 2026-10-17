@@ -31,3 +31,49 @@
     ],
   }
 }
+& {
+
+  lib,
+  drvs,
+  atSpi2Core,
+  atSpi2CoreIntrospection | lib.MesonPackage = {
+    singleSource = atSpi2Core.singleSource,
+
+    buildEnv = {
+      EXTRA_CPPFLAGS = ["-I/usr/include/libxml2"],
+      EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
+      PKG_CONFIG = null,
+      _isStatic = false,
+    },
+    extraMesonArgs = [
+      "-Dintrospection=enabled",
+    ],
+
+    preConfigurePhase = [
+      m%"sed -i 's@shared_module@library@g' ${SRC}/atk-adaptor/meson.build"%,
+    ],
+
+    postInstallPhase = [
+      m%"sed -i 's@-DG_LOG_DOMAIN="atspi"@@g' ${DEST}/usr/lib/pkgconfig/atspi-2.pc"%,
+    ],
+    pythonProvider = drvs.pythonDynamic,
+    biDrvs = [
+      drvs.libxml2,
+      drvs.muslShared,
+      drvs.pythonSetuptools80,
+      drvs.ldd,
+      # drvs.glibGobject & { priority = -2 },
+      # drvs.pangoGobject & { priority = -1 },
+      # drvs.harfbuzzGobjectDynamic & { priority = -1 },
+      # drvs.gdkPixbufIntrospection & { priority = -1 },
+      # drvs.grapheneIntrospection & { priority = -1 },
+      drvs.glibGobjectDynamic & { priority = -1 },
+      drvs.gobjectDynamicCairo2 & { priority = -1 },
+    ],
+    pDrvs = [
+      drvs.glib,
+      drvs.dbus,
+      # drvs.gobjectDynamic,
+    ],
+  }
+}
