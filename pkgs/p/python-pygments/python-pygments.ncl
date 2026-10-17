@@ -1,0 +1,149 @@
+{
+  lib,
+  drvs,
+  pythonPygments | lib.Package = {
+    singleSource = {
+      uri = "https://github.com/pygments/pygments/archive/refs/tags/2.19.2.tar.gz",
+      sha256sum = "542e317dffd5287585b7bc4327969fe2f8d4b7ccec0b46045a83ef45dc840ed9"
+    },
+    buildPhase = [
+      "cd ${SRC}",
+      "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
+      "python -m installer -d ${DEST} .dist/*.whl",
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+      drvs.pythonHatchling,
+      drvs.pythonPathspec,
+      drvs.pythonPluggy,
+      drvs.pythonImportlibMetadate,
+      drvs.pythonMako,
+      drvs.pythonPackaging,
+      drvs.pythonMarkupsafe,
+      drvs.pythonTroveClassifiers,
+    ]
+  }
+}
+& {
+  lib,
+  drvs,
+  pythonHatchling | lib.Package = {
+    # https://github.com/alpinelinux/aports/blob/master/main/py3-hatchling/APKBUILD
+    singleSource = {
+      uri = "https://files.pythonhosted.org/packages/py3/h/hatchling/hatchling-1.27.0-py3-none-any.whl",
+      sha256sum = "d3a2f3567c4f926ea39849cdf924c7e99e6686c9c8e288ae1037c8fa2a5d937b"
+    },
+    installPhase = [
+      m%"python -m installer -d ${DEST} ${SRC}/hatchling-1.27.0-py3-none-any.whl"%
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonInstaller,
+      drvs.pythonSetuptools,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  pythonPathspec | lib.Package = {
+    # https://github.com/alpinelinux/aports/blob/master/main/py3-pathspec/APKBUILD
+    singleSource = {
+      uri = "https://files.pythonhosted.org/packages/source/p/pathspec/pathspec-0.12.1.tar.gz",
+      sha256sum = "a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712"
+    },
+    separateBuildDir = false,
+    buildPhase = [
+      "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
+    ],
+    installPhase = [
+      m%"python -m installer -d ${DEST} .dist/*.whl"%
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  pythonPluggy | lib.Package = {
+    # https://github.com/alpinelinux/aports
+    singleSource = {
+      uri = "https://files.pythonhosted.org/packages/75/21/cdabca0144cfa282c2893dc8e07957245ac8657896ef3ea26f18b6fda710/pluggy-0.12.0.tar.gz",
+      sha256sum = "0825a152ac059776623854c1543d65a4ad408eb3d33ee114dff91e57ec6ae6fc"
+    },
+    separateBuildDir = false,
+    buildPhase = [
+      "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
+    ],
+    installPhase = [
+      m%"python -m installer -d ${DEST} .dist/*.whl"%
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  pythonImportlibMetadate | lib.Package = {
+    # https://github.com/alpinelinux/aports
+    singleSource = {
+      uri = "https://files.pythonhosted.org/packages/76/66/650a33bd90f786193e4de4b3ad86ea60b53c89b669a5c7be931fac31cdb0/importlib_metadata-8.7.0.tar.gz",
+      sha256sum = "d13b81ad223b890aa16c5471f2ac3056cf76c5f10f82d6f9292f0b415f389000"
+    },
+    separateBuildDir = false,
+    buildPhase = [
+      "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
+    ],
+    installPhase = [
+      m%"python -m installer -d ${DEST} .dist/*.whl"%
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+    ],
+  }
+}
+& {
+  lib,
+  drvs,
+  pythonTroveClassifiers | lib.Package = {
+    # https://github.com/alpinelinux/aports
+    singleSource = {
+      uri = "https://github.com/pypa/trove-classifiers/archive/2025.5.9.12/py3-trove-classifiers-2025.5.9.12.tar.gz",
+      sha256sum = "e2073313aeed13ca9c305ad6cacc2bed0c42a1170ef843f67e1e27c3d98c39c1"
+    },
+    separateBuildDir = false,
+    buildPhase = [
+      "gpep517 build-wheel --wheel-dir .dist --output-fd 3 3>&1 >&2",
+    ],
+    installPhase = [
+      m%"python -m installer -d ${DEST} .dist/*.whl"%
+    ],
+    biDrvs = [
+      drvs.pythonFull,
+      drvs.pythonSetuptools,
+      drvs.pythonInstaller,
+      drvs.pythonGpep517,
+      drvs.pythonFlitCore,
+    ],
+  }
+}
