@@ -55,6 +55,7 @@
         "-l_dbus_glib_bindings",
         "-l_gi",
         "-l_cairo",
+        "-lpython_ps_util",
       ],
       
       EXTRA_CPPFLAGS=[
@@ -201,6 +202,7 @@
         drvs.dbusPython,
         drvs.pythonPygobjectStatic,
         drvs.pythonPycairoStatic,
+        drvs.pythonPsutil,
         drvs.eudev,
         drvs.pango,
         drvs.gdkPixbuf,

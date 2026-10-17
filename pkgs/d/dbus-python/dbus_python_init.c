@@ -6,6 +6,7 @@ extern PyObject *PyInit__dbus_bindings(void);
 extern PyObject *PyInit__dbus_glib_bindings(void);
 extern PyObject *PyInit__gi(void);
 extern PyObject *PyInit__cairo(void);
+extern PyObject *PyInit__psutil_linux(void);
 
 __attribute__((constructor)) void python_dbus_module_init(){
     // fprintf(stderr, "initializing dbus modules\n");
@@ -21,6 +22,9 @@ __attribute__((constructor)) void python_dbus_module_init(){
     }
     if (PyImport_AppendInittab("cairo._cairo", PyInit__cairo) == -1){
         fprintf(stderr, "FAIL: error initializing PyInit__cairo\n");   
+    }
+    if (PyImport_AppendInittab("psutil._psutil_linux", PyInit__psutil_linux) == -1){
+        fprintf(stderr, "FAIL: error initializing PyInit__psutil_linux\n");   
     }
 
 }
