@@ -54,6 +54,7 @@
     extraMesonArgs = [
       "-Dtests=false",
       "-Dpycairo=disabled",
+      # "-Dpycairo=enabled",
     ],
     # pythonProvider = drvs.pythonDynamic,
     preConfigurePhase = [
@@ -93,6 +94,7 @@
     ],
     pDrvs = [
       drvs.glib,
+      # drvs.cairoGobject,
     ],
   },
 
@@ -111,6 +113,8 @@
       drvs.libadwaitaIntrospection & { priority = -1 },
       drvs.pangoGobject & { priority = -1 },
       drvs.gdkPixbufIntrospectionDynamic & { priority = -1 },
+      drvs.atSpi2CoreIntrospection & { priority = -1 },
+      drvs.gtk3Introspection & { priority = -1 },
     ]
   },
 }
