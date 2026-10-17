@@ -156,3 +156,97 @@
     ],
   }
 }
+& {
+  lib,
+  drvs,
+  gtk3,
+  gtk3Introspection | lib.MesonPackage = {
+    singleSource = gtk3.singleSource,
+    buildEnv = {
+      PKG_CONFIG = null,
+      EXTRA_LDFLAGS=[
+        "-L/tmp/workdir/build/gdk",
+      ],
+    },
+
+    buildEnv._isStatic = false,
+    extraMesonArgs = [
+      "-Dgtk_doc=false",
+      "-Dxinerama=no",
+      "-Dtests=false",
+      "-Ddemos=false",
+      "-Dexamples=false",
+      "-Dintrospection=true",
+      "-Dcloudproviders=false",
+      "-Dcolord=yes",
+      # "-Dopengl=false",
+      "-Dtracker3=false",
+      "-Dwayland_backend=true",
+      "-Dx11_backend=false",
+      "-Dbuiltin_immodules=all",
+      "-Dbroadway_backend=false",
+      "-Dwin32_backend=false",
+      "-Dquartz_backend=false",
+      "-Dxinerama=no",
+      "-Dprint_backends=file",
+    ],
+    unpackPhase = [
+      "tar -xf /tmp/workdir/packed/7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7/gtk*-3.24.43.tar.xz --strip-components=1 -C /tmp/workdir/src"
+    ],
+
+
+    preConfigurePhase=[
+      # m%"sed -i 's@dependencies: gdk_gir_dep,@dependencies: [gdk_gir_dep,declare_dependency(link_with:libgdk)],@g' ${SRC}/gtk/meson.build"%,
+      # m%"sed -i "s@dependencies: gdk_gir_dep,@dependencies: gdk_gir_dep,link_with:libgdk@g" ${SRC}/gtk/meson.build"%,
+      # m%"sed -i "s@dependencies: gdk_gir_dep,@dependencies: [gdk_gir_dep,declare_dependency(link_with:libgdk,link_args:common_ldflags)],link_with:libgdk,@g" ${SRC}/gtk/meson.build"%,
+      # m%"sed -i "s@gtk_gir_extra_args)@gtk_gir_extra_args+['-Lgtk'])@g" ${SRC}/gtk/meson.build"%,
+      # m%"sed -i "s@dependencies: gdk_gir_dep,@dependencies: [gdk_gir_dep,declare_dependency(link_with:libgdk,link_args:common_ldflags)],@g" ${SRC}/gtk/meson.build"%,
+      m%"sed -i "s@dependencies: gdk_gir_dep,@%{std.string.join "" [
+        "dependencies: [gdk_gir_dep,libgdk_dep],",
+        "link_with:libgdk,",
+        
+        ]}@g" ${SRC}/gtk/meson.build"%,
+
+    ],
+
+    llvmProvider = drvs.llvmFull,
+    pythonProvider = drvs.pythonDynamic,
+
+    biDrvs = [
+      drvs.glibDynamic,
+      drvs.muslShared,
+      drvs.pythonSetuptools80,
+      drvs.ldd,
+      drvs.glibGobject & { priority = -2 },
+      drvs.pangoGobject & { priority = -1 },
+      drvs.harfbuzzGobjectDynamic & { priority = -1 },
+      drvs.gdkPixbufIntrospection & { priority = -1 },
+      drvs.grapheneIntrospection & { priority = -1 },
+      drvs.glibGobjectDynamic & { priority = -1 },
+      drvs.gobjectDynamicCairo2 & { priority = -1 },
+      drvs.atSpi2CoreIntrospection & { priority = -1 },
+
+      # drvs.hwdata,
+      # drvs.llvmConfigStatic,
+      # drvs.spirvLlvmTranslator,
+    ],
+    neverInclude = [
+      drvs.cairo,
+      drvs.glib,
+      # drvs.harfbuzz,
+    ],
+    pDrvs = [
+      # drvs.mesa2,
+      drvs.gdkPixbufFull,
+      # drvs.harfbuzzFull,
+      drvs.atSpi2Core,
+      drvs.graphene,
+      drvs.libxkbcommon,
+      drvs.pango,
+      drvs.libtiff,
+      drvs.libepoxy,
+      # drvs.gobjectDynamic,
+      drvs.cairoGobject,
+    ],
+  }
+}
