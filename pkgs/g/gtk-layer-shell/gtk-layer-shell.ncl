@@ -75,3 +75,39 @@
     ]
   }
 }
+& {
+  lib,
+  drvs,
+  gtkLayerShell,
+  gtkLayerShellIntrospection | lib.MesonPackage = {
+    singleSource = gtkLayerShell.singleSource,
+    buildEnv = {
+      PKG_CONFIG = null,
+      _isStatic = false,
+    },
+    llvmProvider = drvs.llvmFull,
+    pythonProvider = drvs.pythonDynamic,
+
+    biDrvs = [
+      drvs.muslShared,
+      drvs.pythonSetuptools80,
+      drvs.ldd,
+      drvs.glibGobject & { priority = -2 },
+      drvs.pangoGobject & { priority = -1 },
+      drvs.harfbuzzGobjectDynamic & { priority = -1 },
+      drvs.gdkPixbufIntrospection & { priority = -1 },
+      drvs.grapheneIntrospection & { priority = -1 },
+      drvs.glibGobjectDynamic & { priority = -1 },
+      drvs.gobjectDynamicCairo2 & { priority = -1 },
+      drvs.atSpi2CoreIntrospection & { priority = -1 },
+      drvs.gtk3Introspection & { priority = -1 },
+    ],
+    pDrvs = [
+      drvs.gtk3,
+    ],
+    extraMesonArgs = [
+      "-Dvapi=false",
+      "-Dintrospection=true",
+    ]
+  }
+}
