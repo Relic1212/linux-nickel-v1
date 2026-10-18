@@ -18,17 +18,21 @@
     ],
     buildEnv = {
       EXTRA_LDFLAGS = [
-        "$(pkg-config --static --libs dbus-1)",
+        "$(pkg-config --static --libs dbus-1 libpulse)",
       ],
       PKG_CONFIG = null,
 
       _isStatic = false,
     },
+    isStatic = false,
     extraMesonArgs = [
       #   "-Dgvc:static=true",
       #   "-Dgvc:introspection=false",
+      "-Ddefault_library=both",
     ],
-
+    preConfigurePhase = [
+      m%"sed -i 's@shared_library@library@g' ${SRC}/subprojects/gvc/meson.build"%,
+    ],
     pythonProvider = drvs.pythonDynamic,
     neverInclude = [
       drvs.zlibNg,
