@@ -158,6 +158,123 @@
       # drvs.nettleGmp,
     ]
   },
+
+  networkmanagerIntrospection | lib.MesonPackage = {
+    sourceInputs = networkmanager.sourceInputs,
+    # patches = [
+    #   {
+    #     sha256sum = "5cd25b56c0f74b2e7f725132e63b5b28cc045582ac8241a47e9402557c34cb7e",
+    #     file = "networkmanager-all.patch"
+    #   },
+    # ],
+
+    buildEnv = {
+      # https://bugs.gentoo.org/915819
+      EXTRA_LDFLAGS = [
+        # "-Wl,--undefined-version",
+        "-lncursesw",
+        # "${SRC}/lib/libdl_fake.a",
+        "$(pkg-config --static --libs gnutls)",
+        "-L/usr/lib",
+      ],
+      _isStatic = false,
+      PKG_CONFIG = null,
+    },
+    isStatic = false,
+    extraMesonArgs = [
+      "-Dtests=no",
+      "-Dsession_tracking=elogind",
+      "-Dsession_tracking_consolekit=false",
+      "-Dpolkit=true",
+      "-Dmodify_system=true",
+      "-Dintrospection=true",
+      "-Dsystemd_journal=false",
+      "-Dsystemdsystemunitdir=no",
+      "-Dselinux=false",
+      "-Dlibaudit=no",
+      "-Dcrypto=gnutls",
+      "-Dmodem_manager=false",
+      "-Dovs=false",
+      "-Dnm_cloud_setup=false",
+      "-Dnbft=false",
+      "-Dppp=false",
+      # "-Dpppd='/usr/bin/pppd'",
+      "-Diwd=true",
+      # "-Djansson=true",
+      "-Dkernel_firmware_dir='/usr/lib/firmware'",
+      "-Diptables='/usr/bin/iptables'",
+      "-Dip6tables='/usr/bin/ip6tables'",
+      "-Ddhcpcd='/usr/bin/dhcpcd'",
+      "-Dnft='/usr/bin/nft'",
+      "-Dudev_dir='/usr/lib/udev'",
+      "-Dconfig_wifi_backend_default=iwd",
+      "-Ddefault_library=static",
+      # "-Ddocs=true",
+    ],
+    preConfigurePhase =
+      [
+        m%"sed -i "s|subdir('nm-initrd-generator')||g" ${SRC}/src/meson.build"%,
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_library@library@g' ${f};done"%,
+        m%"for f in $(find ${SRC} -name meson.build); do sed -i 's@shared_module@library@g' ${f};done"%,
+        m%"for f in $(find ${SRC}/tools -name '*.sh' -type f); do sed -i 's@\/bin\/bash@\/usr\/bin\/bash@g' ${f};done"%,
+      ]
+      # @ [
+      #   "clang  --verbose -g -c ${SRC}/lib/lib.c -o ${SRC}/lib/lib.c.o",
+      #   "llvm-ar rcs ${SRC}/lib/libdl_fake.a ${SRC}/lib/lib.c.o",
+      #   "llvm-ranlib ${SRC}/lib/libdl_fake.a",
+      # ]
+      @ [
+        m%"sed -i 's@http://docbook.sourceforge.net/release/xsl/current@/usr/share/xml/docbook/xsl-stylesheets-nons-1.79.2@g' ${SRC}/man/meson.build"%,
+        m%"
+      for f in $(find ${SRC}/man -type f -name '*.xml' ); do
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+        sed -i 's@http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd@/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd@g' ${f}
+      done
+      "%,
+      ],
+    buildPhase = [
+      "ninja src/libnm-client-impl/NM-1.0.gir src/libnm-client-impl/NM-1.0.typelib",
+    ],
+
+    installPhase = [
+      "install -Dm0755 src/libnm-client-impl/NM-1.0.gir ${DEST}/usr/share/gir-1.0/NM-1.0.gir",
+      "install -Dm0755 src/libnm-client-impl/NM-1.0.typelib ${DEST}/usr/lib/girepository-1.0/NM-1.0.typelib",
+    ],
+    pythonProvider = drvs.pythonDynamic,
+    neverInclude = [
+      drvs.gobjectDynamicData,
+      drvs.glibDynamic,
+    ],
+    biDrvs =
+      networkmanager.biDrvs
+      @ [
+        drvs.pythonSetuptools80,
+        drvs.ldd,
+        drvs.muslShared,
+        # drvs.glibGobject & { priority = -2 },
+        # drvs.pangoGobject & { priority = -1 },
+        # drvs.harfbuzzGobjectDynamic & { priority = -1 },
+        # drvs.gdkPixbufIntrospection & { priority = -1 },
+        # drvs.grapheneIntrospection & { priority = -1 },
+        # drvs.glibGobjectDynamic & { priority = -1 },
+        drvs.gobjectDynamicCairo2 & { priority = -1 },
+
+        #
+        drvs.glibGobject & { priority = -2 },
+        drvs.pangoGobject & { priority = -1 },
+        drvs.harfbuzzGobjectDynamic & { priority = -1 },
+        drvs.gdkPixbufIntrospection & { priority = -1 },
+        drvs.grapheneIntrospection & { priority = -1 },
+        drvs.glibGobjectDynamic & { priority = -1 },
+        #
+        drvs.pythonPygobject,
+      ],
+    pDrvs =
+      networkmanager.pDrvs
+      @ [
+        # drvs.gobjectDynamic,
+      ],
+  }
 }
 & {
   lib,
