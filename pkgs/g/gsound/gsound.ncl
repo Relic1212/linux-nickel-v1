@@ -7,22 +7,9 @@
       sha256sum = "ebee33c77f43bcae87406c20e051acaff08e86f8960c35b92911e243fddc7a0b"
     },
 
-    biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
+    pDrvs = [
       drvs.libcanberra,
-      drvs.libogg,
-      drvs.libvorbis,
-      drvs.alsaLibs,
-      drvs.eudev,
-      drvs.gperf,
-      drvs.kmod,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
+      drvs.glib,
     ],
     extraMesonArgs = [
       "-Dgtk_doc=false",
