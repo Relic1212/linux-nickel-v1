@@ -43,23 +43,14 @@
     pDrvs =
       [
         drvs.expat,
-        # drvs.libffi,
-        # drvs.libpciaccess,
         drvs.libxkbcommon,
         drvs.libdrm,
-        # drvs.mtdev,
-        # drvs.libevdev,
-        # drvs.eudev,
         drvs.libinput,
         drvs.glib,
-        drvs.gudev,
-        # drvs.pcre2,
-        # drvs.zlibNg,
         drvs.dbus,
         drvs.duktape,
         drvs.attr,
         drvs.acl,
-        # drvs.libcap,
       ]
       @ (
         if options.elogind then
