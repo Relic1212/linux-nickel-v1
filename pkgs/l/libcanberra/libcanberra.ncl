@@ -31,25 +31,12 @@ Requires.private: ogg vorbis alsa vorbisfile
 "%
     ],
     biDrvs = [
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      #drvs.glib,
-      #drvs.vala,
+      drvs.pkgconfMeson,
       drvs.libtool,
-      drvs.gettext,
-      drvs.pkgconf,
-      drvs.libogg,
-      drvs.libvorbis,
-      drvs.linuxHeaders,
-      drvs.alsaLibs,
-      drvs.eudev,
-      drvs.gperf,
-      drvs.kmod,
-      drvs.xz,
-      drvs.openssl,
-      drvs.zstd,
-      drvs.utilLinux,
     ],
+    pDrvs = [
+      drvs.libvorbis,
+      drvs.alsaLibs,
+    ]
   }
 }
