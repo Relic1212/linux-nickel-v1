@@ -34,14 +34,12 @@
     pDrvs = [
       drvs.gtk3,
       drvs.gudev,
-      # drvs.vala,
       drvs.libpsl,
       drvs.libxml2,
       drvs.jsonGlib,
       drvs.libyaml,
       drvs.libxmlb,
       drvs.libvorbis,
-      drvs.libogg,
       ## -X
     ],
     extraConfigureFlags = [
@@ -109,14 +107,12 @@
     pDrvs = [
       drvs.gtk3,
       drvs.gudev,
-      # drvs.vala,
       drvs.libpsl,
       drvs.libxml2,
       drvs.jsonGlib,
       drvs.libyaml,
       drvs.libxmlb,
       drvs.libvorbis,
-      drvs.libogg,
       ## -X
     ],
     extraConfigureFlags = [
