@@ -1,7 +1,7 @@
 let s = {
 
-  uri = "https://github.com/AvengeMedia/DankMaterialShell/archive/refs/tags/v1.6.3.tar.gz",
-  sha256sum = "32e5a87130c5127391f5b1f307348e89a2b34f17e9f0d9c8c0ce09fba334e1fd",
+  uri = "https://github.com/duxlabs-dev/dux-shell/archive/refs/tags/v2.0.0.tar.gz",
+  sha256sum = "e81b0b496b3a6a5a08a6b045ef04d79b3a36f9b07bbfdf475e7dceb80228aca4",
 }
 in
 
@@ -33,10 +33,10 @@ in
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "040fc9a121f6cda4111989825d5a4029b32de09e77012ac38d23398e92ccd5cb", # vendor
+    outputSha256sum = "6a7fbc23fbe1205f722747d7e637a433862fb1c8288caedda9bf4dad0bd5b0ce", # vendor
 
     biDrvs = [
-      drvs.go_1_26,
+      drvs.go_1_27,
       drvs.emptyResolvConf,
       drvs.caCertificates,
       (drvs.gnutar & { priority = 1 }),
@@ -50,17 +50,17 @@ in
       },
       {
         src = {
-          uri = "https://github.com/AvengeMedia/dank-qml-common/archive/26396ce432d6c71c3f5367438f96f4a8d667e160.tar.gz",
-          sha256sum = "f5aa4d56a937a275c9ee504c567c36c141cb11297cae934f1b5cf3cf3620de10",
+          uri = "https://github.com/duxlabs-dev/dux-qml-common/archive/refs/tags/v2.0.0.tar.gz",
+          sha256sum = "dc08721f6df0fbd7717486e1fd3aa29e0b6ec0c687c68efd6b4576751b0752ca",
         },
-        dest = "dank-qml-common",
+        dest = "dux-qml-common",
       },
     ],
-    eofPatches = [
-      {
-        patch = import "dms-cp.patch" as 'Text,
-      },
-    ],
+    # eofPatches = [
+    #   {
+    #     patch = import "dms-cp.patch" as 'Text,
+    #   },
+    # ],
     separateBuildDir = false,
     configurePhase = [
       "export GOROOT=/usr/lib/go",
@@ -91,7 +91,7 @@ in
     enableCcache = false,
     biDrvs = [
       drvs.danklinuxDmsSource,
-      drvs.go_1_26,
+      drvs.go_1_27,
       # drvs.llvm,
       # drvs.musl,
       drvs.basefiles,
