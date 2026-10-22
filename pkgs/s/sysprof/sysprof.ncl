@@ -52,9 +52,7 @@
       drvs.desktopFileUtils,
     ],
     pDrvs = [
-      # drvs.gtk4,
       drvs.libdex,
-      drvs.jsonGlib,
       drvs.libpanel,
     ],
   },
