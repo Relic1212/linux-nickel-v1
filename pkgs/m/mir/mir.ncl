@@ -2,7 +2,6 @@
   lib,
   drvs,
   mir | lib.CargoPackage = {
-    debug = true,
 
     singleSource = {
       uri = "https://github.com/canonical/mir/archive/refs/tags/v2.30.0.tar.gz",
