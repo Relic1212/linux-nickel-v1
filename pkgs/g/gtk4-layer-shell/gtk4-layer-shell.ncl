@@ -2,7 +2,7 @@
   lib,
   drvs,
   gtk4LayerShell | lib.MesonPackage = {
-    debug = true,
+    # debug = true,
     singleSource = {
 
       uri = "https://github.com/wmww/gtk4-layer-shell/archive/refs/tags/v1.3.0.tar.gz",
