@@ -2,7 +2,6 @@
   lib,
   drvs,
   miracleWm | lib.CmakePackage = {
-    debug = true,
     singleSource = {
       uri = "https://github.com/miracle-wm-org/miracle-wm/archive/refs/tags/v0.11.2.tar.gz",
       sha256sum = "71e244ec4991c21fb875182e220bc17227cd45c361f4b674aecb9af785134d45"
@@ -195,6 +194,7 @@
     ],
 
     llvmProvider = drvs.llvmFull,
+    debug,
     muslProvider = if debug then drvs.muslBothRenamedDlDebug else drvs.muslBothRenamedDl,
   }
 }
@@ -213,7 +213,6 @@
   lib,
   drvs,
   lttngUst | lib.AutotoolsPackage = {
-    debug = true,
     singleSource = {
       # uri = "https://lttng.org/files/lttng-ust/lttng-ust-2.15.1.tar.bz2",
       # sha256sum = "37c9b58ea7aa7bc47d6630b52ba1a48ebce095b9a196eab4ddd273d78301792d",
