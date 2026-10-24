@@ -2,6 +2,8 @@
   lib,
   drvs,
   tinysparql | lib.MesonPackage = {
+    # debug = true,
+
     singleSource = {
       # uri = "https://gitlab.gnome.org/GNOME/tinysparql/-/archive/3.11.0/tinysparql-3.11.0.tar.bz2",
       # sha256sum = "49bf23310b02e11b4880a12f7d62e4f3f5f561b23ab9b7da374bce486c893a1b",
@@ -13,7 +15,6 @@
       #   EXTRA_CXXFLAGS = ["-I/usr/include/libxml2", ],
       EXTRA_LDFLAGS = ["-lc++"],
     },
-    debug = true,
     extraMesonArgs = [
       "-Dintrospection=disabled",
       "-Dvapi=disabled",
@@ -68,20 +69,13 @@
       ]
       @ (std.array.map (fun s => "objcopy --redefine-sym %{s}=tracker_parser_icu__%{s} libtracker-parser-libicu.a") icuSymbols)
       @ (std.array.map (fun s => "objcopy --redefine-sym %{s}=tracker_http_soup3__%{s} libtracker-http-soup3.a") httpSymbols),
-    biDrvs = [
+
+    pDrvs = [
       drvs.snowball,
-      drvs.glib,
       drvs.jsonGlib,
-      drvs.libffi,
-      drvs.libicu,
-      drvs.libpsl,
       drvs.libsoup3,
-      drvs.libxml2,
-      drvs.nghttp2,
-      drvs.pcre2,
-      drvs.sqlite,
-      drvs.zlibNg,
       drvs.dbus,
-    ],
+      drvs.libicu,
+    ]
   }
 }
