@@ -19,47 +19,7 @@
     ],
     pDrvs =
       [
-        # drvs.fontconfig,
-        # drvs.freetype,
-        # drvs.zlibNg,
-        # drvs.gperf,
-        # drvs.pixman,
-        # drvs.wayland,
-        # drvs.waylandProtocols,
-        # drvs.libffi,
-        # drvs.libxkbcommon,
-        # drvs.expat,
-        # drvs.linuxHeaders,
-        # drvs.ncurses,
-        # drvs.readline,
-        # drvs.pcre2,
-        # drvs.pango,
-        # drvs.cairo,
-        # drvs.libpng,
-        # drvs.harfbuzz,
-        # # drvs.glibDynamic,
-        # drvs.muslShared,
-        # drvs.hwdata,
-        # # drvs.gobjectDynamic,
-        # drvs.cairoGobject,
-        # # drvs.fribidi,
-        # drvs.gdkPixbufFull,
-        # drvs.libjpegTurbo,
-        # drvs.libepoxy,
-        # drvs.atSpi2Core,
-        # drvs.mesa2,
-        # drvs.libelf,
-        # drvs.libdrm,
-        # drvs.libpciaccess,
-        # drvs.spirvTools,
-        # drvs.spirvLlvmTranslator,
         drvs.gtk3,
-        # drvs.eudev,
-        # drvs.kmod,
-        # drvs.xz,
-        # drvs.openssl,
-        # drvs.zstd,
-        # drvs.utilLinux,
         drvs.gsettingsDesktopSchemas,
         drvs.xkeyboardConfig,
         drvs.isoCodes,
@@ -68,19 +28,10 @@
       @ (
         if options.gtk4 then
           [
-            # drvs.libtiff,
-            # drvs.graphene,
-            # drvs.harfbuzzFull,
             drvs.gtk4,
-            # drvs.pythonSetuptools,
-            # drvs.gobjectDynamic,
-            # drvs.glibDynamic,
           ]
         else
-          [
-            # drvs.gobjectDynamic,
-            # drvs.glibDynamic,
-          ]
+          []
       ),
     extraMesonArgs = [
       "-Dbuild_gtk4=%{std.to_string options.gtk4}",
