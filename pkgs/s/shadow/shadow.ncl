@@ -99,7 +99,6 @@
           {},
 
       extraMakeArgs = ["VERBOSE=1"],
-      debug = true,
       options = {
         pam_elogind | default = "pam_elogind",
         selinux | default = false,
