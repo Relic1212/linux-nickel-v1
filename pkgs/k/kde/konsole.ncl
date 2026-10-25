@@ -5,6 +5,8 @@
   konsole =
     _plasma
     & {
+      # debug = true,
+
       singleSource = {
         uri = "https://invent.kde.org/utilities/konsole/-/archive/v25.08.3/konsole-v25.08.3.tar.bz2",
         sha256sum = "7c0351b1c270c5150f476ae30fd4e10aa5ba32fe95a0b2f1fb6393166fb83f96",
@@ -33,7 +35,6 @@
           file = "konsole.patch",
         }
       ],
-      debug = true,
       biDrvs =
         if true then
           (
