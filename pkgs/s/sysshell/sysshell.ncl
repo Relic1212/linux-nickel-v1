@@ -6,7 +6,6 @@
       uri = "https://github.com/System64fumo/sysboard/archive/1a032fb4dd76f3f5496955d293eab2ea90f7fc15.tar.gz",
       sha256sum = "9ef2bb3b75a32de9315cb77235aab695c40118fe7a1aba73e9181b7c96ecaf60"
     },
-    debug = true,
     patches = [
       {
         sha256sum = "f1d4eab0ac152799b1b3dc6b0e52f36688411819b2e45bc7ed2c12b9770f3f35",
