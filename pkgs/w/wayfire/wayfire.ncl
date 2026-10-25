@@ -2,7 +2,7 @@
   lib,
   drvs,
   wayfire | lib.MesonPackage = {
-    debug = true,
+    # debug = true,
     sourceInputs =
       [
         {
