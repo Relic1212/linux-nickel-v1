@@ -3,18 +3,9 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.3.0.tar.gz",
-      sha256sum = "7677b5d7da80cf89c7a8232de26d25380aa5fcaf34fb38abddd4fe7cb676161a",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.4.1.tar.gz",
+      sha256sum = "6069d922e9d72488c74e4ce335314ce2203f08bd4641380bfe1bd137004597fa",
     },
-    sourceInputs = [
-      { src = singleSource },
-      {
-        src = {
-          uri = "https://github.com/noctalia-dev/noctalia/commit/89d6f065ba89b62fa4afd339871e949b9bbe2ef4.patch",
-          sha256sum = "bf67b1a0599f828415d6462670f936493f5bd93a7c3a93457b3a25f74c246887",
-        }
-      },
-    ],
     buildEnv = {
       EXTRA_CPPFLAGS = [
         # https://github.com/llvm/llvm-project/issues/107779#issuecomment-2339420980
@@ -27,7 +18,6 @@
     # allowDubplicateBuldInputs = true,
     # enableParallel = false,
     preConfigurePhase = [
-      "(cd ${SRC} && patch -p1 < 89d6f065ba89b62fa4afd339871e949b9bbe2ef4.patch)",
       "sed -i 's| log| noctalia_log|g' ${SRC}/src/system/desktop_entry_launch.cpp",
       m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
       m%"sed -i 's|std::to_string(modified.time_since_epoch().count())|std::to_string(static_cast<long long>(modified.time_since_epoch().count()))|g' ${SRC}/src/system/icon_resolver.cpp"%,
