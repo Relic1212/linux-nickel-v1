@@ -164,7 +164,7 @@
     singleSource = gtk3.singleSource,
     buildEnv = {
       PKG_CONFIG = null,
-      EXTRA_LDFLAGS=[
+      EXTRA_LDFLAGS = [
         "-L/tmp/workdir/build/gdk",
       ],
     },
@@ -194,8 +194,7 @@
       "tar -xf /tmp/workdir/packed/7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7/gtk*-3.24.43.tar.xz --strip-components=1 -C /tmp/workdir/src"
     ],
 
-
-    preConfigurePhase=[
+    preConfigurePhase = [
       # m%"sed -i 's@dependencies: gdk_gir_dep,@dependencies: [gdk_gir_dep,declare_dependency(link_with:libgdk)],@g' ${SRC}/gtk/meson.build"%,
       # m%"sed -i "s@dependencies: gdk_gir_dep,@dependencies: gdk_gir_dep,link_with:libgdk@g" ${SRC}/gtk/meson.build"%,
       # m%"sed -i "s@dependencies: gdk_gir_dep,@dependencies: [gdk_gir_dep,declare_dependency(link_with:libgdk,link_args:common_ldflags)],link_with:libgdk,@g" ${SRC}/gtk/meson.build"%,
@@ -206,7 +205,6 @@
         "link_with:libgdk,",
         
         ]}@g" ${SRC}/gtk/meson.build"%,
-
     ],
 
     llvmProvider = drvs.llvmFull,
