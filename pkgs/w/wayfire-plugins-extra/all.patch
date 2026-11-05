@@ -1,0 +1,1796 @@
+diff --git a/src/annotate.cpp b/src/annotate.cpp
+index 3b052fd..161de30 100644
+--- a/src/annotate.cpp
++++ b/src/annotate.cpp
+@@ -202,13 +202,12 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+     annotate_draw_method draw_method;
+     wf::pointf_t grab_point, last_cursor;
+     std::vector<std::vector<std::shared_ptr<simple_node_t>>> overlays;
+-    wf::option_wrapper_t<std::string> method{"annotate/method"};
+-    wf::option_wrapper_t<double> line_width{"annotate/line_width"};
+-    wf::option_wrapper_t<bool> shapes_from_center{"annotate/from_center"};
+-    wf::option_wrapper_t<wf::color_t> stroke_color{"annotate/stroke_color"};
+-    wf::option_wrapper_t<wf::buttonbinding_t> draw_binding{"annotate/draw"};
+-    wf::option_wrapper_t<wf::activatorbinding_t> clear_binding{
+-        "annotate/clear_workspace"};
++    wf::option_wrapper_t<std::string> get_method() { return wf::option_wrapper_t<std::string> {"annotate/method"}; }
++    wf::option_wrapper_t<double> get_line_width() { return wf::option_wrapper_t<double> {"annotate/line_width"}; }
++    wf::option_wrapper_t<bool> get_shapes_from_center() { return wf::option_wrapper_t<bool> {"annotate/from_center"}; }
++    wf::option_wrapper_t<wf::color_t> get_stroke_color() { return wf::option_wrapper_t<wf::color_t> {"annotate/stroke_color"}; }
++    wf::option_wrapper_t<wf::buttonbinding_t> get_draw_binding() { return wf::option_wrapper_t<wf::buttonbinding_t> {"annotate/draw"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_clear_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"annotate/clear_workspace"}; }
+     std::unique_ptr<wf::input_grab_t> input_grab;
+     wf::plugin_activation_data_t grab_interface{
+         .name = "annotate",
+@@ -243,9 +242,9 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+ 
+         output->connect(&output_config_changed);
+         output->connect(&viewport_changed);
+-        method.set_callback(method_changed);
+-        output->add_button(draw_binding, &draw_begin);
+-        output->add_activator(clear_binding, &clear_workspace);
++        get_method().set_callback(method_changed);
++        output->add_button(get_draw_binding(), &draw_begin);
++        output->add_activator(get_clear_binding(), &clear_workspace);
+         input_grab = std::make_unique<wf::input_grab_t>(this->grab_interface.name, output, nullptr, this,
+             nullptr);
+         method_changed();
+@@ -261,16 +260,16 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+ 
+     wf::config::option_base_t::updated_callback_t method_changed = [=] ()
+     {
+-        if (std::string(method) == "draw")
++        if (std::string(get_method()) == "draw")
+         {
+             draw_method = ANNOTATE_METHOD_DRAW;
+-        } else if (std::string(method) == "line")
++        } else if (std::string(get_method()) == "line")
+         {
+             draw_method = ANNOTATE_METHOD_LINE;
+-        } else if (std::string(method) == "rectangle")
++        } else if (std::string(get_method()) == "rectangle")
+         {
+             draw_method = ANNOTATE_METHOD_RECTANGLE;
+-        } else if (std::string(method) == "circle")
++        } else if (std::string(get_method()) == "circle")
+         {
+             draw_method = ANNOTATE_METHOD_CIRCLE;
+         } else
+@@ -506,18 +505,18 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+         cairo_init(ol);
+         cairo_t *cr = ol->cr;
+ 
+-        cairo_set_line_width(cr, line_width);
++        cairo_set_line_width(cr, get_line_width());
+         cairo_set_source_rgba(cr,
+-            wf::color_t(stroke_color).r,
+-            wf::color_t(stroke_color).g,
+-            wf::color_t(stroke_color).b,
+-            wf::color_t(stroke_color).a);
++            wf::color_t(get_stroke_color()).r,
++            wf::color_t(get_stroke_color()).g,
++            wf::color_t(get_stroke_color()).b,
++            wf::color_t(get_stroke_color()).a);
+         cairo_move_to(cr, from.x, from.y);
+         cairo_line_to(cr, to.x, to.y);
+         cairo_stroke(cr);
+ 
+         wf::geometry_t bbox;
+-        int padding = line_width + 1;
++        int padding = get_line_width() + 1;
+         bbox.x     = std::min(from.x, to.x) - padding;
+         bbox.y     = std::min(from.y, to.y) - padding;
+         bbox.width = std::abs(from.x - to.x) + padding * 2;
+@@ -550,18 +549,18 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+         cairo_init(ol);
+         cairo_t *cr = ol->cr;
+ 
+-        cairo_set_line_width(cr, line_width);
++        cairo_set_line_width(cr, get_line_width());
+         cairo_set_source_rgba(cr,
+-            wf::color_t(stroke_color).r,
+-            wf::color_t(stroke_color).g,
+-            wf::color_t(stroke_color).b,
+-            wf::color_t(stroke_color).a);
++            wf::color_t(get_stroke_color()).r,
++            wf::color_t(get_stroke_color()).g,
++            wf::color_t(get_stroke_color()).b,
++            wf::color_t(get_stroke_color()).a);
+         cairo_move_to(cr, from.x, from.y);
+         cairo_line_to(cr, to.x, to.y);
+         cairo_stroke(cr);
+ 
+         wf::geometry_t bbox;
+-        int padding = line_width + 1;
++        int padding = get_line_width() + 1;
+         bbox.x     = std::min(from.x, to.x) - padding;
+         bbox.y     = std::min(from.y, to.y) - padding;
+         bbox.width = std::abs(from.x - to.x) + padding * 2;
+@@ -608,7 +607,7 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+         w = fabs(from.x - to.x);
+         h = fabs(from.y - to.y);
+ 
+-        if (shapes_from_center)
++        if (get_shapes_from_center())
+         {
+             x  = from.x - w;
+             y  = from.y - h;
+@@ -620,17 +619,17 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+             y = std::min(from.y, to.y);
+         }
+ 
+-        cairo_set_line_width(cr, line_width);
++        cairo_set_line_width(cr, get_line_width());
+         cairo_set_source_rgba(cr,
+-            wf::color_t(stroke_color).r,
+-            wf::color_t(stroke_color).g,
+-            wf::color_t(stroke_color).b,
+-            wf::color_t(stroke_color).a);
++            wf::color_t(get_stroke_color()).r,
++            wf::color_t(get_stroke_color()).g,
++            wf::color_t(get_stroke_color()).b,
++            wf::color_t(get_stroke_color()).a);
+         cairo_rectangle(cr, x, y, w, h);
+         cairo_stroke(cr);
+ 
+         wf::geometry_t bbox;
+-        int padding = line_width + 1;
++        int padding = get_line_width() + 1;
+         bbox.x     = x - padding;
+         bbox.y     = y - padding;
+         bbox.width = w + padding * 2;
+@@ -676,24 +675,24 @@ class wayfire_annotate_screen : public wf::per_output_plugin_instance_t, public
+         auto radius =
+             glm::distance(glm::vec2(from.x, from.y), glm::vec2(to.x, to.y));
+ 
+-        if (!shapes_from_center)
++        if (!get_shapes_from_center())
+         {
+             radius /= 2;
+             from.x += (to.x - from.x) / 2;
+             from.y += (to.y - from.y) / 2;
+         }
+ 
+-        cairo_set_line_width(cr, line_width);
++        cairo_set_line_width(cr, get_line_width());
+         cairo_set_source_rgba(cr,
+-            wf::color_t(stroke_color).r,
+-            wf::color_t(stroke_color).g,
+-            wf::color_t(stroke_color).b,
+-            wf::color_t(stroke_color).a);
++            wf::color_t(get_stroke_color()).r,
++            wf::color_t(get_stroke_color()).g,
++            wf::color_t(get_stroke_color()).b,
++            wf::color_t(get_stroke_color()).a);
+         cairo_arc(cr, from.x, from.y, radius, 0, 2 * M_PI);
+         cairo_stroke(cr);
+ 
+         wf::geometry_t bbox;
+-        int padding = line_width + 1;
++        int padding = get_line_width() + 1;
+         bbox.x     = (from.x - radius) - padding;
+         bbox.y     = (from.y - radius) - padding;
+         bbox.width = (radius * 2) + padding * 2;
+diff --git a/src/autorotate-iio.cpp b/src/autorotate-iio.cpp
+index 7656698..1993d67 100644
+--- a/src/autorotate-iio.cpp
++++ b/src/autorotate-iio.cpp
+@@ -70,13 +70,11 @@ class WayfireAutorotateIIO : public wf::per_output_plugin_instance_t
+         }
+     };
+ 
+-    wf::option_wrapper_t<wf::activatorbinding_t>
+-    rotate_up_opt{"autorotate-iio/rotate_up"},
+-    rotate_left_opt{"autorotate-iio/rotate_left"},
+-    rotate_down_opt{"autorotate-iio/rotate_down"},
+-    rotate_right_opt{"autorotate-iio/rotate_right"};
+-    wf::option_wrapper_t<bool>
+-    config_rotation_locked{"autorotate-iio/lock_rotation"};
++    wf::option_wrapper_t<wf::activatorbinding_t> get_rotate_up_opt() { return wf::option_wrapper_t<wf::activatorbinding_t> {"autorotate-iio/rotate_up"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_rotate_left_opt() { return wf::option_wrapper_t<wf::activatorbinding_t> {"autorotate-iio/rotate_left"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_rotate_down_opt() { return wf::option_wrapper_t<wf::activatorbinding_t> {"autorotate-iio/rotate_down"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_rotate_right_opt() { return wf::option_wrapper_t<wf::activatorbinding_t> {"autorotate-iio/rotate_right"}; }
++    wf::option_wrapper_t<bool> get_config_rotation_locked() { return wf::option_wrapper_t<bool> {"autorotate-iio/lock_rotation"}; }
+     wf::plugin_activation_data_t grab_interface{
+         .name = "autorotate-iio",
+         .capabilities = 0,
+@@ -139,7 +137,7 @@ class WayfireAutorotateIIO : public wf::per_output_plugin_instance_t
+         if (user_rotation >= 0)
+         {
+             transform_to_use = (wl_output_transform)user_rotation;
+-        } else if ((sensor_transform >= 0) && !config_rotation_locked)
++        } else if ((sensor_transform >= 0) && !get_config_rotation_locked())
+         {
+             transform_to_use = (wl_output_transform)sensor_transform;
+         } else
+@@ -178,10 +176,10 @@ class WayfireAutorotateIIO : public wf::per_output_plugin_instance_t
+   public:
+     void init() override
+     {
+-        output->add_activator(rotate_left_opt, &on_rotate_left);
+-        output->add_activator(rotate_right_opt, &on_rotate_right);
+-        output->add_activator(rotate_up_opt, &on_rotate_up);
+-        output->add_activator(rotate_down_opt, &on_rotate_down);
++        output->add_activator(get_rotate_left_opt(), &on_rotate_left);
++        output->add_activator(get_rotate_right_opt(), &on_rotate_right);
++        output->add_activator(get_rotate_up_opt(), &on_rotate_up);
++        output->add_activator(get_rotate_down_opt(), &on_rotate_down);
+ 
+         on_input_devices_changed.emit(nullptr);
+         wf::get_core().connect(&on_input_devices_changed);
+diff --git a/src/bench.cpp b/src/bench.cpp
+index b685574..bb3dff1 100644
+--- a/src/bench.cpp
++++ b/src/bench.cpp
+@@ -55,8 +55,8 @@ class wayfire_bench_screen : public wf::per_output_plugin_instance_t
+     cairo_surface_t *cairo_surface;
+     cairo_text_extents_t text_extents;
+     std::deque<int> last_frame_times;
+-    wf::option_wrapper_t<std::string> position{"bench/position"};
+-    wf::option_wrapper_t<int> average_frames{"bench/average_frames"};
++    wf::option_wrapper_t<std::string> get_position() { return wf::option_wrapper_t<std::string> {"bench/position"}; }
++    wf::option_wrapper_t<int> get_average_frames() { return wf::option_wrapper_t<int> {"bench/average_frames"}; }
+ 
+   public:
+     void init() override
+@@ -65,7 +65,7 @@ class wayfire_bench_screen : public wf::per_output_plugin_instance_t
+         output->render->add_effect(&overlay_hook, wf::OUTPUT_EFFECT_OVERLAY);
+ 
+         output->connect(&workarea_changed);
+-        position.set_callback(position_changed);
++        get_position().set_callback(position_changed);
+         update_texture_position();
+ 
+         reset_timeout();
+@@ -76,7 +76,7 @@ class wayfire_bench_screen : public wf::per_output_plugin_instance_t
+         uint32_t current_time = wf::get_current_time();
+         uint32_t elapsed = current_time - last_time;
+         last_time = current_time;
+-        while ((int)last_frame_times.size() >= average_frames)
++        while ((int)last_frame_times.size() >= get_average_frames())
+         {
+             last_frame_times.pop_front();
+         }
+@@ -147,47 +147,47 @@ class wayfire_bench_screen : public wf::per_output_plugin_instance_t
+ 
+         cairo_recreate();
+ 
+-        if ((std::string)position == "top_left")
++        if ((std::string)get_position() == "top_left")
+         {
+             cairo_geometry.x = workarea.x;
+             cairo_geometry.y = workarea.y;
+-        } else if ((std::string)position == "top_center")
++        } else if ((std::string)get_position() == "top_center")
+         {
+             cairo_geometry.x = workarea.x +
+                 (workarea.width / 2 - cairo_geometry.width / 2);
+             cairo_geometry.y = workarea.y;
+-        } else if ((std::string)position == "top_right")
++        } else if ((std::string)get_position() == "top_right")
+         {
+             cairo_geometry.x = workarea.x + (workarea.width - cairo_geometry.width);
+             cairo_geometry.y = workarea.y;
+-        } else if ((std::string)position == "center_left")
++        } else if ((std::string)get_position() == "center_left")
+         {
+             cairo_geometry.x = workarea.x;
+             cairo_geometry.y = workarea.y +
+                 (workarea.height / 2 - cairo_geometry.height / 2);
+-        } else if ((std::string)position == "center")
++        } else if ((std::string)get_position() == "center")
+         {
+             cairo_geometry.x = workarea.x +
+                 (workarea.width / 2 - cairo_geometry.width / 2);
+             cairo_geometry.y = workarea.y +
+                 (workarea.height / 2 - cairo_geometry.height / 2);
+-        } else if ((std::string)position == "center_right")
++        } else if ((std::string)get_position() == "center_right")
+         {
+             cairo_geometry.x = workarea.x + (workarea.width - cairo_geometry.width);
+             cairo_geometry.y = workarea.y +
+                 (workarea.height / 2 - cairo_geometry.height / 2);
+-        } else if ((std::string)position == "bottom_left")
++        } else if ((std::string)get_position() == "bottom_left")
+         {
+             cairo_geometry.x = workarea.x;
+             cairo_geometry.y = workarea.y +
+                 (workarea.height - cairo_geometry.height);
+-        } else if ((std::string)position == "bottom_center")
++        } else if ((std::string)get_position() == "bottom_center")
+         {
+             cairo_geometry.x = workarea.x +
+                 (workarea.width / 2 - cairo_geometry.width / 2);
+             cairo_geometry.y = workarea.y +
+                 (workarea.height - cairo_geometry.height);
+-        } else if ((std::string)position == "bottom_right")
++        } else if ((std::string)get_position() == "bottom_right")
+         {
+             cairo_geometry.x = workarea.x + (workarea.width - cairo_geometry.width);
+             cairo_geometry.y = workarea.y +
+diff --git a/src/crosshair.cpp b/src/crosshair.cpp
+index a9054a3..c0d19c6 100644
+--- a/src/crosshair.cpp
++++ b/src/crosshair.cpp
+@@ -31,8 +31,8 @@
+ 
+ class wayfire_crosshair : public wf::per_output_plugin_instance_t
+ {
+-    wf::option_wrapper_t<double> line_width{"crosshair/line_width"};
+-    wf::option_wrapper_t<wf::color_t> line_color{"crosshair/line_color"};
++    wf::option_wrapper_t<double> get_line_width() { return wf::option_wrapper_t<double> {"crosshair/line_width"}; }
++    wf::option_wrapper_t<wf::color_t> get_line_color() { return wf::option_wrapper_t<wf::color_t> {"crosshair/line_color"}; }
+     wf::geometry_t geometry[2];
+ 
+     OpenGL::program_t program;
+@@ -49,16 +49,16 @@ class wayfire_crosshair : public wf::per_output_plugin_instance_t
+         auto oc = output->get_cursor_position();
+         auto og = output->get_relative_geometry();
+ 
+-        float half_width = line_width * 0.5;
++        float half_width = get_line_width() * 0.5;
+ 
+         /* Damage last frame geometry to clear it */
+         output->render->damage(geometry[0]);
+         output->render->damage(geometry[1]);
+ 
+         geometry[0] =
+-            wf::geometry_t{oc.x - half_width, 0, line_width, og.height};
++            wf::geometry_t{oc.x - half_width, 0, get_line_width(), og.height};
+         geometry[1] =
+-            wf::geometry_t{0, oc.y - half_width, og.width, line_width};
++            wf::geometry_t{0, oc.y - half_width, og.width, get_line_width()};
+ 
+         output->render->damage(geometry[0]);
+         output->render->damage(geometry[1]);
+@@ -80,11 +80,11 @@ class wayfire_crosshair : public wf::per_output_plugin_instance_t
+         region |= geometry[1];
+         region &= target_fb.geometry_region_from_framebuffer_region(output->render->get_swap_damage());
+ 
+-        auto alpha = wf::color_t(line_color).a;
++        auto alpha = wf::color_t(get_line_color()).a;
+         wf::color_t color = wf::color_t{
+-            wf::color_t(line_color).r * alpha,
+-            wf::color_t(line_color).g * alpha,
+-            wf::color_t(line_color).b * alpha,
++            wf::color_t(get_line_color()).r * alpha,
++            wf::color_t(get_line_color()).g * alpha,
++            wf::color_t(get_line_color()).b * alpha,
+             alpha};
+ 
+         auto pass = output->render->get_current_pass();
+diff --git a/src/extra-animations/blinds.hpp b/src/extra-animations/blinds.hpp
+index 35edc28..9ba5671 100644
+--- a/src/extra-animations/blinds.hpp
++++ b/src/extra-animations/blinds.hpp
+@@ -82,7 +82,7 @@ using namespace wf::animation;
+ 
+ static std::string blinds_transformer_name = "animation-blinds";
+ 
+-wf::option_wrapper_t<int> blinds_strip_height{"extra-animations/blinds_strip_height"};
++wf::option_wrapper_t<int> get_blinds_strip_height() { return wf::option_wrapper_t<int> {"extra-animations/blinds_strip_height"}; }
+ 
+ class blinds_transformer : public wf::scene::view_2d_transformer_t
+ {
+@@ -143,11 +143,11 @@ class blinds_transformer : public wf::scene::view_2d_transformer_t
+             auto gl_tex   = wf::gles_texture_t{src_tex};
+             auto progress = self->progression.progress();
+             self->animation_geometry =
+-                wf::geometry_t{src_box.x - int(blinds_strip_height), src_box.y,
+-                (src_box.x - int(blinds_strip_height)) + src_box.width + int(blinds_strip_height) * 2,
++                wf::geometry_t{src_box.x - int(get_blinds_strip_height()), src_box.y,
++                (src_box.x - int(get_blinds_strip_height())) + src_box.width + int(get_blinds_strip_height()) * 2,
+                 src_box.y + src_box.height};
+ 
+-            int line_height = int(blinds_strip_height);
++            int line_height = int(get_blinds_strip_height());
+             data.pass->custom_gles_subpass([&]
+             {
+                 for (int i = 0; i < src_box.height; i += line_height)
+@@ -253,8 +253,8 @@ class blinds_transformer : public wf::scene::view_2d_transformer_t
+         }
+ 
+         animation_geometry =
+-            wf::geometry_t{bbox.x - int(blinds_strip_height), bbox.y,
+-            (bbox.x - int(blinds_strip_height)) + bbox.width + int(blinds_strip_height) * 2,
++            wf::geometry_t{bbox.x - int(get_blinds_strip_height()), bbox.y,
++            (bbox.x - int(get_blinds_strip_height())) + bbox.width + int(get_blinds_strip_height()) * 2,
+             bbox.y + bbox.height};
+         wf::gles::run_in_context([&]
+         {
+diff --git a/src/extra-animations/burn.hpp b/src/extra-animations/burn.hpp
+index 5fd8aaf..bac8182 100644
+--- a/src/extra-animations/burn.hpp
++++ b/src/extra-animations/burn.hpp
+@@ -171,11 +171,11 @@ using namespace wf::animation;
+ 
+ static std::string burn_transformer_name = "animation-burn";
+ 
+-wf::option_wrapper_t<double> burn_flame_speed{"extra-animations/burn_flame_speed"};
+-wf::option_wrapper_t<double> burn_flame_width{"extra-animations/burn_flame_width"};
+-wf::option_wrapper_t<double> burn_flame_height{"extra-animations/burn_flame_height"};
+-wf::option_wrapper_t<wf::color_t> burn_flame_color{"extra-animations/burn_flame_color"};
+-wf::option_wrapper_t<std::string> burn_flame_smoothness{"extra-animations/burn_flame_smoothness"};
++wf::option_wrapper_t<double> get_burn_flame_speed() { return wf::option_wrapper_t<double> {"extra-animations/burn_flame_speed"}; }
++wf::option_wrapper_t<double> get_burn_flame_width() { return wf::option_wrapper_t<double> {"extra-animations/burn_flame_width"}; }
++wf::option_wrapper_t<double> get_burn_flame_height() { return wf::option_wrapper_t<double> {"extra-animations/burn_flame_height"}; }
++wf::option_wrapper_t<wf::color_t> get_burn_flame_color() { return wf::option_wrapper_t<wf::color_t> {"extra-animations/burn_flame_color"}; }
++wf::option_wrapper_t<std::string> get_burn_flame_smoothness() { return wf::option_wrapper_t<std::string> {"extra-animations/burn_flame_smoothness"}; }
+ 
+ class burn_transformer : public wf::scene::view_2d_transformer_t
+ {
+@@ -265,22 +265,22 @@ class burn_transformer : public wf::scene::view_2d_transformer_t
+                 self->program.uniform2f("size", bb.width * 1.0, bb.height * 1.0);
+                 self->program.uniform1f("progress", 1.0 - progress);
+                 self->program.uniform1i("direction", self->progression.get_direction());
+-                self->program.uniform1f("flame_speed", burn_flame_speed);
+-                self->program.uniform1f("flame_width", burn_flame_width);
+-                self->program.uniform1f("flame_height", burn_flame_height);
+-                if (std::string(burn_flame_smoothness) == "softest")
++                self->program.uniform1f("flame_speed", get_burn_flame_speed());
++                self->program.uniform1f("flame_width", get_burn_flame_width());
++                self->program.uniform1f("flame_height", get_burn_flame_height());
++                if (std::string(get_burn_flame_smoothness()) == "softest")
+                 {
+                     self->program.uniform1i("flame_smooth_1", 0);
+                     self->program.uniform1i("flame_smooth_2", 0);
+                     self->program.uniform1i("flame_smooth_3", 0);
+                     self->program.uniform1i("flame_smooth_4", 0);
+-                } else if (std::string(burn_flame_smoothness) == "soft")
++                } else if (std::string(get_burn_flame_smoothness()) == "soft")
+                 {
+                     self->program.uniform1i("flame_smooth_1", 0);
+                     self->program.uniform1i("flame_smooth_2", 1);
+                     self->program.uniform1i("flame_smooth_3", 1);
+                     self->program.uniform1i("flame_smooth_4", 1);
+-                } else if (std::string(burn_flame_smoothness) == "hard")
++                } else if (std::string(get_burn_flame_smoothness()) == "hard")
+                 {
+                     self->program.uniform1i("flame_smooth_1", 1);
+                     self->program.uniform1i("flame_smooth_2", 1);
+@@ -295,10 +295,10 @@ class burn_transformer : public wf::scene::view_2d_transformer_t
+                 }
+ 
+                 glm::vec4 flame_color{
+-                    wf::color_t(burn_flame_color).r,
+-                    wf::color_t(burn_flame_color).g,
+-                    wf::color_t(burn_flame_color).b,
+-                    wf::color_t(burn_flame_color).a};
++                    wf::color_t(get_burn_flame_color()).r,
++                    wf::color_t(get_burn_flame_color()).g,
++                    wf::color_t(get_burn_flame_color()).b,
++                    wf::color_t(get_burn_flame_color()).a};
+                 self->program.uniform4f("flame_color", flame_color);
+ 
+                 self->program.set_active_texture(tex);
+diff --git a/src/extra-animations/carpet.hpp b/src/extra-animations/carpet.hpp
+index 1dde28d..46e554c 100644
+--- a/src/extra-animations/carpet.hpp
++++ b/src/extra-animations/carpet.hpp
+@@ -344,7 +344,7 @@ using namespace wf::animation;
+ 
+ static std::string carpet_transformer_name = "animation-carpet";
+ 
+-wf::option_wrapper_t<int> carpet_roll_direction{"extra-animations/carpet_roll_direction"};
++wf::option_wrapper_t<int> get_carpet_roll_direction() { return wf::option_wrapper_t<int> {"extra-animations/carpet_roll_direction"}; }
+ 
+ class carpet_transformer : public wf::scene::view_2d_transformer_t
+ {
+@@ -432,7 +432,7 @@ class carpet_transformer : public wf::scene::view_2d_transformer_t
+                 self->program.attrib_pointer("position", 2, 0, vertices);
+                 self->program.attrib_pointer("uv_in", 2, 0, uv);
+                 self->program.uniform1f("progress", progress);
+-                self->program.uniform1i("direction", carpet_roll_direction);
++                self->program.uniform1i("direction", get_carpet_roll_direction());
+ 
+                 self->program.set_active_texture(tex);
+                 GL_CALL(glDrawArrays(GL_TRIANGLE_FAN, 0, 4));
+diff --git a/src/extra-animations/dodge.hpp b/src/extra-animations/dodge.hpp
+index ecc2574..c0bf14c 100644
+--- a/src/extra-animations/dodge.hpp
++++ b/src/extra-animations/dodge.hpp
+@@ -77,11 +77,11 @@ class wayfire_dodge
+     std::vector<dodge_view_data> views_from;
+     std::list<wayfire_view> minimized_views;
+     wayfire_view view_to, last_focused_view;
+-    wf::option_wrapper_t<bool> dodge_zoom{"extra-animations/dodge_zoom"};
+-    wf::option_wrapper_t<bool> dodge_rotate{"extra-animations/dodge_rotate"};
+-    wf::option_wrapper_t<std::string> direction{"extra-animations/dodge_direction"};
+-    wf::option_wrapper_t<wf::animation_description_t> animation_duration{"extra-animations/dodge_duration"};
+-    wf::animation::simple_animation_t progression{animation_duration};
++    wf::option_wrapper_t<bool> get_dodge_zoom() { return wf::option_wrapper_t<bool> {"extra-animations/dodge_zoom"}; }
++    wf::option_wrapper_t<bool> get_dodge_rotate() { return wf::option_wrapper_t<bool> {"extra-animations/dodge_rotate"}; }
++    wf::option_wrapper_t<std::string> get_direction() { return wf::option_wrapper_t<std::string> {"extra-animations/dodge_direction"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_animation_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/dodge_duration"}; }
++    wf::animation::simple_animation_t progression{get_animation_duration()};
+     bool view_to_focused;
+     wf::output_t *view_to_output;
+     bool hook_set = false;
+@@ -249,7 +249,7 @@ class wayfire_dodge
+                 if (vd.view == view_data.view)
+                 {
+                     view_found = true;
+-                    if (dodge_rotate && from_mapped_event)
++                    if (get_dodge_rotate() && from_mapped_event)
+                     {
+                         auto direction = compute_direction(view_data.from_bb, to_bb);
+                         vd.direction.x = direction.x;
+@@ -271,7 +271,7 @@ class wayfire_dodge
+                         dodge_transformer_name))
+             {
+                 view_data.transformer = tr;
+-                if (dodge_rotate && from_mapped_event)
++                if (get_dodge_rotate() && from_mapped_event)
+                 {
+                     view_data.transformer->angle = 0.1;
+                 }
+@@ -290,13 +290,13 @@ class wayfire_dodge
+                 if ((((x < 0.001) && (x > -0.001)) && ((y < 0.001) && (y > -0.001))) || std::isnan(x) ||
+                     std::isnan(y))
+                 {
+-                    if ((std::string(direction) == "cardinal") || (std::string(direction) == "diagonal"))
++                    if ((std::string(get_direction()) == "cardinal") || (std::string(get_direction()) == "diagonal"))
+                     {
+                         srand(wf::get_current_time() + rand());
+                         x = (rand() % 2) * 2 - 1;
+                         srand(wf::get_current_time() + rand());
+                         y = (rand() % 2) * 2 - 1;
+-                    } else if (std::string(direction) == "circular")
++                    } else if (std::string(get_direction()) == "circular")
+                     {
+                         srand(wf::get_current_time() + rand());
+                         x = (double(rand()) / RAND_MAX) * 2.0 - 1.0;
+@@ -305,7 +305,7 @@ class wayfire_dodge
+                     }
+                 }
+ 
+-                if (dodge_rotate)
++                if (get_dodge_rotate())
+                 {
+                     view_data.transformer->angle = 0.1;
+                 }
+@@ -374,7 +374,7 @@ class wayfire_dodge
+ 
+         x /= m;
+         y /= m;
+-        if (std::string(direction) != "circular")
++        if (std::string(get_direction()) != "circular")
+         {
+             x = x * std::abs(1.0 / x);
+             y = y * std::abs(1.0 / y);
+@@ -446,7 +446,7 @@ class wayfire_dodge
+             view_to_focused = true;
+         }
+ 
+-        if (dodge_zoom && view_to_transformer)
++        if (get_dodge_zoom() && view_to_transformer)
+         {
+             view_to_transformer->scale_x = view_to_transformer->scale_y = 1.0 + std::sin(
+                 progression.progress() * M_PI) * 0.02;
+@@ -461,7 +461,7 @@ class wayfire_dodge
+             double move_dist_y = std::min(from_bb.y + from_bb.height - to_bb.y,
+                 to_bb.y + to_bb.height - from_bb.y);
+ 
+-            if (dodge_zoom)
++            if (get_dodge_zoom())
+             {
+                 if (view_data.transformer->scale_x <= 1.0)
+                 {
+@@ -474,7 +474,7 @@ class wayfire_dodge
+                 }
+             }
+ 
+-            if (dodge_rotate && (view_data.transformer->angle != 0.0))
++            if (get_dodge_rotate() && (view_data.transformer->angle != 0.0))
+             {
+                 view_data.transformer->angle = progress * M_PI * 2 * (view_data.direction.x > 0 ? 1 : -1);
+                 if (view_data.transformer->angle == 0.0)
+@@ -483,7 +483,7 @@ class wayfire_dodge
+                 }
+             }
+ 
+-            if (std::string(direction) == "cardinal")
++            if (std::string(get_direction()) == "cardinal")
+             {
+                 if (move_dist_x < move_dist_y)
+                 {
+@@ -492,7 +492,7 @@ class wayfire_dodge
+                 {
+                     move_dist_x = 0;
+                 }
+-            } else if (std::string(direction) == "circular")
++            } else if (std::string(get_direction()) == "circular")
+             {
+                 auto direction_x = std::abs(view_data.direction.x);
+                 auto direction_y = std::abs(view_data.direction.y);
+diff --git a/src/extra-animations/helix.hpp b/src/extra-animations/helix.hpp
+index 0c2e747..6f31ecc 100644
+--- a/src/extra-animations/helix.hpp
++++ b/src/extra-animations/helix.hpp
+@@ -82,8 +82,8 @@ using namespace wf::animation;
+ 
+ static std::string transformer_name = "animation-helix";
+ 
+-wf::option_wrapper_t<int> helix_strip_height{"extra-animations/helix_strip_height"};
+-wf::option_wrapper_t<int> helix_rotations{"extra-animations/helix_rotations"};
++wf::option_wrapper_t<int> get_helix_strip_height() { return wf::option_wrapper_t<int> {"extra-animations/helix_strip_height"}; }
++wf::option_wrapper_t<int> get_helix_rotations() { return wf::option_wrapper_t<int> {"extra-animations/helix_rotations"}; }
+ 
+ class helix_transformer : public wf::scene::view_2d_transformer_t
+ {
+@@ -146,7 +146,7 @@ class helix_transformer : public wf::scene::view_2d_transformer_t
+             auto og = self->output->get_relative_geometry();
+             self->animation_geometry = og;
+ 
+-            int line_height = int(helix_strip_height);
++            int line_height = int(get_helix_strip_height());
+             std::vector<float> uv;
+             std::vector<float> vertices;
+             glm::mat4 l = glm::lookAt(
+@@ -175,11 +175,11 @@ class helix_transformer : public wf::scene::view_2d_transformer_t
+                 m = glm::rotate(m, float(M_PI), glm::vec3(1.0, 0.0, 0.0));
+                 m =
+                     glm::rotate(m,
+-                        float(std::min(M_PI * int(helix_rotations),
++                        float(std::min(M_PI * int(get_helix_rotations()),
+                             std::max(0.0,
+-                                ((M_PI * 1.5 + int(helix_rotations) * M_PI) * (1.0 - progress)) - M_PI * 2.0 *
++                                ((M_PI * 1.5 + int(get_helix_rotations()) * M_PI) * (1.0 - progress)) - M_PI * 2.0 *
+                                 (float(i) / src_box.height)) +
+-                            M_PI / 2.0) - int(helix_rotations) * M_PI), glm::vec3(0.0, 1.0, 0.0));
++                            M_PI / 2.0) - int(get_helix_rotations()) * M_PI), glm::vec3(0.0, 1.0, 0.0));
+                 m = glm::scale(m, glm::vec3(2.0f / og.width, 2.0f / og.height, 1.0));
+                 auto x1 = src_box.width / 2.0;
+                 auto x2 = -(src_box.width / 2.0);
+diff --git a/src/extra-animations/melt.hpp b/src/extra-animations/melt.hpp
+index b5d0982..e2fbaaf 100644
+--- a/src/extra-animations/melt.hpp
++++ b/src/extra-animations/melt.hpp
+@@ -99,7 +99,7 @@ using namespace wf::animation;
+ 
+ static std::string melt_transformer_name = "animation-melt";
+ 
+-wf::option_wrapper_t<int> melt_distortion_factor{"extra-animations/melt_distortion_factor"};
++wf::option_wrapper_t<int> get_melt_distortion_factor() { return wf::option_wrapper_t<int> {"extra-animations/melt_distortion_factor"}; }
+ 
+ class melt_transformer : public wf::scene::view_2d_transformer_t
+ {
+@@ -189,7 +189,7 @@ class melt_transformer : public wf::scene::view_2d_transformer_t
+                 self->program.attrib_pointer("uv_in", 2, 0, uv);
+                 self->program.uniform1f("time", progress);
+                 self->program.uniform1f("random", self->random_number);
+-                self->program.uniform1f("distortion", float(melt_distortion_factor));
++                self->program.uniform1f("distortion", float(get_melt_distortion_factor()));
+                 self->program.set_active_texture(tex);
+                 GL_CALL(glDrawArrays(GL_TRIANGLE_FAN, 0, 4));
+ 
+diff --git a/src/extra-animations/plugin.cpp b/src/extra-animations/plugin.cpp
+index 834b3ca..539fa98 100644
+--- a/src/extra-animations/plugin.cpp
++++ b/src/extra-animations/plugin.cpp
+@@ -39,15 +39,14 @@
+ class wayfire_extra_animations : public wf::plugin_interface_t
+ {
+     wf::shared_data::ref_ptr_t<wf::animate::animate_effects_registry_t> effects_registry;
+-    wf::option_wrapper_t<bool> dodge_toggle{"extra-animations/dodge_toggle"};
+-    wf::option_wrapper_t<wf::animation_description_t> blinds_duration{"extra-animations/blinds_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> helix_duration{"extra-animations/helix_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> shatter_duration{"extra-animations/shatter_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> vortex_duration{"extra-animations/vortex_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> melt_duration{"extra-animations/melt_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> burn_duration{"extra-animations/burn_duration"};
+-    wf::option_wrapper_t<wf::animation_description_t> carpet_roll_duration{
+-        "extra-animations/carpet_roll_duration"};
++    wf::option_wrapper_t<bool> get_dodge_toggle() { return wf::option_wrapper_t<bool> {"extra-animations/dodge_toggle"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_blinds_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/blinds_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_helix_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/helix_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_shatter_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/shatter_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_vortex_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/vortex_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_melt_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/melt_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_burn_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/burn_duration"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_carpet_roll_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"extra-animations/carpet_roll_duration"}; }
+     std::unique_ptr<wf::dodge::wayfire_dodge> dodge_plugin;
+ 
+   public:
+@@ -61,43 +60,43 @@ class wayfire_extra_animations : public wf::plugin_interface_t
+ 
+         effects_registry->register_effect("blinds", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::blinds::blinds_animation>(); },
+-            .default_duration = [=] { return blinds_duration.value(); },
++            .default_duration = [=] { return get_blinds_duration().value(); },
+         });
+         effects_registry->register_effect("helix", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::helix::helix_animation>(); },
+-            .default_duration = [=] { return helix_duration.value(); },
++            .default_duration = [=] { return get_helix_duration().value(); },
+         });
+         effects_registry->register_effect("shatter", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::shatter::shatter_animation>(); },
+-            .default_duration = [=] { return shatter_duration.value(); },
++            .default_duration = [=] { return get_shatter_duration().value(); },
+         });
+         effects_registry->register_effect("vortex", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::vortex::vortex_animation>(); },
+-            .default_duration = [=] { return vortex_duration.value(); },
++            .default_duration = [=] { return get_vortex_duration().value(); },
+         });
+         effects_registry->register_effect("melt", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::melt::melt_animation>(); },
+-            .default_duration = [=] { return melt_duration.value(); },
++            .default_duration = [=] { return get_melt_duration().value(); },
+         });
+         effects_registry->register_effect("burn", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::burn::burn_animation>(); },
+-            .default_duration = [=] { return burn_duration.value(); },
++            .default_duration = [=] { return get_burn_duration().value(); },
+         });
+         effects_registry->register_effect("carpet", wf::animate::effect_description_t{
+             .generator = [] { return std::make_unique<wf::carpet::carpet_animation>(); },
+-            .default_duration = [=] { return carpet_roll_duration.value(); },
++            .default_duration = [=] { return get_carpet_roll_duration().value(); },
+         });
+-        dodge_toggle.set_callback([=] {dodge_option_changed();});
++        get_dodge_toggle().set_callback([=] {dodge_option_changed();});
+         dodge_option_changed();
+     }
+ 
+     void dodge_option_changed()
+     {
+-        if (dodge_toggle && !dodge_plugin)
++        if (get_dodge_toggle() && !dodge_plugin)
+         {
+             dodge_plugin = std::make_unique<wf::dodge::wayfire_dodge>();
+             dodge_plugin->init();
+-        } else if (!dodge_toggle && dodge_plugin)
++        } else if (!get_dodge_toggle() && dodge_plugin)
+         {
+             dodge_plugin->fini();
+             dodge_plugin.reset();
+diff --git a/src/fisheye.cpp b/src/fisheye.cpp
+index b3da65a..a12a8de 100644
+--- a/src/fisheye.cpp
++++ b/src/fisheye.cpp
+@@ -103,8 +103,8 @@ class wayfire_fisheye : public wf::per_output_plugin_instance_t
+     float target_zoom;
+     bool active, hook_set;
+ 
+-    wf::option_wrapper_t<double> radius{"fisheye/radius"};
+-    wf::option_wrapper_t<double> zoom{"fisheye/zoom"};
++    wf::option_wrapper_t<double> get_radius() { return wf::option_wrapper_t<double> {"fisheye/radius"}; }
++    wf::option_wrapper_t<double> get_zoom() { return wf::option_wrapper_t<double> {"fisheye/zoom"}; }
+ 
+     OpenGL::program_t program;
+ 
+@@ -132,12 +132,12 @@ class wayfire_fisheye : public wf::per_output_plugin_instance_t
+         hook_set = active = false;
+         output->add_activator(wf::option_wrapper_t<wf::activatorbinding_t>{"fisheye/toggle"}, &toggle_cb);
+ 
+-        target_zoom = zoom;
+-        zoom.set_callback([=] ()
++        target_zoom = get_zoom();
++        get_zoom().set_callback([=] ()
+         {
+             if (active)
+             {
+-                this->progression.animate(zoom);
++                this->progression.animate(get_zoom());
+             }
+         });
+     }
+@@ -156,7 +156,7 @@ class wayfire_fisheye : public wf::per_output_plugin_instance_t
+         } else
+         {
+             active = true;
+-            progression.animate(zoom);
++            progression.animate(get_zoom());
+             if (!hook_set)
+             {
+                 hook_set = true;
+@@ -194,7 +194,7 @@ class wayfire_fisheye : public wf::per_output_plugin_instance_t
+ 
+             program.uniform2f("u_mouse", oc.x, dest.get_size().height - oc.y);
+             program.uniform2f("u_resolution", dest.get_size().width, dest.get_size().height);
+-            program.uniform1f("u_radius", radius);
++            program.uniform1f("u_radius", get_radius());
+             program.uniform1f("u_zoom", progression);
+ 
+             program.attrib_pointer("position", 2, 0, vertexData);
+diff --git a/src/focus-change.cpp b/src/focus-change.cpp
+index dfe4452..affdfd4 100644
+--- a/src/focus-change.cpp
++++ b/src/focus-change.cpp
+@@ -49,19 +49,21 @@ enum class orientation_t
+ class wayfire_focus_change_t : public wf::plugin_interface_t
+ {
+   private:
+-    wf::option_wrapper_t<wf::keybinding_t> key_up{"focus-change/up"},
+-    key_down{"focus-change/down"},
+-    key_right{"focus-change/right"},
+-    key_left{"focus-change/left"};
+-    wf::option_wrapper_t<int> grace_up{"focus-change/grace-up"},
+-    grace_down{"focus-change/grace-down"},
+-    grace_right{"focus-change/grace-right"},
+-    grace_left{"focus-change/grace-left"};
+-    wf::option_wrapper_t<bool> cross_outputs{"focus-change/cross-output"};
+-    wf::option_wrapper_t<bool> cross_workspace{"focus-change/cross-workspace"};
+-    wf::option_wrapper_t<bool> raise_on_change{"focus-change/raise-on-change"};
+-    wf::option_wrapper_t<int> scan_height{"focus-change/scan-height"},
+-    scan_width{"focus-change/scan-width"};
++    wf::option_wrapper_t<wf::keybinding_t> get_key_up() { return wf::option_wrapper_t<wf::keybinding_t> {"focus-change/up"}; }
++    wf::option_wrapper_t<wf::keybinding_t> get_key_down() { return wf::option_wrapper_t<wf::keybinding_t> {"focus-change/down"}; }
++    wf::option_wrapper_t<wf::keybinding_t> get_key_right() { return wf::option_wrapper_t<wf::keybinding_t> {"focus-change/right"}; }
++    wf::option_wrapper_t<wf::keybinding_t> get_key_left() { return wf::option_wrapper_t<wf::keybinding_t> {"focus-change/left"}; }
++
++    wf::option_wrapper_t<int> get_grace_up() { return wf::option_wrapper_t<int> {"focus-change/grace-up"}; }
++    wf::option_wrapper_t<int> get_grace_down() { return wf::option_wrapper_t<int> {"focus-change/grace-down"}; }
++    wf::option_wrapper_t<int> get_grace_left() { return wf::option_wrapper_t<int> {"focus-change/grace-left"}; }
++    wf::option_wrapper_t<int> get_grace_right() { return wf::option_wrapper_t<int> {"focus-change/grace-right"}; }
++
++    wf::option_wrapper_t<bool> get_cross_outputs() { return wf::option_wrapper_t<bool> {"focus-change/cross-output"}; }
++    wf::option_wrapper_t<bool> get_cross_workspace() { return wf::option_wrapper_t<bool> {"focus-change/cross-workspace"}; }
++    wf::option_wrapper_t<bool> get_raise_on_change() { return wf::option_wrapper_t<bool> {"focus-change/raise-on-change"}; }
++    wf::option_wrapper_t<int> get_scan_height() { return wf::option_wrapper_t<int> {"focus-change/scan-height"}; }
++    wf::option_wrapper_t<int> get_scan_width() { return wf::option_wrapper_t<int> {"focus-change/scan-width"}; }
+ 
+ 
+     void change_focus(orientation_t orientation)
+@@ -83,7 +85,7 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+         const int32_t cur_cy = cur_bb.y + cur_bb.height / 2;
+         wf::toplevel_view_interface_t *new_focus = nullptr;
+ 
+-        const bool cross_ws  = cross_workspace.value();
++        const bool cross_ws  = get_cross_workspace().value();
+         const auto workspace =
+             cross_ws ? std::optional<wf::point_t>{} : std::optional{cur_output->wset()->
+             get_current_workspace()};
+@@ -115,12 +117,12 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+                 continue;
+             }
+ 
+-            const int32_t scan_w_intrm = scan_width.value() > 0 ?
+-                scan_width.value() : scan_width.value() < 0 ?
+-                cur_bb.width - abs(scan_width.value()) : cur_bb.width;
+-            const int32_t scan_h_intrm = scan_height.value() > 0 ?
+-                scan_height.value() : scan_height.value() < 0 ?
+-                cur_bb.height - abs(scan_height.value()) : cur_bb.height;
++            const int32_t scan_w_intrm = get_scan_width().value() > 0 ?
++                get_scan_width().value() : get_scan_width().value() < 0 ?
++                cur_bb.width - abs(get_scan_width().value()) : cur_bb.width;
++            const int32_t scan_h_intrm = get_scan_height().value() > 0 ?
++                get_scan_height().value() : get_scan_height().value() < 0 ?
++                cur_bb.height - abs(get_scan_height().value()) : cur_bb.height;
+ 
+             const int32_t scan_w = std::max(scan_w_intrm / 2, 1);
+             const int32_t scan_h = std::max(scan_h_intrm / 2, 1);
+@@ -131,10 +133,10 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+             const int32_t scan_h_l = cur_cy - scan_h;
+             const int32_t scan_h_h = cur_cy + scan_h;
+ 
+-            const int32_t bias_up    = grace_up.value();
+-            const int32_t bias_down  = grace_down.value();
+-            const int32_t bias_right = grace_right.value();
+-            const int32_t bias_left  = grace_left.value();
++            const int32_t bias_up    = get_grace_up().value();
++            const int32_t bias_down  = get_grace_down().value();
++            const int32_t bias_right = get_grace_right().value();
++            const int32_t bias_left  = get_grace_left().value();
+ 
+             const bool w_cond = cx + cxr >= scan_w_l && cx - cxr <= scan_w_h;
+             const bool h_cond = cy + cyr >= scan_h_l && cy - cyr <= scan_h_h;
+@@ -174,7 +176,7 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+             }
+         }
+ 
+-        if ((new_focus == nullptr) && cross_outputs.value())
++        if ((new_focus == nullptr) && get_cross_outputs().value())
+         {
+             const auto pos = cur_output->get_layout_geometry();
+ 
+@@ -295,7 +297,7 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+             }
+ 
+             wf::get_core().seat->focus_view(new_focus->self());
+-            if (raise_on_change.value())
++            if (get_raise_on_change().value())
+             {
+                 wf::get_core().default_wm->focus_request(new_focus);
+             }
+@@ -329,10 +331,10 @@ class wayfire_focus_change_t : public wf::plugin_interface_t
+     void bind()
+     {
+         auto& core = wf::get_core();
+-        core.bindings->add_key(key_up, &on_key_up);
+-        core.bindings->add_key(key_down, &on_key_down);
+-        core.bindings->add_key(key_right, &on_key_right);
+-        core.bindings->add_key(key_left, &on_key_left);
++        core.bindings->add_key(get_key_up(), &on_key_up);
++        core.bindings->add_key(get_key_down(), &on_key_down);
++        core.bindings->add_key(get_key_right(), &on_key_right);
++        core.bindings->add_key(get_key_left(), &on_key_left);
+     }
+ 
+   public:
+diff --git a/src/focus-steal-prevent.cpp b/src/focus-steal-prevent.cpp
+index 9be96df..c64d5b6 100644
+--- a/src/focus-steal-prevent.cpp
++++ b/src/focus-steal-prevent.cpp
+@@ -44,9 +44,9 @@ class wayfire_focus_steal_prevent : public wf::per_output_plugin_instance_t
+     std::multiset<uint32_t> cancel_keycodes;
+     wf::wl_timer<false> timer;
+ 
+-    wf::option_wrapper_t<int> timeout{"focus-steal-prevent/timeout"};
++    wf::option_wrapper_t<int> get_timeout() { return wf::option_wrapper_t<int> {"focus-steal-prevent/timeout"}; }
+     wf::view_matcher_t deny_focus_views{"focus-steal-prevent/deny_focus_views"};
+-    wf::option_wrapper_t<std::string> cancel_keys{"focus-steal-prevent/cancel_keys"};
++    wf::option_wrapper_t<std::string> get_cancel_keys() { return wf::option_wrapper_t<std::string> {"focus-steal-prevent/cancel_keys"}; }
+ 
+     std::string ltrim(const std::string & s)
+     {
+@@ -110,7 +110,7 @@ class wayfire_focus_steal_prevent : public wf::per_output_plugin_instance_t
+     void reset_timeout()
+     {
+         timer.disconnect();
+-        timer.set_timeout(timeout, [=] ()
++        timer.set_timeout(get_timeout(), [=] ()
+         {
+             cancel();
+         });
+@@ -279,13 +279,13 @@ class wayfire_focus_steal_prevent : public wf::per_output_plugin_instance_t
+ 
+     wf::config::option_base_t::updated_callback_t cancel_keys_changed = [=] ()
+     {
+-        cancel_keycodes = get_cancel_keycodes(cancel_keys);
++        cancel_keycodes = get_cancel_keycodes(get_cancel_keys());
+     };
+ 
+   public:
+     void init() override
+     {
+-        cancel_keys.set_callback(cancel_keys_changed);
++        get_cancel_keys().set_callback(cancel_keys_changed);
+         wf::get_core().connect(&pre_view_focused);
+         wf::get_core().connect(&on_button_event);
+         wf::get_core().connect(&on_unmap_event);
+diff --git a/src/follow-focus.cpp b/src/follow-focus.cpp
+index e67cc73..56bf02b 100644
+--- a/src/follow-focus.cpp
++++ b/src/follow-focus.cpp
+@@ -45,11 +45,11 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+     wf::wl_timer<false> change_output_focus, change_view_focus;
+     wf::pointf_t last_output_coords, last_view_coords;
+ 
+-    wf::option_wrapper_t<bool> should_change_view{"follow-focus/change_view"};
+-    wf::option_wrapper_t<bool> should_change_output{"follow-focus/change_output"};
+-    wf::option_wrapper_t<int> focus_delay{"follow-focus/focus_delay"};
+-    wf::option_wrapper_t<int> threshold{"follow-focus/threshold"};
+-    wf::option_wrapper_t<bool> raise_on_top{"follow-focus/raise_on_top"};
++    wf::option_wrapper_t<bool> get_should_change_view() { return wf::option_wrapper_t<bool> {"follow-focus/change_view"}; }
++    wf::option_wrapper_t<bool> get_should_change_output() { return wf::option_wrapper_t<bool> {"follow-focus/change_output"}; }
++    wf::option_wrapper_t<int> get_focus_delay() { return wf::option_wrapper_t<int> {"follow-focus/focus_delay"}; }
++    wf::option_wrapper_t<int> get_threshold() { return wf::option_wrapper_t<int> {"follow-focus/threshold"}; }
++    wf::option_wrapper_t<bool> get_raise_on_top() { return wf::option_wrapper_t<bool> {"follow-focus/raise_on_top"}; }
+ 
+     void change_view()
+     {
+@@ -57,7 +57,7 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+         if (view)
+         {
+             wf::get_core().seat->focus_view(view);
+-            if (raise_on_top)
++            if (get_raise_on_top())
+             {
+                 view_bring_to_front(view);
+             }
+@@ -79,7 +79,7 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+     {
+         change_output_focus.disconnect();
+ 
+-        if (!should_change_output)
++        if (!get_should_change_output())
+         {
+             return;
+         }
+@@ -98,19 +98,19 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+             focus_output = output;
+         }
+ 
+-        if (wf::abs(coords - last_output_coords) < threshold)
++        if (wf::abs(coords - last_output_coords) < get_threshold())
+         {
+             return;
+         }
+ 
+-        if (!focus_delay)
++        if (!get_focus_delay())
+         {
+             change_output();
+ 
+             return;
+         }
+ 
+-        change_output_focus.set_timeout(focus_delay, [=] ()
++        change_output_focus.set_timeout(get_focus_delay(), [=] ()
+         {
+             change_output();
+             return false; // disconnect
+@@ -121,7 +121,7 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+     {
+         change_view_focus.disconnect();
+ 
+-        if (!should_change_view)
++        if (!get_should_change_view())
+         {
+             return;
+         }
+@@ -149,19 +149,19 @@ class wayfire_follow_focus : public wf::per_output_plugin_instance_t
+             focus_view = view;
+         }
+ 
+-        if (wf::abs(coords - last_view_coords) < threshold)
++        if (wf::abs(coords - last_view_coords) < get_threshold())
+         {
+             return;
+         }
+ 
+-        if (!focus_delay)
++        if (!get_focus_delay())
+         {
+             change_view();
+ 
+             return;
+         }
+ 
+-        change_view_focus.set_timeout(focus_delay, [=] ()
++        change_view_focus.set_timeout(get_focus_delay(), [=] ()
+         {
+             change_view();
+             return false; // disconnect
+diff --git a/src/force-fullscreen.cpp b/src/force-fullscreen.cpp
+index ed22f83..e6e4b62 100644
+--- a/src/force-fullscreen.cpp
++++ b/src/force-fullscreen.cpp
+@@ -57,8 +57,7 @@ class simple_node_render_instance_t : public render_instance_t
+     damage_callback push_to_parent;
+     wf::geometry_t *geometry;
+     wf::geometry_t *transparent_box;
+-    wf::option_wrapper_t<bool> transparent_behind_views{
+-        "force-fullscreen/transparent_behind_views"};
++    wf::option_wrapper_t<bool> get_transparent_behind_views() { return wf::option_wrapper_t<bool> {"force-fullscreen/transparent_behind_views"}; }
+ 
+   public:
+     simple_node_render_instance_t(node_t *self, damage_callback push_damage,
+@@ -94,7 +93,7 @@ class simple_node_render_instance_t : public render_instance_t
+         }
+ 
+         wf::regionf_t scissor_region{data.damage};
+-        if (transparent_behind_views)
++        if (get_transparent_behind_views())
+         {
+             auto bbox = *transparent_box;
+             bbox.x     += 1;
+@@ -172,14 +171,11 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+     std::string background_name;
+     bool motion_connected = false;
+     std::map<wayfire_toplevel_view, std::unique_ptr<fullscreen_background>> backgrounds;
+-    wf::option_wrapper_t<bool> preserve_aspect{"force-fullscreen/preserve_aspect"};
+-    wf::option_wrapper_t<bool> constrain_pointer{"force-fullscreen/constrain_pointer"};
+-    wf::option_wrapper_t<std::string> constraint_area{
+-        "force-fullscreen/constraint_area"};
+-    wf::option_wrapper_t<bool> transparent_behind_views{
+-        "force-fullscreen/transparent_behind_views"};
+-    wf::option_wrapper_t<wf::keybinding_t> key_toggle_fullscreen{
+-        "force-fullscreen/key_toggle_fullscreen"};
++    wf::option_wrapper_t<bool> get_preserve_aspect() { return wf::option_wrapper_t<bool> {"force-fullscreen/preserve_aspect"}; }
++    wf::option_wrapper_t<bool> get_constrain_pointer() { return wf::option_wrapper_t<bool> {"force-fullscreen/constrain_pointer"}; }
++    wf::option_wrapper_t<std::string> get_constraint_area() { return wf::option_wrapper_t<std::string> {"force-fullscreen/constraint_area"}; }
++    wf::option_wrapper_t<bool> get_transparent_behind_views() { return wf::option_wrapper_t<bool> {"force-fullscreen/transparent_behind_views"}; }
++    wf::option_wrapper_t<wf::keybinding_t> get_key_toggle_fullscreen() { return wf::option_wrapper_t<wf::keybinding_t> {"force-fullscreen/key_toggle_fullscreen"}; }
+     wf::plugin_activation_data_t grab_interface{
+         .name = "force-fullscreen",
+         .capabilities = wf::CAPABILITY_MANAGE_COMPOSITOR,
+@@ -190,11 +186,11 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+     {
+         background_name = this->grab_interface.name;
+ 
+-        output->add_key(key_toggle_fullscreen, &on_toggle_fullscreen);
+-        transparent_behind_views.set_callback(option_changed);
++        output->add_key(get_key_toggle_fullscreen(), &on_toggle_fullscreen);
++        get_transparent_behind_views().set_callback(option_changed);
+         wayfire_force_fullscreen_instances[output] = this;
+-        constrain_pointer.set_callback(constrain_pointer_option_changed);
+-        preserve_aspect.set_callback(option_changed);
++        get_constrain_pointer().set_callback(constrain_pointer_option_changed);
++        get_preserve_aspect().set_callback(option_changed);
+         output->connect(&viewport_changed);
+     }
+ 
+@@ -281,7 +277,7 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+         double translation_x = (og.width - vg.width) / 2.0;
+         double translation_y = (og.height - vg.height) / 2.0;
+ 
+-        if (preserve_aspect)
++        if (get_preserve_aspect())
+         {
+             scale_x = scale_y = std::min(scale_x, scale_y);
+         }
+@@ -293,12 +289,12 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+         box.y = std::ceil((og.height - box.height) / 2.0);
+ 
+         destroy_subsurface(view);
+-        if (!transparent_behind_views || preserve_aspect)
++        if (!get_transparent_behind_views() || get_preserve_aspect())
+         {
+             ensure_subsurface(view, box);
+         }
+ 
+-        if (preserve_aspect)
++        if (get_preserve_aspect())
+         {
+             scale_x += 1.0 / vg.width;
+             translation_x -= 1.0;
+@@ -392,7 +388,7 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+         view->connect(&view_geometry_changed);
+         output->connect(&view_unmapped);
+         output->connect(&view_focused);
+-        if (constrain_pointer)
++        if (get_constrain_pointer())
+         {
+             connect_motion_signal();
+         }
+@@ -456,7 +452,7 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+ 
+     void update_motion_signal(wayfire_toplevel_view view)
+     {
+-        if (view && (view->get_output() == output) && constrain_pointer &&
++        if (view && (view->get_output() == output) && get_constrain_pointer() &&
+             (backgrounds.find(view) != backgrounds.end()))
+         {
+             connect_motion_signal();
+@@ -508,7 +504,7 @@ class wayfire_force_fullscreen : public wf::per_output_plugin_instance_t
+             box.x += og.x;
+             box.y += og.y;
+ 
+-            if (std::string(constraint_area) == "output")
++            if (std::string(get_constraint_area()) == "output")
+             {
+                 box = og;
+             }
+diff --git a/src/hide-cursor.cpp b/src/hide-cursor.cpp
+index c7ffd94..e05a750 100644
+--- a/src/hide-cursor.cpp
++++ b/src/hide-cursor.cpp
+@@ -34,7 +34,7 @@ bool hidden;
+ 
+ class wayfire_hide_cursor
+ {
+-    wf::option_wrapper_t<int> hide_delay{"hide-cursor/hide_delay"};
++    wf::option_wrapper_t<int> get_hide_delay() { return wf::option_wrapper_t<int> {"hide-cursor/hide_delay"}; }
+     wf::wl_timer<false> hide_timer;
+ 
+   public:
+@@ -59,7 +59,7 @@ class wayfire_hide_cursor
+     void setup_hide_timer()
+     {
+         hide_timer.disconnect();
+-        hide_timer.set_timeout(hide_delay, [=] ()
++        hide_timer.set_timeout(get_hide_delay(), [=] ()
+         {
+             if (!hidden)
+             {
+diff --git a/src/keycolor.cpp b/src/keycolor.cpp
+index 277c4a0..3a15b64 100644
+--- a/src/keycolor.cpp
++++ b/src/keycolor.cpp
+@@ -103,9 +103,9 @@ class simple_node_render_instance_t : public wf::scene::transformer_render_insta
+     wayfire_view view;
+     damage_callback push_to_parent;
+     wf::config::option_base_t::updated_callback_t option_changed;
+-    wf::option_wrapper_t<wf::color_t> color{"keycolor/color"};
+-    wf::option_wrapper_t<double> opacity{"keycolor/opacity"};
+-    wf::option_wrapper_t<double> threshold{"keycolor/threshold"};
++    wf::option_wrapper_t<wf::color_t> get_color() { return wf::option_wrapper_t<wf::color_t> {"keycolor/color"}; }
++    wf::option_wrapper_t<double> get_opacity() { return wf::option_wrapper_t<double> {"keycolor/opacity"}; }
++    wf::option_wrapper_t<double> get_threshold() { return wf::option_wrapper_t<double> {"keycolor/threshold"}; }
+ 
+   public:
+     simple_node_render_instance_t(transformer_base_node_t *self, damage_callback push_damage,
+@@ -123,9 +123,9 @@ class simple_node_render_instance_t : public wf::scene::transformer_render_insta
+             this->view->damage();
+         };
+ 
+-        color.set_callback(option_changed);
+-        opacity.set_callback(option_changed);
+-        threshold.set_callback(option_changed);
++        get_color().set_callback(option_changed);
++        get_opacity().set_callback(option_changed);
++        get_threshold().set_callback(option_changed);
+     }
+ 
+     void schedule_instructions(
+@@ -171,16 +171,16 @@ class simple_node_render_instance_t : public wf::scene::transformer_render_insta
+         {
+             /* Upload data to shader */
+             glm::vec4 color_data{
+-                ((wf::color_t)color).r,
+-                ((wf::color_t)color).g,
+-                ((wf::color_t)color).b,
+-                (double)opacity};
++                ((wf::color_t)get_color()).r,
++                ((wf::color_t)get_color()).g,
++                ((wf::color_t)get_color()).b,
++                (double)get_opacity()};
+             auto src_tex = get_texture(1.0);
+             auto gl_tex  = wf::gles_texture_t{src_tex};
+ 
+             key_data->program.use(gl_tex.type);
+             key_data->program.uniform4f("color", color_data);
+-            key_data->program.uniform1f("threshold", threshold);
++            key_data->program.uniform1f("threshold", get_threshold());
+             key_data->program.attrib_pointer("position", 2, 0, vertexData);
+             key_data->program.attrib_pointer("texcoord", 2, 0, texCoords);
+             key_data->program.uniformMatrix4f("mvp", wf::gles::output_transform(data.target));
+diff --git a/src/mag.cpp b/src/mag.cpp
+index fa7fb42..88dda49 100644
+--- a/src/mag.cpp
++++ b/src/mag.cpp
+@@ -233,8 +233,8 @@ class mag_view_t : public wf::toplevel_view_interface_t
+ class wayfire_magnifier : public wf::per_output_plugin_instance_t
+ {
+     const std::string transformer_name = "mag";
+-    wf::option_wrapper_t<wf::activatorbinding_t> toggle_binding{"mag/toggle"};
+-    wf::option_wrapper_t<int> zoom_level{"mag/zoom_level"};
++    wf::option_wrapper_t<wf::activatorbinding_t> get_toggle_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"mag/toggle"}; }
++    wf::option_wrapper_t<int> get_zoom_level() { return wf::option_wrapper_t<int> {"mag/zoom_level"}; }
+     std::shared_ptr<mag_view_t> mag_view;
+     bool active = false, hook_set = false;
+     int width, height;
+@@ -262,7 +262,7 @@ class wayfire_magnifier : public wf::per_output_plugin_instance_t
+         deactivate();
+     };
+ 
+-    wf::option_wrapper_t<int> default_height{"mag/default_height"};
++    wf::option_wrapper_t<int> get_default_height() { return wf::option_wrapper_t<int> {"mag/default_height"}; }
+ 
+   public:
+     void init() override
+@@ -273,7 +273,7 @@ class wayfire_magnifier : public wf::per_output_plugin_instance_t
+             return;
+         }
+ 
+-        output->add_activator(toggle_binding, &toggle_cb);
++        output->add_activator(get_toggle_binding(), &toggle_cb);
+         hook_set = active = false;
+     }
+ 
+@@ -297,7 +297,7 @@ class wayfire_magnifier : public wf::per_output_plugin_instance_t
+     {
+         auto og = output->get_relative_geometry();
+         float aspect = (float)og.width / og.height;
+-        wf::geometry_t start_geometry = {100, 100, default_height *aspect, (double)default_height};
++        wf::geometry_t start_geometry = {100, 100, get_default_height() *aspect, (double)get_default_height()};
+         return start_geometry;
+     }
+ 
+@@ -363,7 +363,7 @@ class wayfire_magnifier : public wf::per_output_plugin_instance_t
+         float min   = 0.5;
+         float max   = 0.01;
+         float range = min - max;
+-        float level = (1.0 - (zoom_level / 100.0)) * range + max;
++        float level = (1.0 - (get_zoom_level() / 100.0)) * range + max;
+ 
+         /* Compute zoom_box, forcing the zoom to stay on the output */
+         gl_geometry zoom_box;
+diff --git a/src/showrepaint.cpp b/src/showrepaint.cpp
+index 6619122..776b982 100644
+--- a/src/showrepaint.cpp
++++ b/src/showrepaint.cpp
+@@ -37,8 +37,8 @@ extern "C"
+ 
+ class wayfire_showrepaint : public wf::per_output_plugin_instance_t
+ {
+-    wf::option_wrapper_t<wf::activatorbinding_t> toggle_binding{"showrepaint/toggle"};
+-    wf::option_wrapper_t<bool> reduce_flicker{"showrepaint/reduce_flicker"};
++    wf::option_wrapper_t<wf::activatorbinding_t> get_toggle_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"showrepaint/toggle"}; }
++    wf::option_wrapper_t<bool> get_reduce_flicker() { return wf::option_wrapper_t<bool> {"showrepaint/reduce_flicker"}; }
+     bool active, egl_swap_buffers_with_damage;
+     wf::auxilliary_buffer_t last_buffer;
+ 
+@@ -49,8 +49,8 @@ class wayfire_showrepaint : public wf::per_output_plugin_instance_t
+         egl_swap_buffers_with_damage =
+             egl_extension_supported("EGL_KHR_swap_buffers_with_damage") ||
+             egl_extension_supported("EGL_EXT_swap_buffers_with_damage");
+-        output->add_activator(toggle_binding, &toggle_cb);
+-        reduce_flicker.set_callback(option_changed);
++        output->add_activator(get_toggle_binding(), &toggle_cb);
++        get_reduce_flicker().set_callback(option_changed);
+     }
+ 
+     wf::config::option_base_t::updated_callback_t option_changed = [=] ()
+@@ -141,11 +141,11 @@ class wayfire_showrepaint : public wf::per_output_plugin_instance_t
+ 
+         auto rpass = output->render->get_current_pass();
+         rpass->add_rect(color, target_fb, target_fb.geometry, damage);
+-        if (reduce_flicker)
++        if (get_reduce_flicker())
+         {
+             /* Show swap damage. It might be possible that we blit right over this but in the case of cube
+              * and expo, it shows client and swap damage in contrast. This makes sense since the idea is to
+-             * show damage as colored regions. We don't do this if the reduce_flicker option isn't set because
++             * show damage as colored regions. We don't do this if the get_reduce_flicker() option isn't set because
+              * we don't repaint the inverted damage from the last buffer in this case, so we would keep
+              * painting it with different colors until it is white. */
+             get_random_color(color);
+@@ -153,7 +153,7 @@ class wayfire_showrepaint : public wf::per_output_plugin_instance_t
+         }
+ 
+         /* If swap_buffers_with_damage is supported, we do not need the following to be executed. */
+-        if (egl_swap_buffers_with_damage || !reduce_flicker)
++        if (egl_swap_buffers_with_damage || !get_reduce_flicker())
+         {
+             return;
+         }
+@@ -175,7 +175,7 @@ class wayfire_showrepaint : public wf::per_output_plugin_instance_t
+ 
+     wf::effect_hook_t on_main_pass_done = [=] ()
+     {
+-        if (!reduce_flicker || egl_swap_buffers_with_damage)
++        if (!get_reduce_flicker() || egl_swap_buffers_with_damage)
+         {
+             return;
+         }
+diff --git a/src/showtouch.cpp b/src/showtouch.cpp
+index d2b1f32..e850b71 100644
+--- a/src/showtouch.cpp
++++ b/src/showtouch.cpp
+@@ -109,19 +109,19 @@ class wayfire_showtouch : public wf::per_output_plugin_instance_t
+     bool hook_set = false;
+     bool enabled  = false;
+     wf::pointf_t points[6];
+-    wf::option_wrapper_t<wf::color_t> finger_color{"showtouch/finger_color"};
+-    wf::option_wrapper_t<wf::color_t> center_color{"showtouch/center_color"};
+-    wf::option_wrapper_t<int> touch_radius{"showtouch/touch_radius"};
+-    wf::option_wrapper_t<wf::animation_description_t> touch_duration{"showtouch/touch_duration"};
+-    wf::option_wrapper_t<wf::activatorbinding_t> toggle{"showtouch/toggle"};
++    wf::option_wrapper_t<wf::color_t> get_finger_color() { return wf::option_wrapper_t<wf::color_t> {"showtouch/finger_color"}; }
++    wf::option_wrapper_t<wf::color_t> get_center_color() { return wf::option_wrapper_t<wf::color_t> {"showtouch/center_color"}; }
++    wf::option_wrapper_t<int> get_touch_radius() { return wf::option_wrapper_t<int> {"showtouch/touch_radius"}; }
++    wf::option_wrapper_t<wf::animation_description_t> get_touch_duration() { return wf::option_wrapper_t<wf::animation_description_t> {"showtouch/touch_duration"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_toggle() { return wf::option_wrapper_t<wf::activatorbinding_t> {"showtouch/toggle"}; }
+ 
+     OpenGL::program_t program;
+-    wf::animation::simple_animation_t fade0{touch_duration};
+-    wf::animation::simple_animation_t fade1{touch_duration};
+-    wf::animation::simple_animation_t fade2{touch_duration};
+-    wf::animation::simple_animation_t fade3{touch_duration};
+-    wf::animation::simple_animation_t fade4{touch_duration};
+-    wf::animation::simple_animation_t fade_center{touch_duration};
++    wf::animation::simple_animation_t fade0{get_touch_duration()};
++    wf::animation::simple_animation_t fade1{get_touch_duration()};
++    wf::animation::simple_animation_t fade2{get_touch_duration()};
++    wf::animation::simple_animation_t fade3{get_touch_duration()};
++    wf::animation::simple_animation_t fade4{get_touch_duration()};
++    wf::animation::simple_animation_t fade_center{get_touch_duration()};
+ 
+   public:
+     void init() override
+@@ -150,7 +150,7 @@ class wayfire_showtouch : public wf::per_output_plugin_instance_t
+         points[3] = {-100, -100};
+         points[4] = {-100, -100};
+         points[5] = {-100, -100};
+-        output->add_activator(toggle, &toggle_cb);
++        output->add_activator(get_toggle(), &toggle_cb);
+     }
+ 
+     wf::activator_callback toggle_cb = [=] (auto)
+@@ -402,16 +402,16 @@ class wayfire_showtouch : public wf::per_output_plugin_instance_t
+ 
+             program.uniform2f("center", points[5].x, points[5].y);
+             program.uniform4f("finger_color", glm::vec4(
+-                wf::color_t(finger_color).r,
+-                wf::color_t(finger_color).g,
+-                wf::color_t(finger_color).b,
+-                wf::color_t(finger_color).a));
++                wf::color_t(get_finger_color()).r,
++                wf::color_t(get_finger_color()).g,
++                wf::color_t(get_finger_color()).b,
++                wf::color_t(get_finger_color()).a));
+             program.uniform4f("center_color", glm::vec4(
+-                wf::color_t(center_color).r,
+-                wf::color_t(center_color).g,
+-                wf::color_t(center_color).b,
+-                wf::color_t(center_color).a));
+-            program.uniform1f("radius", double(touch_radius));
++                wf::color_t(get_center_color()).r,
++                wf::color_t(get_center_color()).g,
++                wf::color_t(get_center_color()).b,
++                wf::color_t(get_center_color()).a));
++            program.uniform1f("radius", double(get_touch_radius()));
+             program.attrib_pointer("position", 2, 0, vertexData);
+             program.attrib_pointer("texcoord", 2, 0, texCoords);
+             program.uniform2f("resolution", og.width, og.height);
+diff --git a/src/view-shot.cpp b/src/view-shot.cpp
+index f443309..60a3986 100644
+--- a/src/view-shot.cpp
++++ b/src/view-shot.cpp
+@@ -56,15 +56,15 @@ static std::string replaceAll(std::string s, const std::string& from,
+ class wayfire_view_shot : public wf::plugin_interface_t
+ {
+     const std::string transformer_name = "view_shot";
+-    wf::option_wrapper_t<wf::activatorbinding_t> capture_binding{"view-shot/capture"};
+-    wf::option_wrapper_t<std::string> file_name{"view-shot/filename"};
+-    wf::option_wrapper_t<std::string> command{"view-shot/command"};
++    wf::option_wrapper_t<wf::activatorbinding_t> get_capture_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"view-shot/capture"}; }
++    wf::option_wrapper_t<std::string> get_file_name() { return wf::option_wrapper_t<std::string> {"view-shot/filename"}; }
++    wf::option_wrapper_t<std::string> get_command() { return wf::option_wrapper_t<std::string> {"view-shot/command"}; }
+     wf::shared_data::ref_ptr_t<wf::ipc::method_repository_t> ipc_repo;
+ 
+   public:
+     void init() override
+     {
+-        wf::get_core().bindings->add_activator(capture_binding, &on_capture);
++        wf::get_core().bindings->add_activator(get_capture_binding(), &on_capture);
+         ipc_repo->register_method("view-shot/capture", on_ipc_capture);
+     }
+ 
+@@ -80,12 +80,12 @@ class wayfire_view_shot : public wf::plugin_interface_t
+         char _file_name[255];
+         auto time = std::time(nullptr);
+         std::strftime(_file_name, sizeof(_file_name),
+-            file_name.value().c_str(), std::localtime(&time));
++            get_file_name().value().c_str(), std::localtime(&time));
+         std::string formatted_file_name = _file_name;
+ 
+         if (take_snapshot(view, formatted_file_name))
+         {
+-            wf::get_core().run(replaceAll(command, "%f", formatted_file_name));
++            wf::get_core().run(replaceAll(get_command(), "%f", formatted_file_name));
+             return true;
+         }
+ 
+diff --git a/src/water.cpp b/src/water.cpp
+index 179c29d..5033a6a 100644
+--- a/src/water.cpp
++++ b/src/water.cpp
+@@ -185,7 +185,7 @@ void main()
+ 
+ class wayfire_water_screen : public wf::per_output_plugin_instance_t, public wf::pointer_interaction_t
+ {
+-    wf::option_wrapper_t<wf::buttonbinding_t> button{"water/activate"};
++    wf::option_wrapper_t<wf::buttonbinding_t> get_button() { return wf::option_wrapper_t<wf::buttonbinding_t> {"water/activate"}; }
+     wf::animation::simple_animation_t animation =
+         wf::animation::simple_animation_t(wf::create_option<int>(5000));
+     OpenGL::program_t program[3];
+@@ -225,7 +225,7 @@ class wayfire_water_screen : public wf::per_output_plugin_instance_t, public wf:
+         input_grab = std::make_unique<wf::input_grab_t>(this->grab_interface.name, output, nullptr, this,
+             nullptr);
+ 
+-        output->add_button(button, &activate_binding);
++        output->add_button(get_button(), &activate_binding);
+ 
+         animation.set(0, 0);
+     }
+diff --git a/src/window-zoom.cpp b/src/window-zoom.cpp
+index afd2186..e5370e1 100644
+--- a/src/window-zoom.cpp
++++ b/src/window-zoom.cpp
+@@ -62,7 +62,7 @@ class simple_node_render_instance_t : public transformer_render_instance_t<trans
+     float *scale_x, *scale_y;
+     wf::geometry_t *transformed_view_geometry;
+     damage_callback push_damage;
+-    wf::option_wrapper_t<bool> nearest_filtering{"winzoom/nearest_filtering"};
++    wf::option_wrapper_t<bool> get_nearest_filtering() { return wf::option_wrapper_t<bool> {"winzoom/nearest_filtering"}; }
+ 
+   public:
+     simple_node_render_instance_t(transformer_base_node_t *self, damage_callback push_damage,
+@@ -84,7 +84,7 @@ class simple_node_render_instance_t : public transformer_render_instance_t<trans
+             this->view->damage();
+         };
+ 
+-        nearest_filtering.set_callback(option_changed);
++        get_nearest_filtering().set_callback(option_changed);
+     }
+ 
+     void schedule_instructions(
+@@ -123,7 +123,7 @@ class simple_node_render_instance_t : public transformer_render_instance_t<trans
+     {
+         auto src_tex = get_texture(1.0);
+         auto scaled_geometry = get_scaled_geometry();
+-        src_tex->set_filter_mode(nearest_filtering ? WLR_SCALE_FILTER_NEAREST : WLR_SCALE_FILTER_BILINEAR);
++        src_tex->set_filter_mode(get_nearest_filtering() ? WLR_SCALE_FILTER_NEAREST : WLR_SCALE_FILTER_BILINEAR);
+         data.pass->add_texture(src_tex, data.target, scaled_geometry, data.damage);
+     }
+ };
+@@ -168,17 +168,13 @@ class winzoom_t : public view_2d_transformer_t
+ 
+ class wayfire_winzoom : public wf::per_output_plugin_instance_t
+ {
+-    wf::option_wrapper_t<wf::activatorbinding_t> inc_x_binding{
+-        "winzoom/inc_x_binding"};
+-    wf::option_wrapper_t<wf::activatorbinding_t> dec_x_binding{
+-        "winzoom/dec_x_binding"};
+-    wf::option_wrapper_t<wf::activatorbinding_t> inc_y_binding{
+-        "winzoom/inc_y_binding"};
+-    wf::option_wrapper_t<wf::activatorbinding_t> dec_y_binding{
+-        "winzoom/dec_y_binding"};
+-    wf::option_wrapper_t<bool> preserve_aspect{"winzoom/preserve_aspect"};
+-    wf::option_wrapper_t<wf::keybinding_t> modifier{"winzoom/modifier"};
+-    wf::option_wrapper_t<double> zoom_step{"winzoom/zoom_step"};
++    wf::option_wrapper_t<wf::activatorbinding_t> get_inc_x_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"winzoom/inc_x_binding"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_dec_x_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"winzoom/dec_x_binding"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_inc_y_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"winzoom/inc_y_binding"}; }
++    wf::option_wrapper_t<wf::activatorbinding_t> get_dec_y_binding() { return wf::option_wrapper_t<wf::activatorbinding_t> {"winzoom/dec_y_binding"}; }
++    wf::option_wrapper_t<bool> get_preserve_aspect() { return wf::option_wrapper_t<bool> {"winzoom/preserve_aspect"}; }
++    wf::option_wrapper_t<wf::keybinding_t> get_modifier() { return wf::option_wrapper_t<wf::keybinding_t> {"winzoom/modifier"}; }
++    wf::option_wrapper_t<double> get_zoom_step() { return wf::option_wrapper_t<double> {"winzoom/zoom_step"}; }
+     std::map<wayfire_view, std::shared_ptr<winzoom_t>> transformers;
+     wf::plugin_activation_data_t grab_interface{
+         .name = "window-zoom",
+@@ -188,11 +184,11 @@ class wayfire_winzoom : public wf::per_output_plugin_instance_t
+   public:
+     void init() override
+     {
+-        output->add_axis(modifier, &axis_cb);
+-        output->add_activator(inc_x_binding, &on_inc_x);
+-        output->add_activator(dec_x_binding, &on_dec_x);
+-        output->add_activator(inc_y_binding, &on_inc_y);
+-        output->add_activator(dec_y_binding, &on_dec_y);
++        output->add_axis(get_modifier(), &axis_cb);
++        output->add_activator(get_inc_x_binding(), &on_inc_x);
++        output->add_activator(get_dec_x_binding(), &on_dec_x);
++        output->add_activator(get_inc_y_binding(), &on_inc_y);
++        output->add_activator(get_dec_y_binding(), &on_dec_y);
+     }
+ 
+     bool update_winzoom(wayfire_toplevel_view view, wf::point_t delta)
+@@ -237,7 +233,7 @@ class wayfire_winzoom : public wf::per_output_plugin_instance_t
+         zoom.x = transformer->scale_x;
+         zoom.y = transformer->scale_y;
+ 
+-        if (preserve_aspect)
++        if (get_preserve_aspect())
+         {
+             if ((delta.x <= 0) && (delta.y <= 0))
+             {
+@@ -250,8 +246,8 @@ class wayfire_winzoom : public wf::per_output_plugin_instance_t
+             }
+         }
+ 
+-        zoom.x += zoom_step * delta.x;
+-        zoom.y += zoom_step * delta.y;
++        zoom.x += get_zoom_step() * delta.x;
++        zoom.y += get_zoom_step() * delta.y;
+ 
+         zoom.x = std::max(1.0, zoom.x);
+         zoom.y = std::max(1.0, zoom.y);
+diff --git a/src/workspace-names.cpp b/src/workspace-names.cpp
+index 6243e34..8a5ef24 100644
+--- a/src/workspace-names.cpp
++++ b/src/workspace-names.cpp
+@@ -200,19 +200,17 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+     wf::wl_timer<false> timer;
+     bool hook_set = false;
+     std::vector<std::vector<std::shared_ptr<simple_node_t>>> workspaces;
+-    wf::option_wrapper_t<std::string> font{"workspace-names/font"};
+-    wf::option_wrapper_t<std::string> position{"workspace-names/position"};
+-    wf::option_wrapper_t<int> display_duration{"workspace-names/display_duration"};
+-    wf::option_wrapper_t<int> margin{"workspace-names/margin"};
+-    wf::option_wrapper_t<double> background_radius{
+-        "workspace-names/background_radius"};
+-    wf::option_wrapper_t<wf::color_t> text_color{"workspace-names/text_color"};
+-    wf::option_wrapper_t<wf::color_t> background_color{
+-        "workspace-names/background_color"};
+-    wf::option_wrapper_t<bool> show_option_names{"workspace-names/show_option_names"};
+-    wf::option_wrapper_t<bool> show_option_values{"workspace-names/show_option_values"};
+-    wf::animation::simple_animation_t alpha_fade{display_duration};
+-    wf::option_wrapper_t<wf::config::compound_list_t<std::string>> workspace_names{"workspace-names/names"};
++    wf::option_wrapper_t<std::string> get_font() { return wf::option_wrapper_t<std::string> {"workspace-names/font"}; }
++    wf::option_wrapper_t<std::string> get_position() { return wf::option_wrapper_t<std::string> {"workspace-names/position"}; }
++    wf::option_wrapper_t<int> get_display_duration() { return wf::option_wrapper_t<int> {"workspace-names/display_duration"}; }
++    wf::option_wrapper_t<int> get_margin() { return wf::option_wrapper_t<int> {"workspace-names/margin"}; }
++    wf::option_wrapper_t<double> get_background_radius() { return wf::option_wrapper_t<double> {"workspace-names/background_radius"}; }
++    wf::option_wrapper_t<wf::color_t> get_text_color() { return wf::option_wrapper_t<wf::color_t> {"workspace-names/text_color"}; }
++    wf::option_wrapper_t<wf::color_t> get_background_color() { return wf::option_wrapper_t<wf::color_t> {"workspace-names/background_color"}; }
++    wf::option_wrapper_t<bool> get_show_option_names() { return wf::option_wrapper_t<bool> {"workspace-names/show_option_names"}; }
++    wf::option_wrapper_t<bool> get_show_option_values() { return wf::option_wrapper_t<bool> {"workspace-names/show_option_values"}; }
++    wf::animation::simple_animation_t alpha_fade{get_display_duration()};
++    wf::option_wrapper_t<wf::config::compound_list_t<std::string>> get_workspace_names() { return wf::option_wrapper_t<wf::config::compound_list_t<std::string>> {"workspace-names/names"}; }
+ 
+   public:
+     void init() override
+@@ -223,14 +221,14 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         output->connect(&workarea_changed);
+         output->connect(&viewport_changed);
+         output->connect(&viewport_change_request);
+-        font.set_callback(option_changed);
+-        position.set_callback(option_changed);
+-        background_color.set_callback(option_changed);
+-        text_color.set_callback(option_changed);
+-        show_option_values.set_callback(option_changed);
+-        show_option_names.set_callback(show_options_changed);
++        get_font().set_callback(option_changed);
++        get_position().set_callback(option_changed);
++        get_background_color().set_callback(option_changed);
++        get_text_color().set_callback(option_changed);
++        get_show_option_values().set_callback(option_changed);
++        get_show_option_names().set_callback(show_options_changed);
+ 
+-        if (show_option_names)
++        if (get_show_option_names())
+         {
+             show_options_changed();
+         }
+@@ -282,7 +280,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+ 
+     wf::config::option_base_t::updated_callback_t show_options_changed = [=] ()
+     {
+-        if (show_option_names)
++        if (get_show_option_names())
+         {
+             activate();
+             update_names();
+@@ -306,7 +304,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         // Get the option name (key) of the target workspace
+         std::string key = output->to_string() + "_workspace_" + std::to_string(ws_num);
+ 
+-        if (show_option_names && !show_option_values)
++        if (get_show_option_names() && !get_show_option_values())
+         {
+             wsn->name = key;
+         } else
+@@ -331,7 +329,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+ 
+             if (!option_found)
+             {
+-                for (const auto& [wsid, wsname] : workspace_names.value())
++                for (const auto& [wsid, wsname] : get_workspace_names().value())
+                 {
+                     if (wsid == key)
+                     {
+@@ -396,7 +394,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         }
+ 
+         cairo_select_font_face(cr, std::string(
+-            font).c_str(), CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
++            get_font()).c_str(), CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+         cairo_set_font_size(cr, font_size);
+ 
+         const char *name = wsn->name.c_str();
+@@ -414,7 +412,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         cr = cairo_create(cairo_surface);
+ 
+         cairo_select_font_face(cr, std::string(
+-            font).c_str(), CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
++            get_font()).c_str(), CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+         cairo_set_font_size(cr, font_size);
+ 
+         wsn->cr = cr;
+@@ -436,42 +434,42 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+ 
+         cairo_recreate(wsn);
+ 
+-        if ((std::string)position == "top_left")
++        if ((std::string)get_position() == "top_left")
+         {
+-            wsn->rect.x = workarea.x + margin;
+-            wsn->rect.y = workarea.y + margin;
+-        } else if ((std::string)position == "top_center")
++            wsn->rect.x = workarea.x + get_margin();
++            wsn->rect.y = workarea.y + get_margin();
++        } else if ((std::string)get_position() == "top_center")
+         {
+             wsn->rect.x = workarea.x + (workarea.width / 2 - wsn->rect.width / 2);
+-            wsn->rect.y = workarea.y + margin;
+-        } else if ((std::string)position == "top_right")
++            wsn->rect.y = workarea.y + get_margin();
++        } else if ((std::string)get_position() == "top_right")
+         {
+-            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - margin;
+-            wsn->rect.y = workarea.y + margin;
+-        } else if ((std::string)position == "center_left")
++            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - get_margin();
++            wsn->rect.y = workarea.y + get_margin();
++        } else if ((std::string)get_position() == "center_left")
+         {
+-            wsn->rect.x = workarea.x + margin;
++            wsn->rect.x = workarea.x + get_margin();
+             wsn->rect.y = workarea.y + (workarea.height / 2 - wsn->rect.height / 2);
+-        } else if ((std::string)position == "center")
++        } else if ((std::string)get_position() == "center")
+         {
+             wsn->rect.x = workarea.x + (workarea.width / 2 - wsn->rect.width / 2);
+             wsn->rect.y = workarea.y + (workarea.height / 2 - wsn->rect.height / 2);
+-        } else if ((std::string)position == "center_right")
++        } else if ((std::string)get_position() == "center_right")
+         {
+-            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - margin;
++            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - get_margin();
+             wsn->rect.y = workarea.y + (workarea.height / 2 - wsn->rect.height / 2);
+-        } else if ((std::string)position == "bottom_left")
++        } else if ((std::string)get_position() == "bottom_left")
+         {
+-            wsn->rect.x = workarea.x + margin;
+-            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - margin;
+-        } else if ((std::string)position == "bottom_center")
++            wsn->rect.x = workarea.x + get_margin();
++            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - get_margin();
++        } else if ((std::string)get_position() == "bottom_center")
+         {
+             wsn->rect.x = workarea.x + (workarea.width / 2 - wsn->rect.width / 2);
+-            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - margin;
+-        } else if ((std::string)position == "bottom_right")
++            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - get_margin();
++        } else if ((std::string)get_position() == "bottom_right")
+         {
+-            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - margin;
+-            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - margin;
++            wsn->rect.x = workarea.x + (workarea.width - wsn->rect.width) - get_margin();
++            wsn->rect.y = workarea.y + (workarea.height - wsn->rect.height) - get_margin();
+         } else
+         {
+             wsn->rect.x = workarea.x;
+@@ -500,7 +498,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         double yc = wsn->rect.height / 2.0;
+         int x2, y2;
+         const char *name = wsn->name.c_str();
+-        double radius = background_radius;
++        double radius = get_background_radius();
+         cairo_t *cr   = wsn->cr;
+ 
+         cairo_clear(cr);
+@@ -509,10 +507,10 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         y2 = wsn->rect.height;
+ 
+         cairo_set_source_rgba(cr,
+-            wf::color_t(background_color).r,
+-            wf::color_t(background_color).g,
+-            wf::color_t(background_color).b,
+-            wf::color_t(background_color).a);
++            wf::color_t(get_background_color()).r,
++            wf::color_t(get_background_color()).g,
++            wf::color_t(get_background_color()).b,
++            wf::color_t(get_background_color()).a);
+         cairo_new_path(cr);
+         cairo_arc(cr, radius, y2 - radius, radius, M_PI / 2, M_PI);
+         cairo_line_to(cr, 0, radius);
+@@ -525,10 +523,10 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         cairo_fill(cr);
+ 
+         cairo_set_source_rgba(cr,
+-            wf::color_t(text_color).r,
+-            wf::color_t(text_color).g,
+-            wf::color_t(text_color).b,
+-            wf::color_t(text_color).a);
++            wf::color_t(get_text_color()).r,
++            wf::color_t(get_text_color()).g,
++            wf::color_t(get_text_color()).b,
++            wf::color_t(get_text_color()).a);
+         cairo_text_extents(cr, name, &wsn->text_extents);
+         cairo_move_to(cr,
+             xc - (wsn->text_extents.width / 2 + wsn->text_extents.x_bearing),
+@@ -579,7 +577,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+ 
+         output->render->damage_whole();
+ 
+-        if (show_option_names)
++        if (get_show_option_names())
+         {
+             return;
+         }
+@@ -587,7 +585,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+         alpha_fade.animate(alpha_fade, 1);
+ 
+         timer.disconnect();
+-        timer.set_timeout((int)display_duration, timeout);
++        timer.set_timeout((int)get_display_duration(), timeout);
+     }
+ 
+     wf::signal::connection_t<wf::workspace_change_request_signal> viewport_change_request{[this] (wf::
+@@ -615,7 +613,7 @@ class wayfire_workspace_names_output : public wf::per_output_plugin_instance_t
+ 
+     wf::effect_hook_t post_hook = [=] ()
+     {
+-        if (!alpha_fade.running() && !timer.is_connected() && !show_option_names)
++        if (!alpha_fade.running() && !timer.is_connected() && !get_show_option_names())
+         {
+             deactivate();
+         } else
