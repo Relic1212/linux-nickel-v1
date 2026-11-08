@@ -1,7 +1,7 @@
 let s = {
 
-  uri = "https://github.com/duxlabs-dev/dux-shell/archive/refs/tags/v2.0.0.tar.gz",
-  sha256sum = "e81b0b496b3a6a5a08a6b045ef04d79b3a36f9b07bbfdf475e7dceb80228aca4",
+  uri = "https://github.com/duxlabs-dev/dux-shell/archive/refs/tags/v2.1.2.tar.gz",
+  sha256sum = "4990fcd6c359b63b8ce32d97c8b09e3dddb0f71096abec6f1a535445b0039a7f",
 }
 in
 
@@ -33,7 +33,7 @@ in
     ],
     outputFile = "source.tar",
 
-    outputSha256sum = "6a7fbc23fbe1205f722747d7e637a433862fb1c8288caedda9bf4dad0bd5b0ce", # vendor
+    outputSha256sum = "b6d60eb74d0e39328e2b10b3fbc48073b0889b3fc5fbc1da4c76e10234f97418", # vendor
 
     biDrvs = [
       drvs.go_1_27,
