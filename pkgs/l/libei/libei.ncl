@@ -20,29 +20,24 @@
       },
     ],
     biDrvs = [
-      drvs.attr,
-      drvs.acl,
-      drvs.dbus,
-      drvs.pcre2,
-      drvs.libffi,
-      drvs.zlibNg,
-      drvs.glib,
-      drvs.libxslt,
-      drvs.gudev,
-      drvs.eudev,
       drvs.linuxHeaders,
       drvs.gperf,
       drvs.pythonJinja2,
-      #   (drvs.coreutils & { priority = 1 }),
+      # (drvs.coreutils & { priority = 1 }),
       drvs.muslGetent,
-      drvs.utilLinux,
       drvs.bash,
       drvs.pythonMarkupsafe,
       drvs.pythonFlitCore,
       drvs.docbookXslNons,
+      drvs.libxslt,
     ],
-    propagatedBuildInputs = [
+    pDrvs = [
       drvs.elogindWithPolkit,
+      drvs.utilLinux,
+      drvs.gudev,
+      drvs.attr,
+      drvs.acl,
+      drvs.dbus,
     ]
   }
 }
