@@ -19,6 +19,27 @@
         dest = "subprojects/munit"
       },
     ],
+
+    buildEnv = {
+      EXTRA_CPPFLAGS =
+        std.array.map
+          (fun s => "-D%{s}=libei__%{s}")
+          [
+            "strv_len",
+            "strv_append_take",
+            "strv_append_strdup",
+            "strv_from_string",
+            "strv_join",
+            "strv_find",
+            "strv_find_substring",
+            "list_init",
+            "list_insert",
+            "list_empty",
+            "list_append",
+            "list_remove",
+          ],
+    },
+
     biDrvs = [
       drvs.linuxHeaders,
       drvs.gperf,
