@@ -24,17 +24,33 @@
 
     llvmProvider = drvs.llvmFull,
 
-    pDrvs = [
-      drvs.seatd,
-      drvs.mesa2,
-      drvs.libxkbcommon,
-      drvs.pixman,
-      # drvs.eudev,
-      drvs.hwdata,
-      drvs.libdisplayinfo,
-      drvs.libinput,
-    ],
+    pDrvs =
+      [
+        drvs.seatd,
+        drvs.libxkbcommon,
+        # drvs.eudev,
+        drvs.hwdata,
+        drvs.libdisplayinfo,
+        drvs.libinput,
+      ]
+      @ (
+        if options.xwayland then
+          [
+            drvs.xwayland,
+          ]
+        else
+          [
+            drvs.pixman,
+            drvs.mesa2,
+          ]
+      ),
   },
+
+  wlroots20xwayland =
+    wlroots20
+    & {
+      options.xwayland = true,
+    },
 
   wlroots19 | lib.MesonPackage = {
     singleSource = {
@@ -81,5 +97,5 @@
     wlroots19
     & {
       options.xwayland = true,
-    }
+    },
 }
