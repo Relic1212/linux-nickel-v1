@@ -200,7 +200,8 @@
       m%"sed -i 's@"runtime"@"static"@g' ${SRC}/vendor/bindgen/Cargo.toml"%,
 
       #
-
+      m%"sed -i 's/\("files":{\)[^}]*/\1/' vendor/libdisplay-info-sys/.cargo-checksum.json"%,
+      m%"sed -i 's@0.4.0@0.5.0@g' ${SRC}/vendor/libdisplay-info-sys/Cargo.toml"%,
       #
     ],
 
