@@ -3,8 +3,8 @@
   drvs,
   noctalia | lib.MesonPackage = {
     singleSource = {
-      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.4.1.tar.gz",
-      sha256sum = "6069d922e9d72488c74e4ce335314ce2203f08bd4641380bfe1bd137004597fa",
+      uri = "https://github.com/noctalia-dev/noctalia/archive/refs/tags/v5.5.0.tar.gz",
+      sha256sum = "f3fe8a1f1d4306280413e04f934400b787dba212d296d97dfd638bcb55c78262",
     },
     buildEnv = {
       EXTRA_CPPFLAGS = [
@@ -19,7 +19,7 @@
     # enableParallel = false,
     preConfigurePhase = [
       "sed -i 's| log| noctalia_log|g' ${SRC}/src/system/desktop_entry_launch.cpp",
-      m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
+      # m%"sed -i 's|std::to_string(ticks)|std::to_string(static_cast<long long>(ticks))|g' ${SRC}/src/render/core/thumbnail_service.cpp"%,
       m%"sed -i 's|std::to_string(modified.time_since_epoch().count())|std::to_string(static_cast<long long>(modified.time_since_epoch().count()))|g' ${SRC}/src/system/icon_resolver.cpp"%,
       m%"sed -i "s@#include <unistd.h>@#include <unistd.h>\n#include <errno.h>@g" ${SRC}/src/ipc/ipc_client.cpp"%,
       m%"sed -i "s@#include <string.h>@#include <string.h>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Compiler/src/lcode.cpp"%,
@@ -28,6 +28,7 @@
       m%"sed -i "s@#include <algorithm>@#include <algorithm>\n#include <cstdlib>@g" ${SRC}/third_party/luau/Ast/src/Parser.cpp"%,
       # "sed -i 's@cpp_std=c++20@cpp_std=c++23@g' ${SRC}/meson.build",
       "sed -i 's|lua_ident|lua_ident_compat|g' ${SRC}/third_party/luau/VM/src/lapi.cpp",
+      m%"sed -i "s@#include <vector>@#include <vector>\n#include <algorithm>@g" ${SRC}/lib/render/backend/gles_texture_manager.cpp"%,
     ],
 
     llvmProvider = drvs.llvmFull,
