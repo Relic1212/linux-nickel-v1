@@ -1,0 +1,26 @@
+diff --git a/rs_bindings_from_cc/ast_util.cc b/rs_bindings_from_cc/ast_util.cc
+index 82d67763e..cc5e7ccfc 100644
+--- a/rs_bindings_from_cc/ast_util.cc
++++ b/rs_bindings_from_cc/ast_util.cc
+@@ -483,7 +483,7 @@ bool ForceDefineImplicitFunction(ImportContext& ictx,
+ #if LLVM_DEV_DATE_GE(20260818)
+           // The new API has been introduced in
+           // https://github.com/llvm/llvm-project/commit/ab547095ead5464dc024d66264d9b8a987f429f3
+-      function_decl->getDefaultedFunctionKind();
++      // function_decl->getDefaultedFunctionKind();
+ #else
+           ictx.getDefaultedFunctionKind(function_decl);
+ #endif
+diff --git a/rs_bindings_from_cc/importers/function.cc b/rs_bindings_from_cc/importers/function.cc
+index 7c108c897..2819e2efe 100644
+--- a/rs_bindings_from_cc/importers/function.cc
++++ b/rs_bindings_from_cc/importers/function.cc
+@@ -728,7 +728,7 @@ std::unique_ptr<ir_proto::Item> FunctionDeclImporter::Import(
+ #if LLVM_DEV_DATE_GE(20260818)
+           // The new API has been introduced in
+           // https://github.com/llvm/llvm-project/commit/ab547095ead5464dc024d66264d9b8a987f429f3
+-      function_decl->getDefaultedFunctionKind();
++      // function_decl->getDefaultedFunctionKind();
+ #else
+           ictx_.sema_.getDefaultedFunctionKind(function_decl);
+ #endif
