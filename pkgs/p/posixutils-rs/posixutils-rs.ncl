@@ -20,7 +20,5 @@
     configurePhase = [
       "(cd ${SRC}/vendor/libc-0.2.178 && patch -p1 < /tmp/workdir/files/libc.patch)",
     ],
-
-    rustProvider = drvs.rustWFmt,
   }
 }
