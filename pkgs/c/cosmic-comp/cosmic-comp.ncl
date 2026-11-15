@@ -224,16 +224,24 @@
 
     outputFile = "sources.tar",
 
-    biDrvs = [
-      drvs.emptyResolvConf,
-      drvs.muslShared,
-      drvs.rust,
-      drvs.gitFull,
-      drvs.caCertificates,
-      drvs.cargoVendorFilter,
-      # drsv.findutils & {priority = 1},
-      # drsv.gnutar & {priority = 1},
-    ]
+    biDrvs =
+      [
+        drvs.emptyResolvConf,
+        drvs.muslShared,
+        drvs.rust,
+        drvs.gitFull,
+        drvs.caCertificates,
+        # drsv.findutils & {priority = 1},
+        # drsv.gnutar & {priority = 1},
+      ]
+      @ (
+        if options.vendorFilter then
+          [
+            drvs.cargoVendorFilter,
+          ]
+        else
+          []
+      )
   },
 
   _CargoCacher | lib.DeterministicFetcher = {
