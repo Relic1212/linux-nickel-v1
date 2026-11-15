@@ -9,32 +9,35 @@
       sourceInputs = [
         {
           src = {
+            # From here: https://forge.rust-lang.org/infra/other-installation-methods.html#source-code
 
-            uri | priority 1 = "https://static.rust-lang.org/dist/rustc-1.99.0-src.tar.xz",
-            sha256sum | priority 1 = "cc41916a8c84f5d9ec4f55561b44e39f43b647b133f8a6f51be9ea13c83f7036",
+            # uri = "https://static.rust-lang.org/dist/rustc-1.99.0-src.tar.xz",
+            # sha256sum = "cc41916a8c84f5d9ec4f55561b44e39f43b647b133f8a6f51be9ea13c83f7036",
+            uri = "https://static.rust-lang.org/dist/rustc-1.100.0-src.tar.xz",
+            sha256sum = "90dab90b8084eb57c35ae2b1d0b70c8e5138ace6023b22c60a5a400f586f63b2",
           },
         },
         {
           dest = "local",
           src = {
 
-            uri = "https://static.rust-lang.org/dist/rust-std-1.98.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "bd9f35880de21dab0e387e84009c00001ae7836a4ba565cb16823f13f75f325f",
+            uri = "https://static.rust-lang.org/dist/rust-std-1.99.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "1dd241eaeb19ff3b5180461c77bdee93d6cafc669eda9de834e7c06b0ec3ca95",
           }
         },
         {
           dest = "local1",
           src = {
 
-            uri = "https://static.rust-lang.org/dist/rustc-1.98.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "dea916164b47437402d8041cbba90c1ff9ce859948b1ece8e36b08100ff92063",
+            uri = "https://static.rust-lang.org/dist/rustc-1.99.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "034e2cfea9551483c8cedbf89e52d045b89dcf860ab73aae618c89b1a87b0f18",
           }
         },
         {
           dest = "local2",
           src = {
-            uri = "https://static.rust-lang.org/dist/cargo-1.98.1-x86_64-unknown-linux-musl.tar.xz",
-            sha256sum = "2bced641e198f9c4e7b129770de65cb052f2486a8f58d577792ea57c66c91b1c",
+            uri = "https://static.rust-lang.org/dist/cargo-1.99.1-x86_64-unknown-linux-musl.tar.xz",
+            sha256sum = "f70f6f9b251a2d9cbb0f5792c612fde478e06cfa76abb639aceaada2c6453b1f",
           }
         },
       ],
@@ -66,7 +69,10 @@
           # CXXFLAGS = ["-static-libgcc"],
           PKG_CONFIG = null, # why?
         },
-
+      options = {
+        tools = "cargo,src,rustfmt,profiler,rustc-dev",
+        # sccache = true,
+      },
       unpackPhase = [
         m%"
         rust_src=$(find  /tmp/workdir/packed -name rustc-1.*-src.tar.xz)
@@ -173,7 +179,8 @@
           "--enable-locked-deps",
           "--disable-codegen-tests",
           "--enable-cargo-native-static",
-          "--tools=\"cargo,src\"",
+          # "--tools=\"cargo,src\"",
+          "--tools=\"%{options.tools}\"",
           "--set=\"rust.codegen-tests=false\"",
           "--set=\"rust.compress-debuginfo=false\"",
           "--set=\"rust.musl-root=/usr\"",
