@@ -31,7 +31,7 @@ let system_libs = (
       # "absl_types",
       # "absl_utility",
       #-absl-
-      "brotli",
+      # "brotli",
       "crc32c",
       "dav1d",
       "double-conversion",
@@ -77,10 +77,12 @@ in
 {
   lib,
   drvs,
+  lib,
+  drvs,
   chromiumSourceUnpacked | lib.Package = {
     singleSource = {
-      uri = "https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/151.0.7922.71/chromium-151.0.7922.71-linux.tar.xz",
-      sha256sum = "b0bafa1501f47ad27c96c9b5451bb000058ab40ee0dc945a066d3bd614e84a2f",
+      uri = "https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/157.0.8103.38/chromium-157.0.8103.38-linux.tar.xz",
+      sha256sum = "29904f34e47900e96b595e744a91ed23afc5f3060bf0e9f65817a043957ce7ad",
     },
     unpackPhase =
       let d = "/tmp/workdir/out/destdir/chromium-src" in
@@ -101,12 +103,20 @@ in
         sha256sum = "ee49bf67bd9bee869405af78162d028e2af0fcfca80497404f56b1b99f272717"
       },
       copiumSrc = {
-        uri = "https://codeberg.org/selfisekai/copium/archive/151.2.tar.gz",
-        sha256sum = "8c036397ea69f98af09db5a8d304ec21f0ae55801f7d5c2eda7396e382fb2594",
+        uri = "https://codeberg.org/selfisekai/copium/archive/157.0.tar.gz",
+        sha256sum = "ae64bd1c756f1567a56706a9ad6fdc657e6b9783131a626e04619d60ed125596",
       },
       muslSandboxPatch = {
         uri = "https://raw.githubusercontent.com/alpinelinux/aports/63664a5c5eff79b63e8538a34e13bd4dc25cbe73/community/chromium/musl-sandbox.patch",
         sha256sum = "a0b617eec291834abac9bd8affa9c4eebebe7388f601af8a67939925e9c1a4a0",
+      },
+      crubitPatch = {
+        uri = "https://gitlab.archlinux.org/archlinux/packaging/packages/chromium/-/raw/main/chromium-157-crubit.patch",
+        sha256sum = "eda45eaa5ba6c2ee86389200d4b758f0a06ffb32f3d06c3d0b60f2714c5d237f",
+      },
+      metadataPatch = {
+        uri = "https://raw.githubusercontent.com/termux/termux-packages/73c95b106011dad7f9dc84f8eb38669c6a2e55ad/x11-packages/chromium-host-tools/cr-patches/6004-bugfix-ui-base-metadata-base_type_conversion.cc.patch",
+        sha256sum = "021b7a65a8ea26e90a88d9f72fad0566022d9f505b97530afacdab53b7fb652e",
       }
     in
     {
@@ -120,15 +130,21 @@ in
           null,
 
       sourceInputs = [
-        {
-          src = wasmNode,
-        },
+        # {
+        #   src = wasmNode,
+        # },
         {
           src = copiumSrc,
         },
         {
           src = muslSandboxPatch,
-        }
+        },
+        {
+          src = crubitPatch,
+        },
+        {
+          src = metadataPatch,
+        },
       ],
       unpackPhase =
         if options.unpack then
@@ -300,6 +316,11 @@ in
           "blink_symbol_level=0",
           "symbol_level=0",
           "v8_symbol_level=0",
+          "concurrent_links=4",
+          "rust_prebuilt_stdlib=false",
+          "rust_crubit_root=\"/usr\"",
+          "v8_monolithic=true",
+          "v8_use_metagen=false",
           # "absl_build_tests=false",
           # "libsrtp_build_boringssl=false",
           # "rtc_build_ssl=false",
@@ -316,9 +337,33 @@ in
           "gn args --list out/Bld",
           m%"printf "##### END GN ARGS MANIFEST #####\n""%,
         ],
+      remotePatches = [
+        {
+          src = {
+            uri = "https://github.com/chromium/chromium/commit/ef51975a56ebee3fc72061d7b1b3df0d20acfff0.patch",
+            sha256sum = "ac12b1aa03a7a18327e3e243b22fcfcf45ed1b42351481488337affe44cb5790"
+          },
+          reverse = true,
+        },
+      ],
+      eofPatches = [
+        {
+          # revert https://github.com/signalapp/webrtc/commit/a0253ec15b3d3072fb35d6be29ba9224c36f9dd7
+          patch = import "chromium157-webrtc-pw-1.4.patch" as 'Text,
+          subdir = "/third_party/webrtc",
+        },
+
+        # {
+        #   # revert  https://github.com/chromium/chromium/commit/72777c30be767d4f192f2a3ca94e838e0b83550e
+        #   patch = import "chromium157-string2.patch" as 'Text,
+        #   subdir = "",
+        # },
+      ],
 
       preConfigurePhase = [
         "(patch -p1 < /tmp/workdir/packed/%{muslSandboxPatch.sha256sum}/musl-sandbox.patch)",
+        "(patch -p1 < /tmp/workdir/packed/%{crubitPatch.sha256sum}/chromium-157-crubit.patch)",
+        "(patch -p1 < /tmp/workdir/packed/%{metadataPatch.sha256sum}/6004-bugfix-ui-base-metadata-base_type_conversion.cc.patch)",
         lib.functions.writeFile "dlopen_basic.c" (import "chromium_empty_dlopen.c" as 'Text),
         "${CC} ${CFLAGS} -Werror -fPIC -c dlopen_basic.c -o dlopen_basic.o", # also gets into some (currently) shared libs
         "llvm-ar rcs libdl_basic.a dlopen_basic.o",
@@ -336,6 +381,8 @@ in
         "rm -rf third_party/node/linux/node-linux-x64/bin",
         "mkdir -p third_party/node/linux/node-linux-x64",
         "ln -s /usr/bin third_party/node/linux/node-linux-x64/bin",
+        "rm -f third_party/cpython3/host/bin/python3",
+        "(cd third_party/cpython3/host/bin && ln -s /usr/bin/python3 python3)",
         m%"sed -i 's@"-fdiagnostics-show-inlining-chain"@@g' build/config/compiler/BUILD.gn"%,
         m%"sed -i 's@"-fno-lifetime-dse"@@g' build/config/compiler/BUILD.gn"%,
         m%"sed -i 's@"-Wno-unused-but-set-global",@@g' build/config/compiler/BUILD.gn"%,
@@ -371,10 +418,12 @@ in
         "ln -s /usr/bin/gperf third_party/gperf/cipd/bin/gperf",
         "rm third_party/devtools-frontend/src/third_party/esbuild/esbuild",
         "ln -s /usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/esbuild",
+        "rm buildtools/linux64/gn",
+        "ln -s /usr/bin/gn buildtools/linux64/gn",
         # "cp -r ./third_party/devtools-frontend/src/node_modules/@rollup/rollup-linux-x64-gnu ./third_party/devtools-frontend/src/node_modules/@rollup/rollup-linux-x64-musl",
-        "rm -r third_party/devtools-frontend/src/node_modules/rollup",
-        "mkdir -p third_party/devtools-frontend/src/node_modules/rollup",
-        "tar xf /tmp/workdir/packed/%{wasmNode.sha256sum}/%{std.string.split "/" wasmNode.uri |>std.array.last } -C third_party/devtools-frontend/src/node_modules/rollup --strip-components=1",
+        # "rm -r third_party/devtools-frontend/src/node_modules/rollup",
+        # "mkdir -p third_party/devtools-frontend/src/node_modules/rollup",
+        # "tar xf /tmp/workdir/packed/%{wasmNode.sha256sum}/%{std.string.split "/" wasmNode.uri |>std.array.last } -C third_party/devtools-frontend/src/node_modules/rollup --strip-components=1",
         "mkdir copium",
         "tar xf /tmp/workdir/packed/%{copiumSrc.sha256sum}/%{std.string.split "/" copiumSrc.uri |>std.array.last } -C copium --strip-components=1",
         m%"sed -i 's|NODE_VERSION="v24.12.0"|NODE_VERSION="v26.10.0"|g' third_party/node/update_node_binaries"%,
@@ -384,6 +433,7 @@ in
         "python build/linux/unbundle/replace_gn_files.py --system-libraries %{system_libs}",
         "sed -i 's@#include <linux/prctl.h>@// #include <linux/prctl.h>@g' third_party/webrtc/rtc_base/platform_thread_types.cc",
         "patch -p1 < copium/cr148-rust-1.95-bytemuck.patch",
+        # "patch -p1 < copium/cr157-crubit-fix-rs_bindings_from_cc-breakages.patch",
         m%"sed -i 's@#include <sys/cdefs.h>@// #include <sys/cdefs.h>@g' third_party/crashpad/crashpad/compat/linux/sys/ptrace.h"%,
 
         # m%"sed -i 's@= res_ninit@= res_init@g' net/dns/public/scoped_res_state.cc"%,
@@ -411,6 +461,11 @@ in
         # Needed on selinux for some reason 
         m%" sed -i "s@case __NR_pwrite64:@case __NR_pwrite64:\n\t    case __NR_pwritev2:@g" sandbox/policy/linux/bpf_gpu_policy_linux.cc"%,
         m%"sed -i 's@u8::max_value()@u8::MAX@g' third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/structured.rs"%,
+
+        # https://github.com/v8/v8/commit/d3f0ec122bd234aa82347cc0e838c8fae8cd6565
+        m%"sed -i 's@#define V8_USE_ADDRESS_SANITIZER 1@//#define V8_USE_ADDRESS_SANITIZER 1@g' v8/src/base/macros.h"%,
+        m%"sed -i 's@#define V8_USE_MEMORY_SANITIZER 1@//#define V8_USE_MEMORY_SANITIZER 1@g' v8/src/base/macros.h"%,
+        m%"sed -i 's@#define V8_USE_UNDEFINED_BEHAVIOR_SANITIZER 1@//#define V8_USE_UNDEFINED_BEHAVIOR_SANITIZER 1@g' v8/src/base/macros.h"%,
       ],
       buildPhase = [
         "ninja -C out/Bld -j$(nproc) chrome",
@@ -441,14 +496,17 @@ in
           # drvs.flatbuffers,
           drvs.gnupatch & { priority = 1 }, #  Some fuzzyness needed for Alpine patch
           drvs.go_1_26,
-          drvs.gn2435,
-          drvs.pythonFull,
+          # drvs.gn2435,
+          drvs.gn2436,
+          # drvs.pythonFull,
+          drvs.pythonDl,
           llvmProvider,
           drvs.pkgconfMeson,
           drvs.samurai,
-          drvs.bindgen,
+          drvs.bindgen157,
           # drvs.rustWFmt,
-          drvs.rustProfiler,
+          # drvs.rustProfiler,
+          drvs.rust,
           # drvs.muslShared,
           # drvs.muslBothRenamedDl,
           drvs.muslChromium,
@@ -469,6 +527,8 @@ in
           # drvs.libempty,
           drvs.opensslChromium,
           drvs.pipewireChromium,
+          drvs.chromiumCrubitSource,
+          drvs.chromiumCrubit,
         ]
         @ (if options.unpack then [] else [drvs.chromiumSourceUnpacked]),
 
@@ -518,6 +578,10 @@ in
         drvs.pulseaudio17,
       ],
     },
+}
+& {
+  lib,
+  drvs,
   libclangCompat | lib.Package = {
     options = {
       v | default = "23",
