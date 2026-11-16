@@ -7,7 +7,7 @@ let si_all =
   std.record.merge_all (
     std.array.map
       (fun si => { "%{si.src.sha256sum}" = std.serialize 'Json si.src })
-      (std.array.flatten (std.record.values (std.record.map_values (fun p => p.sourceInputs) pkgs)))
+      (std.array.flatten (std.record.values (std.record.map_values (fun p => p.finalSourceInputs) pkgs)))
   )
 in
 

@@ -79,6 +79,8 @@ in
         _writeFile = (fun path content append => "cat %{if append then ">>" else ">"}%{path} << 'EOF'" ++ "\n" ++ content ++ "\nEOF\n"),
         writeFile = (fun path content => _writeFile path content false),
         appendFile = (fun path content => _writeFile path content false),
+        getSrcFile = (fun src => (std.string.split "/" src.uri |> std.array.last)),
+        gerSrcPath = (fun src => "/tmp/workdir/packed/%{src.sha256sum}/%{getSrcFile src}"),
       },
       nullOrString = std.contract.from_predicate (functions.isNullOrString),
 
@@ -111,7 +113,7 @@ in
           in
           let _bs = buildInputsValidated
           in
-          let _sis = sourceInputs in
+          let _sis = finalSourceInputs in
           let _pds = patches in
           let _efs = extraFiles in
           let _sc = scriptContent in
@@ -125,7 +127,7 @@ in
             {
               # name = _name,
               buildInputsValidated = _bs,
-              sourceInputs = _sis,
+              finalSourceInputs = _sis,
               patches = _pds,
               extraFiles = _efs,
               scriptContent = _sc,
@@ -246,7 +248,7 @@ in
         preUnpackPhase | not_exported | Array String | default = [],
 
         unpackPhase | not_exported | Array String | default = [
-          if (std.array.length sourceInputs) == 0 then
+          if (std.array.length finalSourceInputs) == 0 then
             ""
           else
             # TODO: these should be joined by newlines
@@ -259,7 +261,7 @@ in
       unpack_maybe /tmp/workdir/packed/%{x.src.sha256sum}/%{dest} /tmp/workdir/src/%{dest}
       "%
         )
-        ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) sourceInputs ) )}
+        ( std.array.filter (fun si => (std.record.get_or "unpack" true si) ) finalSourceInputs ) )}
       "%
         ],
         preEnvSetupPhase | not_exported | default = [],
@@ -298,7 +300,7 @@ in
         preInstallPhase | not_exported | Array String | default = [],
         installPhase | not_exported | Array String | default = [],
         postInstallPhase | not_exported | Array String | default = [],
-        phases | not_exported | Array (Array String) | default = [preUnpackPhase, unpackPhase, preEnvSetupPhase, envSetupPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
+        phases | not_exported | Array (Array String) | default = [preUnpackPhase, unpackPhase, preEnvSetupPhase, envSetupPhase, remotePatchPhase, patchPhase, eofPatchPhase, cdBuildPhase, preConfigurePhase, configurePhase, preBuildPhase, buildPhase, preInstallPhase, installPhase, postInstallPhase],
 
         cdBuildPhase | not_exported | Array String = if separateBuildDir then [] else ["cd ${SRC}"],
         separateBuildDir | not_exported | Bool | default = true,
@@ -306,12 +308,19 @@ in
         scriptContent | String | force = "#!/bin/sh -e\n" ++ std.string.join "\n" commands,
 
         singleSource | not_exported | Dyn | default = null,
-        sourceInputs | not_exported | Array SourceInput | default = if (singleSource == null) then [] else [{ src = singleSource }],
+        sourceInputs | not_exported | Array SourceInput | default = (if (singleSource == null) then [] else [{ src = singleSource }]),
+        finalSourceInputs | not_exported | Array SourceInput | default = sourceInputs @ (std.array.map (fun s => { src = s.src, unpack = false, }) remotePatches),
         patchDir | String | default = "%{name}/patches",
         filesDir | String | default = "%{name}/files",
+
         patches | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
-        eofPatches | not_exported | Array { patch | String, subdir | String | default = "" } | default = [],
-        eofPatchPhase | not_exported = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch -p1 << 'EOF'\n%{eofPatch.patch}\nEOF\n)") eofPatches,
+
+        remotePatches | not_exported | Array { src | Src, subdir | String | default = "", reverse | default = false, } | default = [],
+        remotePatchPhase | not_exported = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch %{if eofPatch.reverse then "-R " else ""}-p1 < %{functions.gerSrcPath eofPatch.src})") remotePatches,
+
+        eofPatches | not_exported | Array { patch | String, subdir | String | default = "", reverse | default = false, } | default = [],
+        eofPatchPhase | not_exported = std.array.map (fun eofPatch => "(cd ${SRC}%{eofPatch.subdir}; patch %{if eofPatch.reverse then "-R " else ""}-p1 << 'EOF'\n%{eofPatch.patch}\nEOF\n)") eofPatches,
+
         extraFiles | Array { file | String, sha256sum | String, uri | String | optional } | default = [],
 
         enableParallel | Bool | default = true,
@@ -324,6 +333,8 @@ in
         uri | nullOrString | default = null,
         sha256sum | String | default = "",
         fetchMethod | default = null,
+        # filename | default = if uri == null then null else (std.string.split "/" uri |> std.array.last),
+        # packedPath | default = if filename == null then null else "/tmp/workdir/packed/%{sha256sum}/%{filename}",
       },
       SourceInput = {
         src | Src,

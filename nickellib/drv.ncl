@@ -65,7 +65,7 @@ let drvUtils = {
             (std.array.sort (buildInputCmp) p.buildInputsValidated)
         ),
 
-        sourceInputDrvs = if (std.record.has_field "sourceInputs" p) then (std.array.map srcInputToHash p.sourceInputs) else [],
+        sourceInputDrvs = if (std.record.has_field "finalSourceInputs" p) then (std.array.map srcInputToHash p.finalSourceInputs) else [],
         patchDrvs = p.patches,
         extraFileDrvs = p.extraFiles,
         scriptContent = p.scriptContent,
@@ -86,17 +86,17 @@ let drvUtils = {
     in d
   ),
   pkgToJson = (fun p => let drv = pkgToDrv p in drvToJson drv),
-  pkgToFullDrv = (fun p =>
-    {
-      package = {
-        name = p.name,
-        hash = pkgToHash p,
-        drv = pkgToJson p
-      },
-      sourceInputs = std.array.map (fun s => { hash = s.src.sha256sum, drv = std.serialize 'Json s.src }) p.sourceInputs,
-      #      buildInputs= std.array.map pkgToFullDrv p.buildInputs
-    }
-  ),
+  # pkgToFullDrv = (fun p =>
+  #   {
+  #     package = {
+  #       name = p.name,
+  #       hash = pkgToHash p,
+  #       drv = pkgToJson p
+  #     },
+  #     sourceInputs = std.array.map (fun s => { hash = s.src.sha256sum, drv = std.serialize 'Json s.src }) p.finalSourceInputs,
+  #     #      buildInputs= std.array.map pkgToFullDrv p.buildInputs
+  #   }
+  # ),
   sourceInputTohasBasedDrv = (fun s => { "%{s.sha256sum}" = { drv = std.serialize 'Json s, name = null } }),
   toDrvsByhashArray = (fun p =>
     [
@@ -113,7 +113,7 @@ let drvUtils = {
         (
           []
           @ (std.array.flatten (std.array.map toDrvsByhashArray p.buildInputsValidated))
-          @ (std.array.map (fun s => sourceInputTohasBasedDrv s.src) p.sourceInputs)
+          @ (std.array.map (fun s => sourceInputTohasBasedDrv s.src) p.finalSourceInputs)
           @ (std.array.map sourceInputTohasBasedDrv (p.patches @ p.extraFiles))
         )
     )

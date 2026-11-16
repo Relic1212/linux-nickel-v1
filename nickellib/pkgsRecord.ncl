@@ -9,7 +9,7 @@ let name_pkgs = (fun x =>
         v
         & {
           name | priority 100 =
-            # std.trace (std.serialize 'Json v.sourceInputs)
+            # std.trace (std.serialize 'Json v.finalSourceInputs)
             (keyToName k)
         }
       )
