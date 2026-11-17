@@ -1,18 +1,19 @@
 {
   lib,
   drvs,
-  htop | lib.AutotoolsPackage = {
+  htop | lib.AutomakePackage = {
     singleSource = {
-      uri = "https://github.com/htop-dev/htop/releases/download/3.4.1/htop-3.4.1.tar.xz",
-      sha256sum = "904f7d4580fc11cffc7e0f06895a4789e0c1c054435752c151e812fead9f6220"
+      uri = "https://github.com/htop-dev/htop/archive/refs/tags/3.5.3.tar.gz",
+      sha256sum = "edf25ee020a5263ffbef9eef5a8c14392bf74e78b3d5c8bc64d9343dd9a82605"
     },
     biDrvs = [
+      drvs.linuxHeaders,
+    ],
+    pDrvs = [
       drvs.ncurses,
       drvs.libcap,
       drvs.libnl,
       drvs.lmSensors,
-      drvs.pkgconf,
-      drvs.linuxHeaders,
     ]
   }
 }
