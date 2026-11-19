@@ -47,6 +47,8 @@
           echo "DELETE posix_memalign.lo"
           echo "DELETE realloc.lo"
           echo "DELETE reallocarray.lo"
+          echo "DELETE strdup.lo"
+          echo "DELETE strndup.lo"
           echo "DELETE valloc.lo"
           echo "ADDLIB libmimalloc.a"
           echo "SAVE"
