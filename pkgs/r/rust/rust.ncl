@@ -179,6 +179,8 @@
           "--enable-locked-deps",
           "--disable-codegen-tests",
           "--enable-cargo-native-static",
+          "--enable-profiler",
+
           # "--tools=\"cargo,src\"",
           "--tools=\"%{options.tools}\"",
           "--set=\"rust.codegen-tests=false\"",
