@@ -1,15 +1,54 @@
 {
   lib,
   drvs,
-  firefoxJumbo | lib.Package =
-    firefox
-    & {
-      options.jumbo = true,
-    },
+  # firefoxJumbo | lib.Package =
+  #   firefox
+  #   & {
+  #     options.jumbo = true,
+  #   },
   firefox | lib.Package = {
     debug = true,
     options = {
-      jumbo | default = false,
+      jumbo | default = true,
+      link | default = [
+        "-Wl,--start-group",
+        "/usr/lib/libgcm.a",
+        "/usr/lib/libhw-acc-crypto-avx2.a",
+        "/usr/lib/libhw-acc-crypto-avx.a",
+        "/usr/lib/libghash-aes-x86_c_lib.a",
+        "/usr/lib/libsha-x86_c_lib.a",
+        "/usr/lib/libintel-gcm-wrap_c_lib.a",
+        "/usr/lib/libfreebl_static.a",
+        "/usr/lib/libpk11wrap.a",
+        "/usr/lib/libnssutil.a",
+        # "/usr/lib/libEGL.a",
+        "/usr/lib/libplds4.a",
+        "/usr/lib/libplc4.a",
+        "/usr/lib/libsoftokn.a",
+        "/usr/lib/libfreeblpriv3.a",
+        "/usr/lib/libnss_static.a",
+        "/usr/lib/libnssckbi.a",
+        "/usr/lib/libnssckfw.a",
+        "/usr/lib/libnssb.a",
+        "/usr/lib/libcertdb.a",
+        "/usr/lib/libcerthi.a",
+        "/usr/lib/libcryptohi.a",
+        "/usr/lib/libnssdev.a",
+        "/usr/lib/libnsspki.a",
+        "/usr/lib/libpkcs12.a",
+        "/usr/lib/libpkcs7.a",
+        "/usr/lib/libsmime.a",
+        "/usr/lib/libssl_nss.a",
+        "/usr/lib/libsharpyuv.a",
+        #
+        # "/usr/lib/libnspr4.a",
+        # "/usr/lib/libsqlite3.a",
+        # "/usr/lib/libpqcwrap.a",
+        "/usr/lib/libpqcwrap_static.a",
+        "/usr/lib/libcrux.a",
+        # "/usr/lib/libfreebl.a",
+        "-Wl,--end-group",
+      ]
     },
 
     singleSource = {
@@ -45,52 +84,30 @@
       EXTRA_CFLAGS = EXTRA_CPPFLAGS,
       EXTRA_CXXFLAGS = EXTRA_CPPFLAGS,
       AS = "clang",
-      EXTRA_LDFLAGS = [
-        "$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
-        "$(pkg-config --static --libs gtk+-3.0 libcap libpci)",
-        "-Wl,--error-limit=0",
-        "-Wl,--verbose",
-        "-Wl,-Map=firefox.map",
-        # "-Wl,--allow-multiple-definition",
-        "/tmp/workdir/src/libdlopen.a",
-        "-Wl,--start-group",
-        "/usr/lib/libgcm.a",
-        "/usr/lib/libhw-acc-crypto-avx2.a",
-        "/usr/lib/libhw-acc-crypto-avx.a",
-        "/usr/lib/libghash-aes-x86_c_lib.a",
-        "/usr/lib/libsha-x86_c_lib.a",
-        "/usr/lib/libintel-gcm-wrap_c_lib.a",
-        "/usr/lib/libfreebl_static.a",
-        "/usr/lib/libpk11wrap.a",
-        "/usr/lib/libnssutil.a",
-        # "/usr/lib/libEGL.a",
-        "/usr/lib/libplds4.a",
-        "/usr/lib/libplc4.a",
-        "/usr/lib/libsoftokn.a",
-        "/usr/lib/libfreeblpriv3.a",
-        "/usr/lib/libnss_static.a",
-        "/usr/lib/libnssckbi.a",
-        "/usr/lib/libnssckfw.a",
-        "/usr/lib/libnssb.a",
-        "/usr/lib/libcertdb.a",
-        "/usr/lib/libcerthi.a",
-        "/usr/lib/libcryptohi.a",
-        "/usr/lib/libnssdev.a",
-        "/usr/lib/libnsspki.a",
-        "/usr/lib/libpkcs12.a",
-        "/usr/lib/libpkcs7.a",
-        "/usr/lib/libsmime.a",
-        "/usr/lib/libssl_nss.a",
-        "/usr/lib/libsharpyuv.a",
-        "-Wl,--end-group",
-      ],
+      EXTRA_LDFLAGS =
+        [
+          "$(clang --print-file-name=libclang_rt.builtins-x86_64.a)",
+          "$(pkg-config --static --libs gtk+-3.0 libcap libpci)",
+          # "$(pkg-config --static --libs nss)",
+          "-Wl,--error-limit=0",
+          "-Wl,--verbose",
+          "-Wl,-Map=firefox.map",
+          # "-Wl,--allow-multiple-definition",
+          # "/tmp/workdir/src/libdlopen.a",
+        ]
+        @ (options.link),
     },
 
     preConfigurePhase =
-      [
-        "echo '%{import "firefox_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+      ["mkdir dl-json", ]
+      @ (std.array.map_with_index (fun a l => lib.functions.writeFile "dl-json/%{a}.json" (std.serialize 'Json l)) ((import "_dl.ncl") |> std.record.values))
+      @ [
+        # "echo '%{import "firefox_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
+        "dl-func %{std.array.map_with_index (fun a l=>"--file=dl-json/%{a}.json") ((import "_dl.ncl")|>std.record.values)|>std.string.join " "} > ${SRC}/dlopen.c",
+        lib.functions.writeFile "dlopen_bl.c" (import "load.c" as 'Text),
         "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
-        "${AR} rcs libdlopen.a dlopen.o",
+        "${CC} ${CFLAGS} -c ${SRC}/dlopen_bl.c -o ${SRC}/dlopen_bl.o",
+        "${AR} rcs libdlopen.a dlopen.o dlopen_bl.o",
         "export HOME=${BUILDDIR}/home",
         "mkdir -p $HOME",
         "export PIP_NO_INDEX=1",
@@ -98,14 +115,21 @@
         "export MOZ_BUILD_DATE=${SOURCE_DATE_EPOCH}",
         "sed -i 's|when=link_libstdcxx_statically|when=target_is_windows|g' ${SRC}/build/moz.configure/flags.configure",
         (
-          let rustflags = [
-            "-C target-feature=+crt-static",
-            # "-C link-self-contained=yes",
-            "-C link-self-contained=no",
-            "-C link-arg=-static",
-            "-C link-arg=--static",
-            "-C link-arg=/tmp/workdir/src/libdlopen.a",
-          ]
+          let rustflags =
+            [
+              "-C target-feature=+crt-static",
+              # "-C link-self-contained=yes",
+              "-C link-self-contained=no",
+              "-C link-arg=-static",
+              "-C link-arg=--static",
+              # "-C link-arg=/tmp/workdir/src/libdlopen.a",
+            ]
+            @ (
+              std.array.map
+                (fun s => "-C link-arg=%{s}")
+              # options.link
+                []
+            )
           in
           m%"CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="%{std.string.join " " rustflags}""%
           # m%"RUSTFLAGS="%{std.string.join " " rustflags}""%
@@ -117,7 +141,7 @@
         "export SCCACHE_CACHE_SIZE=100G",
         "export SCCACHE_SERVER_UDS=/tmp/sccache.sock",
         "export RUSTC_WRAPPER=/usr/bin/sccache",
-        "export SCCACHE_LOG=debug",
+        # "export SCCACHE_LOG=debug",
         "export SCCACHE_START_SERVER=0",
         "export SCCACHE_NO_DAEMON=1",
         "mkdir -p ${HOME}/.config/sccache/",
@@ -228,6 +252,7 @@
         #
 
         # m%"sed -i 's@if CONFIG["OS_ARCH"] != "WINNT" and CONFIG["COMPILE_ENVIRONMENT"]@if false@g' browser/app/moz.build"%,
+        m%"echo 'LDFLAGS+=["/tmp/workdir/src/libdlopen.a"]' >> browser/app/moz.build"%,
       ]
       @ (
         std.array.map
@@ -712,7 +737,8 @@
     buildPhase = [
       "echo 'bulld phase starting'",
       "echo 'building with mach'",
-      "./mach build --verbose",
+      # "./mach build --verbose",
+      "./mach build",
       "echo 'biuld phase done'",
     ],
     installPhase = [
@@ -737,7 +763,8 @@
       # drvs.muslShared,
       drvs.llvmFull,
       # drvs.musl,
-      drvs.muslBothRenamedDl,
+      # drvs.muslBothRenamedDl,
+      drvs.muslBothWeakDl,
       drvs.pyyaml,
       drvs.pkgconfMeson,
       drvs.rust,
@@ -751,6 +778,7 @@
       drvs.llvmConfigStatic,
       drvs.libstdcppCompat,
       drvs.ccacheBin,
+      drvs.pythonDlFunc,
     ],
     pDrvs = [
       drvs.zstd,
