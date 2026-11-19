@@ -3,8 +3,8 @@
   drvs,
   dinit | lib.MakePackage = {
     singleSource = {
-      uri = "https://github.com/davmac314/dinit/archive/refs/tags/v0.22.1.tar.gz",
-      sha256sum = "8907d4f668259c4f66d9d2c7cbbb55d455c28dc433596ab29005d589cb572e1e"
+      uri = "https://github.com/davmac314/dinit/archive/refs/tags/v0.23.0.tar.gz",
+      sha256sum = "911ed52b78ce4950824623d58826b88a839748e18ef837a234d50db6d83972e2"
     },
 
     extraMakeArgs = [
