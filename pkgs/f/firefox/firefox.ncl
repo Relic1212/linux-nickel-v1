@@ -6,7 +6,7 @@
   #   & {
   #     options.jumbo = true,
   #   },
-  firefoxDebug | lib.Package =
+  _firefoxDebug | lib.Package =
     firefox
     & {
       debug = true,
