@@ -916,16 +916,4 @@
       # gdk_wayland_window_get_xdg_toplevel, # newer gtk needed
     ],
   },
-  #   {
-  #     names = [],
-  #     symbols = [],
-  #   },
-  #   {
-  #     names = [],
-  #     symbols = [],
-  #   },
-  #   {
-  #     names = [],
-  #     symbols = [],
-  #   },
 }

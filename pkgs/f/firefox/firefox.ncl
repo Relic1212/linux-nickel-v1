@@ -109,7 +109,6 @@
       ["mkdir dl-json", ]
       @ (std.array.map_with_index (fun a l => lib.functions.writeFile "dl-json/%{a}.json" (std.serialize 'Json l)) ((import "_dl.ncl") |> std.record.values))
       @ [
-        # "echo '%{import "firefox_dlopen.c" as 'Text}' > ${SRC}/dlopen.c",
         "dl-func %{std.array.map_with_index (fun a l=>"--file=dl-json/%{a}.json") ((import "_dl.ncl")|>std.record.values)|>std.string.join " "} > ${SRC}/dlopen.c",
         lib.functions.writeFile "dlopen_bl.c" (import "load.c" as 'Text),
         "${CC} ${CFLAGS} -c ${SRC}/dlopen.c -o ${SRC}/dlopen.o",
@@ -285,7 +284,6 @@
       )
       @ (
         std.array.map
-        # (fun s => m%"sed -i 's@%{s}@firefox_expat_bundled__%{s}@g' parser/expat/expat/lib/*.c parser/expat/expat/lib/*.h"%)
           (fun s => m%"echo "CFLAGS += ['-D%{s}=firefox_expat_bundled__%{s}']" >> parser/expat/moz.build"%)
           (import "expat-symbols.json")
       )
