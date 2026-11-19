@@ -8,14 +8,11 @@
       _CargoFetcher
       & {
         singleSource = {
-          uri = "https://github.com/andre-brandao/gpui-shell/archive/refs/tags/v0.1.0.tar.gz",
-          sha256sum = "1b90af0f3c2d2fdb6a82ffc0287b562b6fcb0a389019c4f1d5dab8ec78b56140",
+          uri = "https://github.com/andre-brandao/gpui-shell/archive/refs/tags/v0.1.3.tar.gz",
+          sha256sum = "e08afe337d57ea2dff03f7211496e7f6a3b62b474c493f7fb6854109b5ecb7a1",
         },
 
-        # outputSha256sum = "160ab4c2a3589e1c489f97db76f5663e83d3ab813df033406d5c544b3ecdbfdc",
-        # outputSha256sum = "6208d8a5f45ed237368637630b0abb9ffb197cf34b171c2c68d8e3b8eedd8e28",
-        # outputSha256sum = "6860341ec9863a05e85d682d3854892ef7a71d1f03d6c9fa730476edd41f222e",
-        outputSha256sum = "5336b59cbffec37a2e8e2bc5bb53cc523fc5620ac2ede51e846cfa6b159f1c12",
+        outputSha256sum = "5729159bcc2a0526ca8fe374fab29c402d2245e9b72fb9248b6940161628fa2c",
         preConfigurePhase = [
           # https://github.com/CapSoftware/scap/issues/185#issuecomment-4565403391
           # "sed -i 's|0.8|0.10.0|g' ${SRC}/crates/services/Cargo.toml",
