@@ -24,5 +24,15 @@
       drvs.zlibNg,
       drvs.musl & { priority = 1 },
     ],
-  }
+  },
+  bindgen157 | lib.CargoPackage =
+    bindgen
+    & {
+      singleSource | priority 1 = {
+
+        uri = "https://github.com/rust-lang/rust-bindgen/archive/73c69d681eec90b84ffba4f993b5fb2f19580781.tar.gz",
+        sha256sum = "76ebd63a6098889ff9805ba19057b9409748e3848a4135e59a0dff8ad7853397",
+      },
+      crates | priority 1 = lib.functions.filterCrates (import "bindgen157-crates.json"),
+    }
 }
