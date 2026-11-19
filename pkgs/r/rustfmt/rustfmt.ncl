@@ -13,15 +13,16 @@
   lib,
   drvs,
   rust,
-  rustWFmt | lib.CargoPackage =
+  _rustWFmt | lib.CargoPackage =
     let p | lib.CargoPackage = {
       singleSource = (std.array.at 0 rust.sourceInputs).src,
 
-      crates = lib.functions.filterCrates (import "cargo-crates.json"),
+      # crates = lib.functions.filterCrates (import "cargo-crates.json"),
 
       options = {
         tools | default = "cargo,src,rustfmt",
         sccache | default = false,
+        stage | default = 1,
       },
 
       extraEnv.STATIC_RUSTFLAGS = [],
@@ -99,13 +100,15 @@
 
       buildPhase = [
         "echo 'running build'",
-        "./x.py build  --jobs $(nproc)" ++ (if options.sccache then " --stage 1" else ""),
+        # "./x.py build  --jobs $(nproc)" ++ (if options.sccache then " --stage %{options.stage}" else ""),
+        "./x.py build  --jobs $(nproc) --stage %{options.stage}",
         "echo 'build done'"
       ],
 
       installPhase = [
         "echo 'running install'",
-        "DESTDIR=${DEST} ./x.py install" ++ (if options.sccache then " --stage 1" else ""),
+        # "DESTDIR=${DEST} ./x.py install" ++ (if options.sccache then " --stage %{options.stage}" else ""),
+        "DESTDIR=${DEST} ./x.py install --stage %{options.stage}",
         "echo 'install done'"
       ],
 
@@ -140,12 +143,12 @@
       preConfigurePhase | priority 1 = std.array.map (fun s => std.string.replace "--strip-components=1" "--strip-components=1 --no-same-owner" s) p.preConfigurePhase
     },
 
-  rustProfiler | lib.CargoPackage =
-    rustWFmt
+  _rustProfiler | lib.CargoPackage =
+    _rustWFmt
     & {
       options = {
-        tools = "cargo,src,rustfmt,profiler",
-        sccache = true,
+        tools = "cargo,src,rustfmt,profiler,rustc-dev",
+        # sccache = true,
       },
     }
 }
