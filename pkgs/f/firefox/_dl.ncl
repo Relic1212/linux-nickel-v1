@@ -856,6 +856,9 @@
       "av_vorbis_parse_init",
       "av_vorbis_parse_reset",
       "avpriv_split_xiph_headers",
+      #
+      "av_log_set_callback",
+      "av_log_set_level",
     ],
   },
   zzz_main = {
@@ -906,6 +909,11 @@
       "wl_display_roundtrip",
       "wl_display_disconnect",
       "FT_Face_GetCharVariantIndex",
+      "FT_Done_MM_Var",
+      "FT_Get_MM_Var",
+      "FT_Get_Var_Design_Coordinates",
+      "FT_Set_Var_Design_Coordinates",
+      # gdk_wayland_window_get_xdg_toplevel, # newer gtk needed
     ],
   },
   #   {
