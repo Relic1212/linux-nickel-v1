@@ -349,3 +349,4 @@ in
 & (import "packagetypes/CmakePackage.ncl")
 & (import "packagetypes/SetuptoolPackage.ncl")
 & (import "packagetypes/DeterministicFetcher.ncl")
+& (import "packagetypes/DlPackage.ncl")
